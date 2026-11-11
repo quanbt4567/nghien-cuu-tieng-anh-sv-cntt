@@ -16,6 +16,7 @@ import { saveLocalContentOverrides } from "../../lib/contentStore";
 import type { AdminContentOverrides } from "../../lib/types";
 import {
   createCleanEmptyOverrides,
+  resolveAiProviders,
   type AdminHealth,
 } from "./adminShared";
 
@@ -142,6 +143,9 @@ export function AdminSystemTab({
     overrides.customBugChallenges.length +
     overrides.deletedChallengeIds.length;
 
+  const aiProviders = resolveAiProviders(health);
+  const activeAiCount = aiProviders.filter((p) => p.configured).length;
+
   return (
     <div className="space-y-6">
       {notice && (
@@ -193,24 +197,26 @@ export function AdminSystemTab({
         <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono uppercase font-semibold text-ink-muted">
-              Gemini Server Key
+              AI Failover Chain
             </span>
             <Cpu className="w-4 h-4 text-ink-muted" aria-hidden="true" />
           </div>
           <div className="flex items-center gap-2">
             <span
               className={`w-2.5 h-2.5 rounded-full ${
-                health.geminiConfigured ? "bg-ink" : "bg-ink-faint"
+                activeAiCount > 0 ? "bg-ink" : "bg-ink-faint"
               }`}
             />
             <span className="text-sm font-bold text-ink">
-              {health.geminiConfigured ? "Đã cấu hình" : "Chưa cấu hình"}
+              {activeAiCount > 0
+                ? `${activeAiCount}/6 provider đang bật`
+                : "Chế độ Local Fallback"}
             </span>
           </div>
           <p className="text-xs text-ink-muted leading-relaxed">
-            {health.geminiConfigured
-              ? "Biến GEMINI_API_KEY đã sẵn sàng trên server; các lượt luyện nói dùng AI chấm điểm mặc định."
-              : "Server không cài GEMINI_API_KEY mặc định; ứng dụng tự fallback sang chấm điểm từ khóa cục bộ."}
+            {activeAiCount > 0
+              ? "Tự động failover qua các tier AI trong 4000ms trước khi dùng bộ chấm điểm cục bộ."
+              : "Chưa cấu hình AI key trên server; ứng dụng tự fallback sang scoreLocally."}
           </p>
         </div>
 
@@ -238,6 +244,74 @@ export function AdminSystemTab({
           </p>
         </div>
       </div>
+
+      <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h2 className="text-base font-bold text-ink flex items-center gap-2">
+              <Cpu className="w-4 h-4 text-accent" aria-hidden="true" />
+              <span>AI Multi-Provider Failover Matrix</span>
+            </h2>
+            <p className="text-xs text-ink-muted mt-0.5">
+              Thứ tự ưu tiên từ Tier 1 đến Tier 6 (timeout 4000ms mỗi tier) trước khi fallback về bộ quy tắc cục bộ.
+            </p>
+          </div>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-paper border border-ink/15 font-mono text-xs font-bold text-ink">
+            {activeAiCount}/6 active
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {aiProviders.map((item) => (
+            <div
+              key={item.id}
+              className={`rounded-xl border p-3.5 flex items-center justify-between gap-3 ${
+                item.configured
+                  ? "bg-paper border-ink/20"
+                  : "bg-white border-ink/10"
+              }`}
+            >
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-mono text-[11px] font-bold text-accent">
+                    #{item.priority}
+                  </span>
+                  <span className="text-xs font-bold text-ink truncate">
+                    {item.label}
+                  </span>
+                </div>
+                <code className="block font-mono text-[11px] text-ink-muted truncate mt-1">
+                  {item.envVar}
+                </code>
+              </div>
+              <span
+                className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-pill font-mono text-[11px] font-semibold border ${
+                  item.configured
+                    ? "bg-ink text-white border-ink"
+                    : "bg-paper-muted text-ink-faint border-ink/15"
+                }`}
+              >
+                <span
+                  className={`w-1.5 h-1.5 rounded-full ${
+                    item.configured ? "bg-accent" : "bg-ink-faint"
+                  }`}
+                />
+                {item.configured ? "Active" : "Missing"}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-ink/10 text-xs text-ink-muted">
+          <span>
+            <strong className="font-mono text-ink">#7 Offline Fallback:</strong>{" "}
+            <code className="font-mono text-ink">scoreLocally</code>
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-pill bg-paper border border-ink/15 font-mono text-[11px] font-semibold text-ink">
+            Always Ready
+          </span>
+        </div>
+      </section>
 
       {/* Overrides Summary */}
       <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">

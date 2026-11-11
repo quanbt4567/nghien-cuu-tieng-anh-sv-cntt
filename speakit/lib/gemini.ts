@@ -1,24 +1,30 @@
-import { ScoreResponse, ScenarioId } from "./types";
+import { GrammarCorrection, ScenarioId, ScoreResponse } from "./types";
 
-interface GeminiEvaluationOptions {
+export interface AiEvaluationInput {
   transcript: string;
   scenario: ScenarioId;
   turnIndex: number;
   expectedKeywords: string[];
   history?: Array<{ role: "assistant" | "user"; content: string }>;
-  apiKey: string;
 }
 
-export async function evaluateWithGemini({
+interface GeminiEvaluationOptions extends AiEvaluationInput {
+  apiKey: string;
+  timeoutMs?: number;
+  fetchFn?: typeof fetch;
+}
+
+const DEFAULT_TIMEOUT_MS = 4000;
+const DEFAULT_PRONUNCIATION_NOTE =
+  "Đánh giá phát âm ước lượng từ văn bản: Chú ý phát âm rõ âm đuôi của các thuật ngữ chuyên ngành.";
+
+export function buildEvaluationPrompts({
   transcript,
   scenario,
   turnIndex,
   expectedKeywords,
   history = [],
-  apiKey,
-}: GeminiEvaluationOptions): Promise<ScoreResponse | null> {
-  if (!apiKey || apiKey.trim() === "") return null;
-
+}: AiEvaluationInput): { systemInstruction: string; prompt: string } {
   const systemInstruction = `You are an expert IT workplace English coach for Vietnamese software engineering students.
 Role-play authentically according to the workplace scenario:
 - daily-standup: Scrum Master / Tech Lead
@@ -58,13 +64,119 @@ Turn index: ${turnIndex}
 Expected technical keywords: ${JSON.stringify(expectedKeywords)}
 Previous context: ${JSON.stringify(history)}`;
 
-  // Abort controller with 8-second timeout per Clarification Q3
+  return { systemInstruction, prompt };
+}
+
+function stripJsonCodeFence(rawText: string): string {
+  const trimmed = rawText.trim();
+  const fenced = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
+  if (fenced?.[1]) {
+    return fenced[1].trim();
+  }
+  const firstBrace = trimmed.indexOf("{");
+  const lastBrace = trimmed.lastIndexOf("}");
+  if (firstBrace !== -1 && lastBrace > firstBrace) {
+    return trimmed.slice(firstBrace, lastBrace + 1);
+  }
+  return trimmed;
+}
+
+function toStringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter((item): item is string => typeof item === "string");
+}
+
+function toGrammarCorrections(value: unknown): GrammarCorrection[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter(
+    (item): item is GrammarCorrection =>
+      Boolean(item) &&
+      typeof item === "object" &&
+      typeof (item as GrammarCorrection).original === "string" &&
+      typeof (item as GrammarCorrection).corrected === "string" &&
+      typeof (item as GrammarCorrection).explanationVI === "string"
+  );
+}
+
+export function parseEvaluationJson(
+  rawText: string,
+  fallbackTranscript: string
+): ScoreResponse | null {
+  if (!rawText || typeof rawText !== "string") return null;
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(stripJsonCodeFence(rawText));
+  } catch {
+    return null;
+  }
+
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    return null;
+  }
+
+  const record = parsed as Record<string, unknown>;
+  const hasEvaluationShape =
+    typeof record.score === "number" ||
+    typeof record.betterSentence === "string" ||
+    Array.isArray(record.keywordsUsed);
+  if (!hasEvaluationShape) {
+    return null;
+  }
+
+  const rawScore =
+    typeof record.score === "number" && Number.isFinite(record.score)
+      ? Math.round(Math.min(100, Math.max(0, record.score)))
+      : 70;
+
+  return {
+    score: rawScore,
+    keywordsUsed: toStringArray(record.keywordsUsed),
+    keywordsMissed: toStringArray(record.keywordsMissed),
+    grammarCorrections: toGrammarCorrections(record.grammarCorrections),
+    betterSentence:
+      typeof record.betterSentence === "string" && record.betterSentence.trim()
+        ? record.betterSentence.trim()
+        : fallbackTranscript,
+    pronunciationNote:
+      typeof record.pronunciationNote === "string" &&
+      record.pronunciationNote.trim()
+        ? record.pronunciationNote.trim()
+        : DEFAULT_PRONUNCIATION_NOTE,
+    nextQuestion:
+      typeof record.nextQuestion === "string" && record.nextQuestion.trim()
+        ? record.nextQuestion.trim()
+        : undefined,
+    evaluationMode: "ai",
+  };
+}
+
+export async function evaluateWithGemini({
+  transcript,
+  scenario,
+  turnIndex,
+  expectedKeywords,
+  history = [],
+  apiKey,
+  timeoutMs = DEFAULT_TIMEOUT_MS,
+  fetchFn = fetch,
+}: GeminiEvaluationOptions): Promise<ScoreResponse | null> {
+  if (!apiKey || apiKey.trim() === "") return null;
+
+  const { systemInstruction, prompt } = buildEvaluationPrompts({
+    transcript,
+    scenario,
+    turnIndex,
+    expectedKeywords,
+    history,
+  });
+
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 8000);
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey.trim()}`;
-    const response = await fetch(url, {
+    const response = await fetchFn(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -87,34 +199,29 @@ Previous context: ${JSON.stringify(history)}`;
       }),
     });
 
-    clearTimeout(timeoutId);
-
     if (!response.ok) {
       return null;
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as {
+      candidates?: Array<{
+        content?: { parts?: Array<{ text?: string }> };
+      }>;
+    };
     const candidateText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!candidateText) return null;
 
-    const parsed = JSON.parse(candidateText);
+    const normalized = parseEvaluationJson(candidateText, transcript);
+    if (!normalized) return null;
 
-    // Validate parsed fields
     return {
-      score: typeof parsed.score === "number" ? Math.min(100, Math.max(0, parsed.score)) : 70,
-      keywordsUsed: Array.isArray(parsed.keywordsUsed) ? parsed.keywordsUsed : [],
-      keywordsMissed: Array.isArray(parsed.keywordsMissed) ? parsed.keywordsMissed : [],
-      grammarCorrections: Array.isArray(parsed.grammarCorrections) ? parsed.grammarCorrections : [],
-      betterSentence: parsed.betterSentence || transcript,
-      pronunciationNote:
-        parsed.pronunciationNote ||
-        "Đánh giá phát âm ước lượng từ văn bản: Chú ý phát âm rõ âm đuôi của các thuật ngữ chuyên ngành.",
-      nextQuestion: parsed.nextQuestion,
-      evaluationMode: "ai",
+      ...normalized,
+      provider: "gemini",
     };
-  } catch (error) {
-    clearTimeout(timeoutId);
+  } catch {
     return null;
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 

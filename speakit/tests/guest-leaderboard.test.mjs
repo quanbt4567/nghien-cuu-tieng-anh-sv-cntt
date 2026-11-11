@@ -223,3 +223,4 @@ test("user settings exclude client-side geminiApiKey while keeping speech prefer
     win.restore();
   }
 });
+

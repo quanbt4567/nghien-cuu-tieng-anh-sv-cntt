@@ -7,6 +7,7 @@ import {
   normalizeContentOverrides,
 } from "../../../../lib/contentStore";
 import { ensureSchema, getNeonSql } from "../../../../lib/db/neon";
+import { getAiProviderStatusList } from "../../../../lib/ai-waterfall";
 import type { ArenaRunRecord, PracticeAttempt, WeakPoint } from "../../../../lib/types";
 
 export const dynamic = "force-dynamic";
@@ -25,9 +26,11 @@ export async function GET(req: NextRequest) {
     );
   }
 
+  const aiProviders = getAiProviderStatusList();
   const baseHealth = {
     neonConnected: false,
     geminiConfigured: Boolean(process.env.GEMINI_API_KEY?.trim()),
+    aiProviders,
     isDefaultPasscode: isUsingDefaultPasscode(),
   };
 

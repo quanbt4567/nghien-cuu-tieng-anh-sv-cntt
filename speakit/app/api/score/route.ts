@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { evaluateWithGemini } from "../../../lib/gemini";
-import { scoreLocally } from "../../../lib/localScorer";
 import { SCENARIOS } from "../../../data/scenarios";
-import { ScoreRequestPayload, ScoreResponse } from "../../../lib/types";
+import { evaluateWithWaterfall } from "../../../lib/ai-waterfall";
+import { ScoreRequestPayload } from "../../../lib/types";
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,46 +15,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Determine target scenario & next turn
     const currentScenario = SCENARIOS.find((s) => s.id === scenario);
     const nextTurn = currentScenario?.turns?.[turnIndex + 1];
     const defaultNextQuestion = nextTurn ? nextTurn.questionEN : undefined;
 
-    // Resolve server-side API key cleanly without requiring user keys
-    const effectiveApiKey = process.env.GEMINI_API_KEY || "";
-
-    let result: ScoreResponse | null = null;
-
-    // Try Gemini AI evaluation if key is present
-    if (effectiveApiKey && effectiveApiKey.trim().length > 0) {
-      result = await evaluateWithGemini({
-        transcript,
-        scenario,
-        turnIndex,
-        expectedKeywords,
-        history,
-        apiKey: effectiveApiKey,
-      });
-    }
-
-    // Fallback to local rule engine if no key or Gemini fails/times out
-    if (!result) {
-      const localResult = scoreLocally({
-        transcript,
-        expectedKeywords,
-        sampleAnswerEN: currentScenario?.turns?.[turnIndex]?.sampleAnswerEN,
-        hintVI: currentScenario?.turns?.[turnIndex]?.hintVI,
-      });
-
-      result = {
-        ...localResult,
-        nextQuestion: defaultNextQuestion,
-        evaluationMode: "local_rules",
-      };
-    }
+    const result = await evaluateWithWaterfall({
+      transcript,
+      scenario,
+      turnIndex,
+      expectedKeywords,
+      history,
+      sampleAnswerEN: currentScenario?.turns?.[turnIndex]?.sampleAnswerEN,
+      hintVI: currentScenario?.turns?.[turnIndex]?.hintVI,
+      defaultNextQuestion,
+    });
 
     return NextResponse.json(result);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Đã xảy ra lỗi xử lý câu trả lời. Vui lòng thử lại." },
       { status: 500 }

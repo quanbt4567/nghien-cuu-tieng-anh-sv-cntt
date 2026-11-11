@@ -9,18 +9,42 @@ import {
 } from "../../lib/contentStore";
 import { getGamificationState } from "../../lib/gamification";
 import { storageAdapter } from "../../lib/storage";
-import type {
-  AdminContentOverrides,
-  ArenaRunRecord,
-  GameScoreEntry,
-  PracticeAttempt,
-  WeakPoint,
+import {
+  AI_PROVIDER_SPECS,
+  type AdminContentOverrides,
+  type AiProviderId,
+  type ArenaRunRecord,
+  type GameScoreEntry,
+  type PracticeAttempt,
+  type WeakPoint,
 } from "../../lib/types";
+
+export interface AiProviderHealthItem {
+  id: AiProviderId;
+  label: string;
+  envVar: string;
+  priority: number;
+  configured: boolean;
+}
 
 export interface AdminHealth {
   neonConnected: boolean;
   geminiConfigured: boolean;
+  aiProviders?: AiProviderHealthItem[];
   isDefaultPasscode: boolean;
+}
+
+export function resolveAiProviders(health: AdminHealth): AiProviderHealthItem[] {
+  if (Array.isArray(health.aiProviders) && health.aiProviders.length > 0) {
+    return health.aiProviders;
+  }
+  return AI_PROVIDER_SPECS.map((spec) => ({
+    id: spec.id,
+    label: spec.label,
+    envVar: spec.envVar,
+    priority: spec.priority,
+    configured: spec.id === "gemini" ? health.geminiConfigured : false,
+  }));
 }
 
 export interface ScenarioBreakdownItem {

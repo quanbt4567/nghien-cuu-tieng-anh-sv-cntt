@@ -209,5 +209,6 @@ export function scoreLocally({
     betterSentence,
     pronunciationNote,
     evaluationMode: "local_rules",
+    provider: "local",
   };
 }

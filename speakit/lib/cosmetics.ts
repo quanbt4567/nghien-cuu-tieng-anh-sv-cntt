@@ -76,3 +76,4 @@ export function getRingBadgeClass(ring: string): string {
       return "border-ink/20";
   }
 }
+

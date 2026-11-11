@@ -44,6 +44,32 @@ export interface GrammarCorrection {
   explanationVI: string;
 }
 
+export type AiProviderId =
+  | "cerebras"
+  | "inception"
+  | "groq"
+  | "xkiro"
+  | "openrouter"
+  | "gemini";
+
+export type ScoringProvider = AiProviderId | "local";
+
+export interface AiProviderSpec {
+  id: AiProviderId;
+  label: string;
+  envVar: string;
+  priority: number;
+}
+
+export const AI_PROVIDER_SPECS: readonly AiProviderSpec[] = [
+  { id: "cerebras", label: "Cerebras", envVar: "CEREBRAS_API_KEY", priority: 1 },
+  { id: "inception", label: "Inception Labs", envVar: "INCEPTION_API_KEY", priority: 2 },
+  { id: "groq", label: "Groq", envVar: "GROQ_API_KEY", priority: 3 },
+  { id: "xkiro", label: "xKiro", envVar: "XKIRO_API_KEY", priority: 4 },
+  { id: "openrouter", label: "OpenRouter", envVar: "OPENROUTER_API_KEY", priority: 5 },
+  { id: "gemini", label: "Gemini", envVar: "GEMINI_API_KEY", priority: 6 },
+];
+
 export interface ScoreResponse {
   score: number; // 0 - 100
   keywordsUsed: string[];
@@ -53,6 +79,7 @@ export interface ScoreResponse {
   pronunciationNote: string;
   nextQuestion?: string;
   evaluationMode: "ai" | "local_rules";
+  provider?: ScoringProvider;
 }
 
 export interface ScoreRequestPayload {

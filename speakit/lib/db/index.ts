@@ -14,3 +14,4 @@ export async function ensureGuestDatabaseReady(): Promise<boolean> {
   if (!sql) return false;
   return initializeGuestPlayersSchema(sql);
 }
+
