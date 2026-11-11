@@ -12,6 +12,7 @@ import { AiModeBanner } from "../../../components/feedback/AiModeBanner";
 import { ScenarioSummary } from "../../../components/feedback/ScenarioSummary";
 import { startSpeechRecognition, SpeechController } from "../../../lib/speech";
 import { storageAdapter } from "../../../lib/storage";
+import { awardPracticePoints } from "../../../lib/gamification";
 import { ScenarioTurn, ScoreResponse } from "../../../lib/types";
 
 export default function PracticePage() {
@@ -39,6 +40,8 @@ export default function PracticePage() {
   // Turn aggregate records
   const [turnScores, setTurnScores] = useState<number[]>([]);
   const [totalKeywordsUsedCount, setTotalKeywordsUsedCount] = useState(0);
+  const [missedKeywords, setMissedKeywords] = useState<string[]>([]);
+  const [totalPointsEarned, setTotalPointsEarned] = useState(0);
   const [conversationHistory, setConversationHistory] = useState<
     Array<{ role: "assistant" | "user"; content: string }>
   >([]);
@@ -77,6 +80,7 @@ export default function PracticePage() {
   }
 
   const currentTurn: ScenarioTurn = scenario.turns[currentTurnIndex];
+  const scenarioKeywords = scenario.turns.flatMap((t) => t.keywords);
 
   // Speech Recognition Control
   const handleStartRecording = () => {
@@ -119,7 +123,7 @@ export default function PracticePage() {
 
   // Submit Answer to Evaluation Pipeline
   const handleSubmitAnswer = async () => {
-    if (!transcript.trim()) return;
+    if (!transcript.trim() || isEvaluating) return;
 
     if (isRecording) {
       handleStopRecording();
@@ -166,7 +170,21 @@ export default function PracticePage() {
         scoreData.grammarCorrections.map((c) => c.original)
       );
 
-      // Track multi-turn progress
+      // Track multi-turn progress & gamification points
+      const earned = Number.isFinite(scoreData.score)
+        ? Math.max(0, Math.round(scoreData.score))
+        : 0;
+      awardPracticePoints(earned);
+      setTotalPointsEarned((prev) => prev + earned);
+      if (scoreData.keywordsMissed.length > 0) {
+        setMissedKeywords((prev) => {
+          const seen = new Set(prev.map((k) => k.toLowerCase()));
+          const additions = scoreData.keywordsMissed.filter(
+            (k) => !seen.has(k.toLowerCase())
+          );
+          return additions.length > 0 ? [...prev, ...additions] : prev;
+        });
+      }
       setTurnScores((prev) => [...prev, scoreData.score]);
       setTotalKeywordsUsedCount((prev) => prev + scoreData.keywordsUsed.length);
       setConversationHistory((prev) => [
@@ -204,6 +222,8 @@ export default function PracticePage() {
     setEvalResult(null);
     setTurnScores([]);
     setTotalKeywordsUsedCount(0);
+    setMissedKeywords([]);
+    setTotalPointsEarned(0);
     setConversationHistory([]);
     setSpeechError(null);
     setEvaluationError(null);
@@ -253,6 +273,9 @@ export default function PracticePage() {
           totalScore={turnScores.reduce((a, b) => a + b, 0)}
           averageScore={averageScore}
           totalKeywordsUsed={totalKeywordsUsedCount}
+          missedKeywords={missedKeywords}
+          scenarioKeywords={scenarioKeywords}
+          pointsEarned={totalPointsEarned}
           onRetry={handleRetryScenario}
         />
       ) : (

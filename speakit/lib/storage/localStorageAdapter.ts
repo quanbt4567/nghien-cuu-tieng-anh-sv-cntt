@@ -1,4 +1,5 @@
 import { PracticeAttempt, ScenarioId, UserSettings, WeakPoint, StorageAdapter } from "../types";
+import { resetGamificationState } from "../gamification";
 
 const ATTEMPTS_KEY = "speakit_attempts_v1";
 const WEAK_POINTS_KEY = "speakit_weakpoints_v1";
@@ -169,5 +170,6 @@ export class LocalStorageAdapter implements StorageAdapter {
     } catch {
       // ignore
     }
+    resetGamificationState();
   }
 }

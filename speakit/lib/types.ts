@@ -97,4 +97,32 @@ export interface StorageAdapter {
 
 export type IStorageAdapter = StorageAdapter;
 
+export type ITRole = "frontend" | "backend" | "qa" | "devops";
+
+export type DevTitle =
+  | "Junior Speaker"
+  | "Mid-level Communicator"
+  | "Lead Tech Speaker";
+
+export type MinigameId = "bug-buster" | "standup-speed-run";
+
+export interface GameScoreEntry {
+  id: string;
+  gameId: MinigameId;
+  score: number;
+  accuracyOrWords: number;
+  durationSec: number;
+  role: ITRole;
+  createdAt: string;
+}
+
+export interface GamificationState {
+  totalPoints: number;
+  streakDays: number;
+  lastPracticeDate: string | null;
+  selectedRole: ITRole;
+  personalBests: Record<MinigameId, number>;
+  history: GameScoreEntry[];
+}
+
 
