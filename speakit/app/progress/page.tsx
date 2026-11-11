@@ -68,7 +68,7 @@ export default function ProgressPage() {
       <div>
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper-card text-ink text-xs font-medium border-2 border-ink shadow-hard-sm hover:bg-paper-muted shadow-hard-press transition-all mb-2"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper-card text-ink text-xs font-medium border-2 border-ink shadow-hard hover:bg-paper-muted shadow-hard-press transition-all mb-2"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Trang chủ</span>

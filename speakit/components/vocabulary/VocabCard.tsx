@@ -52,7 +52,7 @@ export function VocabCard({ item }: VocabCardProps) {
         <button
           type="button"
           onClick={handlePlayWord}
-          className="w-9 h-9 rounded-full bg-paper border-2 border-ink flex items-center justify-center text-ink hover:bg-accent hover:text-white shadow-hard-sm shadow-hard-press transition-colors"
+          className="w-9 h-9 rounded-full bg-paper border-2 border-ink flex items-center justify-center text-ink hover:bg-accent hover:text-white shadow-hard shadow-hard-press transition-colors"
           title={`Phát âm từ "${item.term}"`}
         >
           {isPlaying ? (

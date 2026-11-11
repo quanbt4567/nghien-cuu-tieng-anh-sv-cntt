@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mic, ArrowRight, Play, Terminal, Sparkles, BookOpen, Clock } from "lucide-react";
+import { Mic, ArrowRight, Play, BookOpen, Clock } from "lucide-react";
 import { EF_EPI_2025 } from "../data/efEpiData";
 import { SCENARIOS } from "../data/scenarios";
 
@@ -101,7 +101,7 @@ export default function HomePage() {
             <Link
               key={scenario.id}
               href={`/practice/${scenario.id}`}
-              className="block group bg-white border-2 border-ink rounded-2xl p-4 sm:p-5 shadow-hard-sm hover:shadow-hard transition-all shadow-hard-press"
+              className="block group bg-white border-2 border-ink rounded-2xl p-4 sm:p-5 shadow-hard hover:shadow-hard transition-all shadow-hard-press"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-start gap-3 sm:gap-4">
@@ -142,7 +142,7 @@ export default function HomePage() {
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Link
           href="/vocabulary"
-          className="bg-paper-card border-2 border-ink rounded-2xl p-5 shadow-hard-sm hover:shadow-hard transition-all shadow-hard-press flex items-start gap-3"
+          className="bg-paper-card border-2 border-ink rounded-2xl p-5 shadow-hard hover:shadow-hard transition-all shadow-hard-press flex items-start gap-3"
         >
           <div className="w-10 h-10 rounded-pill bg-paper flex items-center justify-center border-2 border-ink shrink-0 text-ink">
             <BookOpen className="w-5 h-5" />
@@ -157,7 +157,7 @@ export default function HomePage() {
 
         <Link
           href="/progress"
-          className="bg-paper-card border-2 border-ink rounded-2xl p-5 shadow-hard-sm hover:shadow-hard transition-all shadow-hard-press flex items-start gap-3"
+          className="bg-paper-card border-2 border-ink rounded-2xl p-5 shadow-hard hover:shadow-hard transition-all shadow-hard-press flex items-start gap-3"
         >
           <div className="w-10 h-10 rounded-pill bg-paper flex items-center justify-center border-2 border-ink shrink-0 text-ink">
             <Clock className="w-5 h-5" />

@@ -17,22 +17,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Hard offset shadow utilities (neo-analogue brutalist, zero blur) */
+/* Exactly ONE hard offset shadow utility per Constitution Principle VI */
 .shadow-hard {
   box-shadow: 4px 4px 0px #1A1714;
 }
 
-.shadow-hard-sm {
-  box-shadow: 2px 2px 0px #1A1714;
-}
-
-.shadow-hard-lg {
-  box-shadow: 6px 6px 0px #1A1714;
-}
-
 .shadow-hard-press:active {
   transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px #1A1714;
 }
 
 /* Pulsing wave for recording microphone (ONE signature interaction) */

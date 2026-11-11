@@ -29,7 +29,7 @@ export function SevenDayPlan({ days }: SevenDayPlanProps) {
         {days.map((day) => (
           <div
             key={day.dayNumber}
-            className={`bg-white border-2 border-ink rounded-2xl p-4 sm:p-5 shadow-hard-sm transition-all ${
+            className={`bg-white border-2 border-ink rounded-2xl p-4 sm:p-5 shadow-hard transition-all ${
               day.isCompleted ? "opacity-90" : ""
             }`}
           >
@@ -81,7 +81,7 @@ export function SevenDayPlan({ days }: SevenDayPlanProps) {
               <div className="shrink-0 pt-2 sm:pt-0 flex justify-end">
                 <Link
                   href={`/practice/${day.scenarioId}`}
-                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-pill bg-paper-card text-ink text-xs font-semibold border-2 border-ink shadow-hard-sm hover:bg-paper-muted shadow-hard-press transition-all"
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-pill bg-paper-card text-ink text-xs font-semibold border-2 border-ink shadow-hard hover:bg-paper-muted shadow-hard-press transition-all"
                 >
                   <span>{day.isCompleted ? "Luyện lại" : "Bắt đầu"}</span>
                   <ArrowRight className="w-3.5 h-3.5" />

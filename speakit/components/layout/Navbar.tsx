@@ -22,7 +22,7 @@ export function Navbar() {
           href="/"
           className="flex items-center gap-2 group focus:outline-none"
         >
-          <div className="w-8 h-8 rounded-pill bg-accent flex items-center justify-center border-2 border-ink shadow-hard-sm">
+          <div className="w-8 h-8 rounded-pill bg-accent flex items-center justify-center border-2 border-ink shadow-hard">
             <Mic className="w-4 h-4 text-white" />
           </div>
           <div className="flex flex-col">
@@ -45,7 +45,7 @@ export function Navbar() {
                 href={href}
                 className={`flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-medium rounded-pill border-2 transition-all ${
                   isActive
-                    ? "bg-ink text-white border-ink shadow-hard-sm"
+                    ? "bg-ink text-white border-ink shadow-hard"
                     : "bg-paper-card text-ink border-ink hover:bg-paper-muted"
                 }`}
               >

@@ -23,7 +23,7 @@ export default function VocabularyPage() {
         <div>
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper-card text-ink text-xs font-medium border-2 border-ink shadow-hard-sm hover:bg-paper-muted shadow-hard-press transition-all mb-2"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper-card text-ink text-xs font-medium border-2 border-ink shadow-hard hover:bg-paper-muted shadow-hard-press transition-all mb-2"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Trang chủ</span>
@@ -45,7 +45,7 @@ export default function VocabularyPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Tìm kiếm thuật ngữ..."
-            className="w-full pl-9 pr-3 py-2 text-xs font-mono bg-white border-2 border-ink rounded-pill text-ink placeholder:text-ink-faint focus:outline-none focus:border-accent shadow-hard-sm"
+            className="w-full pl-9 pr-3 py-2 text-xs font-mono bg-white border-2 border-ink rounded-pill text-ink placeholder:text-ink-faint focus:outline-none focus:border-accent shadow-hard"
           />
         </div>
       </div>

@@ -39,9 +39,6 @@ const config: Config = {
       },
       boxShadow: {
         hard: "4px 4px 0px #1A1714",
-        "hard-sm": "2px 2px 0px #1A1714",
-        "hard-lg": "6px 6px 0px #1A1714",
-        "hard-press": "1px 1px 0px #1A1714",
       },
     },
   },

@@ -3,13 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowLeft, Tag, Lightbulb, AlertCircle, Loader2 } from "lucide-react";
+import { ArrowLeft, Tag, Lightbulb, AlertCircle, Loader2, Keyboard, Send, RotateCcw } from "lucide-react";
 import { SCENARIOS } from "../../../data/scenarios";
 import { AudioPromptPlayer } from "../../../components/audio/AudioPromptPlayer";
 import { MicButton } from "../../../components/audio/MicButton";
-import { FallbackTextInput } from "../../../components/audio/FallbackTextInput";
-import { ScoreMeter } from "../../../components/feedback/ScoreMeter";
-import { KeywordBadges } from "../../../components/feedback/KeywordBadges";
 import { FeedbackCard } from "../../../components/feedback/FeedbackCard";
 import { AiModeBanner } from "../../../components/feedback/AiModeBanner";
 import { ScenarioSummary } from "../../../components/feedback/ScenarioSummary";
@@ -58,7 +55,7 @@ export default function PracticePage() {
   if (!scenario) {
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center space-y-4">
-        <div className="w-12 h-12 rounded-pill bg-accent-light text-accent flex items-center justify-center mx-auto border-2 border-ink shadow-hard-sm">
+        <div className="w-12 h-12 rounded-pill bg-accent-light text-accent flex items-center justify-center mx-auto border-2 border-ink shadow-hard">
           <AlertCircle className="w-6 h-6" />
         </div>
         <h1 className="text-xl font-bold text-ink">
@@ -69,7 +66,7 @@ export default function PracticePage() {
         </p>
         <Link
           href="/"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-ink text-white font-medium text-xs border-2 border-ink shadow-hard-sm"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-ink text-white font-medium text-xs border-2 border-ink shadow-hard"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Quay lại danh sách kịch bản</span>
@@ -221,7 +218,7 @@ export default function PracticePage() {
       <div className="flex items-center justify-between gap-4">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper-card text-ink text-xs font-medium border-2 border-ink shadow-hard-sm hover:bg-paper-muted shadow-hard-press transition-all"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper-card text-ink text-xs font-medium border-2 border-ink shadow-hard hover:bg-paper-muted shadow-hard-press transition-all"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Danh sách kịch bản</span>
@@ -234,7 +231,7 @@ export default function PracticePage() {
               key={turn.turnIndex}
               className={`px-3 py-1 rounded-pill text-xs font-mono font-bold border-2 transition-all ${
                 idx === currentTurnIndex && !isCompleted
-                  ? "bg-accent text-white border-ink shadow-hard-sm"
+                  ? "bg-accent text-white border-ink shadow-hard"
                   : idx < currentTurnIndex || isCompleted
                   ? "bg-paper-muted text-ink border-ink"
                   : "bg-paper text-ink-faint border-ink opacity-60"
@@ -326,15 +323,61 @@ export default function PracticePage() {
                 />
               </div>
 
-              {/* Automatic Typed Fallback / Editor */}
-              <FallbackTextInput
-                value={transcript}
-                onChange={setTranscript}
-                onSubmit={handleSubmitAnswer}
-                disabled={isEvaluating || isRecording}
-                autoFocus={isMicDenied}
-                isMicDenied={isMicDenied}
-              />
+              {/* Automatic Typed Fallback / Editor (Inlined) */}
+              <div className="bg-white border-2 border-ink rounded-2xl p-4 sm:p-5 shadow-hard space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-ink">
+                    <Keyboard className="w-4 h-4 text-accent" />
+                    <span>
+                      {isMicDenied
+                        ? "Chế độ gõ văn bản (Microphone bị từ chối)"
+                        : "Hoặc gõ / chỉnh sửa câu trả lời bằng tiếng Anh:"}
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-mono text-ink-muted">
+                    {transcript.trim() ? transcript.trim().split(/\s+/).length : 0} từ
+                  </span>
+                </div>
+
+                <textarea
+                  value={transcript}
+                  onChange={(e) => setTranscript(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      if (transcript.trim().length > 0 && !isEvaluating && !isRecording) {
+                        handleSubmitAnswer();
+                      }
+                    }
+                  }}
+                  disabled={isEvaluating || isRecording}
+                  rows={3}
+                  placeholder="Gõ câu trả lời của bạn bằng tiếng Anh tại đây (hoặc nói bằng micro để văn bản tự điền vào)..."
+                  className="w-full p-3 text-sm bg-paper border-2 border-ink rounded-xl text-ink placeholder:text-ink-faint focus:outline-none focus:border-accent resize-none transition-colors"
+                />
+
+                <div className="flex items-center justify-between gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setTranscript("")}
+                    disabled={!transcript || isEvaluating || isRecording}
+                    className="text-xs text-ink-muted hover:text-ink disabled:opacity-40 flex items-center gap-1 py-1"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    <span>Xóa chữ</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleSubmitAnswer}
+                    disabled={!transcript.trim() || isEvaluating || isRecording}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-ink text-white font-medium text-xs border-2 border-ink shadow-hard hover:bg-ink-muted shadow-hard-press disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                  >
+                    <span>Gửi câu trả lời</span>
+                    <Send className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
 
               {/* Evaluation Loading Indicator */}
               {isEvaluating && (
@@ -356,21 +399,12 @@ export default function PracticePage() {
 
           {/* Evaluation Results (Phase 5) */}
           {evalResult && (
-            <div className="space-y-4">
-              <ScoreMeter score={evalResult.score} />
-
-              <KeywordBadges
-                used={evalResult.keywordsUsed}
-                missed={evalResult.keywordsMissed}
-              />
-
-              <FeedbackCard
-                result={evalResult}
-                transcript={transcript}
-                onNextTurn={handleNextTurn}
-                isLastTurn={currentTurnIndex === scenario.turns.length - 1}
-              />
-            </div>
+            <FeedbackCard
+              result={evalResult}
+              transcript={transcript}
+              onNextTurn={handleNextTurn}
+              isLastTurn={currentTurnIndex === scenario.turns.length - 1}
+            />
           )}
         </>
       )}

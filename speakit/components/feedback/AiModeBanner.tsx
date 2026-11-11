@@ -11,7 +11,7 @@ export function AiModeBanner({ visible = true }: AiModeBannerProps) {
   if (!visible) return null;
 
   return (
-    <div className="bg-paper-muted border-2 border-ink rounded-xl p-3 shadow-hard-sm flex items-center justify-between gap-3 text-xs text-ink">
+    <div className="bg-paper-muted border-2 border-ink rounded-xl p-3 shadow-hard flex items-center justify-between gap-3 text-xs text-ink">
       <div className="flex items-center gap-2">
         <AlertTriangle className="w-4 h-4 text-accent shrink-0" />
         <div>

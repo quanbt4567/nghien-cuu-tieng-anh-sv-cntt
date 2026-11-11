@@ -1,9 +1,8 @@
-import { PracticeAttempt, ScenarioId, UserSettings, WeakPoint } from "../types";
+import { PracticeAttempt, ScenarioId, UserSettings, WeakPoint, StorageAdapter } from "../types";
 import { LocalStorageAdapter } from "./localStorageAdapter";
 import { getSupabaseClient } from "./supabaseClient";
-import { IStorageAdapter } from "./types";
 
-export class SupabaseAdapter implements IStorageAdapter {
+export class SupabaseAdapter implements StorageAdapter {
   private localFallback = new LocalStorageAdapter();
 
   async saveAttempt(
@@ -192,16 +191,6 @@ export class SupabaseAdapter implements IStorageAdapter {
 
   async resetAll(): Promise<void> {
     await this.localFallback.resetAll();
-    const supabase = getSupabaseClient();
-    if (!supabase) return;
-
-    try {
-      // In prototype mode with anonymous access, clear public attempts
-      await supabase.from("attempts").delete().neq("id", "00000000-0000-0000-0000-000000000000");
-      await supabase.from("weak_points").delete().neq("id", "00000000-0000-0000-0000-000000000000");
-    } catch {
-      // ignore
-    }
   }
 }
 

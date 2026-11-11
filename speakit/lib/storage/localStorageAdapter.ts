@@ -1,5 +1,4 @@
-import { PracticeAttempt, ScenarioId, UserSettings, WeakPoint } from "../types";
-import { IStorageAdapter } from "./types";
+import { PracticeAttempt, ScenarioId, UserSettings, WeakPoint, StorageAdapter } from "../types";
 
 const ATTEMPTS_KEY = "speakit_attempts_v1";
 const WEAK_POINTS_KEY = "speakit_weakpoints_v1";
@@ -30,7 +29,7 @@ function safeSetItem(key: string, value: string): void {
   }
 }
 
-export class LocalStorageAdapter implements IStorageAdapter {
+export class LocalStorageAdapter implements StorageAdapter {
   async saveAttempt(
     data: Omit<PracticeAttempt, "id" | "created_at">
   ): Promise<PracticeAttempt> {

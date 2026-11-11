@@ -54,7 +54,7 @@ export function ScenarioSummary({
         <button
           type="button"
           onClick={onRetry}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-pill bg-paper-card text-ink font-semibold text-xs border-2 border-ink shadow-hard-sm hover:bg-paper-muted shadow-hard-press transition-all"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-pill bg-paper-card text-ink font-semibold text-xs border-2 border-ink shadow-hard hover:bg-paper-muted shadow-hard-press transition-all"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           <span>Luyện lại kịch bản này</span>
@@ -62,7 +62,7 @@ export function ScenarioSummary({
 
         <Link
           href="/"
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-pill bg-ink text-white font-semibold text-xs border-2 border-ink shadow-hard-sm hover:bg-ink-muted shadow-hard-press transition-all"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-pill bg-ink text-white font-semibold text-xs border-2 border-ink shadow-hard hover:bg-ink-muted shadow-hard-press transition-all"
         >
           <span>Chọn kịch bản khác</span>
           <ArrowRight className="w-3.5 h-3.5" />

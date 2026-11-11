@@ -100,7 +100,7 @@ export default function SettingsPage() {
       <div>
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper-card text-ink text-xs font-medium border-2 border-ink shadow-hard-sm hover:bg-paper-muted shadow-hard-press transition-all mb-2"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper-card text-ink text-xs font-medium border-2 border-ink shadow-hard hover:bg-paper-muted shadow-hard-press transition-all mb-2"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Trang chủ</span>
@@ -146,7 +146,7 @@ export default function SettingsPage() {
             type="button"
             onClick={handleTestConnection}
             disabled={isTesting || !apiKey.trim()}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-paper-card text-ink text-xs font-semibold border-2 border-ink shadow-hard-sm hover:bg-paper-muted shadow-hard-press disabled:opacity-50 transition-all"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-paper-card text-ink text-xs font-semibold border-2 border-ink shadow-hard hover:bg-paper-muted shadow-hard-press disabled:opacity-50 transition-all"
           >
             {isTesting ? "Đang thử nghiệm..." : "Kiểm tra kết nối"}
           </button>
@@ -154,7 +154,7 @@ export default function SettingsPage() {
           <button
             type="button"
             onClick={handleSaveSettings}
-            className="inline-flex items-center gap-1.5 px-5 py-2 rounded-pill bg-ink text-white text-xs font-semibold border-2 border-ink shadow-hard-sm hover:bg-ink-muted shadow-hard-press transition-all"
+            className="inline-flex items-center gap-1.5 px-5 py-2 rounded-pill bg-ink text-white text-xs font-semibold border-2 border-ink shadow-hard hover:bg-ink-muted shadow-hard-press transition-all"
           >
             <span>Lưu cài đặt</span>
           </button>
@@ -210,7 +210,7 @@ export default function SettingsPage() {
                 }}
                 className={`px-4 py-1.5 rounded-pill text-xs font-mono font-bold border-2 transition-all ${
                   speechRate === r
-                    ? "bg-accent text-white border-ink shadow-hard-sm"
+                    ? "bg-accent text-white border-ink shadow-hard"
                     : "bg-paper-card text-ink border-ink hover:bg-paper"
                 }`}
               >
@@ -237,7 +237,7 @@ export default function SettingsPage() {
         <button
           type="button"
           onClick={() => setShowResetModal(true)}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-paper border-2 border-ink text-accent hover:bg-accent-light text-xs font-semibold shadow-hard-sm shadow-hard-press transition-all"
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-paper border-2 border-ink text-accent hover:bg-accent-light text-xs font-semibold shadow-hard shadow-hard-press transition-all"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           <span>Làm mới tiến độ</span>
@@ -265,7 +265,7 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={() => setShowResetModal(false)}
-                className="px-4 py-2 rounded-pill bg-paper-card border-2 border-ink text-xs font-medium shadow-hard-sm"
+                className="px-4 py-2 rounded-pill bg-paper-card border-2 border-ink text-xs font-medium shadow-hard"
               >
                 Hủy bỏ
               </button>
