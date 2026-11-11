@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import Link from "next/link";
-import { AlertCircle, ArrowLeft, Eye, EyeOff, Info, Lock, ShieldCheck } from "lucide-react";
+import { AlertCircle, ArrowLeft, Eye, EyeOff, Lock, ShieldCheck } from "lucide-react";
 
 interface AdminAuthContextValue {
   isDefaultPasscode: boolean;
@@ -163,15 +163,6 @@ export function AdminLoginGate({ children }: AdminLoginGateProps) {
             >
               <AlertCircle className="w-4 h-4 text-accent shrink-0 mt-0.5" aria-hidden="true" />
               <span>{error}</span>
-            </div>
-          )}
-
-          {isDefaultPasscode && (
-            <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-paper border border-ink/15 text-xs text-ink-muted">
-              <Info className="w-4 h-4 text-ink shrink-0 mt-0.5" aria-hidden="true" />
-              <span>
-                Chế độ Demo: passcode mặc định <code className="font-mono font-semibold text-ink">admin2025</code> (cấu hình <code className="font-mono">ADMIN_PASSCODE</code> trong env cho production)
-              </span>
             </div>
           )}
 

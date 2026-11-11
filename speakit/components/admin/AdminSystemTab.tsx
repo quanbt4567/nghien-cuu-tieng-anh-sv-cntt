@@ -234,7 +234,7 @@ export function AdminSystemTab({
           <p className="text-xs text-ink-muted leading-relaxed">
             {!health.isDefaultPasscode
               ? "ADMIN_PASSCODE riêng đã được thiết lập trong biến môi trường."
-              : "Đang dùng passcode demo mặc định (admin2025). Hãy thiết lập ADMIN_PASSCODE trước khi deploy."}
+              : "Chưa thiết lập ADMIN_PASSCODE riêng trong biến môi trường. Hãy cấu hình trước khi chia sẻ rộng rãi."}
           </p>
         </div>
       </div>
