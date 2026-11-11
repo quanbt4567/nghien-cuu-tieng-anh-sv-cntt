@@ -9,12 +9,19 @@ import {
   Pencil,
   Plus,
   RotateCcw,
+  Sparkles,
   Trash2,
   X,
 } from "lucide-react";
 import { SCENARIOS } from "../../data/scenarios";
 import { mergeScenarios } from "../../lib/contentStore";
-import type { AdminContentOverrides, ITRole, Scenario } from "../../lib/types";
+import type {
+  AdminContentOverrides,
+  ITRole,
+  Scenario,
+  ScenarioTurn,
+} from "../../lib/types";
+import { AdminAiGeneratorBox, type AdminAiGenerateMeta } from "./AdminAiGeneratorBox";
 import { persistAdminOverrides } from "./adminShared";
 
 interface AdminScenariosTabProps {
@@ -38,6 +45,12 @@ const ROLE_OPTIONS: Array<{ id: ITRole; label: string }> = [
 ];
 
 const BASE_SCENARIO_IDS = new Set(SCENARIOS.map((s) => s.id));
+const VALID_ROLES = new Set<ITRole>(["frontend", "backend", "qa", "devops"]);
+const SCENARIO_QUICK_TOPICS = [
+  "Production database outage postmortem",
+  "Sprint planning & API estimation",
+  "Code review feedback on React hooks",
+];
 
 function slugifyId(value: string): string {
   return value
@@ -70,14 +83,17 @@ function emptyTurns(): TurnDraft[] {
   }));
 }
 
-function scenarioToTurns(scenario: Scenario): TurnDraft[] {
+function toTurnDrafts(rawTurns?: Array<Partial<ScenarioTurn>>): TurnDraft[] {
   return [0, 1, 2].map((idx) => {
-    const turn = scenario.turns[idx];
+    const turn = rawTurns?.[idx];
     return {
-      questionEN: turn?.questionEN ?? "",
-      keywordsText: (turn?.keywords ?? []).join(", "),
-      sampleAnswerEN: turn?.sampleAnswerEN ?? "",
-      hintVI: turn?.hintVI ?? "",
+      questionEN: typeof turn?.questionEN === "string" ? turn.questionEN : "",
+      keywordsText: Array.isArray(turn?.keywords)
+        ? turn.keywords.filter((k): k is string => typeof k === "string").join(", ")
+        : "",
+      sampleAnswerEN:
+        typeof turn?.sampleAnswerEN === "string" ? turn.sampleAnswerEN : "",
+      hintVI: typeof turn?.hintVI === "string" ? turn.hintVI : "",
     };
   });
 }
@@ -102,6 +118,7 @@ export function AdminScenariosTab({
   );
 
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [aiFocusKey, setAiFocusKey] = useState(0);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [idTouched, setIdTouched] = useState(false);
   const [id, setId] = useState("");
@@ -120,6 +137,7 @@ export function AdminScenariosTab({
 
   const resetForm = () => {
     setIsFormOpen(false);
+    setAiFocusKey(0);
     setEditingId(null);
     setIdTouched(false);
     setId("");
@@ -132,6 +150,7 @@ export function AdminScenariosTab({
   };
 
   const openCreateForm = () => {
+    setAiFocusKey(0);
     setEditingId(null);
     setIdTouched(false);
     setId("");
@@ -145,7 +164,13 @@ export function AdminScenariosTab({
     setIsFormOpen(true);
   };
 
+  const openCreateWithAi = () => {
+    openCreateForm();
+    setAiFocusKey((k) => k + 1);
+  };
+
   const openEditForm = (scenario: Scenario) => {
+    setAiFocusKey(0);
     setEditingId(scenario.id);
     setIdTouched(true);
     setId(scenario.id);
@@ -154,9 +179,55 @@ export function AdminScenariosTab({
     setRoleVI(scenario.roleVI);
     setDescriptionVI(scenario.descriptionVI);
     setTargetRoles(scenario.targetRoles ?? []);
-    setTurns(scenarioToTurns(scenario));
+    setTurns(toTurnDrafts(scenario.turns));
     setStatusNotice(null);
     setIsFormOpen(true);
+  };
+
+  const handleAiGenerated = (rawDraft: unknown, meta: AdminAiGenerateMeta) => {
+    const draft = (rawDraft && typeof rawDraft === "object" ? rawDraft : {}) as {
+      id?: unknown;
+      titleEN?: unknown;
+      titleVI?: unknown;
+      roleVI?: unknown;
+      descriptionVI?: unknown;
+      targetRoles?: unknown;
+      turns?: unknown;
+    };
+    const nextTitleEN = typeof draft.titleEN === "string" ? draft.titleEN.trim() : "";
+    const nextTitleVI = typeof draft.titleVI === "string" ? draft.titleVI.trim() : "";
+    const nextRoleVI = typeof draft.roleVI === "string" ? draft.roleVI.trim() : "";
+    const nextDescriptionVI =
+      typeof draft.descriptionVI === "string" ? draft.descriptionVI.trim() : "";
+    const nextRoles = Array.isArray(draft.targetRoles)
+      ? draft.targetRoles.filter(
+          (r): r is ITRole => typeof r === "string" && VALID_ROLES.has(r as ITRole)
+        )
+      : [];
+    const nextTurns = Array.isArray(draft.turns)
+      ? toTurnDrafts(draft.turns as Array<Partial<ScenarioTurn>>)
+      : emptyTurns();
+
+    setTitleEN(nextTitleEN);
+    setTitleVI(nextTitleVI);
+    if (nextRoleVI) setRoleVI(nextRoleVI);
+    setDescriptionVI(nextDescriptionVI);
+    setTargetRoles(nextRoles);
+    setTurns(nextTurns);
+
+    if (!editingId && !idTouched) {
+      const rawSlug =
+        typeof draft.id === "string" && draft.id.trim() ? draft.id : nextTitleEN;
+      setId(slugifyId(rawSlug));
+    }
+
+    setStatusNotice({
+      tone: meta.mode === "ai" ? "ok" : "warn",
+      text:
+        meta.mode === "ai"
+          ? `Đã tạo nháp kịch bản từ AI (${meta.provider}). Vui lòng kiểm tra kỹ 3 lượt trước khi lưu.`
+          : "Đã điền mẫu gợi ý cục bộ (chưa có AI key). Hãy chỉnh sửa nội dung cho phù hợp trước khi lưu.",
+    });
   };
 
   const handleTitleENChange = (value: string) => {
@@ -329,23 +400,35 @@ export function AdminScenariosTab({
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={isFormOpen ? resetForm : openCreateForm}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-ink text-white text-xs font-semibold hover:bg-ink/90 shadow-soft shadow-hard-press transition-all self-start sm:self-auto"
-        >
-          {isFormOpen ? (
-            <>
-              <X className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Đóng biểu mẫu</span>
-            </>
-          ) : (
-            <>
-              <Plus className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Tạo kịch bản mới</span>
-            </>
+        <div className="flex flex-wrap items-center gap-2.5 self-start sm:self-auto">
+          {!isFormOpen && (
+            <button
+              type="button"
+              onClick={openCreateWithAi}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill bg-white border border-ink/20 text-xs font-semibold text-ink hover:bg-paper-muted transition-colors"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+              <span>Tạo bằng AI</span>
+            </button>
           )}
-        </button>
+          <button
+            type="button"
+            onClick={isFormOpen ? resetForm : openCreateForm}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-ink text-white text-xs font-semibold hover:bg-ink/90 shadow-soft shadow-hard-press transition-all"
+          >
+            {isFormOpen ? (
+              <>
+                <X className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>Đóng biểu mẫu</span>
+              </>
+            ) : (
+              <>
+                <Plus className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>Tạo kịch bản mới</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Feedback Notice */}
@@ -387,6 +470,18 @@ export function AdminScenariosTab({
               Hủy
             </button>
           </div>
+
+          <AdminAiGeneratorBox
+            key={editingId ?? "create"}
+            kind="scenario"
+            role={targetRoles[0] ?? ""}
+            placeholder="VD: Production database incident postmortem, Daily standup blocker..."
+            quickTopics={SCENARIO_QUICK_TOPICS}
+            onGenerated={handleAiGenerated}
+            onUnauthorized={onUnauthorized}
+            autoFocus={aiFocusKey > 0}
+            focusKey={aiFocusKey}
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">

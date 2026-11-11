@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "node --test tests/gamification.test.mjs tests/admin-content.test.mjs tests/guest-leaderboard.test.mjs tests/ai-waterfall.test.mjs tests/profile.test.mjs"
+    "test": "node --test tests/gamification.test.mjs tests/admin-content.test.mjs tests/guest-leaderboard.test.mjs tests/ai-waterfall.test.mjs tests/profile.test.mjs tests/admin-ai-gen.test.mjs"
   },
   "dependencies": {
     "@neon/config": "^1.14.0",

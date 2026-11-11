@@ -7,6 +7,7 @@ import {
   Pencil,
   Plus,
   RotateCcw,
+  Sparkles,
   Trash2,
   Volume2,
   VolumeX,
@@ -16,6 +17,7 @@ import { VOCABULARY_LIST } from "../../data/scenarios";
 import { mergeVocabulary } from "../../lib/contentStore";
 import { speakText } from "../../lib/speech";
 import type { AdminContentOverrides, VocabularyItem } from "../../lib/types";
+import { AdminAiGeneratorBox, type AdminAiGenerateMeta } from "./AdminAiGeneratorBox";
 import { persistAdminOverrides } from "./adminShared";
 
 interface AdminVocabTabProps {
@@ -26,6 +28,11 @@ interface AdminVocabTabProps {
 
 const BASE_VOCAB_IDS = new Set(VOCABULARY_LIST.map((v) => v.id));
 const POS_OPTIONS = ["noun", "verb", "adjective", "phrase", "adverb"];
+const VOCAB_QUICK_TOPICS = [
+  "idempotency",
+  "rate limiting",
+  "zero-downtime deployment",
+];
 
 export function AdminVocabTab({
   overrides,
@@ -47,6 +54,7 @@ export function AdminVocabTab({
 
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [aiFocusKey, setAiFocusKey] = useState(0);
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const [term, setTerm] = useState("");
@@ -64,6 +72,7 @@ export function AdminVocabTab({
 
   const resetForm = () => {
     setIsFormOpen(false);
+    setAiFocusKey(0);
     setEditingId(null);
     setTerm("");
     setPhonetic("");
@@ -74,6 +83,7 @@ export function AdminVocabTab({
   };
 
   const openCreate = () => {
+    setAiFocusKey(0);
     setEditingId(null);
     setTerm("");
     setPhonetic("");
@@ -85,7 +95,13 @@ export function AdminVocabTab({
     setIsFormOpen(true);
   };
 
+  const openCreateWithAi = () => {
+    openCreate();
+    setAiFocusKey((k) => k + 1);
+  };
+
   const openEdit = (item: VocabularyItem) => {
+    setAiFocusKey(0);
     setEditingId(item.id);
     setTerm(item.term);
     setPhonetic(item.phonetic);
@@ -95,6 +111,41 @@ export function AdminVocabTab({
     setExampleTranslationVI(item.exampleTranslationVI);
     setStatusNotice(null);
     setIsFormOpen(true);
+  };
+
+  const handleAiGenerated = (rawDraft: unknown, meta: AdminAiGenerateMeta) => {
+    const draft = (rawDraft && typeof rawDraft === "object" ? rawDraft : {}) as {
+      term?: unknown;
+      phonetic?: unknown;
+      partOfSpeech?: unknown;
+      meaningVI?: unknown;
+      exampleSentenceEN?: unknown;
+      exampleTranslationVI?: unknown;
+    };
+    const nextPosRaw =
+      typeof draft.partOfSpeech === "string" ? draft.partOfSpeech.trim().toLowerCase() : "";
+    const nextPos = POS_OPTIONS.includes(nextPosRaw) ? nextPosRaw : "noun";
+
+    setTerm(typeof draft.term === "string" ? draft.term.trim() : "");
+    setPhonetic(typeof draft.phonetic === "string" ? draft.phonetic.trim() : "");
+    setPartOfSpeech(nextPos);
+    setMeaningVI(typeof draft.meaningVI === "string" ? draft.meaningVI.trim() : "");
+    setExampleSentenceEN(
+      typeof draft.exampleSentenceEN === "string" ? draft.exampleSentenceEN.trim() : ""
+    );
+    setExampleTranslationVI(
+      typeof draft.exampleTranslationVI === "string"
+        ? draft.exampleTranslationVI.trim()
+        : ""
+    );
+
+    setStatusNotice({
+      tone: meta.mode === "ai" ? "ok" : "warn",
+      text:
+        meta.mode === "ai"
+          ? `Đã tạo nháp thuật ngữ từ AI (${meta.provider}). Vui lòng kiểm tra phiên âm và ví dụ trước khi lưu.`
+          : "Đã điền mẫu gợi ý cục bộ (chưa có AI key). Hãy chỉnh sửa thuật ngữ trước khi lưu.",
+    });
   };
 
   const handlePlayAudio = (item: VocabularyItem) => {
@@ -227,6 +278,16 @@ export function AdminVocabTab({
               <span>Khôi phục mặc định</span>
             </button>
           )}
+          {!isFormOpen && (
+            <button
+              type="button"
+              onClick={openCreateWithAi}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill bg-white border border-ink/20 text-xs font-semibold text-ink hover:bg-paper-muted transition-colors"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+              <span>Tạo bằng AI</span>
+            </button>
+          )}
           <button
             type="button"
             onClick={isFormOpen ? resetForm : openCreate}
@@ -286,6 +347,17 @@ export function AdminVocabTab({
               Hủy
             </button>
           </div>
+
+          <AdminAiGeneratorBox
+            key={editingId ?? "create"}
+            kind="vocabulary"
+            placeholder="VD: idempotency, circuit breaker, race condition..."
+            quickTopics={VOCAB_QUICK_TOPICS}
+            onGenerated={handleAiGenerated}
+            onUnauthorized={onUnauthorized}
+            autoFocus={aiFocusKey > 0}
+            focusKey={aiFocusKey}
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-1.5">

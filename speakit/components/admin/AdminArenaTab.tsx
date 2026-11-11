@@ -8,12 +8,14 @@ import {
   Pencil,
   Plus,
   RotateCcw,
+  Sparkles,
   Trash2,
   X,
 } from "lucide-react";
 import { BUG_BUSTER_CHALLENGES } from "../../data/minigames";
 import { mergeBugChallenges } from "../../lib/contentStore";
 import type { AdminContentOverrides, BugBusterChallenge } from "../../lib/types";
+import { AdminAiGeneratorBox, type AdminAiGenerateMeta } from "./AdminAiGeneratorBox";
 import { persistAdminOverrides } from "./adminShared";
 
 interface AdminArenaTabProps {
@@ -23,6 +25,16 @@ interface AdminArenaTabProps {
 }
 
 const BASE_CHALLENGE_IDS = new Set(BUG_BUSTER_CHALLENGES.map((c) => c.id));
+const VALID_CATEGORIES = new Set<BugBusterChallenge["category"]>([
+  "error-log",
+  "code-review",
+  "incident",
+]);
+const ARENA_QUICK_TOPICS = [
+  "database deadlock in transaction",
+  "memory leak in Node.js worker",
+  "CORS preflight failure",
+];
 
 const CATEGORY_OPTIONS: Array<{
   value: BugBusterChallenge["category"];
@@ -97,6 +109,7 @@ export function AdminArenaTab({
     overrides.deletedChallengeIds.length > 0;
 
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [aiFocusKey, setAiFocusKey] = useState(0);
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const [category, setCategory] =
@@ -115,6 +128,7 @@ export function AdminArenaTab({
 
   const resetForm = () => {
     setIsFormOpen(false);
+    setAiFocusKey(0);
     setEditingId(null);
     setCategory("incident");
     setPromptWithBlank("");
@@ -125,6 +139,7 @@ export function AdminArenaTab({
   };
 
   const openCreate = () => {
+    setAiFocusKey(0);
     setEditingId(null);
     setCategory("incident");
     setPromptWithBlank("");
@@ -136,7 +151,13 @@ export function AdminArenaTab({
     setIsFormOpen(true);
   };
 
+  const openCreateWithAi = () => {
+    openCreate();
+    setAiFocusKey((k) => k + 1);
+  };
+
   const openEdit = (challenge: BugBusterChallenge) => {
+    setAiFocusKey(0);
     setEditingId(challenge.id);
     setCategory(challenge.category);
     setPromptWithBlank(challenge.promptEN);
@@ -146,6 +167,44 @@ export function AdminArenaTab({
     setPhonetic(challenge.phonetic);
     setStatusNotice(null);
     setIsFormOpen(true);
+  };
+
+  const handleAiGenerated = (rawDraft: unknown, meta: AdminAiGenerateMeta) => {
+    const draft = (rawDraft && typeof rawDraft === "object" ? rawDraft : {}) as {
+      category?: unknown;
+      promptEN?: unknown;
+      targetWord?: unknown;
+      acceptedVariants?: unknown;
+      contextVI?: unknown;
+      phonetic?: unknown;
+    };
+
+    if (
+      typeof draft.category === "string" &&
+      VALID_CATEGORIES.has(draft.category as BugBusterChallenge["category"])
+    ) {
+      setCategory(draft.category as BugBusterChallenge["category"]);
+    }
+    setPromptWithBlank(typeof draft.promptEN === "string" ? draft.promptEN.trim() : "");
+    setTargetWord(typeof draft.targetWord === "string" ? draft.targetWord.trim() : "");
+    setAcceptedVariantsText(
+      Array.isArray(draft.acceptedVariants)
+        ? draft.acceptedVariants
+            .filter((v): v is string => typeof v === "string" && Boolean(v.trim()))
+            .map((v) => v.trim())
+            .join(", ")
+        : ""
+    );
+    setContextVI(typeof draft.contextVI === "string" ? draft.contextVI.trim() : "");
+    setPhonetic(typeof draft.phonetic === "string" ? draft.phonetic.trim() : "");
+
+    setStatusNotice({
+      tone: meta.mode === "ai" ? "ok" : "warn",
+      text:
+        meta.mode === "ai"
+          ? `Đã tạo nháp thử thách từ AI (${meta.provider}). Vui lòng kiểm tra chỗ trống ____ và đáp án trước khi lưu.`
+          : "Đã điền mẫu gợi ý cục bộ (chưa có AI key). Hãy kiểm tra chỗ trống ____ và chỉnh sửa trước khi lưu.",
+    });
   };
 
   const saveOverrides = async (next: AdminContentOverrides, okText?: string) => {
@@ -276,6 +335,16 @@ export function AdminArenaTab({
               <span>Khôi phục mặc định</span>
             </button>
           )}
+          {!isFormOpen && (
+            <button
+              type="button"
+              onClick={openCreateWithAi}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill bg-white border border-ink/20 text-xs font-semibold text-ink hover:bg-paper-muted transition-colors"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+              <span>Tạo bằng AI</span>
+            </button>
+          )}
           <button
             type="button"
             onClick={isFormOpen ? resetForm : openCreate}
@@ -335,6 +404,18 @@ export function AdminArenaTab({
               Hủy
             </button>
           </div>
+
+          <AdminAiGeneratorBox
+            key={editingId ?? "create"}
+            kind="bug_challenge"
+            category={category}
+            placeholder="VD: database deadlock, N+1 query bottleneck, memory leak..."
+            quickTopics={ARENA_QUICK_TOPICS}
+            onGenerated={handleAiGenerated}
+            onUnauthorized={onUnauthorized}
+            autoFocus={aiFocusKey > 0}
+            focusKey={aiFocusKey}
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-1.5">
