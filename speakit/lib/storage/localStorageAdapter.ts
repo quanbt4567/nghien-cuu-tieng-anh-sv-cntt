@@ -1,5 +1,5 @@
 import { PracticeAttempt, ScenarioId, UserSettings, WeakPoint, StorageAdapter } from "../types";
-import { resetGamificationState } from "../gamification";
+import { getGamificationState, mirrorTelemetry, resetGamificationState } from "../gamification";
 
 const ATTEMPTS_KEY = "speakit_attempts_v1";
 const WEAK_POINTS_KEY = "speakit_weakpoints_v1";
@@ -48,6 +48,10 @@ export class LocalStorageAdapter implements StorageAdapter {
     }
 
     safeSetItem(ATTEMPTS_KEY, JSON.stringify(attempts));
+    mirrorTelemetry("attempt", {
+      ...newAttempt,
+      role: newAttempt.role ?? getGamificationState().selectedRole,
+    });
     return newAttempt;
   }
 
@@ -120,6 +124,19 @@ export class LocalStorageAdapter implements StorageAdapter {
       (a, b) => b.miss_count - a.miss_count
     );
     safeSetItem(WEAK_POINTS_KEY, JSON.stringify(updated.slice(0, 100)));
+
+    const cleanKeywords = missedKeywords
+      .map((k) => k.trim().toLowerCase())
+      .filter(Boolean);
+    const cleanGrammar = grammarIssues
+      .map((g) => g.trim().toLowerCase())
+      .filter(Boolean);
+    if (cleanKeywords.length > 0 || cleanGrammar.length > 0) {
+      mirrorTelemetry("weak_points", {
+        missedKeywords: cleanKeywords,
+        grammarIssues: cleanGrammar,
+      });
+    }
   }
 
   async getWeakPoints(limit: number = 50): Promise<WeakPoint[]> {

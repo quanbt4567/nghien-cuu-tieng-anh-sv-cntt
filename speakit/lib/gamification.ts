@@ -69,6 +69,27 @@ function dispatchGamificationUpdate(): void {
   }
 }
 
+export function mirrorTelemetry(
+  type: "attempt" | "weak_points" | "arena_run",
+  payload: unknown
+): void {
+  if (typeof window === "undefined" || typeof window.fetch !== "function") {
+    return;
+  }
+  try {
+    void window
+      .fetch("/api/telemetry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type, payload }),
+        keepalive: true,
+      })
+      .catch(() => {});
+  } catch {
+    // Principle III: telemetry mirroring must never block or throw
+  }
+}
+
 function saveAndNotify(state: GamificationState): GamificationState {
   if (typeof window !== "undefined") {
     try {
@@ -239,7 +260,7 @@ export function recordMinigameResult(
     getLocalTodayDate()
   );
 
-  return saveAndNotify({
+  const next = saveAndNotify({
     ...state,
     totalPoints: state.totalPoints + earned,
     streakDays: streak.streakDays,
@@ -250,6 +271,8 @@ export function recordMinigameResult(
     },
     history: [fullEntry, ...state.history].slice(0, 20),
   });
+  mirrorTelemetry("arena_run", fullEntry);
+  return next;
 }
 
 export function resetGamificationState(): void {
@@ -265,9 +288,11 @@ export function resetGamificationState(): void {
 export function suggestWeakVocab(
   missedKeywords: string[],
   scenarioKeywords: string[],
-  limit: number = 3
+  limit: number = 3,
+  vocabPool: VocabularyItem[] = VOCABULARY_LIST
 ): VocabularyItem[] {
-  const max = Math.max(0, Math.min(limit, VOCABULARY_LIST.length));
+  const pool = Array.isArray(vocabPool) ? vocabPool : VOCABULARY_LIST;
+  const max = Math.max(0, Math.min(limit, pool.length));
   if (max === 0) return [];
 
   const picked: VocabularyItem[] = [];
@@ -280,7 +305,7 @@ export function suggestWeakVocab(
       if (!kw) continue;
       const stem = kw.replace(/(ed|ing|es|s)$/, "");
 
-      for (const item of VOCABULARY_LIST) {
+      for (const item of pool) {
         if (seen.has(item.id)) continue;
         const term = item.term.toLowerCase();
         const isMatch =
@@ -299,7 +324,7 @@ export function suggestWeakVocab(
   pickMatching(missedKeywords);
   pickMatching(scenarioKeywords);
 
-  for (const item of VOCABULARY_LIST) {
+  for (const item of pool) {
     if (picked.length >= max) break;
     if (!seen.has(item.id)) {
       seen.add(item.id);

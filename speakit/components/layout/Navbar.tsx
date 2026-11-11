@@ -20,41 +20,70 @@ import {
   getGamificationState,
   pointsToNextCoin,
 } from "../../lib/gamification";
+import {
+  CONTENT_STORAGE_KEY,
+  CONTENT_UPDATED_EVENT,
+  fetchAndCachePublicContent,
+  getEffectiveVocabulary,
+} from "../../lib/contentStore";
+import { VOCABULARY_LIST } from "../../data/scenarios";
 
-const NAV_LINKS = [
+const BASE_NAV_LINKS = [
   { href: "/", label: "Kịch bản", shortLabel: "Kịch bản", icon: Mic },
   { href: "/arena", label: "Arena", shortLabel: "Arena", icon: Gamepad2 },
-  { href: "/vocabulary", label: "Từ vựng (12)", shortLabel: "Từ vựng", icon: BookOpen },
+  { href: "/vocabulary", label: "Từ vựng", shortLabel: "Từ vựng", icon: BookOpen },
   { href: "/progress", label: "Tiến độ & 7 ngày", shortLabel: "Tiến độ", icon: TrendingUp },
   { href: "/settings", label: "Cài đặt", shortLabel: "Cài đặt", icon: Settings },
 ] as const;
 
 export function Navbar() {
   const pathname = usePathname() ?? "";
-  // Initialize with zeroed SSR-safe values to avoid hydration mismatch before localStorage loads.
+  // Initialize with SSR-safe values to avoid hydration mismatch before localStorage loads.
   const [stats, setStats] = useState({ totalPoints: 0, streakDays: 0 });
+  const [vocabCount, setVocabCount] = useState(VOCABULARY_LIST.length);
 
   useEffect(() => {
-    const sync = () => {
+    const syncStats = () => {
       const state = getGamificationState();
       setStats({ totalPoints: state.totalPoints, streakDays: state.streakDays });
     };
+    const syncContent = () => {
+      setVocabCount(getEffectiveVocabulary().length);
+    };
 
-    sync();
-    window.addEventListener(GAMIFICATION_UPDATED_EVENT, sync);
+    syncStats();
+    syncContent();
+    void fetchAndCachePublicContent();
+
+    window.addEventListener(GAMIFICATION_UPDATED_EVENT, syncStats);
+    window.addEventListener(CONTENT_UPDATED_EVENT, syncContent);
 
     const handleStorage = (event: StorageEvent) => {
       if (!event.key || event.key === GAMIFICATION_STORAGE_KEY) {
-        sync();
+        syncStats();
+      }
+      if (!event.key || event.key === CONTENT_STORAGE_KEY) {
+        syncContent();
       }
     };
     window.addEventListener("storage", handleStorage);
 
     return () => {
-      window.removeEventListener(GAMIFICATION_UPDATED_EVENT, sync);
+      window.removeEventListener(GAMIFICATION_UPDATED_EVENT, syncStats);
+      window.removeEventListener(CONTENT_UPDATED_EVENT, syncContent);
       window.removeEventListener("storage", handleStorage);
     };
   }, []);
+
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
+
+  const navLinks = BASE_NAV_LINKS.map((item) =>
+    item.href === "/vocabulary"
+      ? { ...item, label: `Từ vựng (${vocabCount})` }
+      : item
+  );
 
   const coins = calculateCoins(stats.totalPoints);
   const nextCoinPoints = pointsToNextCoin(stats.totalPoints);
@@ -101,7 +130,7 @@ export function Navbar() {
           aria-label="Điều hướng chính"
           className="order-3 md:order-2 w-full md:w-auto flex items-center gap-1.5 lg:gap-2 overflow-x-auto pb-0.5 md:pb-0"
         >
-          {NAV_LINKS.map(({ href, label, shortLabel, icon: Icon }) => {
+          {navLinks.map(({ href, label, shortLabel, icon: Icon }) => {
             const isActive =
               href === "/"
                 ? pathname === "/" || pathname.startsWith("/practice")

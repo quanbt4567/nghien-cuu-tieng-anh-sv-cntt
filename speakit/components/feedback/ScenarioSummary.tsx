@@ -38,6 +38,8 @@ interface ScenarioSummaryProps {
   missedKeywords?: string[];
   scenarioKeywords?: string[];
   pointsEarned?: number;
+  vocabPool?: VocabularyItem[];
+  totalTurns?: number;
 }
 
 const EMPTY_KEYWORDS: string[] = [];
@@ -60,6 +62,8 @@ export function ScenarioSummary({
   missedKeywords = EMPTY_KEYWORDS,
   scenarioKeywords = EMPTY_KEYWORDS,
   pointsEarned,
+  vocabPool,
+  totalTurns = 3,
 }: ScenarioSummaryProps) {
   const [gamification, setGamification] =
     useState<GamificationState>(DEFAULT_GAMIFICATION);
@@ -104,8 +108,8 @@ export function ScenarioSummary({
     : 0;
 
   const weakVocab = useMemo(
-    () => suggestWeakVocab(missedKeywords, scenarioKeywords, 3),
-    [missedKeywords, scenarioKeywords]
+    () => suggestWeakVocab(missedKeywords, scenarioKeywords, 3, vocabPool),
+    [missedKeywords, scenarioKeywords, vocabPool]
   );
 
   const handleCopyResult = async () => {
@@ -208,7 +212,7 @@ export function ScenarioSummary({
             <Award className="w-7 h-7" />
           </div>
           <span className="block text-xs font-mono font-bold uppercase tracking-wider text-accent">
-            Hoàn thành 3/3 lượt luyện tập
+            Hoàn thành {totalTurns}/{totalTurns} lượt luyện tập
           </span>
           <h2 className="text-xl sm:text-2xl font-bold text-ink tracking-tight">
             {scenarioTitle}
@@ -322,50 +326,56 @@ export function ScenarioSummary({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {weakVocab.map((item) => {
-            const isSpeaking = playingTermId === item.id;
-            return (
-              <div
-                key={item.id}
-                className="bg-paper border border-ink/15 rounded-xl p-3.5 flex flex-col justify-between gap-2.5"
-              >
-                <div className="space-y-1">
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <div className="text-sm font-mono font-bold text-ink">
-                        {item.term}
+        {weakVocab.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {weakVocab.map((item) => {
+              const isSpeaking = playingTermId === item.id;
+              return (
+                <div
+                  key={item.id}
+                  className="bg-paper border border-ink/15 rounded-xl p-3.5 flex flex-col justify-between gap-2.5"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <div className="text-sm font-mono font-bold text-ink">
+                          {item.term}
+                        </div>
+                        <div className="text-xs font-ipa text-accent font-medium">
+                          {item.phonetic}
+                        </div>
                       </div>
-                      <div className="text-xs font-ipa text-accent font-medium">
-                        {item.phonetic}
-                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleSpeakTerm(item)}
+                        aria-label={`Phát âm từ ${item.term}`}
+                        title={`Nghe phát âm "${item.term}"`}
+                        className={`w-8 h-8 rounded-full border flex items-center justify-center shrink-0 transition-colors ${
+                          isSpeaking
+                            ? "bg-accent text-white border-accent"
+                            : "bg-white text-ink border-ink/15 hover:bg-accent hover:text-white"
+                        }`}
+                      >
+                        {isSpeaking ? (
+                          <VolumeX className="w-3.5 h-3.5" />
+                        ) : (
+                          <Volume2 className="w-3.5 h-3.5" />
+                        )}
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => handleSpeakTerm(item)}
-                      aria-label={`Phát âm từ ${item.term}`}
-                      title={`Nghe phát âm "${item.term}"`}
-                      className={`w-8 h-8 rounded-full border flex items-center justify-center shrink-0 transition-colors ${
-                        isSpeaking
-                          ? "bg-accent text-white border-accent"
-                          : "bg-white text-ink border-ink/15 hover:bg-accent hover:text-white"
-                      }`}
-                    >
-                      {isSpeaking ? (
-                        <VolumeX className="w-3.5 h-3.5" />
-                      ) : (
-                        <Volume2 className="w-3.5 h-3.5" />
-                      )}
-                    </button>
+                    <p className="text-xs text-ink-muted leading-relaxed pt-1">
+                      {item.meaningVI}
+                    </p>
                   </div>
-                  <p className="text-xs text-ink-muted leading-relaxed pt-1">
-                    {item.meaningVI}
-                  </p>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="bg-paper border border-ink/15 rounded-xl p-4 text-xs text-ink-muted">
+            Chưa có từ vựng gợi ý trong thư viện hiện tại.
+          </div>
+        )}
 
         {ttsError && (
           <div className="flex items-center gap-1.5 text-xs text-accent font-medium bg-accent-light px-3 py-2 rounded-xl border border-accent/40">

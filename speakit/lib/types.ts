@@ -1,10 +1,12 @@
-export type ScenarioId =
+export type CoreScenarioId =
   | "daily-standup"
   | "bug-report"
   | "code-review"
   | "fresher-interview"
   | "client-meeting"
   | "tech-demo";
+
+export type ScenarioId = CoreScenarioId | (string & {});
 
 export interface ScenarioTurn {
   turnIndex: number; // 0, 1, 2
@@ -20,7 +22,10 @@ export interface Scenario {
   titleVI: string;
   roleVI: string;
   descriptionVI: string;
-  turns: [ScenarioTurn, ScenarioTurn, ScenarioTurn];
+  turns: ScenarioTurn[];
+  isHidden?: boolean;
+  isCustom?: boolean;
+  targetRoles?: ITRole[];
 }
 
 export interface VocabularyItem {
@@ -66,6 +71,7 @@ export interface PracticeAttempt {
   transcript: string;
   score: number;
   keywords_used: string[];
+  role?: string | null;
   created_at: string;
 }
 
@@ -123,6 +129,35 @@ export interface GamificationState {
   selectedRole: ITRole;
   personalBests: Record<MinigameId, number>;
   history: GameScoreEntry[];
+}
+
+export interface BugBusterChallenge {
+  id: string;
+  category: "error-log" | "code-review" | "incident";
+  promptEN: string;
+  targetWord: string;
+  acceptedVariants: string[];
+  contextVI: string;
+  phonetic: string;
+}
+
+export interface ArenaRunRecord {
+  id: string;
+  game_id: MinigameId | string;
+  score: number;
+  accuracy_or_words: number;
+  duration_sec: number;
+  role: string | null;
+  created_at: string;
+}
+
+export interface AdminContentOverrides {
+  customScenarios: Scenario[];
+  hiddenScenarioIds: string[];
+  customVocabulary: VocabularyItem[];
+  deletedVocabIds: string[];
+  customBugChallenges: BugBusterChallenge[];
+  deletedChallengeIds: string[];
 }
 
 

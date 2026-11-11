@@ -28,6 +28,12 @@ import {
   pointsToNextCoin,
   recordMinigameResult,
 } from "../../lib/gamification";
+import {
+  CONTENT_STORAGE_KEY,
+  CONTENT_UPDATED_EVENT,
+  fetchAndCachePublicContent,
+  getEffectiveBugChallenges,
+} from "../../lib/contentStore";
 import { SpeechController, startSpeechRecognition } from "../../lib/speech";
 import { ITRole } from "../../lib/types";
 
@@ -72,6 +78,9 @@ const CATEGORY_LABELS: Record<BugBusterChallenge["category"], string> = {
 
 export function BugBusterGame({ role }: BugBusterGameProps) {
   const [phase, setPhase] = useState<"ready" | "playing" | "finished">("ready");
+  const [availableChallenges, setAvailableChallenges] = useState<BugBusterChallenge[]>(
+    BUG_BUSTER_CHALLENGES
+  );
   const [deck, setDeck] = useState<BugBusterChallenge[]>(BUG_BUSTER_CHALLENGES);
   const [challengeIndex, setChallengeIndex] = useState(0);
 
@@ -104,8 +113,33 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
   const totalTimeRef = useRef(ROUND_DURATION_SEC);
   const bugTimeRef = useRef(BUG_DURATION_SEC);
   const challengeIndexRef = useRef(0);
+  const availableChallengesRef = useRef<BugBusterChallenge[]>(BUG_BUSTER_CHALLENGES);
   const deckRef = useRef<BugBusterChallenge[]>(BUG_BUSTER_CHALLENGES);
   const feedbackRef = useRef<FeedbackState | null>(null);
+
+  useEffect(() => {
+    const syncChallenges = () => {
+      const effective = getEffectiveBugChallenges();
+      availableChallengesRef.current = effective;
+      setAvailableChallenges(effective);
+    };
+
+    syncChallenges();
+    void fetchAndCachePublicContent();
+
+    window.addEventListener(CONTENT_UPDATED_EVENT, syncChallenges);
+    const handleStorage = (event: StorageEvent) => {
+      if (!event.key || event.key === CONTENT_STORAGE_KEY) {
+        syncChallenges();
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+
+    return () => {
+      window.removeEventListener(CONTENT_UPDATED_EVENT, syncChallenges);
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, []);
 
   const stopMic = useCallback(() => {
     micSessionRef.current += 1;
@@ -249,10 +283,13 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
   }, [clearAdvanceTimer, stopMic]);
 
   const startRound = () => {
+    const sourcePool = availableChallengesRef.current;
+    if (sourcePool.length === 0) return;
+
     clearAdvanceTimer();
     stopMic();
 
-    const shuffled = shuffleChallenges(BUG_BUSTER_CHALLENGES);
+    const shuffled = shuffleChallenges(sourcePool);
     deckRef.current = shuffled;
     setDeck(shuffled);
 
@@ -390,11 +427,18 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
         <button
           type="button"
           onClick={startRound}
-          className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-pill bg-accent text-white text-sm font-bold border border-accent shadow-soft hover:bg-accent-hover shadow-hard-press transition-all"
+          disabled={availableChallenges.length === 0}
+          className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-pill bg-accent text-white text-sm font-bold border border-accent shadow-soft hover:bg-accent-hover shadow-hard-press disabled:opacity-40 disabled:cursor-not-allowed transition-all"
         >
           <Play className="w-4 h-4 fill-white" />
-          <span>Bắt đầu Bug Buster 60s</span>
+          <span>Bắt đầu Bug Buster 60s ({availableChallenges.length} câu)</span>
         </button>
+
+        {availableChallenges.length === 0 && (
+          <p className="text-xs text-accent font-medium">
+            Hiện chưa có thử thách Bug Buster nào khả dụng. Vui lòng kiểm tra lại trong Cổng Quản trị.
+          </p>
+        )}
       </section>
     );
   }

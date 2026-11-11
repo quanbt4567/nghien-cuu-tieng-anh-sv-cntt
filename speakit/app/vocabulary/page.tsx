@@ -1,15 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Search, BookOpen, Volume2 } from "lucide-react";
+import { ArrowLeft, Search, BookOpen } from "lucide-react";
 import { VOCABULARY_LIST } from "../../data/scenarios";
 import { VocabCard } from "../../components/vocabulary/VocabCard";
+import {
+  CONTENT_STORAGE_KEY,
+  CONTENT_UPDATED_EVENT,
+  fetchAndCachePublicContent,
+  getEffectiveVocabulary,
+} from "../../lib/contentStore";
+import { VocabularyItem } from "../../lib/types";
 
 export default function VocabularyPage() {
+  const [vocabList, setVocabList] = useState<VocabularyItem[]>(VOCABULARY_LIST);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filtered = VOCABULARY_LIST.filter(
+  useEffect(() => {
+    const syncContent = () => {
+      setVocabList(getEffectiveVocabulary());
+    };
+
+    syncContent();
+    void fetchAndCachePublicContent();
+
+    window.addEventListener(CONTENT_UPDATED_EVENT, syncContent);
+    const handleStorage = (event: StorageEvent) => {
+      if (!event.key || event.key === CONTENT_STORAGE_KEY) {
+        syncContent();
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+
+    return () => {
+      window.removeEventListener(CONTENT_UPDATED_EVENT, syncContent);
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, []);
+
+  const filtered = vocabList.filter(
     (item) =>
       item.term.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.meaningVI.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -30,7 +60,7 @@ export default function VocabularyPage() {
           </Link>
           <h1 className="text-2xl font-bold tracking-tight text-ink flex items-center gap-2">
             <BookOpen className="w-6 h-6 text-accent" />
-            <span>12 Thuật Ngữ IT Thiết Yếu</span>
+            <span>{vocabList.length} Thuật Ngữ IT Thiết Yếu</span>
           </h1>
           <p className="text-xs text-ink-muted mt-1.5">
             Luyện phát âm chuẩn và nắm vững cách diễn đạt các thuật ngữ xuất hiện hàng ngày trong môi trường kỹ thuật.
@@ -59,7 +89,9 @@ export default function VocabularyPage() {
 
       {filtered.length === 0 && (
         <div className="bg-white border border-ink/15 rounded-2xl p-8 text-center text-xs text-ink-muted shadow-soft">
-          Không tìm thấy thuật ngữ nào phù hợp với từ khóa "{searchQuery}".
+          {vocabList.length === 0
+            ? "Chưa có thuật ngữ nào trong thư viện."
+            : `Không tìm thấy thuật ngữ nào phù hợp với từ khóa "${searchQuery}".`}
         </div>
       )}
     </div>

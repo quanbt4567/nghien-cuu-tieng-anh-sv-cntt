@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, Tag, Lightbulb, AlertCircle, Loader2, Keyboard, Send, RotateCcw } from "lucide-react";
-import { SCENARIOS } from "../../../data/scenarios";
+import { SCENARIOS, VOCABULARY_LIST } from "../../../data/scenarios";
 import { AudioPromptPlayer } from "../../../components/audio/AudioPromptPlayer";
 import { MicButton } from "../../../components/audio/MicButton";
 import { FeedbackCard } from "../../../components/feedback/FeedbackCard";
@@ -12,13 +12,23 @@ import { AiModeBanner } from "../../../components/feedback/AiModeBanner";
 import { ScenarioSummary } from "../../../components/feedback/ScenarioSummary";
 import { startSpeechRecognition, SpeechController } from "../../../lib/speech";
 import { storageAdapter } from "../../../lib/storage";
-import { awardPracticePoints } from "../../../lib/gamification";
-import { ScenarioTurn, ScoreResponse } from "../../../lib/types";
+import { awardPracticePoints, getGamificationState } from "../../../lib/gamification";
+import {
+  CONTENT_STORAGE_KEY,
+  CONTENT_UPDATED_EVENT,
+  fetchAndCachePublicContent,
+  getEffectiveScenarios,
+  getEffectiveVocabulary,
+} from "../../../lib/contentStore";
+import { Scenario, ScenarioTurn, ScoreResponse, VocabularyItem } from "../../../lib/types";
 
 export default function PracticePage() {
   const params = useParams();
   const scenarioId = params.scenario as string;
-  const scenario = SCENARIOS.find((s) => s.id === scenarioId);
+  const [scenarios, setScenarios] = useState<Scenario[]>(SCENARIOS);
+  const [vocabPool, setVocabPool] = useState<VocabularyItem[]>(VOCABULARY_LIST);
+  const [isContentSyncing, setIsContentSyncing] = useState(true);
+  const scenario = scenarios.find((s) => s.id === scenarioId);
 
   // Turn state (0, 1, 2)
   const [currentTurnIndex, setCurrentTurnIndex] = useState(0);
@@ -56,7 +66,49 @@ export default function PracticePage() {
     }
   }, []);
 
-  if (!scenario) {
+  useEffect(() => {
+    let active = true;
+    const syncContent = () => {
+      if (!active) return;
+      setScenarios(getEffectiveScenarios());
+      setVocabPool(getEffectiveVocabulary());
+    };
+
+    syncContent();
+    window.addEventListener(CONTENT_UPDATED_EVENT, syncContent);
+
+    const handleStorage = (event: StorageEvent) => {
+      if (!event.key || event.key === CONTENT_STORAGE_KEY) {
+        syncContent();
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+
+    fetchAndCachePublicContent().finally(() => {
+      if (!active) return;
+      syncContent();
+      setIsContentSyncing(false);
+    });
+
+    return () => {
+      active = false;
+      window.removeEventListener(CONTENT_UPDATED_EVENT, syncContent);
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, []);
+
+  if (!scenario && isContentSyncing) {
+    return (
+      <div className="max-w-xl mx-auto px-4 py-16 text-center">
+        <div className="bg-white border border-ink/15 rounded-2xl p-8 shadow-soft inline-flex items-center gap-3 text-sm font-semibold text-ink">
+          <Loader2 className="w-5 h-5 animate-spin text-accent" />
+          <span>Đang tải kịch bản luyện tập...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!scenario || scenario.turns.length === 0) {
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center space-y-4">
         <div className="w-12 h-12 rounded-pill bg-accent-light text-accent flex items-center justify-center mx-auto border border-accent/20 shadow-soft">
@@ -79,7 +131,8 @@ export default function PracticePage() {
     );
   }
 
-  const currentTurn: ScenarioTurn = scenario.turns[currentTurnIndex];
+  const safeTurnIndex = Math.min(currentTurnIndex, scenario.turns.length - 1);
+  const currentTurn: ScenarioTurn = scenario.turns[safeTurnIndex];
   const scenarioKeywords = scenario.turns.flatMap((t) => t.keywords);
 
   // Speech Recognition Control
@@ -142,7 +195,7 @@ export default function PracticePage() {
         body: JSON.stringify({
           transcript: transcript.trim(),
           scenario: scenario.id,
-          turnIndex: currentTurnIndex,
+          turnIndex: safeTurnIndex,
           expectedKeywords: currentTurn.keywords,
           history: conversationHistory,
           apiKey: apiKey || undefined,
@@ -159,10 +212,11 @@ export default function PracticePage() {
       // Save attempt & weak points to resilient storage
       await storageAdapter.saveAttempt({
         scenario: scenario.id,
-        turn_index: currentTurnIndex,
+        turn_index: safeTurnIndex,
         transcript: transcript.trim(),
         score: scoreData.score,
         keywords_used: scoreData.keywordsUsed,
+        role: getGamificationState().selectedRole,
       });
 
       await storageAdapter.recordWeakPoints(
@@ -203,8 +257,8 @@ export default function PracticePage() {
 
   // Next Turn or Summary
   const handleNextTurn = () => {
-    if (currentTurnIndex < scenario.turns.length - 1) {
-      setCurrentTurnIndex((prev) => prev + 1);
+    if (safeTurnIndex < scenario.turns.length - 1) {
+      setCurrentTurnIndex(safeTurnIndex + 1);
       setTranscript("");
       setEvalResult(null);
       setSpeechError(null);
@@ -253,14 +307,14 @@ export default function PracticePage() {
             <span
               key={turn.turnIndex}
               className={`px-3 py-1 rounded-pill text-xs font-mono font-bold border transition-all ${
-                idx === currentTurnIndex && !isCompleted
+                idx === safeTurnIndex && !isCompleted
                   ? "bg-accent text-white border-accent shadow-soft"
-                  : idx < currentTurnIndex || isCompleted
+                  : idx < safeTurnIndex || isCompleted
                   ? "bg-paper-muted text-ink border-ink/15"
                   : "bg-paper text-ink-faint border-ink/10 opacity-60"
               }`}
             >
-              Lượt {idx + 1}/3
+              Lượt {idx + 1}/{scenario.turns.length}
             </span>
           ))}
         </div>
@@ -276,6 +330,8 @@ export default function PracticePage() {
           missedKeywords={missedKeywords}
           scenarioKeywords={scenarioKeywords}
           pointsEarned={totalPointsEarned}
+          vocabPool={vocabPool}
+          totalTurns={scenario.turns.length}
           onRetry={handleRetryScenario}
         />
       ) : (
@@ -288,10 +344,10 @@ export default function PracticePage() {
             <div className="flex items-center justify-between border-b border-paper-muted pb-3.5">
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-accent flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-accent" />
-                Câu hỏi Lượt {currentTurnIndex + 1}/3
+                Câu hỏi Lượt {safeTurnIndex + 1}/{scenario.turns.length}
               </span>
               <AudioPromptPlayer
-                key={`${scenario.id}-${currentTurnIndex}`}
+                key={`${scenario.id}-${safeTurnIndex}`}
                 text={currentTurn.questionEN}
                 autoPlay={true}
               />
@@ -445,7 +501,7 @@ export default function PracticePage() {
               result={evalResult}
               transcript={transcript}
               onNextTurn={handleNextTurn}
-              isLastTurn={currentTurnIndex === scenario.turns.length - 1}
+              isLastTurn={safeTurnIndex === scenario.turns.length - 1}
             />
           )}
         </>

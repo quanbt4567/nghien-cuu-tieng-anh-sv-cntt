@@ -19,7 +19,13 @@ import {
   getGamificationState,
   setSelectedRole,
 } from "../../lib/gamification";
-import { ITRole } from "../../lib/types";
+import {
+  CONTENT_STORAGE_KEY,
+  CONTENT_UPDATED_EVENT,
+  fetchAndCachePublicContent,
+  getEffectiveScenarios,
+} from "../../lib/contentStore";
+import { ITRole, Scenario } from "../../lib/types";
 
 const ROLE_ICONS: Record<ITRole, typeof Code2> = {
   frontend: Code2,
@@ -29,26 +35,38 @@ const ROLE_ICONS: Record<ITRole, typeof Code2> = {
 };
 
 export function HomeOnboardingClient() {
-  // Default matches createDefaultState().selectedRole to avoid SSR hydration mismatch.
+  // Default matches SSR state to avoid hydration mismatch before localStorage/content loads.
   const [selectedRole, setSelectedRoleState] = useState<ITRole>("frontend");
+  const [scenarios, setScenarios] = useState<Scenario[]>(SCENARIOS);
 
   useEffect(() => {
     const syncRole = () => {
       setSelectedRoleState(getGamificationState().selectedRole);
     };
+    const syncContent = () => {
+      setScenarios(getEffectiveScenarios());
+    };
 
     syncRole();
+    syncContent();
+    void fetchAndCachePublicContent();
+
     window.addEventListener(GAMIFICATION_UPDATED_EVENT, syncRole);
+    window.addEventListener(CONTENT_UPDATED_EVENT, syncContent);
 
     const handleStorage = (event: StorageEvent) => {
       if (!event.key || event.key === GAMIFICATION_STORAGE_KEY) {
         syncRole();
+      }
+      if (!event.key || event.key === CONTENT_STORAGE_KEY) {
+        syncContent();
       }
     };
     window.addEventListener("storage", handleStorage);
 
     return () => {
       window.removeEventListener(GAMIFICATION_UPDATED_EVENT, syncRole);
+      window.removeEventListener(CONTENT_UPDATED_EVENT, syncContent);
       window.removeEventListener("storage", handleStorage);
     };
   }, []);
@@ -56,17 +74,21 @@ export function HomeOnboardingClient() {
   const activeRole =
     IT_ROLES.find((role) => role.id === selectedRole) ?? IT_ROLES[0];
 
-  const recommendedScenario =
-    SCENARIOS.find((scenario) => scenario.id === activeRole.recommendedScenarioId) ??
-    SCENARIOS[0];
-
   const sortedScenarios = useMemo(() => {
-    return [...SCENARIOS].sort((a, b) => {
-      if (a.id === activeRole.recommendedScenarioId) return -1;
-      if (b.id === activeRole.recommendedScenarioId) return 1;
-      return 0;
-    });
-  }, [activeRole.recommendedScenarioId]);
+    const scorePriority = (scenario: Scenario): number => {
+      let score = 0;
+      if (scenario.targetRoles?.includes(selectedRole)) score += 2;
+      if (scenario.id === activeRole.recommendedScenarioId) score += 1;
+      return score;
+    };
+    return [...scenarios].sort((a, b) => scorePriority(b) - scorePriority(a));
+  }, [scenarios, selectedRole, activeRole.recommendedScenarioId]);
+
+  const recommendedScenario = sortedScenarios[0] ?? null;
+  const totalTurnsCount = useMemo(
+    () => sortedScenarios.reduce((sum, s) => sum + s.turns.length, 0),
+    [sortedScenarios]
+  );
 
   const handleSelectRole = (role: ITRole) => {
     const updated = setSelectedRole(role);
@@ -132,39 +154,45 @@ export function HomeOnboardingClient() {
         </div>
 
         {/* Step 2: Recommended 3-minute Scenario */}
-        <div className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-5">
-          <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="w-7 h-7 rounded-pill bg-accent text-white font-mono text-xs font-bold flex items-center justify-center shrink-0">
-                02
-              </span>
-              <span className="text-xs font-mono font-semibold text-accent uppercase tracking-wide">
-                Luyện 1 kịch bản nhanh (~3 phút)
-              </span>
-              <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-pill bg-accent-light text-accent border border-accent/25">
-                Gợi ý cho {activeRole.label}
-              </span>
+        {recommendedScenario ? (
+          <div className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="w-7 h-7 rounded-pill bg-accent text-white font-mono text-xs font-bold flex items-center justify-center shrink-0">
+                  02
+                </span>
+                <span className="text-xs font-mono font-semibold text-accent uppercase tracking-wide">
+                  Luyện 1 kịch bản nhanh (~3 phút)
+                </span>
+                <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-pill bg-accent-light text-accent border border-accent/25">
+                  Gợi ý cho {activeRole.label}
+                </span>
+              </div>
+              <h2 className="text-lg sm:text-xl font-bold tracking-tight text-ink">
+                {recommendedScenario.titleEN}{" "}
+                <span className="text-sm font-normal text-ink-faint">
+                  ({recommendedScenario.titleVI})
+                </span>
+              </h2>
+              <p className="text-xs sm:text-sm text-ink-muted">
+                {recommendedScenario.descriptionVI}
+              </p>
             </div>
-            <h2 className="text-lg sm:text-xl font-bold tracking-tight text-ink">
-              {recommendedScenario.titleEN}{" "}
-              <span className="text-sm font-normal text-ink-faint">
-                ({recommendedScenario.titleVI})
-              </span>
-            </h2>
-            <p className="text-xs sm:text-sm text-ink-muted">
-              {recommendedScenario.descriptionVI}
-            </p>
-          </div>
 
-          <Link
-            href={`/practice/${recommendedScenario.id}`}
-            className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-pill bg-accent hover:bg-accent-hover text-white font-semibold text-sm border border-accent shadow-soft shadow-hard-press transition-all text-center"
-          >
-            <Play className="w-4 h-4 fill-white shrink-0" aria-hidden="true" />
-            <span>Bắt đầu ngay: {recommendedScenario.titleEN}</span>
-            <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
-          </Link>
-        </div>
+            <Link
+              href={`/practice/${recommendedScenario.id}`}
+              className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-pill bg-accent hover:bg-accent-hover text-white font-semibold text-sm border border-accent shadow-soft shadow-hard-press transition-all text-center"
+            >
+              <Play className="w-4 h-4 fill-white shrink-0" aria-hidden="true" />
+              <span>Bắt đầu ngay: {recommendedScenario.titleEN}</span>
+              <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
+            </Link>
+          </div>
+        ) : (
+          <div className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft text-xs text-ink-muted">
+            Hiện chưa có kịch bản nào đang mở. Vui lòng kiểm tra lại trong Cổng Quản trị.
+          </div>
+        )}
 
         {/* Step 3: Reflex Diagnostics & IT Speaking Arena */}
         <div className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -193,25 +221,27 @@ export function HomeOnboardingClient() {
         </div>
       </section>
 
-      {/* Scenario Setlist (6) */}
+      {/* Scenario Setlist */}
       <section id="scenarios" className="space-y-5">
         <div className="flex items-center justify-between gap-3">
           <div>
             <h2 className="text-xl font-bold tracking-tight text-ink">
-              Kịch bản tình huống (6)
+              Kịch bản tình huống ({sortedScenarios.length})
             </h2>
             <p className="text-xs text-ink-muted mt-0.5">
-              Mỗi kịch bản gồm 3 lượt hội thoại phản xạ công việc thực tế
+              Mỗi kịch bản gồm các lượt hội thoại phản xạ công việc thực tế
             </p>
           </div>
           <span className="text-xs font-mono text-ink-muted bg-paper-muted px-3 py-1 rounded-pill border border-ink/15 shrink-0">
-            18 Lượt luyện
+            {totalTurnsCount} Lượt luyện
           </span>
         </div>
 
         <div className="space-y-4">
           {sortedScenarios.map((scenario, index) => {
-            const isRecommended = scenario.id === activeRole.recommendedScenarioId;
+            const isRecommended =
+              scenario.id === recommendedScenario?.id ||
+              Boolean(scenario.targetRoles?.includes(selectedRole));
             return (
               <Link
                 key={scenario.id}
@@ -229,7 +259,7 @@ export function HomeOnboardingClient() {
                           : "bg-paper text-ink border-ink/20 group-hover:bg-accent group-hover:text-white group-hover:border-accent"
                       }`}
                     >
-                      0{index + 1}
+                      {String(index + 1).padStart(2, "0")}
                     </div>
                     <div className="space-y-1.5">
                       <div className="flex flex-wrap items-center gap-2">
@@ -255,7 +285,9 @@ export function HomeOnboardingClient() {
                   </div>
 
                   <div className="flex items-center justify-end sm:justify-center gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-paper-muted">
-                    <span className="text-xs font-mono text-ink-muted">3 lượt</span>
+                    <span className="text-xs font-mono text-ink-muted">
+                      {scenario.turns.length} lượt
+                    </span>
                     <div className="w-7 h-7 rounded-pill bg-paper flex items-center justify-center border border-ink/20 group-hover:translate-x-1 transition-transform">
                       <ArrowRight className="w-3.5 h-3.5 text-ink" aria-hidden="true" />
                     </div>

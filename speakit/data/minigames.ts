@@ -1,20 +1,12 @@
-import { ITRole, ScenarioId } from "../lib/types";
+import { BugBusterChallenge, ITRole, ScenarioId } from "../lib/types";
+
+export type { BugBusterChallenge };
 
 export interface ITRoleConfig {
   id: ITRole;
   label: string;
   taglineVI: string;
   recommendedScenarioId: ScenarioId;
-}
-
-export interface BugBusterChallenge {
-  id: string;
-  category: "error-log" | "code-review" | "incident";
-  promptEN: string;
-  targetWord: string;
-  acceptedVariants: string[];
-  contextVI: string;
-  phonetic: string;
 }
 
 export interface StandupSpeedQuestion {
