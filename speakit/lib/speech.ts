@@ -89,7 +89,7 @@ export function startSpeechRecognition(
     const recognition = new SpeechRecognitionClass();
     recognition.lang = "en-US";
     recognition.interimResults = true;
-    recognition.continuous = false;
+    recognition.continuous = true;
     recognition.maxAlternatives = 1;
 
     let hasReceivedTranscript = false;

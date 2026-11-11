@@ -1,7 +1,9 @@
 "use client";
 
-import { Check, X, MessageSquare, BookOpen, ArrowRight, CheckCircle2 } from "lucide-react";
+import { useState } from "react";
+import { Check, X, MessageSquare, BookOpen, ArrowRight, CheckCircle2, Volume2 } from "lucide-react";
 import { ScoreResponse } from "../../lib/types";
+import { speakText } from "../../lib/speech";
 
 interface FeedbackCardProps {
   result: ScoreResponse;
@@ -16,6 +18,7 @@ export function FeedbackCard({
   onNextTurn,
   isLastTurn = false,
 }: FeedbackCardProps) {
+  const [isPlayingBetter, setIsPlayingBetter] = useState(false);
   const isHigh = result.score >= 80;
   const isMedium = result.score >= 60 && result.score < 80;
 
@@ -98,12 +101,32 @@ export function FeedbackCard({
           </div>
         </div>
 
-        {/* Better Sentence */}
+        {/* Better Sentence with Shadowing Audio */}
         <div className="space-y-1.5">
-          <span className="text-xs font-mono font-bold uppercase text-ink-muted flex items-center gap-1.5">
-            <BookOpen className="w-3.5 h-3.5 text-accent" />
-            Gợi ý câu nói tự nhiên hơn trong công việc:
-          </span>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="text-xs font-mono font-bold uppercase text-ink-muted flex items-center gap-1.5">
+              <BookOpen className="w-3.5 h-3.5 text-accent" />
+              Gợi ý câu nói tự nhiên hơn:
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                setIsPlayingBetter(true);
+                speakText(
+                  result.betterSentence,
+                  0.8,
+                  () => setIsPlayingBetter(false),
+                  () => setIsPlayingBetter(false)
+                );
+              }}
+              disabled={isPlayingBetter}
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-paper border border-ink text-xs font-mono font-semibold text-ink hover:bg-accent hover:text-white shadow-hard shadow-hard-press transition-colors disabled:opacity-50"
+              title="Nghe câu mẫu phát âm chuẩn"
+            >
+              <Volume2 className={`w-3.5 h-3.5 ${isPlayingBetter ? "text-accent animate-pulse" : ""}`} />
+              <span>{isPlayingBetter ? "Đang phát..." : "Nghe mẫu (Shadowing)"}</span>
+            </button>
+          </div>
           <div className="p-3 bg-accent-light rounded-xl border-2 border-accent text-sm text-ink leading-relaxed">
             <span className="font-semibold text-accent block text-xs font-mono mb-1">
               Better Sentence:

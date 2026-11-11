@@ -24,6 +24,10 @@ export const metadata: Metadata = {
   title: "SpeakIT — Luyện nói tiếng Anh tình huống CNTT",
   description:
     "Ứng dụng nghiên cứu hỗ trợ sinh viên CNTT luyện nói tiếng Anh trong các tình huống làm việc thực tế: Daily Standup, Bug Report, Code Review.",
+  icons: {
+    icon: "/logo-icon.png",
+    apple: "/logo-icon.png",
+  },
 };
 
 export default function RootLayout({

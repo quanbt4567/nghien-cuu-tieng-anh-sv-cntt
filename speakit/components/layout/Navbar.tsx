@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Mic, BookOpen, TrendingUp, Settings } from "lucide-react";
 
@@ -22,17 +23,14 @@ export function Navbar() {
           href="/"
           className="flex items-center gap-2 group focus:outline-none"
         >
-          <div className="w-8 h-8 rounded-pill bg-accent flex items-center justify-center border-2 border-ink shadow-hard">
-            <Mic className="w-4 h-4 text-white" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-display font-bold text-lg text-ink tracking-tight">
-              Speak<span className="text-accent">IT</span>
-            </span>
-            <span className="text-[10px] font-mono text-ink-muted -mt-1">
-              IT Workplace English
-            </span>
-          </div>
+          <Image
+            src="/logo.png"
+            alt="SpeakIT"
+            width={120}
+            height={42}
+            className="h-8 sm:h-9 w-auto object-contain"
+            priority
+          />
         </Link>
 
         {/* Navigation links */}
