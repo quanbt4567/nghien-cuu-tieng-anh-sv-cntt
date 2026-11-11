@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, TrendingUp, Flame, CheckCircle, AlertCircle, BarChart3 } from "lucide-react";
+import { ArrowLeft, TrendingUp, Flame, CheckCircle, AlertCircle, BarChart3, Download } from "lucide-react";
 import { SCENARIOS } from "../../data/scenarios";
 import { storageAdapter } from "../../lib/storage";
 import { PracticeAttempt, WeakPoint } from "../../lib/types";
@@ -62,24 +62,63 @@ export default function ProgressPage() {
     };
   });
 
+  const handleExportData = () => {
+    const data = {
+      project: "SpeakIT - Nghien cuu Tieng Anh SV CNTT (IUH & BCN)",
+      exportDate: new Date().toISOString(),
+      studentSummary: {
+        totalTurns,
+        averageScore,
+        bestScoreOverall,
+        streakDays: currentStreak,
+      },
+      scenarioStats,
+      weakPoints,
+      attempts,
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `speakit_research_data_${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
       {/* Top Header */}
-      <div>
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper-card text-ink text-xs font-medium border-2 border-ink shadow-hard hover:bg-paper-muted shadow-hard-press transition-all mb-2"
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper-card text-ink text-xs font-medium border-2 border-ink shadow-hard hover:bg-paper-muted shadow-hard-press transition-all mb-2"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Trang chủ</span>
+          </Link>
+          <h1 className="text-2xl font-bold tracking-tight text-ink flex items-center gap-2">
+            <TrendingUp className="w-6 h-6 text-accent" />
+            <span>Tiến Độ Học Tập & Kế Hoạch 7 Ngày</span>
+          </h1>
+          <p className="text-xs text-ink-muted mt-1">
+            Theo dõi số lượt luyện nói, điểm số cao nhất từng tình huống và các điểm ngữ pháp/từ khóa cần cải thiện.
+          </p>
+        </div>
+
+        {/* NCKH Data Export Button */}
+        <button
+          type="button"
+          onClick={handleExportData}
+          disabled={attempts.length === 0}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-paper border-2 border-ink text-xs font-mono font-semibold text-ink hover:bg-paper-muted shadow-hard shadow-hard-press transition-all self-start sm:self-center disabled:opacity-50 disabled:cursor-not-allowed"
+          title="Xuất file JSON chứa toàn bộ lượt luyện tập để phục vụ nghiên cứu khoa học"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Trang chủ</span>
-        </Link>
-        <h1 className="text-2xl font-bold tracking-tight text-ink flex items-center gap-2">
-          <TrendingUp className="w-6 h-6 text-accent" />
-          <span>Tiến Độ Học Tập & Kế Hoạch 7 Ngày</span>
-        </h1>
-        <p className="text-xs text-ink-muted mt-1">
-          Theo dõi số lượt luyện nói, điểm số cao nhất từng tình huống và các điểm ngữ pháp/từ khóa cần cải thiện.
-        </p>
+          <Download className="w-4 h-4 text-accent" />
+          <span>Xuất dữ liệu (.json)</span>
+        </button>
       </div>
 
       {/* Metric Cards (Stat Grid) */}
