@@ -19,9 +19,9 @@ export function ScenarioSummary({
   onRetry,
 }: ScenarioSummaryProps) {
   return (
-    <div className="bg-white border-2 border-ink rounded-2xl p-6 sm:p-8 shadow-hard space-y-6 text-center">
+    <div className="bg-white border border-ink/15 rounded-2xl p-6 sm:p-8 shadow-soft space-y-6 text-center">
       {/* Plain CSS Completion Badge */}
-      <div className="w-16 h-16 rounded-full bg-accent text-white flex items-center justify-center mx-auto border-2 border-ink shadow-hard">
+      <div className="w-16 h-16 rounded-full bg-accent text-white flex items-center justify-center mx-auto border border-accent/20 shadow-soft">
         <Award className="w-8 h-8" />
       </div>
 
@@ -39,11 +39,11 @@ export function ScenarioSummary({
 
       {/* Aggregate Stats */}
       <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto">
-        <div className="p-3 bg-paper rounded-xl border border-ink text-center">
+        <div className="p-3 bg-paper rounded-xl border border-ink/15 text-center">
           <div className="text-2xl font-mono font-bold text-ink">{averageScore}</div>
           <div className="text-[11px] text-ink-muted">Điểm trung bình</div>
         </div>
-        <div className="p-3 bg-paper rounded-xl border border-ink text-center">
+        <div className="p-3 bg-paper rounded-xl border border-ink/15 text-center">
           <div className="text-2xl font-mono font-bold text-ink">{totalKeywordsUsed}</div>
           <div className="text-[11px] text-ink-muted">Từ khóa kỹ thuật đã dùng</div>
         </div>
@@ -54,7 +54,7 @@ export function ScenarioSummary({
         <button
           type="button"
           onClick={onRetry}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-pill bg-paper-card text-ink font-semibold text-xs border-2 border-ink shadow-hard hover:bg-paper-muted shadow-hard-press transition-all"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-pill bg-paper-card text-ink font-semibold text-xs border border-ink/15 shadow-soft hover:bg-paper-muted transition-all"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           <span>Luyện lại kịch bản này</span>
@@ -62,7 +62,7 @@ export function ScenarioSummary({
 
         <Link
           href="/"
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-pill bg-ink text-white font-semibold text-xs border-2 border-ink shadow-hard hover:bg-ink-muted shadow-hard-press transition-all"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-pill bg-ink text-white font-semibold text-xs border border-ink shadow-soft hover:bg-ink-muted transition-all"
         >
           <span>Chọn kịch bản khác</span>
           <ArrowRight className="w-3.5 h-3.5" />

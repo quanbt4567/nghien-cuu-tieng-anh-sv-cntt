@@ -10,35 +10,35 @@ interface SevenDayPlanProps {
 
 export function SevenDayPlan({ days }: SevenDayPlanProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold tracking-tight text-ink">
             Kế Hoạch Luyện Tập 7 Ngày Thích Ứng
           </h2>
-          <p className="text-xs text-ink-muted">
+          <p className="text-xs text-ink-muted mt-0.5">
             Tự động đưa các từ khóa bạn thường quên lên các ngày đầu để lặp lại ngắt quãng
           </p>
         </div>
-        <span className="text-xs font-mono font-bold text-accent bg-accent-light px-3 py-1 rounded-pill border border-accent">
+        <span className="text-xs font-mono font-bold text-accent bg-accent-light px-3 py-1 rounded-pill border border-accent/30">
           {days.filter((d) => d.isCompleted).length}/7 Ngày đã luyện
         </span>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         {days.map((day) => (
           <div
             key={day.dayNumber}
-            className={`bg-white border-2 border-ink rounded-2xl p-4 sm:p-5 shadow-hard transition-all ${
+            className={`bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft hover:shadow-card transition-all ${
               day.isCompleted ? "opacity-90" : ""
             }`}
           >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-start gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-start gap-3.5">
                 <div
-                  className={`w-9 h-9 rounded-pill flex items-center justify-center border-2 border-ink shrink-0 font-mono font-bold text-xs ${
+                  className={`w-9 h-9 rounded-pill flex items-center justify-center border border-ink/20 shrink-0 font-mono font-bold text-xs ${
                     day.isCompleted
-                      ? "bg-accent text-white"
+                      ? "bg-accent text-white border-accent"
                       : "bg-paper text-ink"
                   }`}
                 >
@@ -81,7 +81,7 @@ export function SevenDayPlan({ days }: SevenDayPlanProps) {
               <div className="shrink-0 pt-2 sm:pt-0 flex justify-end">
                 <Link
                   href={`/practice/${day.scenarioId}`}
-                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-pill bg-paper-card text-ink text-xs font-semibold border-2 border-ink shadow-hard hover:bg-paper-muted shadow-hard-press transition-all"
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-pill bg-paper-card text-ink text-xs font-semibold border border-ink/15 shadow-soft hover:bg-paper-muted transition-all"
                 >
                   <span>{day.isCompleted ? "Luyện lại" : "Bắt đầu"}</span>
                   <ArrowRight className="w-3.5 h-3.5" />

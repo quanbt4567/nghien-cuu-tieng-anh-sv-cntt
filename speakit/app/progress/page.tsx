@@ -94,7 +94,7 @@ export default function ProgressPage() {
         <div>
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper-card text-ink text-xs font-medium border-2 border-ink shadow-hard hover:bg-paper-muted shadow-hard-press transition-all mb-2"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white text-ink text-xs font-medium border border-ink/15 shadow-soft hover:bg-paper-muted shadow-hard-press transition-all mb-3"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Trang chủ</span>
@@ -103,7 +103,7 @@ export default function ProgressPage() {
             <TrendingUp className="w-6 h-6 text-accent" />
             <span>Tiến Độ Học Tập & Kế Hoạch 7 Ngày</span>
           </h1>
-          <p className="text-xs text-ink-muted mt-1">
+          <p className="text-xs text-ink-muted mt-1.5">
             Theo dõi số lượt luyện nói, điểm số cao nhất từng tình huống và các điểm ngữ pháp/từ khóa cần cải thiện.
           </p>
         </div>
@@ -113,7 +113,7 @@ export default function ProgressPage() {
           type="button"
           onClick={handleExportData}
           disabled={attempts.length === 0}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-paper border-2 border-ink text-xs font-mono font-semibold text-ink hover:bg-paper-muted shadow-hard shadow-hard-press transition-all self-start sm:self-center disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-white border border-ink/20 text-xs font-mono font-semibold text-ink hover:bg-paper-muted shadow-soft shadow-hard-press transition-all self-start sm:self-center disabled:opacity-50 disabled:cursor-not-allowed"
           title="Xuất file JSON chứa toàn bộ lượt luyện tập để phục vụ nghiên cứu khoa học"
         >
           <Download className="w-4 h-4 text-accent" />
@@ -121,30 +121,30 @@ export default function ProgressPage() {
         </button>
       </div>
 
-      {/* Metric Cards (Stat Grid) */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="bg-white border-2 border-ink rounded-2xl p-4 shadow-hard text-center">
+      {/* Metric Cards (Stat Grid with refined borders & soft shadows) */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5">
+        <div className="bg-white border border-ink/15 rounded-2xl p-4 sm:p-5 shadow-soft text-center">
           <div className="text-2xl sm:text-3xl font-mono font-extrabold text-ink">
             {totalTurns}
           </div>
           <div className="text-[11px] text-ink-muted mt-1">Tổng lượt đã luyện</div>
         </div>
 
-        <div className="bg-white border-2 border-ink rounded-2xl p-4 shadow-hard text-center">
+        <div className="bg-white border border-ink/15 rounded-2xl p-4 sm:p-5 shadow-soft text-center">
           <div className="text-2xl sm:text-3xl font-mono font-extrabold text-accent">
             {bestScoreOverall}
           </div>
           <div className="text-[11px] text-ink-muted mt-1">Điểm cao nhất</div>
         </div>
 
-        <div className="bg-white border-2 border-ink rounded-2xl p-4 shadow-hard text-center">
+        <div className="bg-white border border-ink/15 rounded-2xl p-4 sm:p-5 shadow-soft text-center">
           <div className="text-2xl sm:text-3xl font-mono font-extrabold text-ink">
             {averageScore}
           </div>
           <div className="text-[11px] text-ink-muted mt-1">Điểm trung bình</div>
         </div>
 
-        <div className="bg-accent-light border-2 border-accent rounded-2xl p-4 shadow-hard text-center">
+        <div className="bg-accent-light border border-accent/30 rounded-2xl p-4 sm:p-5 shadow-soft text-center">
           <div className="text-2xl sm:text-3xl font-mono font-extrabold text-accent flex items-center justify-center gap-1">
             <Flame className="w-6 h-6 fill-accent text-accent" />
             <span>{currentStreak}</span>
@@ -154,7 +154,7 @@ export default function ProgressPage() {
       </div>
 
       {/* Bar Chart: Best Score per Scenario */}
-      <section className="bg-white border-2 border-ink rounded-2xl p-5 sm:p-6 shadow-hard space-y-4">
+      <section className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-4">
         <div className="flex items-center justify-between border-b border-paper-muted pb-3">
           <h2 className="text-sm font-bold text-ink uppercase tracking-wider font-mono flex items-center gap-2">
             <BarChart3 className="w-4 h-4 text-accent" />
@@ -165,16 +165,16 @@ export default function ProgressPage() {
           </span>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-3.5">
           {scenarioStats.map((st) => (
-            <div key={st.id} className="space-y-1">
+            <div key={st.id} className="space-y-1.5">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-semibold text-ink">{st.titleVI}</span>
                 <span className="font-mono text-ink-muted">
                   {st.bestScore > 0 ? `${st.bestScore} điểm (${st.turnCount} lượt)` : "Chưa luyện"}
                 </span>
               </div>
-              <div className="w-full h-3 bg-paper rounded-pill border border-ink overflow-hidden p-0.5">
+              <div className="w-full h-3 bg-paper rounded-pill border border-ink/15 overflow-hidden p-0.5">
                 <div
                   className={`h-full rounded-pill transition-all duration-500 ${
                     st.bestScore >= 80
@@ -198,7 +198,7 @@ export default function ProgressPage() {
 
       {/* Tracked Weak Points List */}
       {weakPoints.length > 0 && (
-        <section className="bg-white border-2 border-ink rounded-2xl p-5 shadow-hard space-y-3">
+        <section className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-3.5">
           <div className="flex items-center justify-between border-b border-paper-muted pb-2">
             <h3 className="text-xs font-bold font-mono uppercase text-ink flex items-center gap-1.5">
               <AlertCircle className="w-3.5 h-3.5 text-accent" />

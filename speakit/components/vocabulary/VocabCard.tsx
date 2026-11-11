@@ -33,18 +33,18 @@ export function VocabCard({ item }: VocabCardProps) {
   };
 
   return (
-    <div className="bg-white border-2 border-ink rounded-2xl p-5 shadow-hard space-y-3">
+    <div className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4 hover:shadow-card transition-all">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
             <h3 className="text-xl font-bold font-mono text-ink tracking-tight">
               {item.term}
             </h3>
-            <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-paper border border-ink text-ink-muted">
+            <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-ink-muted">
               {item.partOfSpeech}
             </span>
           </div>
-          <div className="text-xs font-mono text-accent font-semibold mt-0.5">
+          <div className="text-sm font-ipa text-accent font-medium tracking-wide mt-1">
             {item.phonetic}
           </div>
         </div>
@@ -52,7 +52,7 @@ export function VocabCard({ item }: VocabCardProps) {
         <button
           type="button"
           onClick={handlePlayWord}
-          className="w-9 h-9 rounded-full bg-paper border-2 border-ink flex items-center justify-center text-ink hover:bg-accent hover:text-white shadow-hard shadow-hard-press transition-colors"
+          className="w-9 h-9 rounded-full bg-paper border border-ink/20 flex items-center justify-center text-ink hover:bg-accent hover:text-white shadow-soft shadow-hard-press transition-colors"
           title={`Phát âm từ "${item.term}"`}
         >
           {isPlaying ? (
@@ -64,12 +64,12 @@ export function VocabCard({ item }: VocabCardProps) {
       </div>
 
       {/* Vietnamese Meaning */}
-      <p className="text-xs text-ink font-medium leading-relaxed bg-paper-card border border-ink/30 p-2.5 rounded-xl">
+      <p className="text-xs text-ink font-medium leading-relaxed bg-paper/60 border border-ink/10 p-3 rounded-xl">
         {item.meaningVI}
       </p>
 
       {/* Example Sentence */}
-      <div className="bg-paper p-3 rounded-xl border border-ink space-y-1 text-xs">
+      <div className="bg-paper p-3.5 rounded-xl border border-ink/15 space-y-1.5 text-xs">
         <div className="flex items-center justify-between">
           <span className="font-mono text-[10px] uppercase font-bold text-ink-muted">
             Ví dụ trong công việc:
@@ -77,10 +77,10 @@ export function VocabCard({ item }: VocabCardProps) {
           <button
             type="button"
             onClick={handlePlaySentence}
-            className="text-[11px] font-mono text-accent hover:underline flex items-center gap-1"
+            className="text-[11px] font-mono text-accent hover:underline flex items-center gap-1 font-semibold"
           >
-            <Volume2 className="w-3 h-3" />
-            <span>Nghe câu</span>
+            <Volume2 className="w-3.5 h-3.5" />
+            <span>Nghe câu mẫu</span>
           </button>
         </div>
         <div className="font-medium text-ink leading-relaxed">

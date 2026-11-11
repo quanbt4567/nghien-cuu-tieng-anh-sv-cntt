@@ -31,6 +31,7 @@ const config: Config = {
         sans: ["var(--font-be-vietnam-pro)", "sans-serif"],
         display: ["var(--font-be-vietnam-pro)", "sans-serif"],
         mono: ["var(--font-jetbrains-mono)", "monospace"],
+        ipa: ["'Lucida Sans Unicode'", "'DejaVu Sans'", "'Arial Unicode MS'", "'Segoe UI'", "sans-serif"],
       },
       borderRadius: {
         card: "16px",
@@ -38,7 +39,9 @@ const config: Config = {
         pill: "9999px",
       },
       boxShadow: {
-        hard: "4px 4px 0px #1A1714",
+        hard: "0 4px 18px -2px rgba(26, 23, 20, 0.08), 0 2px 6px -1px rgba(26, 23, 20, 0.04)",
+        soft: "0 4px 20px -2px rgba(26, 23, 20, 0.06), 0 2px 6px -1px rgba(26, 23, 20, 0.03)",
+        card: "0 4px 24px -2px rgba(26, 23, 20, 0.07), 0 2px 8px -1px rgba(26, 23, 20, 0.03)",
       },
     },
   },

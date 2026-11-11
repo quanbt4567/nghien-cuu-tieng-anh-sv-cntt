@@ -17,25 +17,35 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Exactly ONE hard offset shadow utility per Constitution Principle VI */
-.shadow-hard {
-  box-shadow: 4px 4px 0px #1A1714;
+/* Centered soft shadow & refined borders inspired by xiehanzi.com */
+.shadow-hard,
+.shadow-card {
+  box-shadow: 0 4px 20px -2px rgba(26, 23, 20, 0.07), 0 2px 6px -1px rgba(26, 23, 20, 0.03);
+}
+
+.shadow-soft {
+  box-shadow: 0 4px 16px -2px rgba(26, 23, 20, 0.06), 0 2px 4px -1px rgba(26, 23, 20, 0.02);
 }
 
 .shadow-hard-press:active {
-  transform: translate(2px, 2px);
+  transform: translateY(1px);
+}
+
+/* Dedicated phonetic font stack for clean IPA glyph rendering */
+.font-ipa {
+  font-family: "Lucida Sans Unicode", "DejaVu Sans", "Arial Unicode MS", "Segoe UI", system-ui, sans-serif;
 }
 
 /* Pulsing wave for recording microphone (ONE signature interaction) */
 @keyframes micPulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(229, 72, 77, 0.45), 4px 4px 0px #1A1714;
+    box-shadow: 0 0 0 0 rgba(229, 72, 77, 0.4), 0 4px 16px -2px rgba(26, 23, 20, 0.08);
   }
   70% {
-    box-shadow: 0 0 0 18px rgba(229, 72, 77, 0), 4px 4px 0px #1A1714;
+    box-shadow: 0 0 0 18px rgba(229, 72, 77, 0), 0 4px 16px -2px rgba(26, 23, 20, 0.08);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(229, 72, 77, 0), 4px 4px 0px #1A1714;
+    box-shadow: 0 0 0 0 rgba(229, 72, 77, 0), 0 4px 16px -2px rgba(26, 23, 20, 0.08);
   }
 }
 

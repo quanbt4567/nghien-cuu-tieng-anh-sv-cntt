@@ -87,7 +87,7 @@ export function AudioPromptPlayer({
         <button
           onClick={handleStop}
           type="button"
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-pill bg-accent text-white border-2 border-ink shadow-hard shadow-hard-press"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-pill bg-accent text-white border border-accent shadow-soft"
           title="Dừng phát âm"
         >
           <VolumeX className="w-3.5 h-3.5" />
@@ -97,7 +97,7 @@ export function AudioPromptPlayer({
         <button
           onClick={() => handlePlay()}
           type="button"
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-pill bg-paper-card text-ink border-2 border-ink shadow-hard hover:bg-paper-muted shadow-hard-press"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-pill bg-paper-card text-ink border border-ink/15 shadow-soft hover:bg-paper-muted"
           title="Nghe lại câu hỏi"
         >
           <RotateCcw className="w-3.5 h-3.5" />
@@ -106,7 +106,7 @@ export function AudioPromptPlayer({
       )}
 
       {/* Speed Rate Selectors */}
-      <div className="flex items-center gap-1 bg-paper-card p-0.5 rounded-pill border-2 border-ink shadow-hard">
+      <div className="flex items-center gap-1 bg-paper-card p-0.5 rounded-pill border border-ink/15 shadow-soft">
         {([0.8, 1.0, 1.2] as const).map((r) => (
           <button
             key={r}

@@ -56,7 +56,7 @@ export default function PracticePage() {
   if (!scenario) {
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center space-y-4">
-        <div className="w-12 h-12 rounded-pill bg-accent-light text-accent flex items-center justify-center mx-auto border-2 border-ink shadow-hard">
+        <div className="w-12 h-12 rounded-pill bg-accent-light text-accent flex items-center justify-center mx-auto border border-accent/20 shadow-soft">
           <AlertCircle className="w-6 h-6" />
         </div>
         <h1 className="text-xl font-bold text-ink">
@@ -67,7 +67,7 @@ export default function PracticePage() {
         </p>
         <Link
           href="/"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-ink text-white font-medium text-xs border-2 border-ink shadow-hard"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-ink text-white font-medium text-xs border border-ink shadow-soft hover:bg-ink-muted"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Quay lại danh sách kịch bản</span>
@@ -216,28 +216,28 @@ export default function PracticePage() {
       : 0;
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+    <div className="max-w-3xl mx-auto px-4 py-8 sm:py-10 space-y-8">
       {/* Top Bar */}
       <div className="flex items-center justify-between gap-4">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper-card text-ink text-xs font-medium border-2 border-ink shadow-hard hover:bg-paper-muted shadow-hard-press transition-all"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white text-ink text-xs font-medium border border-ink/15 shadow-soft hover:bg-paper-muted shadow-hard-press transition-all"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Danh sách kịch bản</span>
         </Link>
 
-        {/* Turn Step Indicators */}
-        <div className="flex items-center gap-1.5">
+        {/* Turn Step Indicators (Refined Borders) */}
+        <div className="flex items-center gap-2">
           {scenario.turns.map((turn, idx) => (
             <span
               key={turn.turnIndex}
-              className={`px-3 py-1 rounded-pill text-xs font-mono font-bold border-2 transition-all ${
+              className={`px-3 py-1 rounded-pill text-xs font-mono font-bold border transition-all ${
                 idx === currentTurnIndex && !isCompleted
-                  ? "bg-accent text-white border-ink shadow-hard"
+                  ? "bg-accent text-white border-accent shadow-soft"
                   : idx < currentTurnIndex || isCompleted
-                  ? "bg-paper-muted text-ink border-ink"
-                  : "bg-paper text-ink-faint border-ink opacity-60"
+                  ? "bg-paper-muted text-ink border-ink/15"
+                  : "bg-paper text-ink-faint border-ink/10 opacity-60"
               }`}
             >
               Lượt {idx + 1}/3
@@ -260,9 +260,9 @@ export default function PracticePage() {
           {/* AI Mode Off Banner if no key */}
           {!apiKey && <AiModeBanner />}
 
-          {/* Turn Question Card */}
-          <div className="bg-paper-card border-2 border-ink rounded-2xl p-6 shadow-hard space-y-5">
-            <div className="flex items-center justify-between border-b border-paper-muted pb-3">
+          {/* Turn Question Card (Refined & Breathable) */}
+          <div className="bg-white border border-ink/15 rounded-2xl p-6 sm:p-7 shadow-soft space-y-6">
+            <div className="flex items-center justify-between border-b border-paper-muted pb-3.5">
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-accent flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-accent" />
                 Câu hỏi Lượt {currentTurnIndex + 1}/3
@@ -289,7 +289,7 @@ export default function PracticePage() {
               <button
                 type="button"
                 onClick={() => setShowHint(!showHint)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper border border-ink text-xs font-mono font-medium text-ink hover:bg-paper-muted shadow-hard shadow-hard-press transition-all"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-medium text-ink hover:bg-paper-muted shadow-soft transition-all"
               >
                 <Lightbulb className={`w-3.5 h-3.5 ${showHint ? "text-accent fill-accent" : "text-ink-muted"}`} />
                 <span>{showHint ? "Ẩn gợi ý & từ khóa" : "Xem gợi ý & từ khóa (Hint)"}</span>
@@ -307,7 +307,7 @@ export default function PracticePage() {
                       {currentTurn.keywords.map((kw) => (
                         <span
                           key={kw}
-                          className="px-2.5 py-1 text-xs font-mono bg-paper border border-ink rounded-pill text-ink"
+                          className="px-2.5 py-1 text-xs font-mono bg-paper border border-ink/15 rounded-pill text-ink"
                         >
                           {kw}
                         </span>
@@ -316,7 +316,7 @@ export default function PracticePage() {
                   </div>
 
                   {/* Vietnamese Context Hint */}
-                  <div className="bg-paper-muted border border-ink rounded-xl p-3.5 flex items-start gap-2.5 text-xs text-ink leading-relaxed">
+                  <div className="bg-paper-muted border border-ink/15 rounded-xl p-3.5 flex items-start gap-2.5 text-xs text-ink leading-relaxed">
                     <Lightbulb className="w-4 h-4 text-accent shrink-0 mt-0.5" />
                     <div>
                       <strong className="font-semibold">Gợi ý cách trả lời: </strong>
@@ -332,7 +332,7 @@ export default function PracticePage() {
           {!evalResult && (
             <div className="space-y-5">
               {/* Signature Microphone Button */}
-              <div className="bg-white border-2 border-ink rounded-2xl p-6 shadow-hard">
+              <div className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft">
                 <MicButton
                   isRecording={isRecording}
                   onStart={handleStartRecording}
@@ -342,8 +342,8 @@ export default function PracticePage() {
                 />
               </div>
 
-              {/* Automatic Typed Fallback / Editor (Inlined) */}
-              <div className="bg-white border-2 border-ink rounded-2xl p-4 sm:p-5 shadow-hard space-y-3">
+              {/* Automatic Typed Fallback / Editor (Inlined & Refined) */}
+              <div className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-ink">
                     <Keyboard className="w-4 h-4 text-accent" />
@@ -372,7 +372,7 @@ export default function PracticePage() {
                   disabled={isEvaluating || isRecording}
                   rows={3}
                   placeholder="Gõ câu trả lời của bạn bằng tiếng Anh tại đây (hoặc nói bằng micro để văn bản tự điền vào)..."
-                  className="w-full p-3 text-sm bg-paper border-2 border-ink rounded-xl text-ink placeholder:text-ink-faint focus:outline-none focus:border-accent resize-none transition-colors"
+                  className="w-full p-3.5 text-sm bg-paper border border-ink/15 rounded-xl text-ink placeholder:text-ink-faint focus:outline-none focus:border-accent resize-none transition-colors"
                 />
 
                 <div className="flex items-center justify-between gap-2 pt-1">
@@ -390,7 +390,7 @@ export default function PracticePage() {
                     type="button"
                     onClick={handleSubmitAnswer}
                     disabled={!transcript.trim() || isEvaluating || isRecording}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-ink text-white font-medium text-xs border-2 border-ink shadow-hard hover:bg-ink-muted shadow-hard-press disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-ink text-white font-medium text-xs border border-ink shadow-soft hover:bg-ink-muted shadow-hard-press disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                   >
                     <span>Gửi câu trả lời</span>
                     <Send className="w-3.5 h-3.5" />
@@ -400,7 +400,7 @@ export default function PracticePage() {
 
               {/* Evaluation Loading Indicator */}
               {isEvaluating && (
-                <div className="bg-paper-card border-2 border-ink rounded-2xl p-6 shadow-hard flex items-center justify-center gap-3 text-sm font-semibold text-ink">
+                <div className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft flex items-center justify-center gap-3 text-sm font-semibold text-ink">
                   <Loader2 className="w-5 h-5 animate-spin text-accent" />
                   <span>Đang phân tích từ khóa và ngữ pháp câu trả lời...</span>
                 </div>
@@ -408,7 +408,7 @@ export default function PracticePage() {
 
               {/* Evaluation Network Error Alert */}
               {evaluationError && (
-                <div className="bg-accent-light border-2 border-accent rounded-xl p-4 text-xs text-accent font-semibold flex items-center gap-2">
+                <div className="bg-accent-light border border-accent/40 rounded-xl p-4 text-xs text-accent font-semibold flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{evaluationError}</span>
                 </div>

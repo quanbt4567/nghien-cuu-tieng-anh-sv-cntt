@@ -23,7 +23,7 @@ export default function VocabularyPage() {
         <div>
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper-card text-ink text-xs font-medium border-2 border-ink shadow-hard hover:bg-paper-muted shadow-hard-press transition-all mb-2"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white text-ink text-xs font-medium border border-ink/15 shadow-soft hover:bg-paper-muted shadow-hard-press transition-all mb-3"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Trang chủ</span>
@@ -32,7 +32,7 @@ export default function VocabularyPage() {
             <BookOpen className="w-6 h-6 text-accent" />
             <span>12 Thuật Ngữ IT Thiết Yếu</span>
           </h1>
-          <p className="text-xs text-ink-muted mt-1">
+          <p className="text-xs text-ink-muted mt-1.5">
             Luyện phát âm chuẩn và nắm vững cách diễn đạt các thuật ngữ xuất hiện hàng ngày trong môi trường kỹ thuật.
           </p>
         </div>
@@ -45,20 +45,20 @@ export default function VocabularyPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Tìm kiếm thuật ngữ..."
-            className="w-full pl-9 pr-3 py-2 text-xs font-mono bg-white border-2 border-ink rounded-pill text-ink placeholder:text-ink-faint focus:outline-none focus:border-accent shadow-hard"
+            className="w-full pl-9 pr-3 py-2 text-xs font-mono bg-white border border-ink/20 rounded-pill text-ink placeholder:text-ink-faint focus:outline-none focus:border-accent shadow-soft"
           />
         </div>
       </div>
 
-      {/* Vocabulary Cards List */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* Vocabulary Cards List (Increased Gap & Breathable Layout) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 pt-2">
         {filtered.map((item) => (
           <VocabCard key={item.id} item={item} />
         ))}
       </div>
 
       {filtered.length === 0 && (
-        <div className="bg-white border-2 border-ink rounded-2xl p-8 text-center text-xs text-ink-muted shadow-hard">
+        <div className="bg-white border border-ink/15 rounded-2xl p-8 text-center text-xs text-ink-muted shadow-soft">
           Không tìm thấy thuật ngữ nào phù hợp với từ khóa "{searchQuery}".
         </div>
       )}

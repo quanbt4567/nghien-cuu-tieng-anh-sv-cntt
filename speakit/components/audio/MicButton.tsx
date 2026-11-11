@@ -33,12 +33,12 @@ export function MicButton({
         onClick={handleClick}
         disabled={disabled}
         aria-label={isRecording ? "Dừng ghi âm" : "Bắt đầu nói"}
-        className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-ink flex items-center justify-center transition-all ${
+        className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-accent/20 flex items-center justify-center transition-all ${
           disabled
-            ? "bg-paper-muted cursor-not-allowed opacity-50"
+            ? "bg-paper-muted cursor-not-allowed opacity-50 border-ink/10"
             : isRecording
-            ? "bg-accent text-white animate-mic-listening shadow-hard"
-            : "bg-accent text-white shadow-hard hover:bg-accent-hover shadow-hard-press"
+            ? "bg-accent text-white animate-mic-listening shadow-card scale-105"
+            : "bg-accent text-white shadow-soft hover:shadow-card hover:bg-accent-hover hover:scale-102"
         }`}
       >
         {isRecording ? (

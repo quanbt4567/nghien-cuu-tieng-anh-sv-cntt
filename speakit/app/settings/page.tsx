@@ -100,7 +100,7 @@ export default function SettingsPage() {
       <div>
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper-card text-ink text-xs font-medium border-2 border-ink shadow-hard hover:bg-paper-muted shadow-hard-press transition-all mb-2"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white text-ink text-xs font-medium border border-ink/15 shadow-soft hover:bg-paper-muted transition-all mb-2"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Trang chủ</span>
@@ -114,8 +114,8 @@ export default function SettingsPage() {
       </div>
 
       {/* 1. Gemini API Key Configuration Card */}
-      <section className="bg-white border-2 border-ink rounded-2xl p-5 sm:p-6 shadow-hard space-y-4">
-        <div className="flex items-center gap-2 border-b border-paper-muted pb-3">
+      <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
+        <div className="flex items-center gap-2 border-b border-ink/10 pb-3">
           <Key className="w-5 h-5 text-accent" />
           <h2 className="text-sm font-bold uppercase font-mono text-ink">
             Khóa Google Gemini API (Tùy chọn)
@@ -131,7 +131,7 @@ export default function SettingsPage() {
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
             placeholder="AIzaSy..."
-            className="w-full p-3 text-sm font-mono bg-paper border-2 border-ink rounded-xl text-ink placeholder:text-ink-faint focus:outline-none focus:border-accent"
+            className="w-full p-3 text-sm font-mono bg-paper border border-ink/15 rounded-xl text-ink placeholder:text-ink-faint focus:outline-none focus:border-accent"
           />
           <div className="flex items-start gap-1.5 text-[11px] font-mono text-ink-muted leading-relaxed">
             <ShieldCheck className="w-3.5 h-3.5 text-accent shrink-0 mt-0.5" />
@@ -146,7 +146,7 @@ export default function SettingsPage() {
             type="button"
             onClick={handleTestConnection}
             disabled={isTesting || !apiKey.trim()}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-paper-card text-ink text-xs font-semibold border-2 border-ink shadow-hard hover:bg-paper-muted shadow-hard-press disabled:opacity-50 transition-all"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-paper-card text-ink text-xs font-semibold border border-ink/15 shadow-soft hover:bg-paper-muted disabled:opacity-50 transition-all"
           >
             {isTesting ? "Đang thử nghiệm..." : "Kiểm tra kết nối"}
           </button>
@@ -154,7 +154,7 @@ export default function SettingsPage() {
           <button
             type="button"
             onClick={handleSaveSettings}
-            className="inline-flex items-center gap-1.5 px-5 py-2 rounded-pill bg-ink text-white text-xs font-semibold border-2 border-ink shadow-hard hover:bg-ink-muted shadow-hard-press transition-all"
+            className="inline-flex items-center gap-1.5 px-5 py-2 rounded-pill bg-ink text-white text-xs font-semibold border border-ink shadow-soft hover:bg-ink-muted transition-all"
           >
             <span>Lưu cài đặt</span>
           </button>
@@ -165,8 +165,8 @@ export default function SettingsPage() {
           <div
             className={`p-3 rounded-xl border text-xs font-medium flex items-start gap-2 ${
               testResult.success
-                ? "bg-paper text-ink border-ink"
-                : "bg-accent-light text-accent border-accent"
+                ? "bg-paper text-ink border-ink/20"
+                : "bg-accent-light text-accent border-accent/30"
             }`}
           >
             {testResult.success ? (
@@ -180,15 +180,15 @@ export default function SettingsPage() {
 
         {/* Save Status Banner */}
         {saveStatus && (
-          <div className="p-3 bg-paper rounded-xl border border-ink text-xs text-ink font-medium">
+          <div className="p-3 bg-paper rounded-xl border border-ink/20 text-xs text-ink font-medium">
             {saveStatus}
           </div>
         )}
       </section>
 
       {/* 2. Audio & Speech Settings */}
-      <section className="bg-white border-2 border-ink rounded-2xl p-5 sm:p-6 shadow-hard space-y-4">
-        <div className="flex items-center gap-2 border-b border-paper-muted pb-3">
+      <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
+        <div className="flex items-center gap-2 border-b border-ink/10 pb-3">
           <Volume2 className="w-5 h-5 text-accent" />
           <h2 className="text-sm font-bold uppercase font-mono text-ink">
             Cấu hình giọng đọc câu hỏi (TTS)
@@ -208,10 +208,10 @@ export default function SettingsPage() {
                   setSpeechRate(r);
                   storageAdapter.saveSettings({ speechRate: r });
                 }}
-                className={`px-4 py-1.5 rounded-pill text-xs font-mono font-bold border-2 transition-all ${
+                className={`px-4 py-1.5 rounded-pill text-xs font-mono font-bold border transition-all ${
                   speechRate === r
-                    ? "bg-accent text-white border-ink shadow-hard"
-                    : "bg-paper-card text-ink border-ink hover:bg-paper"
+                    ? "bg-accent text-white border-accent shadow-soft"
+                    : "bg-paper-card text-ink border-ink/15 hover:bg-paper"
                 }`}
               >
                 {r}x {r === 0.8 ? "(Chậm)" : r === 1.0 ? "(Chuẩn)" : "(Nhanh)"}
@@ -222,8 +222,8 @@ export default function SettingsPage() {
       </section>
 
       {/* 3. Reset Progress (Data Hygiene) */}
-      <section className="bg-paper-card border-2 border-ink rounded-2xl p-5 sm:p-6 shadow-hard space-y-3">
-        <div className="flex items-center gap-2 border-b border-paper-muted pb-3">
+      <section className="bg-paper-card border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-3">
+        <div className="flex items-center gap-2 border-b border-ink/10 pb-3">
           <Trash2 className="w-5 h-5 text-accent" />
           <h2 className="text-sm font-bold uppercase font-mono text-ink">
             Quản Lý Dữ Liệu Luyện Tập
@@ -237,7 +237,7 @@ export default function SettingsPage() {
         <button
           type="button"
           onClick={() => setShowResetModal(true)}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-paper border-2 border-ink text-accent hover:bg-accent-light text-xs font-semibold shadow-hard shadow-hard-press transition-all"
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-paper border border-ink/15 text-accent hover:bg-accent-light text-xs font-semibold shadow-soft transition-all"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           <span>Làm mới tiến độ</span>
@@ -252,9 +252,9 @@ export default function SettingsPage() {
 
       {/* Reset Confirmation Modal */}
       {showResetModal && (
-        <div className="fixed inset-0 z-50 bg-ink/50 flex items-center justify-center p-4">
-          <div className="bg-white border-2 border-ink rounded-2xl p-6 max-w-sm w-full shadow-hard space-y-4 text-center">
-            <div className="w-12 h-12 rounded-full bg-accent-light text-accent flex items-center justify-center mx-auto border-2 border-ink">
+        <div className="fixed inset-0 z-50 bg-ink/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-ink/15 rounded-2xl p-6 max-w-sm w-full shadow-card space-y-4 text-center">
+            <div className="w-12 h-12 rounded-full bg-accent-light text-accent flex items-center justify-center mx-auto border border-ink/15">
               <AlertCircle className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold text-ink">Xác nhận làm mới tiến độ?</h3>
@@ -265,14 +265,14 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={() => setShowResetModal(false)}
-                className="px-4 py-2 rounded-pill bg-paper-card border-2 border-ink text-xs font-medium shadow-hard"
+                className="px-4 py-2 rounded-pill bg-paper-card border border-ink/15 text-xs font-medium shadow-soft"
               >
                 Hủy bỏ
               </button>
               <button
                 type="button"
                 onClick={handleResetProgress}
-                className="px-4 py-2 rounded-pill bg-accent text-white border-2 border-ink text-xs font-bold shadow-hard shadow-hard-press"
+                className="px-4 py-2 rounded-pill bg-accent text-white border border-accent text-xs font-bold shadow-soft"
               >
                 Đồng ý xóa
               </button>

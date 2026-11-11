@@ -23,9 +23,9 @@ export function FeedbackCard({
   const isMedium = result.score >= 60 && result.score < 80;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* 1. Score Meter (Inlined from ScoreMeter.tsx) */}
-      <div className="bg-white border-2 border-ink rounded-2xl p-4 shadow-hard space-y-3">
+      <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-3.5">
         <div className="flex items-center justify-between">
           <span className="text-xs font-bold text-ink uppercase tracking-wider font-mono">
             Điểm đánh giá câu trả lời
@@ -36,10 +36,10 @@ export function FeedbackCard({
           </div>
         </div>
 
-        {/* Hard Brutalist Progress Bar */}
-        <div className="w-full h-4 bg-paper rounded-pill border-2 border-ink overflow-hidden p-0.5">
+        {/* Centered Brutalist Progress Bar */}
+        <div className="w-full h-3.5 bg-paper rounded-pill border border-ink/15 overflow-hidden p-0.5">
           <div
-            className={`h-full rounded-pill border border-ink transition-all duration-500 ${
+            className={`h-full rounded-pill border border-ink/20 transition-all duration-500 ${
               isHigh ? "bg-accent" : isMedium ? "bg-ink" : "bg-paper-muted"
             }`}
             style={{ width: `${Math.max(5, result.score)}%` }}
@@ -54,7 +54,7 @@ export function FeedbackCard({
       </div>
 
       {/* 2. IT Keyword Badges (Inlined from KeywordBadges.tsx) */}
-      <div className="bg-white border-2 border-ink rounded-2xl p-4 shadow-hard space-y-3">
+      <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-3.5">
         <div className="flex items-center justify-between text-xs font-bold text-ink">
           <span>Từ khóa kỹ thuật CNTT</span>
           <span className="font-mono text-ink-muted">
@@ -68,7 +68,7 @@ export function FeedbackCard({
           {result.keywordsUsed.map((kw) => (
             <span
               key={kw}
-              className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-mono font-medium rounded-pill bg-paper border border-ink text-ink"
+              className="inline-flex items-center gap-1 px-3 py-1 text-xs font-mono font-medium rounded-pill bg-paper border border-ink/15 text-ink"
             >
               <Check className="w-3.5 h-3.5 text-accent stroke-[3]" />
               <span>{kw}</span>
@@ -79,7 +79,7 @@ export function FeedbackCard({
           {result.keywordsMissed.map((kw) => (
             <span
               key={kw}
-              className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-mono font-medium rounded-pill bg-paper-muted border border-ink text-ink-muted line-through decoration-accent decoration-2"
+              className="inline-flex items-center gap-1 px-3 py-1 text-xs font-mono font-medium rounded-pill bg-paper-muted border border-ink/15 text-ink-muted line-through decoration-accent decoration-2"
             >
               <X className="w-3.5 h-3.5 text-accent stroke-[2]" />
               <span>{kw}</span>
@@ -89,7 +89,7 @@ export function FeedbackCard({
       </div>
 
       {/* 3. Detailed Feedback & Corrections */}
-      <div className="bg-white border-2 border-ink rounded-2xl p-5 sm:p-6 shadow-hard space-y-5">
+      <div className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5">
         {/* Student Transcript */}
         <div className="space-y-1.5">
           <span className="text-xs font-mono font-bold uppercase text-ink-muted flex items-center gap-1.5">
@@ -120,14 +120,14 @@ export function FeedbackCard({
                 );
               }}
               disabled={isPlayingBetter}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-paper border border-ink text-xs font-mono font-semibold text-ink hover:bg-accent hover:text-white shadow-hard shadow-hard-press transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-semibold text-ink hover:bg-accent hover:text-white shadow-soft transition-colors disabled:opacity-50"
               title="Nghe câu mẫu phát âm chuẩn"
             >
               <Volume2 className={`w-3.5 h-3.5 ${isPlayingBetter ? "text-accent animate-pulse" : ""}`} />
               <span>{isPlayingBetter ? "Đang phát..." : "Nghe mẫu (Shadowing)"}</span>
             </button>
           </div>
-          <div className="p-3 bg-accent-light rounded-xl border-2 border-accent text-sm text-ink leading-relaxed">
+          <div className="p-3 bg-accent-light rounded-xl border border-accent/30 text-sm text-ink leading-relaxed">
             <span className="font-semibold text-accent block text-xs font-mono mb-1">
               Better Sentence:
             </span>
@@ -145,7 +145,7 @@ export function FeedbackCard({
               {result.grammarCorrections.map((g, idx) => (
                 <div
                   key={idx}
-                  className="p-3 bg-paper rounded-xl border border-ink space-y-1 text-xs"
+                  className="p-3 bg-paper rounded-xl border border-ink/15 space-y-1 text-xs"
                 >
                   <div className="flex flex-wrap items-baseline gap-2">
                     <span className="line-through text-accent font-mono">
@@ -167,7 +167,7 @@ export function FeedbackCard({
 
         {/* Pronunciation Estimation Note */}
         {result.pronunciationNote && (
-          <div className="p-3 bg-paper-muted rounded-xl border border-ink text-xs text-ink-muted">
+          <div className="p-3 bg-paper-muted rounded-xl border border-ink/15 text-xs text-ink-muted">
             <span className="font-semibold text-ink block font-mono mb-0.5">
               Ước lượng phát âm (từ transcript):
             </span>
@@ -180,7 +180,7 @@ export function FeedbackCard({
           <div className="pt-2">
             <button
               onClick={onNextTurn}
-              className="w-full py-3 px-4 rounded-pill bg-ink text-white font-bold text-sm border-2 border-ink shadow-hard hover:bg-ink-muted shadow-hard-press flex items-center justify-center gap-2 transition-all"
+              className="w-full py-3 px-4 rounded-pill bg-ink text-white font-bold text-sm border border-ink shadow-soft hover:bg-ink-muted flex items-center justify-center gap-2 transition-all"
             >
               <span>{isLastTurn ? "Xem tổng kết lượt luyện tập" : "Lượt đối thoại tiếp theo"}</span>
               <ArrowRight className="w-4 h-4" />

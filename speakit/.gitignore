@@ -38,3 +38,6 @@ Thumbs.db
 *.swo
 
 .neon
+
+.vercel
+.env*
