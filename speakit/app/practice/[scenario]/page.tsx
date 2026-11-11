@@ -22,6 +22,7 @@ export default function PracticePage() {
   // Turn state (0, 1, 2)
   const [currentTurnIndex, setCurrentTurnIndex] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [showHint, setShowHint] = useState(false);
 
   // Input state
   const [transcript, setTranscript] = useState("");
@@ -190,6 +191,7 @@ export default function PracticePage() {
       setEvalResult(null);
       setSpeechError(null);
       setEvaluationError(null);
+      setShowHint(false);
     } else {
       setIsCompleted(true);
     }
@@ -205,6 +207,7 @@ export default function PracticePage() {
     setConversationHistory([]);
     setSpeechError(null);
     setEvaluationError(null);
+    setShowHint(false);
   };
 
   const averageScore =
@@ -281,31 +284,47 @@ export default function PracticePage() {
               </div>
             </div>
 
-            {/* Target Keywords Preview */}
-            <div className="space-y-2 pt-1">
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-ink">
-                <Tag className="w-3.5 h-3.5 text-accent" />
-                <span>Từ khóa gợi ý nên dùng ({currentTurn.keywords.length}):</span>
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {currentTurn.keywords.map((kw) => (
-                  <span
-                    key={kw}
-                    className="px-2.5 py-1 text-xs font-mono bg-paper border border-ink rounded-pill text-ink"
-                  >
-                    {kw}
-                  </span>
-                ))}
-              </div>
-            </div>
+            {/* Collapsible Hint & Keywords (Stimulates Speaking Reflex) */}
+            <div className="pt-1">
+              <button
+                type="button"
+                onClick={() => setShowHint(!showHint)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper border border-ink text-xs font-mono font-medium text-ink hover:bg-paper-muted shadow-hard shadow-hard-press transition-all"
+              >
+                <Lightbulb className={`w-3.5 h-3.5 ${showHint ? "text-accent fill-accent" : "text-ink-muted"}`} />
+                <span>{showHint ? "Ẩn gợi ý & từ khóa" : "Xem gợi ý & từ khóa (Hint)"}</span>
+              </button>
 
-            {/* Vietnamese Context Hint */}
-            <div className="bg-paper-muted border border-ink rounded-xl p-3.5 flex items-start gap-2.5 text-xs text-ink leading-relaxed">
-              <Lightbulb className="w-4 h-4 text-accent shrink-0 mt-0.5" />
-              <div>
-                <strong className="font-semibold">Gợi ý cách trả lời: </strong>
-                <span>{currentTurn.hintVI}</span>
-              </div>
+              {showHint && (
+                <div className="mt-3 space-y-3 pt-3 border-t border-paper-muted animate-fadeIn">
+                  {/* Target Keywords Preview */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1.5 text-xs font-semibold text-ink">
+                      <Tag className="w-3.5 h-3.5 text-accent" />
+                      <span>Từ khóa gợi ý nên dùng ({currentTurn.keywords.length}):</span>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {currentTurn.keywords.map((kw) => (
+                        <span
+                          key={kw}
+                          className="px-2.5 py-1 text-xs font-mono bg-paper border border-ink rounded-pill text-ink"
+                        >
+                          {kw}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Vietnamese Context Hint */}
+                  <div className="bg-paper-muted border border-ink rounded-xl p-3.5 flex items-start gap-2.5 text-xs text-ink leading-relaxed">
+                    <Lightbulb className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="font-semibold">Gợi ý cách trả lời: </strong>
+                      <span>{currentTurn.hintVI}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
