@@ -209,7 +209,7 @@ export function AdminSystemTab({
           </div>
           <p className="text-xs text-ink-muted leading-relaxed">
             {health.geminiConfigured
-              ? "Biến GEMINI_API_KEY đã sẵn sàng trên server (người dùng vẫn có thể tự nhập khóa riêng tại /settings)."
+              ? "Biến GEMINI_API_KEY đã sẵn sàng trên server; các lượt luyện nói dùng AI chấm điểm mặc định."
               : "Server không cài GEMINI_API_KEY mặc định; ứng dụng tự fallback sang chấm điểm từ khóa cục bộ."}
           </p>
         </div>

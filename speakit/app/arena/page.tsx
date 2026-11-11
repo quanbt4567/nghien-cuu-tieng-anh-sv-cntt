@@ -13,9 +13,11 @@ import {
   Trophy,
   UserCog,
 } from "lucide-react";
+import { Globe } from "lucide-react";
 import { BugBusterGame } from "../../components/arena/BugBusterGame";
 import { LocalLeaderboard } from "../../components/arena/LocalLeaderboard";
 import { StandupSpeedRun } from "../../components/arena/StandupSpeedRun";
+import { GlobalLeaderboard } from "../../components/leaderboard/GlobalLeaderboard";
 import { IT_ROLES } from "../../data/minigames";
 import {
   GAMIFICATION_STORAGE_KEY,
@@ -29,7 +31,11 @@ import {
 } from "../../lib/gamification";
 import { GamificationState, ITRole } from "../../lib/types";
 
-type ArenaTab = "bug-buster" | "standup-speed-run" | "leaderboard";
+type ArenaTab =
+  | "bug-buster"
+  | "standup-speed-run"
+  | "leaderboard"
+  | "global-leaderboard";
 
 const INITIAL_SSR_STATE: GamificationState = {
   totalPoints: 0,
@@ -229,6 +235,21 @@ export default function ArenaPage() {
           <Trophy className="w-4 h-4" />
           <span>Xếp hạng & Danh hiệu</span>
         </button>
+
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "global-leaderboard"}
+          onClick={() => setActiveTab("global-leaderboard")}
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-pill text-xs sm:text-sm font-semibold border transition-all ${
+            activeTab === "global-leaderboard"
+              ? "bg-accent text-white border-accent shadow-soft"
+              : "bg-white text-ink border-ink/15 hover:bg-paper-muted shadow-soft"
+          }`}
+        >
+          <Globe className="w-4 h-4" />
+          <span>Bảng xếp hạng Toàn cầu</span>
+        </button>
       </div>
 
       {/* Active Tab Panel */}
@@ -237,6 +258,7 @@ export default function ArenaPage() {
         <StandupSpeedRun role={state.selectedRole} />
       )}
       {activeTab === "leaderboard" && <LocalLeaderboard state={state} />}
+      {activeTab === "global-leaderboard" && <GlobalLeaderboard />}
     </div>
   );
 }

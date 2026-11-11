@@ -7,7 +7,7 @@ import { ScoreRequestPayload, ScoreResponse } from "../../../lib/types";
 export async function POST(req: NextRequest) {
   try {
     const body: ScoreRequestPayload = await req.json();
-    const { transcript, scenario, turnIndex, expectedKeywords, history, apiKey } = body;
+    const { transcript, scenario, turnIndex, expectedKeywords, history } = body;
 
     if (!transcript || transcript.trim().length === 0) {
       return NextResponse.json(
@@ -21,12 +21,8 @@ export async function POST(req: NextRequest) {
     const nextTurn = currentScenario?.turns?.[turnIndex + 1];
     const defaultNextQuestion = nextTurn ? nextTurn.questionEN : undefined;
 
-    // Resolve API key (client header/body or server env)
-    const effectiveApiKey =
-      apiKey ||
-      req.headers.get("x-gemini-key") ||
-      process.env.GEMINI_API_KEY ||
-      "";
+    // Resolve server-side API key cleanly without requiring user keys
+    const effectiveApiKey = process.env.GEMINI_API_KEY || "";
 
     let result: ScoreResponse | null = null;
 

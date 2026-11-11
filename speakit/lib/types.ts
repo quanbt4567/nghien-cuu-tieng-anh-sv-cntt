@@ -61,7 +61,6 @@ export interface ScoreRequestPayload {
   turnIndex: number;
   expectedKeywords: string[];
   history?: Array<{ role: "assistant" | "user"; content: string }>;
-  apiKey?: string;
 }
 
 export interface PracticeAttempt {
@@ -86,7 +85,6 @@ export interface WeakPoint {
 }
 
 export interface UserSettings {
-  geminiApiKey: string;
   speechRate: 0.8 | 1.0 | 1.2;
   autoPlayAudio: boolean;
 }

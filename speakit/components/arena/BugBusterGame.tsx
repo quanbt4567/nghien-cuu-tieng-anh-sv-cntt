@@ -28,6 +28,7 @@ import {
   pointsToNextCoin,
   recordMinigameResult,
 } from "../../lib/gamification";
+import { reportGuestPracticePoints } from "../../lib/guestClient";
 import {
   CONTENT_STORAGE_KEY,
   CONTENT_UPDATED_EVENT,
@@ -176,6 +177,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
       durationSec: elapsed,
       role,
     });
+    void reportGuestPracticePoints("arena-bug-buster", finalScore);
 
     setSummary({
       score: finalScore,

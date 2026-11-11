@@ -4,10 +4,8 @@ import { getGamificationState, mirrorTelemetry, resetGamificationState } from ".
 const ATTEMPTS_KEY = "speakit_attempts_v1";
 const WEAK_POINTS_KEY = "speakit_weakpoints_v1";
 const SETTINGS_KEY = "speakit_settings_v1";
-const GEMINI_KEY = "speakit_gemini_key";
 
 const DEFAULT_SETTINGS: UserSettings = {
-  geminiApiKey: "",
   speechRate: 1.0,
   autoPlayAudio: true,
 };
@@ -152,7 +150,6 @@ export class LocalStorageAdapter implements StorageAdapter {
 
   getSettings(): UserSettings {
     const raw = safeGetItem(SETTINGS_KEY);
-    const apiKey = safeGetItem(GEMINI_KEY) || "";
     let settings = { ...DEFAULT_SETTINGS };
 
     if (raw) {
@@ -164,19 +161,13 @@ export class LocalStorageAdapter implements StorageAdapter {
       }
     }
 
-    settings.geminiApiKey = apiKey;
     return settings;
   }
 
   saveSettings(updates: Partial<UserSettings>): void {
     const current = this.getSettings();
-    if (typeof updates.geminiApiKey === "string") {
-      // Store API key strictly isolated per Constitution Principle II
-      safeSetItem(GEMINI_KEY, updates.geminiApiKey.trim());
-    }
-
-    const { geminiApiKey, ...nonSecretSettings } = { ...current, ...updates };
-    safeSetItem(SETTINGS_KEY, JSON.stringify(nonSecretSettings));
+    const nextSettings = { ...current, ...updates };
+    safeSetItem(SETTINGS_KEY, JSON.stringify(nextSettings));
   }
 
   async resetAll(): Promise<void> {

@@ -8,11 +8,11 @@ import { SCENARIOS, VOCABULARY_LIST } from "../../../data/scenarios";
 import { AudioPromptPlayer } from "../../../components/audio/AudioPromptPlayer";
 import { MicButton } from "../../../components/audio/MicButton";
 import { FeedbackCard } from "../../../components/feedback/FeedbackCard";
-import { AiModeBanner } from "../../../components/feedback/AiModeBanner";
 import { ScenarioSummary } from "../../../components/feedback/ScenarioSummary";
 import { startSpeechRecognition, SpeechController } from "../../../lib/speech";
 import { storageAdapter } from "../../../lib/storage";
 import { awardPracticePoints, getGamificationState } from "../../../lib/gamification";
+import { reportGuestPracticePoints } from "../../../lib/guestClient";
 import {
   CONTENT_STORAGE_KEY,
   CONTENT_UPDATED_EVENT,
@@ -55,16 +55,6 @@ export default function PracticePage() {
   const [conversationHistory, setConversationHistory] = useState<
     Array<{ role: "assistant" | "user"; content: string }>
   >([]);
-
-  // Load client settings (including Gemini key if any)
-  const [apiKey, setApiKey] = useState("");
-
-  useEffect(() => {
-    const settings = storageAdapter.getSettings();
-    if (settings.geminiApiKey) {
-      setApiKey(settings.geminiApiKey);
-    }
-  }, []);
 
   useEffect(() => {
     let active = true;
@@ -190,7 +180,6 @@ export default function PracticePage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(apiKey ? { "x-gemini-key": apiKey } : {}),
         },
         body: JSON.stringify({
           transcript: transcript.trim(),
@@ -198,7 +187,6 @@ export default function PracticePage() {
           turnIndex: safeTurnIndex,
           expectedKeywords: currentTurn.keywords,
           history: conversationHistory,
-          apiKey: apiKey || undefined,
         }),
       });
 
@@ -229,6 +217,7 @@ export default function PracticePage() {
         ? Math.max(0, Math.round(scoreData.score))
         : 0;
       awardPracticePoints(earned);
+      void reportGuestPracticePoints(scenario.id, earned);
       setTotalPointsEarned((prev) => prev + earned);
       if (scoreData.keywordsMissed.length > 0) {
         setMissedKeywords((prev) => {
@@ -336,9 +325,6 @@ export default function PracticePage() {
         />
       ) : (
         <>
-          {/* AI Mode Off Banner if no key */}
-          {!apiKey && <AiModeBanner />}
-
           {/* Turn Question Card (Refined & Breathable) */}
           <div className="bg-white border border-ink/15 rounded-2xl p-6 sm:p-7 shadow-soft space-y-6">
             <div className="flex items-center justify-between border-b border-paper-muted pb-3.5">

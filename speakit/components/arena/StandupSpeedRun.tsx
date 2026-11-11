@@ -1,9 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import {
-  AlertTriangle,
   ArrowRight,
   Check,
   Clock,
@@ -13,7 +11,6 @@ import {
   Mic,
   Play,
   RotateCcw,
-  Settings,
   SkipForward,
   Square,
   Timer,
@@ -29,6 +26,7 @@ import {
   pointsToNextCoin,
   recordMinigameResult,
 } from "../../lib/gamification";
+import { reportGuestPracticePoints } from "../../lib/guestClient";
 import { scoreLocally } from "../../lib/localScorer";
 import {
   SpeechController,
@@ -78,7 +76,6 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
   const [isPlayingTts, setIsPlayingTts] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [speechError, setSpeechError] = useState<string | null>(null);
-  const [apiKey, setApiKey] = useState("");
   const [speechRate, setSpeechRate] = useState<0.8 | 1.0 | 1.2>(1.0);
   const [summary, setSummary] = useState<RunSummary | null>(null);
 
@@ -93,13 +90,9 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
   const submittingRef = useRef(false);
   const resultsRef = useRef<TurnBreakdown[]>([]);
   const runStartMsRef = useRef(0);
-  const apiKeyRef = useRef("");
 
   useEffect(() => {
     const settings = storageAdapter.getSettings();
-    const key = settings.geminiApiKey?.trim() ?? "";
-    setApiKey(key);
-    apiKeyRef.current = key;
     setSpeechRate(settings.speechRate ?? 1.0);
   }, []);
 
@@ -147,6 +140,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
         durationSec,
         role,
       });
+      void reportGuestPracticePoints("arena-standup-speed-run", totalScore);
 
       setSummary({
         totalScore,
@@ -201,16 +195,12 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              ...(apiKeyRef.current
-                ? { "x-gemini-key": apiKeyRef.current }
-                : {}),
             },
             body: JSON.stringify({
               transcript: text,
               scenario: "daily-standup",
               turnIndex: idx,
               expectedKeywords: question.expectedKeywords,
-              apiKey: apiKeyRef.current || undefined,
             }),
           });
           if (!response.ok) {
@@ -286,9 +276,6 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
   const startRun = () => {
     stopAudio();
     const settings = storageAdapter.getSettings();
-    const key = settings.geminiApiKey?.trim() ?? "";
-    setApiKey(key);
-    apiKeyRef.current = key;
     setSpeechRate(settings.speechRate ?? 1.0);
 
     resultsRef.current = [];
@@ -361,30 +348,9 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
     );
   };
 
-  const aiModeBanner = !apiKey && (
-    <div className="bg-paper-muted border border-ink/15 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2 text-xs text-ink">
-      <div className="flex items-center gap-2">
-        <AlertTriangle className="w-4 h-4 text-accent shrink-0" />
-        <span>
-          <strong>AI mode off</strong> — Đang chấm điểm bằng bộ quy tắc từ khóa
-          cục bộ (hoạt động tốt khi offline).
-        </span>
-      </div>
-      <Link
-        href="/settings"
-        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill bg-white border border-ink/20 font-mono text-[11px] font-medium hover:bg-paper"
-      >
-        <Settings className="w-3 h-3" />
-        <span>Cấu hình khóa AI</span>
-      </Link>
-    </div>
-  );
-
   if (phase === "ready") {
     return (
       <section className="bg-white border border-ink/15 rounded-2xl p-6 sm:p-8 shadow-soft space-y-6">
-        {aiModeBanner}
-
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-2 max-w-xl">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-accent-light text-accent text-xs font-mono font-bold border border-accent/25">
@@ -594,8 +560,6 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
 
   return (
     <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-7 shadow-soft space-y-5">
-      {aiModeBanner}
-
       {/* Turn & Countdown Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">

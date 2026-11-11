@@ -180,7 +180,7 @@ export class SupabaseAdapter implements StorageAdapter {
     }
   }
 
-  // Settings & Gemini API key NEVER go to Supabase per Constitution Principle II
+  // Settings NEVER go to Supabase per Constitution Principle II
   getSettings(): UserSettings {
     return this.localFallback.getSettings();
   }
