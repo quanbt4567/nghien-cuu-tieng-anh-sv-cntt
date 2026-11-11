@@ -1,0 +1,13 @@
+{
+  "name": "nghien-cuu-tieng-anh-sv-cntt",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SpeakIT - Nghien cuu Tieng Anh SV CNTT (IUH & BCN Club)",
+  "scripts": {
+    "dev": "npm --prefix speakit run dev",
+    "build": "npm --prefix speakit run build",
+    "start": "npm --prefix speakit run start",
+    "lint": "npm --prefix speakit run lint"
+  }
+}
+
