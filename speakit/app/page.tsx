@@ -1,28 +1,107 @@
 import Link from "next/link";
-import { BookOpen, Clock, Gamepad2 } from "lucide-react";
+import { ArrowRight, BookOpen, Clock, Coins, Flame, Gamepad2, Trophy } from "lucide-react";
 import { HomeOnboardingClient } from "../components/home/HomeOnboardingClient";
 import { EF_EPI_2025 } from "../data/efEpiData";
+import { getRingBadgeClass } from "../lib/cosmetics";
+import { getTopPlayers } from "./actions/leaderboard";
 
-export default function HomePage() {
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const leaderboard = await getTopPlayers(3);
+  const topLeaders = leaderboard.players.slice(0, 3);
+
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 sm:py-10 space-y-10">
-      {/* Compact Page Intro */}
-      <header className="space-y-2">
-        <p className="text-xs font-mono font-semibold uppercase tracking-wider text-accent">
+    <div className="max-w-5xl mx-auto px-4 py-5 sm:py-6 space-y-6">
+      <header className="space-y-1">
+        <p className="text-[11px] font-mono font-semibold uppercase tracking-wider text-accent">
           SpeakIT • Luyện nói tiếng Anh CNTT • Không cần đăng nhập
         </p>
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-ink">
+        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-ink">
           Luyện phản xạ nói tiếng Anh theo tình huống công việc
         </h1>
-        <p className="text-xs sm:text-sm text-ink-muted">
+        <p className="text-xs text-ink-muted">
           Chọn vai trò chuyên môn để bắt đầu nhanh trong ~3 phút, nhận phản hồi từ khóa tức thì và tích lũy IT-Coin.
         </p>
       </header>
 
-      {/* Interactive 3-Step Onboarding & 6 Scenarios */}
       <HomeOnboardingClient />
 
-      {/* Quick Links: Vocabulary (12), 7-Day Plan, IT Speaking Arena */}
+      <section
+        aria-label="Top 3 Arena Leaders"
+        className="bg-white border border-ink/15 rounded-2xl p-4 sm:p-5 shadow-soft space-y-3"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <Trophy className="w-4 h-4 text-accent shrink-0" aria-hidden="true" />
+            <h2 className="text-sm font-bold text-ink">Top 3 Arena Leaders</h2>
+            <span className="text-[11px] font-mono px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-ink-muted">
+              {leaderboard.mode === "online" ? "Neon Live" : "Offline"}
+            </span>
+          </div>
+          <Link
+            href="/arena"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-accent hover:text-accent-hover transition-colors"
+          >
+            <span>Vào Arena &amp; Bảng xếp hạng</span>
+            <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+          </Link>
+        </div>
+
+        {topLeaders.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {topLeaders.map((player) => (
+              <Link
+                key={player.id}
+                href="/arena"
+                className="bg-paper border border-ink/15 hover:border-ink/30 rounded-xl p-3.5 flex items-center justify-between gap-3 transition-colors"
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span
+                    className={`w-8 h-8 rounded-pill bg-white border font-mono text-xs font-bold text-ink flex items-center justify-center shrink-0 ${getRingBadgeClass(
+                      player.equippedRing
+                    )}`}
+                  >
+                    #{player.rank}
+                  </span>
+                  <div className="min-w-0">
+                    <div className="text-xs font-bold text-ink truncate">
+                      {player.displayName}
+                    </div>
+                    <span className="inline-block mt-0.5 text-[10px] font-mono px-2 py-0.5 rounded-pill bg-white border border-ink/15 text-ink-muted truncate max-w-full">
+                      {player.equippedTitle}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="text-right shrink-0 space-y-0.5">
+                  <div className="inline-flex items-center gap-1 text-xs font-mono font-bold text-ink">
+                    <Coins className="w-3.5 h-3.5 text-accent shrink-0" aria-hidden="true" />
+                    <span>{player.itCoins}</span>
+                  </div>
+                  <div className="flex items-center justify-end gap-1 text-[10px] font-mono text-ink-muted">
+                    <Flame className="w-3 h-3 text-accent shrink-0" aria-hidden="true" />
+                    <span>{player.streakDays}d</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="bg-paper border border-ink/10 rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-2 text-xs text-ink-muted">
+            <span>
+              Chưa có dữ liệu bảng xếp hạng trực tuyến. Hoàn thành một vòng luyện Arena để ghi danh vị trí #1.
+            </span>
+            <Link
+              href="/arena"
+              className="font-mono font-semibold text-accent hover:underline"
+            >
+              Mở /arena →
+            </Link>
+          </div>
+        )}
+      </section>
+
       <section aria-label="Công cụ ôn tập nhanh" className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Link
           href="/vocabulary"
@@ -32,7 +111,7 @@ export default function HomePage() {
             <BookOpen className="w-4 h-4 text-accent" aria-hidden="true" />
           </div>
           <div className="space-y-1">
-            <h3 className="font-bold text-sm text-ink">Từ vựng IT (12)</h3>
+            <h3 className="font-bold text-sm text-ink">Từ vựng IT</h3>
             <p className="text-xs text-ink-muted">
               Phát âm IPA và câu ví dụ: standup, blocker, PR, deploy...
             </p>

@@ -35,7 +35,6 @@ const ROLE_ICONS: Record<ITRole, typeof Code2> = {
 };
 
 export function HomeOnboardingClient() {
-  // Default matches SSR state to avoid hydration mismatch before localStorage/content loads.
   const [selectedRole, setSelectedRoleState] = useState<ITRole>("frontend");
   const [scenarios, setScenarios] = useState<Scenario[]>(SCENARIOS);
 
@@ -96,26 +95,20 @@ export function HomeOnboardingClient() {
   };
 
   return (
-    <div className="space-y-10">
-      {/* 3-Step Onboarding Flow */}
-      <section aria-label="Lộ trình bắt đầu nhanh 3 bước" className="space-y-4">
-        {/* Step 1: Select IT Role */}
-        <div className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2.5">
-              <span className="w-7 h-7 rounded-pill bg-ink text-white font-mono text-xs font-bold flex items-center justify-center shrink-0">
-                01
-              </span>
-              <h2 className="text-base sm:text-lg font-bold text-ink">
-                Chọn vai trò CNTT
-              </h2>
-            </div>
-            <span className="text-xs text-ink-muted">
-              Gợi ý kịch bản sát vị trí của bạn
+    <div className="space-y-6">
+      <section
+        aria-label="Lộ trình bắt đầu nhanh 3 bước"
+        className="grid grid-cols-1 lg:grid-cols-3 gap-3"
+      >
+        <div className="bg-white border border-ink/15 rounded-2xl p-4 shadow-soft flex flex-col justify-between gap-2.5">
+          <div className="flex items-center gap-2">
+            <span className="w-6 h-6 rounded-pill bg-ink text-white font-mono text-[11px] font-bold flex items-center justify-center shrink-0">
+              01
             </span>
+            <h2 className="text-sm font-bold text-ink">Chọn vai trò CNTT</h2>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <div className="grid grid-cols-2 gap-1.5">
             {IT_ROLES.map((role) => {
               const Icon = ROLE_ICONS[role.id];
               const isSelected = role.id === activeRole.id;
@@ -125,111 +118,101 @@ export function HomeOnboardingClient() {
                   type="button"
                   onClick={() => handleSelectRole(role.id)}
                   aria-pressed={isSelected}
-                  className={`text-left rounded-2xl p-3.5 border transition-all flex flex-col gap-1.5 ${
+                  className={`text-left rounded-xl px-2.5 py-2 border transition-all flex items-center gap-1.5 ${
                     isSelected
                       ? "bg-ink text-white border-ink shadow-soft"
                       : "bg-paper text-ink border-ink/15 hover:border-ink/35 hover:bg-paper-muted"
                   }`}
                 >
-                  <div className="flex items-center gap-2">
-                    <Icon
-                      className={`w-4 h-4 shrink-0 ${
-                        isSelected ? "text-accent" : "text-ink"
-                      }`}
-                      aria-hidden="true"
-                    />
-                    <span className="font-bold text-sm">{role.label}</span>
-                  </div>
-                  <p
-                    className={`text-[11px] leading-snug line-clamp-2 ${
-                      isSelected ? "text-white/80" : "text-ink-muted"
+                  <Icon
+                    className={`w-3.5 h-3.5 shrink-0 ${
+                      isSelected ? "text-accent" : "text-ink"
                     }`}
-                  >
-                    {role.taglineVI}
-                  </p>
+                    aria-hidden="true"
+                  />
+                  <span className="font-semibold text-xs truncate">{role.label}</span>
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Step 2: Recommended 3-minute Scenario */}
         {recommendedScenario ? (
-          <div className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-5">
-            <div className="space-y-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="w-7 h-7 rounded-pill bg-accent text-white font-mono text-xs font-bold flex items-center justify-center shrink-0">
-                  02
-                </span>
-                <span className="text-xs font-mono font-semibold text-accent uppercase tracking-wide">
-                  Luyện 1 kịch bản nhanh (~3 phút)
-                </span>
-                <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-pill bg-accent-light text-accent border border-accent/25">
-                  Gợi ý cho {activeRole.label}
+          <div className="bg-white border border-accent/40 rounded-2xl p-4 shadow-soft flex flex-col justify-between gap-2.5">
+            <div className="space-y-1">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-pill bg-accent text-white font-mono text-[11px] font-bold flex items-center justify-center shrink-0">
+                    02
+                  </span>
+                  <span className="text-[11px] font-mono font-semibold text-accent uppercase tracking-wide">
+                    Gợi ý (~3 phút)
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-pill bg-accent-light text-accent border border-accent/25 shrink-0">
+                  {activeRole.label}
                 </span>
               </div>
-              <h2 className="text-lg sm:text-xl font-bold tracking-tight text-ink">
+              <h2 className="text-sm font-bold tracking-tight text-ink line-clamp-1">
                 {recommendedScenario.titleEN}{" "}
-                <span className="text-sm font-normal text-ink-faint">
+                <span className="font-normal text-xs text-ink-faint">
                   ({recommendedScenario.titleVI})
                 </span>
               </h2>
-              <p className="text-xs sm:text-sm text-ink-muted">
+              <p className="text-[11px] text-ink-muted line-clamp-2">
                 {recommendedScenario.descriptionVI}
               </p>
             </div>
 
             <Link
               href={`/practice/${recommendedScenario.id}`}
-              className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-pill bg-accent hover:bg-accent-hover text-white font-semibold text-sm border border-accent shadow-soft shadow-hard-press transition-all text-center"
+              className="w-full inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-pill bg-accent hover:bg-accent-hover text-white font-semibold text-xs border border-accent shadow-soft shadow-hard-press transition-all"
             >
-              <Play className="w-4 h-4 fill-white shrink-0" aria-hidden="true" />
-              <span>Bắt đầu ngay: {recommendedScenario.titleEN}</span>
-              <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
+              <Play className="w-3.5 h-3.5 fill-white shrink-0" aria-hidden="true" />
+              <span className="truncate">Bắt đầu: {recommendedScenario.titleEN}</span>
+              <ArrowRight className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
             </Link>
           </div>
         ) : (
-          <div className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft text-xs text-ink-muted">
-            Hiện chưa có kịch bản nào đang mở. Vui lòng kiểm tra lại trong Cổng Quản trị.
+          <div className="bg-white border border-ink/15 rounded-2xl p-4 shadow-soft text-xs text-ink-muted flex items-center">
+            Hiện chưa có kịch bản nào đang mở.
           </div>
         )}
 
-        {/* Step 3: Reflex Diagnostics & IT Speaking Arena */}
-        <div className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2.5">
-              <span className="w-7 h-7 rounded-pill bg-paper border border-ink/20 text-ink font-mono text-xs font-bold flex items-center justify-center shrink-0">
+        <div className="bg-white border border-ink/15 rounded-2xl p-4 shadow-soft flex flex-col justify-between gap-2.5">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-pill bg-paper border border-ink/20 text-ink font-mono text-[11px] font-bold flex items-center justify-center shrink-0">
                 03
               </span>
-              <h2 className="text-base sm:text-lg font-bold text-ink">
-                Chẩn đoán phản xạ & IT Speaking Arena
+              <h2 className="text-sm font-bold text-ink">
+                Phản xạ &amp; Speaking Arena
               </h2>
             </div>
-            <p className="text-xs sm:text-sm text-ink-muted">
-              Thử thách Bug Buster 60s &amp; Standup Speed Run kiếm IT-Coin và nâng danh hiệu kỹ thuật.
+            <p className="text-[11px] text-ink-muted line-clamp-2">
+              Thử thách Bug Buster 60s &amp; Standup Speed Run kiếm IT-Coin và leo bảng xếp hạng.
             </p>
           </div>
 
           <Link
             href="/arena"
-            className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-pill bg-paper hover:bg-paper-muted text-ink font-semibold text-xs sm:text-sm border border-ink/20 shadow-soft transition-all"
+            className="w-full inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-pill bg-paper hover:bg-paper-muted text-ink font-semibold text-xs border border-ink/20 shadow-soft transition-all"
           >
-            <Gamepad2 className="w-4 h-4 text-accent shrink-0" aria-hidden="true" />
+            <Gamepad2 className="w-3.5 h-3.5 text-accent shrink-0" aria-hidden="true" />
             <span>Vào IT Speaking Arena</span>
-            <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
+            <ArrowRight className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
           </Link>
         </div>
       </section>
 
-      {/* Scenario Setlist */}
-      <section id="scenarios" className="space-y-5">
+      <section id="scenarios" className="space-y-3">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-bold tracking-tight text-ink">
+            <h2 className="text-lg font-bold tracking-tight text-ink">
               Kịch bản tình huống ({sortedScenarios.length})
             </h2>
-            <p className="text-xs text-ink-muted mt-0.5">
-              Mỗi kịch bản gồm các lượt hội thoại phản xạ công việc thực tế
+            <p className="text-xs text-ink-muted">
+              Hội thoại phản xạ công việc thực tế cho sinh viên CNTT
             </p>
           </div>
           <span className="text-xs font-mono text-ink-muted bg-paper-muted px-3 py-1 rounded-pill border border-ink/15 shrink-0">
@@ -237,7 +220,7 @@ export function HomeOnboardingClient() {
           </span>
         </div>
 
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {sortedScenarios.map((scenario, index) => {
             const isRecommended =
               scenario.id === recommendedScenario?.id ||
@@ -246,52 +229,51 @@ export function HomeOnboardingClient() {
               <Link
                 key={scenario.id}
                 href={`/practice/${scenario.id}`}
-                className={`block group bg-white border rounded-2xl p-5 sm:p-6 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all ${
+                className={`group bg-white border rounded-2xl p-4 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-3 ${
                   isRecommended ? "border-accent/50" : "border-ink/15"
                 }`}
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="flex items-start gap-3.5 sm:gap-4">
-                    <div
-                      className={`w-9 h-9 rounded-pill flex items-center justify-center border shrink-0 font-mono font-bold text-sm transition-colors ${
-                        isRecommended
-                          ? "bg-accent text-white border-accent"
-                          : "bg-paper text-ink border-ink/20 group-hover:bg-accent group-hover:text-white group-hover:border-accent"
-                      }`}
-                    >
-                      {String(index + 1).padStart(2, "0")}
-                    </div>
-                    <div className="space-y-1.5">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="font-bold text-base text-ink group-hover:text-accent transition-colors">
-                          {scenario.titleEN}
-                        </h3>
-                        <span className="text-xs text-ink-faint">
-                          ({scenario.titleVI})
-                        </span>
-                        {isRecommended && (
-                          <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-pill bg-accent-light text-accent border border-accent/25">
-                            Phù hợp vai trò của bạn
-                          </span>
-                        )}
-                        <span className="text-[11px] font-mono px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-ink-muted">
-                          Vai: {scenario.roleVI}
-                        </span>
-                      </div>
-                      <p className="text-xs text-ink-muted line-clamp-2">
-                        {scenario.descriptionVI}
-                      </p>
-                    </div>
+                <div className="flex items-start gap-3">
+                  <div
+                    className={`w-8 h-8 rounded-pill flex items-center justify-center border shrink-0 font-mono font-bold text-xs transition-colors ${
+                      isRecommended
+                        ? "bg-accent text-white border-accent"
+                        : "bg-paper text-ink border-ink/20 group-hover:bg-accent group-hover:text-white group-hover:border-accent"
+                    }`}
+                  >
+                    {String(index + 1).padStart(2, "0")}
                   </div>
+                  <div className="min-w-0 space-y-1">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <h3 className="font-bold text-sm text-ink group-hover:text-accent transition-colors">
+                        {scenario.titleEN}
+                      </h3>
+                      <span className="text-[11px] text-ink-faint">
+                        ({scenario.titleVI})
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {isRecommended && (
+                        <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-pill bg-accent-light text-accent border border-accent/25">
+                          Gợi ý cho bạn
+                        </span>
+                      )}
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-ink-muted">
+                        Vai: {scenario.roleVI}
+                      </span>
+                    </div>
+                    <p className="text-xs text-ink-muted line-clamp-2">
+                      {scenario.descriptionVI}
+                    </p>
+                  </div>
+                </div>
 
-                  <div className="flex items-center justify-end sm:justify-center gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-paper-muted">
-                    <span className="text-xs font-mono text-ink-muted">
-                      {scenario.turns.length} lượt
-                    </span>
-                    <div className="w-7 h-7 rounded-pill bg-paper flex items-center justify-center border border-ink/20 group-hover:translate-x-1 transition-transform">
-                      <ArrowRight className="w-3.5 h-3.5 text-ink" aria-hidden="true" />
-                    </div>
-                  </div>
+                <div className="flex items-center justify-between pt-2 border-t border-paper-muted text-xs font-mono text-ink-muted">
+                  <span>{scenario.turns.length} lượt hội thoại</span>
+                  <span className="inline-flex items-center gap-1 text-ink font-semibold group-hover:text-accent">
+                    <span>Thực hành</span>
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
+                  </span>
                 </div>
               </Link>
             );

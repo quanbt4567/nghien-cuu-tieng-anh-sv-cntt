@@ -76,6 +76,96 @@ export class AdminGenerateValidationError extends Error {
   }
 }
 
+export class AdminGenerateRejectedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AdminGenerateRejectedError";
+  }
+}
+
+const INVALID_CONTENT_MESSAGE =
+  "Nội dung không phù hợp hoặc không liên quan đến tiếng Anh chuyên ngành CNTT. Vui lòng nhập thuật ngữ, mô tả chức năng hoặc lỗi kỹ thuật liên quan.";
+
+const GIBBERISH_WORDS = new Set([
+  "hihi",
+  "haha",
+  "hehe",
+  "huhu",
+  "kaka",
+  "kkk",
+  "alo",
+  "asdf",
+  "asdfg",
+  "qwer",
+  "qwerty",
+  "zxcv",
+  "hjkl",
+  "abc",
+  "abcd",
+  "xyz",
+  "test",
+  "testing",
+  "dummy",
+  "spam",
+  "blah",
+  "bruh",
+  "lol",
+  "lmao",
+  "ok",
+  "oke",
+  "okay",
+  "bayba",
+  "taolao",
+  "linhtinh",
+  "vovien",
+]);
+
+function isLikelyGibberishTopic(topic: string): boolean {
+  if (topic.length < 2) return true;
+
+  const asciiFolded = topic
+    .replace(/[đĐ]/g, "d")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  if (/(.)\1{4,}/i.test(asciiFolded)) return true;
+
+  const letters = asciiFolded.match(/[a-z]/g) ?? [];
+  if (letters.length < 2) return true;
+
+  const tokens = asciiFolded
+    .split(/[^a-z0-9]+/)
+    .filter((token) => token.length > 0);
+
+  if (tokens.length === 0) return true;
+
+  const wordTokens = tokens.filter((token) => /[a-z]/.test(token));
+  if (wordTokens.length === 0) return true;
+
+  if (wordTokens.every((token) => GIBBERISH_WORDS.has(token))) {
+    return true;
+  }
+
+  if (
+    wordTokens.length === 1 &&
+    wordTokens[0].length <= 10 &&
+    /^([a-z]{2})\1+$/i.test(wordTokens[0])
+  ) {
+    return true;
+  }
+
+  if (
+    wordTokens.length === 1 &&
+    wordTokens[0].length >= 7 &&
+    !/[aeiouy]/.test(wordTokens[0])
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 const VALID_KINDS = new Set<AdminGenerateKind>([
   "scenario",
   "vocabulary",
@@ -156,7 +246,13 @@ export function validateAdminGenerateInput(
   if (!topic) {
     return {
       ok: false,
-      error: "Vui lòng nhập chủ đề (topic) trước khi tạo nội dung.",
+      error: "Vui lòng nhập chủ đề hoặc mô tả chức năng trước khi tạo nội dung.",
+    };
+  }
+  if (isLikelyGibberishTopic(topic)) {
+    return {
+      ok: false,
+      error: INVALID_CONTENT_MESSAGE,
     };
   }
 
@@ -194,7 +290,7 @@ export function validateAdminGenerateInput(
     ok: true,
     value: {
       kind: rawKind as AdminGenerateKind,
-      topic: topic.slice(0, 240),
+      topic: topic.slice(0, 400),
       ...(role ? { role } : {}),
       ...(category ? { category } : {}),
     },
@@ -607,28 +703,48 @@ function normalizeBugChallengeDraft(
   };
 }
 
-function normalizeAiDraft(
+type ParsedAiOutcome =
+  | { kind: "draft"; draft: AdminGenerateDraft }
+  | { kind: "rejected"; reason: string };
+
+function parseAiOutcome(
   input: AdminGenerateInput,
   rawText: string
-): AdminGenerateDraft | null {
+): ParsedAiOutcome | null {
   const parsed = extractFirstJsonObject(rawText);
   if (!parsed) return null;
 
+  if (parsed.rejected === true) {
+    const rawReason =
+      typeof parsed.reason === "string" ? parsed.reason.trim() : "";
+    return {
+      kind: "rejected",
+      reason: rawReason || INVALID_CONTENT_MESSAGE,
+    };
+  }
+
+  let draft: AdminGenerateDraft | null = null;
   if (input.kind === "scenario") {
-    return normalizeScenarioDraft(parsed, input);
+    draft = normalizeScenarioDraft(parsed, input);
+  } else if (input.kind === "vocabulary") {
+    draft = normalizeVocabularyDraft(parsed, input);
+  } else {
+    draft = normalizeBugChallengeDraft(parsed, input);
   }
-  if (input.kind === "vocabulary") {
-    return normalizeVocabularyDraft(parsed, input);
-  }
-  return normalizeBugChallengeDraft(parsed, input);
+
+  return draft ? { kind: "draft", draft } : null;
 }
 
 function buildAdminPrompts(input: AdminGenerateInput): {
   systemInstruction: string;
   userPrompt: string;
 } {
-  const systemInstruction =
-    "You are an expert IT workplace English curriculum designer for Vietnamese software engineering students. Output ONLY one valid JSON object matching the exact requested schema, with no markdown fences or extra commentary.";
+  const systemInstruction = [
+    "You are an expert IT workplace English curriculum designer for Vietnamese software engineering students.",
+    "First, verify the admin input is coherent, appropriate, and related to software engineering, IT systems, developer workflows, or workplace technical communication (it may be a technical term, feature/bug description, or Vietnamese instruction).",
+    `If the input is gibberish, random noise, profane/inappropriate, casual chitchat, or completely unrelated to IT / workplace English, output ONLY: {"rejected":true,"reason":"${INVALID_CONTENT_MESSAGE}"}`,
+    "Otherwise read the functional context carefully and output ONLY one valid JSON object matching the exact schema, with no markdown fences or extra commentary.",
+  ].join(" ");
 
   if (input.kind === "scenario") {
     const roleHint = input.role
@@ -637,11 +753,11 @@ function buildAdminPrompts(input: AdminGenerateInput): {
 
     return {
       systemInstruction,
-      userPrompt: `Create a 3-turn workplace English speaking role-play scenario for Vietnamese IT students.
-Topic: "${input.topic}"
+      userPrompt: `Create a 3-turn workplace English speaking role-play scenario for Vietnamese IT students based on this functional topic / instruction:
+"${input.topic}"
 ${roleHint}
 
-Return STRICT JSON matching this schema:
+Return STRICT JSON matching this schema (or {"rejected":true,"reason":"..."} if off-topic/inappropriate):
 {
   "id": "kebab-case-slug",
   "titleEN": "Concise English title",
@@ -680,13 +796,13 @@ Requirements: exactly 3 sequential turns (turnIndex 0, 1, 2), each with 3 to 5 k
   if (input.kind === "vocabulary") {
     return {
       systemInstruction,
-      userPrompt: `Create one practical IT workplace English vocabulary entry for Vietnamese software engineering students.
-Topic / Term hint: "${input.topic}"
+      userPrompt: `Create one practical IT workplace English vocabulary entry for Vietnamese software engineering students based on this term, functional description, or instruction:
+"${input.topic}"
 
-Return STRICT JSON matching this schema:
+Return STRICT JSON matching this schema (or {"rejected":true,"reason":"..."} if off-topic/inappropriate):
 {
-  "term": "English IT term or short phrase",
-  "phonetic": "/IPA pronunciation/",
+  "term": "English IT term or short phrase matching the requested topic/function",
+  "phonetic": "REQUIRED US/UK IPA pronunciation wrapped in slashes, e.g. /mɜːrdʒ/ or /ˌaɪ.dɛmˈpoʊ.tən.si/",
   "partOfSpeech": "noun | verb | adjective | phrase | adverb",
   "meaningVI": "Nghĩa tiếng Việt rõ ràng trong ngữ cảnh CNTT",
   "exampleSentenceEN": "Natural workplace English sentence using the term",
@@ -698,18 +814,18 @@ Return STRICT JSON matching this schema:
   const preferredCategory = input.category ?? "incident";
   return {
     systemInstruction,
-    userPrompt: `Create one spoken Bug Buster fill-in-the-blank IT English challenge for Vietnamese software engineering students.
-Topic: "${input.topic}"
+    userPrompt: `Create one spoken Bug Buster fill-in-the-blank IT English challenge for Vietnamese software engineering students based on this topic / functional description:
+"${input.topic}"
 Preferred category: "${preferredCategory}" (must be one of "error-log", "code-review", "incident").
 
-Return STRICT JSON matching this schema:
+Return STRICT JSON matching this schema (or {"rejected":true,"reason":"..."} if off-topic/inappropriate):
 {
   "category": "error-log | code-review | incident",
   "promptEN": "One realistic developer error log, code review comment, or incident update containing exact blank ____ where targetWord belongs",
   "targetWord": "single speakable English IT term missing from ____",
   "acceptedVariants": ["2 to 4 close spoken or inflected variants"],
   "contextVI": "Giải thích ngắn bằng tiếng Việt về ngữ cảnh và từ cần điền",
-  "phonetic": "/IPA pronunciation of targetWord/"
+  "phonetic": "REQUIRED IPA pronunciation of targetWord wrapped in slashes, e.g. /ˈtaɪmˌaʊt/"
 }
 CRITICAL: promptEN MUST include the exact 4-underscore blank ____ representing targetWord.`,
   };
@@ -717,7 +833,8 @@ CRITICAL: promptEN MUST include the exact 4-underscore blank ____ representing t
 
 /**
  * Generates an Admin content draft using the 6-provider AI waterfall,
- * falling back deterministically to a local template when AI is unavailable.
+ * rejecting gibberish/off-topic prompts and falling back deterministically
+ * to a local template only when AI providers are unavailable.
  */
 export async function generateAdminContentDraft(
   input: AdminGenerateInput,
@@ -732,32 +849,41 @@ export async function generateAdminContentDraft(
   const { systemInstruction, userPrompt } = buildAdminPrompts(cleanInput);
   const requestText = deps.requestText ?? requestAiWaterfallText;
 
+  let outcome: ParsedAiOutcome | null = null;
+  let aiProvider: Exclude<ScoringProvider, "local"> | null = null;
+
   try {
     const aiResponse = await requestText({
       systemInstruction,
       userPrompt,
       temperature: 0.4,
-      maxTokens: cleanInput.kind === "scenario" ? 1200 : 500,
+      maxTokens: cleanInput.kind === "scenario" ? 1600 : 800,
       jsonMode: true,
-      ...(deps.timeoutMs !== undefined ? { timeoutMs: deps.timeoutMs } : {}),
+      timeoutMs: deps.timeoutMs ?? 6000,
       ...(deps.env !== undefined ? { env: deps.env } : {}),
       ...(deps.fetchFn !== undefined ? { fetchFn: deps.fetchFn } : {}),
-      validate: (raw) => normalizeAiDraft(cleanInput, raw) !== null,
+      validate: (raw) => parseAiOutcome(cleanInput, raw) !== null,
     });
 
     if (aiResponse) {
-      const normalized = normalizeAiDraft(cleanInput, aiResponse.text);
-      if (normalized) {
-        return {
-          kind: cleanInput.kind,
-          mode: "ai",
-          provider: aiResponse.provider,
-          draft: normalized,
-        };
-      }
+      outcome = parseAiOutcome(cleanInput, aiResponse.text);
+      aiProvider = aiResponse.provider;
     }
   } catch {
     // Fall back deterministically to local template below if transport throws.
+  }
+
+  if (outcome?.kind === "rejected") {
+    throw new AdminGenerateRejectedError(outcome.reason);
+  }
+
+  if (outcome?.kind === "draft" && aiProvider) {
+    return {
+      kind: cleanInput.kind,
+      mode: "ai",
+      provider: aiProvider,
+      draft: outcome.draft,
+    };
   }
 
   return {

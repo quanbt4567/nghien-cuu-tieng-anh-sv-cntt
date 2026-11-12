@@ -21,18 +21,11 @@ import {
   getGamificationState,
   pointsToNextCoin,
 } from "../../lib/gamification";
-import {
-  CONTENT_STORAGE_KEY,
-  CONTENT_UPDATED_EVENT,
-  fetchAndCachePublicContent,
-  getEffectiveVocabulary,
-} from "../../lib/contentStore";
-import { VOCABULARY_LIST } from "../../data/scenarios";
 
 const BASE_NAV_LINKS = [
   { href: "/", label: "Kịch bản", shortLabel: "Kịch bản", icon: Mic },
   { href: "/arena", label: "Arena", shortLabel: "Arena", icon: Gamepad2 },
-  { href: "/vocabulary", label: "Từ vựng", shortLabel: "Từ vựng", icon: BookOpen },
+  { href: "/vocabulary", label: "Từ vựng IT", shortLabel: "Từ vựng IT", icon: BookOpen },
   { href: "/progress", label: "Tiến độ & 7 ngày", shortLabel: "Tiến độ", icon: TrendingUp },
   { href: "/profile", label: "Hồ sơ", shortLabel: "Hồ sơ", icon: User },
   { href: "/settings", label: "Cài đặt", shortLabel: "Cài đặt", icon: Settings },
@@ -40,39 +33,27 @@ const BASE_NAV_LINKS = [
 
 export function Navbar() {
   const pathname = usePathname() ?? "";
-  // Initialize with SSR-safe values to avoid hydration mismatch before localStorage loads.
   const [stats, setStats] = useState({ totalPoints: 0, streakDays: 0 });
-  const [vocabCount, setVocabCount] = useState(VOCABULARY_LIST.length);
 
   useEffect(() => {
     const syncStats = () => {
       const state = getGamificationState();
       setStats({ totalPoints: state.totalPoints, streakDays: state.streakDays });
     };
-    const syncContent = () => {
-      setVocabCount(getEffectiveVocabulary().length);
-    };
 
     syncStats();
-    syncContent();
-    void fetchAndCachePublicContent();
 
     window.addEventListener(GAMIFICATION_UPDATED_EVENT, syncStats);
-    window.addEventListener(CONTENT_UPDATED_EVENT, syncContent);
 
     const handleStorage = (event: StorageEvent) => {
       if (!event.key || event.key === GAMIFICATION_STORAGE_KEY) {
         syncStats();
-      }
-      if (!event.key || event.key === CONTENT_STORAGE_KEY) {
-        syncContent();
       }
     };
     window.addEventListener("storage", handleStorage);
 
     return () => {
       window.removeEventListener(GAMIFICATION_UPDATED_EVENT, syncStats);
-      window.removeEventListener(CONTENT_UPDATED_EVENT, syncContent);
       window.removeEventListener("storage", handleStorage);
     };
   }, []);
@@ -81,11 +62,7 @@ export function Navbar() {
     return null;
   }
 
-  const navLinks = BASE_NAV_LINKS.map((item) =>
-    item.href === "/vocabulary"
-      ? { ...item, label: `Từ vựng (${vocabCount})` }
-      : item
-  );
+  const navLinks = BASE_NAV_LINKS;
 
   const coins = calculateCoins(stats.totalPoints);
   const nextCoinPoints = pointsToNextCoin(stats.totalPoints);

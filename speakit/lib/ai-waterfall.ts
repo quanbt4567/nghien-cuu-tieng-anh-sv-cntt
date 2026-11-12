@@ -22,37 +22,39 @@ export const OPENAI_WATERFALL_PROVIDERS: readonly OpenAiProviderEndpoint[] = [
     envVar: "CEREBRAS_API_KEY",
     url: "https://api.cerebras.ai/v1/chat/completions",
     modelEnvVar: "CEREBRAS_MODEL",
-    defaultModel: "llama-3.3-70b",
+    defaultModel: "qwen-3.8-27b",
   },
   {
     id: "inception",
     envVar: "INCEPTION_API_KEY",
     url: "https://api.inceptionlabs.ai/v1/chat/completions",
     modelEnvVar: "INCEPTION_MODEL",
-    defaultModel: "mercury-2.5",
+    defaultModel: "mercury-3",
   },
   {
     id: "groq",
     envVar: "GROQ_API_KEY",
     url: "https://api.groq.com/openai/v1/chat/completions",
     modelEnvVar: "GROQ_MODEL",
-    defaultModel: "llama-3.3-70b-versatile",
+    defaultModel: "qwen/qwen3.8-27b",
   },
   {
     id: "xkiro",
     envVar: "XKIRO_API_KEY",
     url: "https://api.xkiro.com/v1/chat/completions",
     modelEnvVar: "XKIRO_MODEL",
-    defaultModel: "openai/gpt-4o-mini",
+    defaultModel: "mistralai/ministral-14b",
   },
   {
     id: "openrouter",
     envVar: "OPENROUTER_API_KEY",
     url: "https://openrouter.ai/api/v1/chat/completions",
     modelEnvVar: "OPENROUTER_MODEL",
-    defaultModel: "meta-llama/llama-3.3-70b-instruct:free",
+    defaultModel: "openrouter/free",
   },
 ];
+
+const DEFAULT_GEMINI_MODEL = "gemini-3.1-flash-lite-preview";
 
 export interface AiProviderStatusItem {
   id: AiProviderId;
@@ -239,6 +241,7 @@ async function callGeminiText(
     jsonMode = false,
   }: AiWaterfallTextOptions,
   apiKey: string,
+  model: string,
   timeoutMs: number,
   fetchFn: typeof fetch
 ): Promise<string | null> {
@@ -246,7 +249,7 @@ async function callGeminiText(
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey.trim()}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey.trim()}`;
     const response = await fetchFn(url, {
       method: "POST",
       headers: {
@@ -324,7 +327,8 @@ async function runAiWaterfall<T>(
 
   const geminiKey = env.GEMINI_API_KEY?.trim();
   if (geminiKey) {
-    const rawText = await callGeminiText(options, geminiKey, timeoutMs, fetchFn);
+    const geminiModel = env.GEMINI_MODEL?.trim() || DEFAULT_GEMINI_MODEL;
+    const rawText = await callGeminiText(options, geminiKey, geminiModel, timeoutMs, fetchFn);
     if (rawText) {
       const parsed = parse(rawText);
       if (parsed !== null) {

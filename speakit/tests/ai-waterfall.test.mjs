@@ -45,31 +45,31 @@ test("provider catalog defines exact 6-tier failover specs and status helper", (
       [
         "cerebras",
         "CEREBRAS_API_KEY",
-        "llama-3.3-70b",
+        "qwen-3.8-27b",
         "https://api.cerebras.ai/v1/chat/completions",
       ],
       [
         "inception",
         "INCEPTION_API_KEY",
-        "mercury-2.5",
+        "mercury-3",
         "https://api.inceptionlabs.ai/v1/chat/completions",
       ],
       [
         "groq",
         "GROQ_API_KEY",
-        "llama-3.3-70b-versatile",
+        "qwen/qwen3.8-27b",
         "https://api.groq.com/openai/v1/chat/completions",
       ],
       [
         "xkiro",
         "XKIRO_API_KEY",
-        "openai/gpt-4o-mini",
+        "mistralai/ministral-14b",
         "https://api.xkiro.com/v1/chat/completions",
       ],
       [
         "openrouter",
         "OPENROUTER_API_KEY",
-        "meta-llama/llama-3.3-70b-instruct:free",
+        "openrouter/free",
         "https://openrouter.ai/api/v1/chat/completions",
       ],
     ]

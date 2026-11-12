@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
+  AdminGenerateRejectedError,
+  AdminGenerateValidationError,
   generateAdminContentDraft,
   validateAdminGenerateInput,
 } from "../../../../lib/adminAiGenerator";
@@ -42,7 +44,16 @@ export async function POST(req: NextRequest) {
       provider: result.provider,
       draft: result.draft,
     });
-  } catch {
+  } catch (err) {
+    if (
+      err instanceof AdminGenerateValidationError ||
+      err instanceof AdminGenerateRejectedError
+    ) {
+      return NextResponse.json(
+        { ok: false, error: err.message },
+        { status: 400 }
+      );
+    }
     return NextResponse.json(
       { ok: false, error: "Không thể tạo bản nháp nội dung lúc này." },
       { status: 500 }

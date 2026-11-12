@@ -175,7 +175,7 @@ export async function evaluateWithGemini({
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey.trim()}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${apiKey.trim()}`;
     const response = await fetchFn(url, {
       method: "POST",
       headers: {

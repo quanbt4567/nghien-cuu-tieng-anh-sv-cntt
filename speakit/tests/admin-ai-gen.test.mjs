@@ -15,6 +15,7 @@ const {
 } = jiti(resolve(__dirname, "../lib/ai-waterfall.ts"));
 
 const {
+  AdminGenerateRejectedError,
   AdminGenerateValidationError,
   buildFallbackAdminDraft,
   ensurePromptBlank,
@@ -420,4 +421,68 @@ test("validation rejects empty topic, invalid kind, and unauthenticated route re
       else process.env[k] = savedEnv[k];
     }
   }
+});
+
+test("gibberish pre-validation and AI rejection block irrelevant or nonsensical prompts", async () => {
+  // Obvious gibberish or pure digits rejected locally, while short valid IT terms stay allowed
+  for (const junk of ["hihi", "hahaha", "asdf", "123456", "??!!", "aaaaaa"]) {
+    const check = validateAdminGenerateInput({ kind: "vocabulary", topic: junk });
+    assert.equal(check.ok, false, `Expected "${junk}" to be rejected`);
+  }
+
+  for (const validTerm of ["git", "sql", "pgsql", "unit test", "merge", "API gateway 502"]) {
+    const check = validateAdminGenerateInput({ kind: "vocabulary", topic: validTerm });
+    assert.equal(check.ok, true, `Expected "${validTerm}" to pass pre-validation`);
+  }
+
+  // AI semantic rejection must throw AdminGenerateRejectedError and NOT fall back to template
+  let calledProviders = 0;
+  await assert.rejects(
+    () =>
+      generateAdminContentDraft(
+        { kind: "scenario", topic: "Hướng dẫn nấu phở bò gia truyền" },
+        {
+          env: { CEREBRAS_API_KEY: "k1", GROQ_API_KEY: "k3" },
+          fetchFn: async () => {
+            calledProviders += 1;
+            return {
+              ok: true,
+              status: 200,
+              json: async () => ({
+                choices: [
+                  {
+                    message: {
+                      content: JSON.stringify({
+                        rejected: true,
+                        reason: "Nội dung không phù hợp hoặc không liên quan đến CNTT.",
+                      }),
+                    },
+                  },
+                ],
+              }),
+            };
+          },
+        }
+      ),
+    (err) => err instanceof AdminGenerateRejectedError && err.message.includes("không phù hợp")
+  );
+  assert.equal(calledProviders, 1);
+
+  // Route returns HTTP 400 when input is gibberish ("hihi") even when authenticated
+  const { NextRequest } = require("next/server");
+  const token = createAdminSessionToken();
+  const junkRes = await generateRoutePost(
+    new NextRequest("http://localhost/api/admin/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `${ADMIN_COOKIE_NAME}=${token}`,
+      },
+      body: JSON.stringify({ kind: "vocabulary", topic: "hihi" }),
+    })
+  );
+  assert.equal(junkRes.status, 400);
+  const junkJson = await junkRes.json();
+  assert.equal(junkJson.ok, false);
+  assert.match(junkJson.error, /không phù hợp/i);
 });
