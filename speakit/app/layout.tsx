@@ -3,6 +3,7 @@ import { Be_Vietnam_Pro, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "../components/layout/Navbar";
 import { Footer } from "../components/layout/Footer";
+import { WelcomeNameModal } from "../components/layout/WelcomeNameModal";
 
 const beVietnamPro = Be_Vietnam_Pro({
   weight: ["400", "500", "600", "700"],
@@ -39,6 +40,7 @@ export default function RootLayout({
     <html lang="vi" className={`${beVietnamPro.variable} ${jetbrainsMono.variable}`}>
       <body className="bg-paper text-ink min-h-screen antialiased flex flex-col font-sans">
         <Navbar />
+        <WelcomeNameModal />
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

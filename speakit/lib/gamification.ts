@@ -334,3 +334,40 @@ export function suggestWeakVocab(
 
   return picked;
 }
+
+const FRIENDLY_NAME_PREFIXES = [
+  "Swift",
+  "Agile",
+  "Cloud",
+  "Sharp",
+  "Calm",
+  "Bright",
+  "Clever",
+  "Nimble",
+];
+
+const FRIENDLY_NAME_NOUNS = [
+  "Coder",
+  "Gopher",
+  "Fox",
+  "Panda",
+  "Builder",
+  "Debugger",
+  "Pilot",
+  "Maker",
+];
+
+export function generateFriendlyDisplayName(): string {
+  const prefix =
+    FRIENDLY_NAME_PREFIXES[
+      Math.floor(Math.random() * FRIENDLY_NAME_PREFIXES.length)
+    ];
+  const noun =
+    FRIENDLY_NAME_NOUNS[Math.floor(Math.random() * FRIENDLY_NAME_NOUNS.length)];
+  const suffix = 10 + Math.floor(Math.random() * 90);
+  return `${prefix} ${noun} ${suffix}`;
+}
+
+export function isLegacyCodeDisplayName(name: string): boolean {
+  return /^Dev-[A-Z0-9]{4}$/i.test(name.trim());
+}

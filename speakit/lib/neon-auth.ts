@@ -6,6 +6,7 @@ import {
   GuestPlayerRow,
   PublicGuestPlayer,
 } from "./db";
+import { generateFriendlyDisplayName } from "./gamification";
 
 export const GUEST_SESSION_COOKIE_NAME = "speakit_session_token";
 export const GUEST_TRANSFER_STORAGE_KEY = "speakit_transfer_code_v1";
@@ -152,7 +153,7 @@ export async function resolveOrCreateGuestSession(
     const rawToken = generateSessionToken();
     const tokenHash = hashDeviceToken(rawToken);
     const transferCode = generateTransferCode();
-    const displayName = `Dev-${transferCode.slice(-4)}`;
+    const displayName = generateFriendlyDisplayName();
 
     try {
       const inserted = (await sql`

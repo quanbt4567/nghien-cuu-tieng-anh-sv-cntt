@@ -28,6 +28,11 @@ const {
 } = jiti(resolve(__dirname, "../lib/cosmetics.ts"));
 
 const {
+  generateFriendlyDisplayName,
+  isLegacyCodeDisplayName,
+} = jiti(resolve(__dirname, "../lib/gamification.ts"));
+
+const {
   initOrHydrateGuestSession,
   getTopPlayers,
   rewardPracticePoints,
@@ -223,4 +228,15 @@ test("user settings exclude client-side geminiApiKey while keeping speech prefer
     win.restore();
   }
 });
+
+test("generateFriendlyDisplayName produces valid non-code names and isLegacyCodeDisplayName detects Dev-XXXX", () => {
+  for (let i = 0; i < 20; i++) {
+    const name = generateFriendlyDisplayName();
+    assert.ok(name.length >= 2 && name.length <= 24, `Unexpected length: ${name}`);
+    assert.equal(/^dev-/i.test(name), false, `Must not expose Dev- prefix: ${name}`);
+  }
+  assert.equal(isLegacyCodeDisplayName("Dev-7F2A"), true);
+  assert.equal(isLegacyCodeDisplayName("Swift Fox 42"), false);
+});
+
 
