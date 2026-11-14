@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, BookOpen, Clock, Coins, Flame, Gamepad2, Trophy } from "lucide-react";
+import { HomeIntroHero } from "../components/home/HomeIntroHero";
 import { HomeOnboardingClient } from "../components/home/HomeOnboardingClient";
 import { EF_EPI_2025 } from "../data/efEpiData";
 import { getRingBadgeClass } from "../lib/cosmetics";
@@ -13,16 +14,11 @@ export default async function HomePage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-7 sm:py-9 space-y-8">
-      <header className="space-y-1.5">
-        <p className="text-xs font-mono font-semibold uppercase tracking-wider text-accent">
-          SpeakIT · Luyện nói tiếng Anh CNTT
-        </p>
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-ink">
-          Luyện phản xạ nói theo tình huống công việc
-        </h1>
-      </header>
+      <HomeIntroHero />
 
-      <HomeOnboardingClient />
+      <section id="practice-scenarios" className="scroll-mt-6">
+        <HomeOnboardingClient />
+      </section>
 
       <section
         aria-label="Top 3 Arena Leaders"
