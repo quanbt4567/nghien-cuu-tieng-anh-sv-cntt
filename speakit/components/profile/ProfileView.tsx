@@ -559,6 +559,10 @@ export function ProfileView() {
         </div>
       </div>
 
+      <p className="text-xs sm:text-sm text-ink-muted bg-white border border-ink/15 rounded-xl px-4 py-2.5 shadow-soft">
+        Đổi tên hiển thị, lưu mã khôi phục thiết bị DEV-XXXXXX và dùng IT-Coin mở khóa danh hiệu hoặc khung viền.
+      </p>
+
       {/* 1. Identity Header Card */}
       <section
         aria-label="Thông tin định danh người học"

@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { SpeakItLogo } from "./SpeakItLogo";
 import {
   Mic,
   Gamepad2,
@@ -11,6 +11,7 @@ import {
   TrendingUp,
   User,
   Settings,
+  HelpCircle,
   Flame,
   Coins,
 } from "lucide-react";
@@ -29,6 +30,7 @@ const BASE_NAV_LINKS = [
   { href: "/progress", label: "Tiến độ & 7 ngày", shortLabel: "Tiến độ", icon: TrendingUp },
   { href: "/profile", label: "Hồ sơ", shortLabel: "Hồ sơ", icon: User },
   { href: "/settings", label: "Cài đặt", shortLabel: "Cài đặt", icon: Settings },
+  { href: "/guide", label: "Hướng dẫn", shortLabel: "Hướng dẫn", icon: HelpCircle },
 ] as const;
 
 export function Navbar() {
@@ -73,16 +75,10 @@ export function Navbar() {
       <div className="max-w-6xl mx-auto px-4 py-2 md:py-0 md:h-16 flex flex-wrap md:flex-nowrap items-center justify-between gap-x-2 lg:gap-x-3 gap-y-2">
         <Link
           href="/"
+          aria-label="SpeakIT"
           className="order-1 flex items-center gap-2 focus:outline-none shrink-0"
         >
-          <Image
-            src="/logo.png"
-            alt="SpeakIT"
-            width={120}
-            height={42}
-            className="h-8 lg:h-9 w-auto object-contain"
-            priority
-          />
+          <SpeakItLogo />
         </Link>
 
         <Link

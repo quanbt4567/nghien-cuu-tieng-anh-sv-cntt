@@ -2,19 +2,23 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, AlertCircle, RotateCcw, Volume2, Trash2 } from "lucide-react";
+import { ArrowLeft, AlertCircle, RotateCcw, Volume2, Trash2, Mic } from "lucide-react";
 import { storageAdapter } from "../../lib/storage";
+import { VOICE_PERSONAS, speakText } from "../../lib/speech";
+import { VoicePersonaId } from "../../lib/types";
 
 export default function SettingsPage() {
   const [speechRate, setSpeechRate] = useState<0.8 | 1.0 | 1.2>(1.0);
+  const [voicePersona, setVoicePersona] = useState<VoicePersonaId>("auto");
+  const [isTestingVoice, setIsTestingVoice] = useState(false);
 
-  // Reset confirmation modal state
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetStatus, setResetStatus] = useState<string | null>(null);
 
   useEffect(() => {
     const settings = storageAdapter.getSettings();
     setSpeechRate(settings.speechRate || 1.0);
+    setVoicePersona(settings.voicePersona || "auto");
   }, []);
 
   const handleResetProgress = async () => {
@@ -56,7 +60,7 @@ export default function SettingsPage() {
           <label className="text-xs font-semibold text-ink block">
             Tốc độ phát âm mặc định:
           </label>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {([0.8, 1.0, 1.2] as const).map((r) => (
               <button
                 key={r}
@@ -67,11 +71,63 @@ export default function SettingsPage() {
                 }}
                 className={`px-4 py-1.5 rounded-pill text-xs font-mono font-bold border transition-all ${
                   speechRate === r
-                    ? "bg-accent text-white border-accent shadow-soft"
+                    ? "bg-ink text-white border-ink shadow-soft"
                     : "bg-paper-card text-ink border-ink/15 hover:bg-paper"
                 }`}
               >
                 {r}x {r === 0.8 ? "(Chậm)" : r === 1.0 ? "(Chuẩn)" : "(Nhanh)"}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-3 pt-2 border-t border-ink/10">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <label className="text-xs font-semibold text-ink block">
+              Giọng AI phỏng vấn mặc định:
+            </label>
+            <button
+              type="button"
+              disabled={isTestingVoice}
+              onClick={() => {
+                setIsTestingVoice(true);
+                speakText(
+                  "Hi, can you walk me through your pull request and deployment plan?",
+                  speechRate,
+                  () => setIsTestingVoice(false),
+                  () => setIsTestingVoice(false),
+                  voicePersona
+                );
+              }}
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-sky-500/10 border border-sky-500/30 text-sky-700 text-xs font-semibold hover:bg-sky-500/20 disabled:opacity-50 transition-colors"
+            >
+              <Mic className="w-3.5 h-3.5" />
+              <span>{isTestingVoice ? "Đang đọc mẫu..." : "Nghe thử giọng"}</span>
+            </button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {VOICE_PERSONAS.map((persona) => (
+              <button
+                key={persona.id}
+                type="button"
+                onClick={() => {
+                  setVoicePersona(persona.id);
+                  storageAdapter.saveSettings({ voicePersona: persona.id });
+                }}
+                className={`px-3.5 py-2 rounded-xl text-left text-xs font-medium border transition-all ${
+                  voicePersona === persona.id
+                    ? "bg-ink text-white border-ink shadow-soft"
+                    : "bg-paper text-ink border-ink/15 hover:bg-paper-muted"
+                }`}
+              >
+                <div className="font-semibold">{persona.label}</div>
+                <div
+                  className={`text-[11px] font-mono ${
+                    voicePersona === persona.id ? "text-white/75" : "text-ink-muted"
+                  }`}
+                >
+                  {persona.lang}
+                </div>
               </button>
             ))}
           </div>

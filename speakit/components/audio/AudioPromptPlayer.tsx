@@ -1,18 +1,22 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { Volume2, VolumeX, RotateCcw } from "lucide-react";
+import { VolumeX, RotateCcw } from "lucide-react";
 import { speakText, isSpeechSynthesisSupported } from "../../lib/speech";
+import { storageAdapter } from "../../lib/storage";
+import { VoicePersonaId } from "../../lib/types";
 
 interface AudioPromptPlayerProps {
   text: string;
   autoPlay?: boolean;
+  voicePersona?: VoicePersonaId;
   onPlaybackEnd?: () => void;
 }
 
 export function AudioPromptPlayer({
   text,
   autoPlay = true,
+  voicePersona,
   onPlaybackEnd,
 }: AudioPromptPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -22,9 +26,13 @@ export function AudioPromptPlayer({
 
   useEffect(() => {
     setSupported(isSpeechSynthesisSupported());
+    const saved = storageAdapter.getSettings();
+    if (saved.speechRate) {
+      setRate(saved.speechRate);
+    }
   }, []);
 
-  const handlePlay = (customRate = rate) => {
+  const handlePlay = (customRate = rate, customPersona = voicePersona) => {
     if (!text.trim()) return;
 
     if (cancelSpeechRef.current) {
@@ -41,7 +49,8 @@ export function AudioPromptPlayer({
       },
       () => {
         setIsPlaying(false);
-      }
+      },
+      customPersona
     );
     cancelSpeechRef.current = cancelFn;
   };

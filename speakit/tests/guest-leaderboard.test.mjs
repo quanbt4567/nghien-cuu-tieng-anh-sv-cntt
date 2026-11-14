@@ -33,6 +33,18 @@ const {
 } = jiti(resolve(__dirname, "../lib/gamification.ts"));
 
 const {
+  VOICE_PERSONAS,
+  resolveVoiceForPersona,
+} = jiti(resolve(__dirname, "../lib/speech.ts"));
+
+const {
+  evaluatePlacementLevel,
+  getScenarioDifficulty,
+} = jiti(resolve(__dirname, "../lib/placement.ts"));
+
+const { SCENARIOS } = jiti(resolve(__dirname, "../data/scenarios.ts"));
+
+const {
   initOrHydrateGuestSession,
   getTopPlayers,
   rewardPracticePoints,
@@ -238,5 +250,59 @@ test("generateFriendlyDisplayName produces valid non-code names and isLegacyCode
   assert.equal(isLegacyCodeDisplayName("Dev-7F2A"), true);
   assert.equal(isLegacyCodeDisplayName("Swift Fox 42"), false);
 });
+
+test("resolveVoiceForPersona matches distinct English voices and falls back safely", () => {
+  assert.equal(VOICE_PERSONAS.length >= 4, true);
+  const mockVoices = [
+    { name: "Microsoft David - English (United States)", lang: "en-US" },
+    { name: "Microsoft Zira - English (United States)", lang: "en-US" },
+    { name: "Google UK English Female", lang: "en-GB" },
+    { name: "Microsoft An - Vietnamese", lang: "vi-VN" },
+  ];
+
+  const techLead = resolveVoiceForPersona("us-tech-lead", mockVoices);
+  assert.equal(techLead.voice?.name, "Microsoft David - English (United States)");
+  assert.equal(techLead.lang, "en-US");
+
+  const hrFemale = resolveVoiceForPersona("us-hr-female", mockVoices);
+  assert.equal(hrFemale.voice?.name, "Microsoft Zira - English (United States)");
+
+  const ukClient = resolveVoiceForPersona("uk-client", mockVoices);
+  assert.equal(ukClient.voice?.name, "Google UK English Female");
+  assert.equal(ukClient.lang, "en-GB");
+
+  const emptyFallback = resolveVoiceForPersona("uk-client", []);
+  assert.equal(emptyFallback.voice, null);
+  assert.equal(emptyFallback.lang, "en-GB");
+});
+
+test("scenarios have 3 difficulty tiers and evaluatePlacementLevel classifies Fresher, Junior, and Senior", () => {
+  const byId = Object.fromEntries(SCENARIOS.map((s) => [s.id, getScenarioDifficulty(s)]));
+  assert.equal(byId["daily-standup"], "Fresher");
+  assert.equal(byId["fresher-interview"], "Fresher");
+  assert.equal(byId["bug-report"], "Junior");
+  assert.equal(byId["code-review"], "Junior");
+  assert.equal(byId["tech-demo"], "Senior");
+  assert.equal(byId["client-meeting"], "Senior");
+
+  const fresher = evaluatePlacementLevel({}, "");
+  assert.equal(fresher.level, "Fresher");
+  assert.equal(fresher.recommendedScenarioId, "daily-standup");
+
+  const junior = evaluatePlacementLevel(
+    { "mcq-standup": "b", "mcq-review": "b" },
+    "Yesterday I fixed a small bug in the API endpoint."
+  );
+  assert.equal(junior.level, "Junior");
+
+  const senior = evaluatePlacementLevel(
+    { "mcq-standup": "b", "mcq-review": "a" },
+    "Yesterday I fixed a critical database latency issue and deployed the tested API cache fix to production."
+  );
+  assert.equal(senior.level, "Senior");
+  assert.equal(senior.recommendedScenarioId, "client-meeting");
+});
+
+
 
 

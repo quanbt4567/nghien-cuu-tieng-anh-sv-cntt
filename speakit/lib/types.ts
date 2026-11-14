@@ -8,6 +8,8 @@ export type CoreScenarioId =
 
 export type ScenarioId = CoreScenarioId | (string & {});
 
+export type ScenarioDifficulty = "Fresher" | "Junior" | "Senior";
+
 export interface ScenarioTurn {
   turnIndex: number; // 0, 1, 2
   questionEN: string;
@@ -22,6 +24,7 @@ export interface Scenario {
   titleVI: string;
   roleVI: string;
   descriptionVI: string;
+  difficulty?: ScenarioDifficulty;
   turns: ScenarioTurn[];
   isHidden?: boolean;
   isCustom?: boolean;
@@ -111,9 +114,12 @@ export interface WeakPoint {
   updated_at: string;
 }
 
+export type VoicePersonaId = "auto" | "us-tech-lead" | "us-hr-female" | "uk-client";
+
 export interface UserSettings {
   speechRate: 0.8 | 1.0 | 1.2;
   autoPlayAudio: boolean;
+  voicePersona?: VoicePersonaId;
 }
 
 export interface StorageAdapter {

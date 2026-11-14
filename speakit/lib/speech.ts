@@ -1,8 +1,53 @@
-// Web Speech API interfaces for SpeechRecognition across browsers
+import { VoicePersonaId } from "./types";
+
 interface IWindowSpeechRecognition extends Window {
   SpeechRecognition?: any;
   webkitSpeechRecognition?: any;
 }
+
+export interface VoicePersonaOption {
+  id: VoicePersonaId;
+  label: string;
+  shortLabel: string;
+  lang: string;
+  pitch: number;
+  keywords: string[];
+}
+
+export const VOICE_PERSONAS: VoicePersonaOption[] = [
+  {
+    id: "auto",
+    label: "Auto (Default English)",
+    shortLabel: "Auto",
+    lang: "en-US",
+    pitch: 1.0,
+    keywords: [],
+  },
+  {
+    id: "us-tech-lead",
+    label: "US English - Tech Lead",
+    shortLabel: "US Tech Lead",
+    lang: "en-US",
+    pitch: 0.92,
+    keywords: ["david", "mark", "guy", "andrew", "alex", "daniel", "male", "google us english"],
+  },
+  {
+    id: "us-hr-female",
+    label: "US Female - HR",
+    shortLabel: "US Female HR",
+    lang: "en-US",
+    pitch: 1.1,
+    keywords: ["zira", "aria", "jenny", "samantha", "victoria", "ava", "female", "google us english"],
+  },
+  {
+    id: "uk-client",
+    label: "UK English - Client",
+    shortLabel: "UK Client",
+    lang: "en-GB",
+    pitch: 1.0,
+    keywords: ["libby", "ryan", "sonia", "george", "hazel", "kate", "serena", "google uk english", "en-gb", "en_gb"],
+  },
+];
 
 export function isSpeechRecognitionSupported(): boolean {
   if (typeof window === "undefined") return false;
@@ -15,25 +60,88 @@ export function isSpeechSynthesisSupported(): boolean {
   return "speechSynthesis" in window;
 }
 
-/**
- * Text-to-speech helper with configurable rate and cancellation
- */
+export function getAvailableEnglishVoices(): SpeechSynthesisVoice[] {
+  if (!isSpeechSynthesisSupported()) return [];
+  return window.speechSynthesis
+    .getVoices()
+    .filter((voice) => voice.lang.toLowerCase().startsWith("en"));
+}
+
+export function resolveVoiceForPersona(
+  personaId: VoicePersonaId,
+  voices: SpeechSynthesisVoice[]
+): { voice: SpeechSynthesisVoice | null; lang: string; pitch: number } {
+  const persona =
+    VOICE_PERSONAS.find((item) => item.id === personaId) ?? VOICE_PERSONAS[0];
+  const englishVoices = voices.filter((voice) =>
+    voice.lang.toLowerCase().startsWith("en")
+  );
+  if (englishVoices.length === 0) {
+    return { voice: null, lang: persona.lang, pitch: persona.pitch };
+  }
+
+  const targetLangPrefix = persona.lang.toLowerCase().replace("_", "-");
+  const langMatches = englishVoices.filter((voice) =>
+    voice.lang.toLowerCase().replace("_", "-").startsWith(targetLangPrefix)
+  );
+  const pool = langMatches.length > 0 ? langMatches : englishVoices;
+
+  for (const kw of persona.keywords) {
+    const matched = pool.find((voice) =>
+      `${voice.name} ${voice.lang}`.toLowerCase().includes(kw)
+    );
+    if (matched) {
+      return { voice: matched, lang: matched.lang || persona.lang, pitch: persona.pitch };
+    }
+  }
+
+  return { voice: pool[0], lang: pool[0].lang || persona.lang, pitch: persona.pitch };
+}
+
+function readStoredVoicePersona(): VoicePersonaId {
+  if (typeof window === "undefined") return "auto";
+  try {
+    const raw = window.localStorage.getItem("speakit_settings_v1");
+    if (!raw) return "auto";
+    const parsed = JSON.parse(raw) as { voicePersona?: string };
+    if (
+      parsed.voicePersona === "us-tech-lead" ||
+      parsed.voicePersona === "us-hr-female" ||
+      parsed.voicePersona === "uk-client" ||
+      parsed.voicePersona === "auto"
+    ) {
+      return parsed.voicePersona;
+    }
+  } catch {
+  }
+  return "auto";
+}
+
 export function speakText(
   text: string,
   rate: 0.8 | 1.0 | 1.2 = 1.0,
   onEnd?: () => void,
-  onError?: (err: string) => void
+  onError?: (err: string) => void,
+  voicePersona?: VoicePersonaId
 ): () => void {
   if (!isSpeechSynthesisSupported()) {
     if (onError) onError("Trình duyệt không hỗ trợ phát âm thanh tổng hợp.");
     return () => {};
   }
 
-  // Cancel any ongoing utterance
   window.speechSynthesis.cancel();
 
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "en-US";
+  const activePersona = voicePersona ?? readStoredVoicePersona();
+  const resolved = resolveVoiceForPersona(
+    activePersona,
+    window.speechSynthesis.getVoices()
+  );
+  if (resolved.voice) {
+    utterance.voice = resolved.voice;
+  }
+  utterance.lang = resolved.lang;
+  utterance.pitch = resolved.pitch;
   utterance.rate = rate;
 
   utterance.onend = () => {
@@ -41,7 +149,6 @@ export function speakText(
   };
 
   utterance.onerror = (event) => {
-    // If canceled manually, do not treat as error
     if (event.error === "canceled" || event.error === "interrupted") return;
     if (onError) {
       onError("Không thể phát âm thanh. Vui lòng kiểm tra lại thiết bị loa của bạn.");
@@ -50,7 +157,6 @@ export function speakText(
 
   window.speechSynthesis.speak(utterance);
 
-  // Return cancel function
   return () => {
     window.speechSynthesis.cancel();
   };

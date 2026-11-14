@@ -6,10 +6,12 @@ import {
   ArrowRight,
   Bug,
   Code2,
-  Gamepad2,
+  Compass,
+  HelpCircle,
   Play,
   Server,
   Terminal,
+  X,
 } from "lucide-react";
 import { IT_ROLES } from "../../data/minigames";
 import { SCENARIOS } from "../../data/scenarios";
@@ -25,7 +27,16 @@ import {
   fetchAndCachePublicContent,
   getEffectiveScenarios,
 } from "../../lib/contentStore";
-import { ITRole, Scenario } from "../../lib/types";
+import {
+  PLACEMENT_STORAGE_KEY,
+  PLACEMENT_UPDATED_EVENT,
+  PlacementResult,
+  getSavedPlacementResult,
+  getScenarioDifficulty,
+} from "../../lib/placement";
+import { ITRole, Scenario, ScenarioDifficulty } from "../../lib/types";
+
+const GUIDE_BANNER_DISMISSED_KEY = "speakit_guide_banner_dismissed_v1";
 
 const ROLE_ICONS: Record<ITRole, typeof Code2> = {
   frontend: Code2,
@@ -34,9 +45,29 @@ const ROLE_ICONS: Record<ITRole, typeof Code2> = {
   devops: Terminal,
 };
 
+const DIFFICULTY_FILTERS: Array<"ALL" | ScenarioDifficulty> = [
+  "ALL",
+  "Fresher",
+  "Junior",
+  "Senior",
+];
+
+function getDifficultyBadgeClass(level: ScenarioDifficulty): string {
+  if (level === "Fresher") {
+    return "bg-emerald-500/15 text-emerald-700 border-emerald-500/30";
+  }
+  if (level === "Junior") {
+    return "bg-sky-500/10 text-sky-700 border-sky-500/30";
+  }
+  return "bg-ink text-white border-ink";
+}
+
 export function HomeOnboardingClient() {
   const [selectedRole, setSelectedRoleState] = useState<ITRole>("frontend");
   const [scenarios, setScenarios] = useState<Scenario[]>(SCENARIOS);
+  const [difficultyFilter, setDifficultyFilter] = useState<"ALL" | ScenarioDifficulty>("ALL");
+  const [placement, setPlacement] = useState<PlacementResult | null>(null);
+  const [showGuideBanner, setShowGuideBanner] = useState(false);
 
   useEffect(() => {
     const syncRole = () => {
@@ -45,13 +76,27 @@ export function HomeOnboardingClient() {
     const syncContent = () => {
       setScenarios(getEffectiveScenarios());
     };
+    const syncPlacement = () => {
+      setPlacement(getSavedPlacementResult());
+    };
 
     syncRole();
     syncContent();
+    syncPlacement();
+
+    try {
+      setShowGuideBanner(
+        window.localStorage.getItem(GUIDE_BANNER_DISMISSED_KEY) !== "1"
+      );
+    } catch {
+      setShowGuideBanner(false);
+    }
+
     void fetchAndCachePublicContent();
 
     window.addEventListener(GAMIFICATION_UPDATED_EVENT, syncRole);
     window.addEventListener(CONTENT_UPDATED_EVENT, syncContent);
+    window.addEventListener(PLACEMENT_UPDATED_EVENT, syncPlacement);
 
     const handleStorage = (event: StorageEvent) => {
       if (!event.key || event.key === GAMIFICATION_STORAGE_KEY) {
@@ -60,15 +105,27 @@ export function HomeOnboardingClient() {
       if (!event.key || event.key === CONTENT_STORAGE_KEY) {
         syncContent();
       }
+      if (!event.key || event.key === PLACEMENT_STORAGE_KEY) {
+        syncPlacement();
+      }
     };
     window.addEventListener("storage", handleStorage);
 
     return () => {
       window.removeEventListener(GAMIFICATION_UPDATED_EVENT, syncRole);
       window.removeEventListener(CONTENT_UPDATED_EVENT, syncContent);
+      window.removeEventListener(PLACEMENT_UPDATED_EVENT, syncPlacement);
       window.removeEventListener("storage", handleStorage);
     };
   }, []);
+
+  const handleDismissGuideBanner = () => {
+    setShowGuideBanner(false);
+    try {
+      window.localStorage.setItem(GUIDE_BANNER_DISMISSED_KEY, "1");
+    } catch {
+    }
+  };
 
   const activeRole =
     IT_ROLES.find((role) => role.id === selectedRole) ?? IT_ROLES[0];
@@ -76,17 +133,26 @@ export function HomeOnboardingClient() {
   const sortedScenarios = useMemo(() => {
     const scorePriority = (scenario: Scenario): number => {
       let score = 0;
+      if (placement && scenario.id === placement.recommendedScenarioId) score += 4;
+      if (placement && getScenarioDifficulty(scenario) === placement.level) score += 2;
       if (scenario.targetRoles?.includes(selectedRole)) score += 2;
       if (scenario.id === activeRole.recommendedScenarioId) score += 1;
       return score;
     };
     return [...scenarios].sort((a, b) => scorePriority(b) - scorePriority(a));
-  }, [scenarios, selectedRole, activeRole.recommendedScenarioId]);
+  }, [scenarios, selectedRole, activeRole.recommendedScenarioId, placement]);
+
+  const filteredScenarios = useMemo(() => {
+    if (difficultyFilter === "ALL") return sortedScenarios;
+    return sortedScenarios.filter(
+      (scenario) => getScenarioDifficulty(scenario) === difficultyFilter
+    );
+  }, [sortedScenarios, difficultyFilter]);
 
   const recommendedScenario = sortedScenarios[0] ?? null;
   const totalTurnsCount = useMemo(
-    () => sortedScenarios.reduce((sum, s) => sum + s.turns.length, 0),
-    [sortedScenarios]
+    () => filteredScenarios.reduce((sum, s) => sum + s.turns.length, 0),
+    [filteredScenarios]
   );
 
   const handleSelectRole = (role: ITRole) => {
@@ -96,6 +162,33 @@ export function HomeOnboardingClient() {
 
   return (
     <div className="space-y-8">
+      {showGuideBanner && (
+        <div className="bg-sky-500/10 border border-sky-500/30 rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 text-xs sm:text-sm text-ink">
+            <HelpCircle className="w-4 h-4 text-sky-600 shrink-0" aria-hidden="true" />
+            <span>
+              <strong>Lần đầu sử dụng?</strong>{" "}
+              <Link href="/guide" className="text-sky-700 font-semibold underline underline-offset-4 hover:text-sky-800">
+                Xem hướng dẫn 1 phút
+              </Link>{" "}
+              hoặc{" "}
+              <Link href="/placement" className="text-sky-700 font-semibold underline underline-offset-4 hover:text-sky-800">
+                làm test xếp lớp 2 phút
+              </Link>
+              .
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={handleDismissGuideBanner}
+            aria-label="Đóng thông báo hướng dẫn"
+            className="p-1 rounded-pill text-ink-muted hover:text-ink hover:bg-white/60 transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
       <section
         aria-label="Bắt đầu luyện nói nhanh"
         className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5"
@@ -122,7 +215,7 @@ export function HomeOnboardingClient() {
                 >
                   <Icon
                     className={`w-3.5 h-3.5 shrink-0 ${
-                      isSelected ? "text-accent" : "text-ink"
+                      isSelected ? "text-sky-300" : "text-ink"
                     }`}
                     aria-hidden="true"
                   />
@@ -137,8 +230,17 @@ export function HomeOnboardingClient() {
           <div className="pt-4 border-t border-paper-muted flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1.5">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-mono font-semibold text-accent uppercase tracking-wide">
-                  Đề xuất cho {activeRole.label} · ~3 phút
+                <span className="text-xs font-mono font-semibold text-sky-700 uppercase tracking-wide">
+                  {placement
+                    ? `Đề xuất theo trình độ ${placement.level} · ~3 phút`
+                    : `Đề xuất cho ${activeRole.label} · ~3 phút`}
+                </span>
+                <span
+                  className={`text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-pill border ${getDifficultyBadgeClass(
+                    getScenarioDifficulty(recommendedScenario)
+                  )}`}
+                >
+                  {getScenarioDifficulty(recommendedScenario)}
                 </span>
               </div>
               <h2 className="text-lg font-bold tracking-tight text-ink">
@@ -150,11 +252,24 @@ export function HomeOnboardingClient() {
               <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">
                 {recommendedScenario.descriptionVI}
               </p>
+              <div className="pt-0.5">
+                <Link
+                  href="/placement"
+                  className="inline-flex items-center gap-1 text-xs font-medium text-sky-700 hover:underline"
+                >
+                  <Compass className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span>
+                    {placement
+                      ? `Trình độ hiện tại: ${placement.level} (Làm lại test xếp lớp)`
+                      : "Chưa rõ trình độ? Làm bài test 2 phút"}
+                  </span>
+                </Link>
+              </div>
             </div>
 
             <Link
               href={`/practice/${recommendedScenario.id}`}
-              className="w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-pill bg-accent hover:bg-accent-hover text-white font-semibold text-sm border border-accent shadow-soft shadow-hard-press transition-all"
+              className="w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-pill bg-ink hover:bg-ink-muted text-white font-semibold text-sm border border-ink shadow-soft transition-all"
             >
               <Play className="w-4 h-4 fill-white shrink-0" aria-hidden="true" />
               <span>Bắt đầu luyện ngay</span>
@@ -172,10 +287,10 @@ export function HomeOnboardingClient() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-lg sm:text-xl font-bold tracking-tight text-ink">
-              Tất cả tình huống ({sortedScenarios.length})
+              Tất cả tình huống ({filteredScenarios.length})
             </h2>
             <p className="text-xs text-ink-muted mt-0.5">
-              Chọn một tình huống công việc để luyện phản xạ nói tiếng Anh
+              Chọn cấp độ Fresher, Junior hoặc Senior để luyện phản xạ nói tiếng Anh
             </p>
           </div>
           <span className="text-xs font-mono text-ink-muted bg-paper-muted px-3 py-1 rounded-pill border border-ink/15 shrink-0">
@@ -183,9 +298,34 @@ export function HomeOnboardingClient() {
           </span>
         </div>
 
+        <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Lọc theo cấp độ">
+          {DIFFICULTY_FILTERS.map((level) => {
+            const isActive = difficultyFilter === level;
+            return (
+              <button
+                key={level}
+                type="button"
+                onClick={() => setDifficultyFilter(level)}
+                aria-pressed={isActive}
+                className={`px-3.5 py-1.5 rounded-pill text-xs font-mono font-semibold border transition-all ${
+                  isActive
+                    ? "bg-ink text-white border-ink shadow-soft"
+                    : "bg-white text-ink border-ink/15 hover:bg-paper-muted"
+                }`}
+              >
+                {level === "ALL" ? "Tất cả" : level}
+              </button>
+            );
+          })}
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {sortedScenarios.map((scenario, index) => {
+          {filteredScenarios.map((scenario, index) => {
+            const level = getScenarioDifficulty(scenario);
+            const isPlacementMatch =
+              placement?.recommendedScenarioId === scenario.id;
             const isRecommended =
+              isPlacementMatch ||
               scenario.id === recommendedScenario?.id ||
               Boolean(scenario.targetRoles?.includes(selectedRole));
             return (
@@ -193,29 +333,45 @@ export function HomeOnboardingClient() {
                 key={scenario.id}
                 href={`/practice/${scenario.id}`}
                 className={`group bg-white border rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4 ${
-                  isRecommended ? "border-accent/50" : "border-ink/15"
+                  isPlacementMatch
+                    ? "border-sky-500/60 ring-1 ring-sky-500/20"
+                    : isRecommended
+                    ? "border-emerald-500/40"
+                    : "border-ink/15"
                 }`}
               >
                 <div className="flex items-start gap-3.5">
                   <div
                     className={`w-8 h-8 rounded-pill flex items-center justify-center border shrink-0 font-mono font-bold text-xs transition-colors ${
                       isRecommended
-                        ? "bg-accent text-white border-accent"
-                        : "bg-paper text-ink border-ink/20 group-hover:bg-accent group-hover:text-white group-hover:border-accent"
+                        ? "bg-ink text-white border-ink"
+                        : "bg-paper text-ink border-ink/20 group-hover:bg-ink group-hover:text-white group-hover:border-ink"
                     }`}
                   >
                     {String(index + 1).padStart(2, "0")}
                   </div>
                   <div className="min-w-0 space-y-1.5">
-                    <h3 className="font-bold text-sm sm:text-base text-ink group-hover:text-accent transition-colors">
+                    <h3 className="font-bold text-sm sm:text-base text-ink group-hover:text-sky-700 transition-colors">
                       {scenario.titleEN}{" "}
                       <span className="text-xs font-normal text-ink-faint">
                         ({scenario.titleVI})
                       </span>
                     </h3>
                     <div className="flex flex-wrap items-center gap-1.5">
-                      {isRecommended && (
-                        <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-pill bg-accent-light text-accent border border-accent/25">
+                      <span
+                        className={`text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-pill border ${getDifficultyBadgeClass(
+                          level
+                        )}`}
+                      >
+                        {level}
+                      </span>
+                      {isPlacementMatch && (
+                        <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-pill bg-sky-500/10 text-sky-700 border border-sky-500/30">
+                          Đề xuất từ Placement
+                        </span>
+                      )}
+                      {!isPlacementMatch && isRecommended && (
+                        <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-pill bg-emerald-500/15 text-emerald-700 border border-emerald-500/30">
                           Phù hợp với bạn
                         </span>
                       )}
@@ -231,7 +387,7 @@ export function HomeOnboardingClient() {
 
                 <div className="flex items-center justify-between pt-3 border-t border-paper-muted text-xs font-mono text-ink-muted">
                   <span>{scenario.turns.length} lượt hội thoại</span>
-                  <span className="inline-flex items-center gap-1 text-ink font-semibold group-hover:text-accent">
+                  <span className="inline-flex items-center gap-1 text-ink font-semibold group-hover:text-sky-700">
                     <span>Thực hành</span>
                     <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
                   </span>

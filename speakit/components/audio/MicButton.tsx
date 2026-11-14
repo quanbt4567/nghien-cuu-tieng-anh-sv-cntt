@@ -131,27 +131,37 @@ export function MicButton({
         </div>
       )}
 
-      {/* Status Label */}
-      <div className="text-center space-y-1">
-        <div className="text-xs sm:text-sm font-bold text-ink">
+      <div className="text-center space-y-2">
+        <button
+          type="button"
+          onClick={handleClick}
+          disabled={disabled}
+          className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-pill text-xs sm:text-sm font-bold border transition-all disabled:opacity-50 ${
+            isRecording
+              ? "bg-rose-500/10 text-rose-600 border-rose-500/30"
+              : "bg-ink text-white border-ink hover:bg-ink-muted shadow-soft"
+          }`}
+        >
           {isRecording ? (
-            <span className="text-accent flex items-center gap-1.5 justify-center">
-              <span className="w-2 h-2 rounded-full bg-accent animate-ping" />
-              Đang nghe bạn nói... (Nhấn để kết thúc)
-            </span>
+            <>
+              <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+              <span>Dừng ghi âm</span>
+            </>
           ) : (
-            <span>Nhấn vào micro để trả lời</span>
+            <>
+              <Mic className="w-3.5 h-3.5" />
+              <span>Ghi âm câu trả lời</span>
+            </>
           )}
-        </div>
+        </button>
         <div className="text-[11px] font-mono text-ink-muted">
           Chrome SpeechRecognition (en-US)
         </div>
       </div>
 
-      {/* Inline Warning/Error if any */}
       {error && (
-        <div className="flex items-center gap-1.5 text-xs text-accent font-medium bg-accent-light px-3 py-1.5 rounded-pill border border-accent">
-          <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+        <div className="flex items-center gap-1.5 text-xs text-rose-700 font-medium bg-rose-500/10 px-3 py-1.5 rounded-pill border border-rose-500/30">
+          <AlertCircle className="w-3.5 h-3.5 shrink-0 text-rose-500" />
           <span>{error}</span>
         </div>
       )}

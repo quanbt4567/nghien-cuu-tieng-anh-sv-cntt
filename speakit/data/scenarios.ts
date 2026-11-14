@@ -6,6 +6,7 @@ export const SCENARIOS: Scenario[] = [
     titleEN: "Daily Standup Meeting",
     titleVI: "Họp Standup Hàng Ngày",
     roleVI: "Scrum Master / Tech Lead",
+    difficulty: "Fresher",
     descriptionVI: "Báo cáo tiến độ 3 câu hỏi kinh điển: hôm qua làm gì, hôm nay làm gì và có vướng mắc (blocker) gì không.",
     turns: [
       {
@@ -36,6 +37,7 @@ export const SCENARIOS: Scenario[] = [
     titleEN: "Bug Report Triage",
     titleVI: "Báo Cáo & Xử Lý Lỗi Kỹ Thuật",
     roleVI: "QA Lead / Senior Developer",
+    difficulty: "Junior",
     descriptionVI: "Mô tả lỗi phát sinh, các bước tái hiện (reproduce), đánh giá mức độ nghiêm trọng (severity) và hướng khắc phục.",
     turns: [
       {
@@ -66,6 +68,7 @@ export const SCENARIOS: Scenario[] = [
     titleEN: "Code Review Discussion",
     titleVI: "Trao Đổi Đánh Giá Mã Nguồn",
     roleVI: "Senior Peer Reviewer",
+    difficulty: "Junior",
     descriptionVI: "Giải thích nội dung Pull Request, lý do lựa chọn giải pháp kiến trúc và phản hồi nhận xét về hiệu năng.",
     turns: [
       {
@@ -96,6 +99,7 @@ export const SCENARIOS: Scenario[] = [
     titleEN: "Fresher Technical Interview",
     titleVI: "Phỏng Vấn Lập Trình Viên Mới",
     roleVI: "Engineering Hiring Manager",
+    difficulty: "Fresher",
     descriptionVI: "Tự giới thiệu bản thân, chia sẻ thế mạnh kỹ thuật nổi bật nhất và lý do mong muốn gia nhập công ty.",
     turns: [
       {
@@ -126,6 +130,7 @@ export const SCENARIOS: Scenario[] = [
     titleEN: "Client Progress Meeting",
     titleVI: "Họp Báo Cáo Tiến Độ Với Khách Hàng",
     roleVI: "Product Owner / Client Representative",
+    difficulty: "Senior",
     descriptionVI: "Giải thích nguyên nhân chậm trễ bàn giao, đề xuất phương án xử lý thỏa đáng và chốt lại mốc thời gian mới.",
     turns: [
       {
@@ -156,6 +161,7 @@ export const SCENARIOS: Scenario[] = [
     titleEN: "Technical Demo Presentation",
     titleVI: "Thuyết Trình Demo Sản Phẩm Kỹ Thuật",
     roleVI: "Tech Lead & Engineering Audience",
+    difficulty: "Senior",
     descriptionVI: "Trình diễn tính năng vừa hoàn thiện, giải thích cơ chế hoạt động bên dưới (under the hood) và trả lời câu hỏi khán giả.",
     turns: [
       {

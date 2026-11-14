@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Check, X, MessageSquare, BookOpen, ArrowRight, CheckCircle2, Volume2 } from "lucide-react";
+import {
+  Check,
+  X,
+  MessageSquare,
+  Sparkles,
+  ArrowRight,
+  Volume2,
+} from "lucide-react";
 import { ScoreResponse } from "../../lib/types";
 import { speakText } from "../../lib/speech";
 
@@ -23,37 +30,47 @@ export function FeedbackCard({
   const isMedium = result.score >= 60 && result.score < 80;
 
   return (
-    <div className="space-y-5">
-      {/* 1. Score Meter (Inlined from ScoreMeter.tsx) */}
+    <div className="space-y-4">
       <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-3.5">
         <div className="flex items-center justify-between">
           <span className="text-xs font-bold text-ink uppercase tracking-wider font-mono">
             Điểm đánh giá câu trả lời
           </span>
           <div className="flex items-baseline gap-1 font-mono">
-            <span className="text-3xl font-extrabold text-ink">{result.score}</span>
+            <span
+              className={`text-3xl font-extrabold ${
+                isHigh
+                  ? "text-emerald-600"
+                  : isMedium
+                  ? "text-sky-600"
+                  : "text-rose-600"
+              }`}
+            >
+              {result.score}
+            </span>
             <span className="text-xs text-ink-muted">/100</span>
           </div>
         </div>
 
-        {/* Centered Brutalist Progress Bar */}
         <div className="w-full h-3.5 bg-paper rounded-pill border border-ink/15 overflow-hidden p-0.5">
           <div
-            className={`h-full rounded-pill border border-ink/20 transition-all duration-500 ${
-              isHigh ? "bg-accent" : isMedium ? "bg-ink" : "bg-paper-muted"
+            className={`h-full rounded-pill transition-all duration-500 ${
+              isHigh
+                ? "bg-emerald-500"
+                : isMedium
+                ? "bg-sky-500"
+                : "bg-rose-500"
             }`}
             style={{ width: `${Math.max(5, result.score)}%` }}
           />
         </div>
 
-        {/* Formula Disclosure per Constitution Principle V */}
         <div className="flex flex-wrap items-center justify-between text-[11px] font-mono text-ink-muted pt-1 border-t border-paper-muted">
           <span>Công thức chấm:</span>
           <span>40% Từ khóa • 30% Đầy đủ • 30% Ngữ pháp</span>
         </div>
       </div>
 
-      {/* 2. IT Keyword Badges (Inlined from KeywordBadges.tsx) */}
       <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-3.5">
         <div className="flex items-center justify-between text-xs font-bold text-ink">
           <span>Từ khóa kỹ thuật CNTT</span>
@@ -64,48 +81,43 @@ export function FeedbackCard({
         </div>
 
         <div className="flex flex-wrap gap-2">
-          {/* Keywords used */}
           {result.keywordsUsed.map((kw) => (
             <span
               key={kw}
-              className="inline-flex items-center gap-1 px-3 py-1 text-xs font-mono font-medium rounded-pill bg-paper border border-ink/15 text-ink"
+              className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-semibold rounded-pill bg-emerald-500/15 border border-emerald-500/30 text-emerald-700"
             >
-              <Check className="w-3.5 h-3.5 text-accent stroke-[3]" />
+              <Check className="w-3.5 h-3.5 text-emerald-500 stroke-[3]" />
               <span>{kw}</span>
             </span>
           ))}
 
-          {/* Keywords missed */}
           {result.keywordsMissed.map((kw) => (
             <span
               key={kw}
-              className="inline-flex items-center gap-1 px-3 py-1 text-xs font-mono font-medium rounded-pill bg-paper-muted border border-ink/15 text-ink-muted line-through decoration-accent decoration-2"
+              className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-medium rounded-pill bg-rose-500/10 border border-rose-500/30 text-rose-700 line-through decoration-rose-400 decoration-2"
             >
-              <X className="w-3.5 h-3.5 text-accent stroke-[2]" />
+              <X className="w-3.5 h-3.5 text-rose-400 stroke-[2.5]" />
               <span>{kw}</span>
             </span>
           ))}
         </div>
       </div>
 
-      {/* 3. Detailed Feedback & Corrections */}
-      <div className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5">
-        {/* Student Transcript */}
+      <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4">
         <div className="space-y-1.5">
           <span className="text-xs font-mono font-bold uppercase text-ink-muted flex items-center gap-1.5">
-            <MessageSquare className="w-3.5 h-3.5 text-accent" />
+            <MessageSquare className="w-3.5 h-3.5 text-ink" />
             Văn bản bạn đã nói:
           </span>
-          <div className="p-3 bg-paper rounded-xl border border-ink text-sm text-ink font-medium leading-relaxed">
+          <div className="p-3 bg-paper rounded-xl border border-ink/15 text-sm text-ink font-medium leading-relaxed">
             "{transcript}"
           </div>
         </div>
 
-        {/* Better Sentence with Shadowing Audio */}
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="text-xs font-mono font-bold uppercase text-ink-muted flex items-center gap-1.5">
-              <BookOpen className="w-3.5 h-3.5 text-accent" />
+            <span className="text-xs font-mono font-bold uppercase text-sky-700 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-sky-500" />
               Gợi ý câu nói tự nhiên hơn:
             </span>
             <button
@@ -120,39 +132,38 @@ export function FeedbackCard({
                 );
               }}
               disabled={isPlayingBetter}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-semibold text-ink hover:bg-accent hover:text-white shadow-soft transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-sky-500/10 border border-sky-500/30 text-xs font-mono font-semibold text-sky-700 hover:bg-sky-500/20 shadow-soft transition-colors disabled:opacity-50"
               title="Nghe câu mẫu phát âm chuẩn"
             >
-              <Volume2 className={`w-3.5 h-3.5 ${isPlayingBetter ? "text-accent animate-pulse" : ""}`} />
+              <Volume2 className={`w-3.5 h-3.5 ${isPlayingBetter ? "text-sky-500 animate-pulse" : ""}`} />
               <span>{isPlayingBetter ? "Đang phát..." : "Nghe mẫu (Shadowing)"}</span>
             </button>
           </div>
-          <div className="p-3 bg-accent-light rounded-xl border border-accent/30 text-sm text-ink leading-relaxed">
-            <span className="font-semibold text-accent block text-xs font-mono mb-1">
-              Better Sentence:
+          <div className="p-3.5 bg-sky-500/10 rounded-xl border border-sky-500/30 text-sm text-ink leading-relaxed">
+            <span className="font-semibold text-sky-700 block text-xs font-mono mb-1">
+              More Natural / Pro Phrasing:
             </span>
             "{result.betterSentence}"
           </div>
         </div>
 
-        {/* Grammar Corrections with Vietnamese Explanation */}
         {result.grammarCorrections.length > 0 && (
           <div className="space-y-2">
-            <span className="text-xs font-mono font-bold uppercase text-ink-muted">
+            <span className="text-xs font-mono font-bold uppercase text-rose-600">
               Lưu ý ngữ pháp ({result.grammarCorrections.length}):
             </span>
             <div className="space-y-2">
               {result.grammarCorrections.map((g, idx) => (
                 <div
                   key={idx}
-                  className="p-3 bg-paper rounded-xl border border-ink/15 space-y-1 text-xs"
+                  className="p-3 bg-paper rounded-xl border border-rose-500/25 space-y-1 text-xs"
                 >
                   <div className="flex flex-wrap items-baseline gap-2">
-                    <span className="line-through text-accent font-mono">
+                    <span className="line-through text-rose-500 font-mono">
                       "{g.original}"
                     </span>
-                    <span className="font-mono text-ink">→</span>
-                    <span className="font-mono font-bold text-ink">
+                    <span className="font-mono text-ink-muted">→</span>
+                    <span className="font-mono font-bold text-emerald-700">
                       "{g.corrected}"
                     </span>
                   </div>
@@ -165,7 +176,6 @@ export function FeedbackCard({
           </div>
         )}
 
-        {/* Pronunciation Estimation Note */}
         {result.pronunciationNote && (
           <div className="p-3 bg-paper-muted rounded-xl border border-ink/15 text-xs text-ink-muted">
             <span className="font-semibold text-ink block font-mono mb-0.5">
@@ -175,14 +185,14 @@ export function FeedbackCard({
           </div>
         )}
 
-        {/* Action: Next Turn or Finish */}
         {onNextTurn && (
           <div className="pt-2">
             <button
+              type="button"
               onClick={onNextTurn}
               className="w-full py-3 px-4 rounded-pill bg-ink text-white font-bold text-sm border border-ink shadow-soft hover:bg-ink-muted flex items-center justify-center gap-2 transition-all"
             >
-              <span>{isLastTurn ? "Xem tổng kết lượt luyện tập" : "Lượt đối thoại tiếp theo"}</span>
+              <span>{isLastTurn ? "Xem tổng kết lượt luyện tập" : "Tiếp tục lượt sau"}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
