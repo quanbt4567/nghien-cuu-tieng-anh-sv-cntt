@@ -96,7 +96,7 @@ export default function GuidePage() {
         </div>
         <Link
           href="/placement"
-          className="shrink-0 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-pill bg-ink text-white text-xs sm:text-sm font-semibold hover:bg-ink-muted shadow-soft transition-all"
+          className="shrink-0 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-pill bg-accent hover:bg-accent-hover text-white text-sm font-bold shadow-card transition-all"
         >
           <span>Kiểm tra trình độ ngay</span>
           <ArrowRight className="w-4 h-4" />

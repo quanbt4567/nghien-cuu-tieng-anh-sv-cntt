@@ -512,7 +512,7 @@ export default function PracticePage() {
                       type="button"
                       onClick={() => setTranscript("")}
                       disabled={!transcript || isEvaluating || isRecording}
-                      className="text-xs text-ink-muted hover:text-ink disabled:opacity-40 flex items-center gap-1 py-1"
+                      className="text-xs font-medium text-ink-muted hover:text-ink hover:bg-paper-muted px-2.5 py-1.5 rounded-pill disabled:opacity-40 disabled:pointer-events-none flex items-center gap-1 transition-colors"
                     >
                       <RotateCcw className="w-3 h-3" />
                       <span>Xóa chữ</span>
@@ -522,10 +522,14 @@ export default function PracticePage() {
                       type="button"
                       onClick={handleSubmitAnswer}
                       disabled={!transcript.trim() || isEvaluating || isRecording}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-ink text-white font-medium text-xs border border-ink shadow-soft hover:bg-ink-muted disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-pill text-sm border transition-all ${
+                        transcript.trim() && !isEvaluating && !isRecording
+                          ? "bg-accent text-white font-bold border-accent shadow-card ring-2 ring-accent/20 hover:bg-accent-hover hover:ring-accent/35 active:scale-[0.98]"
+                          : "bg-paper-muted text-ink-faint font-semibold border-ink/15 cursor-not-allowed shadow-none"
+                      }`}
                     >
                       <span>Gửi câu trả lời</span>
-                      <Send className="w-3.5 h-3.5" />
+                      <Send className="w-4 h-4" />
                     </button>
                   </div>
                 )}

@@ -127,7 +127,7 @@ export default function PlacementPage() {
           <div className="flex flex-col sm:flex-row gap-3 pt-1">
             <Link
               href={`/practice/${recommendedScenario.id}`}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-pill bg-ink text-white text-sm font-semibold hover:bg-ink-muted shadow-soft transition-all"
+              className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-pill bg-accent hover:bg-accent-hover text-white text-sm font-bold shadow-card transition-all"
             >
               <span>Bắt đầu bài {result.level} ngay</span>
               <ArrowRight className="w-4 h-4" />
@@ -198,7 +198,7 @@ export default function PlacementPage() {
                       type="button"
                       disabled={step === 0}
                       onClick={() => setStep((s) => Math.max(0, s - 1))}
-                      className="px-4 py-2 rounded-pill bg-paper border border-ink/15 text-xs font-medium text-ink disabled:opacity-40"
+                      className="px-4 py-2.5 rounded-pill bg-paper border border-ink/15 text-xs font-medium text-ink-muted hover:bg-paper-muted hover:text-ink disabled:opacity-40 transition-all"
                     >
                       Quay lại
                     </button>
@@ -206,10 +206,10 @@ export default function PlacementPage() {
                       type="button"
                       disabled={!selected}
                       onClick={() => setStep((s) => s + 1)}
-                      className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-pill bg-ink text-white text-xs font-semibold hover:bg-ink-muted disabled:opacity-40 transition-all"
+                      className="inline-flex items-center gap-2 px-6 py-2.5 rounded-pill bg-accent hover:bg-accent-hover text-white text-sm font-bold shadow-card disabled:opacity-40 disabled:pointer-events-none transition-all"
                     >
                       <span>Tiếp tục</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
+                      <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -257,17 +257,17 @@ export default function PlacementPage() {
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="px-4 py-2 rounded-pill bg-paper border border-ink/15 text-xs font-medium text-ink"
+                  className="px-4 py-2.5 rounded-pill bg-paper border border-ink/15 text-xs font-medium text-ink-muted hover:bg-paper-muted hover:text-ink transition-all"
                 >
                   Quay lại
                 </button>
                 <button
                   type="button"
                   onClick={handleFinishPlacement}
-                  className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-pill bg-ink text-white text-xs font-semibold hover:bg-ink-muted shadow-soft transition-all"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-pill bg-accent hover:bg-accent-hover text-white text-sm font-bold shadow-card transition-all"
                 >
                   <span>Xem kết quả xếp lớp</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
             </div>

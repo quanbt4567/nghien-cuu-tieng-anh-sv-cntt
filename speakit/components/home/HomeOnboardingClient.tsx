@@ -164,19 +164,22 @@ export function HomeOnboardingClient() {
     <div className="space-y-8">
       {showGuideBanner && (
         <div className="bg-sky-500/10 border border-sky-500/30 rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5 text-xs sm:text-sm text-ink">
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-ink">
             <HelpCircle className="w-4 h-4 text-sky-600 shrink-0" aria-hidden="true" />
-            <span>
-              <strong>Lần đầu sử dụng?</strong>{" "}
-              <Link href="/guide" className="text-sky-700 font-semibold underline underline-offset-4 hover:text-sky-800">
-                Xem hướng dẫn 1 phút
-              </Link>{" "}
-              hoặc{" "}
-              <Link href="/placement" className="text-sky-700 font-semibold underline underline-offset-4 hover:text-sky-800">
-                làm test xếp lớp 2 phút
-              </Link>
-              .
-            </span>
+            <span className="font-semibold">Lần đầu sử dụng?</span>
+            <Link
+              href="/guide"
+              className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-white hover:bg-sky-500/10 text-sky-700 border border-sky-500/30 text-xs font-semibold transition-colors"
+            >
+              Xem hướng dẫn 1 phút
+            </Link>
+            <span className="text-ink-muted">hoặc</span>
+            <Link
+              href="/placement"
+              className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-white hover:bg-sky-500/10 text-sky-700 border border-sky-500/30 text-xs font-semibold transition-colors"
+            >
+              Làm test xếp lớp 2 phút
+            </Link>
           </div>
           <button
             type="button"
@@ -252,12 +255,12 @@ export function HomeOnboardingClient() {
               <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">
                 {recommendedScenario.descriptionVI}
               </p>
-              <div className="pt-0.5">
+              <div className="pt-1">
                 <Link
                   href="/placement"
-                  className="inline-flex items-center gap-1 text-xs font-medium text-sky-700 hover:underline"
+                  className="inline-flex items-center gap-1.5 rounded-pill px-3 py-1 bg-sky-500/10 hover:bg-sky-500/20 text-sky-700 border border-sky-500/30 text-xs font-semibold transition-colors"
                 >
-                  <Compass className="w-3.5 h-3.5" aria-hidden="true" />
+                  <Compass className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                   <span>
                     {placement
                       ? `Trình độ hiện tại: ${placement.level} (Làm lại test xếp lớp)`
@@ -269,7 +272,7 @@ export function HomeOnboardingClient() {
 
             <Link
               href={`/practice/${recommendedScenario.id}`}
-              className="w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-pill bg-ink hover:bg-ink-muted text-white font-semibold text-sm border border-ink shadow-soft transition-all"
+              className="w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-pill bg-accent hover:bg-accent-hover text-white font-bold text-sm sm:text-base shadow-card ring-2 ring-accent/25 hover:scale-[1.02] transition-all"
             >
               <Play className="w-4 h-4 fill-white shrink-0" aria-hidden="true" />
               <span>Bắt đầu luyện ngay</span>
@@ -387,7 +390,7 @@ export function HomeOnboardingClient() {
 
                 <div className="flex items-center justify-between pt-3 border-t border-paper-muted text-xs font-mono text-ink-muted">
                   <span>{scenario.turns.length} lượt hội thoại</span>
-                  <span className="inline-flex items-center gap-1 text-ink font-semibold group-hover:text-sky-700">
+                  <span className="inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-accent font-sans font-semibold transition-all shadow-soft">
                     <span>Thực hành</span>
                     <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
                   </span>

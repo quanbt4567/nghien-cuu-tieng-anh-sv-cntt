@@ -132,7 +132,7 @@ export function FeedbackCard({
                 );
               }}
               disabled={isPlayingBetter}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-sky-500/10 border border-sky-500/30 text-xs font-mono font-semibold text-sky-700 hover:bg-sky-500/20 shadow-soft transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill bg-sky-500/15 border border-sky-500/40 text-xs font-mono font-bold text-sky-700 hover:bg-sky-500/25 shadow-soft transition-colors disabled:opacity-50"
               title="Nghe câu mẫu phát âm chuẩn"
             >
               <Volume2 className={`w-3.5 h-3.5 ${isPlayingBetter ? "text-sky-500 animate-pulse" : ""}`} />
@@ -190,7 +190,7 @@ export function FeedbackCard({
             <button
               type="button"
               onClick={onNextTurn}
-              className="w-full py-3 px-4 rounded-pill bg-ink text-white font-bold text-sm border border-ink shadow-soft hover:bg-ink-muted flex items-center justify-center gap-2 transition-all"
+              className="w-full py-3.5 px-5 rounded-pill bg-accent hover:bg-accent-hover text-white font-bold text-sm border border-accent shadow-card ring-2 ring-accent/20 hover:ring-accent/35 active:scale-[0.99] flex items-center justify-center gap-2 transition-all"
             >
               <span>{isLastTurn ? "Xem tổng kết lượt luyện tập" : "Tiếp tục lượt sau"}</span>
               <ArrowRight className="w-4 h-4" />

@@ -69,12 +69,12 @@ export function MicButton({
         onClick={handleClick}
         disabled={disabled}
         aria-label={isRecording ? "Dừng ghi âm" : "Bắt đầu nói"}
-        className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-accent/20 flex items-center justify-center transition-all ${
+        className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 flex items-center justify-center transition-all ${
           disabled
-            ? "bg-paper-muted cursor-not-allowed opacity-50 border-ink/10"
+            ? "bg-paper-muted text-ink-faint cursor-not-allowed opacity-50 border-ink/10 shadow-none"
             : isRecording
-            ? "bg-accent text-white animate-mic-listening shadow-card scale-105"
-            : "bg-accent text-white shadow-soft hover:shadow-card hover:bg-accent-hover hover:scale-102"
+            ? "bg-accent text-white border-white/30 animate-mic-listening shadow-card ring-4 ring-accent/30 scale-105"
+            : "bg-accent text-white border-white/25 shadow-card ring-4 ring-accent/20 hover:ring-accent/35 hover:bg-accent-hover hover:scale-105 active:scale-95"
         }`}
       >
         {isRecording ? (
@@ -136,20 +136,20 @@ export function MicButton({
           type="button"
           onClick={handleClick}
           disabled={disabled}
-          className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-pill text-xs sm:text-sm font-bold border transition-all disabled:opacity-50 ${
+          className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-pill text-xs sm:text-sm font-bold border transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none disabled:ring-0 ${
             isRecording
-              ? "bg-rose-500/10 text-rose-600 border-rose-500/30"
-              : "bg-ink text-white border-ink hover:bg-ink-muted shadow-soft"
+              ? "bg-rose-600 text-white border-rose-600 hover:bg-rose-700 shadow-card ring-2 ring-rose-500/25"
+              : "bg-accent text-white border-accent hover:bg-accent-hover shadow-card ring-2 ring-accent/20 hover:ring-accent/35 active:scale-[0.98]"
           }`}
         >
           {isRecording ? (
             <>
-              <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+              <span className="w-2 h-2 rounded-full bg-white animate-ping" />
               <span>Dừng ghi âm</span>
             </>
           ) : (
             <>
-              <Mic className="w-3.5 h-3.5" />
+              <Mic className="w-4 h-4" />
               <span>Ghi âm câu trả lời</span>
             </>
           )}

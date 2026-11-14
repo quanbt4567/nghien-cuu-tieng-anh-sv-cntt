@@ -35,7 +35,7 @@ export default async function HomePage() {
           </div>
           <Link
             href="/arena"
-            className="inline-flex items-center gap-1 text-xs font-semibold text-accent hover:text-accent-hover transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 bg-accent/10 hover:bg-accent text-accent hover:text-white border border-accent/25 hover:border-accent text-xs font-semibold transition-all"
           >
             <span>Xem bảng xếp hạng</span>
             <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -88,9 +88,10 @@ export default async function HomePage() {
             </span>
             <Link
               href="/arena"
-              className="font-mono font-semibold text-accent hover:underline"
+              className="inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 bg-accent hover:bg-accent-hover text-white font-mono text-xs font-semibold shadow-soft transition-all"
             >
-              Mở /arena →
+              <span>Mở /arena</span>
+              <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
             </Link>
           </div>
         )}
@@ -99,46 +100,76 @@ export default async function HomePage() {
       <section aria-label="Công cụ ôn tập nhanh" className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Link
           href="/vocabulary"
-          className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all flex items-start gap-3.5"
+          className="group bg-white border border-ink/15 hover:border-accent/40 rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
         >
-          <div className="w-9 h-9 rounded-pill bg-paper flex items-center justify-center border border-ink/15 shrink-0">
-            <BookOpen className="w-4 h-4 text-accent" aria-hidden="true" />
+          <div className="flex items-start gap-3.5">
+            <div className="w-9 h-9 rounded-pill bg-paper flex items-center justify-center border border-ink/15 shrink-0">
+              <BookOpen className="w-4 h-4 text-accent" aria-hidden="true" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="font-bold text-sm text-ink group-hover:text-accent transition-colors">
+                Từ vựng IT
+              </h3>
+              <p className="text-xs text-ink-muted">
+                Phát âm IPA và câu ví dụ công việc thực tế.
+              </p>
+            </div>
           </div>
-          <div className="space-y-1">
-            <h3 className="font-bold text-sm text-ink">Từ vựng IT</h3>
-            <p className="text-xs text-ink-muted">
-              Phát âm IPA và câu ví dụ công việc thực tế.
-            </p>
+          <div className="flex justify-end">
+            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/15 group-hover:border-accent text-xs font-semibold transition-all">
+              <span>Ôn từ vựng</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
+            </span>
           </div>
         </Link>
 
         <Link
           href="/progress"
-          className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all flex items-start gap-3.5"
+          className="group bg-white border border-ink/15 hover:border-accent/40 rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
         >
-          <div className="w-9 h-9 rounded-pill bg-paper flex items-center justify-center border border-ink/15 shrink-0">
-            <Clock className="w-4 h-4 text-accent" aria-hidden="true" />
+          <div className="flex items-start gap-3.5">
+            <div className="w-9 h-9 rounded-pill bg-paper flex items-center justify-center border border-ink/15 shrink-0">
+              <Clock className="w-4 h-4 text-accent" aria-hidden="true" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="font-bold text-sm text-ink group-hover:text-accent transition-colors">
+                Kế hoạch 7 ngày
+              </h3>
+              <p className="text-xs text-ink-muted">
+                Tổng hợp từ khóa và lỗi ngữ pháp cần ôn.
+              </p>
+            </div>
           </div>
-          <div className="space-y-1">
-            <h3 className="font-bold text-sm text-ink">Kế hoạch 7 ngày</h3>
-            <p className="text-xs text-ink-muted">
-              Tổng hợp từ khóa và lỗi ngữ pháp cần ôn.
-            </p>
+          <div className="flex justify-end">
+            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/15 group-hover:border-accent text-xs font-semibold transition-all">
+              <span>Xem lộ trình</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
+            </span>
           </div>
         </Link>
 
         <Link
           href="/arena"
-          className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all flex items-start gap-3.5"
+          className="group bg-white border border-ink/15 hover:border-accent/40 rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
         >
-          <div className="w-9 h-9 rounded-pill bg-paper flex items-center justify-center border border-ink/15 shrink-0">
-            <Gamepad2 className="w-4 h-4 text-accent" aria-hidden="true" />
+          <div className="flex items-start gap-3.5">
+            <div className="w-9 h-9 rounded-pill bg-paper flex items-center justify-center border border-ink/15 shrink-0">
+              <Gamepad2 className="w-4 h-4 text-accent" aria-hidden="true" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="font-bold text-sm text-ink group-hover:text-accent transition-colors">
+                IT Speaking Arena
+              </h3>
+              <p className="text-xs text-ink-muted">
+                Thử thách tốc độ 60s để kiếm IT-Coin.
+              </p>
+            </div>
           </div>
-          <div className="space-y-1">
-            <h3 className="font-bold text-sm text-ink">IT Speaking Arena</h3>
-            <p className="text-xs text-ink-muted">
-              Thử thách tốc độ 60s để kiếm IT-Coin.
-            </p>
+          <div className="flex justify-end">
+            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/15 group-hover:border-accent text-xs font-semibold transition-all">
+              <span>Vào đấu trường</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
+            </span>
           </div>
         </Link>
       </section>

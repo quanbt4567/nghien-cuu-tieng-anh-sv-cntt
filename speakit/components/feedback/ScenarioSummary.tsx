@@ -265,15 +265,14 @@ export function ScenarioSummary({
           </div>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2.5 pt-1">
           <button
             type="button"
             onClick={handleCopyResult}
-            className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-pill font-semibold text-xs border shadow-soft transition-all ${
+            className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-pill font-medium text-xs border transition-all ${
               copied
-                ? "bg-accent text-white border-accent"
-                : "bg-white text-ink border-ink/15 hover:bg-paper-muted"
+                ? "bg-emerald-600 text-white border-emerald-600 shadow-soft"
+                : "bg-paper text-ink-muted border-ink/15 hover:bg-paper-muted hover:text-ink"
             }`}
           >
             {copied ? (
@@ -287,7 +286,7 @@ export function ScenarioSummary({
           <button
             type="button"
             onClick={onRetry}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-pill bg-paper-card text-ink font-semibold text-xs border border-ink/15 shadow-soft hover:bg-paper-muted transition-all"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-pill bg-ink text-white font-bold text-xs sm:text-sm border border-ink shadow-card hover:bg-ink-muted active:scale-[0.98] transition-all"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Luyện lại kịch bản này</span>
@@ -295,10 +294,10 @@ export function ScenarioSummary({
 
           <Link
             href="/"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-pill bg-ink text-white font-semibold text-xs border border-ink shadow-soft hover:bg-ink-muted transition-all"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-pill bg-accent text-white font-bold text-xs sm:text-sm border border-accent shadow-card ring-2 ring-accent/20 hover:bg-accent-hover hover:ring-accent/35 active:scale-[0.98] transition-all"
           >
             <span>Chọn kịch bản khác</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
@@ -384,29 +383,28 @@ export function ScenarioSummary({
           </div>
         )}
 
-        {/* Next Step CTAs */}
         <div className="flex flex-wrap items-center justify-center sm:justify-between gap-2.5 pt-3 border-t border-paper-muted">
           <Link
             href="/vocabulary"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill bg-paper text-ink text-xs font-semibold border border-ink/15 hover:bg-paper-muted transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill bg-paper text-ink-muted text-xs font-medium border border-ink/15 hover:bg-paper-muted hover:text-ink transition-colors"
           >
-            <BookOpen className="w-3.5 h-3.5 text-accent" />
+            <BookOpen className="w-3.5 h-3.5 text-ink-muted" />
             <span>Ôn tập từ vựng</span>
           </Link>
 
           <Link
             href="/arena"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-accent text-white text-xs font-semibold border border-accent shadow-soft hover:bg-accent-hover transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-pill bg-accent text-white text-xs sm:text-sm font-bold border border-accent shadow-card ring-2 ring-accent/20 hover:bg-accent-hover hover:ring-accent/35 active:scale-[0.98] transition-all"
           >
-            <Swords className="w-3.5 h-3.5" />
+            <Swords className="w-4 h-4" />
             <span>Thử thách IT Arena</span>
           </Link>
 
           <Link
             href="/progress"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill bg-paper text-ink text-xs font-semibold border border-ink/15 hover:bg-paper-muted transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill bg-paper text-ink-muted text-xs font-medium border border-ink/15 hover:bg-paper-muted hover:text-ink transition-colors"
           >
-            <TrendingUp className="w-3.5 h-3.5 text-accent" />
+            <TrendingUp className="w-3.5 h-3.5 text-ink-muted" />
             <span>Tiến độ & 7 ngày</span>
           </Link>
         </div>
