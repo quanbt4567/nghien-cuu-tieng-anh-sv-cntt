@@ -13,6 +13,7 @@ import {
   Send,
   RotateCcw,
   Volume2,
+  VolumeX,
   Check,
   Sparkles,
 } from "lucide-react";
@@ -28,7 +29,7 @@ import {
   SpeechController,
   VOICE_PERSONAS,
 } from "../../../lib/speech";
-import { playTtsAudio } from "../../../lib/tts-player";
+import { playTtsAudio, stopActiveTts } from "../../../lib/tts-player";
 import { storageAdapter } from "../../../lib/storage";
 import { awardPracticePoints, getGamificationState } from "../../../lib/gamification";
 import { reportGuestPracticePoints } from "../../../lib/guestClient";
@@ -371,8 +372,12 @@ export default function PracticePage() {
             </label>
             <button
               type="button"
-              disabled={isPreviewingVoice}
               onClick={() => {
+                if (isPreviewingVoice) {
+                  stopActiveTts();
+                  setIsPreviewingVoice(false);
+                  return;
+                }
                 setIsPreviewingVoice(true);
                 const savedRate = storageAdapter.getSettings().speechRate || 1.0;
                 playTtsAudio({
@@ -383,9 +388,15 @@ export default function PracticePage() {
                   onError: () => setIsPreviewingVoice(false),
                 });
               }}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill bg-sky-500/10 border border-sky-500/30 text-sky-700 text-xs font-semibold hover:bg-sky-500/20 disabled:opacity-50 transition-colors"
+              title="Nghe thử giọng"
+              aria-label="Nghe thử giọng"
+              className="w-8 h-8 rounded-full bg-paper border border-ink/20 flex items-center justify-center text-ink hover:bg-accent hover:text-white shadow-soft shadow-hard-press transition-colors"
             >
-              <span>{isPreviewingVoice ? "Đang đọc..." : "Nghe thử giọng"}</span>
+              {isPreviewingVoice ? (
+                <VolumeX className="w-3.5 h-3.5" />
+              ) : (
+                <Volume2 className="w-3.5 h-3.5" />
+              )}
             </button>
           </div>
         </div>

@@ -2,21 +2,22 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, AlertCircle, RotateCcw, Volume2, Trash2, Mic } from "lucide-react";
+import { ArrowLeft, AlertCircle, RotateCcw, Volume2, VolumeX, Trash2 } from "lucide-react";
 import { storageAdapter } from "../../lib/storage";
 import {
   DEFAULT_VOICE_PERSONA,
   VOICE_PERSONAS,
   normalizeVoicePersona,
 } from "../../lib/speech";
-import { playTtsAudio } from "../../lib/tts-player";
+import { playTtsAudio, stopActiveTts } from "../../lib/tts-player";
 import { VoicePersonaId } from "../../lib/types";
 
 export default function SettingsPage() {
   const [speechRate, setSpeechRate] = useState<0.8 | 1.0 | 1.2>(1.0);
   const [voicePersona, setVoicePersona] =
     useState<VoicePersonaId>(DEFAULT_VOICE_PERSONA);
-  const [isTestingVoice, setIsTestingVoice] = useState(false);
+  const [previewingPersonaId, setPreviewingPersonaId] =
+    useState<VoicePersonaId | null>(null);
 
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetStatus, setResetStatus] = useState<string | null>(null);
@@ -88,48 +89,85 @@ export default function SettingsPage() {
         </div>
 
         <div className="space-y-3 pt-2 border-t border-ink/10">
-          <label
-            htmlFor="settings-voice-persona"
-            className="text-xs font-semibold text-ink block"
-          >
+          <label className="text-xs font-semibold text-ink block">
             Giọng AI phỏng vấn mặc định:
           </label>
-          <div className="flex flex-wrap items-center gap-2.5">
-            <select
-              id="settings-voice-persona"
-              aria-label="Giọng AI phỏng vấn mặc định"
-              value={voicePersona}
-              onChange={(e) => {
-                const next = normalizeVoicePersona(e.target.value);
-                setVoicePersona(next);
-                storageAdapter.saveSettings({ voicePersona: next });
-              }}
-              className="flex-1 min-w-[220px] px-3.5 py-2 rounded-xl bg-paper border border-ink/15 text-xs font-semibold text-ink focus:outline-none focus:ring-2 focus:ring-sky-500/30"
-            >
-              {VOICE_PERSONAS.map((persona) => (
-                <option key={persona.id} value={persona.id}>
-                  {persona.label} ({persona.lang})
-                </option>
-              ))}
-            </select>
-            <button
-              type="button"
-              disabled={isTestingVoice}
-              onClick={() => {
-                setIsTestingVoice(true);
-                playTtsAudio({
-                  text: "Hi, can you walk me through your pull request and deployment plan?",
-                  rate: speechRate,
-                  persona: voicePersona,
-                  onEnd: () => setIsTestingVoice(false),
-                  onError: () => setIsTestingVoice(false),
-                });
-              }}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill bg-sky-500/10 border border-sky-500/30 text-sky-700 text-xs font-semibold hover:bg-sky-500/20 disabled:opacity-50 transition-colors"
-            >
-              <Mic className="w-3.5 h-3.5" />
-              <span>{isTestingVoice ? "Đang đọc mẫu..." : "Nghe thử giọng"}</span>
-            </button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            {VOICE_PERSONAS.map((persona) => {
+              const isSelected = voicePersona === persona.id;
+              const isPreviewing = previewingPersonaId === persona.id;
+              return (
+                <div
+                  key={persona.id}
+                  className={`flex items-center justify-between gap-2 p-2.5 rounded-xl border transition-all ${
+                    isSelected
+                      ? "bg-ink text-white border-ink shadow-soft"
+                      : "bg-paper text-ink border-ink/15 hover:bg-paper-muted"
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setVoicePersona(persona.id);
+                      storageAdapter.saveSettings({ voicePersona: persona.id });
+                    }}
+                    className="flex-1 text-left min-w-0"
+                  >
+                    <div className="font-semibold text-xs truncate">
+                      {persona.label}
+                    </div>
+                    <div
+                      className={`text-[11px] font-mono ${
+                        isSelected ? "text-white/75" : "text-ink-muted"
+                      }`}
+                    >
+                      {persona.lang}
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    aria-label={
+                      isPreviewing
+                        ? `Dừng nghe thử ${persona.label}`
+                        : `Nghe thử ${persona.label}`
+                    }
+                    title={
+                      isPreviewing
+                        ? `Dừng nghe thử ${persona.label}`
+                        : `Nghe thử ${persona.label}`
+                    }
+                    onClick={() => {
+                      if (isPreviewing) {
+                        stopActiveTts();
+                        setPreviewingPersonaId(null);
+                        return;
+                      }
+                      setPreviewingPersonaId(persona.id);
+                      playTtsAudio({
+                        text: "Hi, can you walk me through your pull request and deployment plan?",
+                        rate: speechRate,
+                        persona: persona.id,
+                        onEnd: () =>
+                          setPreviewingPersonaId((curr) =>
+                            curr === persona.id ? null : curr
+                          ),
+                        onError: () =>
+                          setPreviewingPersonaId((curr) =>
+                            curr === persona.id ? null : curr
+                          ),
+                      });
+                    }}
+                    className="w-9 h-9 shrink-0 rounded-full bg-paper border border-ink/20 flex items-center justify-center text-ink hover:bg-accent hover:text-white shadow-soft shadow-hard-press transition-colors"
+                  >
+                    {isPreviewing ? (
+                      <VolumeX className="w-4 h-4" />
+                    ) : (
+                      <Volume2 className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
