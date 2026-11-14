@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { isAdminRequest } from "../../../../lib/adminAuth";
 import {
@@ -65,6 +66,10 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  revalidatePath("/research");
+  revalidatePath("/research/[slug]", "page");
+  revalidatePath(`/research/${saved.slug}`);
+
   return NextResponse.json({ ok: true, article: saved });
 }
 
@@ -93,6 +98,9 @@ export async function PATCH(req: NextRequest) {
     );
   }
 
+  revalidatePath("/research");
+  revalidatePath("/research/[slug]", "page");
+
   return NextResponse.json({ ok: true });
 }
 
@@ -113,6 +121,9 @@ export async function DELETE(req: NextRequest) {
       { status: 500 }
     );
   }
+
+  revalidatePath("/research");
+  revalidatePath("/research/[slug]", "page");
 
   return NextResponse.json({ ok: true });
 }

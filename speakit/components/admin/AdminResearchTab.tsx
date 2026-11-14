@@ -61,6 +61,8 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
       if (res.ok) {
         const data = (await res.json()) as { articles?: ResearchArticle[] };
         setArticles(Array.isArray(data.articles) ? data.articles : []);
+      } else {
+        setErrorMessage("Không thể tải danh sách bài nghiên cứu.");
       }
     } catch {
       setErrorMessage("Không thể tải danh sách bài nghiên cứu.");
@@ -138,44 +140,56 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
     nextStatus: "published" | "archived" | "pending_review"
   ) => {
     setErrorMessage(null);
-    const res = await fetch("/api/admin/research", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, status: nextStatus }),
-    });
-    if (res.status === 401) {
-      onUnauthorized();
-      return;
-    }
-    if (res.ok) {
-      setStatusMessage(
-        nextStatus === "published"
-          ? "Đã duyệt và xuất bản bài viết lên /research."
-          : "Đã cập nhật trạng thái bài viết."
-      );
-      await loadArticles();
-    } else {
-      setErrorMessage("Không thể cập nhật trạng thái bài viết.");
+    setStatusMessage(null);
+    try {
+      const res = await fetch("/api/admin/research", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status: nextStatus }),
+      });
+      if (res.status === 401) {
+        onUnauthorized();
+        return;
+      }
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (res.ok && data.ok !== false) {
+        setStatusMessage(
+          nextStatus === "published"
+            ? "Đã duyệt và xuất bản bài viết lên /research."
+            : "Đã cập nhật trạng thái bài viết."
+        );
+        await loadArticles();
+      } else {
+        setErrorMessage(data.error ?? "Không thể cập nhật trạng thái bài viết.");
+      }
+    } catch {
+      setErrorMessage("Lỗi kết nối khi cập nhật trạng thái bài viết.");
     }
   };
 
   const handleDelete = async (id: string) => {
     setErrorMessage(null);
-    const res = await fetch(`/api/admin/research?id=${encodeURIComponent(id)}`, {
-      method: "DELETE",
-    });
-    if (res.status === 401) {
-      onUnauthorized();
-      return;
-    }
-    if (res.ok) {
-      if (editingId === id) {
-        resetForm();
+    setStatusMessage(null);
+    try {
+      const res = await fetch(`/api/admin/research?id=${encodeURIComponent(id)}`, {
+        method: "DELETE",
+      });
+      if (res.status === 401) {
+        onUnauthorized();
+        return;
       }
-      setStatusMessage("Đã xóa bài viết.");
-      await loadArticles();
-    } else {
-      setErrorMessage("Không thể xóa bài viết.");
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (res.ok && data.ok !== false) {
+        if (editingId === id) {
+          resetForm();
+        }
+        setStatusMessage("Đã xóa bài viết.");
+        await loadArticles();
+      } else {
+        setErrorMessage(data.error ?? "Không thể xóa bài viết.");
+      }
+    } catch {
+      setErrorMessage("Lỗi kết nối khi xóa bài viết.");
     }
   };
 
@@ -213,15 +227,21 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
         onUnauthorized();
         return;
       }
-      const data = (await res.json()) as { ok?: boolean; error?: string };
+      const data = (await res.json()) as {
+        ok?: boolean;
+        error?: string;
+        article?: ResearchArticle;
+      };
       if (!res.ok || !data.ok) {
         setErrorMessage(data.error ?? "Không thể lưu bài viết.");
         return;
       }
+      const savedStatus = data.article?.status ?? targetStatus;
+      const savedTitle = data.article?.title ?? title.trim();
       setStatusMessage(
-        targetStatus === "published"
-          ? "Đã xuất bản bài viết mới lên /research."
-          : "Đã lưu bản nháp vào hàng chờ duyệt."
+        savedStatus === "published"
+          ? `Đã xuất bản bài viết "${savedTitle}" lên /research.`
+          : `Đã lưu bản nháp "${savedTitle}" vào hàng chờ duyệt.`
       );
       resetForm();
       await loadArticles();
@@ -518,7 +538,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
               className="inline-flex items-center gap-1.5 px-5 py-2 rounded-pill bg-ink text-white text-xs font-bold hover:bg-ink-muted disabled:opacity-50"
             >
               {isSaving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-              <span>{editingId ? "Cập nhật & Xuất bản" : "Xuất bản ngay"}</span>
+              <span>{editingId ? "Cập nhật & Xuất bản" : "Tạo & xuất bản ngay"}</span>
             </button>
           </div>
         </form>

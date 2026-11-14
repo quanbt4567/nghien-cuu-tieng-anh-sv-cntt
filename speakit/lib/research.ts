@@ -172,7 +172,8 @@ export async function getPublishedArticles(
           LIMIT 50
         `;
     return rows.map((row) => mapArticleRow(row as Record<string, unknown>));
-  } catch {
+  } catch (err) {
+    console.error("[research] getPublishedArticles failed:", err);
     return category
       ? DEFAULT_RESEARCH_ARTICLES.filter((a) => a.category === category)
       : DEFAULT_RESEARCH_ARTICLES;
@@ -204,7 +205,8 @@ export async function getArticleBySlug(
       return null;
     }
     return mapArticleRow(rows[0] as Record<string, unknown>);
-  } catch {
+  } catch (err) {
+    console.error("[research] getArticleBySlug failed:", err);
     return (
       DEFAULT_RESEARCH_ARTICLES.find((a) => a.slug === cleanSlug) ?? null
     );
@@ -232,7 +234,8 @@ export async function getAllAdminArticles(): Promise<ResearchArticle[]> {
       LIMIT 100
     `;
     return rows.map((row) => mapArticleRow(row as Record<string, unknown>));
-  } catch {
+  } catch (err) {
+    console.error("[research] getAllAdminArticles failed:", err);
     return DEFAULT_RESEARCH_ARTICLES;
   }
 }
@@ -311,7 +314,8 @@ export async function upsertArticle(
     `;
     if (rows.length === 0) return null;
     return mapArticleRow(rows[0] as Record<string, unknown>);
-  } catch {
+  } catch (err) {
+    console.error("[research] upsertArticle failed:", err);
     return null;
   }
 }
@@ -338,7 +342,8 @@ export async function updateArticleStatus(
       RETURNING id
     `;
     return rows.length > 0;
-  } catch {
+  } catch (err) {
+    console.error("[research] updateArticleStatus failed:", err);
     return false;
   }
 }
@@ -355,7 +360,8 @@ export async function deleteArticle(id: string): Promise<boolean> {
       RETURNING id
     `;
     return rows.length > 0;
-  } catch {
+  } catch (err) {
+    console.error("[research] deleteArticle failed:", err);
     return false;
   }
 }
