@@ -264,6 +264,10 @@ test("resolveVoiceForPersona matches distinct English voices and falls back safe
   assert.equal(techLead.voice?.name, "Microsoft David - English (United States)");
   assert.equal(techLead.lang, "en-US");
 
+  const autoVoice = resolveVoiceForPersona("auto", mockVoices);
+  assert.notEqual(autoVoice.voice?.name, techLead.voice?.name);
+  assert.notEqual(autoVoice.pitch, techLead.pitch);
+
   const hrFemale = resolveVoiceForPersona("us-hr-female", mockVoices);
   assert.equal(hrFemale.voice?.name, "Microsoft Zira - English (United States)");
 
