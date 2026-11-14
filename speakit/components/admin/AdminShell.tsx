@@ -16,12 +16,14 @@ import {
   RefreshCw,
   Settings,
   ShieldCheck,
+  Star,
 } from "lucide-react";
 import { SCENARIOS } from "../../data/scenarios";
 import { mergeScenarios } from "../../lib/contentStore";
 import type { AdminContentOverrides } from "../../lib/types";
 import { AdminAnalyticsTab } from "./AdminAnalyticsTab";
 import { AdminArenaTab } from "./AdminArenaTab";
+import { AdminFeedbackTab } from "./AdminFeedbackTab";
 import { useAdminAuth } from "./AdminLoginGate";
 import { AdminLogsTab } from "./AdminLogsTab";
 import { AdminScenariosTab } from "./AdminScenariosTab";
@@ -38,6 +40,7 @@ type AdminTabId =
   | "scenarios"
   | "vocab"
   | "arena"
+  | "feedback"
   | "logs"
   | "system";
 
@@ -50,6 +53,7 @@ const TABS: Array<{
   { id: "scenarios", label: "Kịch bản", icon: MessageSquareText },
   { id: "vocab", label: "Từ vựng", icon: BookOpen },
   { id: "arena", label: "Arena Games", icon: Gamepad2 },
+  { id: "feedback", label: "Góp ý (Feedback)", icon: Star },
   { id: "logs", label: "Nhật ký & Xuất CSV", icon: FileSpreadsheet },
   { id: "system", label: "Hệ thống", icon: Settings },
 ];
@@ -287,6 +291,9 @@ export function AdminShell() {
                 onOverridesChange={handleOverridesChange}
                 onUnauthorized={() => forceLock()}
               />
+            )}
+            {activeTab === "feedback" && (
+              <AdminFeedbackTab onUnauthorized={() => forceLock()} />
             )}
             {activeTab === "logs" && <AdminLogsTab data={data} />}
             {activeTab === "system" && (

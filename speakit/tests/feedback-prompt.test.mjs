@@ -21,6 +21,8 @@ const {
   recordFeedbackSubmitted,
 } = jiti(resolve(__dirname, "../lib/feedbackPrompt.ts"));
 
+const { GET: getFeedbackRoute } = jiti(resolve(__dirname, "../app/api/feedback/route.ts"));
+
 const BASE_NOW = 1_700_000_000_000;
 
 test("fresh user sees feedback prompt", () => {
@@ -103,4 +105,11 @@ test("browser storage wrappers respect session cap and cooldowns", () => {
       globalThis.window = prevWindow;
     }
   }
+});
+
+test("GET /api/feedback rejects unauthenticated admin requests with 401", async () => {
+  const { NextRequest } = require("next/server");
+  const req = new NextRequest("http://localhost:3000/api/feedback");
+  const res = await getFeedbackRoute(req);
+  assert.equal(res.status, 401);
 });
