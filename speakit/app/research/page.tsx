@@ -70,7 +70,7 @@ export default async function ResearchPortalPage({
         </div>
 
         <Link
-          href="/"
+          href="/scenarios"
           className="shrink-0 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-pill bg-accent hover:bg-accent-hover text-white text-xs sm:text-sm font-bold shadow-card transition-all"
         >
           <span>Thực hành nói ngay</span>

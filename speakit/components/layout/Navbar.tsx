@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SpeakItLogo } from "./SpeakItLogo";
 import {
+  Home,
   Mic,
   Gamepad2,
   BookOpen,
@@ -24,7 +25,8 @@ import {
 } from "../../lib/gamification";
 
 const BASE_NAV_LINKS = [
-  { href: "/", label: "Kịch bản", shortLabel: "Kịch bản", icon: Mic },
+  { href: "/", label: "Trang chủ", shortLabel: "Trang chủ", icon: Home },
+  { href: "/scenarios", label: "Kịch bản", shortLabel: "Kịch bản", icon: Mic },
   { href: "/arena", label: "Arena", shortLabel: "Arena", icon: Gamepad2 },
   { href: "/vocabulary", label: "Từ vựng IT", shortLabel: "Từ vựng IT", icon: BookOpen },
   { href: "/progress", label: "Tiến độ & 7 ngày", shortLabel: "Tiến độ", icon: TrendingUp },
@@ -108,8 +110,12 @@ export function Navbar() {
           {navLinks.map(({ href, label, shortLabel, icon: Icon }) => {
             const isActive =
               href === "/"
-                ? pathname === "/" || pathname.startsWith("/practice")
-                : pathname === href || pathname.startsWith(`${href}/`);
+                ? pathname === "/"
+                : href === "/scenarios"
+                  ? pathname === "/scenarios" ||
+                    pathname.startsWith("/scenarios/") ||
+                    pathname.startsWith("/practice")
+                  : pathname === href || pathname.startsWith(`${href}/`);
             return (
               <Link
                 key={href}

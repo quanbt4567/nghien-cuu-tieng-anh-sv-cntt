@@ -294,7 +294,7 @@ export function ScenarioSummary({
           </button>
 
           <Link
-            href="/"
+            href="/scenarios"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-pill bg-accent text-white font-bold text-xs sm:text-sm border border-accent shadow-card ring-2 ring-accent/20 hover:bg-accent-hover hover:ring-accent/35 active:scale-[0.98] transition-all"
           >
             <span>Chọn kịch bản khác</span>

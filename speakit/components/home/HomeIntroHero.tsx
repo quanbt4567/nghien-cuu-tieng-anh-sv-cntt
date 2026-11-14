@@ -68,13 +68,13 @@ export function HomeIntroHero() {
             </div>
 
             <div className="flex flex-wrap items-center gap-3 pt-1">
-              <a
-                href="#practice-scenarios"
+              <Link
+                href="/scenarios"
                 className="inline-flex items-center gap-2 rounded-pill px-5 py-2.5 bg-accent hover:bg-accent-hover text-white text-sm font-semibold shadow-soft transition-all"
               >
                 <span>Bắt đầu luyện nói ngay</span>
                 <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
-              </a>
+              </Link>
 
               <Link
                 href="/placement"

@@ -18,7 +18,7 @@ import {
 
 const SECTION_GUIDES = [
   {
-    href: "/",
+    href: "/scenarios",
     title: "Kịch bản",
     icon: Mic,
     description:

@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, BookOpen, Clock, Coins, Flame, Gamepad2, Trophy } from "lucide-react";
+import { ArrowRight, BookOpen, Clock, Coins, Flame, Gamepad2, MessageSquare, Trophy } from "lucide-react";
 import { HomeIntroHero } from "../components/home/HomeIntroHero";
-import { HomeOnboardingClient } from "../components/home/HomeOnboardingClient";
 import { EF_EPI_2025 } from "../data/efEpiData";
 import { getRingBadgeClass } from "../lib/cosmetics";
 import { getTopPlayers } from "./actions/leaderboard";
@@ -15,10 +14,6 @@ export default async function HomePage() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-7 sm:py-9 space-y-8">
       <HomeIntroHero />
-
-      <section id="practice-scenarios" className="scroll-mt-6">
-        <HomeOnboardingClient />
-      </section>
 
       <section
         aria-label="Top 3 Arena Leaders"
@@ -93,7 +88,32 @@ export default async function HomePage() {
         )}
       </section>
 
-      <section aria-label="Công cụ ôn tập nhanh" className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <section aria-label="Công cụ ôn tập nhanh" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Link
+          href="/scenarios"
+          className="group bg-white border border-ink/15 hover:border-accent/40 rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
+        >
+          <div className="flex items-start gap-3.5">
+            <div className="w-9 h-9 rounded-pill bg-paper flex items-center justify-center border border-ink/15 shrink-0">
+              <MessageSquare className="w-4 h-4 text-accent" aria-hidden="true" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="font-bold text-sm text-ink group-hover:text-accent transition-colors">
+                Kịch bản luyện nói
+              </h3>
+              <p className="text-xs text-ink-muted">
+                6 tình huống công việc CNTT theo vai trò và độ khó.
+              </p>
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/15 group-hover:border-accent text-xs font-semibold transition-all">
+              <span>Luyện kịch bản</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
+            </span>
+          </div>
+        </Link>
+
         <Link
           href="/vocabulary"
           className="group bg-white border border-ink/15 hover:border-accent/40 rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"

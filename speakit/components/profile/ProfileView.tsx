@@ -1247,7 +1247,7 @@ export function ProfileView() {
                 <span>Lượt luyện nói gần đây</span>
               </h3>
               <Link
-                href="/"
+                href="/scenarios"
                 className="text-[11px] font-semibold text-ink hover:text-accent transition-colors"
               >
                 Chọn kịch bản mới →
@@ -1260,7 +1260,7 @@ export function ProfileView() {
                   Bạn chưa có lượt luyện nói nào được ghi nhận trên thiết bị này.
                 </p>
                 <Link
-                  href="/"
+                  href="/scenarios"
                   className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill bg-accent hover:bg-accent-hover text-white text-xs font-semibold transition-colors"
                 >
                   <span>Bắt đầu luyện nói ngay</span>
