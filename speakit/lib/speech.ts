@@ -9,43 +9,66 @@ export interface VoicePersonaOption {
   id: VoicePersonaId;
   label: string;
   shortLabel: string;
+  neuralVoice: string;
   lang: string;
   pitch: number;
   keywords: string[];
 }
 
+export const DEFAULT_VOICE_PERSONA: VoicePersonaId = "beginner_sg";
+
+const LEGACY_PERSONA_MAP: Record<string, VoicePersonaId> = {
+  auto: "beginner_sg",
+  "us-hr-female": "hr_us_female",
+  "us-tech-lead": "lead_us_male",
+  "uk-client": "client_uk",
+  beginner_sg: "beginner_sg",
+  hr_us_female: "hr_us_female",
+  lead_us_male: "lead_us_male",
+  client_uk: "client_uk",
+};
+
+export function normalizeVoicePersona(value?: string | null): VoicePersonaId {
+  if (!value) return DEFAULT_VOICE_PERSONA;
+  return LEGACY_PERSONA_MAP[value] ?? DEFAULT_VOICE_PERSONA;
+}
+
 export const VOICE_PERSONAS: VoicePersonaOption[] = [
   {
-    id: "auto",
-    label: "Auto (Default English)",
-    shortLabel: "Auto",
-    lang: "en-US",
+    id: "beginner_sg",
+    label: "Dễ nghe - Chuẩn châu Á",
+    shortLabel: "Dễ nghe (SG)",
+    neuralVoice: "en-SG-LunaNeural",
+    lang: "en-SG",
     pitch: 1.0,
-    keywords: ["google us english", "aria", "jenny", "samantha", "zira"],
+    keywords: ["luna", "wayne", "singapore", "en-sg", "en_sg", "zira", "samantha", "google us english"],
   },
   {
-    id: "us-tech-lead",
-    label: "US English - Tech Lead",
-    shortLabel: "US Tech Lead",
-    lang: "en-US",
-    pitch: 0.8,
-    keywords: ["mark", "guy", "andrew", "david", "alex", "daniel", "male"],
-  },
-  {
-    id: "us-hr-female",
+    id: "hr_us_female",
     label: "US Female - HR",
     shortLabel: "US Female HR",
+    neuralVoice: "en-US-JennyNeural",
     lang: "en-US",
-    pitch: 1.18,
-    keywords: ["zira", "aria", "jenny", "samantha", "victoria", "ava", "female", "google us english"],
+    pitch: 1.15,
+    keywords: ["jenny", "aria", "zira", "samantha", "victoria", "ava", "female", "google us english"],
   },
   {
-    id: "uk-client",
+    id: "lead_us_male",
+    label: "US English - Tech Lead",
+    shortLabel: "US Tech Lead",
+    neuralVoice: "en-US-AndrewNeural",
+    lang: "en-US",
+    pitch: 0.85,
+    keywords: ["andrew", "david", "mark", "guy", "alex", "daniel", "male"],
+  },
+  {
+    id: "client_uk",
     label: "UK English - Client",
     shortLabel: "UK Client",
+    neuralVoice: "en-GB-SoniaNeural",
     lang: "en-GB",
     pitch: 1.0,
-    keywords: ["libby", "ryan", "sonia", "george", "hazel", "kate", "serena", "google uk english", "en-gb", "en_gb"],
+    keywords: ["sonia", "libby", "ryan", "george", "hazel", "kate", "serena", "google uk english", "en-gb", "en_gb"],
   },
 ];
 
@@ -68,11 +91,12 @@ export function getAvailableEnglishVoices(): SpeechSynthesisVoice[] {
 }
 
 export function resolveVoiceForPersona(
-  personaId: VoicePersonaId,
+  personaId: VoicePersonaId | string,
   voices: SpeechSynthesisVoice[]
 ): { voice: SpeechSynthesisVoice | null; lang: string; pitch: number } {
+  const normalizedId = normalizeVoicePersona(personaId);
   const persona =
-    VOICE_PERSONAS.find((item) => item.id === personaId) ?? VOICE_PERSONAS[0];
+    VOICE_PERSONAS.find((item) => item.id === normalizedId) ?? VOICE_PERSONAS[0];
   const englishVoices = voices.filter((voice) =>
     voice.lang.toLowerCase().startsWith("en")
   );
@@ -99,22 +123,15 @@ export function resolveVoiceForPersona(
 }
 
 function readStoredVoicePersona(): VoicePersonaId {
-  if (typeof window === "undefined") return "auto";
+  if (typeof window === "undefined") return DEFAULT_VOICE_PERSONA;
   try {
     const raw = window.localStorage.getItem("speakit_settings_v1");
-    if (!raw) return "auto";
+    if (!raw) return DEFAULT_VOICE_PERSONA;
     const parsed = JSON.parse(raw) as { voicePersona?: string };
-    if (
-      parsed.voicePersona === "us-tech-lead" ||
-      parsed.voicePersona === "us-hr-female" ||
-      parsed.voicePersona === "uk-client" ||
-      parsed.voicePersona === "auto"
-    ) {
-      return parsed.voicePersona;
-    }
+    return normalizeVoicePersona(parsed.voicePersona);
   } catch {
   }
-  return "auto";
+  return DEFAULT_VOICE_PERSONA;
 }
 
 export function speakText(
@@ -284,4 +301,48 @@ export function startSpeechRecognition(
     );
     return null;
   }
+}
+
+export const MAX_TTS_TEXT_LENGTH = 600;
+
+export function getNeuralVoiceForPersona(persona?: string | null): string {
+  const normalized = normalizeVoicePersona(persona);
+  const found = VOICE_PERSONAS.find((item) => item.id === normalized);
+  return found?.neuralVoice ?? "en-SG-LunaNeural";
+}
+
+export function formatTtsRate(rate?: string | number | null): string | undefined {
+  if (rate === undefined || rate === null || rate === "") return undefined;
+  if (typeof rate === "number") {
+    if (!Number.isFinite(rate) || rate <= 0) return undefined;
+    const pct = Math.round((rate - 1) * 100);
+    return `${pct >= 0 ? "+" : ""}${pct}%`;
+  }
+  const trimmed = rate.trim();
+  if (!trimmed) return undefined;
+  const numeric = Number(trimmed);
+  if (Number.isFinite(numeric) && !trimmed.endsWith("%")) {
+    const pct = Math.round((numeric - 1) * 100);
+    return `${pct >= 0 ? "+" : ""}${pct}%`;
+  }
+  return trimmed;
+}
+
+export function validateTtsInput(text?: string | null): {
+  ok: boolean;
+  text: string;
+  error?: string;
+} {
+  const trimmed = typeof text === "string" ? text.trim() : "";
+  if (!trimmed) {
+    return { ok: false, text: "", error: "Text is required." };
+  }
+  if (trimmed.length > MAX_TTS_TEXT_LENGTH) {
+    return {
+      ok: false,
+      text: trimmed,
+      error: `Text must be ${MAX_TTS_TEXT_LENGTH} characters or fewer.`,
+    };
+  }
+  return { ok: true, text: trimmed };
 }

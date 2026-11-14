@@ -4,12 +4,18 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowLeft, AlertCircle, RotateCcw, Volume2, Trash2, Mic } from "lucide-react";
 import { storageAdapter } from "../../lib/storage";
-import { VOICE_PERSONAS, speakText } from "../../lib/speech";
+import {
+  DEFAULT_VOICE_PERSONA,
+  VOICE_PERSONAS,
+  normalizeVoicePersona,
+} from "../../lib/speech";
+import { playTtsAudio } from "../../lib/tts-player";
 import { VoicePersonaId } from "../../lib/types";
 
 export default function SettingsPage() {
   const [speechRate, setSpeechRate] = useState<0.8 | 1.0 | 1.2>(1.0);
-  const [voicePersona, setVoicePersona] = useState<VoicePersonaId>("auto");
+  const [voicePersona, setVoicePersona] =
+    useState<VoicePersonaId>(DEFAULT_VOICE_PERSONA);
   const [isTestingVoice, setIsTestingVoice] = useState(false);
 
   const [showResetModal, setShowResetModal] = useState(false);
@@ -18,7 +24,7 @@ export default function SettingsPage() {
   useEffect(() => {
     const settings = storageAdapter.getSettings();
     setSpeechRate(settings.speechRate || 1.0);
-    setVoicePersona(settings.voicePersona || "auto");
+    setVoicePersona(normalizeVoicePersona(settings.voicePersona));
   }, []);
 
   const handleResetProgress = async () => {
@@ -82,54 +88,48 @@ export default function SettingsPage() {
         </div>
 
         <div className="space-y-3 pt-2 border-t border-ink/10">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <label className="text-xs font-semibold text-ink block">
-              Giọng AI phỏng vấn mặc định:
-            </label>
+          <label
+            htmlFor="settings-voice-persona"
+            className="text-xs font-semibold text-ink block"
+          >
+            Giọng AI phỏng vấn mặc định:
+          </label>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <select
+              id="settings-voice-persona"
+              aria-label="Giọng AI phỏng vấn mặc định"
+              value={voicePersona}
+              onChange={(e) => {
+                const next = normalizeVoicePersona(e.target.value);
+                setVoicePersona(next);
+                storageAdapter.saveSettings({ voicePersona: next });
+              }}
+              className="flex-1 min-w-[220px] px-3.5 py-2 rounded-xl bg-paper border border-ink/15 text-xs font-semibold text-ink focus:outline-none focus:ring-2 focus:ring-sky-500/30"
+            >
+              {VOICE_PERSONAS.map((persona) => (
+                <option key={persona.id} value={persona.id}>
+                  {persona.label} ({persona.lang})
+                </option>
+              ))}
+            </select>
             <button
               type="button"
               disabled={isTestingVoice}
               onClick={() => {
                 setIsTestingVoice(true);
-                speakText(
-                  "Hi, can you walk me through your pull request and deployment plan?",
-                  speechRate,
-                  () => setIsTestingVoice(false),
-                  () => setIsTestingVoice(false),
-                  voicePersona
-                );
+                playTtsAudio({
+                  text: "Hi, can you walk me through your pull request and deployment plan?",
+                  rate: speechRate,
+                  persona: voicePersona,
+                  onEnd: () => setIsTestingVoice(false),
+                  onError: () => setIsTestingVoice(false),
+                });
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-sky-500/10 border border-sky-500/30 text-sky-700 text-xs font-semibold hover:bg-sky-500/20 disabled:opacity-50 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill bg-sky-500/10 border border-sky-500/30 text-sky-700 text-xs font-semibold hover:bg-sky-500/20 disabled:opacity-50 transition-colors"
             >
               <Mic className="w-3.5 h-3.5" />
               <span>{isTestingVoice ? "Đang đọc mẫu..." : "Nghe thử giọng"}</span>
             </button>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {VOICE_PERSONAS.map((persona) => (
-              <button
-                key={persona.id}
-                type="button"
-                onClick={() => {
-                  setVoicePersona(persona.id);
-                  storageAdapter.saveSettings({ voicePersona: persona.id });
-                }}
-                className={`px-3.5 py-2 rounded-xl text-left text-xs font-medium border transition-all ${
-                  voicePersona === persona.id
-                    ? "bg-ink text-white border-ink shadow-soft"
-                    : "bg-paper text-ink border-ink/15 hover:bg-paper-muted"
-                }`}
-              >
-                <div className="font-semibold">{persona.label}</div>
-                <div
-                  className={`text-[11px] font-mono ${
-                    voicePersona === persona.id ? "text-white/75" : "text-ink-muted"
-                  }`}
-                >
-                  {persona.lang}
-                </div>
-              </button>
-            ))}
           </div>
         </div>
       </section>

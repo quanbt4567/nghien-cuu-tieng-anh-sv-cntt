@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "node --test tests/gamification.test.mjs tests/admin-content.test.mjs tests/guest-leaderboard.test.mjs tests/ai-waterfall.test.mjs tests/profile.test.mjs tests/admin-ai-gen.test.mjs"
+    "test": "node --test tests/gamification.test.mjs tests/admin-content.test.mjs tests/guest-leaderboard.test.mjs tests/ai-waterfall.test.mjs tests/profile.test.mjs tests/admin-ai-gen.test.mjs tests/tts.test.mjs"
   },
   "dependencies": {
     "@neon/config": "^1.14.0",
@@ -15,6 +15,7 @@
     "@neondatabase/serverless": "^1.2.0",
     "@supabase/supabase-js": "^2.49.1",
     "lucide-react": "^1.16.0",
+    "msedge-tts": "^2.1.1",
     "next": "^14.2.24",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

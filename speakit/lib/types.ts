@@ -114,7 +114,11 @@ export interface WeakPoint {
   updated_at: string;
 }
 
-export type VoicePersonaId = "auto" | "us-tech-lead" | "us-hr-female" | "uk-client";
+export type VoicePersonaId =
+  | "beginner_sg"
+  | "hr_us_female"
+  | "lead_us_male"
+  | "client_uk";
 
 export interface UserSettings {
   speechRate: 0.8 | 1.0 | 1.2;

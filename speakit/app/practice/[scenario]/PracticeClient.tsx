@@ -22,10 +22,13 @@ import { MicButton } from "../../../components/audio/MicButton";
 import { FeedbackCard } from "../../../components/feedback/FeedbackCard";
 import { ScenarioSummary } from "../../../components/feedback/ScenarioSummary";
 import {
+  DEFAULT_VOICE_PERSONA,
+  normalizeVoicePersona,
   startSpeechRecognition,
   SpeechController,
   VOICE_PERSONAS,
 } from "../../../lib/speech";
+import { playTtsAudio } from "../../../lib/tts-player";
 import { storageAdapter } from "../../../lib/storage";
 import { awardPracticePoints, getGamificationState } from "../../../lib/gamification";
 import { reportGuestPracticePoints } from "../../../lib/guestClient";
@@ -55,7 +58,9 @@ export default function PracticePage() {
   const [currentTurnIndex, setCurrentTurnIndex] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
   const [showHint, setShowHint] = useState(false);
-  const [voicePersona, setVoicePersona] = useState<VoicePersonaId>("auto");
+  const [voicePersona, setVoicePersona] =
+    useState<VoicePersonaId>(DEFAULT_VOICE_PERSONA);
+  const [isPreviewingVoice, setIsPreviewingVoice] = useState(false);
 
   const [transcript, setTranscript] = useState("");
   const [isRecording, setIsRecording] = useState(false);
@@ -77,9 +82,7 @@ export default function PracticePage() {
 
   useEffect(() => {
     const settings = storageAdapter.getSettings();
-    if (settings.voicePersona) {
-      setVoicePersona(settings.voicePersona);
-    }
+    setVoicePersona(normalizeVoicePersona(settings.voicePersona));
   }, []);
 
   useEffect(() => {
@@ -350,21 +353,41 @@ export default function PracticePage() {
             })}
           </div>
 
-          <label className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-pill bg-paper border border-ink/15 text-xs text-ink">
-            <Volume2 className="w-3.5 h-3.5 text-sky-600 shrink-0" />
-            <select
-              aria-label="AI Voice Persona"
-              value={voicePersona}
-              onChange={(e) => handleVoiceChange(e.target.value as VoicePersonaId)}
-              className="bg-transparent text-xs font-medium text-ink focus:outline-none cursor-pointer pr-1"
+          <div className="inline-flex items-center gap-1.5">
+            <label className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-pill bg-paper border border-ink/15 text-xs text-ink">
+              <Volume2 className="w-3.5 h-3.5 text-sky-600 shrink-0" />
+              <select
+                aria-label="AI Voice Persona"
+                value={voicePersona}
+                onChange={(e) => handleVoiceChange(normalizeVoicePersona(e.target.value))}
+                className="bg-transparent text-xs font-medium text-ink focus:outline-none cursor-pointer pr-1"
+              >
+                {VOICE_PERSONAS.map((persona) => (
+                  <option key={persona.id} value={persona.id}>
+                    {persona.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button
+              type="button"
+              disabled={isPreviewingVoice}
+              onClick={() => {
+                setIsPreviewingVoice(true);
+                const savedRate = storageAdapter.getSettings().speechRate || 1.0;
+                playTtsAudio({
+                  text: "Hi, let's practice your IT English speaking skills together.",
+                  rate: savedRate,
+                  persona: voicePersona,
+                  onEnd: () => setIsPreviewingVoice(false),
+                  onError: () => setIsPreviewingVoice(false),
+                });
+              }}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill bg-sky-500/10 border border-sky-500/30 text-sky-700 text-xs font-semibold hover:bg-sky-500/20 disabled:opacity-50 transition-colors"
             >
-              {VOICE_PERSONAS.map((persona) => (
-                <option key={persona.id} value={persona.id}>
-                  {persona.label}
-                </option>
-              ))}
-            </select>
-          </label>
+              <span>{isPreviewingVoice ? "Đang đọc..." : "Nghe thử giọng"}</span>
+            </button>
+          </div>
         </div>
       </div>
 

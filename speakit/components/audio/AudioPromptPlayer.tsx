@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { VolumeX, RotateCcw } from "lucide-react";
-import { speakText, isSpeechSynthesisSupported } from "../../lib/speech";
+import { playTtsAudio } from "../../lib/tts-player";
 import { storageAdapter } from "../../lib/storage";
 import { VoicePersonaId } from "../../lib/types";
 
@@ -21,11 +21,10 @@ export function AudioPromptPlayer({
 }: AudioPromptPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [rate, setRate] = useState<0.8 | 1.0 | 1.2>(1.0);
-  const [supported, setSupported] = useState(true);
+  const [supported] = useState(true);
   const cancelSpeechRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
-    setSupported(isSpeechSynthesisSupported());
     const saved = storageAdapter.getSettings();
     if (saved.speechRate) {
       setRate(saved.speechRate);
@@ -40,18 +39,18 @@ export function AudioPromptPlayer({
     }
 
     setIsPlaying(true);
-    const cancelFn = speakText(
+    const cancelFn = playTtsAudio({
       text,
-      customRate,
-      () => {
+      rate: customRate,
+      persona: customPersona,
+      onEnd: () => {
         setIsPlaying(false);
         onPlaybackEnd?.();
       },
-      () => {
+      onError: () => {
         setIsPlaying(false);
       },
-      customPersona
-    );
+    });
     cancelSpeechRef.current = cancelFn;
   };
 

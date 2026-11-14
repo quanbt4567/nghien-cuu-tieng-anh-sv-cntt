@@ -10,7 +10,7 @@ import {
   Volume2,
 } from "lucide-react";
 import { ScoreResponse } from "../../lib/types";
-import { speakText } from "../../lib/speech";
+import { playTtsAudio } from "../../lib/tts-player";
 
 interface FeedbackCardProps {
   result: ScoreResponse;
@@ -124,12 +124,12 @@ export function FeedbackCard({
               type="button"
               onClick={() => {
                 setIsPlayingBetter(true);
-                speakText(
-                  result.betterSentence,
-                  0.8,
-                  () => setIsPlayingBetter(false),
-                  () => setIsPlayingBetter(false)
-                );
+                playTtsAudio({
+                  text: result.betterSentence,
+                  rate: 0.8,
+                  onEnd: () => setIsPlayingBetter(false),
+                  onError: () => setIsPlayingBetter(false),
+                });
               }}
               disabled={isPlayingBetter}
               className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill bg-sky-500/15 border border-sky-500/40 text-xs font-mono font-bold text-sky-700 hover:bg-sky-500/25 shadow-soft transition-colors disabled:opacity-50"
