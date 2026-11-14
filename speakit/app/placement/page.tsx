@@ -11,6 +11,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { MicButton } from "../../components/audio/MicButton";
+import { FeedbackPromptModal } from "../../components/feedback/FeedbackPromptModal";
 import { SCENARIOS } from "../../data/scenarios";
 import {
   PLACEMENT_MCQS,
@@ -274,6 +275,7 @@ export default function PlacementPage() {
           )}
         </div>
       )}
+      <FeedbackPromptModal trigger={Boolean(result)} context="placement-test" />
     </div>
   );
 }

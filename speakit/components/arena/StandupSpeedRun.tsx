@@ -35,6 +35,7 @@ import {
 } from "../../lib/speech";
 import { storageAdapter } from "../../lib/storage";
 import { ITRole, ScoreResponse } from "../../lib/types";
+import { FeedbackPromptModal } from "../feedback/FeedbackPromptModal";
 
 interface StandupSpeedRunProps {
   role: ITRole;
@@ -546,6 +547,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
           <RotateCcw className="w-4 h-4" />
           <span>Chạy lại</span>
         </button>
+        <FeedbackPromptModal trigger={true} context="standup-speed-run" />
       </section>
     );
   }

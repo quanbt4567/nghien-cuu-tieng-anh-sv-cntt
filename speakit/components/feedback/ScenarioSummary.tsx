@@ -28,6 +28,7 @@ import {
 } from "../../lib/gamification";
 import { speakText } from "../../lib/speech";
 import { GamificationState, VocabularyItem } from "../../lib/types";
+import { FeedbackPromptModal } from "./FeedbackPromptModal";
 
 interface ScenarioSummaryProps {
   scenarioTitle: string;
@@ -409,6 +410,7 @@ export function ScenarioSummary({
           </Link>
         </div>
       </div>
+      <FeedbackPromptModal trigger={true} context="scenario-summary" />
     </div>
   );
 }

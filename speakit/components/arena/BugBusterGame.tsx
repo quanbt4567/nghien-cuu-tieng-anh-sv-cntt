@@ -37,6 +37,7 @@ import {
 } from "../../lib/contentStore";
 import { SpeechController, startSpeechRecognition } from "../../lib/speech";
 import { ITRole } from "../../lib/types";
+import { FeedbackPromptModal } from "../feedback/FeedbackPromptModal";
 
 const ROUND_DURATION_SEC = 60;
 const BUG_DURATION_SEC = 10;
@@ -507,6 +508,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
             <span>Chơi lại</span>
           </button>
         </div>
+        <FeedbackPromptModal trigger={true} context="bug-buster" />
       </section>
     );
   }
