@@ -24,6 +24,13 @@ export function Footer() {
           </div>
         </div>
         <div className="flex flex-wrap items-center justify-center sm:justify-end gap-x-3 gap-y-1 font-mono text-[11px]">
+          <Link
+            href="/research"
+            className="text-ink font-semibold hover:text-accent transition-colors underline-offset-4 hover:underline"
+          >
+            Nghiên cứu &amp; Tin CNTT
+          </Link>
+          <span aria-hidden="true">•</span>
           <span>EF EPI 2025: VN 500 (Speaking 461)</span>
           <span aria-hidden="true">•</span>
           <span className="text-accent font-semibold">Bản nghiên cứu mở</span>

@@ -13,6 +13,7 @@ import {
   HardDrive,
   Lock,
   MessageSquareText,
+  Newspaper,
   RefreshCw,
   Settings,
   ShieldCheck,
@@ -26,6 +27,7 @@ import { AdminArenaTab } from "./AdminArenaTab";
 import { AdminFeedbackTab } from "./AdminFeedbackTab";
 import { useAdminAuth } from "./AdminLoginGate";
 import { AdminLogsTab } from "./AdminLogsTab";
+import { AdminResearchTab } from "./AdminResearchTab";
 import { AdminScenariosTab } from "./AdminScenariosTab";
 import { AdminSystemTab } from "./AdminSystemTab";
 import { AdminVocabTab } from "./AdminVocabTab";
@@ -40,6 +42,7 @@ type AdminTabId =
   | "scenarios"
   | "vocab"
   | "arena"
+  | "research"
   | "feedback"
   | "logs"
   | "system";
@@ -53,6 +56,7 @@ const TABS: Array<{
   { id: "scenarios", label: "Kịch bản", icon: MessageSquareText },
   { id: "vocab", label: "Từ vựng", icon: BookOpen },
   { id: "arena", label: "Arena Games", icon: Gamepad2 },
+  { id: "research", label: "Bài báo & Nghiên cứu", icon: Newspaper },
   { id: "feedback", label: "Góp ý (Feedback)", icon: Star },
   { id: "logs", label: "Nhật ký & Xuất CSV", icon: FileSpreadsheet },
   { id: "system", label: "Hệ thống", icon: Settings },
@@ -291,6 +295,9 @@ export function AdminShell() {
                 onOverridesChange={handleOverridesChange}
                 onUnauthorized={() => forceLock()}
               />
+            )}
+            {activeTab === "research" && (
+              <AdminResearchTab onUnauthorized={() => forceLock()} />
             )}
             {activeTab === "feedback" && (
               <AdminFeedbackTab onUnauthorized={() => forceLock()} />
