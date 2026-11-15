@@ -88,6 +88,7 @@ export interface GuestPlayerRow {
   equipped_title: string;
   equipped_ring: string;
   owned_items: string[];
+  ip_hash?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -145,13 +146,22 @@ export async function initializeGuestPlayersSchema(
             equipped_title TEXT NOT NULL DEFAULT 'Junior Speaker',
             equipped_ring TEXT NOT NULL DEFAULT 'default',
             owned_items JSONB NOT NULL DEFAULT '[]'::jsonb,
+            ip_hash TEXT,
             created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
             updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
           )
         `,
         sql`
+          ALTER TABLE guest_players
+          ADD COLUMN IF NOT EXISTS ip_hash TEXT
+        `,
+        sql`
           CREATE INDEX IF NOT EXISTS idx_guest_players_leaderboard
           ON guest_players (it_coins DESC, total_points DESC)
+        `,
+        sql`
+          CREATE INDEX IF NOT EXISTS idx_guest_players_ip_created
+          ON guest_players (ip_hash, created_at DESC)
         `,
         sql`
           CREATE TABLE IF NOT EXISTS research_articles (

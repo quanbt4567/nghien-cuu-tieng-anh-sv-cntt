@@ -1,5 +1,5 @@
 import { createHash, randomBytes, randomUUID } from "crypto";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import {
   ensureGuestDatabaseReady,
   getDbClient,
@@ -11,11 +11,45 @@ import { generateFriendlyDisplayName } from "./gamification";
 export const GUEST_SESSION_COOKIE_NAME = "speakit_session_token";
 export const GUEST_TRANSFER_STORAGE_KEY = "speakit_transfer_code_v1";
 export const GUEST_COOKIE_MAX_AGE_SECONDS = 400 * 24 * 60 * 60;
+export const MAX_GUEST_ACCOUNTS_PER_IP_24H = 3;
 
 const TRANSFER_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
 export function hashDeviceToken(rawToken: string): string {
   return createHash("sha256").update(rawToken).digest("hex");
+}
+
+export function extractClientIpFromHeaders(
+  headersList: { get(name: string): string | null | undefined } | null | undefined
+): string | null {
+  if (!headersList) return null;
+  const forwarded = headersList.get("x-forwarded-for");
+  if (forwarded) {
+    const firstIp = forwarded.split(",")[0]?.trim();
+    if (firstIp && firstIp.toLowerCase() !== "unknown") {
+      return firstIp;
+    }
+  }
+  const candidates = [
+    headersList.get("x-real-ip"),
+    headersList.get("cf-connecting-ip"),
+    headersList.get("x-vercel-forwarded-for"),
+  ];
+  for (const candidate of candidates) {
+    const trimmed = candidate?.trim();
+    if (trimmed && trimmed.toLowerCase() !== "unknown") {
+      return trimmed;
+    }
+  }
+  return null;
+}
+
+export function hashIpAddress(ip: string): string;
+export function hashIpAddress(ip: string | null | undefined): string | null;
+export function hashIpAddress(ip: string | null | undefined): string | null {
+  const trimmed = typeof ip === "string" ? ip.trim() : "";
+  if (!trimmed) return null;
+  return createHash("sha256").update(trimmed).digest("hex");
 }
 
 export function generateSessionToken(): string {
@@ -123,6 +157,39 @@ export async function readExistingGuestPlayer(): Promise<PublicGuestPlayer | nul
   }
 }
 
+async function reuseGuestRowById(
+  sql: NonNullable<ReturnType<typeof getDbClient>>,
+  rowId: string
+): Promise<PublicGuestPlayer | null> {
+  const rawToken = generateSessionToken();
+  const tokenHash = hashDeviceToken(rawToken);
+  const updated = (await sql`
+    UPDATE guest_players
+    SET
+      device_token_hash = ${tokenHash},
+      updated_at = NOW()
+    WHERE id = ${rowId}
+    RETURNING
+      id,
+      device_token_hash,
+      transfer_code,
+      display_name,
+      it_coins,
+      total_points,
+      streak_days,
+      last_practice_date,
+      equipped_title,
+      equipped_ring,
+      owned_items,
+      created_at,
+      updated_at
+  `) as GuestPlayerRow[];
+
+  if (updated.length === 0) return null;
+  setGuestSessionCookie(rawToken);
+  return serializePublicGuestPlayer(updated[0]);
+}
+
 export async function resolveOrCreateGuestSession(
   backupTransferCode?: string
 ): Promise<PublicGuestPlayer | null> {
@@ -148,6 +215,61 @@ export async function resolveOrCreateGuestSession(
     }
   }
 
+  let ipHash: string | null = null;
+  try {
+    const clientIp = extractClientIpFromHeaders(headers());
+    if (clientIp) {
+      ipHash = hashIpAddress(clientIp);
+    }
+  } catch {
+    ipHash = null;
+  }
+
+  if (ipHash) {
+    try {
+      const recentZeroRows = (await sql`
+        SELECT id
+        FROM guest_players
+        WHERE ip_hash = ${ipHash}
+          AND total_points = 0
+          AND created_at >= NOW() - INTERVAL '60 seconds'
+        ORDER BY created_at DESC
+        LIMIT 1
+      `) as Array<{ id: string }>;
+
+      if (recentZeroRows.length > 0) {
+        const reused = await reuseGuestRowById(sql, recentZeroRows[0].id);
+        if (reused) return reused;
+      }
+
+      const countRows = (await sql`
+        SELECT COUNT(*)::int AS cnt
+        FROM guest_players
+        WHERE ip_hash = ${ipHash}
+          AND created_at >= NOW() - INTERVAL '24 hours'
+      `) as Array<{ cnt: number }>;
+
+      const recentCount = Number(countRows[0]?.cnt ?? 0);
+      if (recentCount >= MAX_GUEST_ACCOUNTS_PER_IP_24H) {
+        const fallbackRows = (await sql`
+          SELECT id
+          FROM guest_players
+          WHERE ip_hash = ${ipHash}
+            AND total_points = 0
+          ORDER BY created_at DESC
+          LIMIT 1
+        `) as Array<{ id: string }>;
+
+        if (fallbackRows.length > 0) {
+          const reused = await reuseGuestRowById(sql, fallbackRows[0].id);
+          if (reused) return reused;
+        }
+        return null;
+      }
+    } catch {
+    }
+  }
+
   for (let attempt = 0; attempt < 4; attempt += 1) {
     const id = randomUUID();
     const rawToken = generateSessionToken();
@@ -161,13 +283,15 @@ export async function resolveOrCreateGuestSession(
           id,
           device_token_hash,
           transfer_code,
-          display_name
+          display_name,
+          ip_hash
         )
         VALUES (
           ${id},
           ${tokenHash},
           ${transferCode},
-          ${displayName}
+          ${displayName},
+          ${ipHash}
         )
         RETURNING
           id,
