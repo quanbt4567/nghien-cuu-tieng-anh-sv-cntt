@@ -153,9 +153,6 @@ export default function ArenaPage() {
             <ShoppingBag className="w-3.5 h-3.5" />
             <span>Cửa hàng Hiệu ứng</span>
           </Link>
-          <span className="text-[11px] font-mono text-ink-muted hidden sm:inline">
-            Zero-Auth • Lưu điểm cục bộ
-          </span>
         </div>
       </div>
 
