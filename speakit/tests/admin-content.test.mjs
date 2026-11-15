@@ -171,7 +171,7 @@ test("mergeScenarios supports custom additions, existing overrides, hidden filte
         ],
       },
       {
-        id: "incident-postmortem",
+        id: "custom-incident-postmortem",
         titleEN: "Incident Postmortem",
         titleVI: "Phân Tích Sự Cố",
         roleVI: "SRE Lead",
@@ -203,7 +203,7 @@ test("mergeScenarios supports custom additions, existing overrides, hidden filte
   assert.equal(overridden.turns.length, 1);
   assert.equal(overridden.turns[0].questionEN, "What changed in production yesterday?");
 
-  const customAdded = visible.find((s) => s.id === "incident-postmortem");
+  const customAdded = visible.find((s) => s.id === "custom-incident-postmortem");
   assert.ok(customAdded);
   assert.equal(customAdded.isCustom, true);
 

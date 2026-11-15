@@ -101,7 +101,7 @@ export default async function HomePage() {
                 Kịch bản luyện nói
               </h3>
               <p className="text-xs text-ink-muted">
-                6 tình huống công việc CNTT theo vai trò và độ khó.
+                12 tình huống công việc CNTT chia theo 3 cấp độ Fresher / Junior / Senior.
               </p>
             </div>
           </div>

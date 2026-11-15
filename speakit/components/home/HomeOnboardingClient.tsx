@@ -52,6 +52,24 @@ const DIFFICULTY_FILTERS: Array<"ALL" | ScenarioDifficulty> = [
   "Senior",
 ];
 
+const DIFFICULTY_SECTIONS: Array<{
+  level: ScenarioDifficulty;
+  subtitle: string;
+}> = [
+  {
+    level: "Fresher",
+    subtitle: "Làm quen quy trình & giao tiếp cơ bản",
+  },
+  {
+    level: "Junior",
+    subtitle: "Phối hợp nhóm & xử lý nghiệp vụ",
+  },
+  {
+    level: "Senior",
+    subtitle: "Dẫn dắt kỹ thuật, sự cố & khách hàng",
+  },
+];
+
 function getDifficultyBadgeClass(level: ScenarioDifficulty): string {
   if (level === "Fresher") {
     return "bg-emerald-500/15 text-emerald-700 border-emerald-500/30";
@@ -142,12 +160,29 @@ export function HomeOnboardingClient() {
     return [...scenarios].sort((a, b) => scorePriority(b) - scorePriority(a));
   }, [scenarios, selectedRole, activeRole.recommendedScenarioId, placement]);
 
+  const scenariosByLevel = useMemo(() => {
+    const grouped: Record<ScenarioDifficulty, Scenario[]> = {
+      Fresher: [],
+      Junior: [],
+      Senior: [],
+    };
+    for (const scenario of sortedScenarios) {
+      grouped[getScenarioDifficulty(scenario)].push(scenario);
+    }
+    return grouped;
+  }, [sortedScenarios]);
+
+  const difficultyCounts: Record<"ALL" | ScenarioDifficulty, number> = {
+    ALL: sortedScenarios.length,
+    Fresher: scenariosByLevel.Fresher.length,
+    Junior: scenariosByLevel.Junior.length,
+    Senior: scenariosByLevel.Senior.length,
+  };
+
   const filteredScenarios = useMemo(() => {
     if (difficultyFilter === "ALL") return sortedScenarios;
-    return sortedScenarios.filter(
-      (scenario) => getScenarioDifficulty(scenario) === difficultyFilter
-    );
-  }, [sortedScenarios, difficultyFilter]);
+    return scenariosByLevel[difficultyFilter];
+  }, [sortedScenarios, scenariosByLevel, difficultyFilter]);
 
   const recommendedScenario = sortedScenarios[0] ?? null;
   const totalTurnsCount = useMemo(
@@ -158,6 +193,85 @@ export function HomeOnboardingClient() {
   const handleSelectRole = (role: ITRole) => {
     const updated = setSelectedRole(role);
     setSelectedRoleState(updated.selectedRole);
+  };
+
+  const renderScenarioCard = (scenario: Scenario, index: number) => {
+    const level = getScenarioDifficulty(scenario);
+    const isPlacementMatch = placement?.recommendedScenarioId === scenario.id;
+    const isRecommended =
+      isPlacementMatch ||
+      scenario.id === recommendedScenario?.id ||
+      Boolean(scenario.targetRoles?.includes(selectedRole));
+
+    return (
+      <Link
+        key={scenario.id}
+        href={`/practice/${scenario.id}`}
+        className={`group bg-white border rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4 ${
+          isPlacementMatch
+            ? "border-sky-500/60 ring-1 ring-sky-500/20"
+            : isRecommended
+            ? "border-emerald-500/40"
+            : "border-ink/15"
+        }`}
+      >
+        <div className="flex items-start gap-3.5">
+          <div
+            className={`w-8 h-8 rounded-pill flex items-center justify-center border shrink-0 font-mono font-bold text-xs transition-colors ${
+              isRecommended
+                ? "bg-ink text-white border-ink"
+                : "bg-paper text-ink border-ink/20 group-hover:bg-ink group-hover:text-white group-hover:border-ink"
+            }`}
+          >
+            {String(index + 1).padStart(2, "0")}
+          </div>
+          <div className="min-w-0 space-y-1.5">
+            <h3 className="font-bold text-sm sm:text-base text-ink group-hover:text-sky-700 transition-colors">
+              {scenario.titleEN}{" "}
+              <span className="text-xs font-normal text-ink-faint">
+                ({scenario.titleVI})
+              </span>
+            </h3>
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span
+                className={`text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-pill border ${getDifficultyBadgeClass(
+                  level
+                )}`}
+              >
+                {level}
+              </span>
+              {isPlacementMatch && (
+                <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-pill bg-sky-500/10 text-sky-700 border border-sky-500/30">
+                  Đề xuất từ Placement
+                </span>
+              )}
+              {!isPlacementMatch && isRecommended && (
+                <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-pill bg-emerald-500/15 text-emerald-700 border border-emerald-500/30">
+                  Phù hợp với bạn
+                </span>
+              )}
+              <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-pill bg-paper border border-ink/15 text-ink-muted">
+                Vai: {scenario.roleVI}
+              </span>
+            </div>
+            <p className="text-xs text-ink-muted leading-relaxed">
+              {scenario.descriptionVI}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between pt-3 border-t border-paper-muted text-xs font-mono text-ink-muted">
+          <span>{scenario.turns.length} lượt hội thoại</span>
+          <span className="inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-accent font-sans font-semibold transition-all shadow-soft">
+            <span>Thực hành</span>
+            <ArrowRight
+              className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform"
+              aria-hidden="true"
+            />
+          </span>
+        </div>
+      </Link>
+    );
   };
 
   return (
@@ -316,89 +430,45 @@ export function HomeOnboardingClient() {
                     : "bg-white text-ink border-ink/15 hover:bg-paper-muted"
                 }`}
               >
-                {level === "ALL" ? "Tất cả" : level}
+                {level === "ALL"
+                  ? `Tất cả (${difficultyCounts.ALL})`
+                  : `${level} (${difficultyCounts[level]})`}
               </button>
             );
           })}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filteredScenarios.map((scenario, index) => {
-            const level = getScenarioDifficulty(scenario);
-            const isPlacementMatch =
-              placement?.recommendedScenarioId === scenario.id;
-            const isRecommended =
-              isPlacementMatch ||
-              scenario.id === recommendedScenario?.id ||
-              Boolean(scenario.targetRoles?.includes(selectedRole));
-            return (
-              <Link
-                key={scenario.id}
-                href={`/practice/${scenario.id}`}
-                className={`group bg-white border rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4 ${
-                  isPlacementMatch
-                    ? "border-sky-500/60 ring-1 ring-sky-500/20"
-                    : isRecommended
-                    ? "border-emerald-500/40"
-                    : "border-ink/15"
-                }`}
-              >
-                <div className="flex items-start gap-3.5">
-                  <div
-                    className={`w-8 h-8 rounded-pill flex items-center justify-center border shrink-0 font-mono font-bold text-xs transition-colors ${
-                      isRecommended
-                        ? "bg-ink text-white border-ink"
-                        : "bg-paper text-ink border-ink/20 group-hover:bg-ink group-hover:text-white group-hover:border-ink"
-                    }`}
-                  >
-                    {String(index + 1).padStart(2, "0")}
-                  </div>
-                  <div className="min-w-0 space-y-1.5">
-                    <h3 className="font-bold text-sm sm:text-base text-ink group-hover:text-sky-700 transition-colors">
-                      {scenario.titleEN}{" "}
-                      <span className="text-xs font-normal text-ink-faint">
-                        ({scenario.titleVI})
-                      </span>
+        {difficultyFilter === "ALL" ? (
+          <div className="space-y-8">
+            {DIFFICULTY_SECTIONS.map(({ level, subtitle }) => {
+              const items = scenariosByLevel[level];
+              if (items.length === 0) return null;
+              return (
+                <div key={level} className="space-y-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-ink/10">
+                    <h3 className="text-sm sm:text-base font-bold tracking-tight text-ink">
+                      {level} · {subtitle}
                     </h3>
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      <span
-                        className={`text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-pill border ${getDifficultyBadgeClass(
-                          level
-                        )}`}
-                      >
-                        {level}
-                      </span>
-                      {isPlacementMatch && (
-                        <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-pill bg-sky-500/10 text-sky-700 border border-sky-500/30">
-                          Đề xuất từ Placement
-                        </span>
-                      )}
-                      {!isPlacementMatch && isRecommended && (
-                        <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-pill bg-emerald-500/15 text-emerald-700 border border-emerald-500/30">
-                          Phù hợp với bạn
-                        </span>
-                      )}
-                      <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-pill bg-paper border border-ink/15 text-ink-muted">
-                        Vai: {scenario.roleVI}
-                      </span>
-                    </div>
-                    <p className="text-xs text-ink-muted leading-relaxed">
-                      {scenario.descriptionVI}
-                    </p>
+                    <span className="text-xs font-mono text-ink-muted">
+                      {items.length} tình huống
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {items.map((scenario, index) =>
+                      renderScenarioCard(scenario, index)
+                    )}
                   </div>
                 </div>
-
-                <div className="flex items-center justify-between pt-3 border-t border-paper-muted text-xs font-mono text-ink-muted">
-                  <span>{scenario.turns.length} lượt hội thoại</span>
-                  <span className="inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-accent font-sans font-semibold transition-all shadow-soft">
-                    <span>Thực hành</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
-                  </span>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {filteredScenarios.map((scenario, index) =>
+              renderScenarioCard(scenario, index)
+            )}
+          </div>
+        )}
       </section>
     </div>
   );

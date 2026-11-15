@@ -22,7 +22,7 @@ const SECTION_GUIDES = [
     title: "Kịch bản",
     icon: Mic,
     description:
-      "Luyện nói theo 6 tình huống công việc CNTT thực tế (Standup, Bug Report, Code Review, Phỏng vấn, Khách hàng, Demo) chia theo 3 cấp độ Fresher / Junior / Senior.",
+      "Luyện nói theo 12 tình huống công việc CNTT thực tế (Standup, Bug Report, Code Review, Phỏng vấn, Khách hàng, Demo) chia theo 3 cấp độ Fresher / Junior / Senior.",
   },
   {
     href: "/arena",

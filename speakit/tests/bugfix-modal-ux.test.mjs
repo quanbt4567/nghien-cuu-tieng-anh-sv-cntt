@@ -15,6 +15,7 @@ const { scoreLocally, stemWord } = jiti(
 const { generate7DayPlan, isValidKeywordTerm } = jiti(
   resolve(__dirname, "../lib/planGenerator.ts")
 );
+const { SCENARIOS } = jiti(resolve(__dirname, "../data/scenarios.ts"));
 
 test("scoreLocally matches inflections for deploy/cache/multi-word phrases", () => {
   assert.equal(stemWord("deployments"), "deploy");
@@ -69,4 +70,24 @@ test("generate7DayPlan excludes full sentences from focusKeywords", () => {
   );
 
   assert.deepEqual(plan[0].focusKeywords, ["rollback"]);
+});
+
+test("SCENARIOS has at least 12 scenarios with >= 4 per level and 3 sequential turns each", () => {
+  assert.ok(SCENARIOS.length >= 12, `Expected >= 12 scenarios, got ${SCENARIOS.length}`);
+
+  for (const level of ["Fresher", "Junior", "Senior"]) {
+    const levelScenarios = SCENARIOS.filter((s) => s.difficulty === level);
+    assert.ok(
+      levelScenarios.length >= 4,
+      `Expected >= 4 scenarios for ${level}, got ${levelScenarios.length}`
+    );
+    for (const scenario of levelScenarios) {
+      assert.equal(scenario.turns.length, 3, `${scenario.id} should have 3 turns`);
+      assert.deepEqual(
+        scenario.turns.map((t) => t.turnIndex),
+        [0, 1, 2],
+        `${scenario.id} turns should have turnIndex [0, 1, 2]`
+      );
+    }
+  }
 });

@@ -22,7 +22,7 @@ const HOW_IT_WORKS_STEPS = [
     step: "02",
     title: "Nói phản xạ tình huống thật",
     description:
-      "Trả lời trực tiếp qua micro cho Daily Standup, Code Review, Phỏng vấn và 6 tình huống công việc IT.",
+      "Trả lời trực tiếp qua micro cho Daily Standup, Code Review, Phỏng vấn với 12 tình huống công việc IT chia theo 3 cấp độ Fresher / Junior / Senior.",
     icon: Mic,
   },
   {
@@ -35,7 +35,7 @@ const HOW_IT_WORKS_STEPS = [
 ];
 
 const FEATURE_HIGHLIGHTS = [
-  "6 tình huống công việc IT",
+  "12 tình huống công việc IT",
   "4 giọng Microsoft Edge Neural TTS",
   "Chấm điểm Pronunciation · Fluency · Vocabulary",
   "IT Speaking Arena & Kế hoạch 7 ngày",
