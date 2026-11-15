@@ -4,16 +4,19 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
+  ArrowRight,
   Award,
   Bug,
   Coins,
   Flame,
   Gamepad2,
+  Globe,
+  ShoppingBag,
+  Siren,
   Timer,
   Trophy,
   UserCog,
 } from "lucide-react";
-import { Globe } from "lucide-react";
 import { initOrHydrateGuestSession } from "../../app/actions/leaderboard";
 import { BugBusterGame } from "../../components/arena/BugBusterGame";
 import { LocalLeaderboard } from "../../components/arena/LocalLeaderboard";
@@ -133,8 +136,7 @@ export default function ArenaPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
-      {/* Top Breadcrumb */}
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white text-ink text-xs font-medium border border-ink/15 shadow-soft hover:bg-paper-muted shadow-hard-press transition-all"
@@ -143,9 +145,18 @@ export default function ArenaPage() {
           <span>Trang chủ</span>
         </Link>
 
-        <span className="text-[11px] font-mono text-ink-muted">
-          Zero-Auth • Lưu điểm cục bộ
-        </span>
+        <div className="flex items-center gap-2.5">
+          <Link
+            href="/shop"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill bg-[#FAF6EF] text-[#1A1714] text-xs font-bold border-2 border-[#1A1714] shadow-[4px_4px_0_#1A1714] hover:bg-[#E5484D] hover:text-white transition-all"
+          >
+            <ShoppingBag className="w-3.5 h-3.5" />
+            <span>Cửa hàng Hiệu ứng</span>
+          </Link>
+          <span className="text-[11px] font-mono text-ink-muted hidden sm:inline">
+            Zero-Auth • Lưu điểm cục bộ
+          </span>
+        </div>
       </div>
 
       {/* Arena Header Card */}
@@ -230,7 +241,57 @@ export default function ArenaPage() {
         </div>
       </section>
 
-      {/* 3-Tab Selector */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Link
+          href="/arena/party"
+          className="md:col-span-2 group bg-[#FAF6EF] border-2 border-[#1A1714] rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+        >
+          <div className="flex items-start gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-[#E5484D] text-white border-2 border-[#1A1714] flex items-center justify-center shrink-0">
+              <Siren className="w-5 h-5" />
+            </div>
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-pill bg-[#E5484D]/10 text-[#E5484D] border border-[#E5484D]/30 text-[10px] font-mono font-bold uppercase">
+                Live Co-op Mode
+              </div>
+              <h2 className="text-base sm:text-lg font-bold text-[#1A1714]">
+                Outage At 3AM (Party Mode)
+              </h2>
+              <p className="text-xs text-[#1A1714]/75">
+                Phối hợp xử lý sự cố production khẩn cấp theo nhóm với phản xạ tiếng Anh CNTT.
+              </p>
+            </div>
+          </div>
+          <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-[#E5484D] text-white border-2 border-[#1A1714] text-xs font-bold shrink-0 self-start sm:self-center">
+            <span>Mở Party Mode</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+          </span>
+        </Link>
+
+        <Link
+          href="/shop"
+          className="group bg-white border-2 border-[#1A1714] rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] hover:bg-[#FAF6EF] transition-all flex flex-col justify-between gap-3"
+        >
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#FAF6EF] text-[#E5484D] border-2 border-[#1A1714] flex items-center justify-center shrink-0">
+              <ShoppingBag className="w-5 h-5" />
+            </div>
+            <div className="space-y-1">
+              <h2 className="text-base font-bold text-[#1A1714]">
+                Cửa hàng Hiệu ứng
+              </h2>
+              <p className="text-xs text-[#1A1714]/75">
+                Dùng IT-Coin mở khóa khung avatar, nameplate và hiệu ứng bảng xếp hạng.
+              </p>
+            </div>
+          </div>
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#E5484D] self-end">
+            <span>Vào cửa hàng</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+          </span>
+        </Link>
+      </section>
+
       <div
         role="tablist"
         aria-label="Chế độ IT Speaking Arena"

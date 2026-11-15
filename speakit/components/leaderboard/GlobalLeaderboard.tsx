@@ -25,6 +25,8 @@ import {
 } from "../../app/actions/leaderboard";
 import { COSMETIC_CATALOG, getRingBadgeClass } from "../../lib/cosmetics";
 import type { LeaderboardEntry, PublicGuestPlayer } from "../../lib/db";
+import { DiscordAvatarFrame } from "../cosmetics/DiscordAvatarFrame";
+import { LeaderboardRowWrapper } from "../cosmetics/LeaderboardRowWrapper";
 import {
   calculateCoins,
   getDevTitle,
@@ -238,6 +240,7 @@ export function GlobalLeaderboard({
           streakDays: currentPlayer.streakDays,
           equippedTitle: currentPlayer.equippedTitle,
           equippedRing: currentPlayer.equippedRing,
+          equippedCosmetics: currentPlayer.equippedCosmetics,
           rank: 1,
           isCurrentUser: true,
         }
@@ -260,13 +263,19 @@ export function GlobalLeaderboard({
           <section className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div
-                  className={`w-11 h-11 rounded-full bg-paper border flex items-center justify-center font-mono font-bold text-sm text-ink ${getRingBadgeClass(
-                    currentPlayer.equippedRing
-                  )}`}
+                <DiscordAvatarFrame
+                  equippedId={currentPlayer.equippedCosmetics?.avatar_decoration}
+                  fallbackRing={currentPlayer.equippedRing}
+                  size="md"
                 >
-                  {currentPlayer.displayName.slice(0, 2).toUpperCase()}
-                </div>
+                  <div
+                    className={`w-full h-full rounded-full bg-paper border flex items-center justify-center font-mono font-bold text-sm text-ink ${getRingBadgeClass(
+                      currentPlayer.equippedRing
+                    )}`}
+                  >
+                    {currentPlayer.displayName.slice(0, 2).toUpperCase()}
+                  </div>
+                </DiscordAvatarFrame>
                 <div>
                   {!isEditingName ? (
                     <div className="flex items-center gap-2">
@@ -516,59 +525,77 @@ export function GlobalLeaderboard({
           </div>
         ) : (
           <div className="space-y-2.5">
-            {players.map((entry) => (
-              <div
-                key={entry.id}
-                className={`p-3.5 rounded-xl border flex flex-wrap items-center justify-between gap-3 transition-colors ${
-                  entry.isCurrentUser
-                    ? "bg-accent-light/50 border-accent/40"
-                    : "bg-paper border-ink/10"
-                }`}
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <span
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-mono font-bold border shrink-0 ${
-                      entry.rank <= 3
-                        ? "bg-ink text-white border-ink"
-                        : "bg-white text-ink border-ink/15"
-                    } ${getRingBadgeClass(entry.equippedRing)}`}
-                  >
-                    #{entry.rank}
-                  </span>
-
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-bold text-sm text-ink truncate">
-                        {entry.displayName}
-                      </span>
-                      {entry.isCurrentUser && (
-                        <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-ink text-white">
-                          You
+            {players.map((entry) => {
+              const hasNameplate = Boolean(entry.equippedCosmetics?.nameplate);
+              const hasFx = Boolean(entry.equippedCosmetics?.leaderboard_fx);
+              return (
+                <LeaderboardRowWrapper
+                  key={entry.id}
+                  fxId={entry.equippedCosmetics?.leaderboard_fx}
+                  nameplateId={entry.equippedCosmetics?.nameplate}
+                  className={`border transition-colors ${
+                    hasNameplate || hasFx
+                      ? entry.isCurrentUser
+                        ? "border-accent/40"
+                        : "border-ink/15"
+                      : entry.isCurrentUser
+                      ? "bg-accent-light/50 border-accent/40"
+                      : "bg-paper border-ink/10"
+                  }`}
+                >
+                  <div className="p-3.5 flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <DiscordAvatarFrame
+                        equippedId={entry.equippedCosmetics?.avatar_decoration}
+                        fallbackRing={entry.equippedRing}
+                        size="sm"
+                      >
+                        <span
+                          className={`w-full h-full rounded-full flex items-center justify-center text-xs font-mono font-bold border ${
+                            entry.rank <= 3
+                              ? "bg-ink text-white border-ink"
+                              : "bg-white text-ink border-ink/15"
+                          } ${getRingBadgeClass(entry.equippedRing)}`}
+                        >
+                          #{entry.rank}
                         </span>
-                      )}
-                      <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-pill bg-white border border-ink/15 text-ink-muted">
-                        <Sparkles className="w-2.5 h-2.5 text-accent" />
-                        {entry.equippedTitle}
+                      </DiscordAvatarFrame>
+
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-bold text-sm text-ink truncate">
+                            {entry.displayName}
+                          </span>
+                          {entry.isCurrentUser && (
+                            <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-ink text-white">
+                              You
+                            </span>
+                          )}
+                          <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-pill bg-white border border-ink/15 text-ink-muted">
+                            <Sparkles className="w-2.5 h-2.5 text-accent" />
+                            {entry.equippedTitle}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4 font-mono text-xs shrink-0">
+                      <span className="inline-flex items-center gap-1 text-ink-muted">
+                        <Flame className="w-3.5 h-3.5 fill-accent text-accent" />
+                        {entry.streakDays}d
+                      </span>
+                      <span className="inline-flex items-center gap-1 font-bold text-ink">
+                        <Coins className="w-3.5 h-3.5 text-accent" />
+                        {entry.itCoins}
+                      </span>
+                      <span className="text-ink-muted w-20 text-right">
+                        {entry.totalPoints.toLocaleString("en-US")} pts
                       </span>
                     </div>
                   </div>
-                </div>
-
-                <div className="flex items-center gap-4 font-mono text-xs shrink-0">
-                  <span className="inline-flex items-center gap-1 text-ink-muted">
-                    <Flame className="w-3.5 h-3.5 fill-accent text-accent" />
-                    {entry.streakDays}d
-                  </span>
-                  <span className="inline-flex items-center gap-1 font-bold text-ink">
-                    <Coins className="w-3.5 h-3.5 text-accent" />
-                    {entry.itCoins}
-                  </span>
-                  <span className="text-ink-muted w-20 text-right">
-                    {entry.totalPoints.toLocaleString("en-US")} pts
-                  </span>
-                </div>
-              </div>
-            ))}
+                </LeaderboardRowWrapper>
+              );
+            })}
           </div>
         )}
       </section>
@@ -576,13 +603,19 @@ export function GlobalLeaderboard({
       {activeEntry && (
         <div className="sticky bottom-3 z-20 bg-ink text-white border border-ink rounded-2xl p-3.5 sm:px-5 shadow-card flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <span
-              className={`w-9 h-9 rounded-full bg-white text-ink flex items-center justify-center text-xs font-mono font-bold border ${getRingBadgeClass(
-                activeEntry.equippedRing
-              )}`}
+            <DiscordAvatarFrame
+              equippedId={activeEntry.equippedCosmetics?.avatar_decoration}
+              fallbackRing={activeEntry.equippedRing}
+              size="sm"
             >
-              #{activeEntry.rank}
-            </span>
+              <span
+                className={`w-full h-full rounded-full bg-white text-ink flex items-center justify-center text-xs font-mono font-bold border ${getRingBadgeClass(
+                  activeEntry.equippedRing
+                )}`}
+              >
+                #{activeEntry.rank}
+              </span>
+            </DiscordAvatarFrame>
             <div>
               <div className="text-xs font-bold flex items-center gap-2">
                 <span>{activeEntry.displayName}</span>

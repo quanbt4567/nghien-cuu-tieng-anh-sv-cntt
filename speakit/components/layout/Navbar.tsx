@@ -20,6 +20,8 @@ import {
   ChevronDown,
   Menu,
   X,
+  ShoppingBag,
+  Users,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -39,6 +41,7 @@ import { initOrHydrateGuestSession } from "../../app/actions/leaderboard";
 import type { PublicGuestPlayer } from "../../lib/db";
 import { mergeProfileIdentity } from "../../lib/profileStats";
 import type { GamificationState } from "../../lib/types";
+import { CustomCursorTrail } from "../cosmetics/CustomCursorTrail";
 
 type NavItem = {
   href: string;
@@ -71,6 +74,7 @@ const NAV_GROUPS: readonly NavGroup[] = [
     items: [
       { href: "/scenarios", label: "Kịch bản", icon: Mic },
       { href: "/arena", label: "Arena", icon: Gamepad2 },
+      { href: "/arena/party", label: "Outage At 3AM", icon: Users },
       { href: "/vocabulary", label: "Từ vựng IT", icon: BookOpen },
       { href: "/placement", label: "Kiểm tra trình độ", icon: ClipboardCheck },
     ],
@@ -78,17 +82,18 @@ const NAV_GROUPS: readonly NavGroup[] = [
   {
     id: "account",
     label: "Tài khoản",
-    activePrefixes: ["/profile", "/settings"],
+    activePrefixes: ["/profile", "/shop", "/settings"],
     items: [
       { href: "/profile", label: "Hồ sơ", icon: User },
+      { href: "/shop", label: "Cửa hàng Hiệu ứng", icon: ShoppingBag },
       { href: "/settings", label: "Cài đặt", icon: Settings },
     ],
   },
 ];
 
 function isItemActive(pathname: string, href: string): boolean {
-  if (href === "/") {
-    return pathname === "/";
+  if (href === "/" || href === "/arena") {
+    return pathname === href;
   }
   if (href === "/scenarios") {
     return (
@@ -240,7 +245,9 @@ export function Navbar() {
   const homeActive = isItemActive(pathname, "/");
 
   return (
-    <header ref={headerRef} className="sticky top-0 z-40 bg-paper border-b border-ink/15">
+    <>
+      <CustomCursorTrail effectId={guestPlayer?.equippedCosmetics?.cursor_effect ?? null} />
+      <header ref={headerRef} className="sticky top-0 z-40 bg-paper border-b border-ink/15">
       <div className="max-w-6xl mx-auto px-3 sm:px-4 h-16 flex items-center justify-between gap-2 lg:gap-3">
         <Link
           href="/"
@@ -471,6 +478,7 @@ export function Navbar() {
           ))}
         </nav>
       )}
-    </header>
+      </header>
+    </>
   );
 }
