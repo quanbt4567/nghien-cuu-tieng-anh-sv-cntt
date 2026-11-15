@@ -65,6 +65,7 @@ import {
 } from "../../lib/profileStats";
 import { storageAdapter } from "../../lib/storage";
 import type {
+  GameScoreEntry,
   GamificationState,
   ITRole,
   PracticeAttempt,
@@ -114,6 +115,67 @@ function formatAttemptDate(iso: string): string {
     hour: "2-digit",
     minute: "2-digit",
   }).format(date);
+}
+
+function normalizeBugBusterAccuracy(score: number, accuracyOrWords: number): number {
+  if (score < 100 || accuracyOrWords < 1 || accuracyOrWords > 14) {
+    return accuracyOrWords;
+  }
+  if (accuracyOrWords === 7 && score < 700) {
+    return accuracyOrWords;
+  }
+  if (accuracyOrWords === 14 && score < 1400) {
+    return accuracyOrWords;
+  }
+  return Math.round((accuracyOrWords / 14) * 100);
+}
+
+function normalizeArenaHistory(history: GameScoreEntry[]): GameScoreEntry[] {
+  const seenIds = new Set<string>();
+  const normalized: GameScoreEntry[] = [];
+
+  for (const run of history) {
+    if (!run || typeof run.id !== "string" || !run.id || seenIds.has(run.id)) {
+      continue;
+    }
+    seenIds.add(run.id);
+    const safeScore = Number.isFinite(run.score) ? Math.max(0, Math.round(run.score)) : 0;
+    const rawMetric = Number.isFinite(run.accuracyOrWords)
+      ? Math.max(0, Math.round(run.accuracyOrWords))
+      : 0;
+    const accuracyOrWords =
+      run.gameId === "bug-buster"
+        ? normalizeBugBusterAccuracy(safeScore, rawMetric)
+        : rawMetric;
+    const durationSec = Number.isFinite(run.durationSec)
+      ? Math.max(0, Math.round(run.durationSec))
+      : 0;
+
+    normalized.push({
+      ...run,
+      score: safeScore,
+      accuracyOrWords,
+      durationSec,
+    });
+  }
+
+  return normalized.sort((a, b) => {
+    const ta = Date.parse(a.createdAt);
+    const tb = Date.parse(b.createdAt);
+    const aOk = Number.isFinite(ta);
+    const bOk = Number.isFinite(tb);
+    if (aOk && bOk && tb !== ta) {
+      return tb - ta;
+    }
+    if (aOk !== bOk) {
+      return bOk ? 1 : -1;
+    }
+    const isoCmp = b.createdAt.localeCompare(a.createdAt);
+    if (isoCmp !== 0) {
+      return isoCmp;
+    }
+    return a.id.localeCompare(b.id);
+  });
 }
 
 function toVietnameseError(rawError?: string, mode?: "online" | "offline"): string {
@@ -338,20 +400,22 @@ export function ProfileView() {
   const coinEarnedInTier = POINTS_PER_COIN - activity.nextCoinPoints;
   const coinProgressPct = Math.round((coinEarnedInTier / POINTS_PER_COIN) * 100);
   const localSpeakingCount = activity.totalAttempts;
-  const localArenaCount = gamification.history.length;
+  const normalizedArenaHistory = useMemo(
+    () => normalizeArenaHistory(gamification.history),
+    [gamification.history]
+  );
+  const recentArenaRuns = useMemo(
+    () => normalizedArenaHistory.slice(0, 5),
+    [normalizedArenaHistory]
+  );
+  const localArenaCount = normalizedArenaHistory.length;
   const hasCloudPoints = identity.mode === "online" && identity.totalPoints > 0;
 
   const summaryStats = useMemo(() => {
     const speakingScores = attempts.map((attempt) =>
       Number.isFinite(attempt.score) ? attempt.score : 0
     );
-    const arenaSource =
-      gamification.history.length > 0
-        ? gamification.history
-        : activity.recentArenaRuns;
-    const arenaScores = arenaSource.map((run) =>
-      Number.isFinite(run.score) ? run.score : 0
-    );
+    const arenaScores = normalizedArenaHistory.map((run) => run.score);
     const allScores = [...speakingScores, ...arenaScores];
     const totalSessions = speakingScores.length + arenaScores.length;
     const averageScore =
@@ -376,8 +440,7 @@ export function ProfileView() {
     return { totalSessions, averageScore, bestScore };
   }, [
     attempts,
-    gamification.history,
-    activity.recentArenaRuns,
+    normalizedArenaHistory,
     activity.averageScore,
     activity.bestScore,
     activity.bugBusterBest,
@@ -1338,7 +1401,7 @@ export function ProfileView() {
               </Link>
             </div>
 
-            {activity.recentAttempts.length === 0 && activity.recentArenaRuns.length === 0 ? (
+            {activity.recentAttempts.length === 0 && recentArenaRuns.length === 0 ? (
               <div className="bg-white border border-ink/10 rounded-xl p-4 space-y-2.5">
                 <p className="text-xs text-ink-muted">
                   {hasCloudPoints
@@ -1395,7 +1458,7 @@ export function ProfileView() {
                     </Link>
                   );
                 })}
-                {activity.recentArenaRuns.map((run) => (
+                {recentArenaRuns.map((run) => (
                   <Link
                     key={run.id}
                     href="/arena"
@@ -1418,7 +1481,12 @@ export function ProfileView() {
                           ? `${run.accuracyOrWords}% chính xác`
                           : `${run.accuracyOrWords} từ khóa`}
                       </span>
-                      <span>{formatAttemptDate(run.createdAt)}</span>
+                      <span className="flex items-center gap-2 shrink-0">
+                        {run.durationSec > 0 && (
+                          <span>Thời lượng: {run.durationSec}s</span>
+                        )}
+                        <span>{formatAttemptDate(run.createdAt)}</span>
+                      </span>
                     </div>
                   </Link>
                 ))}
