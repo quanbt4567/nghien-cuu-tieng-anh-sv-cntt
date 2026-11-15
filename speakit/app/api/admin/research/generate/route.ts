@@ -175,12 +175,9 @@ function buildFallbackSynthesis(
 
   return {
     title: `Tổng hợp xu hướng ${topicLabel} cho kỹ sư CNTT`,
-    summary: `Bản nháp tổng hợp từ ${sources.length} nguồn công nghệ (HackerNews, Dev.to) liên quan đến chủ đề ${topicLabel} và kỹ năng giao tiếp tiếng Anh chuyên ngành.`,
+    summary: `Tổng hợp xu hướng ${topicLabel} mới nhất từ HackerNews & Dev.to dành cho sinh viên và kỹ sư CNTT.`,
     contentMarkdown: `## Điểm tin nổi bật (${topicLabel})\n\n${bulletLines}\n\n## Gợi ý áp dụng vào luyện nói tiếng Anh CNTT\n\n- Tóm tắt lại các chủ đề trên bằng tiếng Anh trong 3 câu (Context, Action, Result).\n- Luyện sử dụng thuật ngữ kỹ thuật chuẩn xác trong Daily Standup và Code Review.`,
-    metricsJson: [
-      { label: "Nguồn tin đã tổng hợp", value: String(sources.length), highlight: "HackerNews & Dev.to" },
-      { label: "Chủ đề trọng tâm", value: topicLabel, highlight: "AI Curated Draft" },
-    ],
+    metricsJson: [],
     sourceUrls,
   };
 }
@@ -227,12 +224,12 @@ ${sourcesContext}
 Return ONLY valid JSON with this exact shape:
 {
   "title": "Vietnamese editorial headline (max 140 chars)",
-  "summary": "2-sentence Vietnamese executive summary (max 320 chars)",
+  "summary": "2-sentence Vietnamese executive summary for readers (max 320 chars, no internal CMS/drafting labels)",
   "contentMarkdown": "Well-structured Markdown in Vietnamese using ## headings and bullet points, incorporating real insights from the sources and practical IT English speaking takeaways",
-  "metricsJson": [
-    { "label": "Short metric label in Vietnamese", "value": "Concise number/stat", "highlight": "Short note" }
-  ]
-}`;
+  "metricsJson": []
+}
+
+For "metricsJson": ONLY include metric objects ({ "label": "Short metric label in Vietnamese", "value": "Concise number/stat", "highlight": "Short note" }) if the fetched sources contain real concrete numbers or benchmarks; otherwise return "metricsJson": [].`;
 
     const aiResult = await requestAiWaterfallText({
       systemInstruction: "Return strictly valid JSON only without markdown fences.",

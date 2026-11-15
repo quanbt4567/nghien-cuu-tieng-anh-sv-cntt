@@ -12,6 +12,7 @@ import {
 import {
   getPublishedArticles,
   type ResearchCategory,
+  type ResearchMetricItem,
 } from "../../lib/research";
 
 export const dynamic = "force-dynamic";
@@ -27,6 +28,13 @@ const CATEGORY_TABS: Array<{ id: "all" | ResearchCategory; label: string }> = [
 
 function getCategoryLabel(category: ResearchCategory): string {
   return CATEGORY_TABS.find((t) => t.id === category)?.label ?? category;
+}
+
+function isInternalDraftMetric(metric: ResearchMetricItem): boolean {
+  return (
+    metric.highlight === "AI Curated Draft" ||
+    metric.label === "Nguồn tin đã tổng hợp"
+  );
 }
 
 export default async function ResearchPortalPage({
@@ -47,7 +55,10 @@ export default async function ResearchPortalPage({
   const articles = await getPublishedArticles(
     activeCategory === "all" ? undefined : activeCategory
   );
-  const featuredArticle = articles[0] ?? null;
+  const featuredArticle =
+    articles.find(
+      (a) => a.category === "benchmark" && a.metricsJson.length > 0
+    ) ?? null;
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
@@ -151,70 +162,77 @@ export default async function ResearchPortalPage({
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {articles.map((article) => (
-            <article
-              key={article.id}
-              className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft hover:shadow-card transition-all flex flex-col justify-between gap-4"
-            >
-              <div className="space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="px-2.5 py-0.5 rounded-pill bg-sky-500/10 border border-sky-500/30 text-sky-700 text-[11px] font-mono font-semibold">
-                    {getCategoryLabel(article.category)}
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-[11px] font-mono text-ink-muted">
-                    {article.sourceType === "ai_curated" && (
-                      <Sparkles className="w-3 h-3 text-sky-500" />
-                    )}
-                    <span>
-                      {new Date(
-                        article.publishedAt ?? article.createdAt
-                      ).toLocaleDateString("vi-VN")}
+          {articles.map((article) => {
+            const realMetricsCount = article.metricsJson.filter(
+              (m) => !isInternalDraftMetric(m)
+            ).length;
+            return (
+              <article
+                key={article.id}
+                className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft hover:shadow-card transition-all flex flex-col justify-between gap-4"
+              >
+                <div className="space-y-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="px-2.5 py-0.5 rounded-pill bg-sky-500/10 border border-sky-500/30 text-sky-700 text-[11px] font-mono font-semibold">
+                      {getCategoryLabel(article.category)}
                     </span>
-                  </span>
+                    <span className="inline-flex items-center gap-1 text-[11px] font-mono text-ink-muted">
+                      {article.sourceType === "ai_curated" && (
+                        <Sparkles className="w-3 h-3 text-sky-500" />
+                      )}
+                      <span>
+                        {new Date(
+                          article.publishedAt ?? article.createdAt
+                        ).toLocaleDateString("vi-VN")}
+                      </span>
+                    </span>
+                  </div>
+
+                  <Link href={`/research/${article.slug}`} className="block group">
+                    <h2 className="text-base sm:text-lg font-bold text-ink group-hover:text-accent transition-colors leading-snug">
+                      {article.title}
+                    </h2>
+                  </Link>
+
+                  <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">
+                    {article.summary}
+                  </p>
+
+                  {article.sourceUrls.length > 0 && (
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      {article.sourceUrls.slice(0, 2).map((src, idx) => (
+                        <a
+                          key={idx}
+                          href={src.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-[11px] font-mono text-ink-muted hover:text-ink underline underline-offset-2"
+                        >
+                          <span>{src.title.slice(0, 38)}</span>
+                          <ExternalLink className="w-3 h-3 shrink-0" />
+                        </a>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                <Link href={`/research/${article.slug}`} className="block group">
-                  <h2 className="text-base sm:text-lg font-bold text-ink group-hover:text-accent transition-colors leading-snug">
-                    {article.title}
-                  </h2>
-                </Link>
-
-                <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">
-                  {article.summary}
-                </p>
-
-                {article.sourceUrls.length > 0 && (
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    {article.sourceUrls.slice(0, 2).map((src, idx) => (
-                      <a
-                        key={idx}
-                        href={src.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-[11px] font-mono text-ink-muted hover:text-ink underline underline-offset-2"
-                      >
-                        <span>{src.title.slice(0, 38)}</span>
-                        <ExternalLink className="w-3 h-3 shrink-0" />
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div className="flex items-center justify-between pt-3 border-t border-paper-muted">
-                <span className="text-[11px] font-mono text-ink-muted">
-                  {article.metricsJson.length} thẻ số liệu
-                </span>
-                <Link
-                  href={`/research/${article.slug}`}
-                  className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-paper border border-ink/15 text-xs font-semibold text-ink hover:bg-ink hover:text-white transition-colors"
-                >
-                  <span>Đọc chi tiết</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-            </article>
-          ))}
+                <div className="flex items-center justify-between pt-3 border-t border-paper-muted">
+                  <span className="text-[11px] font-mono text-ink-muted">
+                    {realMetricsCount > 0
+                      ? `${realMetricsCount} thẻ số liệu`
+                      : getCategoryLabel(article.category)}
+                  </span>
+                  <Link
+                    href={`/research/${article.slug}`}
+                    className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-paper border border-ink/15 text-xs font-semibold text-ink hover:bg-ink hover:text-white transition-colors"
+                  >
+                    <span>Đọc chi tiết</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </article>
+            );
+          })}
         </div>
       )}
     </div>
