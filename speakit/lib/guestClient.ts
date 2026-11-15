@@ -70,6 +70,21 @@ export function readCachedGuestProfile(): PublicGuestPlayer | null {
   }
 }
 
+export function notifyGuestProfileUpdated(
+  player: PublicGuestPlayer | null
+): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.dispatchEvent(
+      new CustomEvent<PublicGuestPlayer | null>(GUEST_PROFILE_UPDATED_EVENT, {
+        detail: player,
+      })
+    );
+  } catch {
+    return;
+  }
+}
+
 export function saveCachedGuestProfile(player: PublicGuestPlayer | null): void {
   if (typeof window === "undefined") return;
   try {
@@ -81,10 +96,16 @@ export function saveCachedGuestProfile(player: PublicGuestPlayer | null): void {
     } else {
       window.localStorage.removeItem(GUEST_PROFILE_CACHE_KEY);
     }
-    window.dispatchEvent(new CustomEvent(GUEST_PROFILE_UPDATED_EVENT));
+    notifyGuestProfileUpdated(player);
   } catch {
     return;
   }
+}
+
+export function syncGuestProfileFromServer(
+  player: PublicGuestPlayer | null
+): void {
+  saveCachedGuestProfile(player);
 }
 
 export async function reportGuestPracticePoints(

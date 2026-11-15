@@ -10,38 +10,44 @@ import {
 } from "lucide-react";
 import { EF_EPI_2025 } from "../../data/efEpiData";
 
-const HOW_IT_WORKS_STEPS = [
-  {
-    step: "01",
-    title: "Nghe giọng AI Neural",
-    description:
-      "Nghe prompt từ 4 persona Microsoft Edge Neural TTS rõ ràng, tự nhiên theo ngữ cảnh kỹ thuật.",
-    icon: Volume2,
-  },
-  {
-    step: "02",
-    title: "Nói phản xạ tình huống thật",
-    description:
-      "Trả lời trực tiếp qua micro cho Daily Standup, Code Review, Phỏng vấn với 12 tình huống công việc IT chia theo 3 cấp độ Fresher / Junior / Senior.",
-    icon: Mic,
-  },
-  {
-    step: "03",
-    title: "Nhận điểm & Shadowing",
-    description:
-      "AI chấm Pronunciation, Fluency, Vocabulary kèm câu mẫu chuẩn để luyện Shadowing và lưu lộ trình 7 ngày.",
-    icon: Sparkles,
-  },
-];
+function buildHowItWorksSteps(scenarioCount: number) {
+  return [
+    {
+      step: "01",
+      title: "Nghe giọng AI Neural",
+      description:
+        "Nghe prompt từ 4 persona Microsoft Edge Neural TTS rõ ràng, tự nhiên theo ngữ cảnh kỹ thuật.",
+      icon: Volume2,
+    },
+    {
+      step: "02",
+      title: "Nói phản xạ tình huống thật",
+      description:
+        `Trả lời trực tiếp qua micro cho Daily Standup, Code Review, Phỏng vấn với ${scenarioCount} tình huống công việc IT chia theo 3 cấp độ Fresher / Junior / Senior.`,
+      icon: Mic,
+    },
+    {
+      step: "03",
+      title: "Nhận điểm & Shadowing",
+      description:
+        "AI chấm Pronunciation, Fluency, Vocabulary kèm câu mẫu chuẩn để luyện Shadowing và lưu lộ trình 7 ngày.",
+      icon: Sparkles,
+    },
+  ];
+}
 
-const FEATURE_HIGHLIGHTS = [
-  "12 tình huống công việc IT",
-  "4 giọng Microsoft Edge Neural TTS",
-  "Chấm điểm Pronunciation · Fluency · Vocabulary",
-  "IT Speaking Arena & Kế hoạch 7 ngày",
-];
+function buildFeatureHighlights(scenarioCount: number) {
+  return [
+    `${scenarioCount} tình huống công việc IT`,
+    "4 giọng Microsoft Edge Neural TTS",
+    "Chấm điểm Pronunciation · Fluency · Vocabulary",
+    "IT Speaking Arena & Kế hoạch 7 ngày",
+  ];
+}
 
-export function HomeIntroHero() {
+export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
+  const howItWorksSteps = buildHowItWorksSteps(scenarioCount);
+  const featureHighlights = buildFeatureHighlights(scenarioCount);
   const speakingVsReadingGap =
     EF_EPI_2025.skills.reading - EF_EPI_2025.skills.speaking;
   const speakingPercent = Math.round((EF_EPI_2025.skills.speaking / 600) * 100);
@@ -94,7 +100,7 @@ export function HomeIntroHero() {
             </div>
 
             <div className="flex flex-wrap gap-2 pt-1">
-              {FEATURE_HIGHLIGHTS.map((item) => (
+              {featureHighlights.map((item) => (
                 <span
                   key={item}
                   className="inline-flex items-center rounded-pill px-3 py-1 bg-paper border border-ink/15 text-[11px] font-mono text-ink-muted"
@@ -179,7 +185,7 @@ export function HomeIntroHero() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {HOW_IT_WORKS_STEPS.map((item) => {
+        {howItWorksSteps.map((item) => {
           const Icon = item.icon;
           return (
             <div

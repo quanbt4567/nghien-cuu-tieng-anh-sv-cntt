@@ -15,53 +15,60 @@ import {
   User,
   X,
 } from "lucide-react";
+import { getMergedScenarios } from "../../lib/serverScenarios";
 
-const SECTION_GUIDES = [
-  {
-    href: "/scenarios",
-    title: "Kịch bản",
-    icon: Mic,
-    description:
-      "Luyện nói theo 12 tình huống công việc CNTT thực tế (Standup, Bug Report, Code Review, Phỏng vấn, Khách hàng, Demo) chia theo 3 cấp độ Fresher / Junior / Senior.",
-  },
-  {
-    href: "/arena",
-    title: "Arena",
-    icon: Gamepad2,
-    description:
-      "Chơi minigame phản xạ nhanh (Bug Buster, Standup Speed Run) để tích lũy điểm thưởng, giữ chuỗi ngày học và đua bảng xếp hạng toàn cầu.",
-  },
-  {
-    href: "/vocabulary",
-    title: "Từ vựng IT",
-    icon: BookOpen,
-    description:
-      "Tra cứu thuật ngữ CNTT cốt lõi kèm phiên âm IPA, nghĩa tiếng Việt, câu ví dụ thực tế và phát âm chuẩn.",
-  },
-  {
-    href: "/progress",
-    title: "Tiến độ & 7 ngày",
-    icon: TrendingUp,
-    description:
-      "Theo dõi điểm trung bình, danh sách từ khóa còn yếu và nhận lộ trình ôn tập 7 ngày cá nhân hóa.",
-  },
-  {
-    href: "/profile",
-    title: "Hồ sơ",
-    icon: User,
-    description:
-      "Đổi tên hiển thị trên bảng xếp hạng, lấy mã khôi phục thiết bị DEV-XXXXXX và dùng IT-Coin mở khóa danh hiệu & khung viền.",
-  },
-  {
-    href: "/settings",
-    title: "Cài đặt",
-    icon: Settings,
-    description:
-      "Tùy chỉnh tốc độ đọc (0.8x / 1.0x / 1.2x), chọn giọng AI phỏng vấn (US Tech Lead, US Female HR, UK Client) và quản lý dữ liệu.",
-  },
-];
+export const dynamic = "force-dynamic";
 
-export default function GuidePage() {
+function buildSectionGuides(scenarioCount: number) {
+  return [
+    {
+      href: "/scenarios",
+      title: "Kịch bản",
+      icon: Mic,
+      description:
+        `Luyện nói theo ${scenarioCount} tình huống công việc CNTT thực tế (Standup, Bug Report, Code Review, Phỏng vấn, Khách hàng, Demo) chia theo 3 cấp độ Fresher / Junior / Senior.`,
+    },
+    {
+      href: "/arena",
+      title: "Arena",
+      icon: Gamepad2,
+      description:
+        "Chơi minigame phản xạ nhanh (Bug Buster, Standup Speed Run) để tích lũy điểm thưởng, giữ chuỗi ngày học và đua bảng xếp hạng toàn cầu.",
+    },
+    {
+      href: "/vocabulary",
+      title: "Từ vựng IT",
+      icon: BookOpen,
+      description:
+        "Tra cứu thuật ngữ CNTT cốt lõi kèm phiên âm IPA, nghĩa tiếng Việt, câu ví dụ thực tế và phát âm chuẩn.",
+    },
+    {
+      href: "/progress",
+      title: "Tiến độ & 7 ngày",
+      icon: TrendingUp,
+      description:
+        "Theo dõi điểm trung bình, danh sách từ khóa còn yếu và nhận lộ trình ôn tập 7 ngày cá nhân hóa.",
+    },
+    {
+      href: "/profile",
+      title: "Hồ sơ",
+      icon: User,
+      description:
+        "Đổi tên hiển thị trên bảng xếp hạng, lấy mã khôi phục thiết bị DEV-XXXXXX và dùng IT-Coin mở khóa danh hiệu & khung viền.",
+    },
+    {
+      href: "/settings",
+      title: "Cài đặt",
+      icon: Settings,
+      description:
+        "Tùy chỉnh tốc độ đọc (0.8x / 1.0x / 1.2x), chọn giọng AI phỏng vấn (US Tech Lead, US Female HR, UK Client) và quản lý dữ liệu.",
+    },
+  ];
+}
+
+export default async function GuidePage() {
+  const scenarios = await getMergedScenarios();
+  const sectionGuides = buildSectionGuides(scenarios.length);
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
       <div className="space-y-2">
@@ -108,7 +115,7 @@ export default function GuidePage() {
           1. Bản đồ 6 khu vực trên thanh điều hướng
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {SECTION_GUIDES.map(({ href, title, icon: Icon, description }) => (
+          {sectionGuides.map(({ href, title, icon: Icon, description }) => (
             <Link
               key={href}
               href={href}

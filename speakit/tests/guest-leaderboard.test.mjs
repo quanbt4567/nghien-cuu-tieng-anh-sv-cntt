@@ -307,6 +307,25 @@ test("scenarios have 3 difficulty tiers and evaluatePlacementLevel classifies Fr
   assert.equal(senior.recommendedScenarioId, "client-meeting");
 });
 
+test("getTopPlayers SQL orders leaderboard by total_points DESC, effective_coins DESC and excludes 0-point rows", async () => {
+  const { readFileSync } = await import("node:fs");
+  const source = readFileSync(
+    resolve(__dirname, "../app/actions/leaderboard.ts"),
+    "utf8"
+  );
+
+  assert.match(source, /WHERE total_points > 0/);
+  assert.match(
+    source,
+    /DENSE_RANK\(\) OVER \(ORDER BY total_points DESC, effective_coins DESC\)/
+  );
+  assert.match(
+    source,
+    /ORDER BY total_points DESC, effective_coins DESC, created_at ASC/
+  );
+});
+
+
 
 
 

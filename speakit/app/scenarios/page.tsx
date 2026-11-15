@@ -1,9 +1,14 @@
 import Link from "next/link";
 import { ArrowLeft, MessageSquare } from "lucide-react";
 import { HomeOnboardingClient } from "../../components/home/HomeOnboardingClient";
-import { SCENARIOS } from "../../data/scenarios";
+import { getMergedScenarios } from "../../lib/serverScenarios";
 
-export default function ScenariosPage() {
+export const dynamic = "force-dynamic";
+
+export default async function ScenariosPage() {
+  const scenarios = await getMergedScenarios();
+  const scenarioCount = scenarios.length;
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-7 sm:py-9 space-y-6">
       <div>
@@ -19,7 +24,7 @@ export default function ScenariosPage() {
           <span>Kịch bản luyện nói IT</span>
         </h1>
         <p className="text-xs text-ink-muted mt-1.5">
-          Chọn vai trò CNTT (Frontend, Backend, DevOps, QA) và mức độ khó phù hợp để luyện tập {SCENARIOS.length} tình huống giao tiếp công việc thực tế.
+          Chọn vai trò CNTT (Frontend, Backend, DevOps, QA) và mức độ khó phù hợp để luyện tập {scenarioCount} tình huống giao tiếp công việc thực tế.
         </p>
       </div>
 

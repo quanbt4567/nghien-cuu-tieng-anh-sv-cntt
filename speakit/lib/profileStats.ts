@@ -1,3 +1,4 @@
+import { findCosmeticById } from "./cosmetics";
 import type { PublicGuestPlayer } from "./db";
 import { calculateCoins, getDevTitle, pointsToNextCoin } from "./gamification";
 import type {
@@ -43,19 +44,50 @@ function compareIsoDesc(a: string, b: string): number {
   return b.localeCompare(a);
 }
 
-/**
- * Resolves profile identity fields from the online Neon guest session or falls back to local gamification state.
- */
+export function calculateSpentCosmeticCoins(
+  ownedItems: readonly string[]
+): number {
+  const seen = new Set<string>();
+  let spent = 0;
+  for (const itemId of ownedItems) {
+    if (typeof itemId !== "string" || seen.has(itemId)) continue;
+    seen.add(itemId);
+    const item = findCosmeticById(itemId);
+    if (item && Number.isFinite(item.price) && item.price > 0) {
+      spent += item.price;
+    }
+  }
+  return spent;
+}
+
+export function resolveConsistentItCoins(
+  rawCoins: number,
+  totalPoints: number,
+  ownedItems: readonly string[]
+): number {
+  const safeCoins = Number.isFinite(rawCoins)
+    ? Math.max(0, Math.floor(rawCoins))
+    : 0;
+  const safePoints = Number.isFinite(totalPoints)
+    ? Math.max(0, Math.floor(totalPoints))
+    : 0;
+  const earnedCoins = calculateCoins(safePoints);
+  const spentCoins = calculateSpentCosmeticCoins(ownedItems);
+  const reconciledCoins = Math.max(0, earnedCoins - spentCoins);
+  return Math.max(safeCoins, reconciledCoins);
+}
+
 export function mergeProfileIdentity(
   guestPlayer: PublicGuestPlayer | null,
   gamification: GamificationState
 ): ResolvedProfileIdentity {
   if (guestPlayer) {
     const ownedItems = [...guestPlayer.ownedItems];
-    const itCoins =
-      ownedItems.length === 0
-        ? Math.max(guestPlayer.itCoins, calculateCoins(guestPlayer.totalPoints))
-        : guestPlayer.itCoins;
+    const itCoins = resolveConsistentItCoins(
+      guestPlayer.itCoins,
+      guestPlayer.totalPoints,
+      ownedItems
+    );
     return {
       displayName: guestPlayer.displayName,
       itCoins,

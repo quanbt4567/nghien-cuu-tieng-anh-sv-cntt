@@ -1,6 +1,6 @@
 "use server";
 
-import { findCosmeticById } from "../../lib/cosmetics";
+import { COSMETIC_CATALOG, findCosmeticById } from "../../lib/cosmetics";
 import {
   ensureGuestDatabaseReady,
   getDbClient,
@@ -15,6 +15,10 @@ import {
   restoreByTransferCode as restoreGuestByTransferCode,
   serializePublicGuestPlayer,
 } from "../../lib/neon-auth";
+
+const COSMETIC_PRICES_JSON = JSON.stringify(
+  COSMETIC_CATALOG.map((item) => ({ id: item.id, price: item.price }))
+);
 
 function getUtcTodayDate(): string {
   return new Date().toISOString().slice(0, 10);
@@ -81,11 +85,21 @@ export async function getTopPlayers(limit = 50): Promise<{
         SELECT
           id,
           display_name,
-          CASE
-            WHEN jsonb_array_length(COALESCE(owned_items, '[]'::jsonb)) = 0
-              THEN GREATEST(it_coins, FLOOR(total_points::numeric / 1000)::int)
-            ELSE it_coins
-          END AS effective_coins,
+          GREATEST(
+            it_coins,
+            GREATEST(
+              0,
+              FLOOR(total_points::numeric / 1000)::int - COALESCE((
+                SELECT SUM((c->>'price')::int)
+                FROM (
+                  SELECT DISTINCT item_id
+                  FROM jsonb_array_elements_text(COALESCE(owned_items, '[]'::jsonb)) AS owned(item_id)
+                ) AS distinct_owned
+                JOIN jsonb_array_elements(${COSMETIC_PRICES_JSON}::jsonb) AS c
+                  ON c->>'id' = distinct_owned.item_id
+              ), 0)::int
+            )
+          ) AS effective_coins,
           total_points,
           streak_days,
           equipped_title,
@@ -102,9 +116,9 @@ export async function getTopPlayers(limit = 50): Promise<{
         streak_days AS "streakDays",
         equipped_title AS "equippedTitle",
         equipped_ring AS "equippedRing",
-        DENSE_RANK() OVER (ORDER BY effective_coins DESC, total_points DESC)::int AS rank
+        DENSE_RANK() OVER (ORDER BY total_points DESC, effective_coins DESC)::int AS rank
       FROM active_players
-      ORDER BY effective_coins DESC, total_points DESC, created_at ASC
+      ORDER BY total_points DESC, effective_coins DESC, created_at ASC
       LIMIT ${safeLimit}
     `) as Array<Omit<LeaderboardEntry, "isCurrentUser">>;
 
@@ -127,11 +141,21 @@ export async function getTopPlayers(limit = 50): Promise<{
           SELECT
             id,
             display_name,
-            CASE
-              WHEN jsonb_array_length(COALESCE(owned_items, '[]'::jsonb)) = 0
-                THEN GREATEST(it_coins, FLOOR(total_points::numeric / 1000)::int)
-              ELSE it_coins
-            END AS effective_coins,
+            GREATEST(
+              it_coins,
+              GREATEST(
+                0,
+                FLOOR(total_points::numeric / 1000)::int - COALESCE((
+                  SELECT SUM((c->>'price')::int)
+                  FROM (
+                    SELECT DISTINCT item_id
+                    FROM jsonb_array_elements_text(COALESCE(owned_items, '[]'::jsonb)) AS owned(item_id)
+                  ) AS distinct_owned
+                  JOIN jsonb_array_elements(${COSMETIC_PRICES_JSON}::jsonb) AS c
+                    ON c->>'id' = distinct_owned.item_id
+                ), 0)::int
+              )
+            ) AS effective_coins,
             total_points,
             streak_days,
             equipped_title,
@@ -148,7 +172,7 @@ export async function getTopPlayers(limit = 50): Promise<{
             streak_days AS "streakDays",
             equipped_title AS "equippedTitle",
             equipped_ring AS "equippedRing",
-            DENSE_RANK() OVER (ORDER BY effective_coins DESC, total_points DESC)::int AS rank
+            DENSE_RANK() OVER (ORDER BY total_points DESC, effective_coins DESC)::int AS rank
           FROM active_players
         )
         SELECT *
@@ -174,17 +198,27 @@ export async function getTopPlayers(limit = 50): Promise<{
         const tailRows = (await sql`
           WITH active_players AS (
             SELECT
-              CASE
-                WHEN jsonb_array_length(COALESCE(owned_items, '[]'::jsonb)) = 0
-                  THEN GREATEST(it_coins, FLOOR(total_points::numeric / 1000)::int)
-                ELSE it_coins
-              END AS effective_coins,
+              GREATEST(
+                it_coins,
+                GREATEST(
+                  0,
+                  FLOOR(total_points::numeric / 1000)::int - COALESCE((
+                    SELECT SUM((c->>'price')::int)
+                    FROM (
+                      SELECT DISTINCT item_id
+                      FROM jsonb_array_elements_text(COALESCE(owned_items, '[]'::jsonb)) AS owned(item_id)
+                    ) AS distinct_owned
+                    JOIN jsonb_array_elements(${COSMETIC_PRICES_JSON}::jsonb) AS c
+                      ON c->>'id' = distinct_owned.item_id
+                  ), 0)::int
+                )
+              ) AS effective_coins,
               total_points
             FROM guest_players
             WHERE total_points > 0
           ),
           ranked AS (
-            SELECT DENSE_RANK() OVER (ORDER BY effective_coins DESC, total_points DESC)::int AS rank
+            SELECT DENSE_RANK() OVER (ORDER BY total_points DESC, effective_coins DESC)::int AS rank
             FROM active_players
           )
           SELECT (COALESCE(MAX(rank), 0) + 1)::int AS next_rank
@@ -279,20 +313,24 @@ export async function rewardPracticePoints(
     const updated = (await sql`
       UPDATE guest_players
       SET
-        it_coins = CASE
-          WHEN jsonb_array_length(COALESCE(owned_items, '[]'::jsonb)) = 0
-            THEN GREATEST(
-              it_coins + (
-                FLOOR((total_points + ${clampedPoints})::numeric / 1000)::int -
-                FLOOR(total_points::numeric / 1000)::int
-              ),
-              FLOOR((total_points + ${clampedPoints})::numeric / 1000)::int
-            )
-          ELSE it_coins + (
+        it_coins = GREATEST(
+          it_coins + (
             FLOOR((total_points + ${clampedPoints})::numeric / 1000)::int -
             FLOOR(total_points::numeric / 1000)::int
+          ),
+          GREATEST(
+            0,
+            FLOOR((total_points + ${clampedPoints})::numeric / 1000)::int - COALESCE((
+              SELECT SUM((c->>'price')::int)
+              FROM (
+                SELECT DISTINCT item_id
+                FROM jsonb_array_elements_text(COALESCE(owned_items, '[]'::jsonb)) AS owned(item_id)
+              ) AS distinct_owned
+              JOIN jsonb_array_elements(${COSMETIC_PRICES_JSON}::jsonb) AS c
+                ON c->>'id' = distinct_owned.item_id
+            ), 0)::int
           )
-        END,
+        ),
         total_points = total_points + ${clampedPoints},
         streak_days = ${streak.streakDays},
         last_practice_date = ${streak.lastPracticeDate},
@@ -440,30 +478,52 @@ export async function purchaseAndEquipCosmetic(
     }
 
     const updated = (await sql`
+      WITH target AS (
+        SELECT
+          id,
+          GREATEST(
+            it_coins,
+            GREATEST(
+              0,
+              FLOOR(total_points::numeric / 1000)::int - COALESCE((
+                SELECT SUM((c->>'price')::int)
+                FROM (
+                  SELECT DISTINCT item_id
+                  FROM jsonb_array_elements_text(COALESCE(owned_items, '[]'::jsonb)) AS owned(item_id)
+                ) AS distinct_owned
+                JOIN jsonb_array_elements(${COSMETIC_PRICES_JSON}::jsonb) AS c
+                  ON c->>'id' = distinct_owned.item_id
+              ), 0)::int
+            )
+          ) AS effective_coins
+        FROM guest_players
+        WHERE id = ${player.id}
+          AND NOT (owned_items ? ${item.id})
+      )
       UPDATE guest_players
       SET
-        it_coins = it_coins - ${item.price},
-        owned_items = owned_items || ${JSON.stringify([item.id])}::jsonb,
-        equipped_title = CASE WHEN ${item.kind === "title"} THEN ${item.value} ELSE equipped_title END,
-        equipped_ring = CASE WHEN ${item.kind === "ring"} THEN ${item.value} ELSE equipped_ring END,
+        it_coins = target.effective_coins - ${item.price},
+        owned_items = guest_players.owned_items || ${JSON.stringify([item.id])}::jsonb,
+        equipped_title = CASE WHEN ${item.kind === "title"} THEN ${item.value} ELSE guest_players.equipped_title END,
+        equipped_ring = CASE WHEN ${item.kind === "ring"} THEN ${item.value} ELSE guest_players.equipped_ring END,
         updated_at = NOW()
-      WHERE id = ${player.id}
-        AND it_coins >= ${item.price}
-        AND NOT (owned_items ? ${item.id})
+      FROM target
+      WHERE guest_players.id = target.id
+        AND target.effective_coins >= ${item.price}
       RETURNING
-        id,
-        device_token_hash,
-        transfer_code,
-        display_name,
-        it_coins,
-        total_points,
-        streak_days,
-        last_practice_date,
-        equipped_title,
-        equipped_ring,
-        owned_items,
-        created_at,
-        updated_at
+        guest_players.id,
+        guest_players.device_token_hash,
+        guest_players.transfer_code,
+        guest_players.display_name,
+        guest_players.it_coins,
+        guest_players.total_points,
+        guest_players.streak_days,
+        guest_players.last_practice_date,
+        guest_players.equipped_title,
+        guest_players.equipped_ring,
+        guest_players.owned_items,
+        guest_players.created_at,
+        guest_players.updated_at
     `) as GuestPlayerRow[];
 
     if (updated.length === 0) {

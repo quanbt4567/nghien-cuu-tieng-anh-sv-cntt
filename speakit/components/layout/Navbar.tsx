@@ -33,7 +33,7 @@ import {
   GUEST_PROFILE_UPDATED_EVENT,
   readBackupTransferCode,
   readCachedGuestProfile,
-  saveCachedGuestProfile,
+  syncGuestProfileFromServer,
 } from "../../lib/guestClient";
 import { initOrHydrateGuestSession } from "../../app/actions/leaderboard";
 import type { PublicGuestPlayer } from "../../lib/db";
@@ -133,8 +133,14 @@ export function Navbar() {
       setGamification(getGamificationState());
     };
 
-    const syncCachedGuest = () => {
+    const syncCachedGuest = (event?: Event) => {
       if (!active) return;
+      if (event instanceof CustomEvent && event.detail !== undefined) {
+        const nextPlayer = (event.detail as PublicGuestPlayer | null) ?? null;
+        setGuestPlayer(nextPlayer);
+        setHydrated(true);
+        return;
+      }
       const cached = readCachedGuestProfile();
       if (cached) {
         setGuestPlayer(cached);
@@ -151,7 +157,7 @@ export function Navbar() {
         if (!active) return;
         if (session.mode === "online" && session.player) {
           setGuestPlayer(session.player);
-          saveCachedGuestProfile(session.player);
+          syncGuestProfileFromServer(session.player);
         } else if (!readCachedGuestProfile()) {
           setGuestPlayer(null);
         }

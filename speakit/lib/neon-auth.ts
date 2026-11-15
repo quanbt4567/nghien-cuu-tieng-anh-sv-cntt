@@ -6,7 +6,11 @@ import {
   GuestPlayerRow,
   PublicGuestPlayer,
 } from "./db";
-import { calculateCoins, generateFriendlyDisplayName } from "./gamification";
+import { generateFriendlyDisplayName } from "./gamification";
+import {
+  calculateSpentCosmeticCoins,
+  resolveConsistentItCoins,
+} from "./profileStats";
 
 export const GUEST_SESSION_COOKIE_NAME = "speakit_session_token";
 export const GUEST_TRANSFER_STORAGE_KEY = "speakit_transfer_code_v1";
@@ -136,19 +140,7 @@ export function parseOwnedItems(raw: unknown): string[] {
   return [];
 }
 
-export function resolveConsistentItCoins(
-  rawCoins: number,
-  totalPoints: number,
-  ownedItems: readonly string[]
-): number {
-  const safeCoins = Number.isFinite(rawCoins) ? Math.max(0, Math.floor(rawCoins)) : 0;
-  const safePoints = Number.isFinite(totalPoints) ? Math.max(0, Math.floor(totalPoints)) : 0;
-  const earnedCoins = calculateCoins(safePoints);
-  if (ownedItems.length === 0) {
-    return Math.max(safeCoins, earnedCoins);
-  }
-  return safeCoins;
-}
+export { calculateSpentCosmeticCoins, resolveConsistentItCoins };
 
 export function serializePublicGuestPlayer(
   row: GuestPlayerRow

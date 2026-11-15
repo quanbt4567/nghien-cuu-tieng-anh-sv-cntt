@@ -10,7 +10,7 @@ interface LocalLeaderboardProps {
 }
 
 const GAME_LABELS: Record<MinigameId, string> = {
-  "bug-buster": "Bug Buster 60s",
+  "bug-buster": "Bug Buster 280s",
   "standup-speed-run": "Standup Speed Run",
 };
 
@@ -116,9 +116,9 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
               <Bug className="w-4 h-4" />
               <span>Kỷ lục cá nhân</span>
             </div>
-            <h3 className="text-base font-bold text-ink">Bug Buster 60s</h3>
+            <h3 className="text-base font-bold text-ink">Bug Buster 280s</h3>
             <p className="text-xs text-ink-muted">
-              Điểm cao nhất trong 1 vòng 60 giây
+              Điểm cao nhất trong 1 vòng 280 giây
             </p>
           </div>
           <div className="text-right font-mono">
@@ -167,7 +167,7 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
         {rankedHistory.length === 0 ? (
           <div className="bg-paper border border-ink/15 rounded-xl p-6 text-center text-xs text-ink-muted">
             Chưa có lượt chơi nào được lưu. Hãy hoàn thành một vòng{" "}
-            <strong className="text-ink">Bug Buster 60s</strong> hoặc{" "}
+            <strong className="text-ink">Bug Buster 280s</strong> hoặc{" "}
             <strong className="text-ink">Standup Speed Run</strong> để ghi danh!
           </div>
         ) : (

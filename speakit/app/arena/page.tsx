@@ -14,21 +14,30 @@ import {
   UserCog,
 } from "lucide-react";
 import { Globe } from "lucide-react";
+import { initOrHydrateGuestSession } from "../../app/actions/leaderboard";
 import { BugBusterGame } from "../../components/arena/BugBusterGame";
 import { LocalLeaderboard } from "../../components/arena/LocalLeaderboard";
 import { StandupSpeedRun } from "../../components/arena/StandupSpeedRun";
 import { GlobalLeaderboard } from "../../components/leaderboard/GlobalLeaderboard";
 import { IT_ROLES } from "../../data/minigames";
+import type { PublicGuestPlayer } from "../../lib/db";
 import {
   GAMIFICATION_STORAGE_KEY,
   GAMIFICATION_UPDATED_EVENT,
   POINTS_PER_COIN,
-  calculateCoins,
   getDevTitle,
   getGamificationState,
   pointsToNextCoin,
   setSelectedRole,
 } from "../../lib/gamification";
+import {
+  GUEST_PROFILE_CACHE_KEY,
+  GUEST_PROFILE_UPDATED_EVENT,
+  readBackupTransferCode,
+  readCachedGuestProfile,
+  saveCachedGuestProfile,
+} from "../../lib/guestClient";
+import { mergeProfileIdentity } from "../../lib/profileStats";
 import { GamificationState, ITRole } from "../../lib/types";
 
 type ArenaTab =
@@ -52,33 +61,69 @@ const INITIAL_SSR_STATE: GamificationState = {
 export default function ArenaPage() {
   const [activeTab, setActiveTab] = useState<ArenaTab>("bug-buster");
   const [state, setState] = useState<GamificationState>(INITIAL_SSR_STATE);
+  const [guestPlayer, setGuestPlayer] = useState<PublicGuestPlayer | null>(null);
 
   useEffect(() => {
+    let active = true;
+
     const syncState = () => {
+      if (!active) return;
       setState(getGamificationState());
     };
 
+    const syncCachedGuest = () => {
+      if (!active) return;
+      const cached = readCachedGuestProfile();
+      if (cached) {
+        setGuestPlayer(cached);
+      }
+    };
+
     syncState();
+    syncCachedGuest();
+
+    const hydrateCloudGuest = async () => {
+      try {
+        const session = await initOrHydrateGuestSession(readBackupTransferCode());
+        if (!active) return;
+        if (session.mode === "online" && session.player) {
+          setGuestPlayer(session.player);
+          saveCachedGuestProfile(session.player);
+        } else if (!readCachedGuestProfile()) {
+          setGuestPlayer(null);
+        }
+      } catch {
+      }
+    };
+
+    void hydrateCloudGuest();
 
     const handleStorage = (event: StorageEvent) => {
       if (event.key === GAMIFICATION_STORAGE_KEY || event.key === null) {
         syncState();
       }
+      if (event.key === GUEST_PROFILE_CACHE_KEY || event.key === null) {
+        syncCachedGuest();
+      }
     };
 
     window.addEventListener(GAMIFICATION_UPDATED_EVENT, syncState);
+    window.addEventListener(GUEST_PROFILE_UPDATED_EVENT, syncCachedGuest);
     window.addEventListener("storage", handleStorage);
     return () => {
+      active = false;
       window.removeEventListener(GAMIFICATION_UPDATED_EVENT, syncState);
+      window.removeEventListener(GUEST_PROFILE_UPDATED_EVENT, syncCachedGuest);
       window.removeEventListener("storage", handleStorage);
     };
   }, []);
 
-  const coins = calculateCoins(state.totalPoints);
-  const toNextCoin = pointsToNextCoin(state.totalPoints);
+  const identity = mergeProfileIdentity(guestPlayer, state);
+  const coins = identity.itCoins;
+  const toNextCoin = pointsToNextCoin(identity.totalPoints);
   const coinRemainder = POINTS_PER_COIN - toNextCoin;
   const coinProgressPct = Math.round((coinRemainder / POINTS_PER_COIN) * 100);
-  const devTitle = getDevTitle(state.totalPoints);
+  const devTitle = getDevTitle(identity.totalPoints);
   const roleLabel =
     IT_ROLES.find((r) => r.id === state.selectedRole)?.label ?? "Frontend";
 
@@ -121,7 +166,7 @@ export default function ArenaPage() {
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-bold text-ink">
               <Flame className="w-4 h-4 fill-accent text-accent" />
-              <span>{state.streakDays} ngày</span>
+              <span>{identity.streakDays} ngày</span>
             </span>
 
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-ink text-white text-xs font-mono font-semibold">
@@ -157,7 +202,7 @@ export default function ArenaPage() {
               </div>
               <div>
                 <div className="text-sm font-bold text-ink font-mono">
-                  {coins} IT-Coin{coins === 1 ? "" : "s"}
+                  Số dư IT-Coin: {coins}
                 </div>
                 <div className="text-[11px] text-ink-muted">
                   1.000 điểm = 1 IT-Coin • Vai trò hiện tại:{" "}
@@ -203,7 +248,7 @@ export default function ArenaPage() {
           }`}
         >
           <Bug className="w-4 h-4" />
-          <span>Bug Buster 60s</span>
+          <span>Bug Buster 280s</span>
         </button>
 
         <button

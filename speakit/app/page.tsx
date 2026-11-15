@@ -2,17 +2,22 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, Clock, Coins, Flame, Gamepad2, MessageSquare, Trophy } from "lucide-react";
 import { HomeIntroHero } from "../components/home/HomeIntroHero";
 import { getRingBadgeClass } from "../lib/cosmetics";
+import { getMergedScenarios } from "../lib/serverScenarios";
 import { getTopPlayers } from "./actions/leaderboard";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const leaderboard = await getTopPlayers(3);
+  const [leaderboard, scenarios] = await Promise.all([
+    getTopPlayers(3),
+    getMergedScenarios(),
+  ]);
   const topLeaders = leaderboard.players.slice(0, 3);
+  const scenarioCount = scenarios.length;
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-7 sm:py-9 space-y-8">
-      <HomeIntroHero />
+      <HomeIntroHero scenarioCount={scenarioCount} />
 
       <section
         aria-label="Top 3 Arena Leaders"
@@ -101,7 +106,7 @@ export default async function HomePage() {
                 Kịch bản luyện nói
               </h3>
               <p className="text-xs text-ink-muted">
-                12 tình huống công việc CNTT chia theo 3 cấp độ Fresher / Junior / Senior.
+                {scenarioCount} tình huống công việc CNTT chia theo 3 cấp độ Fresher / Junior / Senior.
               </p>
             </div>
           </div>

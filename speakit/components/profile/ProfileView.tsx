@@ -337,6 +337,9 @@ export function ProfileView() {
 
   const coinEarnedInTier = POINTS_PER_COIN - activity.nextCoinPoints;
   const coinProgressPct = Math.round((coinEarnedInTier / POINTS_PER_COIN) * 100);
+  const localSpeakingCount = activity.totalAttempts;
+  const localArenaCount = gamification.history.length;
+  const hasCloudPoints = identity.mode === "online" && identity.totalPoints > 0;
 
   const handleSelectRole = (roleId: ITRole) => {
     const updated = setSelectedRole(roleId);
@@ -1115,7 +1118,13 @@ export function ProfileView() {
               <span>Hoạt động Luyện nói &amp; Arena</span>
             </h2>
             <p className="text-xs text-ink-muted mt-0.5">
-              Đã luyện {activity.scenariosPracticed} tình huống khác nhau trên trình duyệt này.
+              {activity.scenariosPracticed > 0
+                ? `Đã luyện ${activity.scenariosPracticed} tình huống khác nhau (${localSpeakingCount} lượt nói${localArenaCount > 0 ? `, ${localArenaCount} trận Arena` : ""}) trên thiết bị này.`
+                : localArenaCount > 0
+                  ? `Đã hoàn thành ${localArenaCount} trận Arena trên thiết bị này.`
+                  : hasCloudPoints
+                    ? `Tài khoản ${identity.transferCode ?? "Cloud"} đã tích lũy ${identity.totalPoints.toLocaleString("vi-VN")} điểm trên Neon Cloud (chi tiết từng lượt được lưu cục bộ theo thiết bị).`
+                    : "Đã luyện 0 tình huống khác nhau trên trình duyệt này."}
             </p>
           </div>
           <Link
@@ -1127,15 +1136,34 @@ export function ProfileView() {
           </Link>
         </div>
 
-        {/* Metrics Row */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           <div className="bg-paper border border-ink/15 rounded-xl p-3.5 text-center">
             <div className="text-2xl font-mono font-extrabold text-ink">
-              {activity.totalAttempts}
+              {localSpeakingCount > 0
+                ? activity.totalAttempts
+                : localArenaCount > 0
+                  ? localArenaCount
+                  : hasCloudPoints
+                    ? identity.totalPoints.toLocaleString("vi-VN")
+                    : 0}
             </div>
             <div className="text-[11px] text-ink-muted mt-1 flex items-center justify-center gap-1">
-              <Mic className="w-3 h-3 text-accent" aria-hidden="true" />
-              <span>Số lượt luyện nói</span>
+              {localSpeakingCount === 0 && localArenaCount > 0 ? (
+                <Gamepad2 className="w-3 h-3 text-accent" aria-hidden="true" />
+              ) : localSpeakingCount === 0 && hasCloudPoints ? (
+                <Cloud className="w-3 h-3 text-accent" aria-hidden="true" />
+              ) : (
+                <Mic className="w-3 h-3 text-accent" aria-hidden="true" />
+              )}
+              <span>
+                {localSpeakingCount > 0
+                  ? "Số lượt luyện nói"
+                  : localArenaCount > 0
+                    ? "Trận Arena đã chơi"
+                    : hasCloudPoints
+                      ? "Điểm Cloud đã lưu"
+                      : "Số lượt luyện nói"}
+              </span>
             </div>
           </div>
 
@@ -1251,12 +1279,11 @@ export function ProfileView() {
             )}
           </div>
 
-          {/* Recent Speaking Attempts */}
           <div className="bg-paper border border-ink/15 rounded-xl p-4 space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h3 className="text-xs font-bold font-mono uppercase text-ink flex items-center gap-1.5">
                 <Mic className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
-                <span>Lượt luyện nói gần đây</span>
+                <span>Lượt luyện nói &amp; Arena gần đây</span>
               </h3>
               <Link
                 href="/scenarios"
@@ -1266,18 +1293,31 @@ export function ProfileView() {
               </Link>
             </div>
 
-            {activity.recentAttempts.length === 0 ? (
+            {activity.recentAttempts.length === 0 && activity.recentArenaRuns.length === 0 ? (
               <div className="bg-white border border-ink/10 rounded-xl p-4 space-y-2.5">
                 <p className="text-xs text-ink-muted">
-                  Bạn chưa có lượt luyện nói nào được ghi nhận trên thiết bị này.
+                  {hasCloudPoints
+                    ? `Tài khoản ${identity.transferCode ?? ""} đã tích lũy ${identity.totalPoints.toLocaleString("vi-VN")} điểm trên Neon Cloud. Nhật ký từng câu nói được lưu cục bộ trên thiết bị đã luyện; hãy luyện thêm một tình huống hoặc trận Arena trên thiết bị này để xem chi tiết tại đây.`
+                    : "Bạn chưa có lượt luyện nói nào được ghi nhận trên thiết bị này."}
                 </p>
-                <Link
-                  href="/scenarios"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill bg-accent hover:bg-accent-hover text-white text-xs font-semibold transition-colors"
-                >
-                  <span>Bắt đầu luyện nói ngay</span>
-                  <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-                </Link>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href="/scenarios"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill bg-accent hover:bg-accent-hover text-white text-xs font-semibold transition-colors"
+                  >
+                    <span>Bắt đầu luyện nói ngay</span>
+                    <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                  </Link>
+                  {hasCloudPoints && (
+                    <Link
+                      href="/arena"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill bg-paper border border-ink/15 text-xs font-semibold text-ink hover:bg-paper-muted transition-colors"
+                    >
+                      <Gamepad2 className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+                      <span>Vào Arena</span>
+                    </Link>
+                  )}
+                </div>
               </div>
             ) : (
               <div className="space-y-2">
@@ -1310,6 +1350,33 @@ export function ProfileView() {
                     </Link>
                   );
                 })}
+                {activity.recentArenaRuns.map((run) => (
+                  <Link
+                    key={run.id}
+                    href="/arena"
+                    className="block bg-white border border-ink/10 hover:border-ink/30 rounded-xl p-3 transition-colors space-y-1"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-bold text-ink truncate flex items-center gap-1.5">
+                        <Gamepad2 className="w-3.5 h-3.5 text-accent shrink-0" aria-hidden="true" />
+                        <span>
+                          {run.gameId === "bug-buster" ? "Bug Buster Arena" : "Standup Speed Run"}
+                        </span>
+                      </span>
+                      <span className="px-2 py-0.5 rounded-pill bg-accent-light border border-accent/30 text-[11px] font-mono font-bold text-accent shrink-0">
+                        {run.score.toLocaleString("vi-VN")} pts
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between gap-2 text-[11px] font-mono text-ink-muted">
+                      <span>
+                        {run.gameId === "bug-buster"
+                          ? `${run.accuracyOrWords}% chính xác`
+                          : `${run.accuracyOrWords} từ khóa`}
+                      </span>
+                      <span>{formatAttemptDate(run.createdAt)}</span>
+                    </div>
+                  </Link>
+                ))}
               </div>
             )}
           </div>

@@ -23,12 +23,15 @@ import {
   checkBugBusterAnswer,
 } from "../../data/minigames";
 import {
-  calculateCoins,
   getGamificationState,
   pointsToNextCoin,
   recordMinigameResult,
 } from "../../lib/gamification";
-import { reportGuestPracticePoints } from "../../lib/guestClient";
+import {
+  readCachedGuestProfile,
+  reportGuestPracticePoints,
+} from "../../lib/guestClient";
+import { mergeProfileIdentity } from "../../lib/profileStats";
 import {
   CONTENT_STORAGE_KEY,
   CONTENT_UPDATED_EVENT,
@@ -39,7 +42,7 @@ import { SpeechController, startSpeechRecognition } from "../../lib/speech";
 import { ITRole } from "../../lib/types";
 import { FeedbackPromptModal } from "../feedback/FeedbackPromptModal";
 
-const ROUND_DURATION_SEC = 60;
+const ROUND_DURATION_SEC = 280;
 const BUG_DURATION_SEC = 20;
 const BASE_FIX_POINTS = 150;
 
@@ -171,7 +174,8 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
     const finalAttempted = attemptedRef.current;
     const elapsed = Math.max(1, ROUND_DURATION_SEC - totalTimeRef.current);
 
-    const prevTotalPoints = getGamificationState().totalPoints;
+    const prevState = getGamificationState();
+    const prevIdentity = mergeProfileIdentity(readCachedGuestProfile(), prevState);
     const updatedState = recordMinigameResult({
       gameId: "bug-buster",
       score: finalScore,
@@ -179,7 +183,10 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
       durationSec: elapsed,
       role,
     });
-    void reportGuestPracticePoints("arena-bug-buster", finalScore);
+    const optimisticIdentity = mergeProfileIdentity(
+      readCachedGuestProfile(),
+      updatedState
+    );
 
     setSummary({
       score: finalScore,
@@ -187,12 +194,34 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
       attemptedCount: finalAttempted,
       totalCount: deckRef.current.length,
       durationSec: elapsed,
-      coinsEarnedNow:
-        calculateCoins(updatedState.totalPoints) - calculateCoins(prevTotalPoints),
-      totalCoins: calculateCoins(updatedState.totalPoints),
-      remainingToNextCoin: pointsToNextCoin(updatedState.totalPoints),
+      coinsEarnedNow: Math.max(
+        0,
+        optimisticIdentity.itCoins - prevIdentity.itCoins
+      ),
+      totalCoins: optimisticIdentity.itCoins,
+      remainingToNextCoin: pointsToNextCoin(optimisticIdentity.totalPoints),
     });
     setPhase("finished");
+
+    void reportGuestPracticePoints("arena-bug-buster", finalScore).then(() => {
+      const syncedIdentity = mergeProfileIdentity(
+        readCachedGuestProfile(),
+        updatedState
+      );
+      setSummary((prev) =>
+        prev
+          ? {
+              ...prev,
+              coinsEarnedNow: Math.max(
+                0,
+                syncedIdentity.itCoins - prevIdentity.itCoins
+              ),
+              totalCoins: syncedIdentity.itCoins,
+              remainingToNextCoin: pointsToNextCoin(syncedIdentity.totalPoints),
+            }
+          : prev
+      );
+    });
   }, [clearAdvanceTimer, role, stopMic]);
 
   const resolveBug = useCallback(
@@ -389,10 +418,10 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
           <div className="space-y-2 max-w-xl">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-accent-light text-accent text-xs font-mono font-bold border border-accent/25">
               <Zap className="w-3.5 h-3.5" />
-              <span>Thử thách phản xạ từ vựng 60 giây</span>
+              <span>Thử thách phản xạ từ vựng 280 giây</span>
             </span>
             <h2 className="text-xl sm:text-2xl font-bold text-ink">
-              Bug Buster 60s
+              Bug Buster 280s
             </h2>
             <p className="text-sm text-ink-muted leading-relaxed">
               Đọc nhanh log lỗi, code review hoặc thông báo sự cố production và
@@ -407,9 +436,9 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
 
         <div className="grid sm:grid-cols-3 gap-3 text-xs">
           <div className="bg-paper border border-ink/15 rounded-xl p-3.5 space-y-1">
-            <div className="font-mono font-bold text-ink">60s Tổng vòng</div>
+            <div className="font-mono font-bold text-ink">280s Tổng vòng</div>
             <p className="text-ink-muted">
-              Giải quyết càng nhiều bug càng tốt trước khi hết giờ.
+              Giải quyết {availableChallenges.length} câu (14 câu × 20s) trước khi hết giờ.
             </p>
           </div>
           <div className="bg-paper border border-ink/15 rounded-xl p-3.5 space-y-1">
@@ -434,7 +463,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
           className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-pill bg-accent text-white text-sm font-bold border border-accent shadow-soft hover:bg-accent-hover shadow-hard-press disabled:opacity-40 disabled:cursor-not-allowed transition-all"
         >
           <Play className="w-4 h-4 fill-white" />
-          <span>Bắt đầu Bug Buster 60s ({availableChallenges.length} câu)</span>
+          <span>Bắt đầu Bug Buster 280s ({availableChallenges.length} câu)</span>
         </button>
 
         {availableChallenges.length === 0 && (
@@ -452,7 +481,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-paper-muted pb-4">
           <div className="space-y-1">
             <span className="text-xs font-mono font-bold uppercase text-accent">
-              Kết quả Bug Buster 60s
+              Kết quả Bug Buster 280s
             </span>
             <h2 className="text-2xl font-bold text-ink">
               Hoàn thành phiên xử lý sự cố!
@@ -491,8 +520,9 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
               <span>{summary.totalCoins}</span>
             </div>
             <div className="text-[11px] text-ink font-medium mt-1">
+              Số dư IT-Coin •{" "}
               {summary.coinsEarnedNow > 0
-                ? `Nhận thêm +${summary.coinsEarnedNow} IT-Coin!`
+                ? `+${summary.coinsEarnedNow} IT-Coin`
                 : `Còn ${summary.remainingToNextCoin}đ -> +1 Coin`}
             </div>
           </div>

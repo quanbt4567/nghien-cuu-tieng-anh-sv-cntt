@@ -9,9 +9,12 @@ const __dirname = dirname(__filename);
 const require = createRequire(import.meta.url);
 const jiti = require("jiti")(__filename);
 
-const { mergeProfileIdentity, summarizeProfileActivity } = jiti(
-  resolve(__dirname, "../lib/profileStats.ts")
-);
+const {
+  calculateSpentCosmeticCoins,
+  mergeProfileIdentity,
+  resolveConsistentItCoins,
+  summarizeProfileActivity,
+} = jiti(resolve(__dirname, "../lib/profileStats.ts"));
 
 function makeGamificationState(overrides = {}) {
   return {
@@ -272,4 +275,45 @@ test("summarizeProfileActivity applies totalPointsOverride for devTitle and next
   );
   assert.equal(ignoredNonFinite.devTitle.title, "Junior Speaker");
   assert.equal(ignoredNonFinite.nextCoinPoints, 600);
+});
+
+test("resolveConsistentItCoins and mergeProfileIdentity reconcile spent cosmetic prices when rawCoins is 0", () => {
+  assert.equal(
+    calculateSpentCosmeticCoins([
+      "title-bug-whisperer",
+      "ring-crimson",
+      "title-bug-whisperer",
+      "unknown-item",
+    ]),
+    2
+  );
+
+  assert.equal(resolveConsistentItCoins(0, 10993, []), 10);
+  assert.equal(
+    resolveConsistentItCoins(0, 10993, ["title-bug-whisperer", "ring-amber"]),
+    7
+  );
+  assert.equal(
+    resolveConsistentItCoins(1, 2000, ["title-cloud-architect"]),
+    1
+  );
+
+  const reconciled = mergeProfileIdentity(
+    {
+      id: "guest-dev-puwsp7",
+      transferCode: "DEV-PUWSP7",
+      displayName: "Dev User",
+      itCoins: 0,
+      totalPoints: 10993,
+      streakDays: 3,
+      lastPracticeDate: "2026-11-15",
+      equippedTitle: "Bug Whisperer",
+      equippedRing: "ring-amber",
+      ownedItems: ["title-bug-whisperer", "ring-amber"],
+    },
+    makeGamificationState({ totalPoints: 10993 })
+  );
+
+  assert.equal(reconciled.itCoins, 7);
+  assert.equal(reconciled.totalPoints, 10993);
 });

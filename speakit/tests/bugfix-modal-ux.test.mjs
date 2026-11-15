@@ -98,10 +98,11 @@ test("SCENARIOS has at least 12 scenarios with >= 4 per level and 3 sequential t
   }
 });
 
-test("resolveConsistentItCoins reconciles 10333 pts to 10 coins when no items are owned", () => {
+test("resolveConsistentItCoins reconciles earned minus spent cosmetic coins", () => {
   assert.equal(resolveConsistentItCoins(0, 10333, []), 10);
   assert.equal(resolveConsistentItCoins(15, 10333, []), 15);
-  assert.equal(resolveConsistentItCoins(2, 10333, ["title_architect"]), 2);
+  assert.equal(resolveConsistentItCoins(2, 10333, ["title-cloud-architect"]), 6);
+  assert.equal(resolveConsistentItCoins(0, 10333, ["title-bug-whisperer"]), 9);
 });
 
 test("filterUnusedKeywords recognizes multi-word keywords like merge conflict when used across turns", () => {

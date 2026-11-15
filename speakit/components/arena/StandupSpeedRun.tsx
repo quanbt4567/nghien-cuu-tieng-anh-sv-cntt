@@ -21,12 +21,15 @@ import {
   StandupSpeedQuestion,
 } from "../../data/minigames";
 import {
-  calculateCoins,
   getGamificationState,
   pointsToNextCoin,
   recordMinigameResult,
 } from "../../lib/gamification";
-import { reportGuestPracticePoints } from "../../lib/guestClient";
+import {
+  readCachedGuestProfile,
+  reportGuestPracticePoints,
+} from "../../lib/guestClient";
+import { mergeProfileIdentity } from "../../lib/profileStats";
 import { scoreLocally } from "../../lib/localScorer";
 import {
   SpeechController,
@@ -134,7 +137,11 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
         Math.round((Date.now() - runStartMsRef.current) / 1000)
       );
 
-      const prevTotal = getGamificationState().totalPoints;
+      const prevState = getGamificationState();
+      const prevIdentity = mergeProfileIdentity(
+        readCachedGuestProfile(),
+        prevState
+      );
       const updated = recordMinigameResult({
         gameId: "standup-speed-run",
         score: totalScore,
@@ -142,20 +149,49 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
         durationSec,
         role,
       });
-      void reportGuestPracticePoints("arena-standup-speed-run", totalScore);
+      const optimisticIdentity = mergeProfileIdentity(
+        readCachedGuestProfile(),
+        updated
+      );
 
       setSummary({
         totalScore,
         totalKeywordsUsed,
         durationSec,
-        coinsEarnedNow:
-          calculateCoins(updated.totalPoints) - calculateCoins(prevTotal),
-        totalCoins: calculateCoins(updated.totalPoints),
-        remainingToNextCoin: pointsToNextCoin(updated.totalPoints),
+        coinsEarnedNow: Math.max(
+          0,
+          optimisticIdentity.itCoins - prevIdentity.itCoins
+        ),
+        totalCoins: optimisticIdentity.itCoins,
+        remainingToNextCoin: pointsToNextCoin(optimisticIdentity.totalPoints),
         usedAi: allTurns.some((t) => t.evaluationMode === "ai"),
         turns: allTurns,
       });
       setPhase("finished");
+
+      void reportGuestPracticePoints("arena-standup-speed-run", totalScore).then(
+        () => {
+          const syncedIdentity = mergeProfileIdentity(
+            readCachedGuestProfile(),
+            updated
+          );
+          setSummary((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  coinsEarnedNow: Math.max(
+                    0,
+                    syncedIdentity.itCoins - prevIdentity.itCoins
+                  ),
+                  totalCoins: syncedIdentity.itCoins,
+                  remainingToNextCoin: pointsToNextCoin(
+                    syncedIdentity.totalPoints
+                  ),
+                }
+              : prev
+          );
+        }
+      );
     },
     [role, stopAudio]
   );
@@ -462,8 +498,9 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
               <span>{summary.totalCoins}</span>
             </div>
             <div className="text-[11px] text-ink font-medium mt-1">
+              Số dư IT-Coin •{" "}
               {summary.coinsEarnedNow > 0
-                ? `Nhận thêm +${summary.coinsEarnedNow} IT-Coin!`
+                ? `+${summary.coinsEarnedNow} IT-Coin`
                 : `Còn ${summary.remainingToNextCoin}đ -> +1 Coin`}
             </div>
           </div>

@@ -33,15 +33,33 @@ import {
 import {
   readBackupTransferCode,
   saveBackupTransferCode,
-  saveCachedGuestProfile,
+  syncGuestProfileFromServer,
 } from "../../lib/guestClient";
 
-export function GlobalLeaderboard() {
-  const [mode, setMode] = useState<"online" | "offline">("online");
-  const [loading, setLoading] = useState(true);
-  const [players, setPlayers] = useState<LeaderboardEntry[]>([]);
-  const [currentPlayer, setCurrentPlayer] = useState<PublicGuestPlayer | null>(null);
-  const [currentUserRank, setCurrentUserRank] = useState<LeaderboardEntry | null>(null);
+export interface GlobalLeaderboardInitialBoard {
+  mode: "online" | "offline";
+  players: LeaderboardEntry[];
+  currentPlayer: PublicGuestPlayer | null;
+  currentUserRank: LeaderboardEntry | null;
+}
+
+export function GlobalLeaderboard({
+  initialBoard,
+}: {
+  initialBoard?: GlobalLeaderboardInitialBoard;
+} = {}) {
+  const [mode, setMode] = useState<"online" | "offline">(
+    initialBoard?.mode ?? "online"
+  );
+  const [loading, setLoading] = useState(!initialBoard);
+  const [players, setPlayers] = useState<LeaderboardEntry[]>(
+    initialBoard?.players ?? []
+  );
+  const [currentPlayer, setCurrentPlayer] = useState<PublicGuestPlayer | null>(
+    initialBoard?.currentPlayer ?? null
+  );
+  const [currentUserRank, setCurrentUserRank] =
+    useState<LeaderboardEntry | null>(initialBoard?.currentUserRank ?? null);
 
   const [restoreCode, setRestoreCode] = useState("");
   const [restoreStatus, setRestoreStatus] = useState<{
@@ -91,7 +109,7 @@ export function GlobalLeaderboard() {
         const resolvedPlayer = board.currentPlayer ?? session.player;
         setPlayers(board.players);
         setCurrentPlayer(resolvedPlayer);
-        saveCachedGuestProfile(resolvedPlayer);
+        syncGuestProfileFromServer(resolvedPlayer);
         setCurrentUserRank(board.currentUserRank);
       }
     } catch {
@@ -139,7 +157,7 @@ export function GlobalLeaderboard() {
       const result = await restoreByTransferCode(restoreCode);
       if (result.ok && result.player) {
         saveBackupTransferCode(result.player.transferCode);
-        saveCachedGuestProfile(result.player);
+        syncGuestProfileFromServer(result.player);
         setRestoreCode("");
         setRestoreStatus({
           ok: true,
@@ -174,7 +192,7 @@ export function GlobalLeaderboard() {
       );
       if (res.ok && res.player) {
         setCurrentPlayer(res.player);
-        saveCachedGuestProfile(res.player);
+        syncGuestProfileFromServer(res.player);
         setIsEditingName(false);
         await loadLeaderboard();
       } else if (res.error) {
@@ -197,7 +215,7 @@ export function GlobalLeaderboard() {
       );
       if (res.ok && res.player) {
         setCurrentPlayer(res.player);
-        saveCachedGuestProfile(res.player);
+        syncGuestProfileFromServer(res.player);
         await loadLeaderboard();
       } else if (res.error) {
         setShopNotice(res.error);
@@ -466,7 +484,9 @@ export function GlobalLeaderboard() {
           <div>
             <h3 className="text-base font-bold text-ink flex items-center gap-2">
               <Trophy className="w-5 h-5 text-accent" />
-              <span>Global Leaderboard (Top 50)</span>
+              <span>
+                Global Leaderboard ({players.length} học viên · tối đa Top 50)
+              </span>
             </h3>
             <p className="text-xs text-ink-muted">
               Ranked by IT-Coins and cumulative speaking points across all IT roles.
