@@ -9,12 +9,15 @@ import {
   ArrowRight,
   Volume2,
 } from "lucide-react";
-import { ScoreResponse } from "../../lib/types";
+import { ScoreResponse, VoicePersonaId } from "../../lib/types";
+import { normalizeVoicePersona } from "../../lib/speech";
+import { storageAdapter } from "../../lib/storage";
 import { playTtsAudio } from "../../lib/tts-player";
 
 interface FeedbackCardProps {
   result: ScoreResponse;
   transcript: string;
+  voicePersona?: VoicePersonaId;
   onNextTurn?: () => void;
   isLastTurn?: boolean;
 }
@@ -22,6 +25,7 @@ interface FeedbackCardProps {
 export function FeedbackCard({
   result,
   transcript,
+  voicePersona,
   onNextTurn,
   isLastTurn = false,
 }: FeedbackCardProps) {
@@ -123,10 +127,17 @@ export function FeedbackCard({
             <button
               type="button"
               onClick={() => {
+                const savedPersona = storageAdapter.getSettings().voicePersona;
+                const activePersona =
+                  voicePersona ??
+                  (savedPersona
+                    ? normalizeVoicePersona(savedPersona)
+                    : "lead_us_male");
                 setIsPlayingBetter(true);
                 playTtsAudio({
                   text: result.betterSentence,
                   rate: 0.8,
+                  persona: activePersona,
                   onEnd: () => setIsPlayingBetter(false),
                   onError: () => setIsPlayingBetter(false),
                 });

@@ -62,11 +62,11 @@ export function VocabCard({ item }: VocabCardProps) {
     <div className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4 hover:shadow-card transition-all">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2">
-            <h3 className="text-xl font-bold font-mono text-ink tracking-tight">
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className="text-xl font-bold font-mono text-ink tracking-normal leading-snug">
               {item.term}
             </h3>
-            <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-ink-muted">
+            <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-ink-muted tracking-normal">
               {item.partOfSpeech}
             </span>
           </div>

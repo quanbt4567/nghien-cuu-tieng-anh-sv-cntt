@@ -30,7 +30,7 @@ export default async function HomePage() {
           </div>
           <Link
             href="/arena"
-            className="inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 bg-accent/10 hover:bg-accent text-accent hover:text-white border border-accent/25 hover:border-accent text-xs font-semibold transition-all"
+            className="interactive-btn-accent inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 bg-accent/10 hover:bg-accent text-accent hover:text-white border border-accent/40 text-xs font-semibold"
           >
             <span>Xem bảng xếp hạng</span>
             <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -43,7 +43,7 @@ export default async function HomePage() {
               <Link
                 key={player.id}
                 href="/arena"
-                className="bg-paper border border-ink/15 hover:border-ink/30 rounded-xl p-4 flex items-center justify-between gap-3 transition-colors"
+                className="interactive-card bg-paper border border-ink/20 rounded-xl p-4 flex items-center justify-between gap-3"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <span
@@ -83,7 +83,7 @@ export default async function HomePage() {
             </span>
             <Link
               href="/arena"
-              className="inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 bg-accent hover:bg-accent-hover text-white font-mono text-xs font-semibold shadow-soft transition-all"
+              className="interactive-btn-accent inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 bg-accent hover:bg-accent-hover text-white border border-ink font-mono text-xs font-semibold shadow-soft"
             >
               <span>Mở /arena</span>
               <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -95,7 +95,7 @@ export default async function HomePage() {
       <section aria-label="Công cụ ôn tập nhanh" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Link
           href="/scenarios"
-          className="group bg-white border border-ink/15 hover:border-accent/40 rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
+          className="group interactive-card bg-white border border-ink/20 rounded-2xl p-5 shadow-soft flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-pill bg-paper flex items-center justify-center border border-ink/15 shrink-0">
@@ -111,7 +111,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/15 group-hover:border-accent text-xs font-semibold transition-all">
+            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-ink text-xs font-semibold transition-all">
               <span>Luyện kịch bản</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -120,7 +120,7 @@ export default async function HomePage() {
 
         <Link
           href="/vocabulary"
-          className="group bg-white border border-ink/15 hover:border-accent/40 rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
+          className="group interactive-card bg-white border border-ink/20 rounded-2xl p-5 shadow-soft flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-pill bg-paper flex items-center justify-center border border-ink/15 shrink-0">
@@ -136,7 +136,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/15 group-hover:border-accent text-xs font-semibold transition-all">
+            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-ink text-xs font-semibold transition-all">
               <span>Ôn từ vựng</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -145,7 +145,7 @@ export default async function HomePage() {
 
         <Link
           href="/progress"
-          className="group bg-white border border-ink/15 hover:border-accent/40 rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
+          className="group interactive-card bg-white border border-ink/20 rounded-2xl p-5 shadow-soft flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-pill bg-paper flex items-center justify-center border border-ink/15 shrink-0">
@@ -161,7 +161,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/15 group-hover:border-accent text-xs font-semibold transition-all">
+            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-ink text-xs font-semibold transition-all">
               <span>Xem lộ trình</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -170,7 +170,7 @@ export default async function HomePage() {
 
         <Link
           href="/arena"
-          className="group bg-white border border-ink/15 hover:border-accent/40 rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
+          className="group interactive-card bg-white border border-ink/20 rounded-2xl p-5 shadow-soft flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-pill bg-paper flex items-center justify-center border border-ink/15 shrink-0">
@@ -186,7 +186,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/15 group-hover:border-accent text-xs font-semibold transition-all">
+            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-ink text-xs font-semibold transition-all">
               <span>Vào đấu trường</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>

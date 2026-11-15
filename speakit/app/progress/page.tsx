@@ -211,12 +211,34 @@ export default function ProgressPage() {
           <div className="text-[11px] text-ink-muted mt-1">Điểm trung bình</div>
         </div>
 
-        <div className="bg-accent-light border border-accent/30 rounded-2xl p-4 sm:p-5 shadow-soft text-center">
-          <div className="text-2xl sm:text-3xl font-mono font-extrabold text-accent flex items-center justify-center gap-1">
-            <Flame className="w-6 h-6 fill-accent text-accent" />
+        <div
+          className={`rounded-2xl p-4 sm:p-5 shadow-soft text-center border ${
+            currentStreak > 0
+              ? "bg-[#DCFCE7] border-[#15803D]"
+              : "bg-accent-light border-accent/30"
+          }`}
+        >
+          <div
+            className={`text-2xl sm:text-3xl font-mono font-extrabold flex items-center justify-center gap-1 ${
+              currentStreak > 0 ? "text-[#15803D]" : "text-accent"
+            }`}
+          >
+            <Flame
+              className={`w-6 h-6 ${
+                currentStreak > 0
+                  ? "fill-[#16A34A] text-[#16A34A]"
+                  : "fill-accent text-accent"
+              }`}
+            />
             <span>{currentStreak}</span>
           </div>
-          <div className="text-[11px] font-bold text-accent mt-1">Ngày luyện tập</div>
+          <div
+            className={`text-[11px] font-bold mt-1 ${
+              currentStreak > 0 ? "text-[#15803D]" : "text-accent"
+            }`}
+          >
+            Ngày luyện tập
+          </div>
         </div>
       </div>
 
@@ -278,8 +300,21 @@ export default function ProgressPage() {
               </span>
             </span>
 
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-accent-light border border-accent/30 text-xs font-mono font-bold text-accent">
-              <Flame className="w-3.5 h-3.5 fill-accent text-accent" aria-hidden="true" />
+            <span
+              className={`inline-flex items-center gap-1 px-3 py-1 rounded-pill border text-xs font-mono font-bold ${
+                gamification.streakDays > 0
+                  ? "bg-[#DCFCE7] border-[#15803D] text-[#15803D]"
+                  : "bg-accent-light border-accent/30 text-accent"
+              }`}
+            >
+              <Flame
+                className={`w-3.5 h-3.5 ${
+                  gamification.streakDays > 0
+                    ? "fill-[#16A34A] text-[#16A34A]"
+                    : "fill-accent text-accent"
+                }`}
+                aria-hidden="true"
+              />
               <span>{gamification.streakDays} ngày</span>
             </span>
           </div>

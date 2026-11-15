@@ -126,11 +126,11 @@ export default async function ResearchArticlePage({
             <BarChart3 className="w-4 h-4 text-sky-500" />
             <span>Dữ liệu thống kê chính</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
             {article.metricsJson.map((metric, idx) => (
               <div
                 key={idx}
-                className="p-4 rounded-xl bg-paper border border-ink/15 space-y-1"
+                className="h-full p-4 rounded-xl bg-paper border border-ink/15 flex flex-col justify-center gap-1.5"
               >
                 <div className="text-[11px] font-mono text-ink-muted">
                   {metric.label}

@@ -9,6 +9,8 @@ interface SevenDayPlanProps {
 }
 
 export function SevenDayPlan({ days }: SevenDayPlanProps) {
+  const completedCount = days.filter((d) => d.isCompleted).length;
+
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
@@ -20,8 +22,14 @@ export function SevenDayPlan({ days }: SevenDayPlanProps) {
             Tự động đưa các từ khóa bạn thường quên lên các ngày đầu để lặp lại ngắt quãng
           </p>
         </div>
-        <span className="text-xs font-mono font-bold text-accent bg-accent-light px-3 py-1 rounded-pill border border-accent/30">
-          {days.filter((d) => d.isCompleted).length}/7 Ngày đã luyện
+        <span
+          className={`text-xs font-mono font-bold px-3 py-1 rounded-pill border ${
+            completedCount > 0
+              ? "bg-[#DCFCE7] text-[#15803D] border-[#15803D]"
+              : "bg-accent-light text-accent border-accent/30"
+          }`}
+        >
+          {completedCount}/7 Ngày đã luyện
         </span>
       </div>
 
@@ -29,17 +37,19 @@ export function SevenDayPlan({ days }: SevenDayPlanProps) {
         {days.map((day) => (
           <div
             key={day.dayNumber}
-            className={`bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft hover:shadow-card transition-all ${
-              day.isCompleted ? "opacity-90" : ""
+            className={`border rounded-2xl p-5 sm:p-6 shadow-soft hover:shadow-card transition-all ${
+              day.isCompleted
+                ? "bg-[#DCFCE7] border-[#15803D]"
+                : "bg-white border-ink/15"
             }`}
           >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-start gap-3.5">
                 <div
-                  className={`w-9 h-9 rounded-pill flex items-center justify-center border border-ink/20 shrink-0 font-mono font-bold text-xs ${
+                  className={`w-9 h-9 rounded-pill flex items-center justify-center border shrink-0 font-mono font-bold text-xs ${
                     day.isCompleted
-                      ? "bg-accent text-white border-accent"
-                      : "bg-paper text-ink"
+                      ? "bg-[#16A34A] text-white border-[#15803D]"
+                      : "bg-paper text-ink border-ink/20"
                   }`}
                 >
                   {day.dayNumber}
@@ -51,8 +61,8 @@ export function SevenDayPlan({ days }: SevenDayPlanProps) {
                       {day.dayLabel}: {day.scenarioTitleVI}
                     </span>
                     {day.isCompleted && (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-mono text-accent font-semibold">
-                        <CheckCircle2 className="w-3.5 h-3.5" />
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-pill bg-white border border-[#15803D] text-[11px] font-mono text-[#15803D] font-semibold">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#16A34A]" />
                         Đã luyện
                       </span>
                     )}

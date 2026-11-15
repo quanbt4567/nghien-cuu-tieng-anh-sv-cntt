@@ -113,7 +113,7 @@ export default async function ResearchPortalPage({
 
       {featuredArticle && featuredArticle.metricsJson.length > 0 && (
         <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase text-sky-700">
               <BarChart3 className="w-4 h-4 text-sky-500" />
               <span>Số liệu nổi bật · {featuredArticle.title}</span>
@@ -127,11 +127,11 @@ export default async function ResearchPortalPage({
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
             {featuredArticle.metricsJson.map((metric, idx) => (
               <div
                 key={idx}
-                className="p-4 rounded-xl bg-paper border border-ink/15 space-y-1"
+                className="h-full p-4 rounded-xl bg-paper border border-ink/15 flex flex-col justify-center gap-1.5"
               >
                 <div className="text-[11px] font-mono text-ink-muted">
                   {metric.label}

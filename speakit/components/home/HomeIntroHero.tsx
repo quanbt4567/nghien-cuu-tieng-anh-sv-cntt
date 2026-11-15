@@ -64,7 +64,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
             </div>
 
             <div className="space-y-3">
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-ink leading-tight">
+              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-ink leading-[3rem]">
                 Luyện phản xạ nói tiếng Anh CNTT theo tình huống công việc thật
               </h1>
               <p className="text-sm sm:text-base text-ink-muted leading-relaxed max-w-2xl">
@@ -76,7 +76,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
             <div className="flex flex-wrap items-center gap-3 pt-1">
               <Link
                 href="/scenarios"
-                className="inline-flex items-center gap-2 rounded-pill px-5 py-2.5 bg-accent hover:bg-accent-hover text-white text-sm font-semibold shadow-soft transition-all"
+                className="interactive-btn-accent inline-flex items-center gap-2 rounded-pill px-5 py-2.5 bg-accent hover:bg-accent-hover text-white border border-ink text-sm font-semibold shadow-soft"
               >
                 <span>Bắt đầu luyện nói ngay</span>
                 <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
@@ -84,7 +84,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
 
               <Link
                 href="/placement"
-                className="inline-flex items-center gap-2 rounded-pill px-5 py-2.5 bg-paper hover:bg-ink hover:text-white text-ink border border-ink/15 text-sm font-semibold transition-all"
+                className="interactive-btn inline-flex items-center gap-2 rounded-pill px-5 py-2.5 bg-paper text-ink border border-ink/25 text-sm font-semibold"
               >
                 <Compass className="w-4 h-4 shrink-0" aria-hidden="true" />
                 <span>Kiểm tra trình độ (2 phút)</span>
@@ -92,7 +92,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
 
               <Link
                 href="/research"
-                className="inline-flex items-center gap-1.5 rounded-pill px-3.5 py-2 text-xs font-mono font-semibold text-ink-muted hover:text-accent transition-colors"
+                className="interactive-btn inline-flex items-center gap-1.5 rounded-pill px-3.5 py-2 bg-paper/60 border border-ink/15 text-xs font-mono font-semibold text-ink-muted hover:text-ink"
               >
                 <BarChart3 className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                 <span>Số liệu &amp; Nghiên cứu</span>
@@ -112,34 +112,41 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
           </div>
 
           <aside
-            aria-label="Phân tích EF EPI 2025 Việt Nam"
+            aria-label="Số liệu thống kê — Bối cảnh tiếng Anh CNTT"
             className="lg:col-span-5 bg-paper border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4"
           >
-            <div className="flex items-start justify-between gap-3">
-              <div className="space-y-1">
-                <p className="text-[11px] font-mono font-semibold uppercase tracking-wider text-accent">
-                  EF EPI {EF_EPI_2025.year} · {EF_EPI_2025.country}
-                </p>
-                <h2 className="text-base font-bold text-ink">
-                  Khoảng cách Đọc ({EF_EPI_2025.skills.reading}) vs Nói ({EF_EPI_2025.skills.speaking})
-                </h2>
-              </div>
-              <span className="rounded-pill px-2.5 py-1 bg-white border border-ink/15 font-mono text-xs font-bold text-ink shrink-0">
-                {EF_EPI_2025.score} đ
+            <div className="space-y-1.5">
+              <p className="text-[11px] font-mono font-semibold uppercase tracking-wider text-accent">
+                EF EPI {EF_EPI_2025.year} · {EF_EPI_2025.country}
+              </p>
+              <h2 className="text-base font-bold text-ink">
+                Số liệu thống kê — Bối cảnh tiếng Anh CNTT
+              </h2>
+              <p className="text-xs text-ink-muted leading-relaxed">
+                Chỉ số EF EPI 2025 toàn quốc cho thấy người Việt đọc hiểu khá tốt nhưng phản xạ nói còn yếu — lý do bạn cần luyện nói mỗi ngày.
+              </p>
+            </div>
+
+            <div className="bg-white border border-ink/15 rounded-xl px-3 py-2.5 flex items-center justify-between gap-2">
+              <span className="text-xs font-mono text-ink-muted">
+                Điểm tổng EF EPI toàn quốc
+              </span>
+              <span className="font-mono text-sm font-bold text-ink shrink-0">
+                {EF_EPI_2025.score} điểm
               </span>
             </div>
 
             <div className="grid grid-cols-2 gap-2.5 text-xs">
-              <div className="bg-white border border-ink/15 rounded-xl p-2.5">
-                <div className="text-[11px] font-mono text-ink-muted">Toàn cầu</div>
+              <div className="bg-white border border-ink/15 rounded-xl p-2.5 space-y-0.5">
+                <div className="text-[11px] font-mono text-ink-muted">Xếp hạng toàn cầu</div>
                 <div className="text-sm font-mono font-bold text-ink">
-                  #{EF_EPI_2025.globalRank}/{EF_EPI_2025.totalCountries}
+                  Hạng #{EF_EPI_2025.globalRank}/{EF_EPI_2025.totalCountries} quốc gia
                 </div>
               </div>
-              <div className="bg-white border border-ink/15 rounded-xl p-2.5">
-                <div className="text-[11px] font-mono text-ink-muted">Châu Á</div>
+              <div className="bg-white border border-ink/15 rounded-xl p-2.5 space-y-0.5">
+                <div className="text-[11px] font-mono text-ink-muted">Xếp hạng châu Á</div>
                 <div className="text-sm font-mono font-bold text-ink">
-                  #{EF_EPI_2025.asiaRank}/{EF_EPI_2025.totalAsiaCountries}
+                  Hạng #{EF_EPI_2025.asiaRank}/{EF_EPI_2025.totalAsiaCountries} quốc gia
                 </div>
               </div>
             </div>
@@ -147,8 +154,8 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
             <div className="space-y-2.5">
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs font-mono">
-                  <span className="text-ink font-semibold">Reading (Đọc tài liệu)</span>
-                  <span className="text-ink font-bold">{EF_EPI_2025.skills.reading}</span>
+                  <span className="text-ink font-semibold">Kỹ năng Đọc tài liệu (Reading)</span>
+                  <span className="text-ink font-bold">{EF_EPI_2025.skills.reading} điểm</span>
                 </div>
                 <div className="h-2 rounded-pill bg-white border border-ink/15 overflow-hidden">
                   <div
@@ -160,8 +167,8 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
 
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs font-mono">
-                  <span className="text-accent font-semibold">Speaking (Kỹ năng yếu nhất)</span>
-                  <span className="text-accent font-bold">{EF_EPI_2025.skills.speaking}</span>
+                  <span className="text-accent font-semibold">Kỹ năng Nói — yếu nhất (Speaking)</span>
+                  <span className="text-accent font-bold">{EF_EPI_2025.skills.speaking} điểm</span>
                 </div>
                 <div className="h-2 rounded-pill bg-white border border-ink/15 overflow-hidden">
                   <div

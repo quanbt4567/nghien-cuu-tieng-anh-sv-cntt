@@ -27,8 +27,47 @@ body {
   box-shadow: 0 4px 16px -2px rgba(26, 23, 20, 0.06), 0 2px 4px -1px rgba(26, 23, 20, 0.02);
 }
 
+.shadow-hard-press {
+  transition: transform 150ms ease, box-shadow 150ms ease, background-color 150ms ease, border-color 150ms ease;
+}
+
+.shadow-hard-press:hover {
+  background-color: #EFE7D8;
+  border-color: #1A1714;
+  box-shadow: 4px 4px 0 #1A1714;
+  transform: translate(-2px, -2px);
+}
+
 .shadow-hard-press:active {
-  transform: translateY(1px);
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #1A1714;
+}
+
+.interactive-card,
+.interactive-btn,
+.interactive-btn-accent {
+  transition: transform 150ms ease, box-shadow 150ms ease, background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.interactive-card:hover,
+.interactive-btn:hover {
+  background-color: #EFE7D8;
+  border-color: #1A1714;
+  box-shadow: 4px 4px 0 #1A1714;
+  transform: translate(-2px, -2px);
+}
+
+.interactive-btn-accent:hover {
+  border-color: #1A1714;
+  box-shadow: 4px 4px 0 #1A1714;
+  transform: translate(-2px, -2px);
+}
+
+.interactive-card:active,
+.interactive-btn:active,
+.interactive-btn-accent:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 #1A1714;
 }
 
 /* Dedicated phonetic font stack for clean IPA glyph rendering */

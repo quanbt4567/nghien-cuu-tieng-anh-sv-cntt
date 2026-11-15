@@ -23,7 +23,6 @@ import { MicButton } from "../../../components/audio/MicButton";
 import { FeedbackCard } from "../../../components/feedback/FeedbackCard";
 import { ScenarioSummary } from "../../../components/feedback/ScenarioSummary";
 import {
-  DEFAULT_VOICE_PERSONA,
   normalizeVoicePersona,
   startSpeechRecognition,
   SpeechController,
@@ -48,6 +47,8 @@ import {
   VoicePersonaId,
 } from "../../../lib/types";
 
+const SCENARIO_DEFAULT_VOICE_PERSONA: VoicePersonaId = "lead_us_male";
+
 export default function PracticePage() {
   const params = useParams();
   const scenarioId = params.scenario as string;
@@ -60,7 +61,7 @@ export default function PracticePage() {
   const [isCompleted, setIsCompleted] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [voicePersona, setVoicePersona] =
-    useState<VoicePersonaId>(DEFAULT_VOICE_PERSONA);
+    useState<VoicePersonaId>(SCENARIO_DEFAULT_VOICE_PERSONA);
   const [isPreviewingVoice, setIsPreviewingVoice] = useState(false);
 
   const [transcript, setTranscript] = useState("");
@@ -84,7 +85,11 @@ export default function PracticePage() {
 
   useEffect(() => {
     const settings = storageAdapter.getSettings();
-    setVoicePersona(normalizeVoicePersona(settings.voicePersona));
+    setVoicePersona(
+      settings.voicePersona
+        ? normalizeVoicePersona(settings.voicePersona)
+        : SCENARIO_DEFAULT_VOICE_PERSONA
+    );
   }, []);
 
   useEffect(() => {
@@ -634,6 +639,7 @@ export default function PracticePage() {
               <FeedbackCard
                 result={evalResult}
                 transcript={transcript}
+                voicePersona={voicePersona}
                 onNextTurn={handleNextTurn}
                 isLastTurn={safeTurnIndex === scenario.turns.length - 1}
               />

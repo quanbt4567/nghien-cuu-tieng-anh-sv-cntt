@@ -55,6 +55,16 @@ type NavGroup = {
 
 const NAV_GROUPS: readonly NavGroup[] = [
   {
+    id: "resources",
+    label: "Học liệu",
+    activePrefixes: ["/progress", "/research", "/guide"],
+    items: [
+      { href: "/progress", label: "Tiến độ & 7 ngày", icon: TrendingUp },
+      { href: "/research", label: "Nghiên cứu IT", icon: FileText },
+      { href: "/guide", label: "Hướng dẫn", icon: HelpCircle },
+    ],
+  },
+  {
     id: "practice",
     label: "Luyện tập",
     activePrefixes: ["/scenarios", "/practice", "/arena", "/vocabulary", "/placement"],
@@ -63,16 +73,6 @@ const NAV_GROUPS: readonly NavGroup[] = [
       { href: "/arena", label: "Arena", icon: Gamepad2 },
       { href: "/vocabulary", label: "Từ vựng IT", icon: BookOpen },
       { href: "/placement", label: "Kiểm tra trình độ", icon: ClipboardCheck },
-    ],
-  },
-  {
-    id: "resources",
-    label: "Học liệu",
-    activePrefixes: ["/progress", "/research", "/guide"],
-    items: [
-      { href: "/progress", label: "Tiến độ & 7 ngày", icon: TrendingUp },
-      { href: "/research", label: "Nghiên cứu IT", icon: FileText },
-      { href: "/guide", label: "Hướng dẫn", icon: HelpCircle },
     ],
   },
   {

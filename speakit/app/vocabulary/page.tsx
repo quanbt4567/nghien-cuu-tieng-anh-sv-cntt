@@ -54,11 +54,11 @@ export default function VocabularyPage() {
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Trang chủ</span>
           </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-ink flex items-center gap-2">
-            <BookOpen className="w-6 h-6 text-accent" />
+          <h1 className="text-2xl font-bold tracking-normal text-ink flex items-center gap-2.5 leading-snug">
+            <BookOpen className="w-6 h-6 text-accent shrink-0" />
             <span>{vocabList.length} Thuật Ngữ IT Thiết Yếu</span>
           </h1>
-          <p className="text-xs text-ink-muted mt-1.5">
+          <p className="text-xs sm:text-sm text-ink-muted mt-2 leading-relaxed tracking-normal">
             Luyện phát âm chuẩn và nắm vững cách diễn đạt các thuật ngữ xuất hiện hàng ngày trong môi trường kỹ thuật.
           </p>
         </div>
