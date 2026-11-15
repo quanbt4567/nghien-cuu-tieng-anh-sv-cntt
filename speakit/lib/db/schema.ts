@@ -164,6 +164,10 @@ export async function initializeGuestPlayersSchema(
           ON guest_players (ip_hash, created_at DESC)
         `,
         sql`
+          CREATE INDEX IF NOT EXISTS idx_guest_players_zero_coin_cleanup
+          ON guest_players (it_coins, updated_at)
+        `,
+        sql`
           CREATE TABLE IF NOT EXISTS research_articles (
             id UUID PRIMARY KEY,
             slug VARCHAR(160) UNIQUE NOT NULL,

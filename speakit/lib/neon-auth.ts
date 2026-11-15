@@ -12,8 +12,53 @@ export const GUEST_SESSION_COOKIE_NAME = "speakit_session_token";
 export const GUEST_TRANSFER_STORAGE_KEY = "speakit_transfer_code_v1";
 export const GUEST_COOKIE_MAX_AGE_SECONDS = 400 * 24 * 60 * 60;
 export const MAX_GUEST_ACCOUNTS_PER_IP_24H = 3;
+export const ZERO_COIN_RETENTION_DAYS = 7;
+
+const CLEANUP_COOLDOWN_MS = 15 * 60 * 1000;
+let LAST_CLEANUP_AT_MS = 0;
 
 const TRANSFER_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+export function isExpiredZeroCoinGuest(
+  row: Pick<GuestPlayerRow, "it_coins" | "updated_at">,
+  now: Date | number = Date.now()
+): boolean {
+  if (Number(row.it_coins) > 0) return false;
+  const nowMs = now instanceof Date ? now.getTime() : now;
+  const updatedMs = new Date(row.updated_at).getTime();
+  if (!Number.isFinite(nowMs) || !Number.isFinite(updatedMs)) return false;
+  const retentionMs = ZERO_COIN_RETENTION_DAYS * 24 * 60 * 60 * 1000;
+  return updatedMs < nowMs - retentionMs;
+}
+
+export async function cleanupExpiredZeroCoinGuests(options?: {
+  force?: boolean;
+}): Promise<number> {
+  const force = options?.force === true;
+  const nowMs = Date.now();
+  if (!force && nowMs - LAST_CLEANUP_AT_MS < CLEANUP_COOLDOWN_MS) {
+    return 0;
+  }
+
+  const sql = getDbClient();
+  if (!sql) return 0;
+
+  try {
+    const ready = await ensureGuestDatabaseReady();
+    if (!ready) return 0;
+
+    LAST_CLEANUP_AT_MS = nowMs;
+    const deleted = (await sql`
+      DELETE FROM guest_players
+      WHERE it_coins <= 0
+        AND updated_at < NOW() - INTERVAL '7 days'
+      RETURNING id
+    `) as Array<{ id: string }>;
+    return deleted.length;
+  } catch {
+    return 0;
+  }
+}
 
 export function hashDeviceToken(rawToken: string): string {
   return createHash("sha256").update(rawToken).digest("hex");
@@ -124,6 +169,8 @@ export async function readExistingGuestPlayer(): Promise<PublicGuestPlayer | nul
 
   const ready = await ensureGuestDatabaseReady();
   if (!ready) return null;
+
+  void cleanupExpiredZeroCoinGuests();
 
   const rawToken = cookies().get(GUEST_SESSION_COOKIE_NAME)?.value;
   if (!rawToken) return null;
