@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import { NeonQueryFunction } from "@neondatabase/serverless";
+import { EquippedCosmetics } from "../cosmetics";
 import { getNeonSql, sanitizeDatabaseUrl } from "./neon";
 
 export type ResearchCategory = "benchmark" | "hr_interview" | "tech_news" | "case_study";
@@ -87,6 +88,7 @@ export interface GuestPlayerRow {
   last_practice_date: string | null;
   equipped_title: string;
   equipped_ring: string;
+  equipped_cosmetics?: EquippedCosmetics | string | null;
   owned_items: string[];
   ip_hash?: string | null;
   created_at: string;
@@ -101,6 +103,7 @@ export interface LeaderboardEntry {
   streakDays: number;
   equippedTitle: string;
   equippedRing: string;
+  equippedCosmetics?: EquippedCosmetics;
   rank: number;
   isCurrentUser?: boolean;
 }
@@ -115,6 +118,7 @@ export interface PublicGuestPlayer {
   lastPracticeDate: string | null;
   equippedTitle: string;
   equippedRing: string;
+  equippedCosmetics?: EquippedCosmetics;
   ownedItems: string[];
 }
 
@@ -145,6 +149,7 @@ export async function initializeGuestPlayersSchema(
             last_practice_date TEXT,
             equipped_title TEXT NOT NULL DEFAULT 'Junior Speaker',
             equipped_ring TEXT NOT NULL DEFAULT 'default',
+            equipped_cosmetics JSONB NOT NULL DEFAULT '{}'::jsonb,
             owned_items JSONB NOT NULL DEFAULT '[]'::jsonb,
             ip_hash TEXT,
             created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -154,6 +159,10 @@ export async function initializeGuestPlayersSchema(
         sql`
           ALTER TABLE guest_players
           ADD COLUMN IF NOT EXISTS ip_hash TEXT
+        `,
+        sql`
+          ALTER TABLE guest_players
+          ADD COLUMN IF NOT EXISTS equipped_cosmetics JSONB NOT NULL DEFAULT '{}'::jsonb
         `,
         sql`
           CREATE INDEX IF NOT EXISTS idx_guest_players_leaderboard

@@ -1,6 +1,12 @@
 "use server";
 
-import { COSMETIC_CATALOG, findCosmeticById } from "../../lib/cosmetics";
+import {
+  ALL_COSMETIC_ITEMS,
+  COSMETIC_CATEGORIES,
+  CosmeticCategory,
+  findCosmeticById,
+  normalizeEquippedCosmetics,
+} from "../../lib/cosmetics";
 import {
   ensureGuestDatabaseReady,
   getDbClient,
@@ -17,7 +23,7 @@ import {
 } from "../../lib/neon-auth";
 
 const COSMETIC_PRICES_JSON = JSON.stringify(
-  COSMETIC_CATALOG.map((item) => ({ id: item.id, price: item.price }))
+  ALL_COSMETIC_ITEMS.map((item) => ({ id: item.id, price: item.price }))
 );
 
 function getUtcTodayDate(): string {
@@ -104,6 +110,7 @@ export async function getTopPlayers(limit = 50): Promise<{
           streak_days,
           equipped_title,
           equipped_ring,
+          equipped_cosmetics,
           created_at
         FROM guest_players
         WHERE total_points > 0
@@ -116,6 +123,7 @@ export async function getTopPlayers(limit = 50): Promise<{
         streak_days AS "streakDays",
         equipped_title AS "equippedTitle",
         equipped_ring AS "equippedRing",
+        equipped_cosmetics AS "equippedCosmetics",
         DENSE_RANK() OVER (ORDER BY total_points DESC, effective_coins DESC)::int AS rank
       FROM active_players
       ORDER BY total_points DESC, effective_coins DESC, created_at ASC
@@ -130,6 +138,7 @@ export async function getTopPlayers(limit = 50): Promise<{
       streakDays: Number(row.streakDays) || 0,
       equippedTitle: row.equippedTitle || "Junior Speaker",
       equippedRing: row.equippedRing || "default",
+      equippedCosmetics: normalizeEquippedCosmetics(row.equippedCosmetics),
       rank: Number(row.rank) || 1,
       isCurrentUser: currentPlayer ? row.id === currentPlayer.id : false,
     }));
@@ -451,7 +460,8 @@ export async function purchaseAndEquipCosmetic(
         UPDATE guest_players
         SET
           equipped_title = CASE WHEN ${item.kind === "title"} THEN ${item.value} ELSE equipped_title END,
-          equipped_ring = CASE WHEN ${item.kind === "ring"} THEN ${item.value} ELSE equipped_ring END,
+          equipped_ring = CASE WHEN ${item.kind === "ring" || item.category === "avatar_decoration"} THEN ${item.value} ELSE equipped_ring END,
+          equipped_cosmetics = COALESCE(equipped_cosmetics, '{}'::jsonb) || jsonb_build_object(${item.category}::text, ${item.id}::text),
           updated_at = NOW()
         WHERE id = ${player.id}
         RETURNING
@@ -465,6 +475,7 @@ export async function purchaseAndEquipCosmetic(
           last_practice_date,
           equipped_title,
           equipped_ring,
+          equipped_cosmetics,
           owned_items,
           created_at,
           updated_at
@@ -505,7 +516,8 @@ export async function purchaseAndEquipCosmetic(
         it_coins = target.effective_coins - ${item.price},
         owned_items = guest_players.owned_items || ${JSON.stringify([item.id])}::jsonb,
         equipped_title = CASE WHEN ${item.kind === "title"} THEN ${item.value} ELSE guest_players.equipped_title END,
-        equipped_ring = CASE WHEN ${item.kind === "ring"} THEN ${item.value} ELSE guest_players.equipped_ring END,
+        equipped_ring = CASE WHEN ${item.kind === "ring" || item.category === "avatar_decoration"} THEN ${item.value} ELSE guest_players.equipped_ring END,
+        equipped_cosmetics = COALESCE(guest_players.equipped_cosmetics, '{}'::jsonb) || jsonb_build_object(${item.category}::text, ${item.id}::text),
         updated_at = NOW()
       FROM target
       WHERE guest_players.id = target.id
@@ -521,6 +533,7 @@ export async function purchaseAndEquipCosmetic(
         guest_players.last_practice_date,
         guest_players.equipped_title,
         guest_players.equipped_ring,
+        guest_players.equipped_cosmetics,
         guest_players.owned_items,
         guest_players.created_at,
         guest_players.updated_at
@@ -627,6 +640,182 @@ export async function updateGuestDisplayName(
       mode: "offline",
       player,
       error: "Unable to update display name.",
+    };
+  }
+}
+
+export async function equipOwnedCosmetic(
+  category: CosmeticCategory,
+  itemId: string,
+  backupTransferCode?: string
+): Promise<{
+  ok: boolean;
+  mode: "online" | "offline";
+  player: PublicGuestPlayer | null;
+  error?: string;
+}> {
+  if (!COSMETIC_CATEGORIES.includes(category)) {
+    return {
+      ok: false,
+      mode: "online",
+      player: null,
+      error: "Invalid cosmetic category.",
+    };
+  }
+
+  const item = findCosmeticById(itemId);
+  if (!item || item.category !== category) {
+    return {
+      ok: false,
+      mode: "online",
+      player: null,
+      error: "Cosmetic item does not match category.",
+    };
+  }
+
+  const sql = getDbClient();
+  if (!sql) {
+    return {
+      ok: false,
+      mode: "offline",
+      player: null,
+      error: "Cosmetic equip requires Neon DB connection.",
+    };
+  }
+
+  const player = await resolveOrCreateGuestSession(backupTransferCode);
+  if (!player) {
+    return {
+      ok: false,
+      mode: "offline",
+      player: null,
+      error: "Unable to connect to guest profile.",
+    };
+  }
+
+  if (!player.ownedItems.includes(item.id)) {
+    return {
+      ok: false,
+      mode: "online",
+      player,
+      error: "You do not own this cosmetic item yet.",
+    };
+  }
+
+  try {
+    const updated = (await sql`
+      UPDATE guest_players
+      SET
+        equipped_ring = CASE WHEN ${category === "avatar_decoration"} THEN ${item.value} ELSE equipped_ring END,
+        equipped_cosmetics = COALESCE(equipped_cosmetics, '{}'::jsonb) || jsonb_build_object(${category}::text, ${item.id}::text),
+        updated_at = NOW()
+      WHERE id = ${player.id}
+      RETURNING
+        id,
+        device_token_hash,
+        transfer_code,
+        display_name,
+        it_coins,
+        total_points,
+        streak_days,
+        last_practice_date,
+        equipped_title,
+        equipped_ring,
+        equipped_cosmetics,
+        owned_items,
+        created_at,
+        updated_at
+    `) as GuestPlayerRow[];
+
+    return {
+      ok: updated.length > 0,
+      mode: "online",
+      player: updated[0] ? serializePublicGuestPlayer(updated[0]) : player,
+    };
+  } catch {
+    return {
+      ok: false,
+      mode: "offline",
+      player,
+      error: "Unable to equip cosmetic item.",
+    };
+  }
+}
+
+export async function unequipCosmeticSlot(
+  category: CosmeticCategory,
+  backupTransferCode?: string
+): Promise<{
+  ok: boolean;
+  mode: "online" | "offline";
+  player: PublicGuestPlayer | null;
+  error?: string;
+}> {
+  if (!COSMETIC_CATEGORIES.includes(category)) {
+    return {
+      ok: false,
+      mode: "online",
+      player: null,
+      error: "Invalid cosmetic category.",
+    };
+  }
+
+  const sql = getDbClient();
+  if (!sql) {
+    return {
+      ok: false,
+      mode: "offline",
+      player: null,
+      error: "Cosmetic unequip requires Neon DB connection.",
+    };
+  }
+
+  const player = await resolveOrCreateGuestSession(backupTransferCode);
+  if (!player) {
+    return {
+      ok: false,
+      mode: "offline",
+      player: null,
+      error: "Unable to connect to guest profile.",
+    };
+  }
+
+  try {
+    const updated = (await sql`
+      UPDATE guest_players
+      SET
+        equipped_ring = CASE WHEN ${category === "avatar_decoration"} THEN 'default' ELSE equipped_ring END,
+        equipped_cosmetics = COALESCE(equipped_cosmetics, '{}'::jsonb) - ${category},
+        updated_at = NOW()
+      WHERE id = ${player.id}
+      RETURNING
+        id,
+        device_token_hash,
+        transfer_code,
+        display_name,
+        it_coins,
+        total_points,
+        streak_days,
+        last_practice_date,
+        equipped_title,
+        equipped_ring,
+        equipped_cosmetics,
+        owned_items,
+        created_at,
+        updated_at
+    `) as GuestPlayerRow[];
+
+    return {
+      ok: updated.length > 0,
+      mode: "online",
+      player: updated[0] ? serializePublicGuestPlayer(updated[0]) : player,
+    };
+  } catch {
+    return {
+      ok: false,
+      mode: "offline",
+      player,
+      error: "Unable to unequip cosmetic item.",
     };
   }
 }

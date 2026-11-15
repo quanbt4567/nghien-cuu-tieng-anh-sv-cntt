@@ -1,5 +1,6 @@
 import { createHash, randomBytes, randomUUID } from "crypto";
 import { cookies, headers } from "next/headers";
+import { normalizeEquippedCosmetics } from "./cosmetics";
 import {
   ensureGuestDatabaseReady,
   getDbClient,
@@ -157,6 +158,7 @@ export function serializePublicGuestPlayer(
     lastPracticeDate: row.last_practice_date ?? null,
     equippedTitle: row.equipped_title || "Junior Speaker",
     equippedRing: row.equipped_ring || "default",
+    equippedCosmetics: normalizeEquippedCosmetics(row.equipped_cosmetics),
     ownedItems,
   };
 }

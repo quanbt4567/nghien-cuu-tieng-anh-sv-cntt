@@ -45,7 +45,7 @@ import {
   fetchAndCachePublicContent,
   getEffectiveScenarios,
 } from "../../lib/contentStore";
-import { COSMETIC_CATALOG, getRingBadgeClass } from "../../lib/cosmetics";
+import { COSMETIC_CATALOG, normalizeEquippedCosmetics } from "../../lib/cosmetics";
 import type { PublicGuestPlayer } from "../../lib/db";
 import {
   GAMIFICATION_STORAGE_KEY,
@@ -55,10 +55,15 @@ import {
   setSelectedRole,
 } from "../../lib/gamification";
 import {
+  GUEST_PROFILE_UPDATED_EVENT,
   readBackupTransferCode,
   saveBackupTransferCode,
   saveCachedGuestProfile,
 } from "../../lib/guestClient";
+import { CustomCursorTrail } from "../cosmetics/CustomCursorTrail";
+import { DiscordAvatarFrame } from "../cosmetics/DiscordAvatarFrame";
+import { FullPageProfileEffect } from "../cosmetics/FullPageProfileEffect";
+import { LeaderboardRowWrapper } from "../cosmetics/LeaderboardRowWrapper";
 import {
   mergeProfileIdentity,
   summarizeProfileActivity,
@@ -356,21 +361,36 @@ export function ProfileView() {
       }
     };
 
+    const handleGuestEvent = (event: Event) => {
+      if (!active) return;
+      const custom = event as CustomEvent<PublicGuestPlayer | null>;
+      if (custom.detail !== undefined) {
+        setGuestPlayer(custom.detail);
+      }
+    };
+
     window.addEventListener(GAMIFICATION_UPDATED_EVENT, syncGamification);
     window.addEventListener(CONTENT_UPDATED_EVENT, syncContent);
+    window.addEventListener(GUEST_PROFILE_UPDATED_EVENT, handleGuestEvent);
     window.addEventListener("storage", handleStorage);
 
     return () => {
       active = false;
       window.removeEventListener(GAMIFICATION_UPDATED_EVENT, syncGamification);
       window.removeEventListener(CONTENT_UPDATED_EVENT, syncContent);
+      window.removeEventListener(GUEST_PROFILE_UPDATED_EVENT, handleGuestEvent);
       window.removeEventListener("storage", handleStorage);
     };
-  }, []);
+  }, [applyGuestPlayer]);
 
   const identity = useMemo(
     () => mergeProfileIdentity(guestPlayer, gamification),
     [guestPlayer, gamification]
+  );
+
+  const equippedCosmetics = useMemo(
+    () => normalizeEquippedCosmetics(guestPlayer?.equippedCosmetics),
+    [guestPlayer?.equippedCosmetics]
   );
 
   const activity = useMemo(
@@ -640,59 +660,81 @@ export function ProfileView() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 space-y-6 pb-16">
-      {/* Top Breadcrumb & Quick Links */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white text-ink text-xs font-medium border border-ink/15 shadow-soft hover:bg-paper-muted shadow-hard-press transition-all"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>Trang chủ</span>
-          </Link>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-ink flex items-center gap-2 ml-1">
-            <User className="w-5 h-5 sm:w-6 sm:h-6 text-accent shrink-0" aria-hidden="true" />
-            <span>Hồ sơ người dùng</span>
-          </h1>
-        </div>
+    <div className="relative min-h-screen">
+      <FullPageProfileEffect themeId={equippedCosmetics.profile_theme} />
+      <CustomCursorTrail effectId={equippedCosmetics.cursor_effect} />
 
-        <div className="flex items-center gap-2">
-          <Link
-            href="/progress"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white text-ink text-xs font-medium border border-ink/15 shadow-soft hover:bg-paper-muted transition-colors"
-          >
-            <span>Tiến độ 7 ngày</span>
-          </Link>
-          <Link
-            href="/arena"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-ink text-white text-xs font-semibold border border-ink shadow-soft hover:bg-ink/90 transition-colors"
-          >
-            <Gamepad2 className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
-            <span>IT Arena</span>
-          </Link>
-        </div>
-      </div>
-
-      <p className="text-xs sm:text-sm text-ink-muted bg-white border border-ink/15 rounded-xl px-4 py-2.5 shadow-soft">
-        Đổi tên hiển thị, lưu mã khôi phục thiết bị DEV-XXXXXX và dùng IT-Coin mở khóa danh hiệu hoặc khung viền.
-      </p>
-
-      {/* 1. Identity Header Card */}
-      <section
-        aria-label="Thông tin định danh người học"
-        className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5"
-      >
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-5">
-          <div className="flex items-start gap-4 min-w-0">
-            <div
-              aria-label={`Avatar của ${identity.displayName}`}
-              className={`w-16 h-16 rounded-full bg-paper border-2 flex items-center justify-center font-mono font-bold text-lg text-ink shrink-0 ${getRingBadgeClass(
-                identity.equippedRing
-              )}`}
+      <div className="relative z-10 max-w-5xl mx-auto px-4 py-8 space-y-6 pb-16">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white text-ink text-xs font-medium border border-ink/15 shadow-soft hover:bg-paper-muted shadow-hard-press transition-all"
             >
-              {getAvatarInitials(identity.displayName)}
-            </div>
+              <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Trang chủ</span>
+            </Link>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-ink flex items-center gap-2 ml-1">
+              <User className="w-5 h-5 sm:w-6 sm:h-6 text-accent shrink-0" aria-hidden="true" />
+              <span>Hồ sơ người dùng</span>
+            </h1>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              href="/shop"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-accent text-white text-xs font-semibold border border-accent shadow-soft hover:bg-accent-hover transition-colors"
+            >
+              <ShoppingBag className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>IT-Coin Shop</span>
+            </Link>
+            <Link
+              href="/progress"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white text-ink text-xs font-medium border border-ink/15 shadow-soft hover:bg-paper-muted transition-colors"
+            >
+              <span>Tiến độ 7 ngày</span>
+            </Link>
+            <Link
+              href="/arena"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-ink text-white text-xs font-semibold border border-ink shadow-soft hover:bg-ink/90 transition-colors"
+            >
+              <Gamepad2 className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+              <span>IT Arena</span>
+            </Link>
+          </div>
+        </div>
+
+        <p className="text-xs sm:text-sm text-ink-muted bg-white/95 border border-ink/15 rounded-xl px-4 py-2.5 shadow-soft">
+          Đổi tên hiển thị, lưu mã khôi phục thiết bị DEV-XXXXXX và dùng IT-Coin mở khóa hiệu ứng Discord-style tại{" "}
+          <Link href="/shop" className="font-semibold text-accent hover:underline">
+            IT-Coin Shop
+          </Link>
+          .
+        </p>
+
+        <LeaderboardRowWrapper
+          fxId={equippedCosmetics.leaderboard_fx}
+          nameplateId={equippedCosmetics.nameplate}
+          className="bg-white/95 border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft"
+        >
+          <section
+            aria-label="Thông tin định danh người học"
+            className="space-y-5"
+          >
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-5">
+              <div className="flex items-start gap-4 min-w-0">
+                <DiscordAvatarFrame
+                  equippedId={equippedCosmetics.avatar_decoration}
+                  fallbackRing={identity.equippedRing}
+                  size="lg"
+                >
+                  <div
+                    aria-label={`Avatar của ${identity.displayName}`}
+                    className="w-full h-full rounded-full bg-paper flex items-center justify-center font-mono font-bold text-lg text-ink"
+                  >
+                    {getAvatarInitials(identity.displayName)}
+                  </div>
+                </DiscordAvatarFrame>
 
             <div className="min-w-0 space-y-2 flex-1">
               {!isEditingName ? (
@@ -782,7 +824,6 @@ export function ProfileView() {
                 </p>
               )}
 
-              {/* Badges Row */}
               <div className="flex flex-wrap items-center gap-2 pt-0.5">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-ink text-white text-xs font-mono font-semibold">
                   <Award className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
@@ -827,7 +868,6 @@ export function ProfileView() {
           </div>
         </div>
 
-        {/* Progress Bars: Next Title & Next 1000-pt Coin */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-paper border border-ink/15 rounded-xl p-4 space-y-2">
             <div className="flex items-center justify-between gap-2 text-xs">
@@ -905,10 +945,9 @@ export function ProfileView() {
           </div>
         </div>
       </section>
+      </LeaderboardRowWrapper>
 
-      {/* 2. IT Role Selector & 3. Zero-Login Transfer Code */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        {/* IT Role Selector */}
         <section
           aria-label="Chọn vai trò CNTT"
           className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft flex flex-col justify-between gap-4"
@@ -966,7 +1005,6 @@ export function ProfileView() {
           </Link>
         </section>
 
-        {/* Zero-Login Identity & Transfer Code Card */}
         <section
           aria-label="Danh tính Zero-Login và khôi phục thiết bị"
           className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4"
@@ -1087,26 +1125,32 @@ export function ProfileView() {
         </section>
       </div>
 
-      {/* 4. Cosmetics & Titles Shelf */}
       <section
         aria-label="Kệ Danh hiệu và Viền Avatar"
-        className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4"
+        className="bg-white/95 border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4"
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-sm font-bold text-ink uppercase tracking-wider font-mono flex items-center gap-2">
               <ShoppingBag className="w-4 h-4 text-accent" aria-hidden="true" />
-              <span>Danh hiệu &amp; Viền Avatar (Cosmetics)</span>
+              <span>Cosmetics &amp; Hiệu ứng Discord-style</span>
             </h2>
             <p className="text-xs text-ink-muted mt-0.5">
-              Dùng IT-Coin tích lũy từ luyện nói và Arena để mở khóa hoặc trang bị vật phẩm.
+              Dùng IT-Coin tích lũy từ luyện nói, Arena và Incident Party để mở khóa 24 hiệu ứng tại IT-Coin Shop.
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="px-3 py-1 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-bold text-ink">
               Số dư: {identity.itCoins} IT-Coin
             </span>
+            <Link
+              href="/shop"
+              className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-accent text-white border border-accent text-xs font-semibold hover:bg-accent-hover transition-colors"
+            >
+              <span>Mở IT-Coin Shop</span>
+              <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+            </Link>
             <Link
               href="/arena"
               className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-paper-muted border border-ink/15 text-xs font-semibold text-ink hover:bg-paper transition-colors"
@@ -1131,10 +1175,11 @@ export function ProfileView() {
         )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-          {COSMETIC_CATALOG.map((item) => {
+          {COSMETIC_CATALOG.slice(0, 6).map((item) => {
             const isOnline = identity.mode === "online";
             const isOwned = identity.ownedItems.includes(item.id);
             const isEquipped =
+              equippedCosmetics[item.category] === item.id ||
               (item.kind === "title" && identity.equippedTitle === item.value) ||
               (item.kind === "ring" && identity.equippedRing === item.value);
             const canAfford = identity.itCoins >= item.price;
@@ -1147,20 +1192,17 @@ export function ProfileView() {
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
-                      {item.kind === "ring" && (
-                        <span
-                          aria-hidden="true"
-                          className={`w-5 h-5 rounded-full bg-white border shrink-0 ${getRingBadgeClass(
-                            item.value
-                          )}`}
-                        />
-                      )}
+                      <span
+                        aria-hidden="true"
+                        className="w-3 h-3 rounded-full shrink-0 border border-ink/20"
+                        style={{ backgroundColor: item.previewAccent }}
+                      />
                       <span className="text-xs font-bold text-ink truncate">
                         {item.name}
                       </span>
                     </div>
                     <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-white border border-ink/15 text-ink-muted shrink-0">
-                      {item.kind === "title" ? "Danh hiệu" : "Viền"}
+                      {item.rarity}
                     </span>
                   </div>
                   <p className="text-[11px] text-ink-muted">{item.description}</p>
@@ -1212,7 +1254,6 @@ export function ProfileView() {
         </div>
       </section>
 
-      {/* 5. Speaking & Arena Activity Overview */}
       <section
         aria-label="Tổng quan hoạt động luyện nói và Arena"
         className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5"
@@ -1311,7 +1352,6 @@ export function ProfileView() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          {/* Top Weak Keywords/Points */}
           <div className="bg-paper border border-ink/15 rounded-xl p-4 space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h3 className="text-xs font-bold font-mono uppercase text-ink flex items-center gap-1.5">
@@ -1495,6 +1535,7 @@ export function ProfileView() {
           </div>
         </div>
       </section>
+      </div>
     </div>
   );
 }

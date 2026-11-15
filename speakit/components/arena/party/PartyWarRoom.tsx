@@ -1,0 +1,1265 @@
+"use client";
+
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
+import {
+  AlertTriangle,
+  Bot,
+  Check,
+  CheckCircle2,
+  Clock,
+  Coins,
+  Copy,
+  Crown,
+  Mic,
+  Play,
+  Radio,
+  RotateCcw,
+  Send,
+  ShieldAlert,
+  ShoppingBag,
+  Square,
+  Terminal,
+  Users,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
+import { initOrHydrateGuestSession } from "@/app/actions/leaderboard";
+import { DiscordAvatarFrame } from "@/components/cosmetics/DiscordAvatarFrame";
+import { VictoryFinisherOverlay } from "@/components/cosmetics/VictoryFinisherOverlay";
+import {
+  DEFAULT_EQUIPPED_COSMETICS,
+  normalizeEquippedCosmetics,
+} from "@/lib/cosmetics";
+import type { PublicGuestPlayer } from "@/lib/db";
+import {
+  GUEST_PROFILE_CACHE_KEY,
+  GUEST_PROFILE_UPDATED_EVENT,
+  readBackupTransferCode,
+  readCachedGuestProfile,
+  saveCachedGuestProfile,
+} from "@/lib/guestClient";
+import {
+  PARTY_SCENARIOS,
+  PartyRoomState,
+  PartyScenario,
+  PlayerRole,
+  findPartyScenarioById,
+} from "@/lib/party-scenarios";
+import { SpeechController, startSpeechRecognition } from "@/lib/speech";
+import { playTtsAudio, stopActiveTts } from "@/lib/tts-player";
+
+const ROLES: Array<{ id: PlayerRole; label: string; badge: string; focus: string }> = [
+  {
+    id: "frontend",
+    label: "Frontend Engineer",
+    badge: "FE",
+    focus: "Client bundles, retries, headers, and UI state",
+  },
+  {
+    id: "backend",
+    label: "Backend Engineer",
+    badge: "BE",
+    focus: "Transactions, memory heap, API auth, and schemas",
+  },
+  {
+    id: "devops",
+    label: "DevOps / SRE",
+    badge: "SRE",
+    focus: "Connection pools, K8s pods, CDN keys, and rollouts",
+  },
+];
+
+interface EvaluateApiResponse {
+  room?: PartyRoomState;
+  resolutionProgress?: number;
+  penaltySeconds?: number;
+  feedback?: string;
+  ctoFeedback?: string;
+  mvpPlayerId?: string;
+  player?: PublicGuestPlayer | null;
+  error?: string;
+}
+
+interface RoomApiResponse {
+  room?: PartyRoomState;
+  scenario?: PartyScenario;
+  error?: string;
+}
+
+function formatClock(totalSeconds: number): string {
+  const clamped = Math.max(0, Math.floor(totalSeconds));
+  const mins = Math.floor(clamped / 60);
+  const secs = clamped % 60;
+  return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+}
+
+function computeProgressFromRoom(room: PartyRoomState | null): number {
+  if (!room) return 0;
+  if (room.status === "resolved") return 100;
+  if (room.evaluations.length === 0) return 0;
+  const distinctRoles = new Set(room.evaluations.map((item) => item.role));
+  const avgScore =
+    room.evaluations.reduce((sum, item) => sum + item.score, 0) /
+    room.evaluations.length;
+  const roleWeight = Math.min(1, distinctRoles.size / 3) * 70;
+  const qualityWeight = Math.min(30, Math.round((avgScore / 100) * 30));
+  return Math.min(99, Math.round(roleWeight + qualityWeight));
+}
+
+export function PartyWarRoom() {
+  const [guestPlayer, setGuestPlayer] = useState<PublicGuestPlayer | null>(null);
+  const [selectedScenarioId, setSelectedScenarioId] = useState<string>(
+    PARTY_SCENARIOS[0].id
+  );
+  const [selectedRole, setSelectedRole] = useState<PlayerRole>("frontend");
+  const [joinCodeInput, setJoinCodeInput] = useState("");
+  const [room, setRoom] = useState<PartyRoomState | null>(null);
+  const [loadingAction, setLoadingAction] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [copiedCode, setCopiedCode] = useState(false);
+
+  const [resolutionProgress, setResolutionProgress] = useState(0);
+  const [timeLeftSec, setTimeLeftSec] = useState(360);
+  const [penaltyFlash, setPenaltyFlash] = useState(false);
+  const [ctoAlertText, setCtoAlertText] = useState<string | null>(null);
+  const [isTtsPlaying, setIsTtsPlaying] = useState(false);
+
+  const [transcriptInput, setTranscriptInput] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const [speechError, setSpeechError] = useState<string | null>(null);
+  const [mvpPlayerId, setMvpPlayerId] = useState<string | null>(null);
+  const [showFinisher, setShowFinisher] = useState(false);
+
+  const speechControllerRef = useRef<SpeechController | null>(null);
+  const turnStartRef = useRef<number>(Date.now());
+  const timerInitializedForRoomRef = useRef<string | null>(null);
+  const finisherTriggeredRef = useRef<string | null>(null);
+  const briefingSpokenRef = useRef<string | null>(null);
+
+  const syncGuestProfile = useCallback(async () => {
+    const cached = readCachedGuestProfile();
+    if (cached) {
+      setGuestPlayer(cached);
+    }
+    try {
+      const session = await initOrHydrateGuestSession(readBackupTransferCode());
+      if (session.mode === "online" && session.player) {
+        setGuestPlayer(session.player);
+        saveCachedGuestProfile(session.player);
+      }
+    } catch {
+    }
+  }, []);
+
+  useEffect(() => {
+    void syncGuestProfile();
+
+    const handleProfileEvent = () => {
+      const cached = readCachedGuestProfile();
+      if (cached) setGuestPlayer(cached);
+    };
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === GUEST_PROFILE_CACHE_KEY || event.key === null) {
+        handleProfileEvent();
+      }
+    };
+
+    window.addEventListener(GUEST_PROFILE_UPDATED_EVENT, handleProfileEvent);
+    window.addEventListener("storage", handleStorage);
+    return () => {
+      window.removeEventListener(GUEST_PROFILE_UPDATED_EVENT, handleProfileEvent);
+      window.removeEventListener("storage", handleStorage);
+      stopActiveTts();
+      speechControllerRef.current?.abort();
+    };
+  }, [syncGuestProfile]);
+
+  const equippedCosmetics = useMemo(
+    () =>
+      guestPlayer?.equippedCosmetics
+        ? normalizeEquippedCosmetics(guestPlayer.equippedCosmetics)
+        : DEFAULT_EQUIPPED_COSMETICS,
+    [guestPlayer]
+  );
+
+  const activeScenario: PartyScenario = useMemo(() => {
+    if (room) {
+      return findPartyScenarioById(room.scenarioId) ?? PARTY_SCENARIOS[0];
+    }
+    return findPartyScenarioById(selectedScenarioId) ?? PARTY_SCENARIOS[0];
+  }, [room, selectedScenarioId]);
+
+  const speakCtoAlert = useCallback((message: string) => {
+    setCtoAlertText(message);
+    setIsTtsPlaying(true);
+    playTtsAudio({
+      text: message,
+      persona: "lead_us_male",
+      rate: 1.0,
+      onEnd: () => setIsTtsPlaying(false),
+      onError: () => setIsTtsPlaying(false),
+    });
+  }, []);
+
+  const stopCtoAudio = useCallback(() => {
+    stopActiveTts();
+    setIsTtsPlaying(false);
+  }, []);
+
+  useEffect(() => {
+    if (!room) return;
+    if (room.status === "lobby") {
+      timerInitializedForRoomRef.current = null;
+      finisherTriggeredRef.current = null;
+      briefingSpokenRef.current = null;
+      return;
+    }
+
+    if (timerInitializedForRoomRef.current !== room.roomCode) {
+      timerInitializedForRoomRef.current = room.roomCode;
+      setTimeLeftSec(activeScenario.estimatedMinutes * 60);
+      setResolutionProgress(computeProgressFromRoom(room));
+      turnStartRef.current = Date.now();
+    }
+
+    if (
+      room.status !== "resolved" &&
+      briefingSpokenRef.current !== room.roomCode
+    ) {
+      briefingSpokenRef.current = room.roomCode;
+      speakCtoAlert(
+        `Incident Commander here. ${activeScenario.title}. ${activeScenario.incidentContext} Give me your status update in English.`
+      );
+    }
+
+    if (room.status === "resolved") {
+      setResolutionProgress(100);
+      if (finisherTriggeredRef.current !== room.roomCode) {
+        finisherTriggeredRef.current = room.roomCode;
+        setShowFinisher(true);
+        void syncGuestProfile();
+      }
+    }
+  }, [room, activeScenario, speakCtoAlert, syncGuestProfile]);
+
+  useEffect(() => {
+    if (!room || room.status === "lobby" || room.status === "resolved") return;
+    const interval = setInterval(() => {
+      setTimeLeftSec((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [room]);
+
+  useEffect(() => {
+    if (!room || room.status === "resolved") return;
+    const poll = setInterval(async () => {
+      try {
+        const res = await fetch(
+          `/api/party/room?code=${encodeURIComponent(room.roomCode)}`
+        );
+        if (!res.ok) return;
+        const data = (await res.json()) as RoomApiResponse;
+        const nextRoom = data.room ?? (data as unknown as PartyRoomState);
+        if (nextRoom && nextRoom.roomCode) {
+          setRoom(nextRoom);
+          setResolutionProgress((prev) =>
+            Math.max(prev, computeProgressFromRoom(nextRoom))
+          );
+        }
+      } catch {
+      }
+    }, 3000);
+    return () => clearInterval(poll);
+  }, [room]);
+
+  const callRoomAction = async (
+    payload: Record<string, unknown>,
+    actionKey: string
+  ) => {
+    setErrorMsg(null);
+    setLoadingAction(actionKey);
+    try {
+      const res = await fetch("/api/party/room", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...payload,
+          transferCode: readBackupTransferCode(),
+          backupTransferCode: readBackupTransferCode(),
+          displayName: guestPlayer?.displayName,
+        }),
+      });
+      const data = (await res.json()) as RoomApiResponse;
+      if (!res.ok) {
+        setErrorMsg(data.error ?? "Unable to update war room.");
+        return;
+      }
+      const nextRoom = data.room ?? (data as unknown as PartyRoomState);
+      if (nextRoom && nextRoom.roomCode) {
+        setRoom(nextRoom);
+      }
+    } catch {
+      setErrorMsg("Network error connecting to war room server.");
+    } finally {
+      setLoadingAction(null);
+    }
+  };
+
+  const handleCreateRoom = () => {
+    void callRoomAction(
+      {
+        action: "create",
+        scenarioId: selectedScenarioId,
+        role: selectedRole,
+      },
+      "create"
+    );
+  };
+
+  const handleJoinRoom = () => {
+    const cleaned = joinCodeInput.trim().toUpperCase();
+    if (cleaned.length !== 6) {
+      setErrorMsg("Please enter a valid 6-character invite code.");
+      return;
+    }
+    void callRoomAction(
+      {
+        action: "join",
+        code: cleaned,
+        roomCode: cleaned,
+        role: selectedRole,
+      },
+      "join"
+    );
+  };
+
+  const handleFillAi = () => {
+    if (!room) return;
+    void callRoomAction(
+      {
+        action: "fill_ai",
+        code: room.roomCode,
+        roomCode: room.roomCode,
+      },
+      "fill_ai"
+    );
+  };
+
+  const handleStartMission = () => {
+    if (!room) return;
+    void callRoomAction(
+      {
+        action: "start",
+        code: room.roomCode,
+        roomCode: room.roomCode,
+      },
+      "start"
+    );
+  };
+
+  const handleResetRoom = () => {
+    stopCtoAudio();
+    speechControllerRef.current?.abort();
+    setIsRecording(false);
+    setTranscriptInput("");
+    setCtoAlertText(null);
+    setShowFinisher(false);
+    setMvpPlayerId(null);
+    if (!room) return;
+    void callRoomAction(
+      {
+        action: "reset",
+        code: room.roomCode,
+        roomCode: room.roomCode,
+      },
+      "reset"
+    );
+  };
+
+  const handleLeaveRoom = () => {
+    stopCtoAudio();
+    speechControllerRef.current?.abort();
+    setIsRecording(false);
+    setRoom(null);
+    setTranscriptInput("");
+    setCtoAlertText(null);
+    setShowFinisher(false);
+    setMvpPlayerId(null);
+  };
+
+  const handleCopyCode = async () => {
+    if (!room) return;
+    try {
+      await navigator.clipboard.writeText(room.roomCode);
+      setCopiedCode(true);
+      setTimeout(() => setCopiedCode(false), 1800);
+    } catch {
+    }
+  };
+
+  const handleToggleMic = () => {
+    if (isRecording) {
+      speechControllerRef.current?.stop();
+      setIsRecording(false);
+      return;
+    }
+
+    setSpeechError(null);
+    const controller = startSpeechRecognition({
+      onStart: () => {
+        setIsRecording(true);
+        turnStartRef.current = Date.now();
+      },
+      onTranscript: (text) => {
+        setTranscriptInput(text);
+      },
+      onEnd: () => {
+        setIsRecording(false);
+      },
+      onError: (msg) => {
+        setSpeechError(msg);
+        setIsRecording(false);
+      },
+    });
+
+    if (controller) {
+      speechControllerRef.current = controller;
+    }
+  };
+
+  const handleSubmitReport = async () => {
+    if (!room) return;
+    const trimmed = transcriptInput.trim();
+    if (!trimmed) {
+      setErrorMsg("Speak into your mic or type your English status report first.");
+      return;
+    }
+
+    if (isRecording) {
+      speechControllerRef.current?.stop();
+      setIsRecording(false);
+    }
+
+    setErrorMsg(null);
+    setLoadingAction("evaluate");
+    const activePlayer =
+      room.players.find((p) => p.role === selectedRole) ?? room.players[0];
+
+    try {
+      const res = await fetch("/api/party/evaluate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code: room.roomCode,
+          roomCode: room.roomCode,
+          role: selectedRole,
+          playerId: activePlayer?.id ?? guestPlayer?.id ?? `guest-${selectedRole}`,
+          transcript: trimmed,
+          durationMs: Math.max(1000, Date.now() - turnStartRef.current),
+          transferCode: readBackupTransferCode(),
+          backupTransferCode: readBackupTransferCode(),
+        }),
+      });
+      const data = (await res.json()) as EvaluateApiResponse;
+      if (!res.ok) {
+        setErrorMsg(data.error ?? "Evaluation failed. Please try again.");
+        return;
+      }
+
+      if (data.penaltySeconds && data.penaltySeconds > 0) {
+        setTimeLeftSec((prev) => Math.max(0, prev - data.penaltySeconds!));
+        setPenaltyFlash(true);
+        setTimeout(() => setPenaltyFlash(false), 2600);
+      }
+
+      if (data.room) {
+        setRoom(data.room);
+        setResolutionProgress(
+          typeof data.resolutionProgress === "number"
+            ? data.resolutionProgress
+            : computeProgressFromRoom(data.room)
+        );
+      } else if (typeof data.resolutionProgress === "number") {
+        setResolutionProgress(data.resolutionProgress);
+      }
+
+      if (data.mvpPlayerId) {
+        setMvpPlayerId(data.mvpPlayerId);
+      }
+
+      if (data.player) {
+        setGuestPlayer(data.player);
+        saveCachedGuestProfile(data.player);
+      }
+
+      const spokenFeedback = data.ctoFeedback ?? data.feedback;
+      if (spokenFeedback) {
+        speakCtoAlert(spokenFeedback);
+      }
+
+      setTranscriptInput("");
+    } catch {
+      setErrorMsg("Network error submitting your incident report.");
+    } finally {
+      setLoadingAction(null);
+    }
+  };
+
+  const myClue = activeScenario.clues[selectedRole];
+  const teammateRoles = ROLES.filter((r) => r.id !== selectedRole);
+  const myMatchedKeywords = useMemo(() => {
+    if (!room) return new Set<string>();
+    const matched = new Set<string>();
+    for (const ev of room.evaluations) {
+      if (ev.role === selectedRole) {
+        for (const kw of ev.matchedKeywords) {
+          matched.add(kw.toLowerCase());
+        }
+      }
+    }
+    return matched;
+  }, [room, selectedRole]);
+
+  const computedMvpPlayer = useMemo(() => {
+    if (!room || room.players.length === 0) return null;
+    if (mvpPlayerId) {
+      const found = room.players.find((p) => p.id === mvpPlayerId);
+      if (found) return found;
+    }
+    return [...room.players].sort((a, b) => (b.score ?? 0) - (a.score ?? 0))[0];
+  }, [room, mvpPlayerId]);
+
+  return (
+    <div className="space-y-6">
+      <VictoryFinisherOverlay
+        finisherId={equippedCosmetics.victory_finisher}
+        active={showFinisher}
+        title="INCIDENT RESOLVED!"
+        subtitle={`${activeScenario.title} — Team Score ${room?.teamScore ?? 0} pts`}
+        onComplete={() => setShowFinisher(false)}
+      />
+
+      <section className="bg-white border-2 border-ink rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0_#1A1714] space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-accent/10 border border-accent text-accent text-[11px] font-mono font-bold">
+              <Radio className="w-3.5 h-3.5" />
+              <span>CO-OP WAR ROOM • 3AM OUTAGE</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-ink tracking-tight">
+              Outage At 3AM: Incident Command
+            </h1>
+            <p className="text-xs sm:text-sm text-ink/70">
+              Coordinate across Frontend, Backend, and DevOps in English. Speaking
+              Vietnamese triggers a <strong className="text-accent">-15s</strong> clock
+              penalty!
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3 self-start sm:self-center bg-paper border border-ink/20 rounded-2xl px-3.5 py-2">
+            <DiscordAvatarFrame
+              equippedId={equippedCosmetics.avatar_decoration}
+              fallbackRing={guestPlayer?.equippedRing}
+              size="sm"
+              micActive={isRecording}
+            >
+              <div className="w-8 h-8 rounded-full bg-ink text-white flex items-center justify-center text-xs font-mono font-bold">
+                {(guestPlayer?.displayName ?? "DV").slice(0, 2).toUpperCase()}
+              </div>
+            </DiscordAvatarFrame>
+            <div className="text-xs">
+              <div className="font-bold text-ink">
+                {guestPlayer?.displayName ?? "Guest Engineer"}
+              </div>
+              <div className="font-mono text-ink/70 flex items-center gap-1">
+                <Coins className="w-3.5 h-3.5 text-accent" />
+                <span>{guestPlayer?.itCoins ?? 0} IT-Coins</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {errorMsg && (
+          <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-accent/10 border border-accent text-accent text-xs font-medium">
+            <AlertTriangle className="w-4 h-4 shrink-0" />
+            <span>{errorMsg}</span>
+          </div>
+        )}
+      </section>
+
+      {(!room || room.status === "lobby") && (
+        <div className="space-y-6">
+          <section className="bg-white border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] space-y-4">
+            <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-ink">
+              1. Choose Your Engineering Role
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {ROLES.map((role) => {
+                const active = selectedRole === role.id;
+                return (
+                  <button
+                    key={role.id}
+                    type="button"
+                    onClick={() => setSelectedRole(role.id)}
+                    className={`text-left p-4 rounded-xl border-2 transition-all ${
+                      active
+                        ? "bg-paper border-ink shadow-[4px_4px_0_#1A1714] -translate-x-0.5 -translate-y-0.5"
+                        : "bg-white border-ink/20 hover:border-ink"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ink text-white">
+                        {role.badge}
+                      </span>
+                      {active && <CheckCircle2 className="w-4 h-4 text-accent" />}
+                    </div>
+                    <div className="mt-2 font-bold text-sm text-ink">{role.label}</div>
+                    <div className="mt-1 text-xs text-ink/70">{role.focus}</div>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+
+          {!room ? (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <section className="lg:col-span-2 bg-white border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-ink">
+                    2. Create Room — Select Outage Scenario
+                  </h2>
+                  <span className="text-xs font-mono text-ink/60">
+                    {PARTY_SCENARIOS.length} scenarios
+                  </span>
+                </div>
+
+                <div className="space-y-2.5">
+                  {PARTY_SCENARIOS.map((scenario) => {
+                    const active = selectedScenarioId === scenario.id;
+                    return (
+                      <button
+                        key={scenario.id}
+                        type="button"
+                        onClick={() => setSelectedScenarioId(scenario.id)}
+                        className={`w-full text-left p-3.5 rounded-xl border-2 transition-all ${
+                          active
+                            ? "bg-paper border-ink shadow-[4px_4px_0_#1A1714]"
+                            : "bg-white border-ink/15 hover:border-ink"
+                        }`}
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span className="font-bold text-sm text-ink">
+                            {scenario.title}
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={`px-2 py-0.5 rounded text-[11px] font-mono font-bold ${
+                                scenario.severity === "SEV-1"
+                                  ? "bg-accent text-white"
+                                  : "bg-amber-200 text-ink border border-ink/20"
+                              }`}
+                            >
+                              {scenario.severity}
+                            </span>
+                            <span className="text-[11px] font-mono text-ink/60">
+                              ~{scenario.estimatedMinutes}m
+                            </span>
+                          </div>
+                        </div>
+                        <p className="mt-1 text-xs text-ink/75">{scenario.summary}</p>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleCreateRoom}
+                  disabled={loadingAction === "create"}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] disabled:opacity-50"
+                >
+                  <ShieldAlert className="w-4 h-4" />
+                  <span>
+                    {loadingAction === "create"
+                      ? "Creating War Room..."
+                      : "Create War Room"}
+                  </span>
+                </button>
+              </section>
+
+              <section className="bg-paper border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] flex flex-col justify-between space-y-4">
+                <div className="space-y-3">
+                  <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-ink">
+                    Or Join by Invite Code
+                  </h2>
+                  <p className="text-xs text-ink/75">
+                    Enter the 6-character room code shared by your squad lead.
+                  </p>
+                  <input
+                    type="text"
+                    maxLength={6}
+                    value={joinCodeInput}
+                    onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
+                    placeholder="ABC123"
+                    className="w-full px-4 py-3 rounded-xl bg-white border-2 border-ink font-mono text-lg font-bold tracking-[0.25em] text-center text-ink uppercase focus:outline-none"
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleJoinRoom}
+                  disabled={loadingAction === "join"}
+                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-ink text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:bg-white hover:text-ink transition-colors disabled:opacity-50"
+                >
+                  <Users className="w-4 h-4" />
+                  <span>{loadingAction === "join" ? "Joining..." : "Join Room"}</span>
+                </button>
+              </section>
+            </div>
+          ) : (
+            <section className="bg-white border-2 border-ink rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0_#1A1714] space-y-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-ink/15">
+                <div>
+                  <div className="text-xs font-mono text-ink/60">WAR ROOM CODE</div>
+                  <div className="flex items-center gap-3 mt-1">
+                    <span className="text-2xl font-mono font-bold tracking-[0.2em] text-ink bg-paper px-3 py-1 rounded-lg border-2 border-ink">
+                      {room.roomCode}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleCopyCode}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-ink/25 text-xs font-mono font-semibold text-ink hover:border-ink"
+                    >
+                      {copiedCode ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>Copied</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5" />
+                          <span>Copy</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="text-left sm:text-right">
+                  <span className="px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-accent text-white">
+                    {activeScenario.severity}
+                  </span>
+                  <div className="mt-1 font-bold text-base text-ink">
+                    {activeScenario.title}
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {ROLES.map((role) => {
+                  const slot = room.players.find((p) => p.role === role.id);
+                  return (
+                    <div
+                      key={role.id}
+                      className={`p-4 rounded-xl border-2 ${
+                        slot
+                          ? "bg-paper border-ink"
+                          : "bg-white border-dashed border-ink/30"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <DiscordAvatarFrame
+                          equippedId={
+                            slot && role.id === selectedRole
+                              ? equippedCosmetics.avatar_decoration
+                              : null
+                          }
+                          size="sm"
+                        >
+                          <div className="w-9 h-9 rounded-full bg-ink text-white flex items-center justify-center text-xs font-mono font-bold">
+                            {role.badge}
+                          </div>
+                        </DiscordAvatarFrame>
+                        <div className="min-w-0">
+                          <div className="text-xs font-mono text-ink/60">
+                            {role.label}
+                          </div>
+                          <div className="font-bold text-sm text-ink truncate">
+                            {slot ? slot.displayName : "Waiting for engineer..."}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={handleFillAi}
+                    disabled={
+                      loadingAction === "fill_ai" || room.players.length >= 3
+                    }
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-paper text-ink font-bold text-xs sm:text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:bg-white disabled:opacity-50"
+                  >
+                    <Bot className="w-4 h-4 text-accent" />
+                    <span>
+                      {loadingAction === "fill_ai"
+                        ? "Filling AI Squad..."
+                        : "Fill with AI Teammates"}
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleLeaveRoom}
+                    className="px-3.5 py-2.5 rounded-xl bg-white text-ink/70 text-xs font-mono border border-ink/20 hover:border-ink hover:text-ink"
+                  >
+                    Leave Room
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleStartMission}
+                  disabled={loadingAction === "start"}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:translate-x-[-1px] hover:translate-y-[-1px] disabled:opacity-50"
+                >
+                  <Play className="w-4 h-4" />
+                  <span>
+                    {loadingAction === "start"
+                      ? "Launching..."
+                      : "Start Incident Call"}
+                  </span>
+                </button>
+              </div>
+            </section>
+          )}
+        </div>
+      )}
+
+      {room &&
+        (room.status === "briefing" ||
+          room.status === "speaking" ||
+          room.status === "evaluating") && (
+          <div className="space-y-6">
+            <section className="bg-white border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded bg-accent text-white text-xs font-mono font-bold">
+                      {activeScenario.severity}
+                    </span>
+                    <span className="text-xs font-mono text-ink/60">
+                      ROOM {room.roomCode}
+                    </span>
+                  </div>
+                  <h2 className="text-xl font-bold text-ink">
+                    {activeScenario.title}
+                  </h2>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  {penaltyFlash && (
+                    <span className="px-3 py-1 rounded-full bg-accent text-white text-xs font-mono font-bold animate-pulse border border-ink">
+                      -15s Vietnamese Penalty!
+                    </span>
+                  )}
+
+                  <div
+                    className={`flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-ink font-mono font-bold text-lg ${
+                      penaltyFlash
+                        ? "bg-accent text-white"
+                        : timeLeftSec <= 60
+                          ? "bg-accent/15 text-accent"
+                          : "bg-paper text-ink"
+                    }`}
+                  >
+                    <Clock className="w-4 h-4" />
+                    <span>{formatClock(timeLeftSec)}</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={
+                      isTtsPlaying
+                        ? stopCtoAudio
+                        : () =>
+                            speakCtoAlert(
+                              ctoAlertText ?? activeScenario.incidentContext
+                            )
+                    }
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-paper border-2 border-ink text-xs font-mono font-bold text-ink hover:bg-white"
+                  >
+                    {isTtsPlaying ? (
+                      <>
+                        <VolumeX className="w-4 h-4 text-accent" />
+                        <span>Mute CTO</span>
+                      </>
+                    ) : (
+                      <>
+                        <Volume2 className="w-4 h-4 text-accent" />
+                        <span>CTO Briefing</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-xs font-mono font-bold text-ink">
+                  <span>INCIDENT RESOLUTION PROGRESS</span>
+                  <span>{resolutionProgress}%</span>
+                </div>
+                <div className="w-full h-4 rounded-full bg-paper border-2 border-ink overflow-hidden">
+                  <div
+                    className="h-full bg-emerald-600 transition-all duration-500"
+                    style={{ width: `${Math.min(100, Math.max(0, resolutionProgress))}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-paper border border-ink/20 text-xs text-ink/85 flex items-start gap-2.5">
+                <Terminal className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-mono font-bold text-ink">
+                    CTO Incident Commander:{" "}
+                  </span>
+                  <span>{ctoAlertText ?? activeScenario.incidentContext}</span>
+                </div>
+              </div>
+            </section>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <section className="lg:col-span-2 bg-white border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="px-2.5 py-1 rounded-lg bg-ink text-white text-xs font-mono font-bold">
+                    YOUR EXCLUSIVE CLUE • {myClue.roleLabel}
+                  </span>
+                  {room.currentTurnRole === selectedRole && (
+                    <span className="px-2.5 py-1 rounded-full bg-accent/15 text-accent border border-accent text-[11px] font-mono font-bold">
+                      Your Turn to Report
+                    </span>
+                  )}
+                </div>
+
+                <p className="text-sm font-medium text-ink">{myClue.summary}</p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="p-3.5 rounded-xl bg-paper border border-ink/20 space-y-2">
+                    <div className="text-[11px] font-mono font-bold uppercase text-ink/60">
+                      Live Telemetry Metrics
+                    </div>
+                    <ul className="space-y-1.5 text-xs font-mono text-ink">
+                      {myClue.metrics.map((metric) => (
+                        <li key={metric} className="flex items-start gap-1.5">
+                          <span className="text-accent font-bold">•</span>
+                          <span>{metric}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-paper border border-ink/20 space-y-2">
+                    <div className="text-[11px] font-mono font-bold uppercase text-ink/60">
+                      Suspected Root Cause
+                    </div>
+                    <p className="text-xs text-ink font-medium">
+                      {myClue.suspectedCause}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="text-[11px] font-mono font-bold uppercase text-ink/60">
+                    Target English Keywords (Say these clearly)
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {myClue.targetKeywords.map((kw) => {
+                      const hit = myMatchedKeywords.has(kw.toLowerCase());
+                      return (
+                        <span
+                          key={kw}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold border ${
+                            hit
+                              ? "bg-emerald-100 border-emerald-700 text-emerald-800"
+                              : "bg-paper border-ink/25 text-ink"
+                          }`}
+                        >
+                          {hit ? `✓ ${kw}` : kw}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+              </section>
+
+              <section className="bg-paper border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] space-y-4">
+                <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-ink">
+                  Teammates&apos; Intel (Role Summary)
+                </h3>
+                <div className="space-y-3">
+                  {teammateRoles.map((role) => {
+                    const clue = activeScenario.clues[role.id];
+                    const slot = room.players.find((p) => p.role === role.id);
+                    const isTurn = room.currentTurnRole === role.id;
+                    return (
+                      <div
+                        key={role.id}
+                        className={`p-3.5 rounded-xl border-2 bg-white space-y-2 ${
+                          isTurn ? "border-accent" : "border-ink/20"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <DiscordAvatarFrame size="sm" micActive={isTurn}>
+                              <div className="w-7 h-7 rounded-full bg-ink text-white flex items-center justify-center text-[10px] font-mono font-bold">
+                                {role.badge}
+                              </div>
+                            </DiscordAvatarFrame>
+                            <div className="min-w-0">
+                              <div className="text-xs font-bold text-ink truncate">
+                                {slot?.displayName ?? "AI Engineer"}
+                              </div>
+                              <div className="text-[10px] font-mono text-ink/60">
+                                {clue.roleLabel}
+                              </div>
+                            </div>
+                          </div>
+                          {slot?.score !== undefined && (
+                            <span className="text-xs font-mono font-bold text-emerald-700">
+                              {slot.score} pts
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-ink/80">{clue.summary}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            </div>
+
+            <section className="bg-white border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <DiscordAvatarFrame
+                    equippedId={equippedCosmetics.avatar_decoration}
+                    fallbackRing={guestPlayer?.equippedRing}
+                    size="sm"
+                    micActive={isRecording}
+                  >
+                    <div className="w-8 h-8 rounded-full bg-ink text-white flex items-center justify-center text-xs font-mono font-bold">
+                      {(guestPlayer?.displayName ?? "DV").slice(0, 2).toUpperCase()}
+                    </div>
+                  </DiscordAvatarFrame>
+                  <div>
+                    <div className="text-sm font-bold text-ink">
+                      Speak or Type Your Incident Report (English Only)
+                    </div>
+                    <div className="text-xs text-ink/60">
+                      Explain your role&apos;s root cause and proposed fix using the
+                      target keywords above.
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleToggleMic}
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs border-2 border-ink shadow-[4px_4px_0_#1A1714] ${
+                    isRecording
+                      ? "bg-accent text-white animate-pulse"
+                      : "bg-paper text-ink hover:bg-white"
+                  }`}
+                >
+                  {isRecording ? (
+                    <>
+                      <Square className="w-3.5 h-3.5" />
+                      <span>Stop Mic</span>
+                    </>
+                  ) : (
+                    <>
+                      <Mic className="w-3.5 h-3.5 text-accent" />
+                      <span>Record Voice (STT)</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {speechError && (
+                <div className="text-xs text-accent font-medium">{speechError}</div>
+              )}
+
+              <textarea
+                rows={3}
+                value={transcriptInput}
+                onChange={(e) => setTranscriptInput(e.target.value)}
+                placeholder="Example: We have a lock contention deadlock in the payment transaction. Let's add a rollback and client idempotency key..."
+                className="w-full p-3.5 rounded-xl bg-paper border-2 border-ink text-sm text-ink placeholder:text-ink/40 focus:outline-none"
+              />
+
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={handleResetRoom}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-ink/25 text-xs font-mono text-ink/70 hover:border-ink hover:text-ink"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>Reset Room</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleSubmitReport}
+                  disabled={loadingAction === "evaluate"}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] disabled:opacity-50"
+                >
+                  <Send className="w-4 h-4" />
+                  <span>
+                    {loadingAction === "evaluate"
+                      ? "CTO Evaluating..."
+                      : "Submit Status Report"}
+                  </span>
+                </button>
+              </div>
+
+              {room.evaluations.length > 0 && (
+                <div className="pt-4 border-t border-ink/15 space-y-2.5">
+                  <div className="text-xs font-mono font-bold uppercase text-ink/60">
+                    War-Room Dispatch Log
+                  </div>
+                  <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                    {room.evaluations.map((ev, idx) => (
+                      <div
+                        key={`${ev.playerId}-${idx}`}
+                        className="p-3 rounded-xl bg-paper border border-ink/20 text-xs space-y-1"
+                      >
+                        <div className="flex items-center justify-between font-mono font-bold">
+                          <span className="uppercase text-ink">[{ev.role}]</span>
+                          <span className="text-emerald-700">{ev.score} pts</span>
+                        </div>
+                        <p className="text-ink">&ldquo;{ev.transcript}&rdquo;</p>
+                        <p className="text-ink/75 font-medium">
+                          CTO: {ev.feedback}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </section>
+          </div>
+        )}
+
+      {room && room.status === "resolved" && (
+        <section className="bg-white border-2 border-ink rounded-2xl p-6 shadow-[4px_4px_0_#1A1714] space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-ink/15">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 border border-emerald-700 text-emerald-800 text-xs font-mono font-bold">
+                <CheckCircle2 className="w-4 h-4" />
+                <span>SEV RESOLVED • 100% RESTORED</span>
+              </div>
+              <h2 className="text-2xl font-bold text-ink">
+                {activeScenario.title} — Post-Mortem Victory
+              </h2>
+            </div>
+
+            <div className="bg-paper border-2 border-ink rounded-xl px-4 py-2.5 text-center">
+              <div className="text-[10px] font-mono font-bold text-ink/60">
+                TEAM SCORE
+              </div>
+              <div className="text-2xl font-mono font-bold text-ink">
+                {room.teamScore} pts
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 rounded-xl bg-paper border-2 border-ink space-y-3">
+              <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-ink">
+                <Crown className="w-4 h-4 text-accent" />
+                <span>MVP & IT-Coin Rewards</span>
+              </div>
+              {computedMvpPlayer && (
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-white border border-ink/20">
+                  <DiscordAvatarFrame
+                    equippedId={
+                      computedMvpPlayer.role === selectedRole
+                        ? equippedCosmetics.avatar_decoration
+                        : null
+                    }
+                    size="md"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-ink text-white flex items-center justify-center text-xs font-mono font-bold">
+                      {computedMvpPlayer.role.slice(0, 3).toUpperCase()}
+                    </div>
+                  </DiscordAvatarFrame>
+                  <div>
+                    <div className="font-bold text-sm text-ink">
+                      {computedMvpPlayer.displayName} (MVP)
+                    </div>
+                    <div className="text-xs font-mono text-emerald-700 font-bold">
+                      +15 IT-Coins Win + +10 IT-Coins MVP Bonus
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-2">
+                {room.players.map((p) => (
+                  <div
+                    key={p.id}
+                    className="flex items-center justify-between text-xs font-mono px-3 py-2 rounded-lg bg-white border border-ink/15"
+                  >
+                    <span className="font-bold text-ink">
+                      {p.displayName} ({p.role})
+                    </span>
+                    <span className="text-ink/80">{p.score ?? 0} pts</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-paper border-2 border-ink space-y-3">
+              <div className="text-xs font-mono font-bold uppercase text-ink">
+                Incident Resolution Checklist
+              </div>
+              <ul className="space-y-2 text-xs text-ink">
+                {activeScenario.resolutionChecklist.map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <button
+              type="button"
+              onClick={handleResetRoom}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714]"
+            >
+              <RotateCcw className="w-4 h-4" />
+              <span>Play Another Outage</span>
+            </button>
+
+            <Link
+              href="/shop"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-ink text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:bg-white hover:text-ink"
+            >
+              <ShoppingBag className="w-4 h-4 text-accent" />
+              <span>Spend IT-Coins in Shop</span>
+            </Link>
+          </div>
+        </section>
+      )}
+    </div>
+  );
+}
