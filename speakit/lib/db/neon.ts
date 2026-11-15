@@ -63,6 +63,8 @@ export async function ensureSchema(): Promise<boolean> {
             score INT NOT NULL,
             keywords_used JSONB NOT NULL DEFAULT '[]',
             role TEXT,
+            player_name TEXT,
+            transfer_code TEXT,
             created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
           )
         `,
@@ -83,6 +85,8 @@ export async function ensureSchema(): Promise<boolean> {
             accuracy_or_words INT NOT NULL,
             duration_sec INT NOT NULL,
             role TEXT,
+            player_name TEXT,
+            transfer_code TEXT,
             created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
           )
         `,
@@ -92,6 +96,22 @@ export async function ensureSchema(): Promise<boolean> {
             payload JSONB NOT NULL DEFAULT '{}',
             updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
           )
+        `,
+        sql`
+          ALTER TABLE speakit_attempts
+          ADD COLUMN IF NOT EXISTS player_name TEXT
+        `,
+        sql`
+          ALTER TABLE speakit_attempts
+          ADD COLUMN IF NOT EXISTS transfer_code TEXT
+        `,
+        sql`
+          ALTER TABLE speakit_arena_runs
+          ADD COLUMN IF NOT EXISTS player_name TEXT
+        `,
+        sql`
+          ALTER TABLE speakit_arena_runs
+          ADD COLUMN IF NOT EXISTS transfer_code TEXT
         `,
       ]);
       schemaReadyUrl = url;

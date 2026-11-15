@@ -49,9 +49,9 @@ export async function GET(req: NextRequest) {
         avgScore: number;
       }>,
     },
-    attempts: [] as PracticeAttempt[],
+    attempts: [] as Array<PracticeAttempt & { playerName?: string | null; transferCode?: string | null }>,
     weakPoints: [] as WeakPoint[],
-    arenaRuns: [] as ArenaRunRecord[],
+    arenaRuns: [] as Array<ArenaRunRecord & { playerName?: string | null; transferCode?: string | null }>,
     overrides: emptyOverrides,
     health: baseHealth,
   };
@@ -79,7 +79,7 @@ export async function GET(req: NextRequest) {
       scenarioRows,
     ] = await sql.transaction([
       sql`
-        SELECT id, scenario, turn_index, transcript, score, keywords_used, role, created_at
+        SELECT id, scenario, turn_index, transcript, score, keywords_used, role, player_name, transfer_code, created_at
         FROM speakit_attempts
         ORDER BY created_at DESC
         LIMIT 200
@@ -91,7 +91,7 @@ export async function GET(req: NextRequest) {
         LIMIT 100
       `,
       sql`
-        SELECT id, game_id, score, accuracy_or_words, duration_sec, role, created_at
+        SELECT id, game_id, score, accuracy_or_words, duration_sec, role, player_name, transfer_code, created_at
         FROM speakit_arena_runs
         ORDER BY created_at DESC
         LIMIT 200
@@ -133,7 +133,9 @@ export async function GET(req: NextRequest) {
 
     const overrides = normalizeContentOverrides(contentRows[0]?.payload);
 
-    const attempts: PracticeAttempt[] = attemptRows.map((r) => ({
+    const attempts: Array<
+      PracticeAttempt & { playerName: string | null; transferCode: string | null }
+    > = attemptRows.map((r) => ({
       id: String(r.id),
       scenario: String(r.scenario),
       turn_index: Number(r.turn_index) || 0,
@@ -143,6 +145,14 @@ export async function GET(req: NextRequest) {
         ? r.keywords_used.map(String)
         : [],
       role: typeof r.role === "string" ? r.role : null,
+      playerName:
+        typeof r.player_name === "string" && r.player_name.trim()
+          ? r.player_name.trim()
+          : null,
+      transferCode:
+        typeof r.transfer_code === "string" && r.transfer_code.trim()
+          ? r.transfer_code.trim()
+          : null,
       created_at: toIsoString(r.created_at),
     }));
 
@@ -154,13 +164,23 @@ export async function GET(req: NextRequest) {
       updated_at: toIsoString(r.updated_at),
     }));
 
-    const arenaRuns: ArenaRunRecord[] = arenaRows.map((r) => ({
+    const arenaRuns: Array<
+      ArenaRunRecord & { playerName: string | null; transferCode: string | null }
+    > = arenaRows.map((r) => ({
       id: String(r.id),
       game_id: String(r.game_id),
       score: Number(r.score) || 0,
       accuracy_or_words: Number(r.accuracy_or_words) || 0,
       duration_sec: Number(r.duration_sec) || 0,
       role: typeof r.role === "string" ? r.role : null,
+      playerName:
+        typeof r.player_name === "string" && r.player_name.trim()
+          ? r.player_name.trim()
+          : null,
+      transferCode:
+        typeof r.transfer_code === "string" && r.transfer_code.trim()
+          ? r.transfer_code.trim()
+          : null,
       created_at: toIsoString(r.created_at),
     }));
 

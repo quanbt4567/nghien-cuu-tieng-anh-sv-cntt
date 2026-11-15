@@ -23,6 +23,34 @@ const GAME_LABELS: Record<string, string> = {
   "standup-speed-run": "Standup Speed Run",
 };
 
+function PlayerCell({
+  playerName,
+  transferCode,
+}: {
+  playerName?: string | null;
+  transferCode?: string | null;
+}) {
+  const name = playerName?.trim();
+  const code = transferCode?.trim();
+  if (!name && !code) {
+    return (
+      <span className="font-mono text-[11px] text-ink-faint">Ẩn danh</span>
+    );
+  }
+  return (
+    <div className="flex flex-col gap-1">
+      <span className="font-semibold text-ink whitespace-nowrap">
+        {name || "Ẩn danh"}
+      </span>
+      {code && (
+        <span className="inline-flex w-fit px-2 py-0.5 rounded-pill bg-paper border border-ink/15 font-mono text-[10px] text-ink-muted">
+          {code}
+        </span>
+      )}
+    </div>
+  );
+}
+
 export function AdminLogsTab({ data }: AdminLogsTabProps) {
   const { attempts, arenaRuns, weakPoints, overrides } = data;
 
@@ -62,7 +90,9 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
         keywordsJoined.includes(q) ||
         a.scenario.toLowerCase().includes(q) ||
         scenarioTitle.includes(q) ||
-        (a.role ?? "").toLowerCase().includes(q)
+        (a.role ?? "").toLowerCase().includes(q) ||
+        (a.playerName ?? "").toLowerCase().includes(q) ||
+        (a.transferCode ?? "").toLowerCase().includes(q)
       );
     });
   }, [attempts, q, scenarioFilter, scenarioTitleMap]);
@@ -78,6 +108,8 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
         run.game_id.toLowerCase().includes(q) ||
         gameLabel.includes(q) ||
         (run.role ?? "").toLowerCase().includes(q) ||
+        (run.playerName ?? "").toLowerCase().includes(q) ||
+        (run.transferCode ?? "").toLowerCase().includes(q) ||
         String(run.score).includes(q)
       );
     });
@@ -178,7 +210,7 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Tìm transcript, từ khóa, vai trò..."
+              placeholder="Tìm tên người dùng, mã, transcript, từ khóa, vai trò..."
               className="w-full pl-9 pr-3 py-2 text-xs bg-paper border border-ink/20 rounded-xl text-ink placeholder:text-ink-faint focus:outline-none focus:border-accent"
             />
           </div>
@@ -248,6 +280,7 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
                 <thead>
                   <tr className="bg-paper border-b border-ink/10 font-mono text-[11px] text-ink-muted uppercase">
                     <th className="py-3 px-4">Thời gian</th>
+                    <th className="py-3 px-4">Người dùng</th>
                     <th className="py-3 px-4">Kịch bản / Lượt</th>
                     <th className="py-3 px-4">Vai trò</th>
                     <th className="py-3 px-4">Điểm</th>
@@ -260,6 +293,12 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
                     <tr key={attempt.id} className="hover:bg-paper/50 align-top">
                       <td className="py-3 px-4 font-mono text-[11px] text-ink-muted whitespace-nowrap">
                         {formatDateTimeVI(attempt.created_at)}
+                      </td>
+                      <td className="py-3 px-4">
+                        <PlayerCell
+                          playerName={attempt.playerName}
+                          transferCode={attempt.transferCode}
+                        />
                       </td>
                       <td className="py-3 px-4">
                         <div className="font-semibold text-ink">
@@ -331,6 +370,7 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
                 <thead>
                   <tr className="bg-paper border-b border-ink/10 font-mono text-[11px] text-ink-muted uppercase">
                     <th className="py-3 px-4">Thời gian</th>
+                    <th className="py-3 px-4">Người dùng</th>
                     <th className="py-3 px-4">Minigame</th>
                     <th className="py-3 px-4">Vai trò</th>
                     <th className="py-3 px-4">Điểm</th>
@@ -340,9 +380,15 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
                 </thead>
                 <tbody className="divide-y divide-ink/10">
                   {filteredArenaRuns.map((run) => (
-                    <tr key={run.id} className="hover:bg-paper/50">
+                    <tr key={run.id} className="hover:bg-paper/50 align-top">
                       <td className="py-3 px-4 font-mono text-[11px] text-ink-muted whitespace-nowrap">
                         {formatDateTimeVI(run.created_at)}
+                      </td>
+                      <td className="py-3 px-4">
+                        <PlayerCell
+                          playerName={run.playerName}
+                          transferCode={run.transferCode}
+                        />
                       </td>
                       <td className="py-3 px-4 font-semibold text-ink">
                         {GAME_LABELS[run.game_id] ?? run.game_id}

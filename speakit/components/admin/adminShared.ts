@@ -63,20 +63,30 @@ export interface AdminStats {
   scenarioBreakdown: ScenarioBreakdownItem[];
 }
 
+export interface AdminAttemptRow extends PracticeAttempt {
+  playerName?: string | null;
+  transferCode?: string | null;
+}
+
+export interface AdminArenaRunRow extends ArenaRunRecord {
+  playerName?: string | null;
+  transferCode?: string | null;
+}
+
 export interface AdminDashboardResponse {
   stats: AdminStats;
-  attempts: PracticeAttempt[];
+  attempts: AdminAttemptRow[];
   weakPoints: WeakPoint[];
-  arenaRuns: ArenaRunRecord[];
+  arenaRuns: AdminArenaRunRow[];
   overrides: AdminContentOverrides;
   health: AdminHealth;
 }
 
 export interface MergedAdminData {
   stats: AdminStats;
-  attempts: PracticeAttempt[];
+  attempts: AdminAttemptRow[];
   weakPoints: WeakPoint[];
-  arenaRuns: ArenaRunRecord[];
+  arenaRuns: AdminArenaRunRow[];
   overrides: AdminContentOverrides;
   health: AdminHealth;
   localExtrasCount: number;
@@ -200,8 +210,8 @@ export async function loadMergedAdminData(
     isDefaultPasscode: false,
   };
 
-  const remoteAttempts = neonConnected && remote ? remote.attempts : [];
-  const remoteArenaRuns = neonConnected && remote ? remote.arenaRuns : [];
+  const remoteAttempts: AdminAttemptRow[] = neonConnected && remote ? remote.attempts : [];
+  const remoteArenaRuns: AdminArenaRunRow[] = neonConnected && remote ? remote.arenaRuns : [];
   const remoteWeakPoints = neonConnected && remote ? remote.weakPoints : [];
 
   const attemptMerge = dedupeById(remoteAttempts, localAttempts);

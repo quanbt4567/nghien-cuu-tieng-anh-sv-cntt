@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { ensureSchema, getNeonSql } from "../../../lib/db/neon";
+import { readExistingGuestPlayer } from "@/lib/neon-auth";
 import type { WeakPointKind } from "../../../lib/types";
 
 export const dynamic = "force-dynamic";
@@ -29,9 +30,21 @@ function cleanOptionalText(value: unknown): string | null {
 }
 
 export async function POST(req: NextRequest) {
-  let body: { type?: unknown; payload?: unknown } | null = null;
+  let body: {
+    type?: unknown;
+    payload?: unknown;
+    playerName?: unknown;
+    displayName?: unknown;
+    transferCode?: unknown;
+  } | null = null;
   try {
-    body = (await req.json()) as { type?: unknown; payload?: unknown };
+    body = (await req.json()) as {
+      type?: unknown;
+      payload?: unknown;
+      playerName?: unknown;
+      displayName?: unknown;
+      transferCode?: unknown;
+    };
   } catch {
     return NextResponse.json(
       { ok: false, synced: false, error: "Dữ liệu telemetry không hợp lệ." },
@@ -89,6 +102,27 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true, synced: false });
     }
 
+    let playerName: string | null = null;
+    let transferCode: string | null = null;
+    if (type === "attempt" || type === "arena_run") {
+      try {
+        const guest = await readExistingGuestPlayer();
+        playerName = cleanOptionalText(guest?.displayName);
+        transferCode = cleanOptionalText(guest?.transferCode);
+      } catch {
+      }
+      playerName =
+        playerName ??
+        cleanOptionalText(body?.playerName) ??
+        cleanOptionalText(body?.displayName) ??
+        cleanOptionalText(p.playerName) ??
+        cleanOptionalText(p.displayName);
+      transferCode =
+        transferCode ??
+        cleanOptionalText(body?.transferCode) ??
+        cleanOptionalText(p.transferCode);
+    }
+
     if (type === "attempt") {
       const id =
         typeof p.id === "string" && p.id.trim() ? p.id.trim() : `att_${randomUUID()}`;
@@ -106,7 +140,7 @@ export async function POST(req: NextRequest) {
 
       await sql`
         INSERT INTO speakit_attempts (
-          id, scenario, turn_index, transcript, score, keywords_used, role, created_at
+          id, scenario, turn_index, transcript, score, keywords_used, role, player_name, transfer_code, created_at
         )
         VALUES (
           ${id},
@@ -116,6 +150,8 @@ export async function POST(req: NextRequest) {
           ${score},
           ${JSON.stringify(keywordsUsed)}::jsonb,
           ${role},
+          ${playerName},
+          ${transferCode},
           ${createdAt}::timestamptz
         )
         ON CONFLICT (id) DO NOTHING
@@ -174,7 +210,7 @@ export async function POST(req: NextRequest) {
 
       await sql`
         INSERT INTO speakit_arena_runs (
-          id, game_id, score, accuracy_or_words, duration_sec, role, created_at
+          id, game_id, score, accuracy_or_words, duration_sec, role, player_name, transfer_code, created_at
         )
         VALUES (
           ${id},
@@ -183,6 +219,8 @@ export async function POST(req: NextRequest) {
           ${accuracyOrWords},
           ${durationSec},
           ${role},
+          ${playerName},
+          ${transferCode},
           ${createdAt}::timestamptz
         )
         ON CONFLICT (id) DO NOTHING
