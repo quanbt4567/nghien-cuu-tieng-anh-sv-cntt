@@ -82,6 +82,7 @@ export interface GuestPlayerRow {
   device_token_hash: string;
   transfer_code: string;
   display_name: string;
+  avatar_url?: string | null;
   it_coins: number;
   total_points: number;
   streak_days: number;
@@ -98,6 +99,7 @@ export interface GuestPlayerRow {
 export interface LeaderboardEntry {
   id: string;
   displayName: string;
+  avatarUrl?: string | null;
   itCoins: number;
   totalPoints: number;
   streakDays: number;
@@ -112,6 +114,7 @@ export interface PublicGuestPlayer {
   id: string;
   transferCode: string;
   displayName: string;
+  avatarUrl?: string | null;
   itCoins: number;
   totalPoints: number;
   streakDays: number;
@@ -143,6 +146,7 @@ export async function initializeGuestPlayersSchema(
             device_token_hash TEXT UNIQUE NOT NULL,
             transfer_code TEXT UNIQUE NOT NULL,
             display_name TEXT NOT NULL,
+            avatar_url TEXT,
             it_coins INT NOT NULL DEFAULT 0,
             total_points INT NOT NULL DEFAULT 0,
             streak_days INT NOT NULL DEFAULT 0,
@@ -163,6 +167,10 @@ export async function initializeGuestPlayersSchema(
         sql`
           ALTER TABLE guest_players
           ADD COLUMN IF NOT EXISTS equipped_cosmetics JSONB NOT NULL DEFAULT '{}'::jsonb
+        `,
+        sql`
+          ALTER TABLE guest_players
+          ADD COLUMN IF NOT EXISTS avatar_url TEXT
         `,
         sql`
           CREATE INDEX IF NOT EXISTS idx_guest_players_leaderboard

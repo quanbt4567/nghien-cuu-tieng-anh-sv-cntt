@@ -91,6 +91,7 @@ export async function getTopPlayers(limit = 50): Promise<{
         SELECT
           id,
           display_name,
+          avatar_url,
           GREATEST(
             it_coins,
             GREATEST(
@@ -118,6 +119,7 @@ export async function getTopPlayers(limit = 50): Promise<{
       SELECT
         id,
         display_name AS "displayName",
+        avatar_url AS "avatarUrl",
         effective_coins AS "itCoins",
         total_points AS "totalPoints",
         streak_days AS "streakDays",
@@ -133,6 +135,7 @@ export async function getTopPlayers(limit = 50): Promise<{
     const players: LeaderboardEntry[] = rows.map((row) => ({
       id: row.id,
       displayName: row.displayName,
+      avatarUrl: typeof row.avatarUrl === "string" && row.avatarUrl.length > 0 ? row.avatarUrl : null,
       itCoins: Number(row.itCoins) || 0,
       totalPoints: Number(row.totalPoints) || 0,
       streakDays: Number(row.streakDays) || 0,
@@ -150,6 +153,7 @@ export async function getTopPlayers(limit = 50): Promise<{
           SELECT
             id,
             display_name,
+            avatar_url,
             GREATEST(
               it_coins,
               GREATEST(
@@ -176,6 +180,7 @@ export async function getTopPlayers(limit = 50): Promise<{
           SELECT
             id,
             display_name AS "displayName",
+            avatar_url AS "avatarUrl",
             effective_coins AS "itCoins",
             total_points AS "totalPoints",
             streak_days AS "streakDays",
@@ -195,6 +200,7 @@ export async function getTopPlayers(limit = 50): Promise<{
         currentUserRank = {
           id: selfRow.id,
           displayName: selfRow.displayName,
+          avatarUrl: typeof selfRow.avatarUrl === "string" && selfRow.avatarUrl.length > 0 ? selfRow.avatarUrl : null,
           itCoins: Number(selfRow.itCoins) || 0,
           totalPoints: Number(selfRow.totalPoints) || 0,
           streakDays: Number(selfRow.streakDays) || 0,
@@ -237,6 +243,7 @@ export async function getTopPlayers(limit = 50): Promise<{
         currentUserRank = {
           id: currentPlayer.id,
           displayName: currentPlayer.displayName,
+          avatarUrl: currentPlayer.avatarUrl ?? null,
           itCoins: currentPlayer.itCoins,
           totalPoints: currentPlayer.totalPoints,
           streakDays: currentPlayer.streakDays,
@@ -359,6 +366,7 @@ export async function rewardPracticePoints(
         device_token_hash,
         transfer_code,
         display_name,
+        avatar_url,
         it_coins,
         total_points,
         streak_days,
@@ -470,6 +478,7 @@ export async function purchaseAndEquipCosmetic(
           device_token_hash,
           transfer_code,
           display_name,
+          avatar_url,
           it_coins,
           total_points,
           streak_days,
@@ -528,6 +537,7 @@ export async function purchaseAndEquipCosmetic(
         guest_players.device_token_hash,
         guest_players.transfer_code,
         guest_players.display_name,
+        guest_players.avatar_url,
         guest_players.it_coins,
         guest_players.total_points,
         guest_players.streak_days,
@@ -619,6 +629,7 @@ export async function updateGuestDisplayName(
         device_token_hash,
         transfer_code,
         display_name,
+        avatar_url,
         it_coins,
         total_points,
         streak_days,
@@ -642,6 +653,101 @@ export async function updateGuestDisplayName(
       mode: "offline",
       player,
       error: "Unable to update display name.",
+    };
+  }
+}
+
+export async function updateGuestAvatar(
+  rawAvatarUrl: string | null,
+  backupTransferCode?: string
+): Promise<{
+  ok: boolean;
+  mode: "online" | "offline";
+  player: PublicGuestPlayer | null;
+  error?: string;
+}> {
+  let normalizedAvatarUrl: string | null = null;
+  if (rawAvatarUrl !== null) {
+    if (typeof rawAvatarUrl !== "string") {
+      return {
+        ok: false,
+        mode: "online",
+        player: null,
+        error: "Invalid avatar format.",
+      };
+    }
+    const trimmed = rawAvatarUrl.trim();
+    const isPreset = /^preset:[a-z0-9-]{2,32}$/.test(trimmed);
+    const isSafeDataUrl =
+      trimmed.length <= 120000 &&
+      /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(trimmed);
+    if (!isPreset && !isSafeDataUrl) {
+      return {
+        ok: false,
+        mode: "online",
+        player: null,
+        error: "Avatar must be a valid preset or PNG/JPEG/WEBP data URL under 120KB.",
+      };
+    }
+    normalizedAvatarUrl = trimmed;
+  }
+
+  const sql = getDbClient();
+  if (!sql) {
+    return {
+      ok: false,
+      mode: "offline",
+      player: null,
+      error: "Database is unavailable in offline mode.",
+    };
+  }
+
+  const player = await resolveOrCreateGuestSession(backupTransferCode);
+  if (!player) {
+    return {
+      ok: false,
+      mode: "offline",
+      player: null,
+      error: "Unable to resolve guest profile.",
+    };
+  }
+
+  try {
+    const updated = (await sql`
+      UPDATE guest_players
+      SET
+        avatar_url = ${normalizedAvatarUrl},
+        updated_at = NOW()
+      WHERE id = ${player.id}
+      RETURNING
+        id,
+        device_token_hash,
+        transfer_code,
+        display_name,
+        avatar_url,
+        it_coins,
+        total_points,
+        streak_days,
+        last_practice_date,
+        equipped_title,
+        equipped_ring,
+        equipped_cosmetics,
+        owned_items,
+        created_at,
+        updated_at
+    `) as GuestPlayerRow[];
+
+    return {
+      ok: updated.length > 0,
+      mode: "online",
+      player: updated[0] ? serializePublicGuestPlayer(updated[0]) : player,
+    };
+  } catch {
+    return {
+      ok: false,
+      mode: "offline",
+      player,
+      error: "Unable to update avatar.",
     };
   }
 }
@@ -717,6 +823,7 @@ export async function equipOwnedCosmetic(
         device_token_hash,
         transfer_code,
         display_name,
+        avatar_url,
         it_coins,
         total_points,
         streak_days,
@@ -795,6 +902,7 @@ export async function unequipCosmeticSlot(
         device_token_hash,
         transfer_code,
         display_name,
+        avatar_url,
         it_coins,
         total_points,
         streak_days,

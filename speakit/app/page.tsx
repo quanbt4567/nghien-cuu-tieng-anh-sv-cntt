@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, Clock, Coins, Flame, Gamepad2, MessageSquare, ShoppingBag, Siren, Trophy } from "lucide-react";
 import { DiscordAvatarFrame } from "../components/cosmetics/DiscordAvatarFrame";
 import { LeaderboardRowWrapper } from "../components/cosmetics/LeaderboardRowWrapper";
+import { PlayerAvatar } from "../components/cosmetics/PlayerAvatar";
 import { HomeIntroHero } from "../components/home/HomeIntroHero";
 import { getMergedScenarios } from "../lib/serverScenarios";
 import { getTopPlayers } from "./actions/leaderboard";
@@ -57,9 +58,11 @@ export default async function HomePage() {
                       fallbackRing={player.equippedRing}
                       size={36}
                     >
-                      <span className="w-full h-full rounded-full bg-white font-mono text-xs font-bold text-ink flex items-center justify-center">
-                        #{player.rank}
-                      </span>
+                      <PlayerAvatar
+                        avatarUrl={player.avatarUrl}
+                        displayName={player.displayName}
+                        className="text-xs"
+                      />
                     </DiscordAvatarFrame>
                     <div className="min-w-0 space-y-1">
                       <div className="text-sm font-bold text-ink break-words">

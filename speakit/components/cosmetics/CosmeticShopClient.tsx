@@ -54,6 +54,7 @@ import { CustomCursorTrail } from "./CustomCursorTrail";
 import { DiscordAvatarFrame } from "./DiscordAvatarFrame";
 import { FullPageProfileEffect } from "./FullPageProfileEffect";
 import { LeaderboardRowWrapper } from "./LeaderboardRowWrapper";
+import { PlayerAvatar } from "./PlayerAvatar";
 import { VictoryFinisherOverlay } from "./VictoryFinisherOverlay";
 
 const CATEGORY_META: Record<
@@ -662,9 +663,11 @@ export function CosmeticShopClient() {
                   size="xl"
                   micActive={micTestActive}
                 >
-                  <div className="w-full h-full flex items-center justify-center bg-[#FAF6EF] font-mono font-bold text-xl text-[#1A1714]">
-                    {initials}
-                  </div>
+                  <PlayerAvatar
+                    avatarUrl={identity.avatarUrl}
+                    displayName={identity.displayName}
+                    className="text-xl"
+                  />
                 </DiscordAvatarFrame>
 
                 <div className="min-w-0 flex-1 space-y-2">
@@ -721,9 +724,11 @@ export function CosmeticShopClient() {
                         size="sm"
                         micActive={micTestActive}
                       >
-                        <div className="w-full h-full flex items-center justify-center bg-[#FAF6EF] font-mono font-bold text-xs text-[#1A1714]">
-                          {initials}
-                        </div>
+                        <PlayerAvatar
+                          avatarUrl={identity.avatarUrl}
+                          displayName={identity.displayName}
+                          className="text-xs"
+                        />
                       </DiscordAvatarFrame>
                       <div className="min-w-0">
                         <div className="text-sm font-extrabold text-[#1A1714] truncate flex items-center gap-1.5">

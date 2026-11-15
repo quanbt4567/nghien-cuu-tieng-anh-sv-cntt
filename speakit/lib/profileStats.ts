@@ -10,6 +10,7 @@ import type {
 
 export interface ResolvedProfileIdentity {
   displayName: string;
+  avatarUrl: string | null;
   itCoins: number;
   totalPoints: number;
   streakDays: number;
@@ -90,6 +91,7 @@ export function mergeProfileIdentity(
     );
     return {
       displayName: guestPlayer.displayName,
+      avatarUrl: guestPlayer.avatarUrl ?? null,
       itCoins,
       totalPoints: guestPlayer.totalPoints,
       streakDays: guestPlayer.streakDays,
@@ -103,6 +105,7 @@ export function mergeProfileIdentity(
 
   return {
     displayName: "Local Developer",
+    avatarUrl: null,
     itCoins: calculateCoins(gamification.totalPoints),
     totalPoints: gamification.totalPoints,
     streakDays: gamification.streakDays,

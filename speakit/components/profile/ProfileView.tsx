@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import Link from "next/link";
 import {
   AlertCircle,
@@ -9,6 +9,7 @@ import {
   Award,
   BookOpen,
   Bug,
+  Camera,
   Check,
   Cloud,
   Code2,
@@ -21,11 +22,13 @@ import {
   Mic,
   Pencil,
   RefreshCw,
+  RotateCcw,
   Server,
   ShoppingBag,
   Terminal,
   Timer,
   Trophy,
+  Upload,
   User,
   WifiOff,
   X,
@@ -35,6 +38,7 @@ import {
   initOrHydrateGuestSession,
   purchaseAndEquipCosmetic,
   restoreByTransferCode,
+  updateGuestAvatar,
   updateGuestDisplayName,
 } from "../../app/actions/leaderboard";
 import { IT_ROLES } from "../../data/minigames";
@@ -64,6 +68,7 @@ import { CustomCursorTrail } from "../cosmetics/CustomCursorTrail";
 import { DiscordAvatarFrame } from "../cosmetics/DiscordAvatarFrame";
 import { FullPageProfileEffect } from "../cosmetics/FullPageProfileEffect";
 import { LeaderboardRowWrapper } from "../cosmetics/LeaderboardRowWrapper";
+import { AVATAR_PRESETS, PlayerAvatar } from "../cosmetics/PlayerAvatar";
 import {
   mergeProfileIdentity,
   summarizeProfileActivity,
@@ -97,17 +102,38 @@ const ROLE_ICONS: Record<ITRole, typeof Code2> = {
   devops: Terminal,
 };
 
-function getAvatarInitials(name: string): string {
-  const cleaned = name.trim();
-  if (!cleaned) return "DV";
-  const words = cleaned.split(/\s+/).filter(Boolean);
-  if (words.length >= 2) {
-    const first = Array.from(words[0])[0] ?? "";
-    const second = Array.from(words[1])[0] ?? "";
-    return `${first}${second}`.toUpperCase() || "DV";
-  }
-  const letters = Array.from(cleaned.replace(/[^a-zA-Z0-9\u00C0-\u1EFF]/g, ""));
-  return (letters.slice(0, 2).join("") || Array.from(cleaned).slice(0, 2).join("")).toUpperCase() || "DV";
+function resizeAvatarImageToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const size = Math.min(img.width, img.height);
+        const sx = Math.max(0, (img.width - size) / 2);
+        const sy = Math.max(0, (img.height - size) / 2);
+        const canvas = document.createElement("canvas");
+        canvas.width = 128;
+        canvas.height = 128;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          reject(new Error("Canvas unavailable"));
+          return;
+        }
+        ctx.drawImage(img, sx, sy, size, size, 0, 0, 128, 128);
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+        resolve(dataUrl);
+      } catch (err) {
+        reject(err);
+      } finally {
+        URL.revokeObjectURL(objectUrl);
+      }
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error("Invalid image"));
+    };
+    img.src = objectUrl;
+  });
 }
 
 function formatAttemptDate(iso: string): string {
@@ -265,6 +291,14 @@ export function ProfileView() {
     ok: boolean;
     message: string;
   } | null>(null);
+
+  const [isAvatarPanelOpen, setIsAvatarPanelOpen] = useState(false);
+  const [isSavingAvatar, setIsSavingAvatar] = useState(false);
+  const [avatarFeedback, setAvatarFeedback] = useState<{
+    ok: boolean;
+    message: string;
+  } | null>(null);
+  const avatarInputRef = useRef<HTMLInputElement | null>(null);
 
   const applyGuestPlayer = useCallback((player: PublicGuestPlayer | null) => {
     setGuestPlayer(player);
@@ -531,6 +565,78 @@ export function ProfileView() {
     }
   };
 
+  const handleSaveAvatar = async (nextAvatarUrl: string | null) => {
+    if (isSavingAvatar) return;
+    if (identity.mode !== "online") {
+      setAvatarFeedback({
+        ok: false,
+        message: toVietnameseError(undefined, "offline"),
+      });
+      return;
+    }
+
+    setIsSavingAvatar(true);
+    setAvatarFeedback(null);
+    try {
+      const res = await updateGuestAvatar(nextAvatarUrl, readBackupTransferCode());
+      if (res.ok && res.player) {
+        applyGuestPlayer(res.player);
+        setAvatarFeedback({
+          ok: true,
+          message: nextAvatarUrl
+            ? "Đã cập nhật avatar mới."
+            : "Đã đặt lại avatar chữ cái mặc định.",
+        });
+        void refreshOnlineRank();
+      } else {
+        if (res.mode === "offline") {
+          applyGuestPlayer(null);
+          setGlobalRank(null);
+        }
+        setAvatarFeedback({
+          ok: false,
+          message: toVietnameseError(res.error, res.mode),
+        });
+      }
+    } catch {
+      setAvatarFeedback({
+        ok: false,
+        message: "Không thể kết nối máy chủ để cập nhật avatar. Vui lòng thử lại.",
+      });
+    } finally {
+      setIsSavingAvatar(false);
+    }
+  };
+
+  const handleAvatarFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
+      setAvatarFeedback({
+        ok: false,
+        message: "Chỉ hỗ trợ ảnh PNG, JPEG hoặc WebP.",
+      });
+      return;
+    }
+    try {
+      const dataUrl = await resizeAvatarImageToDataUrl(file);
+      if (dataUrl.length > 120000) {
+        setAvatarFeedback({
+          ok: false,
+          message: "Ảnh sau khi nén vẫn quá lớn. Vui lòng chọn ảnh khác.",
+        });
+        return;
+      }
+      await handleSaveAvatar(dataUrl);
+    } catch {
+      setAvatarFeedback({
+        ok: false,
+        message: "Không thể xử lý ảnh này. Vui lòng thử tệp khác.",
+      });
+    }
+  };
+
   const handleCopyTransferCode = async () => {
     if (!identity.transferCode) return;
     if (typeof navigator === "undefined" || !navigator.clipboard) {
@@ -728,12 +834,11 @@ export function ProfileView() {
                   fallbackRing={identity.equippedRing}
                   size="lg"
                 >
-                  <div
-                    aria-label={`Avatar của ${identity.displayName}`}
-                    className="w-full h-full rounded-full bg-paper flex items-center justify-center font-mono font-bold text-lg text-ink"
-                  >
-                    {getAvatarInitials(identity.displayName)}
-                  </div>
+                  <PlayerAvatar
+                    avatarUrl={identity.avatarUrl}
+                    displayName={identity.displayName}
+                    className="text-lg"
+                  />
                 </DiscordAvatarFrame>
 
             <div className="min-w-0 space-y-2 flex-1">
@@ -762,6 +867,24 @@ export function ProfileView() {
                   >
                     <Pencil className="w-3 h-3" aria-hidden="true" />
                     <span>Đổi tên</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsAvatarPanelOpen((prev) => !prev);
+                      setAvatarFeedback(null);
+                    }}
+                    disabled={identity.mode !== "online"}
+                    aria-expanded={isAvatarPanelOpen}
+                    title={
+                      identity.mode === "online"
+                        ? "Đổi Avatar"
+                        : "Đổi avatar yêu cầu kết nối Neon DB"
+                    }
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill bg-paper border border-ink/15 text-xs font-medium text-ink hover:bg-paper-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <Camera className="w-3 h-3" aria-hidden="true" />
+                    <span>Đổi Avatar</span>
                   </button>
                 </div>
               ) : (
@@ -822,6 +945,94 @@ export function ProfileView() {
                 >
                   {nameFeedback.message}
                 </p>
+              )}
+
+              {isAvatarPanelOpen && (
+                <div className="mt-2 p-3 rounded-xl bg-paper border border-ink/15 space-y-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-bold text-ink">
+                      Chọn Avatar Preset hoặc tải ảnh lên
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setIsAvatarPanelOpen(false)}
+                      aria-label="Đóng bảng chọn avatar"
+                      className="p-1 rounded-pill text-ink-muted hover:text-ink hover:bg-paper-muted"
+                    >
+                      <X className="w-3.5 h-3.5" aria-hidden="true" />
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
+                    {AVATAR_PRESETS.map((preset) => {
+                      const isSelected = identity.avatarUrl === preset.id;
+                      const PresetIcon = preset.icon;
+                      return (
+                        <button
+                          key={preset.id}
+                          type="button"
+                          disabled={isSavingAvatar}
+                          onClick={() => void handleSaveAvatar(preset.id)}
+                          title={preset.label}
+                          aria-label={preset.label}
+                          className={`group flex flex-col items-center gap-1 p-1.5 rounded-xl border transition-all disabled:opacity-50 ${
+                            isSelected
+                              ? "border-accent bg-white shadow-soft"
+                              : "border-ink/15 bg-white/70 hover:border-ink"
+                          }`}
+                        >
+                          <span
+                            className={`w-9 h-9 rounded-full flex items-center justify-center ${preset.bgClass} ${preset.textClass}`}
+                          >
+                            <PresetIcon className="w-4 h-4" strokeWidth={2.2} aria-hidden="true" />
+                          </span>
+                          <span className="text-[10px] font-mono text-ink truncate w-full text-center">
+                            {preset.label.split(" ")[0]}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    <input
+                      ref={avatarInputRef}
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      onChange={handleAvatarFileChange}
+                      className="hidden"
+                    />
+                    <button
+                      type="button"
+                      disabled={isSavingAvatar}
+                      onClick={() => avatarInputRef.current?.click()}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-ink text-white text-xs font-semibold hover:bg-ink/90 disabled:opacity-50 transition-colors"
+                    >
+                      <Upload className="w-3.5 h-3.5" aria-hidden="true" />
+                      <span>{isSavingAvatar ? "Đang lưu..." : "Tải ảnh lên"}</span>
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isSavingAvatar || !identity.avatarUrl}
+                      onClick={() => void handleSaveAvatar(null)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white border border-ink/15 text-xs font-medium text-ink hover:bg-paper-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
+                      <span>Đặt lại chữ cái</span>
+                    </button>
+                  </div>
+
+                  {avatarFeedback && (
+                    <p
+                      role="status"
+                      className={`text-xs font-medium ${
+                        avatarFeedback.ok ? "text-ink" : "text-accent"
+                      }`}
+                    >
+                      {avatarFeedback.message}
+                    </p>
+                  )}
+                </div>
               )}
 
               <div className="flex flex-wrap items-center gap-2 pt-0.5">

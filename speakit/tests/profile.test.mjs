@@ -54,6 +54,7 @@ test("mergeProfileIdentity prefers online PublicGuestPlayer fields and isolates 
 
   assert.deepEqual(resolved, {
     displayName: "Backend Architect",
+    avatarUrl: null,
     itCoins: 9,
     totalPoints: 9420,
     streakDays: 14,
@@ -78,6 +79,7 @@ test("mergeProfileIdentity falls back to offline local gamification state when g
   );
   assert.deepEqual(junior, {
     displayName: "Local Developer",
+    avatarUrl: null,
     itCoins: 0,
     totalPoints: 850,
     streakDays: 2,
@@ -94,6 +96,7 @@ test("mergeProfileIdentity falls back to offline local gamification state when g
   );
   assert.deepEqual(lead, {
     displayName: "Local Developer",
+    avatarUrl: null,
     itCoins: 5,
     totalPoints: 5400,
     streakDays: 7,

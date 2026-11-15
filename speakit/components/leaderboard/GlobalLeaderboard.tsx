@@ -27,6 +27,7 @@ import { COSMETIC_CATALOG, getRingBadgeClass } from "../../lib/cosmetics";
 import type { LeaderboardEntry, PublicGuestPlayer } from "../../lib/db";
 import { DiscordAvatarFrame } from "../cosmetics/DiscordAvatarFrame";
 import { LeaderboardRowWrapper } from "../cosmetics/LeaderboardRowWrapper";
+import { PlayerAvatar } from "../cosmetics/PlayerAvatar";
 import {
   calculateCoins,
   getDevTitle,
@@ -268,13 +269,11 @@ export function GlobalLeaderboard({
                   fallbackRing={currentPlayer.equippedRing}
                   size="md"
                 >
-                  <div
-                    className={`w-full h-full rounded-full bg-paper border flex items-center justify-center font-mono font-bold text-sm text-ink ${getRingBadgeClass(
-                      currentPlayer.equippedRing
-                    )}`}
-                  >
-                    {currentPlayer.displayName.slice(0, 2).toUpperCase()}
-                  </div>
+                  <PlayerAvatar
+                    avatarUrl={currentPlayer.avatarUrl}
+                    displayName={currentPlayer.displayName}
+                    className={`text-sm border ${getRingBadgeClass(currentPlayer.equippedRing)}`}
+                  />
                 </DiscordAvatarFrame>
                 <div>
                   {!isEditingName ? (
@@ -550,15 +549,11 @@ export function GlobalLeaderboard({
                         fallbackRing={entry.equippedRing}
                         size="sm"
                       >
-                        <span
-                          className={`w-full h-full rounded-full flex items-center justify-center text-xs font-mono font-bold border ${
-                            entry.rank <= 3
-                              ? "bg-ink text-white border-ink"
-                              : "bg-white text-ink border-ink/15"
-                          } ${getRingBadgeClass(entry.equippedRing)}`}
-                        >
-                          #{entry.rank}
-                        </span>
+                        <PlayerAvatar
+                          avatarUrl={entry.avatarUrl}
+                          displayName={entry.displayName}
+                          className={`text-xs border ${getRingBadgeClass(entry.equippedRing)}`}
+                        />
                       </DiscordAvatarFrame>
 
                       <div className="min-w-0">
@@ -608,13 +603,11 @@ export function GlobalLeaderboard({
               fallbackRing={activeEntry.equippedRing}
               size="sm"
             >
-              <span
-                className={`w-full h-full rounded-full bg-white text-ink flex items-center justify-center text-xs font-mono font-bold border ${getRingBadgeClass(
-                  activeEntry.equippedRing
-                )}`}
-              >
-                #{activeEntry.rank}
-              </span>
+              <PlayerAvatar
+                avatarUrl={activeEntry.avatarUrl}
+                displayName={activeEntry.displayName}
+                className={`text-xs border ${getRingBadgeClass(activeEntry.equippedRing)}`}
+              />
             </DiscordAvatarFrame>
             <div>
               <div className="text-xs font-bold flex items-center gap-2">
