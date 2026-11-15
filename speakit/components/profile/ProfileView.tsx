@@ -341,6 +341,49 @@ export function ProfileView() {
   const localArenaCount = gamification.history.length;
   const hasCloudPoints = identity.mode === "online" && identity.totalPoints > 0;
 
+  const summaryStats = useMemo(() => {
+    const speakingScores = attempts.map((attempt) =>
+      Number.isFinite(attempt.score) ? attempt.score : 0
+    );
+    const arenaSource =
+      gamification.history.length > 0
+        ? gamification.history
+        : activity.recentArenaRuns;
+    const arenaScores = arenaSource.map((run) =>
+      Number.isFinite(run.score) ? run.score : 0
+    );
+    const allScores = [...speakingScores, ...arenaScores];
+    const totalSessions = speakingScores.length + arenaScores.length;
+    const averageScore =
+      allScores.length > 0
+        ? Math.round(
+            allScores.reduce((sum, score) => sum + score, 0) / allScores.length
+          )
+        : activity.averageScore;
+    const bestScore =
+      allScores.length > 0
+        ? Math.max(
+            ...allScores,
+            activity.bestScore,
+            activity.bugBusterBest,
+            activity.standupBest
+          )
+        : Math.max(
+            activity.bestScore,
+            activity.bugBusterBest,
+            activity.standupBest
+          );
+    return { totalSessions, averageScore, bestScore };
+  }, [
+    attempts,
+    gamification.history,
+    activity.recentArenaRuns,
+    activity.averageScore,
+    activity.bestScore,
+    activity.bugBusterBest,
+    activity.standupBest,
+  ]);
+
   const handleSelectRole = (roleId: ITRole) => {
     const updated = setSelectedRole(roleId);
     setGamification(updated);
@@ -1139,44 +1182,46 @@ export function ProfileView() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           <div className="bg-paper border border-ink/15 rounded-xl p-3.5 text-center">
             <div className="text-2xl font-mono font-extrabold text-ink">
-              {localSpeakingCount > 0
-                ? activity.totalAttempts
-                : localArenaCount > 0
-                  ? localArenaCount
-                  : hasCloudPoints
-                    ? identity.totalPoints.toLocaleString("vi-VN")
-                    : 0}
+              {summaryStats.totalSessions > 0
+                ? summaryStats.totalSessions
+                : hasCloudPoints
+                  ? identity.totalPoints.toLocaleString("vi-VN")
+                  : 0}
             </div>
             <div className="text-[11px] text-ink-muted mt-1 flex items-center justify-center gap-1">
               {localSpeakingCount === 0 && localArenaCount > 0 ? (
                 <Gamepad2 className="w-3 h-3 text-accent" aria-hidden="true" />
+              ) : localSpeakingCount > 0 && localArenaCount > 0 ? (
+                <Trophy className="w-3 h-3 text-accent" aria-hidden="true" />
               ) : localSpeakingCount === 0 && hasCloudPoints ? (
                 <Cloud className="w-3 h-3 text-accent" aria-hidden="true" />
               ) : (
                 <Mic className="w-3 h-3 text-accent" aria-hidden="true" />
               )}
               <span>
-                {localSpeakingCount > 0
-                  ? "Số lượt luyện nói"
-                  : localArenaCount > 0
-                    ? "Trận Arena đã chơi"
-                    : hasCloudPoints
-                      ? "Điểm Cloud đã lưu"
-                      : "Số lượt luyện nói"}
+                {localSpeakingCount > 0 && localArenaCount > 0
+                  ? "Tổng phiên hoàn thành"
+                  : localSpeakingCount > 0
+                    ? "Số lượt luyện nói"
+                    : localArenaCount > 0
+                      ? "Trận Arena đã chơi"
+                      : hasCloudPoints
+                        ? "Điểm Cloud đã lưu"
+                        : "Số lượt luyện nói"}
               </span>
             </div>
           </div>
 
           <div className="bg-paper border border-ink/15 rounded-xl p-3.5 text-center">
             <div className="text-2xl font-mono font-extrabold text-ink">
-              {activity.averageScore}
+              {summaryStats.averageScore}
             </div>
             <div className="text-[11px] text-ink-muted mt-1">Điểm TB</div>
           </div>
 
           <div className="bg-paper border border-ink/15 rounded-xl p-3.5 text-center">
             <div className="text-2xl font-mono font-extrabold text-accent">
-              {activity.bestScore}
+              {summaryStats.bestScore}
             </div>
             <div className="text-[11px] text-ink-muted mt-1">Điểm cao nhất</div>
           </div>

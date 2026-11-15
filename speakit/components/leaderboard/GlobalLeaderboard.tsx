@@ -76,8 +76,10 @@ export function GlobalLeaderboard({
   const [busyItemId, setBusyItemId] = useState<string | null>(null);
   const [shopNotice, setShopNotice] = useState<string | null>(null);
 
-  const loadLeaderboard = useCallback(async () => {
-    setLoading(true);
+  const loadLeaderboard = useCallback(async (silent = false) => {
+    if (!silent) {
+      setLoading(true);
+    }
     try {
       const backup = readBackupTransferCode();
       const session = await initOrHydrateGuestSession(backup);
@@ -134,8 +136,8 @@ export function GlobalLeaderboard({
   }, []);
 
   useEffect(() => {
-    loadLeaderboard();
-  }, [loadLeaderboard]);
+    loadLeaderboard(Boolean(initialBoard));
+  }, [initialBoard, loadLeaderboard]);
 
   const handleCopyCode = async () => {
     if (!currentPlayer?.transferCode) return;
@@ -489,12 +491,12 @@ export function GlobalLeaderboard({
               </span>
             </h3>
             <p className="text-xs text-ink-muted">
-              Ranked by IT-Coins and cumulative speaking points across all IT roles.
+              Ranked by Tổng điểm descending first, with IT-Coin as tie-breaker across all IT roles.
             </p>
           </div>
           <button
             type="button"
-            onClick={loadLeaderboard}
+            onClick={() => loadLeaderboard()}
             disabled={loading}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-medium text-ink hover:bg-paper-muted disabled:opacity-50"
           >
@@ -503,7 +505,7 @@ export function GlobalLeaderboard({
           </button>
         </div>
 
-        {loading ? (
+        {loading && players.length === 0 ? (
           <div className="py-10 flex items-center justify-center gap-2 text-xs text-ink-muted">
             <Loader2 className="w-4 h-4 animate-spin text-accent" />
             <span>Loading rankings...</span>

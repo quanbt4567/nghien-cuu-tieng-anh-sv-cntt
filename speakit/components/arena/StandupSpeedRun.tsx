@@ -149,6 +149,10 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
         durationSec,
         role,
       });
+      const pointsPromise = reportGuestPracticePoints(
+        "arena-standup-speed-run",
+        totalScore
+      );
       const optimisticIdentity = mergeProfileIdentity(
         readCachedGuestProfile(),
         updated
@@ -169,12 +173,11 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
       });
       setPhase("finished");
 
-      void reportGuestPracticePoints("arena-standup-speed-run", totalScore).then(
-        () => {
-          const syncedIdentity = mergeProfileIdentity(
-            readCachedGuestProfile(),
-            updated
-          );
+      void pointsPromise.then((player) => {
+        const syncedIdentity = mergeProfileIdentity(
+          player ?? readCachedGuestProfile(),
+          updated
+        );
           setSummary((prev) =>
             prev
               ? {

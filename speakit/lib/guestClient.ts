@@ -96,10 +96,9 @@ export function saveCachedGuestProfile(player: PublicGuestPlayer | null): void {
     } else {
       window.localStorage.removeItem(GUEST_PROFILE_CACHE_KEY);
     }
-    notifyGuestProfileUpdated(player);
   } catch {
-    return;
   }
+  notifyGuestProfileUpdated(player);
 }
 
 export function syncGuestProfileFromServer(
@@ -111,19 +110,44 @@ export function syncGuestProfileFromServer(
 export async function reportGuestPracticePoints(
   scenarioId: string,
   rawScore: number
-): Promise<void> {
-  if (!Number.isFinite(rawScore) || rawScore <= 0) return;
+): Promise<PublicGuestPlayer | null> {
+  const awardedPoints = Number.isFinite(rawScore)
+    ? Math.max(0, Math.min(1000, Math.round(rawScore)))
+    : 0;
+  if (awardedPoints <= 0) return null;
+
+  const previousCached = readCachedGuestProfile();
+  if (previousCached) {
+    const nextTotalPoints = previousCached.totalPoints + awardedPoints;
+    const coinDelta =
+      Math.floor(nextTotalPoints / 1000) -
+      Math.floor(previousCached.totalPoints / 1000);
+    saveCachedGuestProfile({
+      ...previousCached,
+      totalPoints: nextTotalPoints,
+      itCoins: previousCached.itCoins + Math.max(0, coinDelta),
+    });
+  }
+
   try {
     const res = await rewardPracticePoints(
       scenarioId,
-      Math.round(rawScore),
+      awardedPoints,
       readBackupTransferCode()
     );
     if (res.player) {
       saveCachedGuestProfile(res.player);
+      return res.player;
     }
+    if (previousCached) {
+      saveCachedGuestProfile(previousCached);
+    }
+    return null;
   } catch {
-    return;
+    if (previousCached) {
+      saveCachedGuestProfile(previousCached);
+    }
+    return null;
   }
 }
 

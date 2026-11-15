@@ -136,8 +136,10 @@ export function Navbar() {
     const syncCachedGuest = (event?: Event) => {
       if (!active) return;
       if (event instanceof CustomEvent && event.detail !== undefined) {
-        const nextPlayer = (event.detail as PublicGuestPlayer | null) ?? null;
-        setGuestPlayer(nextPlayer);
+        const detail = event.detail as PublicGuestPlayer | null;
+        setGuestPlayer(
+          detail ? { ...detail, ownedItems: [...detail.ownedItems] } : null
+        );
         setHydrated(true);
         return;
       }
@@ -156,8 +158,15 @@ export function Navbar() {
         const session = await initOrHydrateGuestSession(readBackupTransferCode());
         if (!active) return;
         if (session.mode === "online" && session.player) {
-          setGuestPlayer(session.player);
-          syncGuestProfileFromServer(session.player);
+          const cached = readCachedGuestProfile();
+          const isStaleHydration =
+            cached !== null &&
+            cached.id === session.player.id &&
+            cached.totalPoints > session.player.totalPoints;
+          if (!isStaleHydration) {
+            setGuestPlayer(session.player);
+            syncGuestProfileFromServer(session.player);
+          }
         } else if (!readCachedGuestProfile()) {
           setGuestPlayer(null);
         }

@@ -172,17 +172,24 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
     const finalScore = scoreRef.current;
     const finalFixed = fixedRef.current;
     const finalAttempted = attemptedRef.current;
-    const elapsed = Math.max(1, ROUND_DURATION_SEC - totalTimeRef.current);
+    const totalCount = deckRef.current.length;
+    const accuracy =
+      totalCount > 0 ? Math.round((finalFixed / totalCount) * 100) : 0;
+    const elapsed = Math.max(
+      1,
+      ROUND_DURATION_SEC - Math.max(0, totalTimeRef.current)
+    );
 
     const prevState = getGamificationState();
     const prevIdentity = mergeProfileIdentity(readCachedGuestProfile(), prevState);
     const updatedState = recordMinigameResult({
       gameId: "bug-buster",
       score: finalScore,
-      accuracyOrWords: finalFixed,
+      accuracyOrWords: accuracy,
       durationSec: elapsed,
       role,
     });
+    const pointsPromise = reportGuestPracticePoints("arena-bug-buster", finalScore);
     const optimisticIdentity = mergeProfileIdentity(
       readCachedGuestProfile(),
       updatedState
@@ -192,7 +199,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
       score: finalScore,
       fixedCount: finalFixed,
       attemptedCount: finalAttempted,
-      totalCount: deckRef.current.length,
+      totalCount,
       durationSec: elapsed,
       coinsEarnedNow: Math.max(
         0,
@@ -203,9 +210,9 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
     });
     setPhase("finished");
 
-    void reportGuestPracticePoints("arena-bug-buster", finalScore).then(() => {
+    void pointsPromise.then((player) => {
       const syncedIdentity = mergeProfileIdentity(
-        readCachedGuestProfile(),
+        player ?? readCachedGuestProfile(),
         updatedState
       );
       setSummary((prev) =>
