@@ -1,8 +1,11 @@
 "use client";
 
 import { rewardPracticePoints } from "../app/actions/leaderboard";
+import type { PublicGuestPlayer } from "./db";
 
 export const GUEST_TRANSFER_CODE_KEY = "speakit_transfer_code_v1";
+export const GUEST_PROFILE_CACHE_KEY = "speakit_guest_profile_cache_v1";
+export const GUEST_PROFILE_UPDATED_EVENT = "speakit:guest-profile-updated";
 
 export function readBackupTransferCode(): string | undefined {
   if (typeof window === "undefined") return undefined;
@@ -22,6 +25,68 @@ export function saveBackupTransferCode(code: string): void {
   }
 }
 
+export function readCachedGuestProfile(): PublicGuestPlayer | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(GUEST_PROFILE_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<PublicGuestPlayer> | null;
+    if (
+      !parsed ||
+      typeof parsed.id !== "string" ||
+      typeof parsed.transferCode !== "string" ||
+      typeof parsed.displayName !== "string"
+    ) {
+      return null;
+    }
+    return {
+      id: parsed.id,
+      transferCode: parsed.transferCode,
+      displayName: parsed.displayName,
+      itCoins: typeof parsed.itCoins === "number" && Number.isFinite(parsed.itCoins) ? parsed.itCoins : 0,
+      totalPoints:
+        typeof parsed.totalPoints === "number" && Number.isFinite(parsed.totalPoints)
+          ? parsed.totalPoints
+          : 0,
+      streakDays:
+        typeof parsed.streakDays === "number" && Number.isFinite(parsed.streakDays)
+          ? parsed.streakDays
+          : 0,
+      lastPracticeDate: typeof parsed.lastPracticeDate === "string" ? parsed.lastPracticeDate : null,
+      equippedTitle:
+        typeof parsed.equippedTitle === "string" && parsed.equippedTitle
+          ? parsed.equippedTitle
+          : "Junior Speaker",
+      equippedRing:
+        typeof parsed.equippedRing === "string" && parsed.equippedRing
+          ? parsed.equippedRing
+          : "default",
+      ownedItems: Array.isArray(parsed.ownedItems)
+        ? parsed.ownedItems.filter((item): item is string => typeof item === "string")
+        : [],
+    };
+  } catch {
+    return null;
+  }
+}
+
+export function saveCachedGuestProfile(player: PublicGuestPlayer | null): void {
+  if (typeof window === "undefined") return;
+  try {
+    if (player) {
+      window.localStorage.setItem(GUEST_PROFILE_CACHE_KEY, JSON.stringify(player));
+      if (player.transferCode) {
+        window.localStorage.setItem(GUEST_TRANSFER_CODE_KEY, player.transferCode);
+      }
+    } else {
+      window.localStorage.removeItem(GUEST_PROFILE_CACHE_KEY);
+    }
+    window.dispatchEvent(new CustomEvent(GUEST_PROFILE_UPDATED_EVENT));
+  } catch {
+    return;
+  }
+}
+
 export async function reportGuestPracticePoints(
   scenarioId: string,
   rawScore: number
@@ -33,8 +98,8 @@ export async function reportGuestPracticePoints(
       Math.round(rawScore),
       readBackupTransferCode()
     );
-    if (res.player?.transferCode) {
-      saveBackupTransferCode(res.player.transferCode);
+    if (res.player) {
+      saveCachedGuestProfile(res.player);
     }
   } catch {
     return;

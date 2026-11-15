@@ -150,7 +150,7 @@ export function FeedbackCard({
         {result.grammarCorrections.length > 0 && (
           <div className="space-y-2">
             <span className="text-xs font-mono font-bold uppercase text-rose-600">
-              Lưu ý ngữ pháp ({result.grammarCorrections.length}):
+              Gợi ý diễn đạt ({result.grammarCorrections.length}):
             </span>
             <div className="space-y-2">
               {result.grammarCorrections.map((g, idx) => (
@@ -177,11 +177,14 @@ export function FeedbackCard({
         )}
 
         {result.pronunciationNote && (
-          <div className="p-3 bg-paper-muted rounded-xl border border-ink/15 text-xs text-ink-muted">
-            <span className="font-semibold text-ink block font-mono mb-0.5">
+          <div className="p-3 bg-paper-muted rounded-xl border border-ink/15 text-xs text-ink-muted space-y-1">
+            <span className="font-semibold text-ink block font-mono">
               Ước lượng phát âm (từ transcript):
             </span>
-            {result.pronunciationNote}
+            <p>{result.pronunciationNote}</p>
+            <p className="text-[11px] text-ink-faint">
+              Ước lượng dựa trên văn bản transcript khi không phân tích âm thanh trực tiếp.
+            </p>
           </div>
         )}
 

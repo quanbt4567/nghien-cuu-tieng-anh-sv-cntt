@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Search, BookOpen } from "lucide-react";
 import { VOCABULARY_LIST } from "../../data/scenarios";
 import { VocabCard } from "../../components/vocabulary/VocabCard";
+import { filterAndRankVocabulary } from "../../components/vocabulary/vocabSearch";
 import {
   CONTENT_STORAGE_KEY,
   CONTENT_UPDATED_EVENT,
@@ -39,12 +40,7 @@ export default function VocabularyPage() {
     };
   }, []);
 
-  const filtered = vocabList.filter(
-    (item) =>
-      item.term.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.meaningVI.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.exampleSentenceEN.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filtered = filterAndRankVocabulary(vocabList, searchQuery);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">

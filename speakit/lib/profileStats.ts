@@ -51,14 +51,19 @@ export function mergeProfileIdentity(
   gamification: GamificationState
 ): ResolvedProfileIdentity {
   if (guestPlayer) {
+    const ownedItems = [...guestPlayer.ownedItems];
+    const itCoins =
+      ownedItems.length === 0
+        ? Math.max(guestPlayer.itCoins, calculateCoins(guestPlayer.totalPoints))
+        : guestPlayer.itCoins;
     return {
       displayName: guestPlayer.displayName,
-      itCoins: guestPlayer.itCoins,
+      itCoins,
       totalPoints: guestPlayer.totalPoints,
       streakDays: guestPlayer.streakDays,
       equippedTitle: guestPlayer.equippedTitle,
       equippedRing: guestPlayer.equippedRing,
-      ownedItems: [...guestPlayer.ownedItems],
+      ownedItems,
       transferCode: guestPlayer.transferCode,
       mode: "online",
     };

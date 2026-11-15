@@ -75,6 +75,7 @@ export default function PracticePage() {
 
   const [turnScores, setTurnScores] = useState<number[]>([]);
   const [totalKeywordsUsedCount, setTotalKeywordsUsedCount] = useState(0);
+  const [usedKeywords, setUsedKeywords] = useState<string[]>([]);
   const [missedKeywords, setMissedKeywords] = useState<string[]>([]);
   const [totalPointsEarned, setTotalPointsEarned] = useState(0);
   const [conversationHistory, setConversationHistory] = useState<
@@ -261,6 +262,15 @@ export default function PracticePage() {
       }
       setTurnScores((prev) => [...prev, scoreData.score]);
       setTotalKeywordsUsedCount((prev) => prev + scoreData.keywordsUsed.length);
+      if (scoreData.keywordsUsed.length > 0) {
+        setUsedKeywords((prev) => {
+          const seen = new Set(prev.map((k) => k.toLowerCase()));
+          const additions = scoreData.keywordsUsed.filter(
+            (k) => !seen.has(k.toLowerCase())
+          );
+          return additions.length > 0 ? [...prev, ...additions] : prev;
+        });
+      }
       setConversationHistory((prev) => [
         ...prev,
         { role: "assistant", content: currentTurn.questionEN },
@@ -295,6 +305,7 @@ export default function PracticePage() {
     setEvalResult(null);
     setTurnScores([]);
     setTotalKeywordsUsedCount(0);
+    setUsedKeywords([]);
     setMissedKeywords([]);
     setTotalPointsEarned(0);
     setConversationHistory([]);
@@ -410,6 +421,10 @@ export default function PracticePage() {
             averageScore={averageScore}
             totalKeywordsUsed={totalKeywordsUsedCount}
             missedKeywords={missedKeywords}
+            usedKeywords={usedKeywords}
+            transcripts={conversationHistory
+              .filter((m) => m.role === "user")
+              .map((m) => m.content)}
             scenarioKeywords={scenarioKeywords}
             pointsEarned={totalPointsEarned}
             vocabPool={vocabPool}

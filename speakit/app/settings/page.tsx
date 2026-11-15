@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, AlertCircle, RotateCcw, Volume2, VolumeX, Trash2 } from "lucide-react";
+import { ArrowLeft, AlertCircle, Download, RotateCcw, Volume2, VolumeX, Trash2 } from "lucide-react";
 import { storageAdapter } from "../../lib/storage";
 import {
   DEFAULT_VOICE_PERSONA,
@@ -21,12 +21,39 @@ export default function SettingsPage() {
 
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetStatus, setResetStatus] = useState<string | null>(null);
+  const [exportStatus, setExportStatus] = useState<string | null>(null);
 
   useEffect(() => {
     const settings = storageAdapter.getSettings();
     setSpeechRate(settings.speechRate || 1.0);
     setVoicePersona(normalizeVoicePersona(settings.voicePersona));
   }, []);
+
+  const handleExportJson = async () => {
+    const [attempts, weakPoints] = await Promise.all([
+      storageAdapter.getAttempts(),
+      storageAdapter.getWeakPoints(),
+    ]);
+    const payload = {
+      exportedAt: new Date().toISOString(),
+      settings: storageAdapter.getSettings(),
+      attempts,
+      weakPoints,
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "speakit-data.json";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    setExportStatus("Đã xuất dữ liệu JSON thành công!");
+    setTimeout(() => setExportStatus(null), 3500);
+  };
 
   const handleResetProgress = async () => {
     await storageAdapter.resetAll();
@@ -185,14 +212,34 @@ export default function SettingsPage() {
           Xóa toàn bộ lịch sử các lượt nói, điểm số và danh sách từ khóa yếu trong bộ nhớ máy này.
         </p>
 
-        <button
-          type="button"
-          onClick={() => setShowResetModal(true)}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-paper border border-ink/15 text-accent hover:bg-accent-light text-xs font-semibold shadow-soft transition-all"
-        >
-          <RotateCcw className="w-3.5 h-3.5" />
-          <span>Làm mới tiến độ</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            type="button"
+            onClick={handleExportJson}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-white border border-ink/15 text-ink hover:bg-paper text-xs font-semibold shadow-soft transition-all"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>Xuất dữ liệu JSON</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowResetModal(true)}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-paper border border-ink/15 text-accent hover:bg-accent-light text-xs font-semibold shadow-soft transition-all"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Làm mới tiến độ</span>
+          </button>
+        </div>
+
+        {exportStatus && (
+          <div
+            role="status"
+            className="p-3 bg-emerald-500/10 text-emerald-700 rounded-xl border border-emerald-500/30 text-xs font-medium"
+          >
+            {exportStatus}
+          </div>
+        )}
 
         {resetStatus && (
           <div className="p-3 bg-accent-light text-accent rounded-xl border border-accent text-xs font-medium">

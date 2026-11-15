@@ -33,6 +33,7 @@ import {
 import {
   readBackupTransferCode,
   saveBackupTransferCode,
+  saveCachedGuestProfile,
 } from "../../lib/guestClient";
 
 export function GlobalLeaderboard() {
@@ -87,8 +88,10 @@ export function GlobalLeaderboard() {
           isCurrentUser: true,
         });
       } else {
+        const resolvedPlayer = board.currentPlayer ?? session.player;
         setPlayers(board.players);
-        setCurrentPlayer(board.currentPlayer ?? session.player);
+        setCurrentPlayer(resolvedPlayer);
+        saveCachedGuestProfile(resolvedPlayer);
         setCurrentUserRank(board.currentUserRank);
       }
     } catch {
@@ -136,6 +139,7 @@ export function GlobalLeaderboard() {
       const result = await restoreByTransferCode(restoreCode);
       if (result.ok && result.player) {
         saveBackupTransferCode(result.player.transferCode);
+        saveCachedGuestProfile(result.player);
         setRestoreCode("");
         setRestoreStatus({
           ok: true,
@@ -170,6 +174,7 @@ export function GlobalLeaderboard() {
       );
       if (res.ok && res.player) {
         setCurrentPlayer(res.player);
+        saveCachedGuestProfile(res.player);
         setIsEditingName(false);
         await loadLeaderboard();
       } else if (res.error) {
@@ -192,6 +197,7 @@ export function GlobalLeaderboard() {
       );
       if (res.ok && res.player) {
         setCurrentPlayer(res.player);
+        saveCachedGuestProfile(res.player);
         await loadLeaderboard();
       } else if (res.error) {
         setShopNotice(res.error);

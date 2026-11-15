@@ -1,35 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 import { VocabularyItem } from "../../lib/types";
-import { speakText } from "../../lib/speech";
+import { playTtsAudio, stopActiveTts } from "../../lib/tts-player";
+import { storageAdapter } from "../../lib/storage";
 
 interface VocabCardProps {
   item: VocabularyItem;
 }
 
+type PlaybackTarget = "word" | "sentence";
+
 export function VocabCard({ item }: VocabCardProps) {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [playingTarget, setPlayingTarget] = useState<PlaybackTarget | null>(null);
+  const [ttsError, setTtsError] = useState<string | null>(null);
+  const cancelRef = useRef<(() => void) | null>(null);
 
-  const handlePlayWord = () => {
-    setIsPlaying(true);
-    speakText(
-      item.term,
-      1.0,
-      () => setIsPlaying(false),
-      () => setIsPlaying(false)
-    );
-  };
+  useEffect(() => {
+    return () => {
+      if (cancelRef.current) {
+        cancelRef.current();
+        cancelRef.current = null;
+      }
+    };
+  }, []);
 
-  const handlePlaySentence = () => {
-    setIsPlaying(true);
-    speakText(
-      item.exampleSentenceEN,
-      0.8,
-      () => setIsPlaying(false),
-      () => setIsPlaying(false)
-    );
+  const playSegment = (
+    target: PlaybackTarget,
+    text: string,
+    rate: 0.8 | 1.0 | 1.2
+  ) => {
+    if (playingTarget === target) {
+      stopActiveTts();
+      cancelRef.current = null;
+      setPlayingTarget(null);
+      return;
+    }
+
+    setTtsError(null);
+    setPlayingTarget(target);
+    const persona = storageAdapter.getSettings().voicePersona;
+
+    cancelRef.current = playTtsAudio({
+      text,
+      rate,
+      persona,
+      onEnd: () => {
+        cancelRef.current = null;
+        setPlayingTarget((curr) => (curr === target ? null : curr));
+      },
+      onError: (message) => {
+        cancelRef.current = null;
+        setPlayingTarget((curr) => (curr === target ? null : curr));
+        setTtsError(message || "Không thể phát âm thanh lúc này.");
+      },
+    });
   };
 
   return (
@@ -51,11 +77,20 @@ export function VocabCard({ item }: VocabCardProps) {
 
         <button
           type="button"
-          onClick={handlePlayWord}
+          onClick={() => playSegment("word", item.term, 1.0)}
+          aria-label={
+            playingTarget === "word"
+              ? `Dừng phát âm "${item.term}"`
+              : `Phát âm từ "${item.term}"`
+          }
           className="w-9 h-9 rounded-full bg-paper border border-ink/20 flex items-center justify-center text-ink hover:bg-accent hover:text-white shadow-soft shadow-hard-press transition-colors"
-          title={`Phát âm từ "${item.term}"`}
+          title={
+            playingTarget === "word"
+              ? `Dừng phát âm "${item.term}"`
+              : `Phát âm từ "${item.term}"`
+          }
         >
-          {isPlaying ? (
+          {playingTarget === "word" ? (
             <VolumeX className="w-4 h-4" />
           ) : (
             <Volume2 className="w-4 h-4" />
@@ -63,12 +98,10 @@ export function VocabCard({ item }: VocabCardProps) {
         </button>
       </div>
 
-      {/* Vietnamese Meaning */}
       <p className="text-xs text-ink font-medium leading-relaxed bg-paper/60 border border-ink/10 p-3 rounded-xl">
         {item.meaningVI}
       </p>
 
-      {/* Example Sentence */}
       <div className="bg-paper p-3.5 rounded-xl border border-ink/15 space-y-1.5 text-xs">
         <div className="flex items-center justify-between">
           <span className="font-mono text-[10px] uppercase font-bold text-ink-muted">
@@ -76,11 +109,15 @@ export function VocabCard({ item }: VocabCardProps) {
           </span>
           <button
             type="button"
-            onClick={handlePlaySentence}
+            onClick={() => playSegment("sentence", item.exampleSentenceEN, 0.8)}
             className="text-[11px] font-mono text-accent hover:underline flex items-center gap-1 font-semibold"
           >
-            <Volume2 className="w-3.5 h-3.5" />
-            <span>Nghe câu mẫu</span>
+            {playingTarget === "sentence" ? (
+              <VolumeX className="w-3.5 h-3.5" />
+            ) : (
+              <Volume2 className="w-3.5 h-3.5" />
+            )}
+            <span>{playingTarget === "sentence" ? "Dừng phát" : "Nghe câu mẫu"}</span>
           </button>
         </div>
         <div className="font-medium text-ink leading-relaxed">
@@ -90,6 +127,12 @@ export function VocabCard({ item }: VocabCardProps) {
           {item.exampleTranslationVI}
         </div>
       </div>
+
+      {ttsError && (
+        <p className="text-[11px] font-mono text-red-600" role="alert">
+          {ttsError}
+        </p>
+      )}
     </div>
   );
 }

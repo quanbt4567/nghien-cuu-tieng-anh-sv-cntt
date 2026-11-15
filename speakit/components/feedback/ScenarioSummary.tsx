@@ -29,6 +29,9 @@ import {
 import { speakText } from "../../lib/speech";
 import { GamificationState, VocabularyItem } from "../../lib/types";
 import { FeedbackPromptModal } from "./FeedbackPromptModal";
+import { filterUnusedKeywords } from "./keywordFilter";
+
+export { filterUnusedKeywords };
 
 interface ScenarioSummaryProps {
   scenarioTitle: string;
@@ -37,6 +40,8 @@ interface ScenarioSummaryProps {
   totalKeywordsUsed: number;
   onRetry: () => void;
   missedKeywords?: string[];
+  usedKeywords?: string[];
+  transcripts?: string[];
   scenarioKeywords?: string[];
   pointsEarned?: number;
   vocabPool?: VocabularyItem[];
@@ -61,6 +66,8 @@ export function ScenarioSummary({
   totalKeywordsUsed,
   onRetry,
   missedKeywords = EMPTY_KEYWORDS,
+  usedKeywords = EMPTY_KEYWORDS,
+  transcripts = EMPTY_KEYWORDS,
   scenarioKeywords = EMPTY_KEYWORDS,
   pointsEarned,
   vocabPool,
@@ -108,9 +115,14 @@ export function ScenarioSummary({
     ? Math.max(0, Math.round(rawEarned))
     : 0;
 
+  const effectiveMissedKeywords = useMemo(
+    () => filterUnusedKeywords(missedKeywords, usedKeywords, transcripts),
+    [missedKeywords, usedKeywords, transcripts]
+  );
+
   const weakVocab = useMemo(
-    () => suggestWeakVocab(missedKeywords, scenarioKeywords, 3, vocabPool),
-    [missedKeywords, scenarioKeywords, vocabPool]
+    () => suggestWeakVocab(effectiveMissedKeywords, scenarioKeywords, 3, vocabPool),
+    [effectiveMissedKeywords, scenarioKeywords, vocabPool]
   );
 
   const handleCopyResult = async () => {
@@ -319,7 +331,7 @@ export function ScenarioSummary({
               <span>3 Từ vựng trọng tâm cần ôn ngay</span>
             </h3>
             <p className="text-xs text-ink-muted">
-              {missedKeywords.length > 0
+              {effectiveMissedKeywords.length > 0
                 ? "Gợi ý ưu tiên từ các từ khóa bạn chưa dùng trong phiên vừa rồi."
                 : "Các thuật ngữ cốt lõi gắn với kịch bản bạn vừa luyện."}
             </p>

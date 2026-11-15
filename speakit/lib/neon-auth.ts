@@ -6,7 +6,7 @@ import {
   GuestPlayerRow,
   PublicGuestPlayer,
 } from "./db";
-import { generateFriendlyDisplayName } from "./gamification";
+import { calculateCoins, generateFriendlyDisplayName } from "./gamification";
 
 export const GUEST_SESSION_COOKIE_NAME = "speakit_session_token";
 export const GUEST_TRANSFER_STORAGE_KEY = "speakit_transfer_code_v1";
@@ -136,20 +136,36 @@ export function parseOwnedItems(raw: unknown): string[] {
   return [];
 }
 
+export function resolveConsistentItCoins(
+  rawCoins: number,
+  totalPoints: number,
+  ownedItems: readonly string[]
+): number {
+  const safeCoins = Number.isFinite(rawCoins) ? Math.max(0, Math.floor(rawCoins)) : 0;
+  const safePoints = Number.isFinite(totalPoints) ? Math.max(0, Math.floor(totalPoints)) : 0;
+  const earnedCoins = calculateCoins(safePoints);
+  if (ownedItems.length === 0) {
+    return Math.max(safeCoins, earnedCoins);
+  }
+  return safeCoins;
+}
+
 export function serializePublicGuestPlayer(
   row: GuestPlayerRow
 ): PublicGuestPlayer {
+  const ownedItems = parseOwnedItems(row.owned_items);
+  const totalPoints = Number(row.total_points) || 0;
   return {
     id: row.id,
     transferCode: row.transfer_code,
     displayName: row.display_name,
-    itCoins: Number(row.it_coins) || 0,
-    totalPoints: Number(row.total_points) || 0,
+    itCoins: resolveConsistentItCoins(Number(row.it_coins) || 0, totalPoints, ownedItems),
+    totalPoints,
     streakDays: Number(row.streak_days) || 0,
     lastPracticeDate: row.last_practice_date ?? null,
     equippedTitle: row.equipped_title || "Junior Speaker",
     equippedRing: row.equipped_ring || "default",
-    ownedItems: parseOwnedItems(row.owned_items),
+    ownedItems,
   };
 }
 

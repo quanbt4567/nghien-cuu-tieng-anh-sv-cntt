@@ -77,17 +77,34 @@ export async function getTopPlayers(limit = 50): Promise<{
     const currentPlayer = await readExistingGuestPlayer();
 
     const rows = (await sql`
+      WITH active_players AS (
+        SELECT
+          id,
+          display_name,
+          CASE
+            WHEN jsonb_array_length(COALESCE(owned_items, '[]'::jsonb)) = 0
+              THEN GREATEST(it_coins, FLOOR(total_points::numeric / 1000)::int)
+            ELSE it_coins
+          END AS effective_coins,
+          total_points,
+          streak_days,
+          equipped_title,
+          equipped_ring,
+          created_at
+        FROM guest_players
+        WHERE total_points > 0
+      )
       SELECT
         id,
         display_name AS "displayName",
-        it_coins AS "itCoins",
+        effective_coins AS "itCoins",
         total_points AS "totalPoints",
         streak_days AS "streakDays",
         equipped_title AS "equippedTitle",
         equipped_ring AS "equippedRing",
-        DENSE_RANK() OVER (ORDER BY it_coins DESC, total_points DESC)::int AS rank
-      FROM guest_players
-      ORDER BY it_coins DESC, total_points DESC, created_at ASC
+        DENSE_RANK() OVER (ORDER BY effective_coins DESC, total_points DESC)::int AS rank
+      FROM active_players
+      ORDER BY effective_coins DESC, total_points DESC, created_at ASC
       LIMIT ${safeLimit}
     `) as Array<Omit<LeaderboardEntry, "isCurrentUser">>;
 
@@ -106,17 +123,33 @@ export async function getTopPlayers(limit = 50): Promise<{
     let currentUserRank: LeaderboardEntry | null = null;
     if (currentPlayer) {
       const rankRows = (await sql`
-        WITH ranked AS (
+        WITH active_players AS (
+          SELECT
+            id,
+            display_name,
+            CASE
+              WHEN jsonb_array_length(COALESCE(owned_items, '[]'::jsonb)) = 0
+                THEN GREATEST(it_coins, FLOOR(total_points::numeric / 1000)::int)
+              ELSE it_coins
+            END AS effective_coins,
+            total_points,
+            streak_days,
+            equipped_title,
+            equipped_ring
+          FROM guest_players
+          WHERE total_points > 0
+        ),
+        ranked AS (
           SELECT
             id,
             display_name AS "displayName",
-            it_coins AS "itCoins",
+            effective_coins AS "itCoins",
             total_points AS "totalPoints",
             streak_days AS "streakDays",
             equipped_title AS "equippedTitle",
             equipped_ring AS "equippedRing",
-            DENSE_RANK() OVER (ORDER BY it_coins DESC, total_points DESC)::int AS rank
-          FROM guest_players
+            DENSE_RANK() OVER (ORDER BY effective_coins DESC, total_points DESC)::int AS rank
+          FROM active_players
         )
         SELECT *
         FROM ranked
@@ -135,6 +168,38 @@ export async function getTopPlayers(limit = 50): Promise<{
           equippedTitle: selfRow.equippedTitle || "Junior Speaker",
           equippedRing: selfRow.equippedRing || "default",
           rank: Number(selfRow.rank) || 1,
+          isCurrentUser: true,
+        };
+      } else {
+        const tailRows = (await sql`
+          WITH active_players AS (
+            SELECT
+              CASE
+                WHEN jsonb_array_length(COALESCE(owned_items, '[]'::jsonb)) = 0
+                  THEN GREATEST(it_coins, FLOOR(total_points::numeric / 1000)::int)
+                ELSE it_coins
+              END AS effective_coins,
+              total_points
+            FROM guest_players
+            WHERE total_points > 0
+          ),
+          ranked AS (
+            SELECT DENSE_RANK() OVER (ORDER BY effective_coins DESC, total_points DESC)::int AS rank
+            FROM active_players
+          )
+          SELECT (COALESCE(MAX(rank), 0) + 1)::int AS next_rank
+          FROM ranked
+        `) as Array<{ next_rank: number }>;
+
+        currentUserRank = {
+          id: currentPlayer.id,
+          displayName: currentPlayer.displayName,
+          itCoins: currentPlayer.itCoins,
+          totalPoints: currentPlayer.totalPoints,
+          streakDays: currentPlayer.streakDays,
+          equippedTitle: currentPlayer.equippedTitle,
+          equippedRing: currentPlayer.equippedRing,
+          rank: Number(tailRows[0]?.next_rank) || 1,
           isCurrentUser: true,
         };
       }
@@ -214,10 +279,20 @@ export async function rewardPracticePoints(
     const updated = (await sql`
       UPDATE guest_players
       SET
-        it_coins = it_coins + (
-          FLOOR((total_points + ${clampedPoints})::numeric / 1000)::int -
-          FLOOR(total_points::numeric / 1000)::int
-        ),
+        it_coins = CASE
+          WHEN jsonb_array_length(COALESCE(owned_items, '[]'::jsonb)) = 0
+            THEN GREATEST(
+              it_coins + (
+                FLOOR((total_points + ${clampedPoints})::numeric / 1000)::int -
+                FLOOR(total_points::numeric / 1000)::int
+              ),
+              FLOOR((total_points + ${clampedPoints})::numeric / 1000)::int
+            )
+          ELSE it_coins + (
+            FLOOR((total_points + ${clampedPoints})::numeric / 1000)::int -
+            FLOOR(total_points::numeric / 1000)::int
+          )
+        END,
         total_points = total_points + ${clampedPoints},
         streak_days = ${streak.streakDays},
         last_practice_date = ${streak.lastPracticeDate},

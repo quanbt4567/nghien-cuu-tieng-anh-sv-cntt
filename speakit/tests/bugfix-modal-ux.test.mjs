@@ -16,6 +16,12 @@ const { generate7DayPlan, isValidKeywordTerm } = jiti(
   resolve(__dirname, "../lib/planGenerator.ts")
 );
 const { SCENARIOS } = jiti(resolve(__dirname, "../data/scenarios.ts"));
+const { resolveConsistentItCoins } = jiti(
+  resolve(__dirname, "../lib/neon-auth.ts")
+);
+const { filterUnusedKeywords } = jiti(
+  resolve(__dirname, "../components/feedback/keywordFilter.ts")
+);
 
 test("scoreLocally matches inflections for deploy/cache/multi-word phrases", () => {
   assert.equal(stemWord("deployments"), "deploy");
@@ -90,4 +96,26 @@ test("SCENARIOS has at least 12 scenarios with >= 4 per level and 3 sequential t
       );
     }
   }
+});
+
+test("resolveConsistentItCoins reconciles 10333 pts to 10 coins when no items are owned", () => {
+  assert.equal(resolveConsistentItCoins(0, 10333, []), 10);
+  assert.equal(resolveConsistentItCoins(15, 10333, []), 15);
+  assert.equal(resolveConsistentItCoins(2, 10333, ["title_architect"]), 2);
+});
+
+test("filterUnusedKeywords recognizes multi-word keywords like merge conflict when used across turns", () => {
+  const unusedFromUsed = filterUnusedKeywords(
+    ["merge conflict", "rollback", "pull request"],
+    ["merge conflicts"],
+    []
+  );
+  assert.deepEqual(unusedFromUsed, ["rollback", "pull request"]);
+
+  const unusedFromTranscript = filterUnusedKeywords(
+    ["merge conflict", "rollback"],
+    [],
+    ["In turn two I resolved the merge conflict before pushing."]
+  );
+  assert.deepEqual(unusedFromTranscript, ["rollback"]);
 });

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, MessageSquare } from "lucide-react";
 import { HomeOnboardingClient } from "../../components/home/HomeOnboardingClient";
+import { SCENARIOS } from "../../data/scenarios";
 
 export default function ScenariosPage() {
   return (
@@ -18,7 +19,7 @@ export default function ScenariosPage() {
           <span>Kịch bản luyện nói IT</span>
         </h1>
         <p className="text-xs text-ink-muted mt-1.5">
-          Chọn vai trò CNTT (Frontend, Backend, DevOps, QA) và mức độ khó phù hợp để luyện tập 6 tình huống giao tiếp công việc thực tế.
+          Chọn vai trò CNTT (Frontend, Backend, DevOps, QA) và mức độ khó phù hợp để luyện tập {SCENARIOS.length} tình huống giao tiếp công việc thực tế.
         </p>
       </div>
 

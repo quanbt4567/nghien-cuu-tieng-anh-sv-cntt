@@ -25,10 +25,20 @@ import {
 import {
   GAMIFICATION_STORAGE_KEY,
   GAMIFICATION_UPDATED_EVENT,
-  calculateCoins,
   getGamificationState,
   pointsToNextCoin,
 } from "../../lib/gamification";
+import {
+  GUEST_PROFILE_CACHE_KEY,
+  GUEST_PROFILE_UPDATED_EVENT,
+  readBackupTransferCode,
+  readCachedGuestProfile,
+  saveCachedGuestProfile,
+} from "../../lib/guestClient";
+import { initOrHydrateGuestSession } from "../../app/actions/leaderboard";
+import type { PublicGuestPlayer } from "../../lib/db";
+import { mergeProfileIdentity } from "../../lib/profileStats";
+import type { GamificationState } from "../../lib/types";
 
 type NavItem = {
   href: string;
@@ -94,32 +104,84 @@ function isGroupActive(pathname: string, activePrefixes: readonly string[]): boo
   return activePrefixes.some((prefix) => pathname.startsWith(prefix));
 }
 
+const INITIAL_GAMIFICATION: GamificationState = {
+  totalPoints: 0,
+  streakDays: 0,
+  lastPracticeDate: null,
+  selectedRole: "frontend",
+  personalBests: {
+    "bug-buster": 0,
+    "standup-speed-run": 0,
+  },
+  history: [],
+};
+
 export function Navbar() {
   const pathname = usePathname() ?? "";
-  const [stats, setStats] = useState({ totalPoints: 0, streakDays: 0 });
+  const [hydrated, setHydrated] = useState(false);
+  const [gamification, setGamification] = useState<GamificationState>(INITIAL_GAMIFICATION);
+  const [guestPlayer, setGuestPlayer] = useState<PublicGuestPlayer | null>(null);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    const syncStats = () => {
-      const state = getGamificationState();
-      setStats({ totalPoints: state.totalPoints, streakDays: state.streakDays });
+    let active = true;
+
+    const syncLocal = () => {
+      if (!active) return;
+      setGamification(getGamificationState());
     };
 
-    syncStats();
+    const syncCachedGuest = () => {
+      if (!active) return;
+      const cached = readCachedGuestProfile();
+      if (cached) {
+        setGuestPlayer(cached);
+        setHydrated(true);
+      }
+    };
 
-    window.addEventListener(GAMIFICATION_UPDATED_EVENT, syncStats);
+    syncLocal();
+    syncCachedGuest();
+
+    const hydrateCloudGuest = async () => {
+      try {
+        const session = await initOrHydrateGuestSession(readBackupTransferCode());
+        if (!active) return;
+        if (session.mode === "online" && session.player) {
+          setGuestPlayer(session.player);
+          saveCachedGuestProfile(session.player);
+        } else if (!readCachedGuestProfile()) {
+          setGuestPlayer(null);
+        }
+      } catch {
+      } finally {
+        if (active) {
+          setHydrated(true);
+        }
+      }
+    };
+
+    void hydrateCloudGuest();
+
+    window.addEventListener(GAMIFICATION_UPDATED_EVENT, syncLocal);
+    window.addEventListener(GUEST_PROFILE_UPDATED_EVENT, syncCachedGuest);
 
     const handleStorage = (event: StorageEvent) => {
       if (!event.key || event.key === GAMIFICATION_STORAGE_KEY) {
-        syncStats();
+        syncLocal();
+      }
+      if (!event.key || event.key === GUEST_PROFILE_CACHE_KEY) {
+        syncCachedGuest();
       }
     };
     window.addEventListener("storage", handleStorage);
 
     return () => {
-      window.removeEventListener(GAMIFICATION_UPDATED_EVENT, syncStats);
+      active = false;
+      window.removeEventListener(GAMIFICATION_UPDATED_EVENT, syncLocal);
+      window.removeEventListener(GUEST_PROFILE_UPDATED_EVENT, syncCachedGuest);
       window.removeEventListener("storage", handleStorage);
     };
   }, []);
@@ -157,9 +219,9 @@ export function Navbar() {
     return null;
   }
 
-  const coins = calculateCoins(stats.totalPoints);
-  const nextCoinPoints = pointsToNextCoin(stats.totalPoints);
-  const coinTooltip = `${stats.totalPoints} pts (${nextCoinPoints} pts nữa được +1 Coin)`;
+  const identity = mergeProfileIdentity(guestPlayer, gamification);
+  const nextCoinPoints = pointsToNextCoin(identity.totalPoints);
+  const coinTooltip = `${identity.totalPoints.toLocaleString("en-US")} pts (${nextCoinPoints} pts nữa được +1 Coin)`;
   const homeActive = isItemActive(pathname, "/");
 
   return (
@@ -220,8 +282,19 @@ export function Navbar() {
                   <div
                     className={`absolute ${
                       group.id === "account" ? "right-0" : "left-0"
-                    } top-full mt-2 w-56 p-1.5 bg-white border border-ink/15 rounded-2xl shadow-card z-50`}
+                    } top-full mt-2 w-60 p-1.5 bg-white border border-ink/15 rounded-2xl shadow-card z-50`}
                   >
+                    {group.id === "account" && hydrated && (
+                      <div className="px-3 py-2 mb-1 rounded-xl bg-paper border border-ink/10">
+                        <div className="text-xs font-bold text-ink truncate">
+                          {identity.displayName}
+                        </div>
+                        <div className="flex items-center justify-between gap-2 mt-0.5 text-[11px] font-mono text-ink-muted">
+                          <span>{identity.transferCode ?? "Local Mode"}</span>
+                          <span>{identity.totalPoints.toLocaleString("en-US")} pts</span>
+                        </div>
+                      </div>
+                    )}
                     {group.items.map(({ href, label, icon: Icon }) => {
                       const itemActive = isItemActive(pathname, href);
                       return (
@@ -249,25 +322,58 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2 shrink-0">
-          <Link
-            href="/arena"
-            title={coinTooltip}
-            aria-label={`Chuỗi ${stats.streakDays} ngày và ${coins} IT-Coin. ${coinTooltip}`}
-            className="shrink-0 flex items-center gap-1.5 lg:gap-2 px-2.5 lg:px-3 py-1.5 rounded-pill bg-white border border-ink/15 hover:border-ink/30 shadow-soft text-xs font-mono text-ink transition-colors"
-          >
-            <span className="inline-flex items-center gap-1">
-              <Flame className="w-3.5 h-3.5 text-accent shrink-0" aria-hidden="true" />
-              <span className="font-semibold">{stats.streakDays}</span>
-            </span>
-            <span className="text-ink/20" aria-hidden="true">
-              |
-            </span>
-            <span className="inline-flex items-center gap-1">
-              <Coins className="w-3.5 h-3.5 text-ink shrink-0" aria-hidden="true" />
-              <span className="font-semibold">{coins}</span>
-              <span className="hidden lg:inline text-ink-muted">IT-Coin</span>
-            </span>
-          </Link>
+          {!hydrated ? (
+            <div
+              aria-label="Đang đồng bộ tài khoản"
+              className="shrink-0 h-8 w-36 sm:w-52 rounded-pill bg-paper-muted border border-ink/10 animate-pulse"
+            />
+          ) : (
+            <div className="flex items-center gap-1.5 shrink-0">
+              <Link
+                href="/profile"
+                title={
+                  identity.transferCode
+                    ? `${identity.displayName} (${identity.transferCode})`
+                    : identity.displayName
+                }
+                className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-white border border-ink/15 hover:border-ink/30 shadow-soft text-xs text-ink transition-colors max-w-[165px] sm:max-w-[220px]"
+              >
+                <User className="w-3.5 h-3.5 text-accent shrink-0" aria-hidden="true" />
+                <span className="font-semibold truncate">{identity.displayName}</span>
+                {identity.transferCode && (
+                  <span className="hidden sm:inline font-mono text-[10px] px-1.5 py-0.5 rounded bg-paper border border-ink/10 text-ink-muted shrink-0">
+                    {identity.transferCode}
+                  </span>
+                )}
+              </Link>
+
+              <Link
+                href="/arena"
+                title={coinTooltip}
+                aria-label={`Chuỗi ${identity.streakDays} ngày, ${identity.itCoins} IT-Coin, ${identity.totalPoints} điểm. ${coinTooltip}`}
+                className="shrink-0 flex items-center gap-1.5 lg:gap-2 px-2.5 lg:px-3 py-1.5 rounded-pill bg-white border border-ink/15 hover:border-ink/30 shadow-soft text-xs font-mono text-ink transition-colors"
+              >
+                <span className="inline-flex items-center gap-1">
+                  <Flame className="w-3.5 h-3.5 text-accent shrink-0" aria-hidden="true" />
+                  <span className="font-semibold">{identity.streakDays}</span>
+                </span>
+                <span className="text-ink/20" aria-hidden="true">
+                  |
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <Coins className="w-3.5 h-3.5 text-ink shrink-0" aria-hidden="true" />
+                  <span className="font-semibold">{identity.itCoins}</span>
+                  <span className="hidden lg:inline text-ink-muted">Coin</span>
+                </span>
+                <span className="hidden xl:inline text-ink/20" aria-hidden="true">
+                  |
+                </span>
+                <span className="hidden xl:inline text-ink-muted">
+                  {identity.totalPoints.toLocaleString("en-US")} pts
+                </span>
+              </Link>
+            </div>
+          )}
 
           <button
             type="button"
@@ -292,6 +398,20 @@ export function Navbar() {
           aria-label="Điều hướng di động"
           className="md:hidden border-t border-ink/15 bg-paper px-4 py-3 space-y-3 max-h-[calc(100vh-4rem)] overflow-y-auto"
         >
+          {hydrated && (
+            <div className="px-3 py-2 rounded-xl bg-white border border-ink/15 flex items-center justify-between gap-2 text-xs">
+              <div className="min-w-0">
+                <div className="font-bold text-ink truncate">{identity.displayName}</div>
+                <div className="font-mono text-[11px] text-ink-muted">
+                  {identity.transferCode ?? "Local Mode"}
+                </div>
+              </div>
+              <div className="font-mono text-[11px] text-ink shrink-0">
+                {identity.totalPoints.toLocaleString("en-US")} pts · {identity.itCoins} Coin
+              </div>
+            </div>
+          )}
+
           <Link
             href="/"
             aria-current={homeActive ? "page" : undefined}

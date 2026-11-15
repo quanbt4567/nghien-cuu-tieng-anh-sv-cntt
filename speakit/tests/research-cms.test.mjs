@@ -31,7 +31,13 @@ test("DEFAULT_RESEARCH_ARTICLES seeds EF EPI 2025 benchmark without IUH attribut
   assert.equal(seed.category, "benchmark");
   assert.equal(seed.status, "published");
   assert.equal(seed.metricsJson.some((m) => m.value === "500"), true);
+  assert.equal(seed.metricsJson.some((m) => m.value === "64 / 123"), true);
   assert.equal(seed.metricsJson.some((m) => m.value === "461"), true);
+  assert.equal(seed.metricsJson.some((m) => m.value === "522"), true);
+  assert.equal(
+    seed.sourceUrls.some((s) => s.url === "https://www.ef.com/wwen/epi/regions/asia/vietnam/"),
+    true
+  );
   assert.equal(seed.contentMarkdown.includes("IUH"), false);
 });
 

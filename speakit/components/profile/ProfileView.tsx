@@ -57,6 +57,7 @@ import {
 import {
   readBackupTransferCode,
   saveBackupTransferCode,
+  saveCachedGuestProfile,
 } from "../../lib/guestClient";
 import {
   mergeProfileIdentity,
@@ -198,13 +199,18 @@ export function ProfileView() {
     message: string;
   } | null>(null);
 
+  const applyGuestPlayer = useCallback((player: PublicGuestPlayer | null) => {
+    setGuestPlayer(player);
+    saveCachedGuestProfile(player);
+  }, []);
+
   const refreshOnlineRank = useCallback(async () => {
     try {
       const board = await getTopPlayers(50);
       if (board.mode === "online") {
         setGlobalRank(board.currentUserRank?.rank ?? null);
         if (board.currentPlayer) {
-          setGuestPlayer(board.currentPlayer);
+          applyGuestPlayer(board.currentPlayer);
         }
       } else {
         setGlobalRank(null);
@@ -212,7 +218,7 @@ export function ProfileView() {
     } catch {
       setGlobalRank(null);
     }
-  }, []);
+  }, [applyGuestPlayer]);
 
   useEffect(() => {
     let active = true;
@@ -259,17 +265,17 @@ export function ProfileView() {
       if (guestRes.status === "fulfilled") {
         const { session, board } = guestRes.value;
         if (board.mode === "online") {
-          setGuestPlayer(board.currentPlayer ?? session.player);
+          applyGuestPlayer(board.currentPlayer ?? session.player);
           setGlobalRank(board.currentUserRank?.rank ?? null);
         } else if (session.mode === "online" && session.player) {
-          setGuestPlayer(session.player);
+          applyGuestPlayer(session.player);
           setGlobalRank(null);
         } else {
-          setGuestPlayer(null);
+          applyGuestPlayer(null);
           setGlobalRank(null);
         }
       } else {
-        setGuestPlayer(null);
+        applyGuestPlayer(null);
         setGlobalRank(null);
       }
 
@@ -369,7 +375,7 @@ export function ProfileView() {
     try {
       const res = await updateGuestDisplayName(cleaned, readBackupTransferCode());
       if (res.ok && res.player) {
-        setGuestPlayer(res.player);
+        applyGuestPlayer(res.player);
         setIsEditingName(false);
         setNameFeedback({
           ok: true,
@@ -378,7 +384,7 @@ export function ProfileView() {
         void refreshOnlineRank();
       } else {
         if (res.mode === "offline") {
-          setGuestPlayer(null);
+          applyGuestPlayer(null);
           setGlobalRank(null);
         }
         setNameFeedback({
@@ -432,7 +438,7 @@ export function ProfileView() {
       const res = await restoreByTransferCode(normalized);
       if (res.ok && res.player) {
         saveBackupTransferCode(res.player.transferCode);
-        setGuestPlayer(res.player);
+        applyGuestPlayer(res.player);
         setRestoreCode("");
         setRestoreFeedback({
           ok: true,
@@ -466,7 +472,7 @@ export function ProfileView() {
         readBackupTransferCode()
       );
       if (res.ok && res.player) {
-        setGuestPlayer(res.player);
+        applyGuestPlayer(res.player);
         setShopFeedback({
           ok: true,
           message: `Đã trang bị "${itemName}".`,
@@ -474,7 +480,7 @@ export function ProfileView() {
         void refreshOnlineRank();
       } else {
         if (res.mode === "offline") {
-          setGuestPlayer(null);
+          applyGuestPlayer(null);
           setGlobalRank(null);
         }
         setShopFeedback({
@@ -585,6 +591,12 @@ export function ProfileView() {
                   <h2 className="text-xl font-bold text-ink truncate">
                     {identity.displayName}
                   </h2>
+                  {identity.transferCode && (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-bold text-ink">
+                      <KeyRound className="w-3 h-3 text-accent" aria-hidden="true" />
+                      <span>{identity.transferCode}</span>
+                    </span>
+                  )}
                   <button
                     type="button"
                     onClick={handleStartRename}

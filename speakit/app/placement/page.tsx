@@ -103,9 +103,14 @@ export default function PlacementPage() {
               <span className="text-xs font-mono text-sky-700 font-semibold">
                 Cấp độ đề xuất của bạn:
               </span>
-              <span className="px-3 py-0.5 rounded-pill bg-ink text-white text-xs font-mono font-bold">
-                {result.level}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-0.5 rounded-pill bg-white border border-sky-500/30 text-sky-700 text-xs font-mono font-bold">
+                  {result.score}/100 điểm
+                </span>
+                <span className="px-3 py-0.5 rounded-pill bg-ink text-white text-xs font-mono font-bold">
+                  {result.level}
+                </span>
+              </div>
             </div>
             <p className="text-sm text-ink leading-relaxed">{result.summaryVI}</p>
           </div>

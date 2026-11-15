@@ -78,6 +78,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [speechError, setSpeechError] = useState<string | null>(null);
   const [speechRate, setSpeechRate] = useState<0.8 | 1.0 | 1.2>(1.0);
+  const [turnFeedback, setTurnFeedback] = useState<TurnBreakdown | null>(null);
   const [summary, setSummary] = useState<RunSummary | null>(null);
 
   const speechControllerRef = useRef<SpeechController | null>(null);
@@ -236,29 +237,32 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
 
       const nextResults = [...resultsRef.current, breakdown];
       resultsRef.current = nextResults;
-
-      const nextIdx = idx + 1;
-      if (nextIdx >= STANDUP_SPEED_QUESTIONS.length) {
-        submittingRef.current = false;
-        finalizeRun(nextResults);
-        return;
-      }
-
-      questionIdxRef.current = nextIdx;
-      setQuestionIdx(nextIdx);
-      const nextLimit = STANDUP_SPEED_QUESTIONS[nextIdx].timeLimitSec;
-      timeLeftRef.current = nextLimit;
-      setTimeLeft(nextLimit);
-      updateAnswer("");
+      setTurnFeedback(breakdown);
       setSpeechError(null);
       submittingRef.current = false;
     },
-    [finalizeRun, stopAudio]
+    [stopAudio]
   );
 
-  // Per-question 25s countdown timer (pauses while awaiting /api/score)
+  const handleNextTurn = () => {
+    const nextIdx = questionIdxRef.current + 1;
+    setTurnFeedback(null);
+    if (nextIdx >= STANDUP_SPEED_QUESTIONS.length) {
+      finalizeRun(resultsRef.current);
+      return;
+    }
+
+    questionIdxRef.current = nextIdx;
+    setQuestionIdx(nextIdx);
+    const nextLimit = STANDUP_SPEED_QUESTIONS[nextIdx].timeLimitSec;
+    timeLeftRef.current = nextLimit;
+    setTimeLeft(nextLimit);
+    updateAnswer("");
+    setSpeechError(null);
+  };
+
   useEffect(() => {
-    if (phase !== "playing" || isEvaluating) return;
+    if (phase !== "playing" || isEvaluating || turnFeedback !== null) return;
 
     const timer = setInterval(() => {
       if (submittingRef.current) return;
@@ -272,7 +276,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [phase, isEvaluating, submitCurrentTurn]);
+  }, [phase, isEvaluating, turnFeedback, submitCurrentTurn]);
 
   const startRun = () => {
     stopAudio();
@@ -289,6 +293,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
     setTimeLeft(STANDUP_SPEED_QUESTIONS[0].timeLimitSec);
     updateAnswer("");
     setSpeechError(null);
+    setTurnFeedback(null);
     setSummary(null);
     setPhase("playing");
   };
@@ -646,7 +651,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
           <button
             type="button"
             onClick={handleToggleMic}
-            disabled={isEvaluating}
+            disabled={isEvaluating || turnFeedback !== null}
             className={`inline-flex items-center gap-2.5 px-5 py-2.5 rounded-pill font-semibold text-xs border transition-all disabled:opacity-50 ${
               isRecording
                 ? "bg-accent text-white border-accent animate-mic-listening shadow-card"
@@ -686,7 +691,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
           rows={3}
           value={answerText}
           onChange={(e) => updateAnswer(e.target.value)}
-          disabled={isEvaluating}
+          disabled={isEvaluating || turnFeedback !== null}
           placeholder="Ví dụ: Yesterday I fixed the login API timeout and merged my pull request..."
           aria-label="Câu trả lời Daily Standup bằng tiếng Anh"
           className="w-full p-3.5 rounded-2xl bg-paper border border-ink/20 text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:border-accent resize-none disabled:opacity-60"
@@ -699,41 +704,114 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
         )}
       </div>
 
-      {/* Submit / Skip Actions */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-        <button
-          type="button"
-          onClick={() => void submitCurrentTurn(true)}
-          disabled={isEvaluating}
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-pill bg-paper-muted text-ink text-xs font-semibold border border-ink/15 hover:bg-paper-subtle disabled:opacity-50 transition-colors"
-        >
-          <SkipForward className="w-3.5 h-3.5" />
-          <span>Bỏ qua câu này</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => void submitCurrentTurn(false)}
-          disabled={isEvaluating || !answerText.trim()}
-          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-pill bg-accent text-white text-xs sm:text-sm font-bold border border-accent shadow-soft hover:bg-accent-hover disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-        >
-          {isEvaluating ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Đang chấm điểm...</span>
-            </>
-          ) : (
-            <>
-              <span>
-                {questionIdx === STANDUP_SPEED_QUESTIONS.length - 1
-                  ? "Nộp & Xem kết quả"
-                  : "Nộp & Câu tiếp theo"}
+      {turnFeedback && (
+        <div className="bg-paper border border-ink/20 rounded-2xl p-4 space-y-2.5">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="text-xs font-mono font-bold uppercase text-accent">
+              {turnFeedback.skipped ? "Đã bỏ qua lượt" : "Kết quả lượt vừa rồi"}
+            </span>
+            <div className="flex items-center gap-2 font-mono text-xs">
+              <span className="px-2.5 py-0.5 rounded-pill bg-white border border-ink/15 text-ink">
+                {turnFeedback.turnScore}/100
               </span>
-              <ArrowRight className="w-4 h-4" />
+              <span className="px-2.5 py-0.5 rounded-pill bg-ink text-white font-bold">
+                +{turnFeedback.speedPoints} pts
+              </span>
+            </div>
+          </div>
+
+          {!turnFeedback.skipped && (
+            <>
+              <div className="flex flex-wrap items-center justify-between gap-2 text-[11px]">
+                <div className="flex flex-wrap gap-1.5">
+                  {turnFeedback.keywordsUsed.length > 0 ? (
+                    turnFeedback.keywordsUsed.map((kw) => (
+                      <span
+                        key={kw}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-pill bg-white border border-ink/15 font-mono text-ink"
+                      >
+                        <Check className="w-3 h-3 text-accent" />
+                        <span>{kw}</span>
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-ink-muted">
+                      Chưa khớp từ khóa gợi ý
+                    </span>
+                  )}
+                </div>
+                {turnFeedback.timeBonus > 0 && (
+                  <span className="font-mono text-ink-muted">
+                    Bonus tốc độ +{turnFeedback.timeBonus}
+                  </span>
+                )}
+              </div>
+
+              {turnFeedback.betterSentence && (
+                <p className="text-xs text-ink-muted pt-1 border-t border-ink/10">
+                  <strong className="text-ink">Gợi ý mượt hơn:</strong> "
+                  {turnFeedback.betterSentence}"
+                </p>
+              )}
+
+              {turnFeedback.pronunciationNote && (
+                <p className="text-xs text-ink-muted">
+                  <strong className="text-ink">Gợi ý phát âm:</strong>{" "}
+                  {turnFeedback.pronunciationNote}
+                </p>
+              )}
             </>
           )}
-        </button>
-      </div>
+        </div>
+      )}
+
+      {turnFeedback ? (
+        <div className="flex justify-end pt-1">
+          <button
+            type="button"
+            onClick={handleNextTurn}
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-pill bg-accent text-white text-xs sm:text-sm font-bold border border-accent shadow-soft hover:bg-accent-hover transition-all"
+          >
+            <span>
+              {questionIdx === STANDUP_SPEED_QUESTIONS.length - 1
+                ? "Xem kết quả"
+                : "Câu tiếp theo"}
+            </span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      ) : (
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+          <button
+            type="button"
+            onClick={() => void submitCurrentTurn(true)}
+            disabled={isEvaluating}
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-pill bg-paper-muted text-ink text-xs font-semibold border border-ink/15 hover:bg-paper-subtle disabled:opacity-50 transition-colors"
+          >
+            <SkipForward className="w-3.5 h-3.5" />
+            <span>Bỏ qua câu này</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => void submitCurrentTurn(false)}
+            disabled={isEvaluating || !answerText.trim()}
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-pill bg-accent text-white text-xs sm:text-sm font-bold border border-accent shadow-soft hover:bg-accent-hover disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+          >
+            {isEvaluating ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Đang chấm điểm...</span>
+              </>
+            ) : (
+              <>
+                <span>Nộp câu trả lời</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
+          </button>
+        </div>
+      )}
     </section>
   );
 }

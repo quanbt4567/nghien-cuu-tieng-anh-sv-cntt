@@ -126,10 +126,23 @@ function toIsoOrNull(value: unknown): string | null {
   return null;
 }
 
+function normalizeSeedArticleSources(
+  slug: string,
+  sourceUrls: ResearchSourceUrl[]
+): ResearchSourceUrl[] {
+  if (slug !== EF_EPI_2025_SEED_ARTICLE.slug) return sourceUrls;
+  return sourceUrls.map((src) =>
+    src.url === "https://www.ef.com/wwen/epi/"
+      ? { ...src, url: "https://www.ef.com/wwen/epi/regions/asia/vietnam/" }
+      : src
+  );
+}
+
 function mapArticleRow(row: Record<string, unknown>): ResearchArticle {
+  const slug = String(row.slug);
   return {
     id: String(row.id),
-    slug: String(row.slug),
+    slug,
     title: String(row.title),
     summary: String(row.summary),
     contentMarkdown: String(row.content_markdown),
@@ -137,7 +150,10 @@ function mapArticleRow(row: Record<string, unknown>): ResearchArticle {
     metricsJson: parseJsonArray(row.metrics_json, normalizeResearchMetrics),
     sourceType:
       row.source_type === "ai_curated" ? "ai_curated" : "admin_authored",
-    sourceUrls: parseJsonArray(row.source_urls, normalizeResearchSources),
+    sourceUrls: normalizeSeedArticleSources(
+      slug,
+      parseJsonArray(row.source_urls, normalizeResearchSources)
+    ),
     status: normalizeResearchStatus(row.status),
     createdAt: toIsoOrNull(row.created_at) ?? new Date().toISOString(),
     publishedAt: toIsoOrNull(row.published_at),

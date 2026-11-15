@@ -206,9 +206,10 @@ export default async function ResearchPortalPage({
                           href={src.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-[11px] font-mono text-ink-muted hover:text-ink underline underline-offset-2"
+                          title={src.title}
+                          className="inline-flex items-center gap-1 max-w-full text-[11px] font-mono text-ink-muted hover:text-ink underline underline-offset-2"
                         >
-                          <span>{src.title.slice(0, 38)}</span>
+                          <span className="truncate">{src.title}</span>
                           <ExternalLink className="w-3 h-3 shrink-0" />
                         </a>
                       ))}

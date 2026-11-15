@@ -57,6 +57,7 @@ interface RoundSummary {
   score: number;
   fixedCount: number;
   attemptedCount: number;
+  totalCount: number;
   durationSec: number;
   coinsEarnedNow: number;
   totalCoins: number;
@@ -184,6 +185,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
       score: finalScore,
       fixedCount: finalFixed,
       attemptedCount: finalAttempted,
+      totalCount: deckRef.current.length,
       durationSec: elapsed,
       coinsEarnedNow:
         calculateCoins(updatedState.totalPoints) - calculateCoins(prevTotalPoints),
@@ -253,7 +255,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
     if (phase !== "playing") return;
 
     const timer = setInterval(() => {
-      if (finishedRef.current) return;
+      if (finishedRef.current || feedbackRef.current) return;
 
       const nextTotal = totalTimeRef.current - 1;
       totalTimeRef.current = nextTotal;
@@ -264,13 +266,11 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
         return;
       }
 
-      if (!feedbackRef.current) {
-        const nextBug = bugTimeRef.current - 1;
-        bugTimeRef.current = nextBug;
-        setBugTimeLeft(Math.max(0, nextBug));
-        if (nextBug <= 0) {
-          resolveBug(false);
-        }
+      const nextBug = bugTimeRef.current - 1;
+      bugTimeRef.current = nextBug;
+      setBugTimeLeft(Math.max(0, nextBug));
+      if (nextBug <= 0) {
+        resolveBug(false);
       }
     }, 1000);
 
@@ -413,7 +413,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
             </p>
           </div>
           <div className="bg-paper border border-ink/15 rounded-xl p-3.5 space-y-1">
-            <div className="font-mono font-bold text-ink">10s / Mỗi bug</div>
+            <div className="font-mono font-bold text-ink">20s / Mỗi bug</div>
             <p className="text-ink-muted">
               Đúng thưởng <strong className="text-ink">+150 điểm</strong> +{" "}
               <strong className="text-ink">5 điểm/giây dư</strong>.
@@ -474,7 +474,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
             <div className="text-2xl font-mono font-bold text-accent">
               {summary.fixedCount}
               <span className="text-xs text-ink-muted">
-                /{summary.attemptedCount}
+                /{summary.totalCount}
               </span>
             </div>
             <div className="text-[11px] text-ink-muted mt-1">Bug đã sửa</div>
@@ -551,7 +551,6 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
         </button>
       </div>
 
-      {/* Per-Bug 10s Countdown Bar */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between text-[11px] font-mono text-ink-muted">
           <span>Thời gian cho bug hiện tại</span>

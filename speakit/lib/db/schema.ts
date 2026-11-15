@@ -70,7 +70,7 @@ Việc chuyển từ học từ vựng rời rạc sang **luyện phản xạ n�
   sourceUrls: [
     {
       title: "EF English Proficiency Index 2025 — Vietnam",
-      url: "https://www.ef.com/wwen/epi/",
+      url: "https://www.ef.com/wwen/epi/regions/asia/vietnam/",
     },
   ] satisfies ResearchSourceUrl[],
   status: "published" as ResearchStatus,
