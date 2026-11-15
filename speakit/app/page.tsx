@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, BookOpen, Clock, Coins, Flame, Gamepad2, MessageSquare, Trophy } from "lucide-react";
 import { HomeIntroHero } from "../components/home/HomeIntroHero";
-import { EF_EPI_2025 } from "../data/efEpiData";
 import { getRingBadgeClass } from "../lib/cosmetics";
 import { getTopPlayers } from "./actions/leaderboard";
 
@@ -189,10 +188,6 @@ export default async function HomePage() {
           </div>
         </Link>
       </section>
-
-      <p className="text-[11px] font-mono text-ink-muted text-center">
-        Tham chiếu EF EPI {EF_EPI_2025.year} ({EF_EPI_2025.country}): Kỹ năng Speaking {EF_EPI_2025.skills.speaking} điểm — SpeakIT tập trung cải thiện phản xạ nói tiếng Anh chuyên ngành.
-      </p>
     </div>
   );
 }
