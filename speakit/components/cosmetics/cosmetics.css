@@ -1,3 +1,18 @@
+@property --cosmetic-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes cosmeticAngleSpin {
+  0% {
+    --cosmetic-angle: 0deg;
+  }
+  100% {
+    --cosmetic-angle: 360deg;
+  }
+}
+
 @keyframes cosmeticSpinSlow {
   0% {
     transform: rotate(0deg);
@@ -16,6 +31,58 @@
   }
 }
 
+@keyframes cosmeticHaloFloat {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0px);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-2.5px);
+  }
+}
+
+@keyframes cosmeticHornFlicker {
+  0%, 100% {
+    transform: translateX(-50%) scaleY(1);
+  }
+  50% {
+    transform: translateX(-50%) scaleY(1.06);
+  }
+}
+
+@keyframes cosmeticEmberRise {
+  0% {
+    opacity: 0;
+    transform: translateY(4px) scale(0.6) rotate(0deg);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.25) rotate(45deg);
+  }
+}
+
+@keyframes cosmeticReticlePulse {
+  0%, 100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes cosmeticHoloScanY {
+  0% {
+    transform: translateY(-120%);
+  }
+  100% {
+    transform: translateY(420%);
+  }
+}
+
 @keyframes cosmeticPulseGlow {
   0%, 100% {
     opacity: 0.72;
@@ -29,12 +96,12 @@
 
 @keyframes cosmeticMicWave {
   0% {
-    opacity: 0.85;
+    opacity: 0.9;
     transform: scale(1);
   }
   100% {
     opacity: 0;
-    transform: scale(1.42);
+    transform: scale(1.44);
   }
 }
 
@@ -43,7 +110,7 @@
     transform: translateX(-120%) skewX(-18deg);
   }
   100% {
-    transform: translateX(220%) skewX(-18deg);
+    transform: translateX(240%) skewX(-18deg);
   }
 }
 
@@ -185,10 +252,10 @@
 
 @keyframes cosmeticInfernoBorder {
   0%, 100% {
-    box-shadow: 0 0 0 1px rgba(234, 88, 12, 0.45), 0 0 14px rgba(234, 88, 12, 0.25);
+    box-shadow: 0 0 0 1px rgba(229, 72, 77, 0.45), 0 0 14px rgba(245, 158, 11, 0.25);
   }
   50% {
-    box-shadow: 0 0 0 2px rgba(229, 72, 77, 0.8), 0 0 24px rgba(234, 88, 12, 0.45);
+    box-shadow: 0 0 0 2px rgba(229, 72, 77, 0.85), 0 0 22px rgba(245, 158, 11, 0.45);
   }
 }
 
@@ -266,26 +333,62 @@
 }
 
 .cosmetic-avatar-overclock {
-  background: conic-gradient(from 0deg, #e5484d, #f59e0b, #1a1714, #e5484d);
-  animation: cosmeticSpinSlow 3.6s linear infinite;
-  will-change: transform;
+  background: conic-gradient(from var(--cosmetic-angle), #e5484d 0deg 105deg, #f59e0b 105deg 165deg, #1a1714 165deg 275deg, #e5484d 275deg 360deg);
+  animation: cosmeticAngleSpin 2.8s linear infinite;
+  will-change: --cosmetic-angle;
 }
 
 .cosmetic-avatar-matrix-halo {
-  background: conic-gradient(from 0deg, #16a34a, #4ade80, #052e16, #16a34a);
-  animation: cosmeticSpinReverse 4.5s linear infinite;
-  will-change: transform;
+  background: conic-gradient(from var(--cosmetic-angle), #16a34a 0deg 120deg, #4ade80 120deg 175deg, #1a1714 175deg 295deg, #16a34a 295deg 360deg);
+  animation: cosmeticAngleSpin 3.6s linear infinite reverse;
+  will-change: --cosmetic-angle;
 }
 
 .cosmetic-avatar-inferno-horns {
-  background: conic-gradient(from 0deg, #ea580c, #ef4444, #facc15, #ea580c);
-  animation: cosmeticSpinSlow 2.8s linear infinite;
-  will-change: transform;
+  background: conic-gradient(from var(--cosmetic-angle), #e5484d 0deg 95deg, #f59e0b 95deg 205deg, #1a1714 205deg 285deg, #e5484d 285deg 360deg);
+  animation: cosmeticAngleSpin 2.4s linear infinite;
+  will-change: --cosmetic-angle;
 }
 
 .cosmetic-avatar-quantum-visor {
-  background: conic-gradient(from 0deg, #0284c7, #38bdf8, #818cf8, #2dd4bf, #0284c7);
-  animation: cosmeticSpinSlow 3.2s linear infinite;
+  background: conic-gradient(from var(--cosmetic-angle), #0284c7 0deg 115deg, #38bdf8 115deg 180deg, #1a1714 180deg 295deg, #0284c7 295deg 360deg);
+  animation: cosmeticAngleSpin 3s linear infinite;
+  will-change: --cosmetic-angle;
+}
+
+.cosmetic-svg-spin-slow {
+  animation: cosmeticSpinSlow 7s linear infinite;
+  will-change: transform;
+}
+
+.cosmetic-svg-spin-reverse {
+  animation: cosmeticSpinReverse 5.5s linear infinite;
+  will-change: transform;
+}
+
+.cosmetic-halo-float {
+  animation: cosmeticHaloFloat 2.6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.cosmetic-horn-flicker {
+  transform-origin: bottom center;
+  animation: cosmeticHornFlicker 1.8s ease-in-out infinite;
+  will-change: transform;
+}
+
+.cosmetic-ember-rise {
+  animation: cosmeticEmberRise 1.7s ease-out infinite;
+  will-change: transform, opacity;
+}
+
+.cosmetic-reticle-pulse {
+  animation: cosmeticReticlePulse 2.2s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.cosmetic-holo-scan-y {
+  animation: cosmeticHoloScanY 2.2s linear infinite;
   will-change: transform;
 }
 
@@ -318,8 +421,8 @@
 
 .cosmetic-theme-aurora-grid .cosmetic-grid-plane {
   background-image:
-    linear-gradient(to right, rgba(13, 148, 136, 0.14) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(217, 119, 6, 0.12) 1px, transparent 1px);
+    linear-gradient(to right, rgba(2, 132, 199, 0.14) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(245, 158, 11, 0.12) 1px, transparent 1px);
   background-size: 48px 48px;
   animation: cosmeticGridScroll 5s linear infinite;
   will-change: background-position;
@@ -388,7 +491,7 @@
 }
 
 .cosmetic-nameplate-terminal-pulse {
-  background: linear-gradient(120deg, rgba(22, 163, 74, 0.14), rgba(20, 24, 21, 0.06), rgba(22, 163, 74, 0.1));
+  background: linear-gradient(120deg, rgba(22, 163, 74, 0.14), rgba(26, 23, 20, 0.06), rgba(22, 163, 74, 0.1));
   background-size: 200% 200%;
   animation: cosmeticNebulaShift 5s ease infinite;
 }
@@ -398,13 +501,13 @@
 }
 
 .cosmetic-nameplate-supernova-gold {
-  background: linear-gradient(120deg, rgba(217, 119, 6, 0.18), rgba(254, 243, 199, 0.85), rgba(245, 158, 11, 0.16));
+  background: linear-gradient(120deg, rgba(245, 158, 11, 0.2), rgba(254, 243, 199, 0.88), rgba(245, 158, 11, 0.16));
   background-size: 200% 200%;
   animation: cosmeticNebulaShift 4.5s ease infinite;
 }
 
 .cosmetic-nameplate-cyber-glitch {
-  background: linear-gradient(120deg, rgba(2, 132, 199, 0.16), rgba(224, 242, 254, 0.85), rgba(99, 102, 241, 0.14));
+  background: linear-gradient(120deg, rgba(2, 132, 199, 0.16), rgba(224, 242, 254, 0.88), rgba(26, 23, 20, 0.12));
   background-size: 200% 200%;
   animation: cosmeticNebulaShift 3.6s ease infinite, cosmeticHologramSlice 3.8s steps(2, end) infinite;
 }
@@ -440,6 +543,13 @@
   .cosmetic-avatar-matrix-halo,
   .cosmetic-avatar-inferno-horns,
   .cosmetic-avatar-quantum-visor,
+  .cosmetic-svg-spin-slow,
+  .cosmetic-svg-spin-reverse,
+  .cosmetic-halo-float,
+  .cosmetic-horn-flicker,
+  .cosmetic-ember-rise,
+  .cosmetic-reticle-pulse,
+  .cosmetic-holo-scan-y,
   .cosmetic-avatar-visor-beam,
   .cosmetic-avatar-mic-ring,
   .cosmetic-theme-meteor-shower .cosmetic-meteor-streak,
@@ -455,8 +565,14 @@
   .cosmetic-lb-inferno-aura,
   .cosmetic-nameplate-mesh-nebula,
   .cosmetic-nameplate-terminal-pulse,
+  .cosmetic-nameplate-terminal-cursor,
   .cosmetic-nameplate-supernova-gold,
-  .cosmetic-nameplate-cyber-glitch {
+  .cosmetic-nameplate-cyber-glitch,
+  .cosmetic-finisher-lgtm-confetti .cosmetic-confetti-piece,
+  .cosmetic-finisher-shockwave .cosmetic-shockwave-ring,
+  .cosmetic-finisher-lightning .cosmetic-lightning-bolt,
+  .cosmetic-finisher-matrix-override .cosmetic-matrix-override-col,
+  .cosmetic-finisher-banner {
     animation: none !important;
   }
 }

@@ -1,12 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
   Check,
   Coins,
   Crown,
+  Eraser,
+  Eye,
   Flame,
   Gamepad2,
   Layers,
@@ -19,6 +21,7 @@ import {
   Trophy,
   User,
   WifiOff,
+  Zap,
 } from "lucide-react";
 import {
   equipOwnedCosmetic,
@@ -90,10 +93,10 @@ const CATEGORY_META: Record<
 };
 
 const RARITY_BADGE_CLASS: Record<CosmeticRarity, string> = {
-  Common: "bg-paper-muted text-ink-muted border-ink/15",
-  Rare: "bg-sky-50 text-sky-700 border-sky-200",
-  Epic: "bg-amber-50 text-amber-700 border-amber-200",
-  Legendary: "bg-accent-light text-accent border-accent/30",
+  Common: "bg-[#F0EADF] text-[#1A1714] border-2 border-[#1A1714]",
+  Rare: "bg-sky-100 text-sky-900 border-2 border-[#1A1714]",
+  Epic: "bg-amber-200 text-[#1A1714] border-2 border-[#1A1714]",
+  Legendary: "bg-[#E5484D] text-white border-2 border-[#1A1714]",
 };
 
 function getInitials(name: string): string {
@@ -104,6 +107,202 @@ function getInitials(name: string): string {
   return (name.trim().slice(0, 2) || "DV").toUpperCase();
 }
 
+function CosmeticCardThumbnail({
+  item,
+  displayName,
+  initials,
+  micActive,
+}: {
+  item: CosmeticItem;
+  displayName: string;
+  initials: string;
+  micActive: boolean;
+}) {
+  if (item.category === "avatar_decoration") {
+    return (
+      <div className="h-28 rounded-xl border-2 border-[#1A1714] bg-[#FAF6EF] flex items-center justify-center relative overflow-hidden">
+        <DiscordAvatarFrame equippedId={item.id} size="lg" micActive={micActive}>
+          <div className="w-full h-full flex items-center justify-center bg-white font-mono font-bold text-base text-[#1A1714]">
+            {initials}
+          </div>
+        </DiscordAvatarFrame>
+      </div>
+    );
+  }
+
+  if (item.category === "nameplate") {
+    return (
+      <div className="h-28 rounded-xl border-2 border-[#1A1714] bg-[#FAF6EF] px-3 flex items-center justify-center relative overflow-hidden">
+        <div
+          className={`w-full rounded-xl border-2 border-[#1A1714] px-3 py-2.5 flex items-center justify-between gap-2 shadow-[2px_2px_0_#1A1714] relative overflow-hidden ${item.effectClass}`}
+        >
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="w-6 h-6 rounded-full bg-[#1A1714] text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+              {initials}
+            </span>
+            <span className="text-xs font-bold text-[#1A1714] truncate">
+              {displayName}
+            </span>
+          </div>
+          {item.id === "nameplate-terminal-pulse" ? (
+            <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-emerald-700 shrink-0">
+              <span>$</span>
+              <span className="cosmetic-nameplate-terminal-cursor inline-block w-1.5 h-3 bg-emerald-600" />
+            </span>
+          ) : (
+            <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-white/80 border border-[#1A1714]/30 text-[#1A1714] shrink-0">
+              TAG
+            </span>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (item.category === "leaderboard_fx") {
+    return (
+      <div className="h-28 rounded-xl border-2 border-[#1A1714] bg-[#FAF6EF] px-3 flex items-center justify-center relative overflow-hidden">
+        <LeaderboardRowWrapper
+          fxId={item.id}
+          className="w-full border-2 border-[#1A1714] bg-white px-3 py-2 shadow-[2px_2px_0_#1A1714]"
+        >
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="w-6 h-6 rounded-full bg-[#1A1714] text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+                #1
+              </span>
+              <span className="text-xs font-bold text-[#1A1714] truncate">
+                {displayName}
+              </span>
+            </div>
+            <span className="text-[11px] font-mono font-bold text-[#E5484D] shrink-0">
+              2,450 pts
+            </span>
+          </div>
+        </LeaderboardRowWrapper>
+      </div>
+    );
+  }
+
+  if (item.category === "profile_theme") {
+    return (
+      <div
+        className={`h-28 rounded-xl border-2 border-[#1A1714] bg-[#FAF6EF] relative overflow-hidden flex items-end p-2.5 ${item.effectClass}`}
+      >
+        {item.id === "theme-neon-meteor-shower" && (
+          <>
+            <span
+              className="cosmetic-meteor-streak absolute w-[2px] h-14 rounded-full bg-gradient-to-b from-[#E5484D] via-amber-400 to-transparent"
+              style={{ left: "26%", top: "-15%", "--meteor-duration": "2.4s", "--meteor-delay": "0s" } as CSSProperties}
+            />
+            <span
+              className="cosmetic-meteor-streak absolute w-[2px] h-16 rounded-full bg-gradient-to-b from-[#E5484D] via-amber-400 to-transparent"
+              style={{ left: "68%", top: "-20%", "--meteor-duration": "2.8s", "--meteor-delay": "0.8s" } as CSSProperties}
+            />
+          </>
+        )}
+        {item.id === "theme-digital-matrix-rain" && (
+          <>
+            {["15%", "45%", "75%"].map((left, idx) => (
+              <div
+                key={left}
+                className="cosmetic-matrix-col absolute top-0 text-[10px] font-mono font-bold leading-3 text-emerald-600/60 select-none whitespace-pre text-center"
+                style={{ left, "--col-duration": `${2.6 + idx * 0.5}s`, "--col-delay": `${idx * 0.4}s` } as CSSProperties}
+              >
+                {"0\n1\n0\n1\n1\n0"}
+              </div>
+            ))}
+          </>
+        )}
+        {item.id === "theme-aurora-cyber-grid" && (
+          <div className="cosmetic-grid-plane absolute inset-0 opacity-85" />
+        )}
+        {item.id === "theme-electric-storm-surge" && (
+          <div
+            className="cosmetic-storm-arc absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(circle at 25% 25%, rgba(234, 179, 8, 0.35), transparent 55%), radial-gradient(circle at 75% 75%, rgba(229, 72, 77, 0.25), transparent 55%)",
+            }}
+          />
+        )}
+        <span className="relative z-10 px-2 py-0.5 rounded bg-white/95 border border-[#1A1714] text-[10px] font-mono font-bold text-[#1A1714]">
+          BACKDROP FX
+        </span>
+      </div>
+    );
+  }
+
+  if (item.category === "cursor_effect") {
+    return (
+      <div className="h-28 rounded-xl border-2 border-[#1A1714] bg-[#FAF6EF] relative overflow-hidden flex items-center justify-center">
+        {item.id === "cursor-pixel-sparkle-trail" && (
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 bg-amber-500 border border-[#1A1714] animate-pulse" />
+            <span className="w-3 h-3 bg-[#E5484D] border border-[#1A1714] rotate-45 animate-bounce" />
+            <MousePointer2 className="w-5 h-5 text-[#1A1714]" aria-hidden="true" />
+          </div>
+        )}
+        {item.id === "cursor-binary-01-stream" && (
+          <div className="flex items-center gap-2 font-mono font-bold text-xs text-emerald-700">
+            <span className="animate-pulse">0</span>
+            <span>1</span>
+            <span className="animate-bounce">0</span>
+            <span>1</span>
+            <MousePointer2 className="w-5 h-5 text-[#1A1714]" aria-hidden="true" />
+          </div>
+        )}
+        {item.id === "cursor-neon-laser-ribbon" && (
+          <div className="flex items-center gap-1.5">
+            <span className="w-16 h-1.5 rounded-full bg-[#E5484D] cosmetic-cursor-laser-ribbon" />
+            <MousePointer2 className="w-5 h-5 text-[#1A1714]" aria-hidden="true" />
+          </div>
+        )}
+        {item.id === "cursor-tactical-cyber-crosshair" && (
+          <div className="relative flex items-center justify-center">
+            <span className="w-12 h-12 rounded-full border-2 border-dashed border-sky-600 cosmetic-cursor-cyber-crosshair flex items-center justify-center">
+              <span className="w-2 h-2 rounded-full bg-[#E5484D]" />
+            </span>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-28 rounded-xl border-2 border-[#1A1714] bg-[#FAF6EF] relative overflow-hidden flex items-center justify-center px-3">
+      {item.id === "finisher-lgtm-neon-confetti" && (
+        <div className="flex items-center gap-2">
+          <span className="px-2 py-1 rounded bg-emerald-500 text-white border-2 border-[#1A1714] font-mono text-[10px] font-bold rotate-[-4deg] shadow-[2px_2px_0_#1A1714]">
+            LGTM!
+          </span>
+          <span className="w-2.5 h-2.5 bg-[#E5484D] border border-[#1A1714] rotate-12" />
+          <span className="w-2.5 h-2.5 bg-amber-400 border border-[#1A1714] -rotate-12" />
+        </div>
+      )}
+      {item.id === "finisher-system-restored-shockwave" && (
+        <div className="relative flex items-center justify-center">
+          <span className="absolute w-14 h-14 rounded-full border-2 border-teal-500 animate-ping opacity-40" />
+          <span className="px-2.5 py-1 rounded-full bg-teal-600 text-white border-2 border-[#1A1714] font-mono text-[10px] font-bold">
+            200 OK
+          </span>
+        </div>
+      )}
+      {item.id === "finisher-cyber-lightning-strike" && (
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-300 border-2 border-[#1A1714] shadow-[2px_2px_0_#1A1714]">
+          <Zap className="w-4 h-4 text-[#1A1714] fill-[#1A1714]" aria-hidden="true" />
+          <span className="font-mono text-[11px] font-bold text-[#1A1714]">STRIKE</span>
+        </div>
+      )}
+      {item.id === "finisher-matrix-override" && (
+        <div className="px-3 py-1.5 rounded-lg bg-[#1A1714] border-2 border-emerald-500 text-emerald-400 font-mono text-[11px] font-bold shadow-[2px_2px_0_#16A34A]">
+          OVERRIDE_01
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function CosmeticShopClient() {
   const [loading, setLoading] = useState(true);
   const [guestPlayer, setGuestPlayer] = useState<PublicGuestPlayer | null>(null);
@@ -112,6 +311,7 @@ export function CosmeticShopClient() {
   const [previewOverrides, setPreviewOverrides] = useState<
     Partial<EquippedCosmetics>
   >({});
+  const [themePreviewEnabled, setThemePreviewEnabled] = useState(true);
   const [micTestActive, setMicTestActive] = useState(false);
   const [finisherActive, setFinisherActive] = useState(false);
   const [busyItemId, setBusyItemId] = useState<string | null>(null);
@@ -183,20 +383,32 @@ export function CosmeticShopClient() {
   );
 
   const hasPreviewChanges = Object.keys(previewOverrides).length > 0;
+  const hasAnyActiveSandbox = COSMETIC_CATEGORIES.some(
+    (cat) => Boolean(activeSandbox[cat])
+  );
 
   const handleSelectPreview = (item: CosmeticItem) => {
     setPreviewOverrides((prev) => ({
       ...prev,
       [item.category]: item.id,
     }));
+    if (item.category === "profile_theme") {
+      setThemePreviewEnabled(true);
+    }
     if (item.category === "victory_finisher") {
       setFinisherActive(false);
       window.setTimeout(() => setFinisherActive(true), 20);
     }
   };
 
-  const handleResetPreview = () => {
+  const handleResetToEquipped = () => {
     setPreviewOverrides({});
+    setThemePreviewEnabled(true);
+    setFinisherActive(false);
+  };
+
+  const handleClearPreview = () => {
+    setPreviewOverrides({ ...DEFAULT_EQUIPPED_COSMETICS });
     setFinisherActive(false);
   };
 
@@ -310,65 +522,67 @@ export function CosmeticShopClient() {
     }
   };
 
-  const activeThemeItem = COSMETIC_CATALOG.find(
-    (item) => item.id === activeSandbox.profile_theme
-  );
-  const activeCursorItem = COSMETIC_CATALOG.find(
-    (item) => item.id === activeSandbox.cursor_effect
+  const activeNameplateItem = COSMETIC_CATALOG.find(
+    (item) => item.id === activeSandbox.nameplate
   );
   const activeFinisherItem = COSMETIC_CATALOG.find(
     (item) => item.id === activeSandbox.victory_finisher
   );
+  const initials = getInitials(identity.displayName);
 
   return (
-    <div className="relative min-h-screen">
-      <FullPageProfileEffect themeId={activeSandbox.profile_theme} />
+    <div className="relative min-h-screen bg-[#FAF6EF]">
+      <FullPageProfileEffect
+        themeId={themePreviewEnabled ? activeSandbox.profile_theme : null}
+      />
       <CustomCursorTrail effectId={activeSandbox.cursor_effect} />
       <VictoryFinisherOverlay
         finisherId={activeSandbox.victory_finisher}
         active={finisherActive}
         title={activeFinisherItem?.name ?? "Victory Finisher Preview"}
-        subtitle={`${identity.displayName} • Live Sandbox Preview`}
+        subtitle={`${identity.displayName} • Live Try-On Studio`}
         onComplete={() => setFinisherActive(false)}
       />
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 py-8 space-y-6 pb-20">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-3">
             <Link
               href="/profile"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white text-ink text-xs font-medium border border-ink/15 shadow-soft hover:bg-paper-muted transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white text-[#1A1714] text-xs font-bold border-2 border-[#1A1714] shadow-[3px_3px_0_#1A1714] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_#1A1714] transition-all"
             >
               <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Hồ sơ</span>
             </Link>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-ink flex items-center gap-2">
-              <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 text-accent" aria-hidden="true" />
-              <span>IT-Coin Cosmetic Shop</span>
+            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-[#1A1714] flex items-center gap-2">
+              <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-[#E5484D] text-white border-2 border-[#1A1714] shadow-[2px_2px_0_#1A1714]">
+                <ShoppingBag className="w-5 h-5" aria-hidden="true" />
+              </span>
+              <span>IT-Coin Live Try-On Studio</span>
             </h1>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill bg-white border border-ink/15 text-xs font-mono font-bold text-ink shadow-soft">
-              <Coins className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
-              <span>{identity.itCoins} IT-Coin</span>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border-2 border-[#1A1714] text-xs font-mono font-bold text-[#1A1714] shadow-[3px_3px_0_#1A1714]">
+              <Coins className="w-4 h-4 text-[#E5484D]" aria-hidden="true" />
+              <span>{identity.itCoins} IT-Coins</span>
             </span>
             <Link
               href="/arena"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-ink text-white text-xs font-semibold border border-ink shadow-soft hover:bg-ink/90 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1A1714] text-white text-xs font-bold border-2 border-[#1A1714] shadow-[3px_3px_0_#E5484D] hover:translate-x-[1px] hover:translate-y-[1px] transition-all"
             >
-              <Gamepad2 className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+              <Gamepad2 className="w-4 h-4 text-[#E5484D]" aria-hidden="true" />
               <span>Kiếm thêm Coin</span>
             </Link>
           </div>
         </div>
 
         {identity.mode === "offline" && !loading && (
-          <div className="flex items-center justify-between gap-3 bg-white border border-ink/15 rounded-2xl px-4 py-3 text-xs text-ink-muted shadow-soft">
+          <div className="flex items-center justify-between gap-3 bg-white border-2 border-[#1A1714] rounded-2xl px-4 py-3 text-xs font-medium text-[#1A1714] shadow-[4px_4px_0_#1A1714]">
             <div className="flex items-center gap-2">
-              <WifiOff className="w-4 h-4 text-accent shrink-0" aria-hidden="true" />
+              <WifiOff className="w-4 h-4 text-[#E5484D] shrink-0" aria-hidden="true" />
               <span>
-                Đang ở chế độ Local (Offline). Bạn vẫn có thể dùng thử toàn bộ 24 hiệu ứng trong Live Sandbox bên dưới; kết nối Neon DB để mua và lưu trang bị.
+                Đang ở chế độ Local (Offline). Bạn vẫn có thể dùng thử toàn bộ 24 hiệu ứng trong Live Try-On Studio; kết nối Neon DB để mua và lưu trang bị.
               </span>
             </div>
           </div>
@@ -376,16 +590,16 @@ export function CosmeticShopClient() {
 
         <section
           aria-label="Live Try-On Sandbox"
-          className="bg-white/95 backdrop-blur-sm border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4"
+          className="bg-white border-2 border-[#1A1714] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0_#1A1714] space-y-5"
         >
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-paper-muted pb-3">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-[#1A1714] pb-4">
             <div>
-              <h2 className="text-sm font-bold text-ink uppercase tracking-wider font-mono flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-accent" aria-hidden="true" />
+              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#E5484D] text-white border-2 border-[#1A1714] text-[11px] font-mono font-bold uppercase tracking-wider shadow-[2px_2px_0_#1A1714]">
+                <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Live Try-On Sandbox</span>
-              </h2>
-              <p className="text-xs text-ink-muted mt-0.5">
-                Click any locked or owned cosmetic below to preview its real-time animation before buying.
+              </div>
+              <p className="text-xs font-medium text-[#59534C] mt-1.5">
+                All 6 cosmetic slots render live below. Click any card in the catalog to mix &amp; match before unlocking.
               </p>
             </div>
 
@@ -393,14 +607,14 @@ export function CosmeticShopClient() {
               <button
                 type="button"
                 onClick={() => setMicTestActive((v) => !v)}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill border text-xs font-mono font-semibold transition-colors ${
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border-2 border-[#1A1714] text-xs font-mono font-bold shadow-[2px_2px_0_#1A1714] transition-all ${
                   micTestActive
-                    ? "bg-accent text-white border-accent"
-                    : "bg-paper text-ink border-ink/15 hover:bg-paper-muted"
+                    ? "bg-[#E5484D] text-white"
+                    : "bg-[#FAF6EF] text-[#1A1714] hover:bg-[#F0EADF]"
                 }`}
               >
                 <Mic className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>{micTestActive ? "Mic Pulse: ON" : "Test Mic Pulse"}</span>
+                <span>{micTestActive ? "Mic Pulse: ON" : "Mic Pulse"}</span>
               </button>
 
               <button
@@ -409,98 +623,168 @@ export function CosmeticShopClient() {
                   setFinisherActive(false);
                   window.setTimeout(() => setFinisherActive(true), 20);
                 }}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-ink text-white text-xs font-mono font-semibold border border-ink hover:bg-ink/90 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#1A1714] text-white text-xs font-mono font-bold border-2 border-[#1A1714] shadow-[2px_2px_0_#E5484D] hover:bg-[#1A1714]/90 transition-all"
               >
-                <Flame className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+                <Flame className="w-3.5 h-3.5 text-[#E5484D]" aria-hidden="true" />
                 <span>Trigger Finisher</span>
               </button>
+
+              {hasAnyActiveSandbox && (
+                <button
+                  type="button"
+                  onClick={handleClearPreview}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAF6EF] text-[#1A1714] text-xs font-mono font-bold border-2 border-[#1A1714] shadow-[2px_2px_0_#1A1714] hover:bg-[#F0EADF] transition-all"
+                >
+                  <Eraser className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span>Clear Preview</span>
+                </button>
+              )}
 
               {hasPreviewChanges && (
                 <button
                   type="button"
-                  onClick={handleResetPreview}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper text-ink text-xs font-mono font-semibold border border-ink/15 hover:bg-paper-muted transition-colors"
+                  onClick={handleResetToEquipped}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-200 text-[#1A1714] text-xs font-mono font-bold border-2 border-[#1A1714] shadow-[2px_2px_0_#1A1714] hover:bg-amber-300 transition-all"
                 >
                   <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
-                  <span>Reset</span>
+                  <span>Reset to Equipped</span>
                 </button>
               )}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
-            <div className="lg:col-span-5 flex items-center gap-4 p-4 rounded-xl bg-paper border border-ink/15">
-              <DiscordAvatarFrame
-                equippedId={activeSandbox.avatar_decoration}
-                fallbackRing={identity.equippedRing}
-                size="xl"
-                micActive={micTestActive}
-              >
-                <div className="w-full h-full flex items-center justify-center bg-white font-mono font-bold text-xl text-ink">
-                  {getInitials(identity.displayName)}
-                </div>
-              </DiscordAvatarFrame>
+          <div className="rounded-2xl border-2 border-[#1A1714] bg-[#FAF6EF] p-4 sm:p-5 shadow-[4px_4px_0_#1A1714] space-y-4">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+              <div className="lg:col-span-5 flex items-center gap-4 p-4 rounded-xl bg-white border-2 border-[#1A1714] shadow-[3px_3px_0_#1A1714]">
+                <DiscordAvatarFrame
+                  equippedId={activeSandbox.avatar_decoration}
+                  fallbackRing={identity.equippedRing}
+                  size="xl"
+                  micActive={micTestActive}
+                >
+                  <div className="w-full h-full flex items-center justify-center bg-[#FAF6EF] font-mono font-bold text-xl text-[#1A1714]">
+                    {initials}
+                  </div>
+                </DiscordAvatarFrame>
 
-              <div className="min-w-0 space-y-1">
-                <div className="text-sm font-bold text-ink truncate">
-                  {identity.displayName}
+                <div className="min-w-0 flex-1 space-y-2">
+                  <div
+                    className={`rounded-lg border-2 border-[#1A1714] px-2.5 py-1.5 ${
+                      activeNameplateItem?.effectClass ?? "bg-[#FAF6EF]"
+                    }`}
+                  >
+                    <div className="text-sm font-extrabold text-[#1A1714] truncate">
+                      {identity.displayName}
+                    </div>
+                    <div className="text-[11px] font-mono text-[#59534C] truncate">
+                      {identity.transferCode ?? "DEV-SANDBOX"} • {identity.equippedTitle}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setThemePreviewEnabled((v) => !v)}
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border-2 border-[#1A1714] text-[10px] font-mono font-bold transition-colors ${
+                        themePreviewEnabled && activeSandbox.profile_theme
+                          ? "bg-[#E5484D] text-white"
+                          : "bg-white text-[#1A1714]"
+                      }`}
+                    >
+                      <Layers className="w-3 h-3" aria-hidden="true" />
+                      <span>
+                        Theme FX: {themePreviewEnabled ? "ON" : "OFF"}
+                      </span>
+                    </button>
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-white border-2 border-[#1A1714] text-[10px] font-mono font-bold text-[#1A1714]">
+                      <MousePointer2 className="w-3 h-3 text-[#E5484D]" aria-hidden="true" />
+                      <span>{activeSandbox.cursor_effect ? "Cursor Live" : "Default Cursor"}</span>
+                    </span>
+                  </div>
                 </div>
-                <div className="text-[11px] font-mono text-ink-muted">
-                  {identity.transferCode ?? "DEV-SANDBOX"} • {identity.equippedTitle}
-                </div>
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  <span className="px-2 py-0.5 rounded-pill bg-white border border-ink/15 text-[10px] font-mono text-ink-muted">
-                    Theme: {activeThemeItem?.name ?? "None"}
-                  </span>
-                  <span className="px-2 py-0.5 rounded-pill bg-white border border-ink/15 text-[10px] font-mono text-ink-muted">
-                    Cursor: {activeCursorItem?.name ?? "Default"}
-                  </span>
-                </div>
+              </div>
+
+              <div className="lg:col-span-7">
+                <LeaderboardRowWrapper
+                  fxId={activeSandbox.leaderboard_fx}
+                  nameplateId={activeSandbox.nameplate}
+                  className="border-2 border-[#1A1714] bg-white p-4 shadow-[3px_3px_0_#1A1714]"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#1A1714] text-white font-mono text-xs font-bold shrink-0">
+                        #1
+                      </span>
+                      <DiscordAvatarFrame
+                        equippedId={activeSandbox.avatar_decoration}
+                        fallbackRing={identity.equippedRing}
+                        size="sm"
+                        micActive={micTestActive}
+                      >
+                        <div className="w-full h-full flex items-center justify-center bg-[#FAF6EF] font-mono font-bold text-xs text-[#1A1714]">
+                          {initials}
+                        </div>
+                      </DiscordAvatarFrame>
+                      <div className="min-w-0">
+                        <div className="text-sm font-extrabold text-[#1A1714] truncate flex items-center gap-1.5">
+                          <span>{identity.displayName}</span>
+                          <Crown className="w-4 h-4 text-amber-500 shrink-0" aria-hidden="true" />
+                        </div>
+                        <div className="text-[11px] font-mono text-[#59534C] truncate">
+                          Live Identity Card • Leaderboard &amp; Nameplate FX
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-right shrink-0 font-mono">
+                      <div className="text-sm font-extrabold text-[#1A1714]">
+                        {identity.totalPoints.toLocaleString("vi-VN")} pts
+                      </div>
+                      <div className="text-[11px] text-[#E5484D] font-bold">
+                        {identity.itCoins} IT-Coins
+                      </div>
+                    </div>
+                  </div>
+                </LeaderboardRowWrapper>
               </div>
             </div>
 
-            <div className="lg:col-span-7">
-              <LeaderboardRowWrapper
-                fxId={activeSandbox.leaderboard_fx}
-                nameplateId={activeSandbox.nameplate}
-                className="border border-ink/15 bg-white p-4 shadow-soft"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-ink text-white font-mono text-xs font-bold shrink-0">
-                      #1
-                    </span>
-                    <DiscordAvatarFrame
-                      equippedId={activeSandbox.avatar_decoration}
-                      fallbackRing={identity.equippedRing}
-                      size="sm"
-                      micActive={micTestActive}
-                    >
-                      <div className="w-full h-full flex items-center justify-center bg-paper font-mono font-bold text-xs text-ink">
-                        {getInitials(identity.displayName)}
-                      </div>
-                    </DiscordAvatarFrame>
-                    <div className="min-w-0">
-                      <div className="text-sm font-bold text-ink truncate flex items-center gap-1.5">
-                        <span>{identity.displayName}</span>
-                        <Crown className="w-3.5 h-3.5 text-amber-500 shrink-0" aria-hidden="true" />
-                      </div>
-                      <div className="text-[11px] font-mono text-ink-muted truncate">
-                        Leaderboard Row &amp; Nameplate Live Preview
-                      </div>
-                    </div>
-                  </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+              {COSMETIC_CATEGORIES.map((cat) => {
+                const meta = CATEGORY_META[cat];
+                const Icon = meta.icon;
+                const activeId = activeSandbox[cat];
+                const activeItem = COSMETIC_CATALOG.find((c) => c.id === activeId);
+                const isOverridden = previewOverrides[cat] !== undefined;
 
-                  <div className="text-right shrink-0 font-mono">
-                    <div className="text-sm font-bold text-ink">
-                      {identity.totalPoints.toLocaleString("vi-VN")} pts
+                return (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setActiveCategory(cat)}
+                    className={`text-left rounded-xl border-2 border-[#1A1714] p-2.5 transition-all ${
+                      activeCategory === cat
+                        ? "bg-white shadow-[2px_2px_0_#E5484D]"
+                        : "bg-white/80 hover:bg-white"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold uppercase text-[#59534C]">
+                        <Icon className="w-3 h-3 text-[#E5484D]" aria-hidden="true" />
+                        <span>{meta.shortLabel}</span>
+                      </span>
+                      {isOverridden && (
+                        <span className="px-1.5 py-0.5 rounded bg-[#E5484D] text-white text-[9px] font-mono font-bold uppercase">
+                          Try
+                        </span>
+                      )}
                     </div>
-                    <div className="text-[11px] text-accent font-semibold">
-                      {identity.itCoins} IT-Coin
+                    <div className="text-xs font-bold text-[#1A1714] truncate mt-1">
+                      {activeItem?.name ?? "None"}
                     </div>
-                  </div>
-                </div>
-              </LeaderboardRowWrapper>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -508,10 +792,10 @@ export function CosmeticShopClient() {
         {feedback && (
           <div
             role="status"
-            className={`px-4 py-3 rounded-xl border text-xs font-medium ${
+            className={`px-4 py-3 rounded-xl border-2 border-[#1A1714] text-xs font-bold shadow-[3px_3px_0_#1A1714] ${
               feedback.ok
-                ? "bg-white border-ink/20 text-ink shadow-soft"
-                : "bg-accent-light border-accent/30 text-accent"
+                ? "bg-white text-[#1A1714]"
+                : "bg-[#FFE5E5] text-[#E5484D]"
             }`}
           >
             {feedback.message}
@@ -521,7 +805,7 @@ export function CosmeticShopClient() {
         <div
           role="tablist"
           aria-label="Cosmetic Categories"
-          className="flex flex-wrap gap-2"
+          className="flex flex-wrap gap-2.5"
         >
           {COSMETIC_CATEGORIES.map((cat) => {
             const meta = CATEGORY_META[cat];
@@ -534,14 +818,14 @@ export function CosmeticShopClient() {
                 role="tab"
                 aria-selected={selected}
                 onClick={() => setActiveCategory(cat)}
-                className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill border text-xs font-semibold transition-all ${
+                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border-2 border-[#1A1714] text-xs font-bold transition-all ${
                   selected
-                    ? "bg-ink text-white border-ink shadow-soft"
-                    : "bg-white text-ink border-ink/15 hover:bg-paper-muted"
+                    ? "bg-[#1A1714] text-white shadow-[3px_3px_0_#E5484D]"
+                    : "bg-white text-[#1A1714] shadow-[3px_3px_0_#1A1714] hover:bg-[#F0EADF]"
                 }`}
               >
                 <Icon
-                  className={`w-3.5 h-3.5 ${selected ? "text-accent" : "text-ink-muted"}`}
+                  className={`w-3.5 h-3.5 ${selected ? "text-[#E5484D]" : "text-[#59534C]"}`}
                   aria-hidden="true"
                 />
                 <span>{meta.label}</span>
@@ -550,7 +834,7 @@ export function CosmeticShopClient() {
           })}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {categoryItems.map((item) => {
             const isOwned = identity.ownedItems.includes(item.id);
             const isEquipped = equipped[item.category] === item.id;
@@ -558,58 +842,89 @@ export function CosmeticShopClient() {
             const canAfford = identity.itCoins >= item.price;
             const isOnline = identity.mode === "online";
 
+            const statusLabel = isPreviewing
+              ? "Previewing"
+              : isEquipped
+                ? "Equipped"
+                : isOwned
+                  ? "Owned"
+                  : null;
+
             return (
               <div
                 key={item.id}
                 onClick={() => handleSelectPreview(item)}
-                className={`cursor-pointer rounded-2xl bg-white/95 border p-4 shadow-soft flex flex-col justify-between gap-4 transition-all ${
+                className={`cursor-pointer rounded-2xl border-2 border-[#1A1714] p-4 flex flex-col justify-between gap-3.5 transition-all ${
                   isPreviewing
-                    ? "border-accent ring-2 ring-accent/20"
-                    : "border-ink/15 hover:border-ink/40"
+                    ? "bg-[#FAF6EF] shadow-[4px_4px_0_#E5484D] -translate-y-0.5"
+                    : "bg-white shadow-[4px_4px_0_#1A1714] hover:-translate-y-0.5"
                 }`}
               >
-                <div className="space-y-2.5">
+                <div className="space-y-3">
                   <div className="flex items-center justify-between gap-2">
                     <span
-                      className={`text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-pill border ${
+                      className={`text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-lg ${
                         RARITY_BADGE_CLASS[item.rarity]
                       }`}
                     >
                       {item.rarity}
                     </span>
-                    <span className="inline-flex items-center gap-1 text-xs font-mono font-bold text-ink">
-                      <span
-                        aria-hidden="true"
-                        className="w-2.5 h-2.5 rounded-full"
-                        style={{ backgroundColor: item.previewAccent }}
-                      />
-                      <span>{item.price} Coin</span>
-                    </span>
+
+                    <div className="flex items-center gap-1.5">
+                      {statusLabel && (
+                        <span
+                          className={`inline-flex items-center gap-1 text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-lg border-2 border-[#1A1714] ${
+                            isPreviewing
+                              ? "bg-[#E5484D] text-white"
+                              : isEquipped
+                                ? "bg-[#1A1714] text-white"
+                                : "bg-emerald-100 text-emerald-900"
+                          }`}
+                        >
+                          {isPreviewing && <Eye className="w-2.5 h-2.5" aria-hidden="true" />}
+                          <span>{statusLabel}</span>
+                        </span>
+                      )}
+                    </div>
                   </div>
 
+                  <CosmeticCardThumbnail
+                    item={item}
+                    displayName={identity.displayName}
+                    initials={initials}
+                    micActive={micTestActive}
+                  />
+
                   <div>
-                    <h3 className="text-sm font-bold text-ink">{item.name}</h3>
-                    <p className="text-xs text-ink-muted mt-1 leading-relaxed">
+                    <div className="flex items-baseline justify-between gap-2">
+                      <h3 className="text-sm font-extrabold text-[#1A1714]">
+                        {item.name}
+                      </h3>
+                      <span className="text-xs font-mono font-bold text-[#E5484D] shrink-0">
+                        {item.price} IT-Coins
+                      </span>
+                    </div>
+                    <p className="text-xs text-[#59534C] mt-1 leading-relaxed">
                       {item.description}
                     </p>
                   </div>
                 </div>
 
                 <div
-                  className="space-y-2 pt-2 border-t border-paper-muted"
+                  className="space-y-2 pt-2.5 border-t-2 border-[#F0EADF]"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {isEquipped ? (
                     <div className="flex items-center gap-2">
-                      <span className="flex-1 inline-flex items-center justify-center gap-1 py-1.5 px-3 rounded-pill bg-ink text-white text-xs font-mono font-semibold">
-                        <Check className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+                      <span className="flex-1 inline-flex items-center justify-center gap-1 py-2 px-3 rounded-xl bg-[#1A1714] text-white border-2 border-[#1A1714] text-xs font-mono font-bold">
+                        <Check className="w-3.5 h-3.5 text-[#E5484D]" aria-hidden="true" />
                         <span>Equipped</span>
                       </span>
                       <button
                         type="button"
                         disabled={busyItemId === item.id || !isOnline}
                         onClick={() => handleUnequip(item.category, item.id)}
-                        className="px-3 py-1.5 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-semibold text-ink hover:bg-paper-muted disabled:opacity-50"
+                        className="px-3 py-2 rounded-xl bg-[#FAF6EF] border-2 border-[#1A1714] text-xs font-mono font-bold text-[#1A1714] shadow-[2px_2px_0_#1A1714] hover:bg-[#F0EADF] disabled:opacity-50"
                       >
                         Unequip
                       </button>
@@ -619,28 +934,28 @@ export function CosmeticShopClient() {
                       type="button"
                       disabled={busyItemId === item.id || !isOnline}
                       onClick={() => handleEquipOwned(item)}
-                      className="w-full py-1.5 px-3 rounded-pill bg-white border border-ink/20 text-xs font-mono font-semibold text-ink hover:bg-paper-muted disabled:opacity-50"
+                      className="w-full py-2 px-3 rounded-xl bg-white border-2 border-[#1A1714] text-xs font-mono font-bold text-[#1A1714] shadow-[2px_2px_0_#1A1714] hover:bg-[#FAF6EF] disabled:opacity-50"
                     >
-                      {busyItemId === item.id ? "Equipping..." : "Equip"}
+                      {busyItemId === item.id ? "Equipping..." : "Owned • Equip"}
                     </button>
                   ) : isOnline && canAfford ? (
                     <button
                       type="button"
                       disabled={busyItemId === item.id}
                       onClick={() => handleBuyAndEquip(item)}
-                      className="w-full py-1.5 px-3 rounded-pill bg-accent hover:bg-accent-hover text-white border border-accent text-xs font-mono font-semibold disabled:opacity-50"
+                      className="w-full py-2 px-3 rounded-xl bg-[#E5484D] hover:bg-[#DC3D43] text-white border-2 border-[#1A1714] text-xs font-mono font-bold shadow-[2px_2px_0_#1A1714] disabled:opacity-50"
                     >
                       {busyItemId === item.id
                         ? "Unlocking..."
-                        : `Buy & Equip (${item.price} Coin)`}
+                        : `Unlock for ${item.price} IT-Coins`}
                     </button>
                   ) : (
                     <button
                       type="button"
                       onClick={() => handleSelectPreview(item)}
-                      className="w-full py-1.5 px-3 rounded-pill bg-paper-muted border border-ink/10 text-xs font-mono font-semibold text-ink-muted hover:text-ink"
+                      className="w-full py-2 px-3 rounded-xl bg-[#FAF6EF] border-2 border-[#1A1714] text-xs font-mono font-bold text-[#1A1714] shadow-[2px_2px_0_#1A1714] hover:bg-[#F0EADF]"
                     >
-                      {isOnline ? `Need ${item.price} Coin • Preview` : "Preview in Sandbox"}
+                      {`Unlock for ${item.price} IT-Coins`}
                     </button>
                   )}
                 </div>
