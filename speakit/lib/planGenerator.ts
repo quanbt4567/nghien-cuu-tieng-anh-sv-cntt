@@ -12,14 +12,20 @@ export interface PlanDay {
   priorityNoteVI?: string;
 }
 
+export function isValidKeywordTerm(value: string): boolean {
+  const trimmed = value.trim();
+  if (!trimmed || trimmed.length > 40) return false;
+  if (/[.!?]/.test(trimmed)) return false;
+  return trimmed.split(/\s+/).length <= 4;
+}
+
 export function generate7DayPlan(
   weakPoints: WeakPoint[],
   attempts: PracticeAttempt[]
 ): PlanDay[] {
-  // Sort weak points by miss_count desc
   const weakKeywords = weakPoints
-    .filter((w) => w.kind === "keyword")
-    .map((w) => w.value);
+    .filter((w) => w.kind === "keyword" && isValidKeywordTerm(w.value))
+    .map((w) => w.value.trim());
 
   const weakGrammar = weakPoints
     .filter((w) => w.kind === "grammar")

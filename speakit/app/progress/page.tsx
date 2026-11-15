@@ -18,7 +18,7 @@ import {
 import { SCENARIOS } from "../../data/scenarios";
 import { storageAdapter } from "../../lib/storage";
 import { GamificationState, PracticeAttempt, Scenario, WeakPoint } from "../../lib/types";
-import { generate7DayPlan, PlanDay } from "../../lib/planGenerator";
+import { generate7DayPlan, isValidKeywordTerm, PlanDay } from "../../lib/planGenerator";
 import {
   GAMIFICATION_STORAGE_KEY,
   GAMIFICATION_UPDATED_EVENT,
@@ -110,6 +110,9 @@ export default function ProgressPage() {
 
   const devTitle = getDevTitle(gamification.totalPoints);
   const coins = calculateCoins(gamification.totalPoints);
+  const keywordWeakPoints = weakPoints.filter(
+    (wp) => wp.kind === "keyword" && isValidKeywordTerm(wp.value)
+  );
 
   // Best score per scenario
   const scenarioStats = scenarios.map((scenario) => {
@@ -312,12 +315,12 @@ export default function ProgressPage() {
       </section>
 
       {/* Tracked Weak Points List */}
-      {weakPoints.length > 0 && (
+      {keywordWeakPoints.length > 0 && (
         <section className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-3.5">
           <div className="flex items-center justify-between border-b border-paper-muted pb-2">
             <h3 className="text-xs font-bold font-mono uppercase text-ink flex items-center gap-1.5">
               <AlertCircle className="w-3.5 h-3.5 text-accent" />
-              <span>Từ khóa bạn hay quên nhất ({weakPoints.length})</span>
+              <span>Từ khóa bạn hay quên nhất ({keywordWeakPoints.length})</span>
             </h3>
             <span className="text-[11px] font-mono text-ink-muted">
               Xếp theo số lần bỏ sót
@@ -325,7 +328,7 @@ export default function ProgressPage() {
           </div>
 
           <div className="flex flex-wrap gap-2 pt-1">
-            {weakPoints.slice(0, 15).map((wp) => (
+            {keywordWeakPoints.slice(0, 15).map((wp) => (
               <span
                 key={wp.id}
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-paper border border-ink text-xs font-mono"

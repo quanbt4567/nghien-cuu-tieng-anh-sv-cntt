@@ -164,7 +164,7 @@ export function Navbar() {
 
   return (
     <header ref={headerRef} className="sticky top-0 z-40 bg-paper border-b border-ink/15">
-      <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 h-16 flex items-center justify-between gap-2 lg:gap-3">
         <Link
           href="/"
           aria-label="SpeakIT"
@@ -175,12 +175,12 @@ export function Navbar() {
 
         <nav
           aria-label="Điều hướng chính"
-          className="hidden md:flex items-center gap-1.5 lg:gap-2"
+          className="hidden md:flex items-center gap-1 lg:gap-2 min-w-0"
         >
           <Link
             href="/"
             aria-current={homeActive ? "page" : undefined}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-all whitespace-nowrap ${
+            className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-all shrink-0 whitespace-nowrap ${
               homeActive
                 ? "bg-ink text-white border-ink shadow-soft"
                 : "bg-white text-ink border-ink/15 hover:border-ink/30 hover:bg-paper-muted shadow-soft"
@@ -195,13 +195,13 @@ export function Navbar() {
             const isOpen = openGroup === group.id;
 
             return (
-              <div key={group.id} className="relative">
+              <div key={group.id} className="relative shrink-0">
                 <button
                   type="button"
                   aria-expanded={isOpen}
                   aria-haspopup="true"
                   onClick={() => setOpenGroup((prev) => (prev === group.id ? null : group.id))}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-all whitespace-nowrap ${
+                  className={`flex items-center gap-1 lg:gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-all whitespace-nowrap ${
                     active || isOpen
                       ? "bg-ink text-white border-ink shadow-soft"
                       : "bg-white text-ink border-ink/15 hover:border-ink/30 hover:bg-paper-muted shadow-soft"
@@ -217,7 +217,11 @@ export function Navbar() {
                 </button>
 
                 {isOpen && (
-                  <div className="absolute left-0 top-full mt-2 w-56 p-1.5 bg-white border border-ink/15 rounded-2xl shadow-card z-50">
+                  <div
+                    className={`absolute ${
+                      group.id === "account" ? "right-0" : "left-0"
+                    } top-full mt-2 w-56 p-1.5 bg-white border border-ink/15 rounded-2xl shadow-card z-50`}
+                  >
                     {group.items.map(({ href, label, icon: Icon }) => {
                       const itemActive = isItemActive(pathname, href);
                       return (

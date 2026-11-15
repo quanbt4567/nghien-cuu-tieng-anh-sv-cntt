@@ -63,23 +63,67 @@ function normalizeText(text: string): string {
 /**
  * Checks if a keyword matches a target word or its common inflections.
  */
-function matchesKeyword(transcriptWords: string[], keyword: string): boolean {
-  const normKey = keyword.toLowerCase().trim();
+export function stemWord(raw: string): string {
+  const word = raw.toLowerCase().trim();
+  if (word.length <= 3) return word;
+  const suffixes = [
+    "ments",
+    "ment",
+    "ations",
+    "ation",
+    "ities",
+    "ity",
+    "ings",
+    "ing",
+    "ied",
+    "ies",
+    "es",
+    "ed",
+    "er",
+    "ly",
+    "s",
+  ];
+  for (const suffix of suffixes) {
+    if (word.endsWith(suffix) && word.length - suffix.length >= 3) {
+      let stem = word.slice(0, word.length - suffix.length);
+      if (suffix === "ied" || suffix === "ies") {
+        stem += "y";
+      } else if (stem.length >= 4 && stem[stem.length - 1] === stem[stem.length - 2]) {
+        stem = stem.slice(0, -1);
+      }
+      return stem;
+    }
+  }
+  return word.endsWith("e") && word.length > 4 ? word.slice(0, -1) : word;
+}
 
-  // Multi-word keyword (e.g. "pull request", "under the hood")
-  if (normKey.includes(" ")) {
+function wordsMatchStem(transcriptWord: string, keywordWord: string): boolean {
+  const w = transcriptWord.toLowerCase().trim();
+  const k = keywordWord.toLowerCase().trim();
+  if (!w || !k) return false;
+  if (w === k) return true;
+  const sw = stemWord(w);
+  const sk = stemWord(k);
+  if (sw === sk) return true;
+  if (w.startsWith(k) && w.length - k.length <= 5) return true;
+  if (k.startsWith(w) && k.length - w.length <= 3) return true;
+  return false;
+}
+
+export function matchesKeyword(transcriptWords: string[], keyword: string): boolean {
+  const normKey = normalizeText(keyword);
+  if (!normKey) return false;
+
+  const keyTokens = normKey.split(" ").filter(Boolean);
+  if (keyTokens.length > 1) {
     const normTranscript = transcriptWords.join(" ");
-    return normTranscript.includes(normKey);
+    if (normTranscript.includes(normKey)) return true;
+    return keyTokens.every((kt) =>
+      transcriptWords.some((tw) => wordsMatchStem(tw, kt))
+    );
   }
 
-  // Single word keyword: test exact or stem inflection
-  return transcriptWords.some((word) => {
-    if (word === normKey) return true;
-    // Simple inflection check (e.g., fix -> fixed, fixes, fixing; deploy -> deployed, deploys)
-    if (word.startsWith(normKey) && word.length - normKey.length <= 4) return true;
-    if (normKey.startsWith(word) && normKey.length - word.length <= 3) return true;
-    return false;
-  });
+  return transcriptWords.some((word) => wordsMatchStem(word, normKey));
 }
 
 /**

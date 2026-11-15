@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Loader2, Sparkles, UserCheck } from "lucide-react";
+import { Loader2, Sparkles, UserCheck, X } from "lucide-react";
 import {
   initOrHydrateGuestSession,
   updateGuestDisplayName,
@@ -23,6 +23,7 @@ export function WelcomeNameModal() {
   const pathname = usePathname() ?? "";
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [hasExistingName, setHasExistingName] = useState(false);
   const [nameInput, setNameInput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -34,6 +35,12 @@ export function WelcomeNameModal() {
 
     const checkWelcomePrompt = async () => {
       try {
+        const localName = window.localStorage.getItem(LOCAL_DISPLAY_NAME_KEY)?.trim() ?? "";
+        if (localName && !isLegacyCodeDisplayName(localName)) {
+          window.localStorage.setItem(NAME_PROMPTED_STORAGE_KEY, "1");
+          setHasExistingName(true);
+          return;
+        }
         if (window.localStorage.getItem(NAME_PROMPTED_STORAGE_KEY) === "1") {
           return;
         }
@@ -47,11 +54,16 @@ export function WelcomeNameModal() {
         if (session.mode === "online" && session.player) {
           saveBackupTransferCode(session.player.transferCode);
           if (!isLegacyCodeDisplayName(session.player.displayName)) {
-            setNameInput("");
+            try {
+              window.localStorage.setItem(NAME_PROMPTED_STORAGE_KEY, "1");
+              window.localStorage.setItem(LOCAL_DISPLAY_NAME_KEY, session.player.displayName);
+            } catch {
+            }
+            setHasExistingName(true);
+            return;
           }
         }
       } catch {
-        // Proceed with modal even in offline mode.
       }
 
       if (!cancelled) {
@@ -66,20 +78,51 @@ export function WelcomeNameModal() {
     };
   }, [pathname]);
 
+  const finishOnboarding = useCallback(
+    (savedName: string) => {
+      try {
+        window.localStorage.setItem(NAME_PROMPTED_STORAGE_KEY, "1");
+        window.localStorage.setItem(LOCAL_DISPLAY_NAME_KEY, savedName);
+      } catch {
+      }
+      setHasExistingName(true);
+      setIsOpen(false);
+      router.refresh();
+    },
+    [router]
+  );
+
+  const handleDismiss = useCallback(() => {
+    if (isSaving) return;
+    if (hasExistingName) {
+      setIsOpen(false);
+      return;
+    }
+    const defaultName = generateFriendlyDisplayName();
+    finishOnboarding(defaultName);
+    void updateGuestDisplayName(defaultName, readBackupTransferCode())
+      .then((res) => {
+        if (res.player?.transferCode) {
+          saveBackupTransferCode(res.player.transferCode);
+        }
+      })
+      .catch(() => {});
+  }, [finishOnboarding, hasExistingName, isSaving]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        handleDismiss();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [handleDismiss, isOpen]);
+
   if (!isOpen || pathname.startsWith("/admin")) {
     return null;
   }
-
-  const finishOnboarding = (savedName: string) => {
-    try {
-      window.localStorage.setItem(NAME_PROMPTED_STORAGE_KEY, "1");
-      window.localStorage.setItem(LOCAL_DISPLAY_NAME_KEY, savedName);
-    } catch {
-      // Ignore storage quota errors.
-    }
-    setIsOpen(false);
-    router.refresh();
-  };
 
   const applyDisplayName = async (candidate: string) => {
     setIsSaving(true);
@@ -126,13 +169,27 @@ export function WelcomeNameModal() {
       role="dialog"
       aria-modal="true"
       aria-labelledby="welcome-name-title"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          handleDismiss();
+        }
+      }}
       className="fixed inset-0 z-50 bg-ink/40 backdrop-blur-[2px] flex items-center justify-center p-4"
     >
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md bg-white border border-ink/20 rounded-2xl p-6 shadow-card space-y-4"
+        className="w-full max-w-md bg-white border border-ink/20 rounded-2xl p-6 shadow-card space-y-4 relative"
       >
-        <div className="flex items-start gap-3">
+        <button
+          type="button"
+          onClick={handleDismiss}
+          aria-label="Đóng hộp thoại đặt tên"
+          className="absolute top-4 right-4 w-8 h-8 rounded-pill bg-paper border border-ink/15 text-ink-muted hover:text-ink hover:bg-paper-muted flex items-center justify-center transition-colors"
+        >
+          <X className="w-4 h-4" aria-hidden="true" />
+        </button>
+
+        <div className="flex items-start gap-3 pr-8">
           <div className="w-10 h-10 rounded-pill bg-accent-light border border-accent/30 flex items-center justify-center shrink-0">
             <UserCheck className="w-5 h-5 text-accent" aria-hidden="true" />
           </div>
@@ -190,14 +247,25 @@ export function WelcomeNameModal() {
             )}
           </button>
 
+          {!hasExistingName && (
+            <button
+              type="button"
+              disabled={isSaving}
+              onClick={() => void handleSkipRandom()}
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-pill bg-paper hover:bg-paper-muted text-ink text-xs font-semibold border border-ink/20 transition-colors disabled:opacity-60"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+              <span>Tạo tên ngẫu nhiên</span>
+            </button>
+          )}
+
           <button
             type="button"
             disabled={isSaving}
-            onClick={() => void handleSkipRandom()}
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-pill bg-paper hover:bg-paper-muted text-ink text-xs font-semibold border border-ink/20 transition-colors disabled:opacity-60"
+            onClick={handleDismiss}
+            className="inline-flex items-center justify-center px-4 py-2.5 rounded-pill bg-white hover:bg-paper-muted text-ink-muted hover:text-ink text-xs font-semibold border border-ink/15 transition-colors disabled:opacity-60"
           >
-            <Sparkles className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
-            <span>Tạo tên ngẫu nhiên</span>
+            Bỏ qua
           </button>
         </div>
       </form>

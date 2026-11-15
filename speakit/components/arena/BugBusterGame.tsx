@@ -40,7 +40,7 @@ import { ITRole } from "../../lib/types";
 import { FeedbackPromptModal } from "../feedback/FeedbackPromptModal";
 
 const ROUND_DURATION_SEC = 60;
-const BUG_DURATION_SEC = 10;
+const BUG_DURATION_SEC = 20;
 const BASE_FIX_POINTS = 150;
 
 interface BugBusterGameProps {
