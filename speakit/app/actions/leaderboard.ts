@@ -365,6 +365,7 @@ export async function rewardPracticePoints(
         last_practice_date,
         equipped_title,
         equipped_ring,
+        equipped_cosmetics,
         owned_items,
         created_at,
         updated_at
@@ -624,6 +625,7 @@ export async function updateGuestDisplayName(
         last_practice_date,
         equipped_title,
         equipped_ring,
+        equipped_cosmetics,
         owned_items,
         created_at,
         updated_at

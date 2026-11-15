@@ -199,6 +199,7 @@ export async function readExistingGuestPlayer(): Promise<PublicGuestPlayer | nul
         last_practice_date,
         equipped_title,
         equipped_ring,
+        equipped_cosmetics,
         owned_items,
         created_at,
         updated_at
@@ -237,6 +238,7 @@ async function reuseGuestRowById(
       last_practice_date,
       equipped_title,
       equipped_ring,
+      equipped_cosmetics,
       owned_items,
       created_at,
       updated_at
@@ -361,6 +363,7 @@ export async function resolveOrCreateGuestSession(
           last_practice_date,
           equipped_title,
           equipped_ring,
+          equipped_cosmetics,
           owned_items,
           created_at,
           updated_at
@@ -435,6 +438,7 @@ export async function restoreByTransferCode(code: string): Promise<{
         last_practice_date,
         equipped_title,
         equipped_ring,
+        equipped_cosmetics,
         owned_items,
         created_at,
         updated_at
