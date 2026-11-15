@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { unstable_noStore as noStore } from "next/cache";
 import {
   ArrowLeft,
   ArrowRight,
@@ -14,6 +15,7 @@ import {
 } from "../../lib/research";
 
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 const CATEGORY_TABS: Array<{ id: "all" | ResearchCategory; label: string }> = [
   { id: "all", label: "Tất cả" },
@@ -32,6 +34,7 @@ export default async function ResearchPortalPage({
 }: {
   searchParams?: { category?: string };
 }) {
+  noStore();
   const rawCategory = searchParams?.category;
   const activeCategory: "all" | ResearchCategory =
     rawCategory === "benchmark" ||

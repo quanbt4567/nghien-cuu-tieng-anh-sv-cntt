@@ -12,6 +12,7 @@ import { SCENARIOS } from "../../../data/scenarios";
 import { getArticleBySlug, type ResearchCategory } from "../../../lib/research";
 
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 function renderMarkdownBlocks(markdown: string) {
   const lines = markdown.split(/\r?\n/);

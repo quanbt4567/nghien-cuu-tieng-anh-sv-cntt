@@ -31,7 +31,7 @@ export function getNeonSql(): NeonQueryFunction<false, false> | null {
   if (cachedUrl === url && cachedSql) return cachedSql;
 
   try {
-    cachedSql = neon(url);
+    cachedSql = neon(url, { fetchOptions: { cache: "no-store" } });
     cachedUrl = url;
     return cachedSql;
   } catch {
