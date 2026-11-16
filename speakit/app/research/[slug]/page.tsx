@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { SCENARIOS } from "../../../data/scenarios";
 import { getArticleBySlug, type ResearchCategory } from "../../../lib/research";
+import { VocabExtractorButton } from "../../../components/research/VocabExtractorButton";
 
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
@@ -124,6 +125,14 @@ export default async function ResearchArticlePage({
         <p className="text-sm sm:text-base text-ink-muted leading-relaxed">
           {article.summary}
         </p>
+        <div className="pt-1">
+          <VocabExtractorButton
+            title={article.title}
+            summary={article.summary}
+            content={article.contentMarkdown}
+            variant="detail"
+          />
+        </div>
       </div>
 
       {article.metricsJson.length > 0 && (

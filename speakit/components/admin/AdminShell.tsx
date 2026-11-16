@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import {
+  Activity,
   AlertCircle,
   ArrowUpRight,
   BarChart3,
@@ -23,6 +24,7 @@ import {
 import { SCENARIOS } from "../../data/scenarios";
 import { mergeScenarios } from "../../lib/contentStore";
 import type { AdminContentOverrides } from "../../lib/types";
+import { AdminAiMonitorTab } from "./AdminAiMonitorTab";
 import { AdminAnalyticsTab } from "./AdminAnalyticsTab";
 import { AdminArenaTab } from "./AdminArenaTab";
 import { AdminCosmeticsTab } from "./AdminCosmeticsTab";
@@ -41,6 +43,7 @@ import {
 
 type AdminTabId =
   | "analytics"
+  | "ai-monitor"
   | "scenarios"
   | "vocab"
   | "arena"
@@ -56,6 +59,7 @@ const TABS: Array<{
   icon: typeof BarChart3;
 }> = [
   { id: "analytics", label: "Tổng quan", icon: BarChart3 },
+  { id: "ai-monitor", label: "Giám Sát 6 API AI", icon: Activity },
   { id: "scenarios", label: "Kịch bản", icon: MessageSquareText },
   { id: "vocab", label: "Từ vựng", icon: BookOpen },
   { id: "arena", label: "Arena Games", icon: Gamepad2 },
@@ -279,6 +283,9 @@ export function AdminShell() {
         ) : (
           <>
             {activeTab === "analytics" && <AdminAnalyticsTab data={data} />}
+            {activeTab === "ai-monitor" && (
+              <AdminAiMonitorTab onUnauthorized={() => forceLock()} />
+            )}
             {activeTab === "scenarios" && (
               <AdminScenariosTab
                 overrides={data.overrides}

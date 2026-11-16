@@ -248,3 +248,56 @@ export async function initializeGuestPlayersSchema(
   return guestSchemaInFlight;
 }
 
+let aiUsageSchemaReadyUrl: string | null = null;
+let aiUsageSchemaInFlight: Promise<boolean> | null = null;
+
+export async function initializeAiProviderUsageSchema(
+  sqlClient?: NeonQueryFunction<false, false> | null
+): Promise<boolean> {
+  const url = sanitizeDatabaseUrl(process.env.DATABASE_URL);
+  const sql = sqlClient ?? getNeonSql();
+  if (!url || !sql) return false;
+  if (aiUsageSchemaReadyUrl === url) return true;
+  if (aiUsageSchemaInFlight) return aiUsageSchemaInFlight;
+
+  aiUsageSchemaInFlight = (async () => {
+    try {
+      await sql.transaction([
+        sql`
+          CREATE TABLE IF NOT EXISTS ai_provider_usage (
+            provider TEXT NOT NULL,
+            date_key TEXT NOT NULL,
+            request_count INT DEFAULT 0,
+            error_429_count INT DEFAULT 0,
+            last_status INT,
+            last_latency_ms INT,
+            remaining_requests_header TEXT,
+            remaining_tokens_header TEXT,
+            daily_limit_cap INT DEFAULT 1000,
+            is_enabled BOOLEAN DEFAULT TRUE,
+            updated_at TIMESTAMPTZ DEFAULT NOW(),
+            PRIMARY KEY (provider, date_key)
+          )
+        `,
+        sql`
+          CREATE TABLE IF NOT EXISTS ai_provider_settings (
+            provider TEXT PRIMARY KEY,
+            daily_limit_cap INT DEFAULT 1000,
+            is_enabled BOOLEAN DEFAULT TRUE,
+            updated_at TIMESTAMPTZ DEFAULT NOW()
+          )
+        `,
+      ]);
+      aiUsageSchemaReadyUrl = url;
+      return true;
+    } catch {
+      aiUsageSchemaReadyUrl = null;
+      return false;
+    } finally {
+      aiUsageSchemaInFlight = null;
+    }
+  })();
+
+  return aiUsageSchemaInFlight;
+}
+

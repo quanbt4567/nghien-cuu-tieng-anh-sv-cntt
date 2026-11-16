@@ -1,4 +1,11 @@
 import {
+  DEFAULT_GEMINI_MODEL,
+  getAiProviderSettings,
+  OPENAI_WATERFALL_PROVIDERS,
+  OpenAiProviderEndpoint,
+  recordAiProviderTelemetry,
+} from "./ai-telemetry";
+import {
   AiEvaluationInput,
   buildEvaluationPrompts,
   parseEvaluationJson,
@@ -6,55 +13,9 @@ import {
 import { scoreLocally } from "./localScorer";
 import { AI_PROVIDER_SPECS, AiProviderId, ScoreResponse, ScoringProvider } from "./types";
 
+export { OPENAI_WATERFALL_PROVIDERS };
+
 const PROVIDER_TIMEOUT_MS = 4000;
-
-interface OpenAiProviderEndpoint {
-  id: Exclude<AiProviderId, "gemini">;
-  envVar: string;
-  url: string;
-  modelEnvVar: string;
-  defaultModel: string;
-}
-
-export const OPENAI_WATERFALL_PROVIDERS: readonly OpenAiProviderEndpoint[] = [
-  {
-    id: "cerebras",
-    envVar: "CEREBRAS_API_KEY",
-    url: "https://api.cerebras.ai/v1/chat/completions",
-    modelEnvVar: "CEREBRAS_MODEL",
-    defaultModel: "qwen-3.8-27b",
-  },
-  {
-    id: "inception",
-    envVar: "INCEPTION_API_KEY",
-    url: "https://api.inceptionlabs.ai/v1/chat/completions",
-    modelEnvVar: "INCEPTION_MODEL",
-    defaultModel: "mercury-3",
-  },
-  {
-    id: "groq",
-    envVar: "GROQ_API_KEY",
-    url: "https://api.groq.com/openai/v1/chat/completions",
-    modelEnvVar: "GROQ_MODEL",
-    defaultModel: "qwen/qwen3.8-27b",
-  },
-  {
-    id: "xkiro",
-    envVar: "XKIRO_API_KEY",
-    url: "https://api.xkiro.com/v1/chat/completions",
-    modelEnvVar: "XKIRO_MODEL",
-    defaultModel: "mistralai/ministral-14b",
-  },
-  {
-    id: "openrouter",
-    envVar: "OPENROUTER_API_KEY",
-    url: "https://openrouter.ai/api/v1/chat/completions",
-    modelEnvVar: "OPENROUTER_MODEL",
-    defaultModel: "openrouter/free",
-  },
-];
-
-const DEFAULT_GEMINI_MODEL = "gemini-3.1-flash-lite-preview";
 
 export interface AiProviderStatusItem {
   id: AiProviderId;
@@ -198,6 +159,7 @@ async function callOpenAiCompatibleText(
 ): Promise<string | null> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  const startedAt = Date.now();
 
   try {
     const response = await fetchFn(provider.url, {
@@ -218,6 +180,15 @@ async function callOpenAiCompatibleText(
       }),
     });
 
+    const latencyMs = Date.now() - startedAt;
+    void recordAiProviderTelemetry({
+      provider: provider.id,
+      status: response.status,
+      latencyMs,
+      remainingRequests: response.headers?.get("x-ratelimit-remaining-requests") ?? null,
+      remainingTokens: response.headers?.get("x-ratelimit-remaining-tokens") ?? null,
+    });
+
     if (!response.ok) {
       return null;
     }
@@ -226,6 +197,11 @@ async function callOpenAiCompatibleText(
     const contentText = extractOpenAiContent(data);
     return contentText && contentText.trim() ? contentText.trim() : null;
   } catch {
+    void recordAiProviderTelemetry({
+      provider: provider.id,
+      status: null,
+      latencyMs: Date.now() - startedAt,
+    });
     return null;
   } finally {
     clearTimeout(timeoutId);
@@ -247,6 +223,7 @@ async function callGeminiText(
 ): Promise<string | null> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  const startedAt = Date.now();
 
   try {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey.trim()}`;
@@ -274,6 +251,15 @@ async function callGeminiText(
       }),
     });
 
+    const latencyMs = Date.now() - startedAt;
+    void recordAiProviderTelemetry({
+      provider: "gemini",
+      status: response.status,
+      latencyMs,
+      remainingRequests: response.headers?.get("x-ratelimit-remaining-requests") ?? null,
+      remainingTokens: response.headers?.get("x-ratelimit-remaining-tokens") ?? null,
+    });
+
     if (!response.ok) {
       return null;
     }
@@ -288,6 +274,11 @@ async function callGeminiText(
       ? candidateText.trim()
       : null;
   } catch {
+    void recordAiProviderTelemetry({
+      provider: "gemini",
+      status: null,
+      latencyMs: Date.now() - startedAt,
+    });
     return null;
   } finally {
     clearTimeout(timeoutId);
@@ -304,7 +295,11 @@ async function runAiWaterfall<T>(
     timeoutMs = PROVIDER_TIMEOUT_MS,
   } = options;
 
+  const settings = await getAiProviderSettings();
+
   for (const provider of OPENAI_WATERFALL_PROVIDERS) {
+    if (settings[provider.id]?.isEnabled === false) continue;
+
     const apiKey = env[provider.envVar]?.trim();
     if (!apiKey) continue;
 
@@ -326,7 +321,7 @@ async function runAiWaterfall<T>(
   }
 
   const geminiKey = env.GEMINI_API_KEY?.trim();
-  if (geminiKey) {
+  if (geminiKey && settings.gemini?.isEnabled !== false) {
     const geminiModel = env.GEMINI_MODEL?.trim() || DEFAULT_GEMINI_MODEL;
     const rawText = await callGeminiText(options, geminiKey, geminiModel, timeoutMs, fetchFn);
     if (rawText) {

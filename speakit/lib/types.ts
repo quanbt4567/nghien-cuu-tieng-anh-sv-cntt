@@ -39,6 +39,10 @@ export interface VocabularyItem {
   meaningVI: string;
   exampleSentenceEN: string;
   exampleTranslationVI: string;
+  clusterTitle?: string;
+  clusterSlug?: string;
+  careerLevel?: "Fresher" | "Junior" | "Senior";
+  relatedTerms?: string[];
 }
 
 export interface GrammarCorrection {

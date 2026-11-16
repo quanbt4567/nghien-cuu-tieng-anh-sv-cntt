@@ -14,6 +14,7 @@ import {
   type ResearchCategory,
   type ResearchMetricItem,
 } from "../../lib/research";
+import { VocabExtractorButton } from "../../components/research/VocabExtractorButton";
 
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
@@ -217,19 +218,27 @@ export default async function ResearchPortalPage({
                   )}
                 </div>
 
-                <div className="flex items-center justify-between pt-3 border-t border-paper-muted">
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-paper-muted">
                   <span className="text-[11px] font-mono text-ink-muted">
                     {realMetricsCount > 0
                       ? `${realMetricsCount} thẻ số liệu`
                       : getCategoryLabel(article.category)}
                   </span>
-                  <Link
-                    href={`/research/${article.slug}`}
-                    className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-paper border border-ink/15 text-xs font-semibold text-ink hover:bg-ink hover:text-white transition-colors"
-                  >
-                    <span>Đọc chi tiết</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <VocabExtractorButton
+                      title={article.title}
+                      summary={article.summary}
+                      content={article.contentMarkdown}
+                      variant="card"
+                    />
+                    <Link
+                      href={`/research/${article.slug}`}
+                      className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-paper border border-ink/15 text-xs font-semibold text-ink hover:bg-ink hover:text-white transition-colors"
+                    >
+                      <span>Đọc chi tiết</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
                 </div>
               </article>
             );

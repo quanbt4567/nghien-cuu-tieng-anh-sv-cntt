@@ -1,20 +1,22 @@
 "use client";
 
-import { useMemo, useState, type FormEvent } from "react";
+import { useMemo, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import {
   AlertCircle,
   CheckCircle2,
+  Download,
   Pencil,
   Plus,
   RotateCcw,
   Sparkles,
   Trash2,
+  Upload,
   Volume2,
   VolumeX,
   X,
 } from "lucide-react";
 import { VOCABULARY_LIST } from "../../data/scenarios";
-import { mergeVocabulary } from "../../lib/contentStore";
+import { mergeVocabulary, saveLocalContentOverrides } from "../../lib/contentStore";
 import { speakText } from "../../lib/speech";
 import type { AdminContentOverrides, VocabularyItem } from "../../lib/types";
 import { AdminAiGeneratorBox, type AdminAiGenerateMeta } from "./AdminAiGeneratorBox";
@@ -65,6 +67,12 @@ export function AdminVocabTab({
   const [exampleTranslationVI, setExampleTranslationVI] = useState("");
 
   const [isSaving, setIsSaving] = useState(false);
+  const [isExporting, setIsExporting] = useState<"json" | "csv" | null>(null);
+  const [isImportOpen, setIsImportOpen] = useState(false);
+  const [importFormat, setImportFormat] = useState<"json" | "csv">("json");
+  const [importData, setImportData] = useState("");
+  const [isImporting, setIsImporting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [statusNotice, setStatusNotice] = useState<{
     tone: "ok" | "warn" | "error";
     text: string;
@@ -253,6 +261,129 @@ export function AdminVocabTab({
     );
   };
 
+  const handleExport = async (format: "json" | "csv") => {
+    setIsExporting(format);
+    setStatusNotice(null);
+    try {
+      const res = await fetch(`/api/admin/vocabulary/io?format=${format}`, {
+        cache: "no-store",
+      });
+      if (res.status === 401) {
+        onUnauthorized();
+        return;
+      }
+      if (!res.ok) {
+        const errData = (await res.json().catch(() => null)) as { error?: string } | null;
+        setStatusNotice({
+          tone: "error",
+          text: errData?.error || `Export ${format.toUpperCase()} failed.`,
+        });
+        return;
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `speakit-vocabulary.${format}`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      setStatusNotice({
+        tone: "ok",
+        text: `Exported vocabulary as ${format.toUpperCase()}.`,
+      });
+    } catch {
+      setStatusNotice({
+        tone: "error",
+        text: `Failed to export vocabulary as ${format.toUpperCase()}.`,
+      });
+    } finally {
+      setIsExporting(null);
+    }
+  };
+
+  const handleImportFile = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const lowerName = file.name.toLowerCase();
+    if (lowerName.endsWith(".csv")) {
+      setImportFormat("csv");
+    } else if (lowerName.endsWith(".json")) {
+      setImportFormat("json");
+    }
+    const text = await file.text();
+    setImportData(text);
+  };
+
+  const handleImportSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    const trimmed = importData.trim();
+    if (!trimmed) {
+      setStatusNotice({
+        tone: "error",
+        text: "Please upload a file or paste JSON/CSV data before importing.",
+      });
+      return;
+    }
+
+    setIsImporting(true);
+    setStatusNotice(null);
+    try {
+      const res = await fetch("/api/admin/vocabulary/io", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          format: importFormat,
+          data: trimmed,
+        }),
+      });
+      if (res.status === 401) {
+        onUnauthorized();
+        return;
+      }
+      const result = (await res.json().catch(() => null)) as {
+        ok?: boolean;
+        error?: string;
+        inserted?: number;
+        updated?: number;
+        skipped?: number;
+        total?: number;
+        overrides?: AdminContentOverrides;
+      } | null;
+
+      if (!res.ok || !result?.ok) {
+        setStatusNotice({
+          tone: "error",
+          text: result?.error || "Import failed.",
+        });
+        return;
+      }
+
+      if (result.overrides) {
+        const saved = saveLocalContentOverrides(result.overrides);
+        onOverridesChange(saved);
+      }
+
+      setStatusNotice({
+        tone: "ok",
+        text: `Import complete: ${result.inserted ?? 0} inserted, ${result.updated ?? 0} updated, ${result.skipped ?? 0} skipped (total ${result.total ?? 0}).`,
+      });
+      setImportData("");
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+      setIsImportOpen(false);
+    } catch {
+      setStatusNotice({
+        tone: "error",
+        text: "Network error while importing vocabulary.",
+      });
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -267,6 +398,32 @@ export function AdminVocabTab({
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            type="button"
+            disabled={isExporting !== null}
+            onClick={() => handleExport("json")}
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-pill bg-white border border-ink/20 text-xs font-medium text-ink hover:bg-paper-muted transition-colors disabled:opacity-50"
+          >
+            <Download className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>{isExporting === "json" ? "Exporting..." : "Export JSON"}</span>
+          </button>
+          <button
+            type="button"
+            disabled={isExporting !== null}
+            onClick={() => handleExport("csv")}
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-pill bg-white border border-ink/20 text-xs font-medium text-ink hover:bg-paper-muted transition-colors disabled:opacity-50"
+          >
+            <Download className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>{isExporting === "csv" ? "Exporting..." : "Export CSV"}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsImportOpen((prev) => !prev)}
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-pill bg-white border border-ink/20 text-xs font-medium text-ink hover:bg-paper-muted transition-colors"
+          >
+            <Upload className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>Import JSON / CSV</span>
+          </button>
           {hasVocabOverrides && (
             <button
               type="button"
@@ -327,6 +484,97 @@ export function AdminVocabTab({
           )}
           <span>{statusNotice.text}</span>
         </div>
+      )}
+
+      {isImportOpen && (
+        <form
+          onSubmit={handleImportSubmit}
+          className="bg-white border border-ink/20 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4"
+        >
+          <div className="flex items-center justify-between border-b border-ink/10 pb-3">
+            <h3 className="text-base font-bold text-ink">
+              Import Vocabulary (JSON / CSV)
+            </h3>
+            <button
+              type="button"
+              onClick={() => setIsImportOpen(false)}
+              className="text-xs font-mono text-ink-muted hover:text-ink"
+            >
+              Close
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-mono font-semibold text-ink-muted">
+                Format
+              </label>
+              <select
+                value={importFormat}
+                onChange={(e) =>
+                  setImportFormat(e.target.value === "csv" ? "csv" : "json")
+                }
+                className="w-full px-3.5 py-2 text-sm font-mono bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+              >
+                <option value="json">JSON</option>
+                <option value="csv">CSV (RFC-4180)</option>
+              </select>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-xs font-mono font-semibold text-ink-muted">
+                Upload File (.json or .csv)
+              </label>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".json,.csv,application/json,text/csv"
+                onChange={handleImportFile}
+                className="w-full px-3 py-1.5 text-xs bg-paper border border-ink/20 rounded-xl text-ink file:mr-3 file:px-3 file:py-1 file:rounded-pill file:border-0 file:bg-ink file:text-white file:text-xs file:font-medium"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block text-xs font-mono font-semibold text-ink-muted">
+              Or Paste {importFormat.toUpperCase()} Content
+            </label>
+            <textarea
+              rows={6}
+              value={importData}
+              onChange={(e) => setImportData(e.target.value)}
+              placeholder={
+                importFormat === "json"
+                  ? '[{"term":"idempotency","phonetic":"/ˌaɪ.demˈpoʊ.tən.si/","partOfSpeech":"noun","meaningVI":"Tính bất biến"}]'
+                  : "term,phonetic,partOfSpeech,meaningVI,exampleSentenceEN,exampleTranslationVI"
+              }
+              className="w-full px-3.5 py-2 text-xs font-mono bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+            />
+          </div>
+
+          <div className="flex items-center justify-end gap-3 pt-1">
+            <button
+              type="button"
+              onClick={() => {
+                setImportData("");
+                if (fileInputRef.current) {
+                  fileInputRef.current.value = "";
+                }
+                setIsImportOpen(false);
+              }}
+              className="px-4 py-2 rounded-pill bg-white border border-ink/20 text-xs font-medium text-ink hover:bg-paper-muted"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isImporting}
+              className="px-5 py-2 rounded-pill bg-accent text-white text-xs font-semibold hover:bg-accent-hover shadow-soft shadow-hard-press transition-all disabled:opacity-60"
+            >
+              {isImporting ? "Importing..." : "Import & Sync"}
+            </button>
+          </div>
+        </form>
       )}
 
       {/* Create / Edit Form */}

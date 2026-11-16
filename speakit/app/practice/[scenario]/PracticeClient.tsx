@@ -18,17 +18,21 @@ import {
   Sparkles,
 } from "lucide-react";
 import { SCENARIOS, VOCABULARY_LIST } from "../../../data/scenarios";
-import { AudioPromptPlayer } from "../../../components/audio/AudioPromptPlayer";
 import { MicButton } from "../../../components/audio/MicButton";
 import { FeedbackCard } from "../../../components/feedback/FeedbackCard";
 import { ScenarioSummary } from "../../../components/feedback/ScenarioSummary";
 import {
-  normalizeVoicePersona,
   startSpeechRecognition,
   SpeechController,
-  VOICE_PERSONAS,
 } from "../../../lib/speech";
-import { playTtsAudio, stopActiveTts } from "../../../lib/tts-player";
+import {
+  DEFAULT_VOICE_PERSONA,
+  TTS_VOICE_PERSONAS,
+  VoicePersona,
+  normalizeTtsPersona,
+  playTtsAudio,
+  stopActiveTts,
+} from "../../../lib/tts-player";
 import { storageAdapter } from "../../../lib/storage";
 import { awardPracticePoints, getGamificationState } from "../../../lib/gamification";
 import { reportGuestPracticePoints } from "../../../lib/guestClient";
@@ -47,7 +51,7 @@ import {
   VoicePersonaId,
 } from "../../../lib/types";
 
-const SCENARIO_DEFAULT_VOICE_PERSONA: VoicePersonaId = "lead_us_male";
+const SCENARIO_DEFAULT_VOICE_PERSONA: VoicePersona = DEFAULT_VOICE_PERSONA;
 
 export default function PracticePage() {
   const params = useParams();
@@ -61,8 +65,13 @@ export default function PracticePage() {
   const [isCompleted, setIsCompleted] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [voicePersona, setVoicePersona] =
-    useState<VoicePersonaId>(SCENARIO_DEFAULT_VOICE_PERSONA);
+    useState<VoicePersona>(SCENARIO_DEFAULT_VOICE_PERSONA);
   const [isPreviewingVoice, setIsPreviewingVoice] = useState(false);
+  const [promptRate, setPromptRate] = useState<0.8 | 1.0 | 1.2>(1.0);
+  const [isPlayingPrompt, setIsPlayingPrompt] = useState(false);
+  const [isSlowPlaying, setIsSlowPlaying] = useState(false);
+  const [playbackProgress, setPlaybackProgress] = useState(-1);
+  const promptCancelRef = useRef<(() => void) | null>(null);
 
   const [transcript, setTranscript] = useState("");
   const [isRecording, setIsRecording] = useState(false);
@@ -87,10 +96,80 @@ export default function PracticePage() {
     const settings = storageAdapter.getSettings();
     setVoicePersona(
       settings.voicePersona
-        ? normalizeVoicePersona(settings.voicePersona)
+        ? normalizeTtsPersona(settings.voicePersona)
         : SCENARIO_DEFAULT_VOICE_PERSONA
     );
+    setPromptRate(settings.speechRate || 1.0);
   }, []);
+
+  const stopPromptAudio = () => {
+    if (promptCancelRef.current) {
+      promptCancelRef.current();
+      promptCancelRef.current = null;
+    }
+    setIsPlayingPrompt(false);
+    setIsSlowPlaying(false);
+    setPlaybackProgress(-1);
+  };
+
+  const playPromptAudio = (opts?: {
+    rate?: 0.8 | 1.0 | 1.2;
+    slowMode?: boolean;
+    persona?: VoicePersona;
+  }) => {
+    const turns = scenario?.turns ?? [];
+    const questionText =
+      turns[Math.min(currentTurnIndex, Math.max(0, turns.length - 1))]
+        ?.questionEN ?? "";
+    if (!questionText.trim()) return;
+    if (promptCancelRef.current) {
+      promptCancelRef.current();
+    }
+    const slowMode = Boolean(opts?.slowMode);
+    setIsPreviewingVoice(false);
+    setIsPlayingPrompt(true);
+    setIsSlowPlaying(slowMode);
+    setPlaybackProgress(0);
+    const cancelFn = playTtsAudio({
+      text: questionText,
+      rate: opts?.rate ?? promptRate,
+      persona: opts?.persona ?? voicePersona,
+      slowMode,
+      onProgress: (ratio) => {
+        setPlaybackProgress(ratio);
+      },
+      onEnd: () => {
+        promptCancelRef.current = null;
+        setIsPlayingPrompt(false);
+        setIsSlowPlaying(false);
+        setPlaybackProgress(-1);
+      },
+      onError: () => {
+        promptCancelRef.current = null;
+        setIsPlayingPrompt(false);
+        setIsSlowPlaying(false);
+        setPlaybackProgress(-1);
+      },
+    });
+    promptCancelRef.current = cancelFn;
+  };
+
+  const activeQuestionEN =
+    !isCompleted && scenario && scenario.turns.length > 0
+      ? scenario.turns[Math.min(currentTurnIndex, scenario.turns.length - 1)]
+          ?.questionEN ?? ""
+      : "";
+
+  useEffect(() => {
+    if (!activeQuestionEN || (isContentSyncing && !scenario)) return;
+    playPromptAudio();
+    return () => {
+      if (promptCancelRef.current) {
+        promptCancelRef.current();
+        promptCancelRef.current = null;
+      }
+    };
+  }, [activeQuestionEN]);
 
   useEffect(() => {
     let active = true;
@@ -161,9 +240,11 @@ export default function PracticePage() {
   const currentTurn: ScenarioTurn = scenario.turns[safeTurnIndex];
   const scenarioKeywords = scenario.turns.flatMap((t) => t.keywords);
 
-  const handleVoiceChange = (nextPersona: VoicePersonaId) => {
+  const handleVoiceChange = (nextPersona: VoicePersona) => {
     setVoicePersona(nextPersona);
-    storageAdapter.saveSettings({ voicePersona: nextPersona });
+    storageAdapter.saveSettings({
+      voicePersona: nextPersona as VoicePersonaId,
+    });
   };
 
   const handleStartRecording = () => {
@@ -376,10 +457,10 @@ export default function PracticePage() {
               <select
                 aria-label="AI Voice Persona"
                 value={voicePersona}
-                onChange={(e) => handleVoiceChange(normalizeVoicePersona(e.target.value))}
+                onChange={(e) => handleVoiceChange(normalizeTtsPersona(e.target.value))}
                 className="bg-transparent text-xs font-medium text-ink focus:outline-none cursor-pointer pr-1"
               >
-                {VOICE_PERSONAS.map((persona) => (
+                {TTS_VOICE_PERSONAS.map((persona) => (
                   <option key={persona.id} value={persona.id}>
                     {persona.label}
                   </option>
@@ -446,12 +527,75 @@ export default function PracticePage() {
                   <span className="w-2 h-2 rounded-full bg-sky-500" />
                   AI Interviewer • Lượt {safeTurnIndex + 1}/{scenario.turns.length}
                 </span>
-                <AudioPromptPlayer
-                  key={`${scenario.id}-${safeTurnIndex}`}
-                  text={currentTurn.questionEN}
-                  autoPlay={true}
-                  voicePersona={voicePersona}
-                />
+                <div className="flex flex-wrap items-center gap-2">
+                  {isPlayingPrompt && !isSlowPlaying ? (
+                    <button
+                      onClick={stopPromptAudio}
+                      type="button"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-pill bg-accent text-white border border-accent shadow-soft"
+                      title="Dừng phát âm"
+                    >
+                      <VolumeX className="w-3.5 h-3.5" />
+                      <span>Dừng nghe</span>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => playPromptAudio({ slowMode: false })}
+                      type="button"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-pill bg-paper-card text-ink border border-ink/15 shadow-soft hover:bg-paper-muted"
+                      title="Nghe lại câu hỏi"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      <span>Nghe lại</span>
+                    </button>
+                  )}
+
+                  <button
+                    onClick={() => {
+                      if (isPlayingPrompt && isSlowPlaying) {
+                        stopPromptAudio();
+                      } else {
+                        playPromptAudio({ slowMode: true });
+                      }
+                    }}
+                    type="button"
+                    className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-pill border shadow-soft transition-all ${
+                      isPlayingPrompt && isSlowPlaying
+                        ? "bg-amber-500 text-white border-amber-600"
+                        : "bg-amber-50 text-amber-900 border-amber-300 hover:bg-amber-100"
+                    }`}
+                    title="Nghe chậm từng từ"
+                  >
+                    {isPlayingPrompt && isSlowPlaying ? (
+                      <VolumeX className="w-3.5 h-3.5" />
+                    ) : (
+                      <Volume2 className="w-3.5 h-3.5" />
+                    )}
+                    <span>Nghe chậm từng từ (Slow)</span>
+                  </button>
+
+                  <div className="flex items-center gap-1 bg-paper-card p-0.5 rounded-pill border border-ink/15 shadow-soft">
+                    {([0.8, 1.0, 1.2] as const).map((r) => (
+                      <button
+                        key={r}
+                        type="button"
+                        onClick={() => {
+                          setPromptRate(r);
+                          if (isPlayingPrompt) {
+                            playPromptAudio({ rate: r, slowMode: isSlowPlaying });
+                          }
+                        }}
+                        className={`px-2 py-0.5 text-[11px] font-mono font-semibold rounded-pill transition-all ${
+                          promptRate === r
+                            ? "bg-ink text-white"
+                            : "text-ink-muted hover:text-ink"
+                        }`}
+                      >
+                        {r}x
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               <div className="space-y-1.5">
@@ -459,7 +603,42 @@ export default function PracticePage() {
                   Vai của bạn: {scenario.roleVI}
                 </div>
                 <div className="text-lg sm:text-xl font-bold text-ink leading-snug">
-                  "{currentTurn.questionEN}"
+                  &ldquo;
+                  {(() => {
+                    const promptWords = currentTurn.questionEN
+                      .trim()
+                      .split(/\s+/)
+                      .filter(Boolean);
+                    const activeWordIndex =
+                      playbackProgress >= 0 && promptWords.length > 0
+                        ? Math.min(
+                            promptWords.length - 1,
+                            Math.floor(playbackProgress * promptWords.length)
+                          )
+                        : -1;
+                    return promptWords.map((word, idx) => {
+                      const isActive = idx === activeWordIndex;
+                      const isSpoken =
+                        activeWordIndex > -1 && idx < activeWordIndex;
+                      return (
+                        <span key={`${idx}-${word}`}>
+                          <span
+                            className={
+                              isActive
+                                ? "bg-amber-200/90 text-ink px-1 py-0.5 rounded-md transition-colors duration-100"
+                                : isSpoken
+                                ? "text-sky-700 transition-colors duration-100"
+                                : "transition-colors duration-100"
+                            }
+                          >
+                            {word}
+                          </span>
+                          {idx < promptWords.length - 1 ? " " : ""}
+                        </span>
+                      );
+                    });
+                  })()}
+                  &rdquo;
                 </div>
               </div>
 
@@ -639,7 +818,7 @@ export default function PracticePage() {
               <FeedbackCard
                 result={evalResult}
                 transcript={transcript}
-                voicePersona={voicePersona}
+                voicePersona={voicePersona as VoicePersonaId}
                 onNextTurn={handleNextTurn}
                 isLastTurn={safeTurnIndex === scenario.turns.length - 1}
               />

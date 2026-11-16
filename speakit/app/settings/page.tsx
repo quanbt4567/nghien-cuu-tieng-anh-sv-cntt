@@ -6,18 +6,20 @@ import { ArrowLeft, AlertCircle, Download, RotateCcw, Volume2, VolumeX, Trash2 }
 import { storageAdapter } from "../../lib/storage";
 import {
   DEFAULT_VOICE_PERSONA,
-  VOICE_PERSONAS,
-  normalizeVoicePersona,
-} from "../../lib/speech";
-import { playTtsAudio, stopActiveTts } from "../../lib/tts-player";
+  TTS_VOICE_PERSONAS,
+  VoicePersona,
+  normalizeTtsPersona,
+  playTtsAudio,
+  stopActiveTts,
+} from "../../lib/tts-player";
 import { VoicePersonaId } from "../../lib/types";
 
 export default function SettingsPage() {
   const [speechRate, setSpeechRate] = useState<0.8 | 1.0 | 1.2>(1.0);
   const [voicePersona, setVoicePersona] =
-    useState<VoicePersonaId>(DEFAULT_VOICE_PERSONA);
+    useState<VoicePersona>(DEFAULT_VOICE_PERSONA);
   const [previewingPersonaId, setPreviewingPersonaId] =
-    useState<VoicePersonaId | null>(null);
+    useState<VoicePersona | null>(null);
 
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetStatus, setResetStatus] = useState<string | null>(null);
@@ -26,7 +28,7 @@ export default function SettingsPage() {
   useEffect(() => {
     const settings = storageAdapter.getSettings();
     setSpeechRate(settings.speechRate || 1.0);
-    setVoicePersona(normalizeVoicePersona(settings.voicePersona));
+    setVoicePersona(normalizeTtsPersona(settings.voicePersona));
   }, []);
 
   const handleExportJson = async () => {
@@ -120,7 +122,7 @@ export default function SettingsPage() {
             Giọng AI phỏng vấn mặc định:
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            {VOICE_PERSONAS.map((persona) => {
+            {TTS_VOICE_PERSONAS.map((persona) => {
               const isSelected = voicePersona === persona.id;
               const isPreviewing = previewingPersonaId === persona.id;
               return (
@@ -136,7 +138,9 @@ export default function SettingsPage() {
                     type="button"
                     onClick={() => {
                       setVoicePersona(persona.id);
-                      storageAdapter.saveSettings({ voicePersona: persona.id });
+                      storageAdapter.saveSettings({
+                        voicePersona: persona.id as VoicePersonaId,
+                      });
                     }}
                     className="flex-1 text-left min-w-0"
                   >
