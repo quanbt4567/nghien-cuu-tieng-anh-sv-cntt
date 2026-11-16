@@ -4,13 +4,15 @@ import { useMemo, useState, type FormEvent } from "react";
 import {
   AlertCircle,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   Gamepad2,
   Pencil,
   Plus,
   RotateCcw,
+  Search,
   Sparkles,
   Trash2,
-  X,
 } from "lucide-react";
 import { BUG_BUSTER_CHALLENGES } from "../../data/minigames";
 import { mergeBugChallenges } from "../../lib/contentStore";
@@ -24,6 +26,7 @@ interface AdminArenaTabProps {
   onUnauthorized: () => void;
 }
 
+const PAGE_SIZE = 10;
 const BASE_CHALLENGE_IDS = new Set(BUG_BUSTER_CHALLENGES.map((c) => c.id));
 const VALID_CATEGORIES = new Set<BugBusterChallenge["category"]>([
   "error-log",
@@ -43,6 +46,16 @@ const CATEGORY_OPTIONS: Array<{
   { value: "incident", label: "Incident (Sự cố)" },
   { value: "error-log", label: "Error Log (Nhật ký lỗi)" },
   { value: "code-review", label: "Code Review" },
+];
+
+const CATEGORY_FILTER_TABS: Array<{
+  value: "all" | BugBusterChallenge["category"];
+  label: string;
+}> = [
+  { value: "all", label: "Tất cả" },
+  { value: "error-log", label: "error-log" },
+  { value: "code-review", label: "code-review" },
+  { value: "incident", label: "incident" },
 ];
 
 function splitCommaList(value: string): string[] {
@@ -79,7 +92,7 @@ function PromptBlankPreview({
         <span key={idx}>
           {part}
           {idx < parts.length - 1 && (
-            <span className="inline-flex items-center px-2 py-0.5 mx-1 rounded-md bg-accent-light border border-accent/50 font-mono font-bold text-ink text-xs">
+            <span className="inline-flex items-center px-1.5 py-0.5 mx-1 rounded bg-accent-light border border-accent/50 font-mono font-bold text-ink text-xs">
               {targetWord.trim() || "____"}
             </span>
           )}
@@ -108,7 +121,13 @@ export function AdminArenaTab({
     overrides.customBugChallenges.length > 0 ||
     overrides.deletedChallengeIds.length > 0;
 
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [activeSubTab, setActiveSubTab] = useState<"list" | "create">("list");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<
+    "all" | BugBusterChallenge["category"]
+  >("all");
+  const [currentPage, setCurrentPage] = useState(1);
+
   const [aiFocusKey, setAiFocusKey] = useState(0);
   const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -126,8 +145,31 @@ export function AdminArenaTab({
     text: string;
   } | null>(null);
 
+  const filteredChallenges = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return challenges.filter((c) => {
+      if (categoryFilter !== "all" && c.category !== categoryFilter) {
+        return false;
+      }
+      if (!q) return true;
+      return (
+        c.targetWord.toLowerCase().includes(q) ||
+        c.promptEN.toLowerCase().includes(q) ||
+        c.contextVI.toLowerCase().includes(q) ||
+        c.acceptedVariants.some((v) => v.toLowerCase().includes(q))
+      );
+    });
+  }, [challenges, categoryFilter, searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredChallenges.length / PAGE_SIZE));
+  const safePage = Math.min(currentPage, totalPages);
+  const paginatedChallenges = useMemo(() => {
+    const start = (safePage - 1) * PAGE_SIZE;
+    return filteredChallenges.slice(start, start + PAGE_SIZE);
+  }, [filteredChallenges, safePage]);
+
   const resetForm = () => {
-    setIsFormOpen(false);
+    setActiveSubTab("list");
     setAiFocusKey(0);
     setEditingId(null);
     setCategory("incident");
@@ -148,7 +190,7 @@ export function AdminArenaTab({
     setContextVI("");
     setPhonetic("");
     setStatusNotice(null);
-    setIsFormOpen(true);
+    setActiveSubTab("create");
   };
 
   const openCreateWithAi = () => {
@@ -166,7 +208,7 @@ export function AdminArenaTab({
     setContextVI(challenge.contextVI);
     setPhonetic(challenge.phonetic);
     setStatusNotice(null);
-    setIsFormOpen(true);
+    setActiveSubTab("create");
   };
 
   const handleAiGenerated = (rawDraft: unknown, meta: AdminAiGenerateMeta) => {
@@ -309,67 +351,81 @@ export function AdminArenaTab({
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-bold text-ink flex items-center gap-2">
-            <Gamepad2 className="w-5 h-5 text-accent" aria-hidden="true" />
-            <span>Quản Lý Arena Bug Buster ({challenges.length})</span>
-          </h2>
-          <p className="text-xs text-ink-muted mt-0.5">
-            Tạo và chỉnh sửa thử thách điền khuyết từ vựng lỗi kỹ thuật với chỗ trống{" "}
-            <code className="font-mono text-accent">____</code> và phiên âm IPA.
-          </p>
+    <div className="space-y-4">
+      <div className="bg-white border border-ink/15 rounded-2xl p-4 shadow-soft flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
+          <Gamepad2 className="w-5 h-5 text-accent shrink-0" aria-hidden="true" />
+          <div>
+            <h2 className="text-base font-bold text-ink">
+              Quản Lý Arena Bug Buster ({challenges.length})
+            </h2>
+            <p className="text-xs text-ink-muted">
+              Điền khuyết từ vựng lỗi kỹ thuật với chỗ trống{" "}
+              <code className="font-mono text-accent">____</code> và phiên âm IPA.
+            </p>
+          </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="inline-flex rounded-pill bg-paper p-1 border border-ink/15">
+            <button
+              type="button"
+              onClick={() => setActiveSubTab("list")}
+              className={`px-3.5 py-1.5 rounded-pill text-xs font-semibold transition-colors ${
+                activeSubTab === "list"
+                  ? "bg-ink text-white shadow-soft"
+                  : "text-ink-muted hover:text-ink"
+              }`}
+            >
+              Danh sách thử thách Bug Buster ({challenges.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (activeSubTab !== "create") {
+                  openCreate();
+                }
+              }}
+              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill text-xs font-semibold transition-colors ${
+                activeSubTab === "create"
+                  ? "bg-accent text-white shadow-soft"
+                  : "text-ink-muted hover:text-ink"
+              }`}
+            >
+              <Plus className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>+ Thêm mới / AI Tạo nhanh</span>
+            </button>
+          </div>
+
+          {activeSubTab === "list" && (
+            <button
+              type="button"
+              onClick={openCreateWithAi}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white border border-ink/20 text-xs font-semibold text-ink hover:bg-paper-muted transition-colors"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+              <span>AI Tạo nhanh</span>
+            </button>
+          )}
+
           {hasChallengeOverrides && (
             <button
               type="button"
               disabled={isSaving}
               onClick={handleRestoreDefaults}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill bg-white border border-ink/20 text-xs font-medium text-ink hover:bg-paper-muted transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white border border-ink/20 text-xs font-medium text-ink hover:bg-paper-muted transition-colors disabled:opacity-50"
             >
               <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Khôi phục mặc định</span>
             </button>
           )}
-          {!isFormOpen && (
-            <button
-              type="button"
-              onClick={openCreateWithAi}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill bg-white border border-ink/20 text-xs font-semibold text-ink hover:bg-paper-muted transition-colors"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
-              <span>Tạo bằng AI</span>
-            </button>
-          )}
-          <button
-            type="button"
-            onClick={isFormOpen ? resetForm : openCreate}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-ink text-white text-xs font-semibold hover:bg-ink/90 shadow-soft shadow-hard-press transition-all"
-          >
-            {isFormOpen ? (
-              <>
-                <X className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>Đóng biểu mẫu</span>
-              </>
-            ) : (
-              <>
-                <Plus className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>Thêm thử thách</span>
-              </>
-            )}
-          </button>
         </div>
       </div>
 
-      {/* Feedback Notice */}
       {statusNotice && (
         <div
           role={statusNotice.tone === "error" ? "alert" : "status"}
-          className={`flex items-start gap-2.5 p-3.5 rounded-2xl border text-xs ${
+          className={`flex items-start gap-2.5 p-3 rounded-xl border text-xs ${
             statusNotice.tone === "error"
               ? "bg-accent-light border-accent/40 text-ink"
               : statusNotice.tone === "warn"
@@ -386,14 +442,13 @@ export function AdminArenaTab({
         </div>
       )}
 
-      {/* Create / Edit Form */}
-      {isFormOpen && (
+      {activeSubTab === "create" ? (
         <form
           onSubmit={handleSubmit}
-          className="bg-white border border-ink/20 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4"
+          className="bg-white border border-ink/20 rounded-2xl p-5 shadow-soft space-y-4"
         >
           <div className="flex items-center justify-between border-b border-ink/10 pb-3">
-            <h3 className="text-base font-bold text-ink">
+            <h3 className="text-sm font-bold text-ink">
               {editingId ? `Chỉnh sửa thử thách (${editingId})` : "Thêm thử thách Bug Buster mới"}
             </h3>
             <button
@@ -401,7 +456,7 @@ export function AdminArenaTab({
               onClick={resetForm}
               className="text-xs font-mono text-ink-muted hover:text-ink"
             >
-              Hủy
+              Quay lại danh sách
             </button>
           </div>
 
@@ -417,8 +472,8 @@ export function AdminArenaTab({
             focusKey={aiFocusKey}
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-1.5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+            <div className="space-y-1">
               <label className="block text-xs font-mono font-semibold text-ink-muted">
                 Nhóm tình huống (category)
               </label>
@@ -427,7 +482,7 @@ export function AdminArenaTab({
                 onChange={(e) =>
                   setCategory(e.target.value as BugBusterChallenge["category"])
                 }
-                className="w-full px-3.5 py-2 text-sm font-mono bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="w-full px-3 py-2 text-sm font-mono bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
               >
                 {CATEGORY_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -437,7 +492,7 @@ export function AdminArenaTab({
               </select>
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-1">
               <label className="block text-xs font-mono font-semibold text-ink-muted">
                 Đáp án chính (targetWord) *
               </label>
@@ -446,11 +501,11 @@ export function AdminArenaTab({
                 value={targetWord}
                 onChange={(e) => setTargetWord(e.target.value)}
                 placeholder="VD: deadlock"
-                className="w-full px-3.5 py-2 text-sm font-mono bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="w-full px-3 py-2 text-sm font-mono bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
               />
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-1">
               <label className="block text-xs font-mono font-semibold text-ink-muted">
                 Phiên âm IPA (phonetic)
               </label>
@@ -459,12 +514,12 @@ export function AdminArenaTab({
                 value={phonetic}
                 onChange={(e) => setPhonetic(e.target.value)}
                 placeholder="VD: /ˈded.lɑːk/"
-                className="w-full px-3.5 py-2 text-sm font-ipa bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="w-full px-3 py-2 text-sm font-ipa bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
               />
             </div>
           </div>
 
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <label className="block text-xs font-mono font-semibold text-ink-muted">
               Câu tình huống chứa chỗ trống ____ (promptWithBlank) *
             </label>
@@ -473,12 +528,11 @@ export function AdminArenaTab({
               value={promptWithBlank}
               onChange={(e) => setPromptWithBlank(e.target.value)}
               placeholder="[ERROR] Two transactions waited on each other indefinitely, causing a database ____."
-              className="w-full px-3.5 py-2 text-sm bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+              className="w-full px-3 py-2 text-sm bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
             />
           </div>
 
-          {/* Live visual preview */}
-          <div className="p-3.5 rounded-xl bg-paper border border-ink/15 space-y-1.5">
+          <div className="p-3 rounded-xl bg-paper border border-ink/15 space-y-1">
             <div className="flex items-center justify-between text-[11px] font-mono text-ink-muted">
               <span>Xem trước hiển thị chỗ trống:</span>
               {phonetic && <span className="font-ipa text-accent">{phonetic}</span>}
@@ -491,8 +545,8 @@ export function AdminArenaTab({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            <div className="space-y-1">
               <label className="block text-xs font-mono font-semibold text-ink-muted">
                 Biến thể chấp nhận (phân tách dấu phẩy)
               </label>
@@ -501,11 +555,11 @@ export function AdminArenaTab({
                 value={acceptedVariantsText}
                 onChange={(e) => setAcceptedVariantsText(e.target.value)}
                 placeholder="dead lock, deadlocks, deadlocked"
-                className="w-full px-3.5 py-2 text-xs font-mono bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="w-full px-3 py-2 text-xs font-mono bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
               />
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-1">
               <label className="block text-xs font-mono font-semibold text-ink-muted">
                 Giải thích ngữ cảnh tiếng Việt (contextVI)
               </label>
@@ -514,12 +568,12 @@ export function AdminArenaTab({
                 value={contextVI}
                 onChange={(e) => setContextVI(e.target.value)}
                 placeholder="Tình trạng hai tiến trình khóa chéo tài nguyên của nhau."
-                className="w-full px-3.5 py-2 text-xs bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="w-full px-3 py-2 text-xs bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-2">
+          <div className="flex items-center justify-end gap-2.5 pt-1">
             <button
               type="button"
               onClick={resetForm}
@@ -536,82 +590,157 @@ export function AdminArenaTab({
             </button>
           </div>
         </form>
-      )}
-
-      {/* Challenges List */}
-      <div className="grid grid-cols-1 gap-4">
-        {challenges.map((challenge) => {
-          const isBase = BASE_CHALLENGE_IDS.has(challenge.id);
-          const isOverridden = customIds.has(challenge.id);
-
-          return (
-            <div
-              key={challenge.id}
-              className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft flex flex-col lg:flex-row lg:items-center justify-between gap-4"
-            >
-              <div className="space-y-2 min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="px-2.5 py-0.5 rounded-pill bg-paper border border-ink/15 text-[10px] font-mono uppercase text-ink-muted">
-                    {challenge.category}
-                  </span>
-                  <span className="font-mono font-bold text-sm text-ink">
-                    {challenge.targetWord}
-                  </span>
-                  <span className="text-sm font-ipa text-accent font-medium">
-                    {challenge.phonetic || "/.../"}
-                  </span>
-                  {!isBase ? (
-                    <span className="px-2 py-0.5 rounded-pill bg-accent-light border border-accent/30 text-[10px] font-mono font-semibold text-ink">
-                      Tùy chỉnh
-                    </span>
-                  ) : isOverridden ? (
-                    <span className="px-2 py-0.5 rounded-pill bg-paper-muted border border-ink/20 text-[10px] font-mono font-semibold text-ink">
-                      Đã sửa
-                    </span>
-                  ) : null}
-                </div>
-
-                <div className="text-sm text-ink leading-relaxed bg-paper/70 border border-ink/10 rounded-xl p-3">
-                  <PromptBlankPreview
-                    promptWithBlank={challenge.promptEN}
-                    targetWord={challenge.targetWord}
-                  />
-                </div>
-
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-muted">
-                  {challenge.contextVI && <span>{challenge.contextVI}</span>}
-                  {challenge.acceptedVariants.length > 0 && (
-                    <span className="font-mono text-[11px] text-ink-faint">
-                      Biến thể: {challenge.acceptedVariants.join(", ")}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  type="button"
-                  disabled={isSaving}
-                  onClick={() => openEdit(challenge)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white border border-ink/20 text-xs font-medium text-ink hover:bg-paper-muted transition-colors disabled:opacity-50"
-                >
-                  <Pencil className="w-3.5 h-3.5" aria-hidden="true" />
-                  <span>Sửa</span>
-                </button>
-                <button
-                  type="button"
-                  disabled={isSaving}
-                  onClick={() => handleDelete(challenge)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-accent-light border border-accent/40 text-xs font-medium text-ink hover:bg-accent hover:text-white transition-colors disabled:opacity-50"
-                >
-                  <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
-                  <span>Xóa</span>
-                </button>
-              </div>
+      ) : (
+        <div className="space-y-3">
+          <div className="bg-white border border-ink/15 rounded-2xl p-3.5 shadow-soft flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div className="relative flex-1 max-w-md">
+              <Search
+                className="w-4 h-4 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2"
+                aria-hidden="true"
+              />
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
+                placeholder="Tìm theo từ khóa, câu lỗi hoặc nghĩa tiếng Việt..."
+                className="w-full pl-9 pr-3 py-1.5 text-xs bg-paper border border-ink/15 rounded-pill text-ink focus:outline-none focus:border-ink"
+              />
             </div>
-          );
-        })}
-      </div>
+
+            <div className="flex flex-wrap items-center gap-1.5">
+              {CATEGORY_FILTER_TABS.map((tab) => (
+                <button
+                  key={tab.value}
+                  type="button"
+                  onClick={() => {
+                    setCategoryFilter(tab.value);
+                    setCurrentPage(1);
+                  }}
+                  className={`px-3 py-1 rounded-pill text-xs font-mono font-semibold transition-colors ${
+                    categoryFilter === tab.value
+                      ? "bg-ink text-white"
+                      : "bg-paper border border-ink/15 text-ink-muted hover:text-ink"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {paginatedChallenges.length === 0 ? (
+            <div className="bg-white border border-ink/15 rounded-2xl p-8 text-center text-xs text-ink-muted">
+              Không tìm thấy thử thách Bug Buster nào khớp bộ lọc.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {paginatedChallenges.map((challenge) => {
+                const isBase = BASE_CHALLENGE_IDS.has(challenge.id);
+                const isOverridden = customIds.has(challenge.id);
+
+                return (
+                  <div
+                    key={challenge.id}
+                    className="bg-white border border-ink/15 rounded-xl p-3.5 shadow-soft flex flex-col justify-between gap-2.5"
+                  >
+                    <div className="space-y-2 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex flex-wrap items-center gap-1.5 min-w-0">
+                          <span className="px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-[10px] font-mono uppercase text-ink-muted">
+                            {challenge.category}
+                          </span>
+                          <span className="font-mono font-bold text-xs text-ink">
+                            {challenge.targetWord}
+                          </span>
+                          <span className="text-xs font-ipa text-accent font-medium">
+                            {challenge.phonetic || "/.../"}
+                          </span>
+                          {!isBase ? (
+                            <span className="px-2 py-0.5 rounded-pill bg-accent-light border border-accent/30 text-[10px] font-mono font-semibold text-ink">
+                              Tùy chỉnh
+                            </span>
+                          ) : isOverridden ? (
+                            <span className="px-2 py-0.5 rounded-pill bg-paper-muted border border-ink/20 text-[10px] font-mono font-semibold text-ink">
+                              Đã sửa
+                            </span>
+                          ) : null}
+                        </div>
+
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <button
+                            type="button"
+                            disabled={isSaving}
+                            onClick={() => openEdit(challenge)}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill bg-white border border-ink/20 text-[11px] font-medium text-ink hover:bg-paper-muted transition-colors disabled:opacity-50"
+                          >
+                            <Pencil className="w-3 h-3" aria-hidden="true" />
+                            <span>Sửa</span>
+                          </button>
+                          <button
+                            type="button"
+                            disabled={isSaving}
+                            onClick={() => handleDelete(challenge)}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill bg-accent-light border border-accent/40 text-[11px] font-medium text-ink hover:bg-accent hover:text-white transition-colors disabled:opacity-50"
+                          >
+                            <Trash2 className="w-3 h-3" aria-hidden="true" />
+                            <span>Xóa</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="text-xs text-ink leading-relaxed bg-paper/70 border border-ink/10 rounded-lg p-2.5">
+                        <PromptBlankPreview
+                          promptWithBlank={challenge.promptEN}
+                          targetWord={challenge.targetWord}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[11px] text-ink-muted pt-1 border-t border-ink/10">
+                      <span className="truncate">{challenge.contextVI}</span>
+                      {challenge.acceptedVariants.length > 0 && (
+                        <span className="font-mono text-[10px] text-ink-faint shrink-0">
+                          Biến thể: {challenge.acceptedVariants.join(", ")}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="bg-white border border-ink/15 rounded-2xl px-4 py-2.5 shadow-soft flex flex-wrap items-center justify-between gap-3 text-xs">
+            <span className="text-ink-muted font-mono">
+              Hiển thị {paginatedChallenges.length} / {filteredChallenges.length} thử thách · Trang{" "}
+              {safePage} / {totalPages}
+            </span>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                disabled={safePage <= 1}
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-paper border border-ink/15 font-semibold text-ink hover:bg-paper-muted disabled:opacity-40"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>Trước</span>
+              </button>
+              <button
+                type="button"
+                disabled={safePage >= totalPages}
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-paper border border-ink/15 font-semibold text-ink hover:bg-paper-muted disabled:opacity-40"
+              >
+                <span>Sau</span>
+                <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
