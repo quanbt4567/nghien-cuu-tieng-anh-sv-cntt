@@ -41,7 +41,7 @@ export function generate7DayPlan(
     { dayNumber: 4, scenarioId: "fresher-interview" },
     { dayNumber: 5, scenarioId: "client-meeting" },
     { dayNumber: 6, scenarioId: "tech-demo" },
-    { dayNumber: 7, scenarioId: "daily-standup" }, // Repetition of core standup
+    { dayNumber: 7, scenarioId: "git-workflow" },
   ];
 
   return planSequence.map(({ dayNumber, scenarioId }) => {

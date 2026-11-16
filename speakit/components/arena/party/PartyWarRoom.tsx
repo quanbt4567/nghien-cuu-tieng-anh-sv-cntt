@@ -70,8 +70,23 @@ const ROLES: Array<{ id: PlayerRole; label: string; badge: string; focus: string
   },
 ];
 
+interface PartyTranscriptEntry {
+  playerId: string;
+  playerName: string;
+  role: PlayerRole;
+  transcript: string;
+  score: number;
+  feedback: string;
+  timestamp: string;
+}
+
+interface PartyRoomViewState extends PartyRoomState {
+  resolutionProgress?: number;
+  transcript?: PartyTranscriptEntry[];
+}
+
 interface EvaluateApiResponse {
-  room?: PartyRoomState;
+  room?: PartyRoomViewState;
   resolutionProgress?: number;
   penaltySeconds?: number;
   feedback?: string;
@@ -83,7 +98,7 @@ interface EvaluateApiResponse {
 }
 
 interface RoomApiResponse {
-  room?: PartyRoomState;
+  room?: PartyRoomViewState;
   scenario?: PartyScenario;
   player?: PublicGuestPlayer | null;
   error?: string;
@@ -116,7 +131,7 @@ export function PartyWarRoom() {
   );
   const [selectedRole, setSelectedRole] = useState<PlayerRole>("frontend");
   const [joinCodeInput, setJoinCodeInput] = useState("");
-  const [room, setRoom] = useState<PartyRoomState | null>(null);
+  const [room, setRoom] = useState<PartyRoomViewState | null>(null);
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [copiedCode, setCopiedCode] = useState(false);
@@ -1218,24 +1233,68 @@ export function PartyWarRoom() {
                 </button>
               </div>
 
-              {room.evaluations.length > 0 && (
+              {(room.transcript && room.transcript.length > 0
+                ? room.transcript
+                : room.evaluations.map((ev) => ({
+                    playerId: ev.playerId,
+                    playerName:
+                      room.players.find((p) => p.id === ev.playerId)?.displayName ??
+                      ev.role.toUpperCase(),
+                    role: ev.role,
+                    transcript: ev.transcript,
+                    score: ev.score,
+                    feedback: ev.feedback,
+                    timestamp: room.updatedAt,
+                  }))
+              ).length > 0 && (
                 <div className="pt-4 border-t border-ink/15 space-y-2.5">
                   <div className="text-xs font-mono font-bold uppercase text-ink/60">
-                    War-Room Dispatch Log
+                    War-Room Live Transcript
                   </div>
-                  <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
-                    {room.evaluations.map((ev, idx) => (
+                  <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+                    {(room.transcript && room.transcript.length > 0
+                      ? room.transcript
+                      : room.evaluations.map((ev) => ({
+                          playerId: ev.playerId,
+                          playerName:
+                            room.players.find((p) => p.id === ev.playerId)
+                              ?.displayName ?? ev.role.toUpperCase(),
+                          role: ev.role,
+                          transcript: ev.transcript,
+                          score: ev.score,
+                          feedback: ev.feedback,
+                          timestamp: room.updatedAt,
+                        }))
+                    ).map((entry, idx) => (
                       <div
-                        key={`${ev.playerId}-${idx}`}
+                        key={`${entry.playerId}-${entry.timestamp}-${idx}`}
                         className="p-3 rounded-xl bg-paper border border-ink/20 text-xs space-y-1"
                       >
-                        <div className="flex items-center justify-between font-mono font-bold">
-                          <span className="uppercase text-ink">[{ev.role}]</span>
-                          <span className="text-emerald-700">{ev.score} pts</span>
+                        <div className="flex items-center justify-between gap-2 font-mono font-bold">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className="text-ink truncate">
+                              {entry.playerName}
+                            </span>
+                            <span className="uppercase px-1.5 py-0.5 rounded bg-ink/10 text-ink text-[10px]">
+                              {entry.role}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <span className="text-[10px] text-ink/50 font-normal">
+                              {new Date(entry.timestamp).toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                second: "2-digit",
+                              })}
+                            </span>
+                            <span className="text-emerald-700">
+                              {entry.score} pts
+                            </span>
+                          </div>
                         </div>
-                        <p className="text-ink">&ldquo;{ev.transcript}&rdquo;</p>
+                        <p className="text-ink">&ldquo;{entry.transcript}&rdquo;</p>
                         <p className="text-ink/75 font-medium">
-                          CTO: {ev.feedback}
+                          CTO: {entry.feedback}
                         </p>
                       </div>
                     ))}

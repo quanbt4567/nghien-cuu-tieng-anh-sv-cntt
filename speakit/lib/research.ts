@@ -126,14 +126,18 @@ function toIsoOrNull(value: unknown): string | null {
   return null;
 }
 
+const EF_EPI_2025_REPORT_PDF_URL =
+  "https://www.ef.com/__/~/media/centralefcom/epi/v12/downloads/full-reports/ef-epi-2025-english.pdf";
+
 function normalizeSeedArticleSources(
   slug: string,
   sourceUrls: ResearchSourceUrl[]
 ): ResearchSourceUrl[] {
   if (slug !== EF_EPI_2025_SEED_ARTICLE.slug) return sourceUrls;
   return sourceUrls.map((src) =>
-    src.url === "https://www.ef.com/wwen/epi/"
-      ? { ...src, url: "https://www.ef.com/wwen/epi/regions/asia/vietnam/" }
+    src.url === "https://www.ef.com/wwen/epi/" ||
+    src.url === "https://www.ef.com/wwen/epi/regions/asia/vietnam/"
+      ? { ...src, url: EF_EPI_2025_REPORT_PDF_URL }
       : src
   );
 }

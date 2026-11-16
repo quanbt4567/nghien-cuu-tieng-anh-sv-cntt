@@ -67,6 +67,16 @@ export interface VietnamesePenaltyResult {
   penaltySeconds: number;
 }
 
+export interface PartyTranscriptEntry {
+  playerId: string;
+  playerName: string;
+  role: PlayerRole;
+  transcript: string;
+  score: number;
+  feedback: string;
+  timestamp: string;
+}
+
 export interface PartyRoomSnapshot extends PartyRoomState {
   resolutionProgress: number;
   remainingSeconds: number;
@@ -74,6 +84,7 @@ export interface PartyRoomSnapshot extends PartyRoomState {
   mvpPlayerId: string | null;
   mvpDisplayName: string | null;
   rewardsAwarded: boolean;
+  transcript?: PartyTranscriptEntry[];
 }
 
 export interface VictoryRewardSummary {
@@ -183,6 +194,7 @@ export function createPartyRoom(options?: {
     currentTurnRole: null,
     players,
     evaluations: [],
+    transcript: [],
     teamScore: 0,
     resolutionProgress: 0,
     remainingSeconds: scenario.estimatedMinutes * 60,
@@ -378,11 +390,148 @@ export function getNextTurnRole(room: PartyRoomSnapshot): PlayerRole | null {
 
 export function buildAiTeammateTranscript(
   scenario: PartyScenario,
-  role: PlayerRole
+  role: PlayerRole,
+  turnNumber = 1
 ): string {
   const clue = scenario.clues[role];
   const kw = clue.targetKeywords.join(", ");
-  return `${clue.summary} From the ${clue.roleLabel} side, ${clue.suspectedCause} Key signals include ${kw}.`;
+  const roleIndex = PARTY_ROLES.indexOf(role);
+  const checklistItem =
+    scenario.resolutionChecklist[
+      (roleIndex + Math.max(0, turnNumber - 1)) %
+        scenario.resolutionChecklist.length
+    ] ?? "rolling out the targeted mitigation";
+
+  if (turnNumber <= 1) {
+    const firstMetric = clue.metrics[0] ?? "";
+    return `${clue.summary} On the ${clue.roleLabel} side (${firstMetric}), ${clue.suspectedCause} Key signals include ${kw}.`;
+  }
+
+  if (turnNumber === 2) {
+    const secondMetric = clue.metrics[1] ?? clue.metrics[0] ?? "";
+    return `Mitigation update from ${clue.roleLabel}: we are ${checklistItem.toLowerCase()} while tracking ${secondMetric}. Addressing ${kw} now.`;
+  }
+
+  return `Verification update from ${clue.roleLabel}: ${checklistItem} is deployed and ${kw} metrics are stabilizing across production.`;
+}
+
+function hashSeed(input: string): number {
+  let hash = 2166136261;
+  for (let i = 0; i < input.length; i += 1) {
+    hash ^= input.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+export function evaluateAiTeammateTurn(input: {
+  scenario: PartyScenario;
+  role: PlayerRole;
+  playerId: string;
+  roomCode: string;
+  turnNumber: number;
+  usedScores?: number[];
+}): TurnEvaluation {
+  const transcript = buildAiTeammateTranscript(
+    input.scenario,
+    input.role,
+    input.turnNumber
+  );
+  const localEval = evaluateTurnLocal({
+    transcript,
+    role: input.role,
+    scenario: input.scenario,
+    playerId: input.playerId,
+    durationMs: 1600 + (hashSeed(`${input.roomCode}:${input.role}:${input.turnNumber}`) % 900),
+  });
+
+  const clue = input.scenario.clues[input.role];
+  const expectedCount = Math.max(1, clue.targetKeywords.length);
+  const matchedRoleCount = clue.targetKeywords.filter((kw) =>
+    localEval.matchedKeywords.includes(kw)
+  ).length;
+  const coverageRatio = matchedRoleCount / expectedCount;
+
+  const baseFromCoverage = 74 + Math.round(coverageRatio * 10);
+  const turnProgression = Math.min(6, Math.max(0, input.turnNumber - 1) * 3);
+  const seedOffset =
+    (hashSeed(
+      `${input.roomCode}:${input.role}:${input.turnNumber}:${input.scenario.id}`
+    ) %
+      9) -
+    3;
+
+  let score = Math.max(
+    72,
+    Math.min(94, baseFromCoverage + turnProgression + seedOffset)
+  );
+
+  if (input.usedScores && input.usedScores.includes(score)) {
+    const candidateUp = score + 2 <= 94 ? score + 2 : score - 2;
+    const candidateDown = score - 1 >= 72 ? score - 1 : score + 1;
+    score = !input.usedScores.includes(candidateUp)
+      ? candidateUp
+      : !input.usedScores.includes(candidateDown)
+        ? candidateDown
+        : score;
+  }
+
+  const phaseLabel =
+    input.turnNumber <= 1
+      ? "Initial diagnosis"
+      : input.turnNumber === 2
+        ? "Mitigation action"
+        : "Recovery verification";
+  const topKeywords = localEval.matchedKeywords.slice(0, 3).join(", ");
+  const feedback = topKeywords
+    ? `${phaseLabel} logged for ${clue.roleLabel} (${topKeywords}). Coordinate next step with the squad.`
+    : `${phaseLabel} logged for ${clue.roleLabel}. Continue coordinating mitigation.`;
+
+  return {
+    playerId: localEval.playerId,
+    role: localEval.role,
+    transcript: localEval.transcript,
+    score,
+    matchedKeywords: localEval.matchedKeywords,
+    missingKeywords: localEval.missingKeywords,
+    feedback,
+    durationMs: localEval.durationMs,
+  };
+}
+
+export function computeRoundCappedProgress(input: {
+  previousProgress: number;
+  roundNumber: number;
+  humanScore: number;
+  allRolesCovered: boolean;
+}): number {
+  const prev = Math.max(0, Math.min(100, Math.round(input.previousProgress)));
+  if (prev >= 100) return 100;
+
+  let maxIncrement: number;
+  if (input.humanScore >= 55) {
+    maxIncrement = Math.min(
+      36,
+      Math.max(26, Math.round(26 + ((input.humanScore - 55) / 45) * 10))
+    );
+  } else {
+    maxIncrement = Math.max(
+      10,
+      Math.round((Math.max(0, input.humanScore) / 55) * 22)
+    );
+  }
+
+  const candidate = prev + maxIncrement;
+  if (input.roundNumber < 3) {
+    const preFinalCap = input.roundNumber === 1 ? 35 : 72;
+    return Math.max(prev, Math.min(preFinalCap, candidate));
+  }
+
+  if (input.allRolesCovered && input.humanScore >= 55 && candidate >= 94) {
+    return 100;
+  }
+
+  return Math.max(prev, Math.min(99, candidate));
 }
 
 export async function recordPartyArenaRun(input: {
@@ -497,6 +646,7 @@ export function resetPartyRoom(room: PartyRoomSnapshot): PartyRoomSnapshot {
       score: undefined,
     })),
     evaluations: [],
+    transcript: [],
     teamScore: 0,
     resolutionProgress: 0,
     remainingSeconds: scenario.estimatedMinutes * 60,

@@ -11,11 +11,11 @@ import {
   serializePublicGuestPlayer,
 } from "../../../../lib/neon-auth";
 import {
-  buildAiTeammateTranscript,
   calculateVictoryRewards,
-  computeTeamResolutionProgress,
+  computeRoundCappedProgress,
   computeTeamScore,
   detectVietnamesePenalty,
+  evaluateAiTeammateTurn,
   evaluateTurnLocal,
   getNextTurnRole,
   isValidPartyRole,
@@ -23,6 +23,7 @@ import {
   normalizeRoomCode,
   PARTY_ROLES,
   PartyRoomSnapshot,
+  PartyTranscriptEntry,
   recordPartyArenaRun,
   savePartyRoom,
   VictoryRewardSummary,
@@ -154,10 +155,24 @@ function applyEvaluationToRoom(
   room: PartyRoomSnapshot,
   evaluation: TurnEvaluation,
   penaltySeconds: number,
-  overrideRemainingSeconds?: number
+  overrideRemainingSeconds?: number,
+  overrideProgress?: number
 ): PartyRoomSnapshot {
   const now = new Date().toISOString();
   const nextEvaluations = [...room.evaluations, evaluation];
+  const targetPlayer = room.players.find(
+    (p) => p.id === evaluation.playerId || p.role === evaluation.role
+  );
+  const transcriptEntry: PartyTranscriptEntry = {
+    playerId: evaluation.playerId,
+    playerName: targetPlayer?.displayName ?? evaluation.role.toUpperCase(),
+    role: evaluation.role,
+    transcript: evaluation.transcript,
+    score: evaluation.score,
+    feedback: evaluation.feedback,
+    timestamp: now,
+  };
+  const nextTranscript = [...(room.transcript ?? []), transcriptEntry];
   const nextPlayers = room.players.map((p) =>
     p.id === evaluation.playerId || p.role === evaluation.role
       ? {
@@ -175,12 +190,9 @@ function applyEvaluationToRoom(
       : room.remainingSeconds;
 
   const nextRemaining = Math.max(0, baseRemaining - penaltySeconds);
-  const computedProgress = computeTeamResolutionProgress({
-    evaluations: nextEvaluations,
-  });
   const resolutionProgress = Math.max(
     room.resolutionProgress ?? 0,
-    computedProgress
+    overrideProgress ?? room.resolutionProgress ?? 0
   );
   const teamScore = computeTeamScore(nextEvaluations);
   const isResolved = resolutionProgress >= 100;
@@ -189,6 +201,7 @@ function applyEvaluationToRoom(
     ...room,
     players: nextPlayers,
     evaluations: nextEvaluations,
+    transcript: nextTranscript,
     teamScore,
     resolutionProgress,
     remainingSeconds: nextRemaining,
@@ -324,46 +337,71 @@ export async function POST(req: NextRequest) {
       durationMs
     );
 
+    const previousProgress = room.resolutionProgress ?? 0;
+    const humanRoundCount =
+      room.evaluations.filter((e) => !e.playerId.startsWith("ai-")).length + 1;
+
     let updatedRoom = applyEvaluationToRoom(
       room,
       evaluation,
       penalty.penaltySeconds,
-      body.remainingSeconds
+      body.remainingSeconds,
+      previousProgress
     );
 
     const aiEvaluations: TurnEvaluation[] = [];
-    if (body.runAiTurns !== false && updatedRoom.status !== "resolved") {
+    if (body.runAiTurns !== false && previousProgress < 100) {
+      const usedScores: number[] = [];
       for (const role of PARTY_ROLES) {
         const aiPlayer = updatedRoom.players.find(
           (p) => p.role === role && p.id.startsWith("ai-")
         );
-        const alreadyEvaluated = updatedRoom.evaluations.some(
-          (e) => e.role === role && e.score >= 55
-        );
-        if (!aiPlayer || alreadyEvaluated) continue;
+        if (!aiPlayer) continue;
 
-        const aiTranscript = buildAiTeammateTranscript(scenario, role);
-        const aiEval = evaluateTurnLocal({
-          transcript: aiTranscript,
-          role,
+        const aiTurnNumber =
+          updatedRoom.evaluations.filter((e) => e.playerId === aiPlayer.id)
+            .length + 1;
+        const cleanAiEval = evaluateAiTeammateTurn({
           scenario,
+          role,
           playerId: aiPlayer.id,
-          durationMs: 1800,
+          roomCode: updatedRoom.roomCode,
+          turnNumber: aiTurnNumber,
+          usedScores,
         });
-        const cleanAiEval: TurnEvaluation = {
-          playerId: aiEval.playerId,
-          role: aiEval.role,
-          transcript: aiEval.transcript,
-          score: aiEval.score,
-          matchedKeywords: aiEval.matchedKeywords,
-          missingKeywords: aiEval.missingKeywords,
-          feedback: aiEval.feedback,
-          durationMs: aiEval.durationMs,
-        };
+        usedScores.push(cleanAiEval.score);
         aiEvaluations.push(cleanAiEval);
-        updatedRoom = applyEvaluationToRoom(updatedRoom, cleanAiEval, 0);
+        updatedRoom = applyEvaluationToRoom(
+          updatedRoom,
+          cleanAiEval,
+          0,
+          undefined,
+          previousProgress
+        );
       }
     }
+
+    const coveredRoles = new Set(
+      updatedRoom.evaluations
+        .filter((e) => e.score >= 55)
+        .map((e) => e.role)
+    );
+    const allRolesCovered = PARTY_ROLES.every((r) => coveredRoles.has(r));
+    const cappedProgress = computeRoundCappedProgress({
+      previousProgress,
+      roundNumber: humanRoundCount,
+      humanScore: evaluation.score,
+      allRolesCovered,
+    });
+    const finalProgress = Math.max(previousProgress, cappedProgress);
+    const isResolved = finalProgress >= 100;
+
+    updatedRoom = {
+      ...updatedRoom,
+      resolutionProgress: finalProgress,
+      status: isResolved ? "resolved" : "speaking",
+      currentTurnRole: isResolved ? null : getNextTurnRole(updatedRoom),
+    };
 
     let rewards: VictoryRewardSummary | null = null;
     let updatedPlayer: PublicGuestPlayer | null = null;

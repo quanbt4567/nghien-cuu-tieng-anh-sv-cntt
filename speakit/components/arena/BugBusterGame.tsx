@@ -65,6 +65,7 @@ interface RoundSummary {
   coinsEarnedNow: number;
   totalCoins: number;
   remainingToNextCoin: number;
+  endedEarly?: boolean;
 }
 
 function shuffleChallenges(items: BugBusterChallenge[]): BugBusterChallenge[] {
@@ -163,7 +164,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
     }
   }, []);
 
-  const finishRound = useCallback(() => {
+  const finishRound = useCallback((endedEarly = false) => {
     if (finishedRef.current) return;
     finishedRef.current = true;
     clearAdvanceTimer();
@@ -207,6 +208,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
       ),
       totalCoins: optimisticIdentity.itCoins,
       remainingToNextCoin: pointsToNextCoin(optimisticIdentity.totalPoints),
+      endedEarly,
     });
     setPhase("finished");
 
@@ -491,7 +493,9 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
               Kết quả Bug Buster 280s
             </span>
             <h2 className="text-2xl font-bold text-ink">
-              Hoàn thành phiên xử lý sự cố!
+              {summary.endedEarly
+                ? "Đã kết thúc sớm phiên xử lý sự cố"
+                : "Hoàn thành phiên xử lý sự cố!"}
             </h2>
           </div>
           <div className="px-4 py-2 rounded-pill bg-ink text-white font-mono text-sm font-bold">
@@ -587,7 +591,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
 
         <button
           type="button"
-          onClick={finishRound}
+          onClick={() => finishRound(true)}
           className="px-3.5 py-1.5 rounded-pill bg-paper-muted text-ink text-xs font-semibold border border-ink/15 hover:bg-paper-subtle transition-colors"
         >
           Kết thúc sớm
@@ -632,7 +636,8 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
         </div>
 
         <p className="text-base sm:text-lg font-medium text-ink leading-relaxed">
-          {promptParts[0]}
+          {promptParts[0].trimEnd()}
+          {" "}
           <span
             className={`inline-block min-w-[96px] mx-1 px-2.5 py-0.5 rounded-lg font-mono font-bold text-center border transition-colors ${
               feedback?.kind === "fixed"
@@ -644,7 +649,8 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
           >
             {feedback ? feedback.targetWord : "____"}
           </span>
-          {promptParts.slice(1).join("____")}
+          {" "}
+          {promptParts.slice(1).join("____").trimStart()}
         </p>
 
         <div className="text-xs text-ink-muted bg-white border border-ink/10 rounded-xl p-3 space-y-1">

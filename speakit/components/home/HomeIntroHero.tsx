@@ -140,13 +140,21 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
               <div className="bg-white border border-ink/15 rounded-xl p-2.5 space-y-0.5">
                 <div className="text-[11px] font-mono text-ink-muted">Xếp hạng toàn cầu</div>
                 <div className="text-sm font-mono font-bold text-ink">
-                  Hạng #{EF_EPI_2025.globalRank}/{EF_EPI_2025.totalCountries} quốc gia
+                  <span className="whitespace-nowrap">
+                    Hạng #{EF_EPI_2025.globalRank}/{EF_EPI_2025.totalCountries}
+                  </span>{" "}
+                  <span className="whitespace-nowrap">quốc gia</span>
                 </div>
               </div>
               <div className="bg-white border border-ink/15 rounded-xl p-2.5 space-y-0.5">
-                <div className="text-[11px] font-mono text-ink-muted">Xếp hạng châu Á</div>
+                <div className="text-[11px] font-mono text-ink-muted">
+                  Xếp hạng <span className="whitespace-nowrap">châu Á</span>
+                </div>
                 <div className="text-sm font-mono font-bold text-ink">
-                  Hạng #{EF_EPI_2025.asiaRank}/{EF_EPI_2025.totalAsiaCountries} quốc gia
+                  <span className="whitespace-nowrap">
+                    Hạng #{EF_EPI_2025.asiaRank}/{EF_EPI_2025.totalAsiaCountries}
+                  </span>{" "}
+                  <span className="whitespace-nowrap">quốc gia</span>
                 </div>
               </div>
             </div>

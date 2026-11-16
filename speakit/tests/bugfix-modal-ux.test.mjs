@@ -138,3 +138,29 @@ test("scoreLocally matches block/dependency inflections and prevents false posit
   assert.deepEqual(noFalsePositive.keywordsUsed, []);
   assert.deepEqual(noFalsePositive.keywordsMissed, ["dependency", "no", "bug", "plan"]);
 });
+
+test("generate7DayPlan assigns 7 distinct scenarios and marks only 1 day per scenario attempt", () => {
+  const plan = generate7DayPlan(
+    [],
+    [
+      {
+        id: "a1",
+        scenario: "daily-standup",
+        turnIndex: 0,
+        transcript: "Yesterday I fixed a bug.",
+        score: 80,
+        keywordsUsed: [],
+        keywordsMissed: [],
+        createdAt: "2026-11-16T00:00:00Z",
+      },
+    ]
+  );
+
+  assert.equal(plan.length, 7);
+  const scenarioIds = plan.map((d) => d.scenarioId);
+  assert.equal(new Set(scenarioIds).size, 7);
+  assert.notEqual(plan[0].scenarioId, plan[6].scenarioId);
+  assert.equal(plan.filter((d) => d.isCompleted).length, 1);
+  assert.equal(plan[0].isCompleted, true);
+  assert.equal(plan[6].isCompleted, false);
+});
