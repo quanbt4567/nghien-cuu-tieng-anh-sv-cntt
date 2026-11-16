@@ -120,3 +120,21 @@ test("filterUnusedKeywords recognizes multi-word keywords like merge conflict wh
   );
   assert.deepEqual(unusedFromTranscript, ["rollback"]);
 });
+
+test("scoreLocally matches block/dependency inflections and prevents false positives", () => {
+  const blockResult = scoreLocally({
+    transcript: "Nothing is blocking my progress and zero dependencies remain.",
+    expectedKeywords: ["blocker", "blocked", "dependency", "no", "bug", "plan"],
+  });
+
+  assert.deepEqual(blockResult.keywordsUsed, ["blocker", "blocked", "dependency"]);
+  assert.deepEqual(blockResult.keywordsMissed, ["no", "bug", "plan"]);
+
+  const noFalsePositive = scoreLocally({
+    transcript: "I finished the budget node planet task on time.",
+    expectedKeywords: ["dependency", "no", "bug", "plan"],
+  });
+
+  assert.deepEqual(noFalsePositive.keywordsUsed, []);
+  assert.deepEqual(noFalsePositive.keywordsMissed, ["dependency", "no", "bug", "plan"]);
+});

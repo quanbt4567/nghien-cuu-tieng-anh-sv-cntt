@@ -76,7 +76,13 @@ export default async function ResearchArticlePage({
 }: {
   params: { slug: string };
 }) {
-  const article = await getArticleBySlug(params.slug);
+  let decodedSlug = params.slug;
+  try {
+    decodedSlug = decodeURIComponent(params.slug);
+  } catch {
+    decodedSlug = params.slug;
+  }
+  const article = await getArticleBySlug(decodedSlug);
   if (!article) {
     notFound();
   }

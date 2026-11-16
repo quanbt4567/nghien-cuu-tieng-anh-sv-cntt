@@ -119,8 +119,8 @@ export default async function ResearchPortalPage({
               <span>Số liệu nổi bật · {featuredArticle.title}</span>
             </div>
             <Link
-              href={`/research/${featuredArticle.slug}`}
-              className="text-xs font-semibold text-accent hover:underline inline-flex items-center gap-1"
+              href={`/research/${encodeURIComponent(featuredArticle.slug)}`}
+              className="relative z-10 shrink-0 text-xs font-semibold text-accent hover:underline inline-flex items-center gap-1 px-2.5 py-1 rounded-pill hover:bg-accent/10 transition-colors"
             >
               <span>Đọc phân tích đầy đủ</span>
               <ArrowRight className="w-3.5 h-3.5" />

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
+  AlertCircle,
   ArrowLeft,
   ArrowRight,
   Award,
@@ -12,17 +13,26 @@ import {
   Download,
   Flame,
   Gamepad2,
-  AlertCircle,
+  History,
   TrendingUp,
 } from "lucide-react";
+import { initOrHydrateGuestSession } from "../actions/leaderboard";
 import { SCENARIOS } from "../../data/scenarios";
+import type { PublicGuestPlayer } from "../../lib/db";
+import {
+  readBackupTransferCode,
+  saveBackupTransferCode,
+} from "../../lib/guestClient";
+import {
+  mergeProfileIdentity,
+  normalizeArenaHistory,
+} from "../../lib/profileStats";
 import { storageAdapter } from "../../lib/storage";
 import { GamificationState, PracticeAttempt, Scenario, WeakPoint } from "../../lib/types";
 import { generate7DayPlan, isValidKeywordTerm, PlanDay } from "../../lib/planGenerator";
 import {
   GAMIFICATION_STORAGE_KEY,
   GAMIFICATION_UPDATED_EVENT,
-  calculateCoins,
   getDevTitle,
   getGamificationState,
 } from "../../lib/gamification";
@@ -50,18 +60,27 @@ export default function ProgressPage() {
   const [scenarios, setScenarios] = useState<Scenario[]>(SCENARIOS);
   const [gamification, setGamification] =
     useState<GamificationState>(INITIAL_GAMIFICATION);
+  const [guestPlayer, setGuestPlayer] = useState<PublicGuestPlayer | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      const [allAttempts, allWeakPoints] = await Promise.all([
+      const [allAttempts, allWeakPoints, sessionRes] = await Promise.all([
         storageAdapter.getAttempts(),
         storageAdapter.getWeakPoints(),
+        initOrHydrateGuestSession(readBackupTransferCode()).catch(() => ({
+          mode: "offline" as const,
+          player: null,
+        })),
       ]);
 
       setAttempts(allAttempts);
       setWeakPoints(allWeakPoints);
+      if (sessionRes.mode === "online" && sessionRes.player) {
+        saveBackupTransferCode(sessionRes.player.transferCode);
+        setGuestPlayer(sessionRes.player);
+      }
       setPlanDays(generate7DayPlan(allWeakPoints, allAttempts));
       setIsLoading(false);
     }
@@ -93,23 +112,53 @@ export default function ProgressPage() {
     };
   }, []);
 
+  const identity = mergeProfileIdentity(guestPlayer, gamification);
+  const arenaRuns = normalizeArenaHistory(gamification.history);
+  const bugBusterRuns = arenaRuns.filter((r) => r.gameId === "bug-buster");
+  const standupRuns = arenaRuns.filter((r) => r.gameId === "standup-speed-run");
+  const bugBusterBest = Math.max(
+    gamification.personalBests["bug-buster"] ?? 0,
+    ...bugBusterRuns.map((r) => r.score),
+    0
+  );
+  const standupBest = Math.max(
+    gamification.personalBests["standup-speed-run"] ?? 0,
+    ...standupRuns.map((r) => r.score),
+    0
+  );
+  const avgBugAccuracy =
+    bugBusterRuns.length > 0
+      ? Math.round(
+          bugBusterRuns.reduce((sum, r) => sum + r.accuracyOrWords, 0) /
+            bugBusterRuns.length
+        )
+      : 0;
+  const totalStandupKeywords = standupRuns.reduce(
+    (sum, r) => sum + r.accuracyOrWords,
+    0
+  );
+
   // Compute stats
   const totalTurns = attempts.length;
+  const totalSessions = totalTurns + arenaRuns.length;
+  const isArenaOnly = totalTurns === 0 && arenaRuns.length > 0;
   const bestScoreOverall =
     attempts.length > 0 ? Math.max(...attempts.map((a) => a.score)) : 0;
+  const bestArenaScore = Math.max(bugBusterBest, standupBest);
   const averageScore =
     attempts.length > 0
       ? Math.round(attempts.reduce((acc, a) => acc + a.score, 0) / attempts.length)
       : 0;
 
-  // Streak calculation (days with at least 1 attempt)
-  const uniqueDates = new Set(
-    attempts.map((a) => a.created_at.slice(0, 10))
-  );
-  const currentStreak = uniqueDates.size;
+  // Streak calculation (days with at least 1 scenario attempt or arena run)
+  const uniqueDates = new Set([
+    ...attempts.map((a) => a.created_at.slice(0, 10)),
+    ...arenaRuns.map((r) => r.createdAt.slice(0, 10)),
+  ]);
+  const currentStreak = Math.max(uniqueDates.size, identity.streakDays);
 
-  const devTitle = getDevTitle(gamification.totalPoints);
-  const coins = calculateCoins(gamification.totalPoints);
+  const devTitle = getDevTitle(identity.totalPoints);
+  const coins = identity.itCoins;
   const keywordWeakPoints = weakPoints.filter(
     (wp) => wp.kind === "keyword" && isValidKeywordTerm(wp.value)
   );
@@ -135,11 +184,17 @@ export default function ProgressPage() {
       exportDate: new Date().toISOString(),
       studentSummary: {
         totalTurns,
+        totalArenaRuns: arenaRuns.length,
+        totalPoints: identity.totalPoints,
         averageScore,
         bestScoreOverall,
+        bugBusterBest,
+        standupBest,
+        avgBugAccuracy,
         streakDays: currentStreak,
       },
       scenarioStats,
+      arenaRuns,
       weakPoints,
       attempts,
     };
@@ -179,7 +234,7 @@ export default function ProgressPage() {
         <button
           type="button"
           onClick={handleExportData}
-          disabled={attempts.length === 0}
+          disabled={attempts.length === 0 && arenaRuns.length === 0}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-white border border-ink/20 text-xs font-mono font-semibold text-ink hover:bg-paper-muted shadow-soft shadow-hard-press transition-all self-start sm:self-center disabled:opacity-50 disabled:cursor-not-allowed"
           title="Xuất file JSON chứa toàn bộ lượt luyện tập để phục vụ nghiên cứu khoa học"
         >
@@ -192,23 +247,42 @@ export default function ProgressPage() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5">
         <div className="bg-white border border-ink/15 rounded-2xl p-4 sm:p-5 shadow-soft text-center">
           <div className="text-2xl sm:text-3xl font-mono font-extrabold text-ink">
-            {totalTurns}
+            {totalSessions}
           </div>
-          <div className="text-[11px] text-ink-muted mt-1">Tổng lượt đã luyện</div>
+          <div className="text-[11px] text-ink-muted mt-1">
+            Tổng lượt đã luyện
+            {arenaRuns.length > 0 && (
+              <span className="block text-[10px] font-mono">
+                ({totalTurns} hội thoại • {arenaRuns.length} Arena)
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="bg-white border border-ink/15 rounded-2xl p-4 sm:p-5 shadow-soft text-center">
           <div className="text-2xl sm:text-3xl font-mono font-extrabold text-accent">
-            {bestScoreOverall}
+            {isArenaOnly ? bestArenaScore : bestScoreOverall}
           </div>
-          <div className="text-[11px] text-ink-muted mt-1">Điểm cao nhất</div>
+          <div className="text-[11px] text-ink-muted mt-1">
+            {isArenaOnly ? "Điểm Arena cao nhất" : "Điểm cao nhất"}
+          </div>
         </div>
 
         <div className="bg-white border border-ink/15 rounded-2xl p-4 sm:p-5 shadow-soft text-center">
           <div className="text-2xl sm:text-3xl font-mono font-extrabold text-ink">
-            {averageScore}
+            {isArenaOnly
+              ? bugBusterRuns.length > 0
+                ? `${avgBugAccuracy}%`
+                : `${totalStandupKeywords}`
+              : averageScore}
           </div>
-          <div className="text-[11px] text-ink-muted mt-1">Điểm trung bình</div>
+          <div className="text-[11px] text-ink-muted mt-1">
+            {isArenaOnly
+              ? bugBusterRuns.length > 0
+                ? "Chính xác Bug Buster TB"
+                : "Từ khóa Standup"
+              : "Điểm trung bình"}
+          </div>
         </div>
 
         <div
@@ -241,6 +315,95 @@ export default function ProgressPage() {
           </div>
         </div>
       </div>
+
+      {/* Arena Activity & History */}
+      <section className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-4">
+        <div className="flex items-center justify-between border-b border-paper-muted pb-3">
+          <h2 className="text-sm font-bold text-ink uppercase tracking-wider font-mono flex items-center gap-2">
+            <Gamepad2 className="w-4 h-4 text-accent" />
+            <span>Hoạt Động IT Speaking Arena</span>
+          </h2>
+          <span className="text-[11px] font-mono text-ink-muted">
+            {arenaRuns.length} lượt chơi
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="bg-paper border border-ink/15 rounded-xl p-3.5">
+            <div className="text-[11px] font-mono text-ink-muted">Bug Buster cao nhất</div>
+            <div className="text-xl font-mono font-extrabold text-ink mt-0.5">
+              {bugBusterBest.toLocaleString("vi-VN")} pts
+            </div>
+            <div className="text-[11px] text-ink-muted mt-0.5">
+              {bugBusterRuns.length > 0
+                ? `${bugBusterRuns.length} lượt • ${avgBugAccuracy}% chính xác TB`
+                : "Chưa có lượt chơi"}
+            </div>
+          </div>
+          <div className="bg-paper border border-ink/15 rounded-xl p-3.5">
+            <div className="text-[11px] font-mono text-ink-muted">Standup Speed Run cao nhất</div>
+            <div className="text-xl font-mono font-extrabold text-ink mt-0.5">
+              {standupBest.toLocaleString("vi-VN")} pts
+            </div>
+            <div className="text-[11px] text-ink-muted mt-0.5">
+              {standupRuns.length > 0
+                ? `${standupRuns.length} lượt • ${totalStandupKeywords} từ khóa`
+                : "Chưa có lượt chơi"}
+            </div>
+          </div>
+          <div className="bg-paper border border-ink/15 rounded-xl p-3.5">
+            <div className="text-[11px] font-mono text-ink-muted">Tổng điểm tích lũy</div>
+            <div className="text-xl font-mono font-extrabold text-accent mt-0.5">
+              {identity.totalPoints.toLocaleString("vi-VN")} pts
+            </div>
+            <div className="text-[11px] text-ink-muted mt-0.5">
+              {coins} IT-Coin • {devTitle.title}
+            </div>
+          </div>
+        </div>
+
+        {arenaRuns.length > 0 ? (
+          <div className="space-y-2 pt-1">
+            <div className="text-xs font-mono font-bold text-ink-muted flex items-center gap-1.5">
+              <History className="w-3.5 h-3.5 text-accent" />
+              <span>Lịch sử Arena gần đây</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {arenaRuns.slice(0, 8).map((run) => (
+                <div
+                  key={run.id}
+                  className="bg-paper border border-ink/10 rounded-xl p-3 flex items-center justify-between gap-3"
+                >
+                  <div className="min-w-0">
+                    <div className="text-xs font-bold text-ink truncate">
+                      {run.gameId === "bug-buster" ? "Bug Buster Arena" : "Standup Speed Run"}
+                    </div>
+                    <div className="text-[11px] font-mono text-ink-muted">
+                      {run.gameId === "bug-buster"
+                        ? `${run.accuracyOrWords}% chính xác`
+                        : `${run.accuracyOrWords} từ khóa`}
+                      {run.durationSec > 0 ? ` • ${run.durationSec}s` : ""}
+                      {" • "}
+                      {new Date(run.createdAt).toLocaleDateString("vi-VN")}
+                    </div>
+                  </div>
+                  <span className="px-2.5 py-1 rounded-pill bg-accent-light border border-accent/30 text-xs font-mono font-bold text-accent shrink-0">
+                    {run.score.toLocaleString("vi-VN")} pts
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <p className="text-xs text-ink-muted">
+            Bạn chưa có lượt chơi Arena nào. Thử sức tại{" "}
+            <Link href="/arena" className="text-accent font-semibold hover:underline">
+              IT Speaking Arena
+            </Link>
+            !
+          </p>
+        )}
+      </section>
 
       {/* Bar Chart: Best Score per Scenario */}
       <section className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-4">
@@ -320,7 +483,7 @@ export default function ProgressPage() {
           </div>
 
           <p className="text-xs text-ink-muted font-mono">
-            Tổng {gamification.totalPoints} điểm tích lũy từ hội thoại &amp; Arena minigame.
+            Tổng {identity.totalPoints} điểm tích lũy từ hội thoại &amp; Arena minigame.
           </p>
         </div>
 

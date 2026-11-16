@@ -12,6 +12,8 @@ const jiti = require("jiti")(__filename);
 const {
   calculateSpentCosmeticCoins,
   mergeProfileIdentity,
+  normalizeArenaHistory,
+  normalizeBugBusterAccuracy,
   resolveConsistentItCoins,
   summarizeProfileActivity,
 } = jiti(resolve(__dirname, "../lib/profileStats.ts"));
@@ -319,4 +321,25 @@ test("resolveConsistentItCoins and mergeProfileIdentity reconcile spent cosmetic
 
   assert.equal(reconciled.itCoins, 7);
   assert.equal(reconciled.totalPoints, 10993);
+});
+
+test("normalizeBugBusterAccuracy preserves attempted percentages and converts legacy raw counts", () => {
+  assert.equal(normalizeBugBusterAccuracy(550, 75), 75);
+  assert.equal(normalizeBugBusterAccuracy(180, 10), 10);
+  assert.equal(normalizeBugBusterAccuracy(180, 7), 7);
+  assert.equal(normalizeBugBusterAccuracy(550, 3), 21);
+  assert.equal(normalizeBugBusterAccuracy(2500, 14), 100);
+
+  const normalized = normalizeArenaHistory([
+    {
+      id: "run-1",
+      gameId: "bug-buster",
+      score: 550,
+      accuracyOrWords: 75,
+      durationSec: 45,
+      role: "frontend",
+      createdAt: "2026-11-16T10:00:00Z",
+    },
+  ]);
+  assert.equal(normalized[0].accuracyOrWords, 75);
 });

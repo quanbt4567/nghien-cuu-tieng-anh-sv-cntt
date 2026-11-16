@@ -78,12 +78,14 @@ interface EvaluateApiResponse {
   ctoFeedback?: string;
   mvpPlayerId?: string;
   player?: PublicGuestPlayer | null;
+  updatedPlayer?: PublicGuestPlayer | null;
   error?: string;
 }
 
 interface RoomApiResponse {
   room?: PartyRoomState;
   scenario?: PartyScenario;
+  player?: PublicGuestPlayer | null;
   error?: string;
 }
 
@@ -136,6 +138,7 @@ export function PartyWarRoom() {
   const timerInitializedForRoomRef = useRef<string | null>(null);
   const finisherTriggeredRef = useRef<string | null>(null);
   const briefingSpokenRef = useRef<string | null>(null);
+  const flushedRoomRef = useRef<string | null>(null);
 
   const syncGuestProfile = useCallback(async () => {
     const cached = readCachedGuestProfile();
@@ -219,8 +222,12 @@ export function PartyWarRoom() {
 
     if (timerInitializedForRoomRef.current !== room.roomCode) {
       timerInitializedForRoomRef.current = room.roomCode;
+      flushedRoomRef.current = null;
       setTimeLeftSec(activeScenario.estimatedMinutes * 60);
-      setResolutionProgress(computeProgressFromRoom(room));
+      const initialProgress =
+        (room as PartyRoomState & { resolutionProgress?: number })
+          .resolutionProgress ?? computeProgressFromRoom(room);
+      setResolutionProgress(initialProgress);
       turnStartRef.current = Date.now();
     }
 
@@ -264,9 +271,10 @@ export function PartyWarRoom() {
         const nextRoom = data.room ?? (data as unknown as PartyRoomState);
         if (nextRoom && nextRoom.roomCode) {
           setRoom(nextRoom);
-          setResolutionProgress((prev) =>
-            Math.max(prev, computeProgressFromRoom(nextRoom))
-          );
+          const nextProgress =
+            (nextRoom as PartyRoomState & { resolutionProgress?: number })
+              .resolutionProgress ?? computeProgressFromRoom(nextRoom);
+          setResolutionProgress((prev) => Math.max(prev, nextProgress));
         }
       } catch {
       }
@@ -359,6 +367,53 @@ export function PartyWarRoom() {
     );
   };
 
+  const flushUnresolvedRoomPoints = useCallback(
+    async (targetRoom: PartyRoomState | null, keepalive = false) => {
+      if (
+        !targetRoom ||
+        targetRoom.status === "resolved" ||
+        targetRoom.teamScore <= 0 ||
+        flushedRoomRef.current === targetRoom.roomCode
+      ) {
+        return;
+      }
+      flushedRoomRef.current = targetRoom.roomCode;
+      try {
+        const res = await fetch("/api/party/room", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          keepalive,
+          body: JSON.stringify({
+            action: "leave",
+            code: targetRoom.roomCode,
+            roomCode: targetRoom.roomCode,
+            role: selectedRole,
+            transferCode: readBackupTransferCode(),
+            backupTransferCode: readBackupTransferCode(),
+            displayName: guestPlayer?.displayName,
+          }),
+        });
+        if (!keepalive && res.ok) {
+          const data = (await res.json()) as RoomApiResponse;
+          if (data.player) {
+            setGuestPlayer(data.player);
+            saveCachedGuestProfile(data.player);
+          }
+        }
+      } catch {
+      }
+    },
+    [guestPlayer?.displayName, selectedRole]
+  );
+
+  useEffect(() => {
+    const handlePageHide = () => {
+      void flushUnresolvedRoomPoints(room, true);
+    };
+    window.addEventListener("pagehide", handlePageHide);
+    return () => window.removeEventListener("pagehide", handlePageHide);
+  }, [flushUnresolvedRoomPoints, room]);
+
   const handleResetRoom = () => {
     stopCtoAudio();
     speechControllerRef.current?.abort();
@@ -367,18 +422,25 @@ export function PartyWarRoom() {
     setCtoAlertText(null);
     setShowFinisher(false);
     setMvpPlayerId(null);
+    setResolutionProgress(0);
     if (!room) return;
+    flushedRoomRef.current = room.roomCode;
     void callRoomAction(
       {
         action: "reset",
         code: room.roomCode,
         roomCode: room.roomCode,
+        role: selectedRole,
       },
       "reset"
-    );
+    ).then(() => {
+      flushedRoomRef.current = null;
+      void syncGuestProfile();
+    });
   };
 
   const handleLeaveRoom = () => {
+    const leavingRoom = room;
     stopCtoAudio();
     speechControllerRef.current?.abort();
     setIsRecording(false);
@@ -387,6 +449,8 @@ export function PartyWarRoom() {
     setCtoAlertText(null);
     setShowFinisher(false);
     setMvpPlayerId(null);
+    setResolutionProgress(0);
+    void flushUnresolvedRoomPoints(leavingRoom, true);
   };
 
   const handleCopyCode = async () => {
@@ -458,6 +522,7 @@ export function PartyWarRoom() {
           playerId: activePlayer?.id ?? guestPlayer?.id ?? `guest-${selectedRole}`,
           transcript: trimmed,
           durationMs: Math.max(1000, Date.now() - turnStartRef.current),
+          runAiTurns: true,
           transferCode: readBackupTransferCode(),
           backupTransferCode: readBackupTransferCode(),
         }),
@@ -476,22 +541,26 @@ export function PartyWarRoom() {
 
       if (data.room) {
         setRoom(data.room);
-        setResolutionProgress(
+        const serverProgress =
           typeof data.resolutionProgress === "number"
             ? data.resolutionProgress
-            : computeProgressFromRoom(data.room)
-        );
+            : (data.room as PartyRoomState & { resolutionProgress?: number })
+                .resolutionProgress ?? computeProgressFromRoom(data.room);
+        setResolutionProgress((prev) => Math.max(prev, serverProgress));
       } else if (typeof data.resolutionProgress === "number") {
-        setResolutionProgress(data.resolutionProgress);
+        setResolutionProgress((prev) =>
+          Math.max(prev, data.resolutionProgress!)
+        );
       }
 
       if (data.mvpPlayerId) {
         setMvpPlayerId(data.mvpPlayerId);
       }
 
-      if (data.player) {
-        setGuestPlayer(data.player);
-        saveCachedGuestProfile(data.player);
+      const nextPlayer = data.updatedPlayer ?? data.player;
+      if (nextPlayer) {
+        setGuestPlayer(nextPlayer);
+        saveCachedGuestProfile(nextPlayer);
       }
 
       const spokenFeedback = data.ctoFeedback ?? data.feedback;
@@ -823,19 +892,30 @@ export function PartyWarRoom() {
                   </button>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={handleStartMission}
-                  disabled={loadingAction === "start"}
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:translate-x-[-1px] hover:translate-y-[-1px] disabled:opacity-50"
-                >
-                  <Play className="w-4 h-4" />
-                  <span>
-                    {loadingAction === "start"
-                      ? "Launching..."
-                      : "Start Incident Call"}
-                  </span>
-                </button>
+                <div className="flex flex-col items-start sm:items-end gap-1.5">
+                  <button
+                    type="button"
+                    onClick={handleStartMission}
+                    disabled={
+                      loadingAction === "start" || room.players.length < 3
+                    }
+                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:translate-x-[-1px] hover:translate-y-[-1px] disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Play className="w-4 h-4" />
+                    <span>
+                      {loadingAction === "start"
+                        ? "Launching..."
+                        : "Start Incident Call"}
+                    </span>
+                  </button>
+                  {room.players.length < 3 && (
+                    <span className="text-xs font-mono text-ink/60">
+                      Need {3 - room.players.length} more teammate
+                      {3 - room.players.length > 1 ? "s" : ""} (invite or click
+                      Fill with AI Teammates).
+                    </span>
+                  )}
+                </div>
               </div>
             </section>
           )}
@@ -927,8 +1007,8 @@ export function PartyWarRoom() {
                 <Terminal className="w-4 h-4 text-accent shrink-0 mt-0.5" />
                 <div>
                   <span className="font-mono font-bold text-ink">
-                    CTO Incident Commander:{" "}
-                  </span>
+                    CTO Incident Commander:
+                  </span>{" "}
                   <span>{ctoAlertText ?? activeScenario.incidentContext}</span>
                 </div>
               </div>
@@ -1104,14 +1184,24 @@ export function PartyWarRoom() {
               />
 
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <button
-                  type="button"
-                  onClick={handleResetRoom}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-ink/25 text-xs font-mono text-ink/70 hover:border-ink hover:text-ink"
-                >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                  <span>Reset Room</span>
-                </button>
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={handleResetRoom}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-ink/25 text-xs font-mono text-ink/70 hover:border-ink hover:text-ink"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    <span>Reset Room</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleLeaveRoom}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-ink/25 text-xs font-mono text-ink/70 hover:border-ink hover:text-ink"
+                  >
+                    <span>Leave Room</span>
+                  </button>
+                </div>
 
                 <button
                   type="button"
@@ -1204,7 +1294,7 @@ export function PartyWarRoom() {
                       {computedMvpPlayer.displayName} (MVP)
                     </div>
                     <div className="text-xs font-mono text-emerald-700 font-bold">
-                      +15 IT-Coins Win + +10 IT-Coins MVP Bonus
+                      +15 IT-Coins Win • +10 IT-Coins MVP Bonus
                     </div>
                   </div>
                 </div>

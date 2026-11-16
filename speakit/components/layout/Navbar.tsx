@@ -398,7 +398,7 @@ export function Navbar() {
                 </span>
                 <span className="inline-flex items-center gap-1">
                   <Coins className="w-3.5 h-3.5 text-ink shrink-0" aria-hidden="true" />
-                  <span className="font-semibold">{identity.itCoins}</span>
+                  <span className="font-semibold">{identity.itCoins}</span>{" "}
                   <span className="hidden lg:inline text-ink-muted">Coin</span>
                 </span>
                 <span className="hidden xl:inline text-ink/20" aria-hidden="true">

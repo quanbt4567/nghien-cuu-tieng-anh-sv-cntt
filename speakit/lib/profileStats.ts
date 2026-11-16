@@ -45,6 +45,59 @@ function compareIsoDesc(a: string, b: string): number {
   return b.localeCompare(a);
 }
 
+export function normalizeBugBusterAccuracy(
+  score: number,
+  accuracyOrWords: number
+): number {
+  if (score < 150 || accuracyOrWords < 1 || accuracyOrWords > 14) {
+    return accuracyOrWords;
+  }
+  // Legacy runs stored raw fixed bug count (1..14), where each fixed bug awards >= 150 pts.
+  if (score < accuracyOrWords * 150) {
+    return accuracyOrWords;
+  }
+  return Math.round((accuracyOrWords / 14) * 100);
+}
+
+export function normalizeArenaHistory(
+  history: GameScoreEntry[]
+): GameScoreEntry[] {
+  const seenIds = new Set<string>();
+  const normalized: GameScoreEntry[] = [];
+
+  for (const run of history) {
+    if (!run || typeof run.id !== "string" || !run.id || seenIds.has(run.id)) {
+      continue;
+    }
+    seenIds.add(run.id);
+    const safeScore = Number.isFinite(run.score)
+      ? Math.max(0, Math.round(run.score))
+      : 0;
+    const rawMetric = Number.isFinite(run.accuracyOrWords)
+      ? Math.max(0, Math.round(run.accuracyOrWords))
+      : 0;
+    const accuracyOrWords =
+      run.gameId === "bug-buster"
+        ? normalizeBugBusterAccuracy(safeScore, rawMetric)
+        : rawMetric;
+    const durationSec = Number.isFinite(run.durationSec)
+      ? Math.max(0, Math.round(run.durationSec))
+      : 0;
+
+    normalized.push({
+      ...run,
+      score: safeScore,
+      accuracyOrWords,
+      durationSec,
+    });
+  }
+
+  return normalized.sort((a, b) => {
+    const cmp = compareIsoDesc(a.createdAt, b.createdAt);
+    return cmp !== 0 ? cmp : a.id.localeCompare(b.id);
+  });
+}
+
 export function calculateSpentCosmeticCoins(
   ownedItems: readonly string[]
 ): number {

@@ -1,5 +1,6 @@
 import { randomBytes } from "crypto";
 import { getDbClient } from "./db";
+import { ensureSchema } from "./db/neon";
 import { scoreLocally } from "./localScorer";
 import {
   findPartyScenarioById,
@@ -381,7 +382,51 @@ export function buildAiTeammateTranscript(
 ): string {
   const clue = scenario.clues[role];
   const kw = clue.targetKeywords.join(", ");
-  return `From the ${clue.roleLabel} perspective, ${clue.suspectedCause} Key telemetry points to ${kw}.`;
+  return `${clue.summary} From the ${clue.roleLabel} side, ${clue.suspectedCause} Key signals include ${kw}.`;
+}
+
+export async function recordPartyArenaRun(input: {
+  roomCode: string;
+  scenarioId: string;
+  score: number;
+  progressPercent: number;
+  durationSec: number;
+  role?: string | null;
+  playerId: string;
+  playerName?: string | null;
+  transferCode?: string | null;
+}): Promise<void> {
+  const sql = getDbClient();
+  if (!sql) return;
+  const ready = await ensureSchema();
+  if (!ready) return;
+  const id = `party-${input.roomCode}-${input.playerId}`.slice(0, 120);
+  const safeScore = Math.max(0, Math.round(input.score));
+  const safeProgress = Math.max(
+    0,
+    Math.min(100, Math.round(input.progressPercent))
+  );
+  const safeDuration = Math.max(0, Math.round(input.durationSec));
+  try {
+    await sql`
+      INSERT INTO speakit_arena_runs (
+        id, game_id, score, accuracy_or_words, duration_sec, role, player_name, transfer_code, created_at
+      )
+      VALUES (
+        ${id},
+        ${`party:${input.scenarioId}`},
+        ${safeScore},
+        ${safeProgress},
+        ${safeDuration},
+        ${input.role ?? null},
+        ${input.playerName ?? null},
+        ${input.transferCode ?? null},
+        NOW()
+      )
+      ON CONFLICT (id) DO NOTHING
+    `;
+  } catch {
+  }
 }
 
 export function calculateVictoryRewards(

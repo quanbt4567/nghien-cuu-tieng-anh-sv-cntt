@@ -550,6 +550,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
   const activeFinisherItem = catalogItems.find(
     (item) => item.id === activeSandbox.victory_finisher
   );
+  const isIdentityHydrating = loading && !guestPlayer;
   const initials = getInitials(identity.displayName);
 
   return (
@@ -563,7 +564,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
         finisherId={activeSandbox.victory_finisher}
         active={finisherActive}
         title={activeFinisherItem?.name ?? "Victory Finisher Preview"}
-        subtitle={`${identity.displayName} • Live Try-On Studio`}
+        subtitle={`${isIdentityHydrating ? "—" : identity.displayName} • Live Try-On Studio`}
         onComplete={() => setFinisherActive(false)}
       />
 
@@ -588,7 +589,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border-2 border-[#1A1714] text-xs font-mono font-bold text-[#1A1714] shadow-[3px_3px_0_#1A1714]">
               <Coins className="w-4 h-4 text-[#E5484D]" aria-hidden="true" />
-              <span>{identity.itCoins} IT-Coins</span>
+              <span>{isIdentityHydrating ? "— IT-Coins" : `${identity.itCoins} IT-Coins`}</span>
             </span>
             <Link
               href="/arena"
@@ -688,7 +689,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                 >
                   <PlayerAvatar
                     avatarUrl={identity.avatarUrl}
-                    displayName={identity.displayName}
+                    displayName={isIdentityHydrating ? "--" : identity.displayName}
                     className="text-xl"
                   />
                 </DiscordAvatarFrame>
@@ -708,14 +709,23 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                         activeSandbox.nameplate ? "text-white" : "text-[#1A1714]"
                       }`}
                     >
-                      {identity.displayName}
+                      {isIdentityHydrating ? (
+                        <span
+                          aria-label="Đang tải hồ sơ"
+                          className={`inline-block h-4 w-28 rounded animate-pulse align-middle ${
+                            activeSandbox.nameplate ? "bg-white/25" : "bg-[#1A1714]/15"
+                          }`}
+                        />
+                      ) : (
+                        identity.displayName
+                      )}
                     </div>
                     <div
                       className={`text-[11px] font-mono truncate ${
                         activeSandbox.nameplate ? "text-zinc-300" : "text-[#59534C]"
                       }`}
                     >
-                      {identity.transferCode ?? "DEV-SANDBOX"} • {identity.equippedTitle}
+                      {isIdentityHydrating ? "—" : (identity.transferCode ?? "DEV-SANDBOX")} • {identity.equippedTitle}
                     </div>
                   </NameplateBanner>
 
@@ -761,13 +771,20 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                       >
                         <PlayerAvatar
                           avatarUrl={identity.avatarUrl}
-                          displayName={identity.displayName}
+                          displayName={isIdentityHydrating ? "--" : identity.displayName}
                           className="text-xs"
                         />
                       </DiscordAvatarFrame>
                       <div className="min-w-0">
                         <div className="text-sm font-extrabold text-[#1A1714] truncate flex items-center gap-1.5">
-                          <span>{identity.displayName}</span>
+                          {isIdentityHydrating ? (
+                            <span
+                              aria-label="Đang tải hồ sơ"
+                              className="inline-block h-4 w-28 rounded bg-[#1A1714]/15 animate-pulse"
+                            />
+                          ) : (
+                            <span>{identity.displayName}</span>
+                          )}
                           <Crown className="w-4 h-4 text-amber-500 shrink-0" aria-hidden="true" />
                         </div>
                         <div className="text-[11px] font-mono text-[#59534C] truncate">
@@ -778,10 +795,10 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
 
                     <div className="text-right shrink-0 font-mono">
                       <div className="text-sm font-extrabold text-[#1A1714]">
-                        {identity.totalPoints.toLocaleString("vi-VN")} pts
+                        {isIdentityHydrating ? "— pts" : `${identity.totalPoints.toLocaleString("vi-VN")} pts`}
                       </div>
                       <div className="text-[11px] text-[#E5484D] font-bold">
-                        {identity.itCoins} IT-Coins
+                        {isIdentityHydrating ? "— IT-Coins" : `${identity.itCoins} IT-Coins`}
                       </div>
                     </div>
                   </div>
@@ -930,8 +947,8 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
 
                   <CosmeticCardThumbnail
                     item={item}
-                    displayName={identity.displayName}
-                    initials={initials}
+                    displayName={isIdentityHydrating ? "—" : identity.displayName}
+                    initials={isIdentityHydrating ? "--" : initials}
                     micActive={micTestActive}
                   />
 

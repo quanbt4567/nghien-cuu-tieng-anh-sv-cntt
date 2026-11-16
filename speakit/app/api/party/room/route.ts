@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rewardPracticePoints } from "../../../../app/actions/leaderboard";
 import {
   readExistingGuestPlayer,
   resolveOrCreateGuestSession,
@@ -10,6 +11,8 @@ import {
   joinPartyRoom,
   loadPartyRoom,
   normalizeRoomCode,
+  PartyRoomSnapshot,
+  recordPartyArenaRun,
   resetPartyRoom,
   savePartyRoom,
   startPartyRoom,
@@ -20,7 +23,47 @@ import {
   PlayerRole,
 } from "../../../../lib/party-scenarios";
 
-type RoomAction = "create" | "join" | "fill_ai" | "start" | "reset";
+type RoomAction = "create" | "join" | "fill_ai" | "start" | "reset" | "leave";
+
+async function flushUnresolvedRoomRewards(input: {
+  room: PartyRoomSnapshot;
+  playerId: string;
+  displayName: string;
+  role?: PlayerRole;
+  backupTransferCode?: string;
+}) {
+  const { room } = input;
+  if (room.status === "resolved" || room.rewardsAwarded || room.teamScore <= 0) {
+    return { flushed: false, player: null };
+  }
+
+  const scenario = findPartyScenarioById(room.scenarioId) ?? PARTY_SCENARIOS[0];
+  const rewardResult = await rewardPracticePoints(
+    room.scenarioId,
+    room.teamScore,
+    input.backupTransferCode
+  );
+  const slot = room.players.find((p) => p.id === input.playerId);
+  const durationSec = Math.max(
+    0,
+    scenario.estimatedMinutes * 60 - room.remainingSeconds
+  );
+
+  await recordPartyArenaRun({
+    roomCode: room.roomCode,
+    scenarioId: room.scenarioId,
+    score: room.teamScore,
+    progressPercent: room.resolutionProgress,
+    durationSec,
+    role: slot?.role ?? input.role ?? null,
+    playerId: rewardResult.player?.id ?? input.playerId,
+    playerName: rewardResult.player?.displayName ?? input.displayName,
+    transferCode:
+      rewardResult.player?.transferCode ?? input.backupTransferCode ?? null,
+  });
+
+  return { flushed: true, player: rewardResult.player };
+}
 
 interface RoomRequestBody {
   action?: RoomAction;
@@ -130,6 +173,7 @@ export async function POST(req: NextRequest) {
     }
 
     let updatedRoom = existingRoom;
+    let activePlayer = sessionPlayer;
 
     if (action === "join") {
       updatedRoom = joinPartyRoom(existingRoom, {
@@ -140,9 +184,46 @@ export async function POST(req: NextRequest) {
     } else if (action === "fill_ai") {
       updatedRoom = fillWithAiTeammates(existingRoom);
     } else if (action === "start") {
+      if (existingRoom.players.length < 3) {
+        return NextResponse.json(
+          {
+            error:
+              "Need 3 participants (humans or AI teammates) to start the incident call.",
+          },
+          { status: 400 }
+        );
+      }
       updatedRoom = startPartyRoom(existingRoom);
     } else if (action === "reset") {
+      const flushed = await flushUnresolvedRoomRewards({
+        room: existingRoom,
+        playerId,
+        displayName,
+        role: requestedRole,
+        backupTransferCode: body.backupTransferCode,
+      });
+      if (flushed.player) {
+        activePlayer = flushed.player;
+      }
       updatedRoom = resetPartyRoom(existingRoom);
+    } else if (action === "leave") {
+      const flushed = await flushUnresolvedRoomRewards({
+        room: existingRoom,
+        playerId,
+        displayName,
+        role: requestedRole,
+        backupTransferCode: body.backupTransferCode,
+      });
+      if (flushed.player) {
+        activePlayer = flushed.player;
+      }
+      updatedRoom = flushed.flushed
+        ? {
+            ...existingRoom,
+            rewardsAwarded: true,
+            updatedAt: new Date().toISOString(),
+          }
+        : existingRoom;
     } else {
       return NextResponse.json(
         { error: "Unsupported room action." },
@@ -158,7 +239,7 @@ export async function POST(req: NextRequest) {
       ok: true,
       room: updatedRoom,
       scenario,
-      player: sessionPlayer,
+      player: activePlayer,
     });
   } catch {
     return NextResponse.json(

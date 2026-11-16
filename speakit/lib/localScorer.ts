@@ -66,25 +66,34 @@ function normalizeText(text: string): string {
 export function stemWord(raw: string): string {
   const word = raw.toLowerCase().trim();
   if (word.length <= 3) return word;
-  const suffixes = [
-    "ments",
-    "ment",
-    "ations",
-    "ation",
-    "ities",
-    "ity",
-    "ings",
-    "ing",
-    "ied",
-    "ies",
-    "es",
-    "ed",
-    "er",
-    "ly",
-    "s",
+  const suffixes: Array<[string, number]> = [
+    ["ments", 4],
+    ["ment", 4],
+    ["ations", 4],
+    ["ation", 4],
+    ["ities", 4],
+    ["ity", 4],
+    ["encies", 4],
+    ["ency", 4],
+    ["ences", 4],
+    ["ence", 4],
+    ["ents", 4],
+    ["ent", 4],
+    ["ings", 3],
+    ["ing", 3],
+    ["ied", 3],
+    ["ies", 3],
+    ["ers", 4],
+    ["er", 4],
+    ["ors", 4],
+    ["or", 4],
+    ["es", 3],
+    ["ed", 3],
+    ["ly", 3],
+    ["s", 3],
   ];
-  for (const suffix of suffixes) {
-    if (word.endsWith(suffix) && word.length - suffix.length >= 3) {
+  for (const [suffix, minStem] of suffixes) {
+    if (word.endsWith(suffix) && word.length - suffix.length >= minStem) {
       let stem = word.slice(0, word.length - suffix.length);
       if (suffix === "ied" || suffix === "ies") {
         stem += "y";
@@ -97,17 +106,17 @@ export function stemWord(raw: string): string {
   return word.endsWith("e") && word.length > 4 ? word.slice(0, -1) : word;
 }
 
+export function normalizeTextForMatching(text: string): string {
+  return normalizeText(text);
+}
+
 function wordsMatchStem(transcriptWord: string, keywordWord: string): boolean {
   const w = transcriptWord.toLowerCase().trim();
   const k = keywordWord.toLowerCase().trim();
   if (!w || !k) return false;
   if (w === k) return true;
-  const sw = stemWord(w);
-  const sk = stemWord(k);
-  if (sw === sk) return true;
-  if (w.startsWith(k) && w.length - k.length <= 5) return true;
-  if (k.startsWith(w) && k.length - w.length <= 3) return true;
-  return false;
+  if (w.length < 3 || k.length < 3) return false;
+  return stemWord(w) === stemWord(k);
 }
 
 export function matchesKeyword(transcriptWords: string[], keyword: string): boolean {
@@ -117,7 +126,7 @@ export function matchesKeyword(transcriptWords: string[], keyword: string): bool
   const keyTokens = normKey.split(" ").filter(Boolean);
   if (keyTokens.length > 1) {
     const normTranscript = transcriptWords.join(" ");
-    if (normTranscript.includes(normKey)) return true;
+    if (` ${normTranscript} `.includes(` ${normKey} `)) return true;
     return keyTokens.every((kt) =>
       transcriptWords.some((tw) => wordsMatchStem(tw, kt))
     );

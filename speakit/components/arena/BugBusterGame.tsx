@@ -174,7 +174,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
     const finalAttempted = attemptedRef.current;
     const totalCount = deckRef.current.length;
     const accuracy =
-      totalCount > 0 ? Math.round((finalFixed / totalCount) * 100) : 0;
+      finalAttempted > 0 ? Math.round((finalFixed / finalAttempted) * 100) : 0;
     const elapsed = Math.max(
       1,
       ROUND_DURATION_SEC - Math.max(0, totalTimeRef.current)
@@ -510,10 +510,16 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
             <div className="text-2xl font-mono font-bold text-accent">
               {summary.fixedCount}
               <span className="text-xs text-ink-muted">
-                /{summary.totalCount}
+                /{summary.attemptedCount}
               </span>
             </div>
-            <div className="text-[11px] text-ink-muted mt-1">Bug đã sửa</div>
+            <div className="text-[11px] text-ink-muted mt-1">
+              Bug đã sửa (
+              {summary.attemptedCount > 0
+                ? Math.round((summary.fixedCount / summary.attemptedCount) * 100)
+                : 0}
+              %)
+            </div>
           </div>
           <div className="bg-paper border border-ink/15 rounded-xl p-3.5 text-center">
             <div className="text-2xl font-mono font-bold text-ink">

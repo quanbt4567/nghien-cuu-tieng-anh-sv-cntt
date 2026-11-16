@@ -76,6 +76,7 @@ import { LeaderboardRowWrapper } from "../cosmetics/LeaderboardRowWrapper";
 import { AVATAR_PRESETS, PlayerAvatar } from "../cosmetics/PlayerAvatar";
 import {
   mergeProfileIdentity,
+  normalizeArenaHistory,
   summarizeProfileActivity,
 } from "../../lib/profileStats";
 import { storageAdapter } from "../../lib/storage";
@@ -151,67 +152,6 @@ function formatAttemptDate(iso: string): string {
     hour: "2-digit",
     minute: "2-digit",
   }).format(date);
-}
-
-function normalizeBugBusterAccuracy(score: number, accuracyOrWords: number): number {
-  if (score < 100 || accuracyOrWords < 1 || accuracyOrWords > 14) {
-    return accuracyOrWords;
-  }
-  if (accuracyOrWords === 7 && score < 700) {
-    return accuracyOrWords;
-  }
-  if (accuracyOrWords === 14 && score < 1400) {
-    return accuracyOrWords;
-  }
-  return Math.round((accuracyOrWords / 14) * 100);
-}
-
-function normalizeArenaHistory(history: GameScoreEntry[]): GameScoreEntry[] {
-  const seenIds = new Set<string>();
-  const normalized: GameScoreEntry[] = [];
-
-  for (const run of history) {
-    if (!run || typeof run.id !== "string" || !run.id || seenIds.has(run.id)) {
-      continue;
-    }
-    seenIds.add(run.id);
-    const safeScore = Number.isFinite(run.score) ? Math.max(0, Math.round(run.score)) : 0;
-    const rawMetric = Number.isFinite(run.accuracyOrWords)
-      ? Math.max(0, Math.round(run.accuracyOrWords))
-      : 0;
-    const accuracyOrWords =
-      run.gameId === "bug-buster"
-        ? normalizeBugBusterAccuracy(safeScore, rawMetric)
-        : rawMetric;
-    const durationSec = Number.isFinite(run.durationSec)
-      ? Math.max(0, Math.round(run.durationSec))
-      : 0;
-
-    normalized.push({
-      ...run,
-      score: safeScore,
-      accuracyOrWords,
-      durationSec,
-    });
-  }
-
-  return normalized.sort((a, b) => {
-    const ta = Date.parse(a.createdAt);
-    const tb = Date.parse(b.createdAt);
-    const aOk = Number.isFinite(ta);
-    const bOk = Number.isFinite(tb);
-    if (aOk && bOk && tb !== ta) {
-      return tb - ta;
-    }
-    if (aOk !== bOk) {
-      return bOk ? 1 : -1;
-    }
-    const isoCmp = b.createdAt.localeCompare(a.createdAt);
-    if (isoCmp !== 0) {
-      return isoCmp;
-    }
-    return a.id.localeCompare(b.id);
-  });
 }
 
 function toVietnameseError(rawError?: string, mode?: "online" | "offline"): string {

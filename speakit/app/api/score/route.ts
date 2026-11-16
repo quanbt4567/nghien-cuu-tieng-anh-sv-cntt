@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SCENARIOS } from "../../../data/scenarios";
 import { evaluateWithWaterfall } from "../../../lib/ai-waterfall";
+import { matchesKeyword, normalizeTextForMatching } from "../../../lib/localScorer";
 import { ScoreRequestPayload } from "../../../lib/types";
 
 export async function POST(req: NextRequest) {
@@ -29,6 +30,24 @@ export async function POST(req: NextRequest) {
       hintVI: currentScenario?.turns?.[turnIndex]?.hintVI,
       defaultNextQuestion,
     });
+
+    if (Array.isArray(expectedKeywords) && expectedKeywords.length > 0) {
+      const words = normalizeTextForMatching(transcript).split(" ").filter(Boolean);
+      const keywordsUsed: string[] = [];
+      const keywordsMissed: string[] = [];
+      for (const kw of expectedKeywords) {
+        if (matchesKeyword(words, kw)) {
+          keywordsUsed.push(kw);
+        } else {
+          keywordsMissed.push(kw);
+        }
+      }
+      return NextResponse.json({
+        ...result,
+        keywordsUsed,
+        keywordsMissed,
+      });
+    }
 
     return NextResponse.json(result);
   } catch {

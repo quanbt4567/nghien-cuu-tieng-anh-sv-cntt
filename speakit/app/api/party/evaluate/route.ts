@@ -23,6 +23,7 @@ import {
   normalizeRoomCode,
   PARTY_ROLES,
   PartyRoomSnapshot,
+  recordPartyArenaRun,
   savePartyRoom,
   VictoryRewardSummary,
 } from "../../../../lib/party-engine";
@@ -174,9 +175,13 @@ function applyEvaluationToRoom(
       : room.remainingSeconds;
 
   const nextRemaining = Math.max(0, baseRemaining - penaltySeconds);
-  const resolutionProgress = computeTeamResolutionProgress({
+  const computedProgress = computeTeamResolutionProgress({
     evaluations: nextEvaluations,
   });
+  const resolutionProgress = Math.max(
+    room.resolutionProgress ?? 0,
+    computedProgress
+  );
   const teamScore = computeTeamScore(nextEvaluations);
   const isResolved = resolutionProgress >= 100;
 
@@ -327,7 +332,7 @@ export async function POST(req: NextRequest) {
     );
 
     const aiEvaluations: TurnEvaluation[] = [];
-    if (body.runAiTurns && updatedRoom.status !== "resolved") {
+    if (body.runAiTurns !== false && updatedRoom.status !== "resolved") {
       for (const role of PARTY_ROLES) {
         const aiPlayer = updatedRoom.players.find(
           (p) => p.role === role && p.id.startsWith("ai-")
@@ -377,6 +382,21 @@ export async function POST(req: NextRequest) {
           rewards,
           body.backupTransferCode
         );
+        await recordPartyArenaRun({
+          roomCode: updatedRoom.roomCode,
+          scenarioId: updatedRoom.scenarioId,
+          score: Math.max(50, updatedRoom.teamScore),
+          progressPercent: updatedRoom.resolutionProgress,
+          durationSec: Math.max(
+            0,
+            scenario.estimatedMinutes * 60 - updatedRoom.remainingSeconds
+          ),
+          role: targetRole,
+          playerId: updatedPlayer?.id ?? playerId,
+          playerName: updatedPlayer?.displayName ?? sessionPlayer?.displayName ?? null,
+          transferCode:
+            updatedPlayer?.transferCode ?? body.backupTransferCode ?? null,
+        });
         updatedRoom = {
           ...updatedRoom,
           rewardsAwarded: true,
@@ -391,10 +411,16 @@ export async function POST(req: NextRequest) {
       evaluation,
       aiEvaluations,
       penalty,
+      penaltySeconds: penalty.penaltySeconds,
       provider,
       room: updatedRoom,
+      resolutionProgress: updatedRoom.resolutionProgress,
+      feedback: evaluation.feedback,
+      ctoFeedback: evaluation.feedback,
+      mvpPlayerId: updatedRoom.mvpPlayerId,
       scenario,
       rewards,
+      player: updatedPlayer,
       updatedPlayer,
     });
   } catch {
