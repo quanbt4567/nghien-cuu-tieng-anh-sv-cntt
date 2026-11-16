@@ -21,7 +21,6 @@ import {
   Menu,
   X,
   ShoppingBag,
-  Users,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -74,7 +73,6 @@ const NAV_GROUPS: readonly NavGroup[] = [
     items: [
       { href: "/scenarios", label: "Kịch bản", icon: Mic },
       { href: "/arena", label: "Arena", icon: Gamepad2 },
-      { href: "/arena/party", label: "Outage At 3AM", icon: Users },
       { href: "/vocabulary", label: "Từ vựng IT", icon: BookOpen },
       { href: "/placement", label: "Kiểm tra trình độ", icon: ClipboardCheck },
     ],
@@ -85,7 +83,6 @@ const NAV_GROUPS: readonly NavGroup[] = [
     activePrefixes: ["/profile", "/settings"],
     items: [
       { href: "/profile", label: "Hồ sơ", icon: User },
-      { href: "/shop", label: "Cửa hàng Hiệu ứng", icon: ShoppingBag },
       { href: "/settings", label: "Cài đặt", icon: Settings },
     ],
   },
@@ -275,24 +272,11 @@ export function Navbar() {
             <span>Trang chủ</span>
           </Link>
 
-          <Link
-            href="/shop"
-            aria-current={shopActive ? "page" : undefined}
-            className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-all shrink-0 whitespace-nowrap ${
-              shopActive
-                ? "bg-ink text-white border-ink shadow-soft"
-                : "bg-white text-ink border-ink/15 hover:border-ink/30 hover:bg-paper-muted shadow-soft"
-            }`}
-          >
-            <ShoppingBag className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-            <span>Cửa hàng</span>
-          </Link>
-
-          {NAV_GROUPS.map((group) => {
+          {NAV_GROUPS.flatMap((group) => {
             const active = isGroupActive(pathname, group.activePrefixes);
             const isOpen = openGroup === group.id;
 
-            return (
+            const groupNode = (
               <div key={group.id} className="relative shrink-0">
                 <button
                   type="button"
@@ -354,6 +338,27 @@ export function Navbar() {
                 )}
               </div>
             );
+
+            if (group.id === "practice") {
+              return [
+                groupNode,
+                <Link
+                  key="shop"
+                  href="/shop"
+                  aria-current={shopActive ? "page" : undefined}
+                  className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-all shrink-0 whitespace-nowrap ${
+                    shopActive
+                      ? "bg-ink text-white border-ink shadow-soft"
+                      : "bg-white text-ink border-ink/15 hover:border-ink/30 hover:bg-paper-muted shadow-soft"
+                  }`}
+                >
+                  <ShoppingBag className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                  <span>Cửa hàng</span>
+                </Link>,
+              ];
+            }
+
+            return [groupNode];
           })}
         </nav>
 
@@ -464,48 +469,58 @@ export function Navbar() {
             <span>Trang chủ</span>
           </Link>
 
-          <Link
-            href="/shop"
-            aria-current={shopActive ? "page" : undefined}
-            onClick={() => setMobileOpen(false)}
-            className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium border transition-colors ${
-              shopActive
-                ? "bg-ink text-white border-ink shadow-soft"
-                : "bg-white text-ink border-ink/15 hover:bg-paper-muted shadow-soft"
-            }`}
-          >
-            <ShoppingBag className="w-4 h-4 shrink-0" aria-hidden="true" />
-            <span>Cửa hàng</span>
-          </Link>
+          {NAV_GROUPS.flatMap((group) => {
+            const groupBlock = (
+              <div key={group.id} className="space-y-1">
+                <div className="px-2 text-xs font-mono uppercase tracking-wider text-ink-muted">
+                  {group.label}
+                </div>
+                <div className="bg-white border border-ink/15 rounded-2xl p-1.5 shadow-soft space-y-0.5">
+                  {group.items.map(({ href, label, icon: Icon }) => {
+                    const itemActive = isItemActive(pathname, href);
+                    return (
+                      <Link
+                        key={href}
+                        href={href}
+                        aria-current={itemActive ? "page" : undefined}
+                        onClick={() => setMobileOpen(false)}
+                        className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
+                          itemActive
+                            ? "bg-ink text-white"
+                            : "text-ink hover:bg-paper-muted"
+                        }`}
+                      >
+                        <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
+                        <span>{label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            );
 
-          {NAV_GROUPS.map((group) => (
-            <div key={group.id} className="space-y-1">
-              <div className="px-2 text-xs font-mono uppercase tracking-wider text-ink-muted">
-                {group.label}
-              </div>
-              <div className="bg-white border border-ink/15 rounded-2xl p-1.5 shadow-soft space-y-0.5">
-                {group.items.map(({ href, label, icon: Icon }) => {
-                  const itemActive = isItemActive(pathname, href);
-                  return (
-                    <Link
-                      key={href}
-                      href={href}
-                      aria-current={itemActive ? "page" : undefined}
-                      onClick={() => setMobileOpen(false)}
-                      className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
-                        itemActive
-                          ? "bg-ink text-white"
-                          : "text-ink hover:bg-paper-muted"
-                      }`}
-                    >
-                      <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
-                      <span>{label}</span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
+            if (group.id === "practice") {
+              return [
+                groupBlock,
+                <Link
+                  key="shop-mobile"
+                  href="/shop"
+                  aria-current={shopActive ? "page" : undefined}
+                  onClick={() => setMobileOpen(false)}
+                  className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium border transition-colors ${
+                    shopActive
+                      ? "bg-ink text-white border-ink shadow-soft"
+                      : "bg-white text-ink border-ink/15 hover:bg-paper-muted shadow-soft"
+                  }`}
+                >
+                  <ShoppingBag className="w-4 h-4 shrink-0" aria-hidden="true" />
+                  <span>Cửa hàng</span>
+                </Link>,
+              ];
+            }
+
+            return [groupBlock];
+          })}
         </nav>
       )}
       </header>

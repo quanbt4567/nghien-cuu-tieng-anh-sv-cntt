@@ -37,6 +37,8 @@ function createMockStorage(initial = {}) {
   };
 }
 
+const VALID_PLACEMENTS = new Set(["top", "bottom", "left", "right"]);
+
 test("FEATURE_GUIDES defines 15 complete Vietnamese feature guides with unique ids and route prefixes", () => {
   assert.equal(FEATURE_GUIDES.length, 15);
 
@@ -56,6 +58,42 @@ test("FEATURE_GUIDES defines 15 complete Vietnamese feature guides with unique i
     assert.ok(guide.subtitle.trim().length > 0);
     assert.ok(Array.isArray(guide.steps) && guide.steps.length >= 3);
     assert.ok(Array.isArray(guide.tips) && guide.tips.length >= 1);
+    assert.ok(
+      Array.isArray(guide.tourStops) &&
+        guide.tourStops.length >= 3 &&
+        guide.tourStops.length <= 5,
+      `expected 3-5 tourStops for guide ${guide.id}, got ${guide.tourStops?.length}`
+    );
+
+    for (const [idx, stop] of guide.tourStops.entries()) {
+      assert.equal(typeof stop.title, "string", `${guide.id}[${idx}] missing title`);
+      assert.ok(stop.title.trim().length > 0, `${guide.id}[${idx}] empty title`);
+      assert.equal(
+        typeof stop.description,
+        "string",
+        `${guide.id}[${idx}] missing description`
+      );
+      assert.ok(
+        stop.description.trim().length > 0,
+        `${guide.id}[${idx}] empty description`
+      );
+      const hasSelectors =
+        Array.isArray(stop.selectors) &&
+        stop.selectors.some((sel) => typeof sel === "string" && sel.trim().length > 0);
+      const hasMatchTexts =
+        Array.isArray(stop.matchTexts) &&
+        stop.matchTexts.some((txt) => typeof txt === "string" && txt.trim().length > 0);
+      assert.ok(
+        hasSelectors || hasMatchTexts,
+        `${guide.id}[${idx}] must define at least one selector or matchText`
+      );
+      if (stop.placement !== undefined) {
+        assert.ok(
+          VALID_PLACEMENTS.has(stop.placement),
+          `${guide.id}[${idx}] invalid placement: ${stop.placement}`
+        );
+      }
+    }
   }
 });
 
