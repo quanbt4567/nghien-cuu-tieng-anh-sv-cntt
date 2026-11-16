@@ -1,21 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
   ArrowRight,
   Award,
+  Bomb,
+  Bot,
   Bug,
   Coins,
   Flame,
   Gamepad2,
   Globe,
+  MessageSquare,
   ShoppingBag,
   Siren,
+  Swords,
   Timer,
   Trophy,
   UserCog,
+  type LucideIcon,
 } from "lucide-react";
 import { initOrHydrateGuestSession } from "../../app/actions/leaderboard";
 import { BugBusterGame } from "../../components/arena/BugBusterGame";
@@ -49,6 +54,96 @@ type ArenaTab =
   | "leaderboard"
   | "global-leaderboard";
 
+type InlineGameTab = Extract<ArenaTab, "bug-buster" | "standup-speed-run">;
+
+type ArenaModeCard = {
+  id: string;
+  title: string;
+  playersTag: string;
+  rewardBadge: string;
+  description: string;
+  ctaLabel: string;
+  icon: LucideIcon;
+  badgeTone: string;
+  href?: string;
+  tab?: InlineGameTab;
+};
+
+const ARENA_SHOWCASE_MODES: ArenaModeCard[] = [
+  {
+    id: "party",
+    title: "Outage At 3AM (Party Mode)",
+    playersTag: "Co-op / AI Teammates",
+    rewardBadge: "+15-25 IT-Coins",
+    description:
+      "Phối hợp xử lý sự cố production khẩn cấp theo nhóm với phản xạ tiếng Anh CNTT.",
+    ctaLabel: "Mở Party Mode",
+    icon: Siren,
+    badgeTone: "bg-[#E5484D] text-white",
+    href: "/arena/party",
+  },
+  {
+    id: "duel",
+    title: "Code Review Duel",
+    playersTag: "1v1 PvP / AI Bot",
+    rewardBadge: "+12 IT-Coins",
+    description:
+      "Tranh luận bảo vệ PR hoặc review code 1v1 theo lượt, phản biện trực tiếp bằng tiếng Anh.",
+    ctaLabel: "Vào Duel",
+    icon: Swords,
+    badgeTone: "bg-[#1A1714] text-white",
+    href: "/arena/duel",
+  },
+  {
+    id: "taboo",
+    title: "Explain It Like I'm 5",
+    playersTag: "Party / AI Guesser",
+    rewardBadge: "+10 IT-Coins",
+    description:
+      "Giải thích khái niệm CNTT thật dễ hiểu mà không chạm từ cấm để AI hoặc đồng đội đoán đúng.",
+    ctaLabel: "Chơi Taboo",
+    icon: MessageSquare,
+    badgeTone: "bg-[#F59E0B] text-[#1A1714]",
+    href: "/arena/taboo",
+  },
+  {
+    id: "word-chain",
+    title: "Syntax Bomb: Tech Word Chain",
+    playersTag: "Speed / AI Bot",
+    rewardBadge: "+8 IT-Coins",
+    description:
+      "Nối nhanh thuật ngữ IT theo chữ cái cuối trước khi bom máy chủ nổ, tích combo rút dây cháy.",
+    ctaLabel: "Vào Word Chain",
+    icon: Bomb,
+    badgeTone: "bg-[#0EA5E9] text-white",
+    href: "/arena/word-chain",
+  },
+  {
+    id: "bug-buster",
+    title: "Bug Buster 280s",
+    playersTag: "Solo / Phản xạ 280s",
+    rewardBadge: "+2-5 IT-Coins",
+    description:
+      "Đọc và nói đúng từ khóa kỹ thuật còn thiếu trong 280 giây để vá nhanh hàng loạt bug.",
+    ctaLabel: "Mở Bug Buster",
+    icon: Bug,
+    badgeTone: "bg-[#10B981] text-white",
+    tab: "bug-buster",
+  },
+  {
+    id: "standup-speed-run",
+    title: "Standup Speed Run",
+    playersTag: "Solo / AI Chấm điểm",
+    rewardBadge: "+1-2 IT-Coins",
+    description:
+      "Trả lời 3 câu hỏi Daily Standup trong 25 giây mỗi lượt để luyện phản xạ nói gọn gàng.",
+    ctaLabel: "Mở Speed Run",
+    icon: Timer,
+    badgeTone: "bg-[#8B5CF6] text-white",
+    tab: "standup-speed-run",
+  },
+];
+
 const INITIAL_SSR_STATE: GamificationState = {
   totalPoints: 0,
   streakDays: 0,
@@ -65,6 +160,7 @@ export default function ArenaPage() {
   const [activeTab, setActiveTab] = useState<ArenaTab>("bug-buster");
   const [state, setState] = useState<GamificationState>(INITIAL_SSR_STATE);
   const [guestPlayer, setGuestPlayer] = useState<PublicGuestPlayer | null>(null);
+  const tabSectionRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -134,6 +230,63 @@ export default function ArenaPage() {
     setState(setSelectedRole(role));
   };
 
+  const handleSelectInlineMode = (tab: InlineGameTab) => {
+    setActiveTab(tab);
+    tabSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const renderModeCardContent = (mode: ArenaModeCard, isInlineActive: boolean) => {
+    const Icon = mode.icon;
+    return (
+      <>
+        <div className="space-y-3">
+          <div className="flex items-start justify-between gap-2">
+            <div
+              className={`w-10 h-10 rounded-xl border-2 border-[#1A1714] flex items-center justify-center shrink-0 ${mode.badgeTone}`}
+            >
+              <Icon className="w-5 h-5" />
+            </div>
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill bg-[#FEF2F2] text-[#B91C1C] border border-[#E5484D]/35 text-[11px] font-mono font-bold shrink-0">
+              <Coins className="w-3 h-3" />
+              <span>{mode.rewardBadge}</span>
+            </span>
+          </div>
+
+          <div className="space-y-1.5">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-pill bg-white border border-[#1A1714]/20 text-[10px] font-mono font-bold text-[#1A1714] uppercase">
+              <Bot className="w-3 h-3 text-[#E5484D]" />
+              <span>{mode.playersTag}</span>
+            </span>
+            <h2 className="text-base font-bold text-[#1A1714] leading-snug">
+              {mode.title}
+            </h2>
+            <p className="text-xs text-[#1A1714]/75 leading-relaxed">
+              {mode.description}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between pt-1">
+          <span className="text-[11px] font-mono font-semibold text-[#1A1714]/60">
+            {mode.href ? "Phòng chơi riêng" : "Chơi trực tiếp bên dưới"}
+          </span>
+          <span
+            className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill border-2 border-[#1A1714] text-xs font-bold shrink-0 transition-colors ${
+              mode.href
+                ? "bg-[#E5484D] text-white group-hover:bg-[#1A1714]"
+                : isInlineActive
+                  ? "bg-[#1A1714] text-white"
+                  : "bg-white text-[#1A1714] group-hover:bg-[#1A1714] group-hover:text-white"
+            }`}
+          >
+            <span>{isInlineActive ? "Đang mở" : mode.ctaLabel}</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+          </span>
+        </div>
+      </>
+    );
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -156,7 +309,6 @@ export default function ArenaPage() {
         </div>
       </div>
 
-      {/* Arena Header Card */}
       <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1.5">
@@ -170,7 +322,6 @@ export default function ArenaPage() {
             </p>
           </div>
 
-          {/* Badges: Streak Flame, Dev Title, Role */}
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-bold text-ink">
               <Flame className="w-4 h-4 fill-accent text-accent" />
@@ -201,7 +352,6 @@ export default function ArenaPage() {
           </div>
         </div>
 
-        {/* IT-Coins & Progress toward next Coin (1000 pts = 1 IT-Coin) */}
         <div className="bg-paper border border-ink/15 rounded-2xl p-4 space-y-2.5">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
@@ -238,61 +388,64 @@ export default function ArenaPage() {
         </div>
       </section>
 
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Link
-          href="/arena/party"
-          className="md:col-span-2 group bg-[#FAF6EF] border-2 border-[#1A1714] rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-        >
-          <div className="flex items-start gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-[#E5484D] text-white border-2 border-[#1A1714] flex items-center justify-center shrink-0">
-              <Siren className="w-5 h-5" />
-            </div>
-            <div className="space-y-1">
-              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-pill bg-[#E5484D]/10 text-[#E5484D] border border-[#E5484D]/30 text-[10px] font-mono font-bold uppercase">
-                Live Co-op Mode
-              </div>
-              <h2 className="text-base sm:text-lg font-bold text-[#1A1714]">
-                Outage At 3AM (Party Mode)
-              </h2>
-              <p className="text-xs text-[#1A1714]/75">
-                Phối hợp xử lý sự cố production khẩn cấp theo nhóm với phản xạ tiếng Anh CNTT.
-              </p>
-            </div>
+      <section className="space-y-3.5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="space-y-0.5">
+            <h2 className="text-base sm:text-lg font-bold text-ink">
+              6 Chế độ Đấu trường SpeakIT
+            </h2>
+            <p className="text-xs text-ink-muted">
+              Chọn phòng Co-op / PvP đấu AI Bot hoặc luyện tập tốc độ trực tiếp ngay bên dưới.
+            </p>
           </div>
-          <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-[#E5484D] text-white border-2 border-[#1A1714] text-xs font-bold shrink-0 self-start sm:self-center">
-            <span>Mở Party Mode</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-          </span>
-        </Link>
+          <Link
+            href="/shop"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white text-[#1A1714] border-2 border-[#1A1714] shadow-[3px_3px_0_#1A1714] hover:bg-[#FAF6EF] text-xs font-bold transition-all"
+          >
+            <ShoppingBag className="w-3.5 h-3.5 text-[#E5484D]" />
+            <span>Đổi quà tại Shop</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
 
-        <Link
-          href="/shop"
-          className="group bg-white border-2 border-[#1A1714] rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] hover:bg-[#FAF6EF] transition-all flex flex-col justify-between gap-3"
-        >
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#FAF6EF] text-[#E5484D] border-2 border-[#1A1714] flex items-center justify-center shrink-0">
-              <ShoppingBag className="w-5 h-5" />
-            </div>
-            <div className="space-y-1">
-              <h2 className="text-base font-bold text-[#1A1714]">
-                Cửa hàng Hiệu ứng
-              </h2>
-              <p className="text-xs text-[#1A1714]/75">
-                Dùng IT-Coin mở khóa khung avatar, nameplate và hiệu ứng bảng xếp hạng.
-              </p>
-            </div>
-          </div>
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#E5484D] self-end">
-            <span>Vào cửa hàng</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-          </span>
-        </Link>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {ARENA_SHOWCASE_MODES.map((mode) => {
+            const isInlineActive = Boolean(mode.tab && activeTab === mode.tab);
+            const cardClass = `group text-left border-2 border-[#1A1714] rounded-2xl p-4 sm:p-5 shadow-[4px_4px_0_#1A1714] hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex flex-col justify-between gap-4 ${
+              mode.href
+                ? "bg-[#FAF6EF]"
+                : isInlineActive
+                  ? "bg-[#FAF6EF] ring-2 ring-[#E5484D]"
+                  : "bg-white hover:bg-[#FAF6EF]"
+            }`;
+
+            if (mode.href) {
+              return (
+                <Link key={mode.id} href={mode.href} className={cardClass}>
+                  {renderModeCardContent(mode, false)}
+                </Link>
+              );
+            }
+
+            return (
+              <button
+                key={mode.id}
+                type="button"
+                onClick={() => handleSelectInlineMode(mode.tab!)}
+                className={cardClass}
+              >
+                {renderModeCardContent(mode, isInlineActive)}
+              </button>
+            );
+          })}
+        </div>
       </section>
 
       <div
+        ref={tabSectionRef}
         role="tablist"
         aria-label="Chế độ IT Speaking Arena"
-        className="flex flex-wrap gap-2"
+        className="flex flex-wrap gap-2 scroll-mt-4"
       >
         <button
           type="button"
@@ -355,7 +508,6 @@ export default function ArenaPage() {
         </button>
       </div>
 
-      {/* Active Tab Panel */}
       {activeTab === "bug-buster" && <BugBusterGame role={state.selectedRole} />}
       {activeTab === "standup-speed-run" && (
         <StandupSpeedRun role={state.selectedRole} />

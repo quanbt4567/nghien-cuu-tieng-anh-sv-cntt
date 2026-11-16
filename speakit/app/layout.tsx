@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "../components/layout/Navbar";
 import { Footer } from "../components/layout/Footer";
 import { WelcomeNameModal } from "../components/layout/WelcomeNameModal";
+import { FeatureGuideDock } from "../components/common/FeatureGuideDock";
 
 const beVietnamPro = Be_Vietnam_Pro({
   weight: ["400", "500", "600", "700"],
@@ -43,6 +44,7 @@ export default function RootLayout({
         <WelcomeNameModal />
         <main className="flex-1">{children}</main>
         <Footer />
+        <FeatureGuideDock />
       </body>
     </html>
   );
