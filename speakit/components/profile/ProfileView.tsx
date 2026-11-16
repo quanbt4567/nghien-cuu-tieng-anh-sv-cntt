@@ -1018,7 +1018,7 @@ export function ProfileView() {
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white border border-ink/15 text-xs font-medium text-ink hover:bg-paper-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
-                      <span>Đặt lại chữ cái</span>
+                      <span>Đặt lại</span>
                     </button>
                   </div>
 
