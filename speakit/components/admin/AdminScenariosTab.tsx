@@ -397,8 +397,8 @@ export function AdminScenariosTab({
     const done = await saveOverrides(
       nextOverrides,
       editingId
-        ? `Đã cập nhật kịch bản "${nextScenario.titleVI}" và đồng bộ Cloud DB.`
-        : `Đã tạo kịch bản mới "${nextScenario.titleVI}" và đồng bộ Cloud DB.`
+        ? `Đã cập nhật kịch bản "${nextScenario.titleVI}".`
+        : `Đã tạo kịch bản mới "${nextScenario.titleVI}".`
     );
     if (done) {
       resetForm();

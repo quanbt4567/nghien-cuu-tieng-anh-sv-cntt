@@ -20,7 +20,6 @@ import {
   Tag,
   Trophy,
   User,
-  WifiOff,
   Zap,
 } from "lucide-react";
 import {
@@ -600,17 +599,6 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
             </Link>
           </div>
         </div>
-
-        {identity.mode === "offline" && !loading && (
-          <div className="flex items-center justify-between gap-3 bg-white border-2 border-[#1A1714] rounded-2xl px-4 py-3 text-xs font-medium text-[#1A1714] shadow-[4px_4px_0_#1A1714]">
-            <div className="flex items-center gap-2">
-              <WifiOff className="w-4 h-4 text-[#E5484D] shrink-0" aria-hidden="true" />
-              <span>
-                Đang ở chế độ Local (Offline). Bạn vẫn có thể dùng thử toàn bộ 24 hiệu ứng trong Live Try-On Studio; kết nối Neon DB để mua và lưu trang bị.
-              </span>
-            </div>
-          </div>
-        )}
 
         <section
           aria-label="Live Try-On Sandbox"

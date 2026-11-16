@@ -5,11 +5,9 @@ import {
   AlertTriangle,
   Award,
   BarChart3,
-  Cloud,
   Download,
   FileJson,
   Gamepad2,
-  HardDrive,
   MessageSquare,
 } from "lucide-react";
 import { SCENARIOS } from "../../data/scenarios";
@@ -26,7 +24,7 @@ interface AdminAnalyticsTabProps {
 }
 
 export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
-  const { stats, weakPoints, attempts, arenaRuns, overrides, health, localExtrasCount } = data;
+  const { stats, weakPoints, attempts, arenaRuns, overrides } = data;
 
   const scenarioMap = useMemo(() => {
     const allScenarios = mergeScenarios(SCENARIOS, overrides, true);
@@ -58,7 +56,6 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
       });
     }
 
-    // Include archived/deleted custom scenario IDs that still have logged attempts
     for (const hit of stats.scenarioBreakdown) {
       if (!scenarioMap.has(hit.scenario)) {
         rows.push({
@@ -96,7 +93,7 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
     downloadResearchJson({
       project: "SpeakIT — IUH & BCN Research Telemetry",
       exportedAt: new Date().toISOString(),
-      source: health.neonConnected ? "Neon Cloud DB" : "Local Cache",
+      source: "SpeakIT Admin",
       stats,
       weakPoints,
       attempts,
@@ -109,32 +106,11 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
 
   return (
     <div className="space-y-6">
-      {/* Source Status & Research Export Bar */}
       <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="space-y-1.5">
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-xs font-mono font-semibold border ${
-                health.neonConnected
-                  ? "bg-paper text-ink border-ink/20"
-                  : "bg-accent-light text-ink border-accent/40"
-              }`}
-            >
-              {health.neonConnected ? (
-                <Cloud className="w-3.5 h-3.5 text-ink" aria-hidden="true" />
-              ) : (
-                <HardDrive className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
-              )}
-              <span>
-                Nguồn dữ liệu: {health.neonConnected ? "Neon Cloud DB" : "Local Cache"}
-              </span>
-            </span>
-            {health.neonConnected && localExtrasCount > 0 && (
-              <span className="inline-flex items-center px-2.5 py-1 rounded-pill bg-paper-muted border border-ink/15 text-[11px] font-mono text-ink-muted">
-                +{localExtrasCount} bản ghi trình duyệt chưa đồng bộ
-              </span>
-            )}
-          </div>
+        <div className="space-y-1">
+          <h2 className="text-sm font-bold text-ink">
+            Tổng hợp dữ liệu luyện tập &amp; nghiên cứu
+          </h2>
           <p className="text-xs text-ink-muted">
             Toàn bộ chỉ số bên dưới tổng hợp trực tiếp từ nhật ký luyện tập thực tế (không dùng dữ liệu giả lập).
           </p>
@@ -162,7 +138,6 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
         </div>
       </div>
 
-      {/* Overview KPI Strip */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-2">
           <div className="flex items-center justify-between text-ink-muted">
@@ -218,7 +193,6 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
         </div>
       </div>
 
-      {/* Role distribution if available */}
       {roleEntries.length > 0 && (
         <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft flex flex-wrap items-center gap-3">
           <span className="text-xs font-mono font-semibold uppercase text-ink-muted mr-1">
@@ -236,9 +210,7 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
         </div>
       )}
 
-      {/* Main 2-column Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        {/* Scenario Breakdown */}
         <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-bold text-ink flex items-center gap-2">
@@ -295,7 +267,6 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
           )}
         </section>
 
-        {/* Top Weak Points */}
         <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-bold text-ink flex items-center gap-2">

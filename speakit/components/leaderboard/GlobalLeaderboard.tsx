@@ -15,7 +15,6 @@ import {
   ShoppingBag,
   Sparkles,
   Trophy,
-  WifiOff,
 } from "lucide-react";
 import {
   getTopPlayers,
@@ -250,16 +249,6 @@ export function GlobalLeaderboard({
 
   return (
     <div className="space-y-6 pb-20">
-      {mode === "offline" && (
-        <div className="bg-paper border border-ink/15 rounded-2xl p-4 flex items-center gap-3 text-xs text-ink-muted shadow-soft">
-          <WifiOff className="w-4 h-4 text-accent shrink-0" />
-          <span>
-            Offline mode active (Neon DB not configured). Global leaderboard requires{" "}
-            <code className="font-mono text-ink">DATABASE_URL</code>; local browser progress remains available.
-          </span>
-        </div>
-      )}
-
       {mode === "online" && currentPlayer && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <section className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4">
@@ -629,7 +618,7 @@ export function GlobalLeaderboard({
                 </span>
               </div>
               <div className="text-[11px] font-mono text-white/75">
-                {mode === "online" ? "Global Persistent Rank" : "Offline Local Progress"}
+                Hạng #{activeEntry.rank}
               </div>
             </div>
           </div>

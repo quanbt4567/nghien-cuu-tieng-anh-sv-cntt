@@ -485,7 +485,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                 rows={4}
                 value={rawJson}
                 onChange={(e) => handleJsonChange(e.target.value)}
-                placeholder='{ "title": "Neon Frame", "assets": { "frame": "/discord-fx/avatar-cyberpunk-overclock-ring.png" } }'
+                placeholder='{ "title": "Cyber Sakura Frame", "assets": { "frame": "/discord-fx/avatar-cyberpunk-overclock-ring.png" } }'
                 className="w-full rounded-xl border border-ink/15 bg-paper p-3 text-xs font-mono text-ink focus:outline-none focus:ring-2 focus:ring-accent/40"
               />
 

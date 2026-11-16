@@ -11,7 +11,6 @@ import {
   Bug,
   Camera,
   Check,
-  Cloud,
   Code2,
   Coins,
   Copy,
@@ -30,7 +29,6 @@ import {
   Trophy,
   Upload,
   User,
-  WifiOff,
   X,
 } from "lucide-react";
 import {
@@ -156,14 +154,14 @@ function formatAttemptDate(iso: string): string {
 
 function toVietnameseError(rawError?: string, mode?: "online" | "offline"): string {
   if (mode === "offline") {
-    return "Chức năng này cần kết nối Neon DB. Hiện tại hồ sơ đang hoạt động ở chế độ Local.";
+    return "Không thể kết nối máy chủ lúc này. Vui lòng thử lại sau.";
   }
   switch (rawError) {
     case "Display name must be between 2 and 24 characters.":
       return "Tên hiển thị phải dài từ 2 đến 24 ký tự.";
     case "Database is unavailable in offline mode.":
     case "Cosmetic shop requires Neon DB connection.":
-      return "Chức năng này cần kết nối Neon DB. Vui lòng thử lại khi trực tuyến.";
+      return "Không thể kết nối máy chủ. Vui lòng thử lại khi trực tuyến.";
     case "Unable to resolve guest profile.":
     case "Unable to connect to guest profile.":
       return "Không thể kết nối tới hồ sơ khách. Vui lòng tải lại trang.";
@@ -174,7 +172,7 @@ function toVietnameseError(rawError?: string, mode?: "online" | "offline"): stri
     case "Transfer code not found.":
       return "Không tìm thấy hồ sơ nào khớp với mã chuyển thiết bị này.";
     case "Unable to restore guest session from Neon DB.":
-      return "Không thể khôi phục phiên từ Neon DB. Vui lòng thử lại sau.";
+      return "Không thể khôi phục hồ sơ lúc này. Vui lòng thử lại sau.";
     case "Not enough IT-Coins to purchase this item.":
       return "Bạn chưa đủ IT-Coin để mở khóa vật phẩm này.";
     case "Cosmetic item not found.":
@@ -861,11 +859,7 @@ export function ProfileView() {
                     onClick={handleStartRename}
                     disabled={identity.mode !== "online"}
                     aria-label="Chỉnh sửa tên hiển thị"
-                    title={
-                      identity.mode === "online"
-                        ? "Chỉnh sửa tên hiển thị"
-                        : "Đổi tên yêu cầu kết nối Neon DB"
-                    }
+                    title="Chỉnh sửa tên hiển thị"
                     className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill bg-paper border border-ink/15 text-xs font-medium text-ink hover:bg-paper-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     <Pencil className="w-3 h-3" aria-hidden="true" />
@@ -879,11 +873,7 @@ export function ProfileView() {
                     }}
                     disabled={identity.mode !== "online"}
                     aria-expanded={isAvatarPanelOpen}
-                    title={
-                      identity.mode === "online"
-                        ? "Đổi Avatar"
-                        : "Đổi avatar yêu cầu kết nối Neon DB"
-                    }
+                    title="Đổi Avatar"
                     className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill bg-paper border border-ink/15 text-xs font-medium text-ink hover:bg-paper-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     <Camera className="w-3 h-3" aria-hidden="true" />
@@ -931,12 +921,6 @@ export function ProfileView() {
                     <span>Hủy</span>
                   </button>
                 </form>
-              )}
-
-              {identity.mode === "offline" && (
-                <p className="text-[11px] text-ink-muted">
-                  Chế độ cục bộ (Offline): đổi tên trực tuyến tạm khóa khi chưa kết nối Neon DB.
-                </p>
               )}
 
               {nameFeedback && (
@@ -1044,7 +1028,7 @@ export function ProfileView() {
                   <span>{identity.equippedTitle}</span>
                 </span>
 
-                {identity.mode === "online" ? (
+                {identity.mode === "online" && (
                   <Link
                     href="/arena"
                     className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-bold text-ink hover:bg-paper-muted transition-colors"
@@ -1054,11 +1038,6 @@ export function ProfileView() {
                       {globalRank !== null ? `#${globalRank} Toàn cầu` : "Hạng toàn cầu"}
                     </span>
                   </Link>
-                ) : (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-paper-muted border border-ink/15 text-xs font-mono font-semibold text-ink-muted">
-                    <WifiOff className="w-3.5 h-3.5" aria-hidden="true" />
-                    <span>Local Mode</span>
-                  </span>
                 )}
 
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-accent-light border border-accent/30 text-xs font-mono font-bold text-accent">
@@ -1220,26 +1199,14 @@ export function ProfileView() {
         </section>
 
         <section
-          aria-label="Danh tính Zero-Login và khôi phục thiết bị"
+          aria-label="Mã chuyển thiết bị và khôi phục hồ sơ"
           className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4"
         >
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-sm font-bold text-ink uppercase tracking-wider font-mono flex items-center gap-1.5">
               <KeyRound className="w-4 h-4 text-accent" aria-hidden="true" />
-              <span>Zero-Login &amp; Mã chuyển thiết bị</span>
+              <span>Mã chuyển thiết bị</span>
             </h2>
-
-            {identity.mode === "online" ? (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill bg-paper border border-ink/15 text-[11px] font-mono font-semibold text-ink">
-                <Cloud className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
-                <span>Neon Cloud Online</span>
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill bg-paper-muted border border-ink/15 text-[11px] font-mono font-semibold text-ink-muted">
-                <WifiOff className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>Offline (Local)</span>
-              </span>
-            )}
           </div>
 
           {identity.transferCode ? (
@@ -1274,7 +1241,7 @@ export function ProfileView() {
             </div>
           ) : (
             <div className="p-3.5 bg-paper border border-ink/15 rounded-xl text-xs text-ink-muted">
-              Mã <code className="font-mono text-ink">DEV-XXXXXX</code> sẽ tự động được cấp khi kết nối Neon DB. Điểm và lịch sử hiện tại vẫn lưu an toàn trong trình duyệt.
+              Mã <code className="font-mono text-ink">DEV-XXXXXX</code> sẽ tự động được cấp cho hồ sơ của bạn để đồng bộ tiến độ giữa các thiết bị.
             </div>
           )}
 
@@ -1479,12 +1446,12 @@ export function ProfileView() {
             </h2>
             <p className="text-xs text-ink-muted mt-0.5">
               {activity.scenariosPracticed > 0
-                ? `Đã luyện ${activity.scenariosPracticed} tình huống khác nhau (${localSpeakingCount} lượt nói${localArenaCount > 0 ? `, ${localArenaCount} trận Arena` : ""}) trên thiết bị này.`
+                ? `Đã luyện ${activity.scenariosPracticed} tình huống khác nhau (${localSpeakingCount} lượt nói${localArenaCount > 0 ? `, ${localArenaCount} trận Arena` : ""}).`
                 : localArenaCount > 0
-                  ? `Đã hoàn thành ${localArenaCount} trận Arena trên thiết bị này.`
+                  ? `Đã hoàn thành ${localArenaCount} trận Arena.`
                   : hasCloudPoints
-                    ? `Tài khoản ${identity.transferCode ?? "Cloud"} đã tích lũy ${identity.totalPoints.toLocaleString("vi-VN")} điểm trên Neon Cloud (chi tiết từng lượt được lưu cục bộ theo thiết bị).`
-                    : "Đã luyện 0 tình huống khác nhau trên trình duyệt này."}
+                    ? `Tài khoản ${identity.transferCode ?? ""} đã tích lũy ${identity.totalPoints.toLocaleString("vi-VN")} điểm.`
+                    : "Chưa có tình huống nào được luyện."}
             </p>
           </div>
           <Link
@@ -1508,10 +1475,8 @@ export function ProfileView() {
             <div className="text-[11px] text-ink-muted mt-1 flex items-center justify-center gap-1">
               {localSpeakingCount === 0 && localArenaCount > 0 ? (
                 <Gamepad2 className="w-3 h-3 text-accent" aria-hidden="true" />
-              ) : localSpeakingCount > 0 && localArenaCount > 0 ? (
+              ) : (localSpeakingCount > 0 && localArenaCount > 0) || (localSpeakingCount === 0 && hasCloudPoints) ? (
                 <Trophy className="w-3 h-3 text-accent" aria-hidden="true" />
-              ) : localSpeakingCount === 0 && hasCloudPoints ? (
-                <Cloud className="w-3 h-3 text-accent" aria-hidden="true" />
               ) : (
                 <Mic className="w-3 h-3 text-accent" aria-hidden="true" />
               )}
@@ -1523,7 +1488,7 @@ export function ProfileView() {
                     : localArenaCount > 0
                       ? "Trận Arena đã chơi"
                       : hasCloudPoints
-                        ? "Điểm Cloud đã lưu"
+                        ? "Tổng điểm tích lũy"
                         : "Số lượt luyện nói"}
               </span>
             </div>
@@ -1658,8 +1623,8 @@ export function ProfileView() {
               <div className="bg-white border border-ink/10 rounded-xl p-4 space-y-2.5">
                 <p className="text-xs text-ink-muted">
                   {hasCloudPoints
-                    ? `Tài khoản ${identity.transferCode ?? ""} đã tích lũy ${identity.totalPoints.toLocaleString("vi-VN")} điểm trên Neon Cloud. Nhật ký từng câu nói được lưu cục bộ trên thiết bị đã luyện; hãy luyện thêm một tình huống hoặc trận Arena trên thiết bị này để xem chi tiết tại đây.`
-                    : "Bạn chưa có lượt luyện nói nào được ghi nhận trên thiết bị này."}
+                    ? `Tài khoản ${identity.transferCode ?? ""} đã tích lũy ${identity.totalPoints.toLocaleString("vi-VN")} điểm. Hãy luyện thêm một tình huống hoặc trận Arena để xem chi tiết tại đây.`
+                    : "Bạn chưa có lượt luyện nói nào được ghi nhận."}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   <Link

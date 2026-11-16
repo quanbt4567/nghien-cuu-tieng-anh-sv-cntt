@@ -1,6 +1,6 @@
 "use client";
 
-import { Award, Bug, ShieldCheck, Timer, Trophy } from "lucide-react";
+import { Award, Bug, Timer, Trophy } from "lucide-react";
 import { IT_ROLES } from "../../data/minigames";
 import { getDevTitle } from "../../lib/gamification";
 import { GamificationState, ITRole, MinigameId } from "../../lib/types";
@@ -33,7 +33,6 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
 
   return (
     <div className="space-y-6">
-      {/* 1. Current Dev Title Card */}
       <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-1">
@@ -49,7 +48,6 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
           </div>
         </div>
 
-        {/* Progress Bar to Next Title */}
         <div className="space-y-2">
           <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
             <span className="text-ink-muted">
@@ -78,7 +76,6 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
           </div>
         </div>
 
-        {/* Tier Ladder */}
         <div className="grid sm:grid-cols-3 gap-3 pt-1">
           {TITLE_TIERS.map((tier) => {
             const isCurrent = devTitle.title === tier.name;
@@ -108,7 +105,6 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
         </div>
       </section>
 
-      {/* 2. Personal Best Cards */}
       <section className="grid sm:grid-cols-2 gap-4">
         <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft flex items-center justify-between gap-4">
           <div className="space-y-1">
@@ -149,7 +145,6 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
         </div>
       </section>
 
-      {/* 3. Top Personal Runs Table */}
       <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
@@ -158,10 +153,6 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
               Bảng thành tích cá nhân
             </h3>
           </div>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-paper border border-ink/15 text-[11px] font-mono text-ink-muted">
-            <ShieldCheck className="w-3.5 h-3.5 text-accent" />
-            <span>Lưu cục bộ trên trình duyệt — Zero-auth</span>
-          </span>
         </div>
 
         {rankedHistory.length === 0 ? (

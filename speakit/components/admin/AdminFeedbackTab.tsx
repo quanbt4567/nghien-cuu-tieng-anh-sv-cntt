@@ -18,7 +18,6 @@ interface AdminFeedbackTabProps {
 
 export function AdminFeedbackTab({ onUnauthorized }: AdminFeedbackTabProps) {
   const [items, setItems] = useState<FeedbackItem[]>([]);
-  const [connected, setConnected] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [ratingFilter, setRatingFilter] = useState<number | "ALL">("ALL");
 
@@ -32,14 +31,12 @@ export function AdminFeedbackTab({ onUnauthorized }: AdminFeedbackTabProps) {
       }
       if (res.ok) {
         const data = (await res.json()) as {
-          connected?: boolean;
           items?: FeedbackItem[];
         };
-        setConnected(Boolean(data.connected));
         setItems(Array.isArray(data.items) ? data.items : []);
       }
     } catch {
-      setConnected(false);
+      setItems([]);
     } finally {
       setIsLoading(false);
     }
@@ -130,12 +127,6 @@ export function AdminFeedbackTab({ onUnauthorized }: AdminFeedbackTabProps) {
             <span>Làm mới</span>
           </button>
         </div>
-
-        {!connected && (
-          <div className="p-3 rounded-xl bg-paper-muted border border-ink/15 text-xs text-ink-muted">
-            Chưa kết nối Neon Postgres hoặc chưa có dữ liệu phản hồi từ máy chủ.
-          </div>
-        )}
 
         {isLoading ? (
           <div className="py-10 flex items-center justify-center gap-2 text-xs text-ink-muted">

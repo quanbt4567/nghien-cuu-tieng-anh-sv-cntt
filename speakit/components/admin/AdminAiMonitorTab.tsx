@@ -293,17 +293,6 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
             <h2 className="text-lg font-bold text-ink">
               Giám Sát 6 API AI (Waterfall Telemetry)
             </h2>
-            {summary && (
-              <span
-                className={`inline-flex items-center px-2.5 py-0.5 rounded-pill text-[11px] font-mono font-semibold border ${
-                  summary.dbConnected
-                    ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                    : "bg-amber-50 text-amber-800 border-amber-200"
-                }`}
-              >
-                {summary.dbConnected ? "Neon Telemetry Active" : "Fallback Mode (No DB)"}
-              </span>
-            )}
           </div>
           <p className="text-xs text-ink-muted">
             Theo dõi hạn mức ngày, mã lỗi 429, độ trễ trực tiếp và bật/tắt circuit-breaker cho từng provider.

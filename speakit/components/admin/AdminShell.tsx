@@ -8,10 +8,8 @@ import {
   ArrowUpRight,
   BarChart3,
   BookOpen,
-  Cloud,
   FileSpreadsheet,
   Gamepad2,
-  HardDrive,
   Lock,
   Menu,
   MessageSquareText,
@@ -102,12 +100,12 @@ export function AdminShell() {
           remote = (await res.json()) as AdminDashboardResponse;
         } else {
           setLoadWarning(
-            "Không thể tải dữ liệu từ máy chủ; đang hiển thị dữ liệu Local Cache trên trình duyệt."
+            "Không thể tải dữ liệu từ máy chủ; đang hiển thị dữ liệu lưu trên trình duyệt."
           );
         }
       } catch {
         setLoadWarning(
-          "Mất kết nối máy chủ; đang hiển thị dữ liệu tổng hợp từ Local Cache."
+          "Mất kết nối máy chủ; đang hiển thị dữ liệu lưu trên trình duyệt."
         );
       }
 
@@ -167,7 +165,6 @@ export function AdminShell() {
     });
   }, []);
 
-  const neonConnected = Boolean(data?.health.neonConnected);
   const activeTabMeta = TABS.find((t) => t.id === activeTab) ?? TABS[0];
 
   return (
@@ -195,20 +192,6 @@ export function AdminShell() {
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          <span
-            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-pill text-[11px] font-mono font-semibold border ${
-              neonConnected
-                ? "bg-white border-ink/20 text-ink"
-                : "bg-accent-light border-accent/40 text-ink"
-            }`}
-          >
-            {neonConnected ? (
-              <Cloud className="w-3 h-3 text-ink" aria-hidden="true" />
-            ) : (
-              <HardDrive className="w-3 h-3 text-accent" aria-hidden="true" />
-            )}
-            <span className="hidden sm:inline">{neonConnected ? "Neon DB" : "Local"}</span>
-          </span>
           <button
             type="button"
             disabled={isRefreshing || isLoading}
@@ -258,21 +241,6 @@ export function AdminShell() {
               SpeakIT Control Center
             </p>
           </div>
-
-          <span
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-pill text-[11px] font-mono font-semibold border ${
-              neonConnected
-                ? "bg-white border-ink/20 text-ink"
-                : "bg-accent-light border-accent/40 text-ink"
-            }`}
-          >
-            {neonConnected ? (
-              <Cloud className="w-3 h-3 text-ink" aria-hidden="true" />
-            ) : (
-              <HardDrive className="w-3 h-3 text-accent" aria-hidden="true" />
-            )}
-            <span>{neonConnected ? "Neon Cloud DB" : "Local Cache"}</span>
-          </span>
         </div>
 
         <nav

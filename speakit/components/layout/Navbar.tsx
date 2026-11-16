@@ -326,7 +326,7 @@ export function Navbar() {
                           {identity.displayName}
                         </div>
                         <div className="flex items-center justify-between gap-2 mt-0.5 text-[11px] font-mono text-ink-muted">
-                          <span>{identity.transferCode ?? "Local Mode"}</span>
+                          {identity.transferCode && <span>{identity.transferCode}</span>}
                           <span>{identity.totalPoints.toLocaleString("en-US")} pts</span>
                         </div>
                       </div>
@@ -438,9 +438,11 @@ export function Navbar() {
             <div className="px-3 py-2 rounded-xl bg-white border border-ink/15 flex items-center justify-between gap-2 text-xs">
               <div className="min-w-0">
                 <div className="font-bold text-ink truncate">{identity.displayName}</div>
-                <div className="font-mono text-[11px] text-ink-muted">
-                  {identity.transferCode ?? "Local Mode"}
-                </div>
+                {identity.transferCode && (
+                  <div className="font-mono text-[11px] text-ink-muted">
+                    {identity.transferCode}
+                  </div>
+                )}
               </div>
               <div className="font-mono text-[11px] text-ink shrink-0">
                 {identity.totalPoints.toLocaleString("en-US")} pts · {identity.itCoins} Coin
