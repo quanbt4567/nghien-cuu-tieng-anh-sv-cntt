@@ -249,7 +249,7 @@ export function Navbar() {
     <>
       <CustomCursorTrail effectId={guestPlayer?.equippedCosmetics?.cursor_effect ?? null} />
       <header ref={headerRef} className="sticky top-0 z-40 bg-paper border-b border-ink/15">
-      <div className="max-w-6xl mx-auto px-3 sm:px-4 h-16 flex items-center justify-between gap-2 lg:gap-3">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 h-16 flex items-center justify-between gap-2 lg:gap-4">
         <Link
           href="/"
           aria-label="SpeakIT"
@@ -357,14 +357,14 @@ export function Navbar() {
           })}
         </nav>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 min-w-0">
           {!hydrated ? (
             <div
               aria-label="Đang đồng bộ tài khoản"
               className="shrink-0 h-8 w-36 sm:w-52 rounded-pill bg-paper-muted border border-ink/10 animate-pulse"
             />
           ) : (
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex items-center gap-1.5 shrink-0 min-w-0">
               <Link
                 href="/profile"
                 title={
@@ -372,12 +372,12 @@ export function Navbar() {
                     ? `${identity.displayName} (${identity.transferCode})`
                     : identity.displayName
                 }
-                className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-white border border-ink/15 hover:border-ink/30 shadow-soft text-xs text-ink transition-colors max-w-[165px] sm:max-w-[220px]"
+                className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-white border border-ink/15 hover:border-ink/30 shadow-soft text-xs text-ink transition-colors max-w-[120px] lg:max-w-[165px] xl:max-w-[220px]"
               >
                 <User className="w-3.5 h-3.5 text-accent shrink-0" aria-hidden="true" />
-                <span className="font-semibold truncate">{identity.displayName}</span>
+                <span className="font-semibold truncate hidden sm:inline md:hidden lg:inline">{identity.displayName}</span>
                 {identity.transferCode && (
-                  <span className="hidden sm:inline font-mono text-[10px] px-1.5 py-0.5 rounded bg-paper border border-ink/10 text-ink-muted shrink-0">
+                  <span className="hidden xl:inline font-mono text-[10px] px-1.5 py-0.5 rounded bg-paper border border-ink/10 text-ink-muted shrink-0">
                     {identity.transferCode}
                   </span>
                 )}

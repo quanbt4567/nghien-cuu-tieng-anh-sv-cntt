@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import {
   Award,
@@ -413,12 +414,20 @@ export function GlobalLeaderboard({
                 <span>IT-Coin Cosmetic Armory</span>
               </h3>
               <p className="text-xs text-ink-muted">
-                Unlock and equip Developer Titles or Avatar Rings on the global leaderboard.
+                Mở khóa & trang bị nhanh 3 hiệu ứng nổi bật trên bảng xếp hạng.
               </p>
             </div>
-            <span className="px-3 py-1 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-bold text-ink">
-              Balance: {currentPlayer.itCoins} Coins
-            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="px-3 py-1 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-bold text-ink">
+                Balance: {currentPlayer.itCoins} Coins
+              </span>
+              <Link
+                href="/shop"
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-accent text-white text-xs font-mono font-semibold hover:bg-accent-hover transition-colors"
+              >
+                <span>Xem thêm tại Cửa hàng →</span>
+              </Link>
+            </div>
           </div>
 
           {shopNotice && (
@@ -427,8 +436,8 @@ export function GlobalLeaderboard({
             </div>
           )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {COSMETIC_CATALOG.map((item) => {
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {COSMETIC_CATALOG.slice(0, 3).map((item) => {
               const isOwned = currentPlayer.ownedItems.includes(item.id);
               const isEquipped =
                 (item.kind === "title" &&
