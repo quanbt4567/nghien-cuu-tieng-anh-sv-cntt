@@ -552,7 +552,10 @@ export function GlobalLeaderboard({
                   }`}
                 >
                   <div className="p-3.5 flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex items-center gap-3 min-w-0">
+                    <Link
+                      href={`/profile/${entry.id}`}
+                      className="group flex items-center gap-3 min-w-0"
+                    >
                       <DiscordAvatarFrame
                         equippedId={entry.equippedCosmetics?.avatar_decoration}
                         fallbackRing={entry.equippedRing}
@@ -567,7 +570,7 @@ export function GlobalLeaderboard({
 
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="font-bold text-sm text-ink truncate">
+                          <span className="font-bold text-sm text-ink truncate group-hover:underline">
                             {entry.displayName}
                           </span>
                           {entry.isCurrentUser && (
@@ -581,7 +584,7 @@ export function GlobalLeaderboard({
                           </span>
                         </div>
                       </div>
-                    </div>
+                    </Link>
 
                     <div className="flex items-center gap-4 font-mono text-xs shrink-0">
                       <span className="inline-flex items-center gap-1 text-ink-muted">

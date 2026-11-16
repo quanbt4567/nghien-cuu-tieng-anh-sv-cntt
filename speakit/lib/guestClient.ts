@@ -112,7 +112,7 @@ export async function reportGuestPracticePoints(
   rawScore: number
 ): Promise<PublicGuestPlayer | null> {
   const awardedPoints = Number.isFinite(rawScore)
-    ? Math.max(0, Math.min(1000, Math.round(rawScore)))
+    ? Math.max(0, Math.min(10000, Math.round(rawScore)))
     : 0;
   if (awardedPoints <= 0) return null;
 

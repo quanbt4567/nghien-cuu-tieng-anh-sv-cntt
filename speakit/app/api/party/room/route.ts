@@ -33,17 +33,36 @@ async function flushUnresolvedRoomRewards(input: {
   backupTransferCode?: string;
 }) {
   const { room } = input;
-  if (room.status === "resolved" || room.rewardsAwarded || room.teamScore <= 0) {
+  if (room.status === "resolved" || room.rewardsAwarded) {
+    return { flushed: false, player: null };
+  }
+
+  const slot = room.players.find(
+    (p) =>
+      p.id === input.playerId ||
+      (!p.id.startsWith("ai-") && input.role && p.role === input.role)
+  );
+  const playerEvals = room.evaluations.filter(
+    (e) =>
+      e.playerId === input.playerId ||
+      (slot ? e.playerId === slot.id : false)
+  );
+  const bestEvalScore =
+    playerEvals.length > 0 ? Math.max(...playerEvals.map((e) => e.score)) : 0;
+  const playerScore = Math.round(
+    typeof slot?.score === "number" ? slot.score : bestEvalScore
+  );
+
+  if (playerScore <= 0) {
     return { flushed: false, player: null };
   }
 
   const scenario = findPartyScenarioById(room.scenarioId) ?? PARTY_SCENARIOS[0];
   const rewardResult = await rewardPracticePoints(
     room.scenarioId,
-    room.teamScore,
+    playerScore,
     input.backupTransferCode
   );
-  const slot = room.players.find((p) => p.id === input.playerId);
   const durationSec = Math.max(
     0,
     scenario.estimatedMinutes * 60 - room.remainingSeconds
@@ -52,7 +71,7 @@ async function flushUnresolvedRoomRewards(input: {
   await recordPartyArenaRun({
     roomCode: room.roomCode,
     scenarioId: room.scenarioId,
-    score: room.teamScore,
+    score: playerScore,
     progressPercent: room.resolutionProgress,
     durationSec,
     role: slot?.role ?? input.role ?? null,

@@ -49,8 +49,8 @@ export default async function HomePage() {
                 className="rounded-lg transition-colors hover:bg-paper/70"
               >
                 <Link
-                  href="/arena"
-                  className="p-3.5 flex items-center justify-between gap-3"
+                  href={`/profile/${player.id}`}
+                  className="group p-3.5 flex items-center justify-between gap-3"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <DiscordAvatarFrame
@@ -65,7 +65,7 @@ export default async function HomePage() {
                       />
                     </DiscordAvatarFrame>
                     <div className="min-w-0 space-y-1">
-                      <div className="text-sm font-bold text-ink break-words">
+                      <div className="text-sm font-bold text-ink break-words group-hover:underline">
                         {player.displayName}
                       </div>
                       <span className="inline-block text-[11px] font-mono px-2 py-0.5 rounded-pill bg-paper border border-ink/10 text-ink-muted">

@@ -636,8 +636,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
         </div>
 
         <p className="text-base sm:text-lg font-medium text-ink leading-relaxed">
-          {promptParts[0].trimEnd()}
-          {" "}
+          {promptParts[0].trimEnd()}{"\u00A0"}
           <span
             className={`inline min-w-[96px] mx-1 px-2.5 py-0.5 rounded-lg font-mono font-bold text-center border transition-colors ${
               feedback?.kind === "fixed"
@@ -647,10 +646,9 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
                 : "bg-white text-accent border-dashed border-accent"
             }`}
           >
-            {feedback ? feedback.targetWord : "____"}
+            {" "}{feedback ? feedback.targetWord : "____"}{" "}
           </span>
-          {" "}
-          {promptParts.slice(1).join("____").trimStart()}
+          {"\u00A0"}{promptParts.slice(1).join("____").trimStart()}
         </p>
 
         <div className="text-xs text-ink-muted bg-white border border-ink/10 rounded-xl p-3 space-y-1">

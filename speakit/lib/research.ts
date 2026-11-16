@@ -130,7 +130,7 @@ function toIsoOrNull(value: unknown): string | null {
   return null;
 }
 
-const EF_EPI_2025_INTERNAL_URL = "/research/ef-epi-2025-vietnam";
+const EF_EPI_2025_INTERNAL_URL = "/research/ef-epi-2025-vietnam-it-speaking-benchmark";
 const EF_EPI_2025_INTERNAL_LABEL = "Phân tích chi tiết EF EPI 2025 (Nội bộ SpeakIT)";
 
 function normalizeSeedArticleSources(
