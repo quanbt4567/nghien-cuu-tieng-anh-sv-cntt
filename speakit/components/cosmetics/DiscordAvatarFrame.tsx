@@ -1,11 +1,14 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import { Lottie } from "lottie-react";
+import { findCosmeticById, type CosmeticItem } from "../../lib/cosmetics";
 import "./cosmetics.css";
 
 export interface DiscordAvatarFrameProps {
   equippedId?: string | null;
   fallbackRing?: string | null;
+  item?: CosmeticItem | null;
   size?: "xs" | "sm" | "md" | "lg" | "xl" | number;
   micActive?: boolean;
   children: ReactNode;
@@ -17,6 +20,12 @@ type AvatarEffectId =
   | "avatar-inferno-hotfix-horns"
   | "avatar-quantum-holo-visor";
 
+interface AvatarLottieConfig {
+  src: string;
+  filter: string;
+  micColor: string;
+}
+
 const SIZE_MAP: Record<"xs" | "sm" | "md" | "lg" | "xl", number> = {
   xs: 32,
   sm: 40,
@@ -25,23 +34,57 @@ const SIZE_MAP: Record<"xs" | "sm" | "md" | "lg" | "xl", number> = {
   xl: 88,
 };
 
-const BINARY_ORBIT_NODES = [
-  { x: 50, y: 7, bit: "1", color: "#16A34A" },
-  { x: 80, y: 20, bit: "0", color: "#1A1714" },
-  { x: 93, y: 50, bit: "1", color: "#16A34A" },
-  { x: 80, y: 80, bit: "0", color: "#15803D" },
-  { x: 50, y: 93, bit: "1", color: "#16A34A" },
-  { x: 20, y: 80, bit: "0", color: "#1A1714" },
-  { x: 7, y: 50, bit: "1", color: "#16A34A" },
-  { x: 20, y: 20, bit: "0", color: "#15803D" },
-];
+const AVATAR_LOTTIE_MAP: Record<AvatarEffectId, AvatarLottieConfig> = {
+  "avatar-cyberpunk-overclock-ring": {
+    src: "/lottie/cyber-ring.json",
+    filter: "drop-shadow(0 0 10px rgba(229, 72, 77, 0.55)) drop-shadow(0 0 18px rgba(56, 189, 248, 0.35))",
+    micColor: "border-[#E5484D]",
+  },
+  "avatar-matrix-code-halo": {
+    src: "/lottie/matrix-pulse.json",
+    filter: "drop-shadow(0 0 10px rgba(22, 163, 74, 0.6)) drop-shadow(0 0 18px rgba(74, 222, 128, 0.35))",
+    micColor: "border-[#16A34A]",
+  },
+  "avatar-inferno-hotfix-horns": {
+    src: "/lottie/inferno-aura.json",
+    filter: "drop-shadow(0 0 10px rgba(245, 158, 11, 0.6)) drop-shadow(0 0 18px rgba(229, 72, 77, 0.4))",
+    micColor: "border-[#F59E0B]",
+  },
+  "avatar-quantum-holo-visor": {
+    src: "/lottie/cyber-ring.json",
+    filter:
+      "hue-rotate(115deg) saturate(1.25) drop-shadow(0 0 10px rgba(56, 189, 248, 0.65)) drop-shadow(0 0 20px rgba(168, 85, 247, 0.5))",
+    micColor: "border-[#0284C7]",
+  },
+};
 
-const EMBER_SPARKS = [
-  { left: "10%", top: "24%", color: "#F59E0B", delay: "0s", size: 5 },
-  { left: "86%", top: "20%", color: "#E5484D", delay: "0.45s", size: 4 },
-  { left: "6%", top: "68%", color: "#E5484D", delay: "0.9s", size: 4 },
-  { left: "90%", top: "64%", color: "#F59E0B", delay: "1.35s", size: 5 },
-];
+const lottieDataCache = new Map<string, object>();
+const lottiePromiseCache = new Map<string, Promise<object | null>>();
+
+function loadLottieJson(url: string): Promise<object | null> {
+  const cached = lottieDataCache.get(url);
+  if (cached) return Promise.resolve(cached);
+
+  const pending = lottiePromiseCache.get(url);
+  if (pending) return pending;
+
+  const request = fetch(url)
+    .then((res) => {
+      if (!res.ok) throw new Error(`Failed to fetch ${url}`);
+      return res.json() as Promise<object>;
+    })
+    .then((json) => {
+      lottieDataCache.set(url, json);
+      return json;
+    })
+    .catch(() => null)
+    .finally(() => {
+      lottiePromiseCache.delete(url);
+    });
+
+  lottiePromiseCache.set(url, request);
+  return request;
+}
 
 function resolveAvatarEffect(
   equippedId?: string | null,
@@ -65,312 +108,105 @@ function resolveAvatarEffect(
   }
 }
 
-function getSpinClass(effectId: AvatarEffectId | null): string {
-  switch (effectId) {
-    case "avatar-cyberpunk-overclock-ring":
-      return "cosmetic-avatar-overclock";
-    case "avatar-matrix-code-halo":
-      return "cosmetic-avatar-matrix-halo";
-    case "avatar-inferno-hotfix-horns":
-      return "cosmetic-avatar-inferno-horns";
-    case "avatar-quantum-holo-visor":
-      return "cosmetic-avatar-quantum-visor";
-    default:
-      return "";
+function getAssetKind(url?: string): "video" | "lottie" | "image" | null {
+  if (!url) return null;
+  const clean = url.split(/[?#]/)[0].toLowerCase();
+  if (clean.endsWith(".webm")) return "video";
+  if (clean.endsWith(".json")) return "lottie";
+  if (
+    clean.endsWith(".png") ||
+    clean.endsWith(".webp") ||
+    clean.endsWith(".gif") ||
+    clean.endsWith(".apng") ||
+    clean.startsWith("data:image/")
+  ) {
+    return "image";
   }
-}
-
-function getMicColor(effectId: AvatarEffectId | null): string {
-  switch (effectId) {
-    case "avatar-matrix-code-halo":
-      return "border-[#16A34A]";
-    case "avatar-inferno-hotfix-horns":
-      return "border-[#F59E0B]";
-    case "avatar-quantum-holo-visor":
-      return "border-[#0284C7]";
-    default:
-      return "border-[#E5484D]";
-  }
-}
-
-function OverclockFrameOverlay() {
-  return (
-    <>
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 100 100"
-        className="absolute -inset-[10%] w-[120%] h-[120%] pointer-events-none z-20 cosmetic-svg-spin-slow"
-      >
-        <circle
-          cx="50"
-          cy="50"
-          r="46"
-          fill="none"
-          stroke="#E5484D"
-          strokeWidth="2.4"
-          strokeDasharray="16 8 6 8"
-          strokeLinecap="butt"
-        />
-        <line x1="50" y1="1" x2="50" y2="8" stroke="#F59E0B" strokeWidth="2.8" />
-        <line x1="50" y1="92" x2="50" y2="99" stroke="#F59E0B" strokeWidth="2.8" />
-        <line x1="1" y1="50" x2="8" y2="50" stroke="#E5484D" strokeWidth="2.8" />
-        <line x1="92" y1="50" x2="99" y2="50" stroke="#E5484D" strokeWidth="2.8" />
-      </svg>
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 100 100"
-        className="absolute -inset-[5%] w-[110%] h-[110%] pointer-events-none z-20 cosmetic-svg-spin-reverse"
-      >
-        <circle
-          cx="50"
-          cy="50"
-          r="45"
-          fill="none"
-          stroke="#1A1714"
-          strokeWidth="2"
-          strokeDasharray="10 14"
-        />
-        <circle
-          cx="50"
-          cy="50"
-          r="45"
-          fill="none"
-          stroke="#F59E0B"
-          strokeWidth="2"
-          strokeDasharray="4 20"
-          strokeDashoffset="6"
-        />
-      </svg>
-    </>
-  );
-}
-
-function MatrixHaloOverlay() {
-  return (
-    <>
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 100 100"
-        className="absolute -inset-[12%] w-[124%] h-[124%] pointer-events-none z-20 cosmetic-svg-spin-slow"
-      >
-        <circle
-          cx="50"
-          cy="50"
-          r="43"
-          fill="none"
-          stroke="#16A34A"
-          strokeOpacity="0.45"
-          strokeWidth="1.2"
-          strokeDasharray="4 4"
-        />
-        {BINARY_ORBIT_NODES.map((node, index) => (
-          <text
-            key={index}
-            x={node.x}
-            y={node.y}
-            textAnchor="middle"
-            dominantBaseline="central"
-            fill={node.color}
-            fontSize="8.5"
-            fontWeight="800"
-            fontFamily="monospace"
-          >
-            {node.bit}
-          </text>
-        ))}
-      </svg>
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 100 28"
-        className="absolute -top-[18%] left-1/2 w-[96%] h-auto pointer-events-none z-30 cosmetic-halo-float"
-      >
-        <ellipse
-          cx="50"
-          cy="14"
-          rx="41"
-          ry="7.5"
-          fill="none"
-          stroke="#1A1714"
-          strokeWidth="4.4"
-        />
-        <ellipse
-          cx="50"
-          cy="14"
-          rx="41"
-          ry="7.5"
-          fill="none"
-          stroke="#16A34A"
-          strokeWidth="2.6"
-          strokeDasharray="10 4"
-        />
-        <ellipse
-          cx="50"
-          cy="14"
-          rx="34"
-          ry="4.5"
-          fill="none"
-          stroke="#4ADE80"
-          strokeWidth="1.4"
-          strokeDasharray="5 6"
-        />
-      </svg>
-    </>
-  );
-}
-
-function InfernoHornsOverlay() {
-  return (
-    <>
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 100 44"
-        className="absolute -top-[26%] left-1/2 w-[118%] h-auto pointer-events-none z-30 cosmetic-horn-flicker"
-      >
-        <polygon
-          points="14,38 8,19 22,4 24,18 35,31"
-          fill="#E5484D"
-          stroke="#1A1714"
-          strokeWidth="2.4"
-          strokeLinejoin="miter"
-        />
-        <polygon
-          points="86,38 92,19 78,4 76,18 65,31"
-          fill="#E5484D"
-          stroke="#1A1714"
-          strokeWidth="2.4"
-          strokeLinejoin="miter"
-        />
-        <polygon points="18,33 14,21 22,11 23,21 30,29" fill="#F59E0B" />
-        <polygon points="82,33 86,21 78,11 77,21 70,29" fill="#F59E0B" />
-      </svg>
-      {EMBER_SPARKS.map((spark, index) => (
-        <span
-          key={index}
-          aria-hidden="true"
-          className="absolute pointer-events-none z-30 cosmetic-ember-rise border border-[#1A1714]"
-          style={{
-            left: spark.left,
-            top: spark.top,
-            width: spark.size,
-            height: spark.size,
-            backgroundColor: spark.color,
-            animationDelay: spark.delay,
-          }}
-        />
-      ))}
-    </>
-  );
-}
-
-function QuantumVisorOverlay() {
-  return (
-    <>
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 100 100"
-        className="absolute -inset-[9%] w-[118%] h-[118%] pointer-events-none z-20 cosmetic-reticle-pulse"
-      >
-        <path
-          d="M8 24 L8 8 L24 8"
-          fill="none"
-          stroke="#1A1714"
-          strokeWidth="3.5"
-          strokeLinecap="square"
-        />
-        <path
-          d="M8 24 L8 8 L24 8"
-          fill="none"
-          stroke="#0284C7"
-          strokeWidth="2"
-          strokeLinecap="square"
-        />
-        <path
-          d="M76 8 L92 8 L92 24"
-          fill="none"
-          stroke="#1A1714"
-          strokeWidth="3.5"
-          strokeLinecap="square"
-        />
-        <path
-          d="M76 8 L92 8 L92 24"
-          fill="none"
-          stroke="#0284C7"
-          strokeWidth="2"
-          strokeLinecap="square"
-        />
-        <path
-          d="M8 76 L8 92 L24 92"
-          fill="none"
-          stroke="#1A1714"
-          strokeWidth="3.5"
-          strokeLinecap="square"
-        />
-        <path
-          d="M8 76 L8 92 L24 92"
-          fill="none"
-          stroke="#0284C7"
-          strokeWidth="2"
-          strokeLinecap="square"
-        />
-        <path
-          d="M76 92 L92 92 L92 76"
-          fill="none"
-          stroke="#1A1714"
-          strokeWidth="3.5"
-          strokeLinecap="square"
-        />
-        <path
-          d="M76 92 L92 92 L92 76"
-          fill="none"
-          stroke="#0284C7"
-          strokeWidth="2"
-          strokeLinecap="square"
-        />
-      </svg>
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 100 30"
-        className="absolute top-[18%] left-1/2 -translate-x-1/2 w-[108%] h-auto pointer-events-none z-30"
-      >
-        <rect
-          x="10"
-          y="7"
-          width="80"
-          height="14"
-          rx="3"
-          fill="rgba(2, 132, 199, 0.2)"
-          stroke="#1A1714"
-          strokeWidth="3"
-        />
-        <rect
-          x="10"
-          y="7"
-          width="80"
-          height="14"
-          rx="3"
-          fill="none"
-          stroke="#38BDF8"
-          strokeWidth="1.8"
-        />
-        <line x1="18" y1="14" x2="34" y2="14" stroke="#E0F2FE" strokeWidth="2" />
-        <line x1="68" y1="14" x2="82" y2="14" stroke="#38BDF8" strokeWidth="1.6" />
-      </svg>
-    </>
-  );
+  return "image";
 }
 
 export function DiscordAvatarFrame({
   equippedId,
   fallbackRing,
+  item,
   size = "md",
   micActive = false,
   children,
 }: DiscordAvatarFrameProps) {
   const px = typeof size === "number" ? Math.max(24, size) : SIZE_MAP[size];
-  const effectId = resolveAvatarEffect(equippedId, fallbackRing);
-  const spinClass = getSpinClass(effectId);
-  const micColor = getMicColor(effectId);
-  const pad = effectId ? (px >= 64 ? 4 : 3) : 0;
+  const rawId = equippedId || fallbackRing || "";
+  const resolvedItem = item ?? (rawId ? findCosmeticById(rawId) : undefined);
+  const effectId = resolveAvatarEffect(resolvedItem?.id ?? equippedId, fallbackRing);
+  const lottieConfig = effectId ? AVATAR_LOTTIE_MAP[effectId] : null;
+  const assetUrl = resolvedItem?.assetUrl;
+  const assetKind = getAssetKind(assetUrl);
+
+  const [mediaFailed, setMediaFailed] = useState(false);
+
+  useEffect(() => {
+    setMediaFailed(false);
+  }, [assetUrl]);
+
+  const shouldUseLottieFallback =
+    !assetUrl || mediaFailed || assetKind === "lottie";
+  const lottieUrl =
+    assetKind === "lottie" && assetUrl && !mediaFailed
+      ? assetUrl
+      : lottieConfig?.src ?? (resolvedItem ? "/lottie/cyber-ring.json" : null);
+
+  const [animationData, setAnimationData] = useState<object | null>(() =>
+    lottieUrl ? lottieDataCache.get(lottieUrl) ?? null : null
+  );
+
+  useEffect(() => {
+    if (!shouldUseLottieFallback || !lottieUrl) {
+      setAnimationData(null);
+      return;
+    }
+
+    const cached = lottieDataCache.get(lottieUrl);
+    if (cached) {
+      setAnimationData(cached);
+      return;
+    }
+
+    let cancelled = false;
+    loadLottieJson(lottieUrl).then((data) => {
+      if (!cancelled && data) {
+        setAnimationData(data);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [shouldUseLottieFallback, lottieUrl]);
+
+  const hasEffect = Boolean(resolvedItem || lottieConfig);
+  const glowColor =
+    resolvedItem?.fallbackGlowColor ?? resolvedItem?.previewAccent ?? undefined;
+  const micColor = lottieConfig?.micColor ?? "border-[#E5484D]";
+  const scale = resolvedItem?.scale ?? 1.22;
+  const isDefaultScale = Math.abs(scale - 1.22) < 0.001;
+
+  const boxStyle: CSSProperties = isDefaultScale
+    ? {}
+    : {
+        width: `${scale * 100}%`,
+        height: `${scale * 100}%`,
+        left: `${-((scale - 1) * 50)}%`,
+        top: `${-((scale - 1) * 50)}%`,
+      };
+
+  const glowFilter =
+    lottieConfig?.filter ??
+    (glowColor ? `drop-shadow(0 0 10px ${glowColor}99)` : undefined);
+
+  const overlayStyle: CSSProperties = {
+    ...boxStyle,
+    filter: glowFilter,
+    mixBlendMode: resolvedItem?.blendMode === "screen" ? "screen" : "normal",
+  };
 
   return (
     <div
@@ -391,41 +227,53 @@ export function DiscordAvatarFrame({
         </>
       )}
 
-      {effectId ? (
+      <div className="relative w-full h-full rounded-full overflow-hidden flex items-center justify-center z-10">
+        {children}
+      </div>
+
+      {hasEffect && (
         <div
-          className="relative w-full h-full rounded-full flex items-center justify-center border border-[#1A1714]"
-          style={{ padding: pad }}
+          aria-hidden="true"
+          className={`pointer-events-none select-none absolute z-20 flex items-center justify-center ${
+            isDefaultScale ? "w-[122%] h-[122%] -inset-[11%]" : ""
+          }`}
+          style={overlayStyle}
         >
-          <span
-            aria-hidden="true"
-            className={`absolute inset-0 rounded-full ${spinClass} pointer-events-none`}
-          />
-          <div className="relative w-full h-full rounded-full bg-paper border border-[#1A1714] overflow-hidden flex items-center justify-center z-10">
-            {children}
-            {effectId === "avatar-quantum-holo-visor" && (
-              <>
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-x-0 h-[3px] bg-[#38BDF8]/80 shadow-[0_0_8px_#0284C7] cosmetic-holo-scan-y pointer-events-none z-20"
-                />
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-sky-300/45 to-transparent cosmetic-avatar-visor-beam pointer-events-none z-20"
-                />
-              </>
-            )}
-          </div>
-        </div>
-      ) : (
-        <div className="relative w-full h-full rounded-full overflow-hidden flex items-center justify-center">
-          {children}
+          {!mediaFailed && assetUrl && assetKind === "video" ? (
+            <video
+              src={assetUrl}
+              autoPlay
+              loop
+              muted
+              playsInline
+              onError={() => setMediaFailed(true)}
+              className="w-full h-full object-contain pointer-events-none select-none"
+            />
+          ) : !mediaFailed && assetUrl && assetKind === "image" ? (
+            <img
+              src={assetUrl}
+              alt=""
+              onError={() => setMediaFailed(true)}
+              className="w-full h-full object-contain pointer-events-none select-none"
+            />
+          ) : animationData ? (
+            <Lottie
+              src={animationData}
+              loop
+              autoplay
+              className="w-full h-full pointer-events-none select-none"
+            />
+          ) : glowColor ? (
+            <span
+              className="w-full h-full rounded-full border-2 opacity-80"
+              style={{
+                borderColor: glowColor,
+                boxShadow: `0 0 14px ${glowColor}88`,
+              }}
+            />
+          ) : null}
         </div>
       )}
-
-      {effectId === "avatar-cyberpunk-overclock-ring" && <OverclockFrameOverlay />}
-      {effectId === "avatar-matrix-code-halo" && <MatrixHaloOverlay />}
-      {effectId === "avatar-inferno-hotfix-horns" && <InfernoHornsOverlay />}
-      {effectId === "avatar-quantum-holo-visor" && <QuantumVisorOverlay />}
     </div>
   );
 }

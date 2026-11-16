@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import confetti from "canvas-confetti";
+import { Lottie } from "lottie-react";
 import { Sparkles, Terminal, Zap, CheckCircle2 } from "lucide-react";
 import "./cosmetics.css";
 
@@ -13,255 +14,81 @@ export interface VictoryFinisherOverlayProps {
   onComplete?: () => void;
 }
 
-const FINISHER_PALETTE = ["#E5484D", "#16A34A", "#F59E0B", "#0284C7", "#1A1714"];
+const VICTORY_LOTTIE_URL = "/lottie/victory-burst.json";
+const victoryLottieCache = new Map<string, object>();
+let victoryLottiePending: Promise<object | null> | null = null;
 
-const CONFETTI_STAMPS = [
-  { left: "8%", tx: "-32px", delay: "0s", duration: "2.1s", label: "LGTM!" },
-  { left: "21%", tx: "40px", delay: "0.14s", duration: "2.3s", label: "200 OK" },
-  { left: "35%", tx: "-24px", delay: "0.06s", duration: "2.0s", label: "LGTM!" },
-  { left: "50%", tx: "28px", delay: "0.2s", duration: "2.4s", label: "APPROVED" },
-  { left: "65%", tx: "-38px", delay: "0.08s", duration: "2.2s", label: "LGTM!" },
-  { left: "79%", tx: "32px", delay: "0.16s", duration: "2.4s", label: "SHIPPED" },
-  { left: "90%", tx: "-22px", delay: "0.1s", duration: "2.1s", label: "LGTM!" },
-];
+function loadVictoryLottie(): Promise<object | null> {
+  const cached = victoryLottieCache.get(VICTORY_LOTTIE_URL);
+  if (cached) return Promise.resolve(cached);
+  if (victoryLottiePending) return victoryLottiePending;
 
-const MATRIX_GLYPHS =
-  "01011001ABCDEF0123456789アイウエオカキクケコサシスセソタチツテト";
-
-interface BoltSegment {
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-  width: number;
-}
-
-function buildStrikeBolt(
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number,
-  displacement: number,
-  depth: number,
-  width: number,
-  out: BoltSegment[]
-) {
-  if (depth <= 0) {
-    out.push({ x1, y1, x2, y2, width });
-    return;
-  }
-  const midX = (x1 + x2) * 0.5 + (Math.random() - 0.5) * displacement;
-  const midY = (y1 + y2) * 0.5 + (Math.random() - 0.5) * displacement;
-  buildStrikeBolt(x1, y1, midX, midY, displacement * 0.55, depth - 1, width, out);
-  buildStrikeBolt(midX, midY, x2, y2, displacement * 0.55, depth - 1, width, out);
-
-  if (depth >= 2 && Math.random() < 0.5) {
-    const bx = midX + (Math.random() - 0.5) * displacement * 1.4;
-    const by = midY + Math.abs(y2 - y1) * 0.35 + Math.random() * 45;
-    buildStrikeBolt(midX, midY, bx, by, displacement * 0.45, depth - 2, width * 0.55, out);
-  }
-}
-
-function CyberLightningCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    canvas.width = Math.floor(width * dpr);
-    canvas.height = Math.floor(height * dpr);
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    const createBolts = (): BoltSegment[][] => {
-      const leftBolt: BoltSegment[] = [];
-      const rightBolt: BoltSegment[] = [];
-      const centerBolt: BoltSegment[] = [];
-      buildStrikeBolt(width * 0.16, 0, width * 0.44, height * 0.58, 95, 5, 3.6, leftBolt);
-      buildStrikeBolt(width * 0.84, 0, width * 0.56, height * 0.58, 95, 5, 3.6, rightBolt);
-      buildStrikeBolt(width * 0.5, 0, width * 0.5, height * 0.48, 70, 4, 2.8, centerBolt);
-      return [leftBolt, rightBolt, centerBolt];
-    };
-
-    let bolts = createBolts();
-    let frame = 0;
-    let rafId = 0;
-
-    const draw = () => {
-      ctx.clearRect(0, 0, width, height);
-      frame += 1;
-
-      if (!reducedMotion && (frame === 14 || frame === 30)) {
-        bolts = createBolts();
-      }
-
-      const envelope = reducedMotion
-        ? 0.7
-        : frame < 10
-          ? 1
-          : frame < 24
-            ? 0.78
-            : Math.max(0, 1 - (frame - 24) / 42);
-
-      if (envelope > 0.01) {
-        const flashRadius = Math.max(width, height) * 0.48;
-        const flashGrad = ctx.createRadialGradient(
-          width * 0.5,
-          height * 0.48,
-          10,
-          width * 0.5,
-          height * 0.48,
-          flashRadius
-        );
-        flashGrad.addColorStop(0, `rgba(245, 158, 11, ${(0.34 * envelope).toFixed(3)})`);
-        flashGrad.addColorStop(0.55, `rgba(202, 138, 4, ${(0.14 * envelope).toFixed(3)})`);
-        flashGrad.addColorStop(1, "rgba(245, 158, 11, 0)");
-        ctx.fillStyle = flashGrad;
-        ctx.fillRect(0, 0, width, height);
-
-        const colors = ["#F59E0B", "#CA8A04", "#E5484D"];
-        ctx.save();
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
-        bolts.forEach((group, idx) => {
-          const stroke = colors[idx % colors.length] ?? "#F59E0B";
-          ctx.shadowColor = stroke;
-          ctx.shadowBlur = 18;
-          for (const seg of group) {
-            ctx.beginPath();
-            ctx.moveTo(seg.x1, seg.y1);
-            ctx.lineTo(seg.x2, seg.y2);
-            ctx.strokeStyle = stroke;
-            ctx.globalAlpha = 0.9 * envelope;
-            ctx.lineWidth = seg.width;
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.moveTo(seg.x1, seg.y1);
-            ctx.lineTo(seg.x2, seg.y2);
-            ctx.strokeStyle = "#FFFFFF";
-            ctx.globalAlpha = 0.95 * envelope;
-            ctx.lineWidth = Math.max(1, seg.width * 0.42);
-            ctx.stroke();
-          }
-        });
-        ctx.restore();
-      }
-
-      if (!reducedMotion && frame < 72) {
-        rafId = window.requestAnimationFrame(draw);
-      }
-    };
-
-    draw();
-    return () => {
-      if (rafId) window.cancelAnimationFrame(rafId);
-    };
-  }, []);
-
-  return <canvas ref={canvasRef} className="absolute inset-0 block w-full h-full" />;
-}
-
-function MatrixOverrideCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    canvas.width = Math.floor(width * dpr);
-    canvas.height = Math.floor(height * dpr);
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    const fontSize = 15;
-    const colWidth = 20;
-    const count = Math.max(1, Math.ceil(width / colWidth));
-    const maxRows = Math.ceil(height / fontSize) + 14;
-    const columns = Array.from({ length: count }, () => {
-      const trail = 10 + Math.floor(Math.random() * 8);
-      return {
-        y: Math.random() * (maxRows * 0.45),
-        speed: 0.42 + Math.random() * 0.36,
-        trail,
-        chars: Array.from(
-          { length: trail },
-          () => MATRIX_GLYPHS[Math.floor(Math.random() * MATRIX_GLYPHS.length)] ?? "1"
-        ),
-      };
+  victoryLottiePending = fetch(VICTORY_LOTTIE_URL)
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to fetch victory-burst.json");
+      return res.json() as Promise<object>;
+    })
+    .then((json) => {
+      victoryLottieCache.set(VICTORY_LOTTIE_URL, json);
+      return json;
+    })
+    .catch(() => null)
+    .finally(() => {
+      victoryLottiePending = null;
     });
 
-    let rafId = 0;
-    let tick = 0;
+  return victoryLottiePending;
+}
 
-    const draw = () => {
-      ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = "rgba(5, 46, 22, 0.22)";
-      ctx.fillRect(0, 0, width, height);
-      ctx.font = `700 ${fontSize}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
-      ctx.textBaseline = "top";
-      tick += 1;
+function getFinisherBloomStyle(finisherId: string): CSSProperties {
+  switch (finisherId) {
+    case "finisher-system-restored-shockwave":
+      return {
+        filter:
+          "hue-rotate(110deg) drop-shadow(0 0 24px rgba(16, 185, 129, 0.5)) drop-shadow(0 0 44px rgba(13, 148, 136, 0.3))",
+      };
+    case "finisher-cyber-lightning-strike":
+      return {
+        filter:
+          "saturate(1.2) drop-shadow(0 0 24px rgba(245, 158, 11, 0.55)) drop-shadow(0 0 44px rgba(202, 138, 4, 0.3))",
+      };
+    case "finisher-matrix-override":
+      return {
+        filter:
+          "hue-rotate(95deg) saturate(1.15) drop-shadow(0 0 24px rgba(22, 163, 74, 0.55)) drop-shadow(0 0 44px rgba(21, 128, 61, 0.32))",
+      };
+    default:
+      return {
+        filter:
+          "drop-shadow(0 0 22px rgba(229, 72, 77, 0.48)) drop-shadow(0 0 44px rgba(245, 158, 11, 0.3))",
+      };
+  }
+}
 
-      for (let i = 0; i < columns.length; i += 1) {
-        const col = columns[i];
-        if (!col) continue;
-        const x = i * colWidth + 3;
-        const head = Math.floor(col.y);
+function getConfettiPalette(finisherId: string): string[] {
+  switch (finisherId) {
+    case "finisher-system-restored-shockwave":
+      return ["#10b981", "#0d9488", "#34d399", "#a7f3d0"];
+    case "finisher-cyber-lightning-strike":
+      return ["#f59e0b", "#fbbf24", "#0284c7", "#fef3c7"];
+    case "finisher-matrix-override":
+      return ["#22c55e", "#16a34a", "#4ade80", "#bbf7d0"];
+    default:
+      return ["#e5484d", "#f59e0b", "#0d9488", "#fde68a"];
+  }
+}
 
-        for (let t = 0; t < col.trail; t += 1) {
-          const rowY = (head - t) * fontSize;
-          if (rowY < -fontSize || rowY > height) continue;
-          if (tick % 4 === 0 && Math.random() < 0.2) {
-            col.chars[t] =
-              MATRIX_GLYPHS[Math.floor(Math.random() * MATRIX_GLYPHS.length)] ?? "0";
-          }
-          const ch = col.chars[t] ?? "1";
-          if (t === 0) {
-            ctx.fillStyle = "rgba(187, 247, 208, 0.96)";
-          } else if (t === 1) {
-            ctx.fillStyle = "rgba(22, 163, 74, 0.88)";
-          } else {
-            const alpha = Math.max(0.08, 0.72 * (1 - t / col.trail));
-            ctx.fillStyle = `rgba(21, 128, 61, ${alpha.toFixed(3)})`;
-          }
-          ctx.fillText(ch, x, rowY);
-        }
-
-        if (!reducedMotion) {
-          col.y += col.speed;
-          if (col.y - col.trail > maxRows) {
-            col.y = -Math.random() * 8;
-          }
-        }
-      }
-
-      if (!reducedMotion) {
-        rafId = window.requestAnimationFrame(draw);
-      }
-    };
-
-    draw();
-    return () => {
-      if (rafId) window.cancelAnimationFrame(rafId);
-    };
-  }, []);
-
-  return <canvas ref={canvasRef} className="absolute inset-0 block w-full h-full" />;
+function getShockwaveColor(finisherId: string): string {
+  switch (finisherId) {
+    case "finisher-system-restored-shockwave":
+      return "rgba(16, 185, 129, 0.32)";
+    case "finisher-cyber-lightning-strike":
+      return "rgba(245, 158, 11, 0.34)";
+    case "finisher-matrix-override":
+      return "rgba(34, 197, 94, 0.32)";
+    default:
+      return "rgba(229, 72, 77, 0.28)";
+  }
 }
 
 export function VictoryFinisherOverlay({
@@ -271,67 +98,87 @@ export function VictoryFinisherOverlay({
   subtitle = "Incident Resolved & Verified",
   onComplete,
 }: VictoryFinisherOverlayProps) {
-  const confettiCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const resolvedId = finisherId || "finisher-lgtm-neon-confetti";
+  const confettiCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [fading, setFading] = useState(false);
+  const [animationData, setAnimationData] = useState<object | null>(
+    () => victoryLottieCache.get(VICTORY_LOTTIE_URL) ?? null
+  );
 
   useEffect(() => {
     if (!active) return;
-    const timer = window.setTimeout(() => {
+
+    const cached = victoryLottieCache.get(VICTORY_LOTTIE_URL);
+    if (cached) {
+      setAnimationData(cached);
+    } else {
+      let cancelled = false;
+      loadVictoryLottie().then((data) => {
+        if (!cancelled && data) setAnimationData(data);
+      });
+      return () => {
+        cancelled = true;
+      };
+    }
+  }, [active]);
+
+  useEffect(() => {
+    if (!active) {
+      setFading(false);
+      return;
+    }
+
+    setFading(false);
+    const fadeTimer = window.setTimeout(() => {
+      setFading(true);
+    }, 1850);
+    const doneTimer = window.setTimeout(() => {
       onComplete?.();
     }, 2600);
-    return () => window.clearTimeout(timer);
+
+    return () => {
+      window.clearTimeout(fadeTimer);
+      window.clearTimeout(doneTimer);
+    };
   }, [active, onComplete]);
 
   useEffect(() => {
-    if (!active) return;
+    if (!active || typeof window === "undefined") return;
     const canvas = confettiCanvasRef.current;
     if (!canvas) return;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     if (reducedMotion) return;
 
     const fire = confetti.create(canvas, { resize: true, useWorker: false });
-    const shapes: confetti.Shape[] = ["star", "square"];
-    const baseColors = FINISHER_PALETTE;
+    const colors = getConfettiPalette(resolvedId);
 
-    const launchCannons = () => {
-      fire({
-        particleCount: resolvedId === "finisher-lgtm-neon-confetti" ? 42 : 26,
-        angle: 60,
-        spread: 58,
-        startVelocity: 54,
-        origin: { x: 0.04, y: 0.68 },
-        colors: baseColors,
-        shapes,
-        scalar: 1.05,
-        disableForReducedMotion: true,
-      });
-      fire({
-        particleCount: resolvedId === "finisher-lgtm-neon-confetti" ? 42 : 26,
-        angle: 120,
-        spread: 58,
-        startVelocity: 54,
-        origin: { x: 0.96, y: 0.68 },
-        colors: baseColors,
-        shapes,
-        scalar: 1.05,
-        disableForReducedMotion: true,
-      });
-    };
-
-    launchCannons();
+    fire({
+      particleCount: 28,
+      angle: 60,
+      spread: 52,
+      startVelocity: 42,
+      scalar: 0.85,
+      ticks: 135,
+      gravity: 1.05,
+      origin: { x: 0.22, y: 0.62 },
+      colors,
+      disableForReducedMotion: true,
+    });
 
     const burstTimer = window.setTimeout(() => {
       fire({
-        particleCount: resolvedId === "finisher-lgtm-neon-confetti" ? 65 : 36,
-        spread: 110,
-        startVelocity: 38,
-        origin: { x: 0.5, y: 0.45 },
-        colors: baseColors,
-        shapes,
-        ticks: 180,
+        particleCount: 28,
+        angle: 120,
+        spread: 52,
+        startVelocity: 42,
+        scalar: 0.85,
+        ticks: 135,
+        gravity: 1.05,
+        origin: { x: 0.78, y: 0.62 },
+        colors,
         disableForReducedMotion: true,
       });
-    }, 240);
+    }, 120);
 
     return () => {
       window.clearTimeout(burstTimer);
@@ -344,6 +191,7 @@ export function VictoryFinisherOverlay({
   const isMatrix = resolvedId === "finisher-matrix-override";
   const isShockwave = resolvedId === "finisher-system-restored-shockwave";
   const isLightning = resolvedId === "finisher-cyber-lightning-strike";
+  const shockwaveColor = getShockwaveColor(resolvedId);
 
   return (
     <div
@@ -351,85 +199,47 @@ export function VictoryFinisherOverlay({
       aria-live="polite"
       className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center overflow-hidden"
     >
-      <canvas
-        ref={confettiCanvasRef}
-        className="absolute inset-0 z-20 block w-full h-full pointer-events-none"
-      />
+      <div
+        aria-hidden="true"
+        className={`absolute inset-0 transition-opacity duration-700 ${
+          fading ? "opacity-0" : "opacity-100"
+        }`}
+      >
+        <canvas
+          ref={confettiCanvasRef}
+          className="absolute inset-0 z-10 w-full h-full pointer-events-none"
+        />
 
-      {resolvedId === "finisher-lgtm-neon-confetti" && (
-        <div className="cosmetic-finisher-lgtm-confetti absolute inset-0 z-10">
-          {CONFETTI_STAMPS.map((piece, idx) => (
-            <span
-              key={idx}
-              className="cosmetic-confetti-piece absolute top-0 px-2.5 py-1 rounded-md font-mono text-[11px] font-bold shadow-sm border-2 border-ink bg-paper text-emerald-700"
-              style={
-                {
-                  left: piece.left,
-                  "--tx": piece.tx,
-                  "--drop-delay": piece.delay,
-                  "--drop-duration": piece.duration,
-                } as CSSProperties
-              }
-            >
-              {piece.label}
-            </span>
-          ))}
+        <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+          <div
+            className="w-72 h-72 rounded-full border-2 animate-ping"
+            style={{
+              borderColor: shockwaveColor,
+              animationDuration: "1.4s",
+              animationIterationCount: 1,
+            }}
+          />
         </div>
-      )}
 
-      {isShockwave && (
-        <div className="cosmetic-finisher-shockwave absolute inset-0 z-10 flex items-center justify-center">
-          <svg
-            viewBox="0 0 400 400"
-            className="absolute w-[34rem] h-[34rem] opacity-75"
-            aria-hidden="true"
+        {animationData && (
+          <div
+            className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none opacity-80"
+            style={getFinisherBloomStyle(resolvedId)}
           >
-            <circle
-              cx="200"
-              cy="200"
-              r="140"
-              fill="none"
-              stroke="#16A34A"
-              strokeWidth="2"
-              strokeDasharray="10 8"
+            <Lottie
+              src={animationData}
+              loop={false}
+              autoplay
+              className="w-[30rem] h-[30rem] max-w-[90vw] max-h-[90vh] pointer-events-none"
             />
-            <circle
-              cx="200"
-              cy="200"
-              r="180"
-              fill="none"
-              stroke="#0D9488"
-              strokeWidth="1.5"
-              strokeDasharray="6 10"
-            />
-          </svg>
-          <span className="cosmetic-shockwave-ring absolute w-48 h-48 rounded-full border-4 border-emerald-500/85" />
-          <span
-            className="cosmetic-shockwave-ring absolute w-48 h-48 rounded-full border-4 border-teal-400/70"
-            style={{ animationDelay: "0.22s" }}
-          />
-          <span
-            className="cosmetic-shockwave-ring absolute w-48 h-48 rounded-full border-4 border-sky-500/55"
-            style={{ animationDelay: "0.44s" }}
-          />
-        </div>
-      )}
-
-      {isLightning && (
-        <div className="cosmetic-finisher-lightning absolute inset-0 z-10">
-          <div className="cosmetic-lightning-bolt absolute inset-0 bg-amber-400/15" />
-          <CyberLightningCanvas />
-        </div>
-      )}
-
-      {isMatrix && (
-        <div className="cosmetic-finisher-matrix-override absolute inset-0 z-10">
-          <MatrixOverrideCanvas />
-        </div>
-      )}
+          </div>
+        )}
+      </div>
 
       <div
-        className={`cosmetic-finisher-banner relative z-30 mx-4 max-w-md w-full rounded-2xl border-2 px-6 py-5 shadow-hard text-center space-y-2 ${
+        className={`cosmetic-finisher-banner relative z-30 mx-4 max-w-md w-full rounded-2xl border-2 px-6 py-5 shadow-hard text-center space-y-2 transition-opacity duration-500 ${
+          fading ? "opacity-0" : "opacity-100"
+        } ${
           isMatrix
             ? "border-emerald-500 bg-ink text-emerald-400"
             : "border-ink bg-paper text-ink"

@@ -33,7 +33,6 @@ import {
   COSMETIC_CATEGORIES,
   COSMETIC_CATALOG,
   DEFAULT_EQUIPPED_COSMETICS,
-  getCosmeticsByCategory,
   normalizeEquippedCosmetics,
   type CosmeticCategory,
   type CosmeticItem,
@@ -54,6 +53,7 @@ import { CustomCursorTrail } from "./CustomCursorTrail";
 import { DiscordAvatarFrame } from "./DiscordAvatarFrame";
 import { FullPageProfileEffect } from "./FullPageProfileEffect";
 import { LeaderboardRowWrapper } from "./LeaderboardRowWrapper";
+import { NameplateBanner } from "./NameplateBanner";
 import { PlayerAvatar } from "./PlayerAvatar";
 import { VictoryFinisherOverlay } from "./VictoryFinisherOverlay";
 
@@ -122,7 +122,7 @@ function CosmeticCardThumbnail({
   if (item.category === "avatar_decoration") {
     return (
       <div className="h-28 rounded-xl border-2 border-[#1A1714] bg-[#FAF6EF] flex items-center justify-center relative overflow-hidden">
-        <DiscordAvatarFrame equippedId={item.id} size="lg" micActive={micActive}>
+        <DiscordAvatarFrame equippedId={item.id} item={item} size="lg" micActive={micActive}>
           <div className="w-full h-full flex items-center justify-center bg-white font-mono font-bold text-base text-[#1A1714]">
             {initials}
           </div>
@@ -134,28 +134,32 @@ function CosmeticCardThumbnail({
   if (item.category === "nameplate") {
     return (
       <div className="h-28 rounded-xl border-2 border-[#1A1714] bg-[#FAF6EF] px-3 flex items-center justify-center relative overflow-hidden">
-        <div
-          className={`w-full rounded-xl border-2 border-[#1A1714] px-3 py-2.5 flex items-center justify-between gap-2 shadow-[2px_2px_0_#1A1714] relative overflow-hidden ${item.effectClass}`}
+        <NameplateBanner
+          nameplateId={item.id}
+          item={item}
+          className="w-full px-3 py-2.5 shadow-[2px_2px_0_#1A1714]"
         >
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="w-6 h-6 rounded-full bg-[#1A1714] text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
-              {initials}
-            </span>
-            <span className="text-xs font-bold text-[#1A1714] truncate">
-              {displayName}
-            </span>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="w-6 h-6 rounded-full bg-white text-[#1A1714] font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+                {initials}
+              </span>
+              <span className="text-xs font-bold text-white truncate">
+                {displayName}
+              </span>
+            </div>
+            {item.id === "nameplate-terminal-pulse" ? (
+              <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-emerald-300 shrink-0">
+                <span>$</span>
+                <span className="cosmetic-nameplate-terminal-cursor inline-block w-1.5 h-3 bg-emerald-400" />
+              </span>
+            ) : (
+              <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-white/15 border border-white/25 text-white shrink-0">
+                TAG
+              </span>
+            )}
           </div>
-          {item.id === "nameplate-terminal-pulse" ? (
-            <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-emerald-700 shrink-0">
-              <span>$</span>
-              <span className="cosmetic-nameplate-terminal-cursor inline-block w-1.5 h-3 bg-emerald-600" />
-            </span>
-          ) : (
-            <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-white/80 border border-[#1A1714]/30 text-[#1A1714] shrink-0">
-              TAG
-            </span>
-          )}
-        </div>
+        </NameplateBanner>
       </div>
     );
   }
@@ -304,7 +308,11 @@ function CosmeticCardThumbnail({
   );
 }
 
-export function CosmeticShopClient() {
+export interface CosmeticShopClientProps {
+  extraItems?: CosmeticItem[];
+}
+
+export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps) {
   const [loading, setLoading] = useState(true);
   const [guestPlayer, setGuestPlayer] = useState<PublicGuestPlayer | null>(null);
   const [activeCategory, setActiveCategory] =
@@ -378,9 +386,16 @@ export function CosmeticShopClient() {
     [equipped, previewOverrides]
   );
 
+  const catalogItems = useMemo(() => {
+    if (!extraItems.length) return COSMETIC_CATALOG;
+    const seen = new Set(COSMETIC_CATALOG.map((item) => item.id));
+    const uniqueExtra = extraItems.filter((item) => !seen.has(item.id));
+    return [...COSMETIC_CATALOG, ...uniqueExtra];
+  }, [extraItems]);
+
   const categoryItems = useMemo(
-    () => getCosmeticsByCategory(activeCategory),
-    [activeCategory]
+    () => catalogItems.filter((item) => item.category === activeCategory),
+    [catalogItems, activeCategory]
   );
 
   const hasPreviewChanges = Object.keys(previewOverrides).length > 0;
@@ -523,10 +538,16 @@ export function CosmeticShopClient() {
     }
   };
 
-  const activeNameplateItem = COSMETIC_CATALOG.find(
+  const activeAvatarItem = catalogItems.find(
+    (item) => item.id === activeSandbox.avatar_decoration
+  );
+  const activeThemeItem = catalogItems.find(
+    (item) => item.id === activeSandbox.profile_theme
+  );
+  const activeNameplateItem = catalogItems.find(
     (item) => item.id === activeSandbox.nameplate
   );
-  const activeFinisherItem = COSMETIC_CATALOG.find(
+  const activeFinisherItem = catalogItems.find(
     (item) => item.id === activeSandbox.victory_finisher
   );
   const initials = getInitials(identity.displayName);
@@ -535,6 +556,7 @@ export function CosmeticShopClient() {
     <div className="relative min-h-screen bg-[#FAF6EF]">
       <FullPageProfileEffect
         themeId={themePreviewEnabled ? activeSandbox.profile_theme : null}
+        item={themePreviewEnabled ? activeThemeItem : null}
       />
       <CustomCursorTrail effectId={activeSandbox.cursor_effect} />
       <VictoryFinisherOverlay
@@ -660,6 +682,7 @@ export function CosmeticShopClient() {
                 <DiscordAvatarFrame
                   equippedId={activeSandbox.avatar_decoration}
                   fallbackRing={identity.equippedRing}
+                  item={activeAvatarItem}
                   size="xl"
                   micActive={micTestActive}
                 >
@@ -671,18 +694,30 @@ export function CosmeticShopClient() {
                 </DiscordAvatarFrame>
 
                 <div className="min-w-0 flex-1 space-y-2">
-                  <div
-                    className={`rounded-lg border-2 border-[#1A1714] px-2.5 py-1.5 ${
-                      activeNameplateItem?.effectClass ?? "bg-[#FAF6EF]"
-                    }`}
+                  <NameplateBanner
+                    nameplateId={activeSandbox.nameplate}
+                    item={activeNameplateItem}
+                    className={
+                      activeSandbox.nameplate
+                        ? "px-2.5 py-1.5"
+                        : "rounded-lg border-2 border-[#1A1714] px-2.5 py-1.5 bg-[#FAF6EF]"
+                    }
                   >
-                    <div className="text-sm font-extrabold text-[#1A1714] truncate">
+                    <div
+                      className={`text-sm font-extrabold truncate ${
+                        activeSandbox.nameplate ? "text-white" : "text-[#1A1714]"
+                      }`}
+                    >
                       {identity.displayName}
                     </div>
-                    <div className="text-[11px] font-mono text-[#59534C] truncate">
+                    <div
+                      className={`text-[11px] font-mono truncate ${
+                        activeSandbox.nameplate ? "text-zinc-300" : "text-[#59534C]"
+                      }`}
+                    >
                       {identity.transferCode ?? "DEV-SANDBOX"} • {identity.equippedTitle}
                     </div>
-                  </div>
+                  </NameplateBanner>
 
                   <div className="flex flex-wrap items-center gap-1.5">
                     <button
@@ -759,7 +794,7 @@ export function CosmeticShopClient() {
                 const meta = CATEGORY_META[cat];
                 const Icon = meta.icon;
                 const activeId = activeSandbox[cat];
-                const activeItem = COSMETIC_CATALOG.find((c) => c.id === activeId);
+                const activeItem = catalogItems.find((c) => c.id === activeId);
                 const isOverridden = previewOverrides[cat] !== undefined;
 
                 return (

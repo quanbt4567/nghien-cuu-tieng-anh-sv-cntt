@@ -433,6 +433,99 @@
   will-change: opacity;
 }
 
+.cosmetic-dark-glass {
+  color: #fafafa;
+}
+
+.cosmetic-dark-glass .text-ink {
+  color: #fafafa;
+}
+
+.cosmetic-dark-glass .text-ink-muted {
+  color: #d4d4d8;
+}
+
+.cosmetic-dark-glass .text-\[\#1A1714\] {
+  color: #fafafa;
+}
+
+.cosmetic-dark-glass .bg-white.text-ink,
+.cosmetic-dark-glass .bg-paper.text-ink,
+.cosmetic-dark-glass .bg-white .text-ink,
+.cosmetic-dark-glass .bg-paper .text-ink {
+  color: #1a1714;
+}
+
+.cosmetic-dark-glass .bg-white.text-ink-muted,
+.cosmetic-dark-glass .bg-paper.text-ink-muted,
+.cosmetic-dark-glass .bg-white .text-ink-muted,
+.cosmetic-dark-glass .bg-paper .text-ink-muted {
+  color: #59534c;
+}
+
+.cosmetic-border-beam {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--cosmetic-angle),
+    transparent 0deg 280deg,
+    var(--beam-from, rgba(229, 72, 77, 0.85)) 320deg,
+    var(--beam-to, rgba(245, 158, 11, 0.9)) 346deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: cosmeticAngleSpin 3.6s linear infinite;
+  will-change: --cosmetic-angle;
+}
+
+.cosmetic-spotlight {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 220ms ease;
+  background: radial-gradient(
+    240px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    var(--spot-color, rgba(255, 255, 255, 0.12)),
+    transparent 75%
+  );
+}
+
+.group:hover .cosmetic-spotlight {
+  opacity: 1;
+}
+
+@keyframes cosmeticShinySweep {
+  0% {
+    background-position: 180% 0;
+  }
+  100% {
+    background-position: -80% 0;
+  }
+}
+
+.cosmetic-shiny-sweep {
+  pointer-events: none;
+  background-image: linear-gradient(
+    120deg,
+    transparent 32%,
+    var(--shiny-color, rgba(255, 255, 255, 0.22)) 48%,
+    rgba(255, 255, 255, 0.34) 50%,
+    var(--shiny-color, rgba(255, 255, 255, 0.22)) 52%,
+    transparent 68%
+  );
+  background-size: 240% 100%;
+  animation: cosmeticShinySweep 4.6s ease-in-out infinite;
+  will-change: background-position;
+}
+
 .cosmetic-cursor-pixel-sparkle {
   animation: cosmeticCursorSparkle 0.55s ease-out forwards;
 }
@@ -485,13 +578,13 @@
 }
 
 .cosmetic-nameplate-mesh-nebula {
-  background: linear-gradient(120deg, rgba(229, 72, 77, 0.14), rgba(250, 246, 239, 0.95), rgba(26, 23, 20, 0.08));
+  background: linear-gradient(120deg, rgba(229, 72, 77, 0.16), rgba(24, 24, 27, 0.75), rgba(245, 158, 11, 0.14));
   background-size: 200% 200%;
   animation: cosmeticNebulaShift 6s ease infinite;
 }
 
 .cosmetic-nameplate-terminal-pulse {
-  background: linear-gradient(120deg, rgba(22, 163, 74, 0.14), rgba(26, 23, 20, 0.06), rgba(22, 163, 74, 0.1));
+  background: linear-gradient(120deg, rgba(22, 163, 74, 0.16), rgba(9, 9, 11, 0.78), rgba(22, 163, 74, 0.12));
   background-size: 200% 200%;
   animation: cosmeticNebulaShift 5s ease infinite;
 }
@@ -501,13 +594,13 @@
 }
 
 .cosmetic-nameplate-supernova-gold {
-  background: linear-gradient(120deg, rgba(245, 158, 11, 0.2), rgba(254, 243, 199, 0.88), rgba(245, 158, 11, 0.16));
+  background: linear-gradient(120deg, rgba(245, 158, 11, 0.2), rgba(24, 24, 27, 0.75), rgba(245, 158, 11, 0.16));
   background-size: 200% 200%;
   animation: cosmeticNebulaShift 4.5s ease infinite;
 }
 
 .cosmetic-nameplate-cyber-glitch {
-  background: linear-gradient(120deg, rgba(2, 132, 199, 0.16), rgba(224, 242, 254, 0.88), rgba(26, 23, 20, 0.12));
+  background: linear-gradient(120deg, rgba(2, 132, 199, 0.18), rgba(9, 9, 11, 0.78), rgba(229, 72, 77, 0.14));
   background-size: 200% 200%;
   animation: cosmeticNebulaShift 3.6s ease infinite, cosmeticHologramSlice 3.8s steps(2, end) infinite;
 }
@@ -572,7 +665,9 @@
   .cosmetic-finisher-shockwave .cosmetic-shockwave-ring,
   .cosmetic-finisher-lightning .cosmetic-lightning-bolt,
   .cosmetic-finisher-matrix-override .cosmetic-matrix-override-col,
-  .cosmetic-finisher-banner {
+  .cosmetic-finisher-banner,
+  .cosmetic-border-beam,
+  .cosmetic-shiny-sweep {
     animation: none !important;
   }
 }

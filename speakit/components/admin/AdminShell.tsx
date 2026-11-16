@@ -17,6 +17,7 @@ import {
   RefreshCw,
   Settings,
   ShieldCheck,
+  Sparkles,
   Star,
 } from "lucide-react";
 import { SCENARIOS } from "../../data/scenarios";
@@ -24,6 +25,7 @@ import { mergeScenarios } from "../../lib/contentStore";
 import type { AdminContentOverrides } from "../../lib/types";
 import { AdminAnalyticsTab } from "./AdminAnalyticsTab";
 import { AdminArenaTab } from "./AdminArenaTab";
+import { AdminCosmeticsTab } from "./AdminCosmeticsTab";
 import { AdminFeedbackTab } from "./AdminFeedbackTab";
 import { useAdminAuth } from "./AdminLoginGate";
 import { AdminLogsTab } from "./AdminLogsTab";
@@ -42,6 +44,7 @@ type AdminTabId =
   | "scenarios"
   | "vocab"
   | "arena"
+  | "cosmetics"
   | "research"
   | "feedback"
   | "logs"
@@ -56,6 +59,7 @@ const TABS: Array<{
   { id: "scenarios", label: "Kịch bản", icon: MessageSquareText },
   { id: "vocab", label: "Từ vựng", icon: BookOpen },
   { id: "arena", label: "Arena Games", icon: Gamepad2 },
+  { id: "cosmetics", label: "Kho Hiệu Ứng (Discord JSON Importer)", icon: Sparkles },
   { id: "research", label: "Bài báo & Nghiên cứu", icon: Newspaper },
   { id: "feedback", label: "Góp ý (Feedback)", icon: Star },
   { id: "logs", label: "Nhật ký & Xuất CSV", icon: FileSpreadsheet },
@@ -295,6 +299,9 @@ export function AdminShell() {
                 onOverridesChange={handleOverridesChange}
                 onUnauthorized={() => forceLock()}
               />
+            )}
+            {activeTab === "cosmetics" && (
+              <AdminCosmeticsTab onUnauthorized={() => forceLock()} />
             )}
             {activeTab === "research" && (
               <AdminResearchTab onUnauthorized={() => forceLock()} />

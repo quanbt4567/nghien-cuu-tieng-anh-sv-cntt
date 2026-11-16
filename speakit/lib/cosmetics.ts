@@ -10,6 +10,8 @@ export type CosmeticRarity = "Common" | "Rare" | "Epic" | "Legendary";
 
 export type CosmeticKind = "title" | "ring" | CosmeticCategory;
 
+export type CosmeticBlendMode = "normal" | "screen";
+
 export type EquippedCosmetics = Record<CosmeticCategory, string | null>;
 
 export interface CosmeticItem {
@@ -23,6 +25,11 @@ export interface CosmeticItem {
   description: string;
   effectClass: string;
   previewAccent: string;
+  assetUrl?: string;
+  introAssetUrl?: string;
+  fallbackGlowColor?: string;
+  scale?: number;
+  blendMode?: CosmeticBlendMode;
 }
 
 export const COSMETIC_CATEGORIES: CosmeticCategory[] = [
@@ -55,6 +62,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Rotating crimson-amber tactical ring around your developer avatar.",
     effectClass: "cosmetic-avatar-overclock",
     previewAccent: "#E5484D",
+    assetUrl: "/discord-fx/avatar-overclock-ring.png",
+    fallbackGlowColor: "#E5484D",
+    scale: 1.22,
+    blendMode: "normal",
   },
   {
     id: "avatar-matrix-code-halo",
@@ -67,6 +78,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Animated binary orbital halo pulsing above your profile avatar.",
     effectClass: "cosmetic-avatar-matrix-halo",
     previewAccent: "#16A34A",
+    assetUrl: "/discord-fx/avatar-matrix-halo.png",
+    fallbackGlowColor: "#16A34A",
+    scale: 1.22,
+    blendMode: "normal",
   },
   {
     id: "avatar-inferno-hotfix-horns",
@@ -79,6 +94,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Blazing geometric twin horns forged for emergency hotfix responders.",
     effectClass: "cosmetic-avatar-inferno-horns",
     previewAccent: "#EA580C",
+    assetUrl: "/discord-fx/avatar-inferno-horns.png",
+    fallbackGlowColor: "#EA580C",
+    scale: 1.22,
+    blendMode: "normal",
   },
   {
     id: "avatar-quantum-holo-visor",
@@ -91,6 +110,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Prismatic scanning visor frame with kinetic telemetry sweep.",
     effectClass: "cosmetic-avatar-quantum-visor",
     previewAccent: "#0284C7",
+    assetUrl: "/discord-fx/avatar-quantum-visor.png",
+    fallbackGlowColor: "#0284C7",
+    scale: 1.22,
+    blendMode: "normal",
   },
   {
     id: "theme-neon-meteor-shower",
@@ -103,6 +126,11 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Diagonal meteor streaks sweeping across your /profile backdrop.",
     effectClass: "cosmetic-theme-meteor-shower",
     previewAccent: "#E5484D",
+    assetUrl: "/discord-fx/theme-meteor-shower.png",
+    introAssetUrl: "/discord-fx/theme-meteor-intro.png",
+    fallbackGlowColor: "#E5484D",
+    scale: 1,
+    blendMode: "screen",
   },
   {
     id: "theme-digital-matrix-rain",
@@ -115,6 +143,11 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Cascading terminal glyph columns layered behind your profile cards.",
     effectClass: "cosmetic-theme-matrix-rain",
     previewAccent: "#15803D",
+    assetUrl: "/discord-fx/theme-matrix-rain.png",
+    introAssetUrl: "/discord-fx/theme-matrix-intro.png",
+    fallbackGlowColor: "#15803D",
+    scale: 1,
+    blendMode: "screen",
   },
   {
     id: "theme-aurora-cyber-grid",
@@ -127,6 +160,11 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Animated perspective blueprint grid with warm amber-teal bands.",
     effectClass: "cosmetic-theme-aurora-grid",
     previewAccent: "#0D9488",
+    assetUrl: "/discord-fx/theme-aurora-grid.png",
+    introAssetUrl: "/discord-fx/theme-aurora-intro.png",
+    fallbackGlowColor: "#0D9488",
+    scale: 1,
+    blendMode: "screen",
   },
   {
     id: "theme-electric-storm-surge",
@@ -139,6 +177,11 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "High-voltage arc pulses framing your entire profile showcase.",
     effectClass: "cosmetic-theme-electric-storm",
     previewAccent: "#CA8A04",
+    assetUrl: "/discord-fx/theme-electric-storm.png",
+    introAssetUrl: "/discord-fx/theme-storm-intro.png",
+    fallbackGlowColor: "#CA8A04",
+    scale: 1,
+    blendMode: "screen",
   },
   {
     id: "cursor-pixel-sparkle-trail",
@@ -151,6 +194,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Crisp 8-bit square sparkles trailing every pointer movement.",
     effectClass: "cosmetic-cursor-pixel-sparkle",
     previewAccent: "#D97706",
+    assetUrl: "/discord-fx/cursor-pixel-sparkle.png",
+    fallbackGlowColor: "#D97706",
+    scale: 1,
+    blendMode: "screen",
   },
   {
     id: "cursor-binary-01-stream",
@@ -163,6 +210,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Floating monospace 0 and 1 bits emitted from your cursor.",
     effectClass: "cosmetic-cursor-binary-stream",
     previewAccent: "#16A34A",
+    assetUrl: "/discord-fx/cursor-binary-stream.png",
+    fallbackGlowColor: "#16A34A",
+    scale: 1,
+    blendMode: "screen",
   },
   {
     id: "cursor-neon-laser-ribbon",
@@ -175,6 +226,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "High-contrast crimson ribbon vector following rapid cursor sweeps.",
     effectClass: "cosmetic-cursor-laser-ribbon",
     previewAccent: "#E5484D",
+    assetUrl: "/discord-fx/cursor-laser-ribbon.png",
+    fallbackGlowColor: "#E5484D",
+    scale: 1,
+    blendMode: "screen",
   },
   {
     id: "cursor-tactical-cyber-crosshair",
@@ -187,6 +242,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Precision HUD reticle with dynamic lock-on ticks on hover.",
     effectClass: "cosmetic-cursor-cyber-crosshair",
     previewAccent: "#0284C7",
+    assetUrl: "/discord-fx/cursor-cyber-crosshair.png",
+    fallbackGlowColor: "#0284C7",
+    scale: 1,
+    blendMode: "normal",
   },
   {
     id: "lb-border-beam-sweep",
@@ -199,6 +258,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Animated light beam racing along your Global Leaderboard row border.",
     effectClass: "cosmetic-lb-border-beam",
     previewAccent: "#E5484D",
+    assetUrl: "/discord-fx/lb-border-beam.png",
+    fallbackGlowColor: "#E5484D",
+    scale: 1,
+    blendMode: "screen",
   },
   {
     id: "lb-royal-gold-shimmer",
@@ -211,6 +274,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Metallic gold sheen sweeping across your leaderboard rank card.",
     effectClass: "cosmetic-lb-gold-shimmer",
     previewAccent: "#D97706",
+    assetUrl: "/discord-fx/lb-gold-shimmer.png",
+    fallbackGlowColor: "#D97706",
+    scale: 1,
+    blendMode: "screen",
   },
   {
     id: "lb-hologram-glitch",
@@ -223,6 +290,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Periodic chromatic scanline slice across your leaderboard row.",
     effectClass: "cosmetic-lb-hologram-glitch",
     previewAccent: "#0284C7",
+    assetUrl: "/discord-fx/lb-hologram-glitch.png",
+    fallbackGlowColor: "#0284C7",
+    scale: 1,
+    blendMode: "screen",
   },
   {
     id: "lb-inferno-rank-aura",
@@ -235,6 +306,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Ember border pulse signaling top-tier arena dominance.",
     effectClass: "cosmetic-lb-inferno-aura",
     previewAccent: "#EA580C",
+    assetUrl: "/discord-fx/lb-inferno-aura.png",
+    fallbackGlowColor: "#EA580C",
+    scale: 1,
+    blendMode: "screen",
   },
   {
     id: "nameplate-mesh-nebula",
@@ -247,6 +322,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Layered warm-coral and slate animated banner behind your display name.",
     effectClass: "cosmetic-nameplate-mesh-nebula",
     previewAccent: "#E5484D",
+    assetUrl: "/discord-fx/nameplate-mesh-nebula.png",
+    fallbackGlowColor: "#E5484D",
+    scale: 1,
+    blendMode: "normal",
   },
   {
     id: "nameplate-terminal-pulse",
@@ -259,6 +338,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Dark-ink terminal header banner with blinking green status cursor.",
     effectClass: "cosmetic-nameplate-terminal-pulse",
     previewAccent: "#16A34A",
+    assetUrl: "/discord-fx/nameplate-terminal-pulse.png",
+    fallbackGlowColor: "#16A34A",
+    scale: 1,
+    blendMode: "normal",
   },
   {
     id: "nameplate-supernova-gold",
@@ -271,6 +354,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Radiant solar-amber shimmer banner for seasoned speakers.",
     effectClass: "cosmetic-nameplate-supernova-gold",
     previewAccent: "#D97706",
+    assetUrl: "/discord-fx/nameplate-supernova-gold.png",
+    fallbackGlowColor: "#D97706",
+    scale: 1,
+    blendMode: "normal",
   },
   {
     id: "nameplate-cyber-glitch",
@@ -283,6 +370,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "High-speed kinetic scan banner with crisp ink-edge jitter.",
     effectClass: "cosmetic-nameplate-cyber-glitch",
     previewAccent: "#0284C7",
+    assetUrl: "/discord-fx/nameplate-cyber-glitch.png",
+    fallbackGlowColor: "#0284C7",
+    scale: 1,
+    blendMode: "normal",
   },
   {
     id: "finisher-lgtm-neon-confetti",
@@ -295,6 +386,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Burst of LGTM! approval stamps and crisp geometric confetti on wins.",
     effectClass: "cosmetic-finisher-lgtm-confetti",
     previewAccent: "#16A34A",
+    assetUrl: "/lottie/victory-burst.json",
+    fallbackGlowColor: "#16A34A",
+    scale: 1,
+    blendMode: "screen",
   },
   {
     id: "finisher-system-restored-shockwave",
@@ -307,6 +402,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Expanding emerald status shockwave celebrating outage resolution.",
     effectClass: "cosmetic-finisher-shockwave",
     previewAccent: "#0D9488",
+    assetUrl: "/lottie/cyber-ring.json",
+    fallbackGlowColor: "#0D9488",
+    scale: 1,
+    blendMode: "screen",
   },
   {
     id: "finisher-cyber-lightning-strike",
@@ -319,6 +418,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Crisp angular lightning flash across the victory summary banner.",
     effectClass: "cosmetic-finisher-lightning",
     previewAccent: "#CA8A04",
+    assetUrl: "/lottie/inferno-aura.json",
+    fallbackGlowColor: "#CA8A04",
+    scale: 1,
+    blendMode: "screen",
   },
   {
     id: "finisher-matrix-override",
@@ -331,6 +434,10 @@ export const COSMETIC_CATALOG: CosmeticItem[] = [
     description: "Full-screen green terminal override cascade on high-score finishes.",
     effectClass: "cosmetic-finisher-matrix-override",
     previewAccent: "#15803D",
+    assetUrl: "/lottie/matrix-pulse.json",
+    fallbackGlowColor: "#15803D",
+    scale: 1,
+    blendMode: "screen",
   },
 ];
 
@@ -346,6 +453,10 @@ const LEGACY_COSMETIC_ITEMS: CosmeticItem[] = [
     description: "Title badge for rapid bug resolution",
     effectClass: "cosmetic-nameplate-mesh-nebula",
     previewAccent: "#E5484D",
+    assetUrl: "/discord-fx/nameplate-mesh-nebula.png",
+    fallbackGlowColor: "#E5484D",
+    scale: 1,
+    blendMode: "normal",
   },
   {
     id: "title-standup-ninja",
@@ -358,6 +469,10 @@ const LEGACY_COSMETIC_ITEMS: CosmeticItem[] = [
     description: "Title badge for fast daily standup delivery",
     effectClass: "cosmetic-nameplate-terminal-pulse",
     previewAccent: "#16A34A",
+    assetUrl: "/discord-fx/nameplate-terminal-pulse.png",
+    fallbackGlowColor: "#16A34A",
+    scale: 1,
+    blendMode: "normal",
   },
   {
     id: "title-cloud-architect",
@@ -370,6 +485,10 @@ const LEGACY_COSMETIC_ITEMS: CosmeticItem[] = [
     description: "Title badge for senior technical speakers",
     effectClass: "cosmetic-nameplate-supernova-gold",
     previewAccent: "#D97706",
+    assetUrl: "/discord-fx/nameplate-supernova-gold.png",
+    fallbackGlowColor: "#D97706",
+    scale: 1,
+    blendMode: "normal",
   },
   {
     id: "ring-crimson",
@@ -382,6 +501,10 @@ const LEGACY_COSMETIC_ITEMS: CosmeticItem[] = [
     description: "Recording-red avatar highlight ring",
     effectClass: "cosmetic-avatar-overclock",
     previewAccent: "#E5484D",
+    assetUrl: "/discord-fx/avatar-overclock-ring.png",
+    fallbackGlowColor: "#E5484D",
+    scale: 1.22,
+    blendMode: "normal",
   },
   {
     id: "ring-amber",
@@ -394,6 +517,10 @@ const LEGACY_COSMETIC_ITEMS: CosmeticItem[] = [
     description: "Warm amber rank ring",
     effectClass: "cosmetic-avatar-inferno-horns",
     previewAccent: "#D97706",
+    assetUrl: "/discord-fx/avatar-inferno-horns.png",
+    fallbackGlowColor: "#D97706",
+    scale: 1.22,
+    blendMode: "normal",
   },
   {
     id: "ring-emerald",
@@ -406,6 +533,10 @@ const LEGACY_COSMETIC_ITEMS: CosmeticItem[] = [
     description: "Verified emerald status ring",
     effectClass: "cosmetic-avatar-matrix-halo",
     previewAccent: "#16A34A",
+    assetUrl: "/discord-fx/avatar-matrix-halo.png",
+    fallbackGlowColor: "#16A34A",
+    scale: 1.22,
+    blendMode: "normal",
   },
 ];
 
@@ -463,4 +594,130 @@ export function getRingBadgeClass(ring: string): string {
     default:
       return "border-ink/20";
   }
+}
+
+const VALID_RARITIES: CosmeticRarity[] = ["Common", "Rare", "Epic", "Legendary"];
+
+function slugifyId(input: string): string {
+  return input
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function asNonEmptyString(value: unknown): string | undefined {
+  return typeof value === "string" && value.trim().length > 0 ? value.trim() : undefined;
+}
+
+export function parseDiscordEffectJson(raw: string): CosmeticItem[] {
+  if (!raw || typeof raw !== "string") return [];
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return [];
+  }
+
+  let entries: unknown[] = [];
+  if (Array.isArray(parsed)) {
+    entries = parsed;
+  } else if (parsed && typeof parsed === "object") {
+    const obj = parsed as Record<string, unknown>;
+    if (Array.isArray(obj.effects)) {
+      entries = obj.effects;
+    } else if (Array.isArray(obj.items)) {
+      entries = obj.items;
+    } else {
+      entries = [obj];
+    }
+  }
+
+  const drafts: CosmeticItem[] = [];
+  for (let i = 0; i < entries.length; i++) {
+    const entry = entries[i];
+    if (!entry || typeof entry !== "object" || Array.isArray(entry)) continue;
+    const record = entry as Record<string, unknown>;
+    const assets =
+      record.assets && typeof record.assets === "object" && !Array.isArray(record.assets)
+        ? (record.assets as Record<string, unknown>)
+        : null;
+
+    const name = asNonEmptyString(record.name) ?? asNonEmptyString(record.title);
+    const assetUrl =
+      asNonEmptyString(record.assetUrl) ??
+      asNonEmptyString(assets?.loop) ??
+      asNonEmptyString(assets?.frame) ??
+      asNonEmptyString(assets?.intro);
+    const introAssetUrl =
+      asNonEmptyString(record.introAssetUrl) ?? asNonEmptyString(assets?.intro);
+
+    if (!name && !assetUrl) continue;
+
+    const rawCategory = asNonEmptyString(record.category);
+    const category: CosmeticCategory = COSMETIC_CATEGORIES.includes(
+      rawCategory as CosmeticCategory
+    )
+      ? (rawCategory as CosmeticCategory)
+      : introAssetUrl || assets?.loop
+      ? "profile_theme"
+      : "avatar_decoration";
+
+    const displayName = name ?? `Discord Effect ${i + 1}`;
+    const rawId = asNonEmptyString(record.id);
+    const slug = slugifyId(rawId ?? displayName) || `discord-fx-${i + 1}`;
+    const id = rawId ? slug : `discord-${slug}`;
+
+    const rawRarity = asNonEmptyString(record.rarity);
+    const rarity: CosmeticRarity = VALID_RARITIES.includes(rawRarity as CosmeticRarity)
+      ? (rawRarity as CosmeticRarity)
+      : "Epic";
+
+    const price =
+      typeof record.price === "number" && Number.isFinite(record.price) && record.price >= 0
+        ? Math.round(record.price)
+        : 50;
+
+    const scale =
+      typeof record.scale === "number" && Number.isFinite(record.scale) && record.scale > 0
+        ? record.scale
+        : category === "avatar_decoration"
+        ? 1.22
+        : 1;
+
+    const blendMode: CosmeticBlendMode =
+      record.blendMode === "screen" || record.blendMode === "normal"
+        ? record.blendMode
+        : category === "profile_theme"
+        ? "screen"
+        : "normal";
+
+    const accent =
+      asNonEmptyString(record.fallbackGlowColor) ??
+      asNonEmptyString(record.previewAccent) ??
+      asNonEmptyString(record.accent) ??
+      asNonEmptyString(record.color) ??
+      "#E5484D";
+
+    drafts.push({
+      id,
+      kind: category,
+      category,
+      rarity,
+      name: displayName,
+      value: id,
+      price,
+      description:
+        asNonEmptyString(record.description) ?? `Imported Discord FX: ${displayName}`,
+      effectClass: asNonEmptyString(record.effectClass) ?? `cosmetic-${slug}`,
+      previewAccent: accent,
+      assetUrl,
+      ...(introAssetUrl ? { introAssetUrl } : {}),
+      fallbackGlowColor: accent,
+      scale,
+      blendMode,
+    });
+  }
+
+  return drafts;
 }
