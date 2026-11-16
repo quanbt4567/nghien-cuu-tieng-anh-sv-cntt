@@ -7,7 +7,7 @@ import { GlobalLeaderboard } from "../../components/leaderboard/GlobalLeaderboar
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Bảng xếp hạng toàn cầu — SpeakIT",
+  title: "Bảng xếp hạng — SpeakIT",
   description:
     "Bảng xếp hạng điểm luyện nói và số dư IT-Coin của học viên CNTT trên SpeakIT.",
 };
@@ -28,7 +28,7 @@ export default async function LeaderboardPage() {
           </Link>
           <h1 className="text-2xl sm:text-3xl font-bold text-ink flex items-center gap-2.5">
             <Trophy className="w-6 h-6 text-accent" />
-            <span>Global Leaderboard</span>
+            <span>Bảng xếp hạng</span>
           </h1>
         </div>
       </div>

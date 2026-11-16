@@ -351,7 +351,7 @@ export default function ArenaPage() {
           }`}
         >
           <Globe className="w-4 h-4" />
-          <span>Bảng xếp hạng Toàn cầu</span>
+          <span>Bảng xếp hạng</span>
         </button>
       </div>
 

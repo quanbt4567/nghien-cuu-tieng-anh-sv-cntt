@@ -38,6 +38,7 @@ import {
   initOrHydrateGuestSession,
   purchaseAndEquipCosmetic,
   restoreByTransferCode,
+  unequipCosmeticSlot,
   updateGuestAvatar,
   updateGuestDisplayName,
 } from "../../app/actions/leaderboard";
@@ -49,7 +50,11 @@ import {
   fetchAndCachePublicContent,
   getEffectiveScenarios,
 } from "../../lib/contentStore";
-import { COSMETIC_CATALOG, normalizeEquippedCosmetics } from "../../lib/cosmetics";
+import {
+  COSMETIC_CATALOG,
+  normalizeEquippedCosmetics,
+  type CosmeticCategory,
+} from "../../lib/cosmetics";
 import type { PublicGuestPlayer } from "../../lib/db";
 import {
   GAMIFICATION_STORAGE_KEY,
@@ -427,6 +432,27 @@ export function ProfileView() {
     [guestPlayer?.equippedCosmetics]
   );
 
+  const armoryPreviewItems = useMemo(() => {
+    const isItemEquipped = (item: (typeof COSMETIC_CATALOG)[number]) =>
+      equippedCosmetics[item.category] === item.id ||
+      (item.kind === "title" && identity.equippedTitle === item.value) ||
+      (item.kind === "ring" && identity.equippedRing === item.value);
+
+    const equipped = COSMETIC_CATALOG.filter(isItemEquipped);
+    const owned = COSMETIC_CATALOG.filter(
+      (item) => !isItemEquipped(item) && identity.ownedItems.includes(item.id)
+    );
+    const featured = COSMETIC_CATALOG.filter(
+      (item) => !isItemEquipped(item) && !identity.ownedItems.includes(item.id)
+    );
+    return [...equipped, ...owned, ...featured].slice(0, 4);
+  }, [
+    equippedCosmetics,
+    identity.equippedTitle,
+    identity.equippedRing,
+    identity.ownedItems,
+  ]);
+
   const activity = useMemo(
     () =>
       summarizeProfileActivity(
@@ -727,6 +753,43 @@ export function ProfileView() {
       setShopFeedback({
         ok: false,
         message: "Không thể cập nhật vật phẩm lúc này. Vui lòng thử lại.",
+      });
+    } finally {
+      setBusyItemId(null);
+    }
+  };
+
+  const handleUnequipCosmetic = async (
+    itemId: string,
+    category: CosmeticCategory,
+    itemName: string
+  ) => {
+    if (busyItemId || identity.mode !== "online") return;
+    setBusyItemId(itemId);
+    setShopFeedback(null);
+    try {
+      const res = await unequipCosmeticSlot(category, readBackupTransferCode());
+      if (res.ok && res.player) {
+        applyGuestPlayer(res.player);
+        setShopFeedback({
+          ok: true,
+          message: `Đã tháo "${itemName}".`,
+        });
+        void refreshOnlineRank();
+      } else {
+        if (res.mode === "offline") {
+          applyGuestPlayer(null);
+          setGlobalRank(null);
+        }
+        setShopFeedback({
+          ok: false,
+          message: toVietnameseError(res.error, res.mode),
+        });
+      }
+    } catch {
+      setShopFeedback({
+        ok: false,
+        message: "Không thể tháo vật phẩm lúc này. Vui lòng thử lại.",
       });
     } finally {
       setBusyItemId(null);
@@ -1338,36 +1401,28 @@ export function ProfileView() {
 
       <section
         aria-label="Kệ Danh hiệu và Viền Avatar"
-        className="bg-white/95 border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4"
+        className="bg-white/95 border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4"
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-sm font-bold text-ink uppercase tracking-wider font-mono flex items-center gap-2">
               <ShoppingBag className="w-4 h-4 text-accent" aria-hidden="true" />
-              <span>Cosmetics &amp; Hiệu ứng Discord-style</span>
+              <span>IT-Coin Cosmetic Armory</span>
             </h2>
             <p className="text-xs text-ink-muted mt-0.5">
-              Dùng IT-Coin tích lũy từ luyện nói, Arena và Incident Party để mở khóa 24 hiệu ứng tại IT-Coin Shop.
+              Đã sở hữu {identity.ownedItems.length}/{COSMETIC_CATALOG.length} hiệu ứng · Xem nhanh tối đa 4 vật phẩm nổi bật.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="px-3 py-1 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-bold text-ink">
-              Số dư: {identity.itCoins} IT-Coin
+            <span className="px-3 py-1.5 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-bold text-ink">
+              {identity.itCoins} IT-Coin
             </span>
             <Link
               href="/shop"
-              className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-accent text-white border border-accent text-xs font-semibold hover:bg-accent-hover transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-pill bg-accent text-white border border-accent text-xs font-bold hover:bg-accent-hover transition-colors shadow-soft"
             >
-              <span>Mở IT-Coin Shop</span>
-              <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-            </Link>
-            <Link
-              href="/arena"
-              className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-paper-muted border border-ink/15 text-xs font-semibold text-ink hover:bg-paper transition-colors"
-            >
-              <span>Kiếm thêm ở Arena</span>
-              <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Vào Cửa Hàng Hiệu Ứng →</span>
             </Link>
           </div>
         </div>
@@ -1385,83 +1440,90 @@ export function ProfileView() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-          {COSMETIC_CATALOG.slice(0, 6).map((item) => {
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {armoryPreviewItems.map((item) => {
             const isOnline = identity.mode === "online";
             const isOwned = identity.ownedItems.includes(item.id);
             const isEquipped =
               equippedCosmetics[item.category] === item.id ||
               (item.kind === "title" && identity.equippedTitle === item.value) ||
               (item.kind === "ring" && identity.equippedRing === item.value);
-            const canAfford = identity.itCoins >= item.price;
 
             return (
               <div
                 key={item.id}
-                className="p-4 rounded-xl bg-paper border border-ink/15 flex flex-col justify-between gap-3"
+                className="p-3.5 rounded-xl bg-paper border border-ink/15 flex flex-col justify-between gap-2.5"
               >
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
                       <span
                         aria-hidden="true"
-                        className="w-3 h-3 rounded-full shrink-0 border border-ink/20"
+                        className="w-2.5 h-2.5 rounded-full shrink-0 border border-ink/20"
                         style={{ backgroundColor: item.previewAccent }}
                       />
                       <span className="text-xs font-bold text-ink truncate">
                         {item.name}
                       </span>
                     </div>
-                    <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-white border border-ink/15 text-ink-muted shrink-0">
+                    <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded-pill bg-white border border-ink/15 text-ink-muted shrink-0">
                       {item.rarity}
                     </span>
                   </div>
-                  <p className="text-[11px] text-ink-muted">{item.description}</p>
+                  <p className="text-[11px] text-ink-muted line-clamp-1">
+                    {item.description}
+                  </p>
                 </div>
 
-                <div className="space-y-1.5">
-                  {isEquipped ? (
-                    <span className="w-full inline-flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-pill text-xs font-mono font-semibold bg-ink text-white border border-ink">
-                      <Check className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+                {isEquipped ? (
+                  <div className="flex items-center gap-1.5">
+                    <span className="flex-1 inline-flex items-center justify-center gap-1 py-1 px-2.5 rounded-pill text-[11px] font-mono font-semibold bg-ink text-white border border-ink">
+                      <Check className="w-3 h-3 text-accent" aria-hidden="true" />
                       <span>Đang dùng</span>
                     </span>
-                  ) : isOwned && isOnline ? (
-                    <button
-                      type="button"
-                      disabled={busyItemId === item.id}
-                      onClick={() => handleCosmeticAction(item.id, item.price, item.name)}
-                      className="w-full py-1.5 px-3 rounded-pill text-xs font-mono font-semibold border bg-white text-ink border-ink/20 hover:bg-paper-muted transition-colors disabled:opacity-50"
-                    >
-                      {busyItemId === item.id ? "Đang cập nhật..." : "Trang bị"}
-                    </button>
-                  ) : isOnline && canAfford ? (
-                    <button
-                      type="button"
-                      disabled={busyItemId === item.id}
-                      onClick={() => handleCosmeticAction(item.id, item.price, item.name)}
-                      className="w-full py-1.5 px-3 rounded-pill text-xs font-mono font-semibold border bg-accent text-white border-accent hover:bg-accent-hover transition-colors disabled:opacity-50"
-                    >
-                      {busyItemId === item.id
-                        ? "Đang mở khóa..."
-                        : `Mở khóa (${item.price} Coin)`}
-                    </button>
-                  ) : (
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="flex-1 text-center py-1.5 px-2.5 rounded-pill text-xs font-mono font-semibold border bg-paper-muted text-ink-faint border-ink/10">
-                        Mở khóa ({item.price} Coin)
-                      </span>
-                      <Link
-                        href="/arena"
-                        className="px-2.5 py-1.5 rounded-pill text-[11px] font-semibold bg-white text-ink border border-ink/15 hover:bg-paper-muted shrink-0"
+                    {isOnline && (
+                      <button
+                        type="button"
+                        disabled={busyItemId === item.id}
+                        onClick={() =>
+                          handleUnequipCosmetic(item.id, item.category, item.name)
+                        }
+                        className="py-1 px-2.5 rounded-pill text-[11px] font-mono font-semibold border bg-white text-ink border-ink/20 hover:bg-paper-muted transition-colors disabled:opacity-50"
                       >
-                        {isOnline ? "Kiếm Coin" : "Vào Arena"}
-                      </Link>
-                    </div>
-                  )}
-                </div>
+                        {busyItemId === item.id ? "..." : "Tháo"}
+                      </button>
+                    )}
+                  </div>
+                ) : isOwned && isOnline ? (
+                  <button
+                    type="button"
+                    disabled={busyItemId === item.id}
+                    onClick={() => handleCosmeticAction(item.id, item.price, item.name)}
+                    className="w-full py-1 px-3 rounded-pill text-[11px] font-mono font-semibold border bg-white text-ink border-ink/20 hover:bg-paper-muted transition-colors disabled:opacity-50"
+                  >
+                    {busyItemId === item.id ? "Đang cập nhật..." : "Trang bị nhanh"}
+                  </button>
+                ) : (
+                  <span className="w-full inline-flex items-center justify-center py-1 px-2.5 rounded-pill text-[11px] font-mono font-semibold border bg-white/80 text-ink-muted border-ink/10">
+                    Xem trước · {item.price} Coin
+                  </span>
+                )}
               </div>
             );
           })}
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-paper-muted text-xs">
+          <span className="text-ink-muted">
+            Khám phá toàn bộ {COSMETIC_CATALOG.length} hiệu ứng viền, bảng tên và chủ đề hồ sơ.
+          </span>
+          <Link
+            href="/shop"
+            className="inline-flex items-center gap-1 font-semibold text-accent hover:underline"
+          >
+            <span>Mua thêm tại Cửa hàng</span>
+            <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+          </Link>
         </div>
       </section>
 

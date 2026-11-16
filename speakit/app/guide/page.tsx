@@ -33,7 +33,7 @@ function buildSectionGuides(scenarioCount: number) {
       title: "Arena",
       icon: Gamepad2,
       description:
-        "Chơi minigame phản xạ nhanh (Bug Buster, Standup Speed Run) để tích lũy điểm thưởng, giữ chuỗi ngày học và đua bảng xếp hạng toàn cầu.",
+        "Chơi minigame phản xạ nhanh (Bug Buster, Standup Speed Run) để tích lũy điểm thưởng, giữ chuỗi ngày học và đua bảng xếp hạng.",
     },
     {
       href: "/vocabulary",

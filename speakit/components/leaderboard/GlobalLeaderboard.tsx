@@ -495,7 +495,7 @@ export function GlobalLeaderboard({
             <h3 className="text-base font-bold text-ink flex items-center gap-2">
               <Trophy className="w-5 h-5 text-accent" />
               <span>
-                Global Leaderboard ({players.length} học viên · tối đa Top 50)
+                Bảng xếp hạng ({players.length} học viên · tối đa Top 50)
               </span>
             </h3>
             <p className="text-xs text-ink-muted">

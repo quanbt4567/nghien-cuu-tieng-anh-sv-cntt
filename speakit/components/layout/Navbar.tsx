@@ -82,7 +82,7 @@ const NAV_GROUPS: readonly NavGroup[] = [
   {
     id: "account",
     label: "Tài khoản",
-    activePrefixes: ["/profile", "/shop", "/settings"],
+    activePrefixes: ["/profile", "/settings"],
     items: [
       { href: "/profile", label: "Hồ sơ", icon: User },
       { href: "/shop", label: "Cửa hàng Hiệu ứng", icon: ShoppingBag },
@@ -243,6 +243,7 @@ export function Navbar() {
   const nextCoinPoints = pointsToNextCoin(identity.totalPoints);
   const coinTooltip = `${identity.totalPoints.toLocaleString("en-US")} pts (${nextCoinPoints} pts nữa được +1 Coin)`;
   const homeActive = isItemActive(pathname, "/");
+  const shopActive = pathname.startsWith("/shop");
 
   return (
     <>
@@ -272,6 +273,19 @@ export function Navbar() {
           >
             <Home className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
             <span>Trang chủ</span>
+          </Link>
+
+          <Link
+            href="/shop"
+            aria-current={shopActive ? "page" : undefined}
+            className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-all shrink-0 whitespace-nowrap ${
+              shopActive
+                ? "bg-ink text-white border-ink shadow-soft"
+                : "bg-white text-ink border-ink/15 hover:border-ink/30 hover:bg-paper-muted shadow-soft"
+            }`}
+          >
+            <ShoppingBag className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+            <span>Cửa hàng</span>
           </Link>
 
           {NAV_GROUPS.map((group) => {
@@ -446,6 +460,20 @@ export function Navbar() {
           >
             <Home className="w-4 h-4 shrink-0" aria-hidden="true" />
             <span>Trang chủ</span>
+          </Link>
+
+          <Link
+            href="/shop"
+            aria-current={shopActive ? "page" : undefined}
+            onClick={() => setMobileOpen(false)}
+            className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium border transition-colors ${
+              shopActive
+                ? "bg-ink text-white border-ink shadow-soft"
+                : "bg-white text-ink border-ink/15 hover:bg-paper-muted shadow-soft"
+            }`}
+          >
+            <ShoppingBag className="w-4 h-4 shrink-0" aria-hidden="true" />
+            <span>Cửa hàng</span>
           </Link>
 
           {NAV_GROUPS.map((group) => (
