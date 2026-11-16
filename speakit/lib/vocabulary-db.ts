@@ -1,86 +1,26 @@
-import { normalizeContentOverrides } from "./contentStore";
+import { VOCABULARY_LIST } from "../data/scenarios";
+import {
+  normalizeContentOverrides,
+  normalizeIncomingVocabularyItem,
+} from "./contentStore";
 import { getNeonSql as getSql } from "./db";
 import { ensureSchema } from "./db/neon";
 import type { VocabularyItem } from "./types";
 
-function slugifyTerm(value: string): string {
-  const slug = value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 64);
-  return slug || `term-${Date.now().toString(36)}`;
+export function canonicalVocabularyTermKey(raw: string): string {
+  return raw.trim().replace(/\s+/g, " ").toLowerCase();
 }
 
-function normalizeCareerLevel(
-  value: unknown
-): "Fresher" | "Junior" | "Senior" | undefined {
-  if (value === "Fresher" || value === "Junior" || value === "Senior") {
-    return value;
-  }
-  return undefined;
+function isBrokenPlaceholderVocabulary(item: VocabularyItem): boolean {
+  const ipa = (item.phonetic || "").trim();
+  const hasIpa = Boolean(ipa && ipa !== "/.../");
+  const hasMeaning = Boolean((item.meaningVI || "").trim());
+  const hasExample = Boolean((item.exampleSentenceEN || "").trim());
+  return !hasIpa && !hasMeaning && !hasExample;
 }
 
-function normalizeRelatedTerms(value: unknown): string[] | undefined {
-  if (!Array.isArray(value)) return undefined;
-  const out: string[] = [];
-  const seen = new Set<string>();
-  for (const entry of value) {
-    if (typeof entry !== "string") continue;
-    const trimmed = entry.trim();
-    const key = trimmed.toLowerCase();
-    if (trimmed && !seen.has(key)) {
-      seen.add(key);
-      out.push(trimmed);
-    }
-  }
-  return out.length > 0 ? out : undefined;
-}
-
-function normalizeVocabularyItem(raw: VocabularyItem): VocabularyItem | null {
-  const term = typeof raw.term === "string" ? raw.term.trim() : "";
-  if (!term) return null;
-  const id =
-    typeof raw.id === "string" && raw.id.trim()
-      ? raw.id.trim()
-      : `vocab-${slugifyTerm(term)}`;
-  const careerLevel = normalizeCareerLevel(raw.careerLevel);
-  const relatedTerms = normalizeRelatedTerms(raw.relatedTerms);
-  const clusterTitle =
-    typeof raw.clusterTitle === "string" && raw.clusterTitle.trim()
-      ? raw.clusterTitle.trim()
-      : undefined;
-  const clusterSlug =
-    typeof raw.clusterSlug === "string" && raw.clusterSlug.trim()
-      ? raw.clusterSlug.trim()
-      : clusterTitle
-      ? slugifyTerm(clusterTitle)
-      : undefined;
-
-  return {
-    id,
-    term,
-    phonetic: typeof raw.phonetic === "string" ? raw.phonetic.trim() : "",
-    partOfSpeech:
-      typeof raw.partOfSpeech === "string" && raw.partOfSpeech.trim()
-        ? raw.partOfSpeech.trim()
-        : "noun",
-    meaningVI: typeof raw.meaningVI === "string" ? raw.meaningVI.trim() : "",
-    exampleSentenceEN:
-      typeof raw.exampleSentenceEN === "string"
-        ? raw.exampleSentenceEN.trim()
-        : "",
-    exampleTranslationVI:
-      typeof raw.exampleTranslationVI === "string"
-        ? raw.exampleTranslationVI.trim()
-        : "",
-    ...(clusterTitle ? { clusterTitle } : {}),
-    ...(clusterSlug ? { clusterSlug } : {}),
-    ...(careerLevel ? { careerLevel } : {}),
-    ...(relatedTerms ? { relatedTerms } : {}),
-  };
+function normalizeVocabularyItem(raw: unknown): VocabularyItem | null {
+  return normalizeIncomingVocabularyItem(raw);
 }
 
 async function ensureVocabularyTable(): Promise<boolean> {
@@ -99,6 +39,153 @@ async function ensureVocabularyTable(): Promise<boolean> {
   return true;
 }
 
+export async function purgeBrokenPlaceholderVocabulary(): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+
+  await ensureVocabularyTable();
+  await sql`
+    DELETE FROM vocabulary_items
+    WHERE COALESCE(BTRIM(payload->>'meaningVI'), '') = ''
+      AND (COALESCE(BTRIM(payload->>'phonetic'), '') = '' OR BTRIM(payload->>'phonetic') = '/.../')
+      AND COALESCE(BTRIM(payload->>'exampleSentenceEN'), '') = ''
+  `;
+
+  const schemaReady = await ensureSchema();
+  if (!schemaReady) return;
+
+  const rows = await sql`
+    SELECT payload
+    FROM speakit_custom_content
+    WHERE key = 'main'
+    LIMIT 1
+  `;
+  const overrides = normalizeContentOverrides(rows[0]?.payload);
+  const cleanedCustom = overrides.customVocabulary.filter(
+    (entry) => !isBrokenPlaceholderVocabulary(entry)
+  );
+  if (cleanedCustom.length !== overrides.customVocabulary.length) {
+    const nextOverrides = {
+      ...overrides,
+      customVocabulary: cleanedCustom,
+    };
+    await sql`
+      INSERT INTO speakit_custom_content (key, payload, updated_at)
+      VALUES ('main', ${JSON.stringify(nextOverrides)}::jsonb, NOW())
+      ON CONFLICT (key) DO UPDATE SET
+        payload = EXCLUDED.payload,
+        updated_at = NOW()
+    `;
+  }
+}
+
+export async function importVocabularyItemsSkipDuplicates(
+  rawRows: unknown[],
+  defaultClusterFallback = "Tùy chỉnh"
+): Promise<{
+  importedCount: number;
+  skippedDuplicatesCount: number;
+  skippedTerms: string[];
+}> {
+  const sql = getSql();
+  if (!sql) {
+    return { importedCount: 0, skippedDuplicatesCount: 0, skippedTerms: [] };
+  }
+
+  await purgeBrokenPlaceholderVocabulary();
+
+  const existingKeys = new Set<string>();
+  for (const baseItem of VOCABULARY_LIST) {
+    const key = canonicalVocabularyTermKey(baseItem.term);
+    if (key) existingKeys.add(key);
+  }
+
+  const dbRows = await sql`
+    SELECT LOWER(REGEXP_REPLACE(BTRIM(term), '\s+', ' ', 'g')) AS canonical_term
+    FROM vocabulary_items
+  `;
+  for (const row of dbRows) {
+    if (typeof row.canonical_term === "string" && row.canonical_term) {
+      existingKeys.add(row.canonical_term);
+    }
+  }
+
+  const schemaReady = await ensureSchema();
+  let overrides = normalizeContentOverrides(null);
+  if (schemaReady) {
+    const rows = await sql`
+      SELECT payload
+      FROM speakit_custom_content
+      WHERE key = 'main'
+      LIMIT 1
+    `;
+    overrides = normalizeContentOverrides(rows[0]?.payload);
+    for (const customItem of overrides.customVocabulary) {
+      const key = canonicalVocabularyTermKey(customItem.term);
+      if (key) existingKeys.add(key);
+    }
+  }
+
+  const batchSeen = new Set<string>();
+  const skippedTerms: string[] = [];
+  const toInsert: VocabularyItem[] = [];
+
+  for (const rawRow of rawRows) {
+    const item = normalizeIncomingVocabularyItem(rawRow, defaultClusterFallback);
+    if (!item) continue;
+    const key = canonicalVocabularyTermKey(item.term);
+    if (!key) continue;
+
+    if (batchSeen.has(key) || existingKeys.has(key)) {
+      skippedTerms.push(item.term);
+      continue;
+    }
+
+    batchSeen.add(key);
+    existingKeys.add(key);
+    toInsert.push(item);
+  }
+
+  for (const item of toInsert) {
+    const key = canonicalVocabularyTermKey(item.term);
+    await sql`
+      INSERT INTO vocabulary_items (id, term, payload, cluster_slug, cluster_title, updated_at)
+      VALUES (
+        ${item.id},
+        ${key},
+        ${JSON.stringify(item)}::jsonb,
+        ${item.clusterSlug ?? null},
+        ${item.clusterTitle ?? null},
+        NOW()
+      )
+      ON CONFLICT (term) DO NOTHING
+    `;
+  }
+
+  if (schemaReady && toInsert.length > 0) {
+    const nextOverrides = {
+      ...overrides,
+      customVocabulary: [...overrides.customVocabulary, ...toInsert],
+      deletedVocabIds: overrides.deletedVocabIds.filter(
+        (id) => !toInsert.some((ins) => ins.id === id)
+      ),
+    };
+    await sql`
+      INSERT INTO speakit_custom_content (key, payload, updated_at)
+      VALUES ('main', ${JSON.stringify(nextOverrides)}::jsonb, NOW())
+      ON CONFLICT (key) DO UPDATE SET
+        payload = EXCLUDED.payload,
+        updated_at = NOW()
+    `;
+  }
+
+  return {
+    importedCount: toInsert.length,
+    skippedDuplicatesCount: skippedTerms.length,
+    skippedTerms,
+  };
+}
+
 export async function upsertVocabularyItems(
   items: VocabularyItem[]
 ): Promise<VocabularyItem[]> {
@@ -106,7 +193,7 @@ export async function upsertVocabularyItems(
   for (const item of items) {
     const normalized = normalizeVocabularyItem(item);
     if (!normalized) continue;
-    deduped.set(normalized.term.toLowerCase(), normalized);
+    deduped.set(canonicalVocabularyTermKey(normalized.term), normalized);
   }
   const normalizedItems = Array.from(deduped.values());
   if (normalizedItems.length === 0) return [];
@@ -121,7 +208,7 @@ export async function upsertVocabularyItems(
       INSERT INTO vocabulary_items (id, term, payload, cluster_slug, cluster_title, updated_at)
       VALUES (
         ${item.id},
-        ${item.term.toLowerCase()},
+        ${canonicalVocabularyTermKey(item.term)},
         ${JSON.stringify(item)}::jsonb,
         ${item.clusterSlug ?? null},
         ${item.clusterTitle ?? null},
@@ -148,7 +235,7 @@ export async function upsertVocabularyItems(
     const indexByTerm = new Map<string, number>();
     const indexById = new Map<string, number>();
     merged.forEach((entry, idx) => {
-      indexByTerm.set(entry.term.toLowerCase(), idx);
+      indexByTerm.set(canonicalVocabularyTermKey(entry.term), idx);
       indexById.set(entry.id, idx);
     });
 
@@ -156,7 +243,8 @@ export async function upsertVocabularyItems(
     for (const item of normalizedItems) {
       removedIds.add(item.id);
       const existingIdx =
-        indexByTerm.get(item.term.toLowerCase()) ?? indexById.get(item.id);
+        indexByTerm.get(canonicalVocabularyTermKey(item.term)) ??
+        indexById.get(item.id);
       if (existingIdx !== undefined) {
         merged[existingIdx] = {
           ...item,
@@ -166,7 +254,7 @@ export async function upsertVocabularyItems(
       } else {
         const nextIdx = merged.length;
         merged.push(item);
-        indexByTerm.set(item.term.toLowerCase(), nextIdx);
+        indexByTerm.set(canonicalVocabularyTermKey(item.term), nextIdx);
         indexById.set(item.id, nextIdx);
       }
     }
@@ -207,42 +295,27 @@ export async function listDbVocabularyItems(): Promise<VocabularyItem[]> {
     for (const row of rows) {
       const rawPayload =
         row.payload && typeof row.payload === "object"
-          ? (row.payload as Partial<VocabularyItem>)
+          ? (row.payload as Record<string, unknown>)
           : {};
       const item = normalizeVocabularyItem({
+        ...rawPayload,
         id: typeof rawPayload.id === "string" ? rawPayload.id : String(row.id),
         term:
           typeof rawPayload.term === "string"
             ? rawPayload.term
             : String(row.term),
-        phonetic:
-          typeof rawPayload.phonetic === "string" ? rawPayload.phonetic : "",
-        partOfSpeech:
-          typeof rawPayload.partOfSpeech === "string"
-            ? rawPayload.partOfSpeech
-            : "noun",
-        meaningVI:
-          typeof rawPayload.meaningVI === "string" ? rawPayload.meaningVI : "",
-        exampleSentenceEN:
-          typeof rawPayload.exampleSentenceEN === "string"
-            ? rawPayload.exampleSentenceEN
-            : "",
-        exampleTranslationVI:
-          typeof rawPayload.exampleTranslationVI === "string"
-            ? rawPayload.exampleTranslationVI
-            : "",
         clusterSlug:
-          typeof row.cluster_slug === "string"
+          typeof row.cluster_slug === "string" && row.cluster_slug
             ? row.cluster_slug
             : rawPayload.clusterSlug,
         clusterTitle:
-          typeof row.cluster_title === "string"
+          typeof row.cluster_title === "string" && row.cluster_title
             ? row.cluster_title
             : rawPayload.clusterTitle,
-        careerLevel: rawPayload.careerLevel,
-        relatedTerms: rawPayload.relatedTerms,
       });
-      if (item) result.push(item);
+      if (item && !isBrokenPlaceholderVocabulary(item)) {
+        result.push(item);
+      }
     }
     return result;
   } catch {

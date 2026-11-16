@@ -9,8 +9,9 @@ import {
 import { ensureSchema, getNeonSql } from "../../../../../lib/db/neon";
 import type { AdminContentOverrides, VocabularyItem } from "../../../../../lib/types";
 import {
+  canonicalVocabularyTermKey,
+  importVocabularyItemsSkipDuplicates,
   listDbVocabularyItems,
-  upsertVocabularyItems,
 } from "../../../../../lib/vocabulary-db";
 
 export const dynamic = "force-dynamic";
@@ -129,91 +130,6 @@ function parseCsvObjects(input: string): Record<string, unknown>[] {
   return records;
 }
 
-function parseRelatedTerms(raw: unknown): string[] | undefined {
-  if (Array.isArray(raw)) {
-    const list = raw
-      .filter((x): x is string => typeof x === "string")
-      .map((x) => x.trim())
-      .filter(Boolean);
-    return list.length > 0 ? list : undefined;
-  }
-  if (typeof raw === "string" && raw.trim()) {
-    const list = raw
-      .split(/[;|]/)
-      .map((x) => x.trim())
-      .filter(Boolean);
-    return list.length > 0 ? list : undefined;
-  }
-  return undefined;
-}
-
-function normalizeCareerLevel(
-  value: unknown
-): "Fresher" | "Junior" | "Senior" | undefined {
-  if (typeof value !== "string") return undefined;
-  const trimmed = value.trim();
-  if (trimmed === "Fresher" || trimmed === "Junior" || trimmed === "Senior") {
-    return trimmed;
-  }
-  return undefined;
-}
-
-function slugifyTerm(value: string): string {
-  const slug = value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 64);
-  return slug || `term-${Date.now().toString(36)}`;
-}
-
-function toVocabularyItem(raw: unknown): VocabularyItem | null {
-  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
-  const r = raw as Record<string, unknown>;
-  const term = typeof r.term === "string" ? r.term.trim() : "";
-  if (!term) return null;
-
-  const id =
-    typeof r.id === "string" && r.id.trim()
-      ? r.id.trim()
-      : `vocab-${slugifyTerm(term)}`;
-  const clusterTitle =
-    typeof r.clusterTitle === "string" && r.clusterTitle.trim()
-      ? r.clusterTitle.trim()
-      : undefined;
-  const clusterSlug =
-    typeof r.clusterSlug === "string" && r.clusterSlug.trim()
-      ? r.clusterSlug.trim()
-      : clusterTitle
-      ? slugifyTerm(clusterTitle)
-      : undefined;
-  const careerLevel = normalizeCareerLevel(r.careerLevel);
-  const relatedTerms = parseRelatedTerms(r.relatedTerms);
-
-  return {
-    id,
-    term,
-    phonetic: typeof r.phonetic === "string" ? r.phonetic.trim() : "",
-    partOfSpeech:
-      typeof r.partOfSpeech === "string" && r.partOfSpeech.trim()
-        ? r.partOfSpeech.trim()
-        : "noun",
-    meaningVI: typeof r.meaningVI === "string" ? r.meaningVI.trim() : "",
-    exampleSentenceEN:
-      typeof r.exampleSentenceEN === "string" ? r.exampleSentenceEN.trim() : "",
-    exampleTranslationVI:
-      typeof r.exampleTranslationVI === "string"
-        ? r.exampleTranslationVI.trim()
-        : "",
-    ...(clusterTitle ? { clusterTitle } : {}),
-    ...(clusterSlug ? { clusterSlug } : {}),
-    ...(careerLevel ? { careerLevel } : {}),
-    ...(relatedTerms ? { relatedTerms } : {}),
-  };
-}
-
 async function readStoredOverrides(): Promise<AdminContentOverrides> {
   const sql = getNeonSql();
   if (!sql || !(await ensureSchema())) {
@@ -241,13 +157,13 @@ async function getEffectiveVocabulary(): Promise<VocabularyItem[]> {
   const byTerm = new Map<string, VocabularyItem>();
 
   for (const item of mergedBase) {
-    const key = item.term.trim().toLowerCase();
+    const key = canonicalVocabularyTermKey(item.term);
     if (key) {
       byTerm.set(key, item);
     }
   }
   for (const item of dbItems) {
-    const key = item.term.trim().toLowerCase();
+    const key = canonicalVocabularyTermKey(item.term);
     if (key) {
       byTerm.set(key, item);
     }
@@ -378,50 +294,18 @@ export async function POST(req: NextRequest) {
   }
 
   const total = rawRows.length;
-  const deduped = new Map<string, VocabularyItem>();
-  let skipped = 0;
-
-  for (const row of rawRows) {
-    const item = toVocabularyItem(row);
-    if (!item) {
-      skipped += 1;
-      continue;
-    }
-    const key = item.term.toLowerCase();
-    if (deduped.has(key)) {
-      skipped += 1;
-      continue;
-    }
-    deduped.set(key, item);
-  }
-
-  const validItems = Array.from(deduped.values());
-  const existingItems = await getEffectiveVocabulary();
-  const existingTerms = new Set(
-    existingItems.map((item) => item.term.trim().toLowerCase())
-  );
-
-  let inserted = 0;
-  let updated = 0;
-  for (const item of validItems) {
-    if (existingTerms.has(item.term.toLowerCase())) {
-      updated += 1;
-    } else {
-      inserted += 1;
-    }
-  }
-
-  if (validItems.length > 0) {
-    await upsertVocabularyItems(validItems);
-  }
-
+  const { importedCount, skippedDuplicatesCount, skippedTerms } =
+    await importVocabularyItemsSkipDuplicates(rawRows, "Tùy chỉnh");
   const overrides = await readStoredOverrides();
 
   return NextResponse.json({
     ok: true,
-    inserted,
-    updated,
-    skipped,
+    importedCount,
+    skippedDuplicatesCount,
+    skippedTerms,
+    inserted: importedCount,
+    updated: 0,
+    skipped: skippedDuplicatesCount,
     total,
     overrides,
   });

@@ -101,29 +101,152 @@ function sanitizeScenario(raw: unknown): Scenario | null {
   };
 }
 
-function sanitizeVocab(raw: unknown): VocabularyItem | null {
-  if (!raw || typeof raw !== "object") return null;
+function pickFirstNonEmptyString(
+  record: Record<string, unknown>,
+  keys: string[]
+): string {
+  for (const key of keys) {
+    const val = record[key];
+    if (typeof val === "string" && val.trim()) {
+      return val.trim();
+    }
+  }
+  return "";
+}
+
+function normalizeCanonicalTerm(raw: string): string {
+  return raw.trim().replace(/\s+/g, " ");
+}
+
+function slugifyVocabValue(value: string): string {
+  const slug = value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 64);
+  return slug || `term-${Date.now().toString(36)}`;
+}
+
+function normalizeVocabLevel(
+  raw: unknown
+): "Fresher" | "Junior" | "Senior" | undefined {
+  if (typeof raw !== "string") return undefined;
+  const lower = raw.trim().toLowerCase();
+  if (lower === "fresher" || lower === "beginner" || lower === "entry") {
+    return "Fresher";
+  }
+  if (lower === "junior" || lower === "intermediate" || lower === "mid") {
+    return "Junior";
+  }
+  if (lower === "senior" || lower === "advanced" || lower === "lead") {
+    return "Senior";
+  }
+  return undefined;
+}
+
+function normalizeVocabRelatedTerms(raw: unknown): string[] | undefined {
+  if (Array.isArray(raw)) {
+    const list = toStringList(raw);
+    return list.length > 0 ? list : undefined;
+  }
+  if (typeof raw === "string" && raw.trim()) {
+    const list = toStringList(raw.split(/[;|,]/));
+    return list.length > 0 ? list : undefined;
+  }
+  return undefined;
+}
+
+export function normalizeIncomingVocabularyItem(
+  raw: unknown,
+  defaultClusterFallback?: string
+): VocabularyItem | null {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
   const r = raw as Record<string, unknown>;
-  const id = typeof r.id === "string" ? r.id.trim() : "";
-  const term = typeof r.term === "string" ? r.term.trim() : "";
-  if (!id || !term) return null;
+  const rawTerm = pickFirstNonEmptyString(r, ["term", "word", "vocabulary", "title"]);
+  const term = normalizeCanonicalTerm(rawTerm);
+  if (!term) return null;
+
+  const rawId = pickFirstNonEmptyString(r, ["id"]);
+  const id = rawId || `vocab-${slugifyVocabValue(term)}`;
+
+  const rawIpa = pickFirstNonEmptyString(r, ["phonetic", "ipa", "pronunciation"]);
+  const phonetic = rawIpa === "/.../" ? "" : rawIpa;
+
+  const partOfSpeech =
+    pickFirstNonEmptyString(r, ["partOfSpeech", "part_of_speech", "pos", "type"]) ||
+    "noun";
+
+  const meaningVI = pickFirstNonEmptyString(r, [
+    "meaningVI",
+    "meaning_vi",
+    "vietnameseMeaning",
+    "vietnamese_meaning",
+    "meaning",
+    "definition_vi",
+    "definition",
+  ]);
+
+  const exampleSentenceEN = pickFirstNonEmptyString(r, [
+    "exampleSentenceEN",
+    "example_sentence_en",
+    "example_en",
+    "exampleSentence",
+    "example",
+    "sampleSentence",
+  ]);
+
+  const exampleTranslationVI = pickFirstNonEmptyString(r, [
+    "exampleTranslationVI",
+    "example_translation_vi",
+    "example_vi",
+    "exampleTranslation",
+    "translation_vi",
+    "translation",
+  ]);
+
+  const rawClusterTitle = pickFirstNonEmptyString(r, [
+    "clusterTitle",
+    "cluster_title",
+    "category",
+    "topic",
+    "cluster",
+    "group",
+  ]);
+  const clusterTitle = rawClusterTitle || defaultClusterFallback || undefined;
+
+  const rawClusterSlug = pickFirstNonEmptyString(r, ["clusterSlug", "cluster_slug"]);
+  const clusterSlug =
+    rawClusterSlug || (clusterTitle ? slugifyVocabValue(clusterTitle) : undefined);
+
+  const careerLevel =
+    normalizeVocabLevel(r.careerLevel ?? r.career_level ?? r.level) ??
+    (defaultClusterFallback ? "Fresher" : undefined);
+
+  const relatedTerms = normalizeVocabRelatedTerms(
+    r.relatedTerms ?? r.related_terms ?? r.related
+  );
 
   return {
     id,
     term,
-    phonetic: typeof r.phonetic === "string" ? r.phonetic.trim() : "",
-    partOfSpeech:
-      typeof r.partOfSpeech === "string" && r.partOfSpeech.trim()
-        ? r.partOfSpeech.trim()
-        : "noun",
-    meaningVI: typeof r.meaningVI === "string" ? r.meaningVI.trim() : "",
-    exampleSentenceEN:
-      typeof r.exampleSentenceEN === "string" ? r.exampleSentenceEN.trim() : "",
-    exampleTranslationVI:
-      typeof r.exampleTranslationVI === "string"
-        ? r.exampleTranslationVI.trim()
-        : "",
+    phonetic,
+    partOfSpeech,
+    meaningVI,
+    exampleSentenceEN,
+    exampleTranslationVI,
+    ...(clusterTitle ? { clusterTitle } : {}),
+    ...(clusterSlug ? { clusterSlug } : {}),
+    ...(careerLevel ? { careerLevel } : {}),
+    ...(relatedTerms ? { relatedTerms } : {}),
   };
+}
+
+function sanitizeVocab(raw: unknown): VocabularyItem | null {
+  const item = normalizeIncomingVocabularyItem(raw);
+  if (!item || !item.id || !item.term) return null;
+  return item;
 }
 
 function sanitizeBugChallenge(raw: unknown): BugBusterChallenge | null {

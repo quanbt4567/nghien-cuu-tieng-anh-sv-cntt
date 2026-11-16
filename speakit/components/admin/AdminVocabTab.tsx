@@ -105,7 +105,9 @@ export function AdminVocabTab({
         item.term.toLowerCase().includes(q) ||
         item.meaningVI.toLowerCase().includes(q) ||
         item.partOfSpeech.toLowerCase().includes(q) ||
-        item.exampleSentenceEN.toLowerCase().includes(q)
+        item.exampleSentenceEN.toLowerCase().includes(q) ||
+        (item.clusterTitle ?? "").toLowerCase().includes(q) ||
+        (item.relatedTerms ?? []).some((rel) => rel.toLowerCase().includes(q))
       );
     });
   }, [vocabList, customIds, searchQuery, sourceFilter]);
@@ -399,6 +401,9 @@ export function AdminVocabTab({
       const result = (await res.json().catch(() => null)) as {
         ok?: boolean;
         error?: string;
+        importedCount?: number;
+        skippedDuplicatesCount?: number;
+        skippedTerms?: string[];
         inserted?: number;
         updated?: number;
         skipped?: number;
@@ -419,9 +424,22 @@ export function AdminVocabTab({
         onOverridesChange(saved);
       }
 
+      const importedCount = result.importedCount ?? result.inserted ?? 0;
+      const skippedDuplicatesCount =
+        result.skippedDuplicatesCount ?? result.skipped ?? 0;
+      const skippedTerms = Array.isArray(result.skippedTerms)
+        ? result.skippedTerms
+        : [];
+      const skippedSample =
+        skippedTerms.length > 0
+          ? ` (${skippedTerms.slice(0, 8).join(", ")}${
+              skippedTerms.length > 8 ? ", ..." : ""
+            })`
+          : "";
+
       setStatusNotice({
         tone: "ok",
-        text: `Import complete: ${result.inserted ?? 0} inserted, ${result.updated ?? 0} updated, ${result.skipped ?? 0} skipped (total ${result.total ?? 0}).`,
+        text: `Đã thêm mới ${importedCount} từ • Bỏ qua ${skippedDuplicatesCount} từ bị trùng${skippedSample}.`,
       });
       setImportData("");
       if (fileInputRef.current) {
@@ -873,10 +891,21 @@ export function AdminVocabTab({
                           <span className="px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-[10px] font-mono uppercase text-ink-muted">
                             {item.partOfSpeech}
                           </span>
-                          <span className="text-xs font-ipa text-accent font-medium">
-                            {item.phonetic || "/.../"}
-                          </span>
-                          {!isBase ? (
+                          {item.phonetic && item.phonetic !== "/.../" ? (
+                            <span className="text-xs font-ipa text-accent font-medium">
+                              {item.phonetic}
+                            </span>
+                          ) : null}
+                          {item.careerLevel ? (
+                            <span className="px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-[10px] font-mono font-semibold text-ink">
+                              {item.careerLevel}
+                            </span>
+                          ) : null}
+                          {item.clusterTitle ? (
+                            <span className="px-2 py-0.5 rounded-pill bg-accent-light border border-accent/30 text-[10px] font-mono font-semibold text-ink">
+                              {item.clusterTitle}
+                            </span>
+                          ) : !isBase ? (
                             <span className="px-2 py-0.5 rounded-pill bg-accent-light border border-accent/30 text-[10px] font-mono font-semibold text-ink">
                               Tùy chỉnh
                             </span>
@@ -964,6 +993,19 @@ export function AdminVocabTab({
                         {(isExpanded || !hasLongExample) && item.exampleTranslationVI && (
                           <div className="text-[11px] mt-0.5">{item.exampleTranslationVI}</div>
                         )}
+                      </div>
+                    )}
+
+                    {Array.isArray(item.relatedTerms) && item.relatedTerms.length > 0 && (
+                      <div className="flex flex-wrap items-center gap-1 pt-0.5">
+                        {item.relatedTerms.map((rel) => (
+                          <span
+                            key={rel}
+                            className="px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-[10px] font-mono text-ink-muted"
+                          >
+                            #{rel}
+                          </span>
+                        ))}
                       </div>
                     )}
                   </div>
