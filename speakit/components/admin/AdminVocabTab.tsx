@@ -402,6 +402,7 @@ export function AdminVocabTab({
         ok?: boolean;
         error?: string;
         importedCount?: number;
+        aiRepairedCount?: number;
         skippedDuplicatesCount?: number;
         skippedTerms?: string[];
         inserted?: number;
@@ -425,6 +426,7 @@ export function AdminVocabTab({
       }
 
       const importedCount = result.importedCount ?? result.inserted ?? 0;
+      const aiRepairedCount = result.aiRepairedCount ?? 0;
       const skippedDuplicatesCount =
         result.skippedDuplicatesCount ?? result.skipped ?? 0;
       const skippedTerms = Array.isArray(result.skippedTerms)
@@ -439,7 +441,7 @@ export function AdminVocabTab({
 
       setStatusNotice({
         tone: "ok",
-        text: `Đã thêm mới ${importedCount} từ • Bỏ qua ${skippedDuplicatesCount} từ bị trùng${skippedSample}.`,
+        text: `Đã thêm mới ${importedCount} từ (AI chuẩn hóa ${aiRepairedCount} từ) • Bỏ qua ${skippedDuplicatesCount} từ bị trùng${skippedSample}.`,
       });
       setImportData("");
       if (fileInputRef.current) {
@@ -674,7 +676,11 @@ export function AdminVocabTab({
                 className="inline-flex items-center gap-1.5 px-5 py-2 rounded-pill bg-accent text-white text-xs font-semibold hover:bg-accent-hover shadow-soft shadow-hard-press transition-all disabled:opacity-60"
               >
                 <Upload className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>{isImporting ? "Importing..." : "Import & Sync"}</span>
+                <span>
+                  {isImporting
+                    ? "AI đang kiểm tra & chuẩn hóa cấu trúc..."
+                    : "Import & Sync"}
+                </span>
               </button>
             </div>
           </form>

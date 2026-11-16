@@ -162,6 +162,24 @@ export function normalizeIncomingVocabularyItem(
   raw: unknown,
   defaultClusterFallback?: string
 ): VocabularyItem | null {
+  if (typeof raw === "string") {
+    const term = normalizeCanonicalTerm(raw);
+    if (!term) return null;
+    const clusterTitle = defaultClusterFallback || undefined;
+    const clusterSlug = clusterTitle ? slugifyVocabValue(clusterTitle) : undefined;
+    return {
+      id: `vocab-${slugifyVocabValue(term)}`,
+      term,
+      phonetic: "",
+      partOfSpeech: /\s+/.test(term) ? "phrase" : "noun",
+      meaningVI: "",
+      exampleSentenceEN: "",
+      exampleTranslationVI: "",
+      ...(clusterTitle ? { clusterTitle } : {}),
+      ...(clusterSlug ? { clusterSlug } : {}),
+      ...(defaultClusterFallback ? { careerLevel: "Fresher" } : {}),
+    };
+  }
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
   const r = raw as Record<string, unknown>;
   const rawTerm = pickFirstNonEmptyString(r, ["term", "word", "vocabulary", "title"]);
@@ -244,6 +262,7 @@ export function normalizeIncomingVocabularyItem(
 }
 
 function sanitizeVocab(raw: unknown): VocabularyItem | null {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
   const item = normalizeIncomingVocabularyItem(raw);
   if (!item || !item.id || !item.term) return null;
   return item;
@@ -274,9 +293,6 @@ function sanitizeBugChallenge(raw: unknown): BugBusterChallenge | null {
   };
 }
 
-/**
- * Validates and normalizes untrusted JSON overrides into a safe AdminContentOverrides shape.
- */
 export function normalizeContentOverrides(raw: unknown): AdminContentOverrides {
   if (!raw || typeof raw !== "object") return createEmptyContentOverrides();
   const r = raw as Record<string, unknown>;
@@ -371,9 +387,6 @@ function csvCell(value: unknown): string {
   return /[",\r\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
 }
 
-/**
- * Exports research telemetry as UTF-8 BOM RFC 4180 CSV so Excel renders Vietnamese cleanly.
- */
 export function buildResearchCsv(
   attempts: PracticeAttempt[],
   arenaRuns: Array<ArenaRunRecord | GameScoreEntry>,
@@ -453,9 +466,7 @@ function dispatchContentUpdate(): void {
   if (typeof window === "undefined") return;
   try {
     window.dispatchEvent(new CustomEvent(CONTENT_UPDATED_EVENT));
-  } catch {
-    // ignore in restricted environments
-  }
+  } catch {}
 }
 
 export function getLocalContentOverrides(): AdminContentOverrides {
@@ -479,9 +490,7 @@ export function saveLocalContentOverrides(
         CONTENT_STORAGE_KEY,
         JSON.stringify(normalized)
       );
-    } catch {
-      // ignore quota errors
-    }
+    } catch {}
     dispatchContentUpdate();
   }
   return normalized;

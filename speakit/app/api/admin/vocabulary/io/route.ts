@@ -30,6 +30,54 @@ const CSV_HEADERS = [
   "relatedTerms",
 ] as const;
 
+const KNOWN_CSV_HEADER_KEYS = new Set([
+  "id",
+  "term",
+  "word",
+  "vocabulary",
+  "title",
+  "phonetic",
+  "ipa",
+  "pronunciation",
+  "partofspeech",
+  "part_of_speech",
+  "pos",
+  "type",
+  "meaningvi",
+  "meaning_vi",
+  "vietnamesemeaning",
+  "vietnamese_meaning",
+  "meaning",
+  "definition_vi",
+  "definition",
+  "examplesentenceen",
+  "example_sentence_en",
+  "example_en",
+  "examplesentence",
+  "example",
+  "samplesentence",
+  "exampletranslationvi",
+  "example_translation_vi",
+  "example_vi",
+  "exampletranslation",
+  "translation_vi",
+  "translation",
+  "clustertitle",
+  "cluster_title",
+  "category",
+  "topic",
+  "cluster",
+  "group",
+  "clusterslug",
+  "cluster_slug",
+  "careerlevel",
+  "career_level",
+  "level",
+  "relatedterms",
+  "related_terms",
+  "related",
+]);
+
 function csvCell(value: unknown): string {
   const str = value === null || value === undefined ? "" : String(value);
   return /[",\r\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
@@ -109,8 +157,37 @@ function parseCsvRows(input: string): string[][] {
   return rows.filter((r) => r.some((c) => c.trim().length > 0));
 }
 
-function parseCsvObjects(input: string): Record<string, unknown>[] {
+function parseCsvObjects(input: string): unknown[] {
   const matrix = parseCsvRows(input);
+  if (matrix.length === 0) return [];
+
+  const firstRowNormalized = matrix[0].map((h) =>
+    h.trim().toLowerCase().replace(/[\s-]+/g, "_")
+  );
+  const hasHeaderRow = firstRowNormalized.some(
+    (h) => KNOWN_CSV_HEADER_KEYS.has(h) || KNOWN_CSV_HEADER_KEYS.has(h.replace(/_/g, ""))
+  );
+
+  if (!hasHeaderRow) {
+    if (matrix.every((r) => r.length === 1)) {
+      return matrix.map((r) => r[0].trim()).filter(Boolean);
+    }
+    if (matrix.length === 1) {
+      return matrix[0].map((c) => c.trim()).filter(Boolean);
+    }
+    return matrix
+      .map((r) => ({
+        term: r[0] ?? "",
+        phonetic: r[1] ?? "",
+        partOfSpeech: r[2] ?? "",
+        meaningVI: r[3] ?? "",
+        exampleSentenceEN: r[4] ?? "",
+        exampleTranslationVI: r[5] ?? "",
+        clusterTitle: r[6] ?? "",
+      }))
+      .filter((obj) => String(obj.term).trim().length > 0);
+  }
+
   if (matrix.length < 2) return [];
 
   const headers = matrix[0].map((h) => h.trim());
@@ -128,6 +205,20 @@ function parseCsvObjects(input: string): Record<string, unknown>[] {
   }
 
   return records;
+}
+
+function extractJsonRows(parsed: unknown): unknown[] | null {
+  if (Array.isArray(parsed)) {
+    return parsed;
+  }
+  if (parsed && typeof parsed === "object") {
+    const obj = parsed as Record<string, unknown>;
+    if (Array.isArray(obj.items)) return obj.items;
+    if (Array.isArray(obj.vocabulary)) return obj.vocabulary;
+    if (Array.isArray(obj.customVocabulary)) return obj.customVocabulary;
+    if (Array.isArray(obj.data)) return obj.data;
+  }
+  return null;
 }
 
 async function readStoredOverrides(): Promise<AdminContentOverrides> {
@@ -224,65 +315,75 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  if (!body || typeof body !== "object" || Array.isArray(body)) {
+  if (!body || typeof body !== "object") {
     return NextResponse.json(
-      { ok: false, error: "Request body must be an object." },
-      { status: 400 }
-    );
-  }
-
-  const payload = body as { format?: unknown; data?: unknown };
-  const format = payload.format === "csv" ? "csv" : payload.format === "json" ? "json" : null;
-  if (!format) {
-    return NextResponse.json(
-      { ok: false, error: "Invalid format. Expected 'json' or 'csv'." },
+      { ok: false, error: "Request body must be an object or array." },
       { status: 400 }
     );
   }
 
   let rawRows: unknown[] = [];
-  if (format === "json") {
-    let parsed: unknown = payload.data;
-    if (typeof parsed === "string") {
-      try {
-        parsed = JSON.parse(parsed);
-      } catch {
-        return NextResponse.json(
-          { ok: false, error: "Invalid JSON data string." },
-          { status: 400 }
-        );
-      }
-    }
-    if (Array.isArray(parsed)) {
-      rawRows = parsed;
-    } else if (parsed && typeof parsed === "object") {
-      const obj = parsed as Record<string, unknown>;
-      if (Array.isArray(obj.items)) {
-        rawRows = obj.items;
-      } else if (Array.isArray(obj.vocabulary)) {
-        rawRows = obj.vocabulary;
-      } else if (Array.isArray(obj.customVocabulary)) {
-        rawRows = obj.customVocabulary;
-      } else {
-        return NextResponse.json(
-          { ok: false, error: "JSON data must be an array of vocabulary items." },
-          { status: 400 }
-        );
-      }
-    } else {
-      return NextResponse.json(
-        { ok: false, error: "JSON data must be an array of vocabulary items." },
-        { status: 400 }
-      );
-    }
+
+  if (Array.isArray(body)) {
+    rawRows = body;
   } else {
-    if (typeof payload.data !== "string") {
-      return NextResponse.json(
-        { ok: false, error: "CSV data must be a string." },
-        { status: 400 }
-      );
+    const payload = body as {
+      format?: unknown;
+      data?: unknown;
+      items?: unknown;
+      vocabulary?: unknown;
+      customVocabulary?: unknown;
+    };
+
+    const directWrapped =
+      payload.format === undefined ? extractJsonRows(payload) : null;
+
+    if (directWrapped) {
+      rawRows = directWrapped;
+    } else {
+      const format =
+        payload.format === "csv"
+          ? "csv"
+          : payload.format === "json"
+            ? "json"
+            : null;
+      if (!format) {
+        return NextResponse.json(
+          { ok: false, error: "Invalid format. Expected 'json' or 'csv'." },
+          { status: 400 }
+        );
+      }
+
+      if (format === "json") {
+        let parsed: unknown = payload.data;
+        if (typeof parsed === "string") {
+          try {
+            parsed = JSON.parse(parsed);
+          } catch {
+            return NextResponse.json(
+              { ok: false, error: "Invalid JSON data string." },
+              { status: 400 }
+            );
+          }
+        }
+        const extracted = extractJsonRows(parsed);
+        if (!extracted) {
+          return NextResponse.json(
+            { ok: false, error: "JSON data must be an array of vocabulary items." },
+            { status: 400 }
+          );
+        }
+        rawRows = extracted;
+      } else {
+        if (typeof payload.data !== "string") {
+          return NextResponse.json(
+            { ok: false, error: "CSV data must be a string." },
+            { status: 400 }
+          );
+        }
+        rawRows = parseCsvObjects(payload.data);
+      }
     }
-    rawRows = parseCsvObjects(payload.data);
   }
 
   const sql = getNeonSql();
@@ -294,13 +395,18 @@ export async function POST(req: NextRequest) {
   }
 
   const total = rawRows.length;
-  const { importedCount, skippedDuplicatesCount, skippedTerms } =
-    await importVocabularyItemsSkipDuplicates(rawRows, "Tùy chỉnh");
+  const {
+    importedCount,
+    aiRepairedCount,
+    skippedDuplicatesCount,
+    skippedTerms,
+  } = await importVocabularyItemsSkipDuplicates(rawRows, "Tùy chỉnh");
   const overrides = await readStoredOverrides();
 
   return NextResponse.json({
     ok: true,
     importedCount,
+    aiRepairedCount,
     skippedDuplicatesCount,
     skippedTerms,
     inserted: importedCount,

@@ -6,6 +6,7 @@ import {
 import { getNeonSql as getSql } from "./db";
 import { ensureSchema } from "./db/neon";
 import type { VocabularyItem } from "./types";
+import { repairVocabularyItemsWithAi } from "./vocab-cluster-engine";
 
 export function canonicalVocabularyTermKey(raw: string): string {
   return raw.trim().replace(/\s+/g, " ").toLowerCase();
@@ -84,29 +85,49 @@ export async function importVocabularyItemsSkipDuplicates(
   defaultClusterFallback = "Tùy chỉnh"
 ): Promise<{
   importedCount: number;
+  aiRepairedCount: number;
   skippedDuplicatesCount: number;
   skippedTerms: string[];
 }> {
   const sql = getSql();
   if (!sql) {
-    return { importedCount: 0, skippedDuplicatesCount: 0, skippedTerms: [] };
+    return {
+      importedCount: 0,
+      aiRepairedCount: 0,
+      skippedDuplicatesCount: 0,
+      skippedTerms: [],
+    };
   }
 
   await purgeBrokenPlaceholderVocabulary();
 
   const existingKeys = new Set<string>();
+  const existingClusterSet = new Set<string>();
+
   for (const baseItem of VOCABULARY_LIST) {
     const key = canonicalVocabularyTermKey(baseItem.term);
     if (key) existingKeys.add(key);
+    const cluster = baseItem.clusterTitle?.trim();
+    if (cluster && cluster !== "Tùy chỉnh") {
+      existingClusterSet.add(cluster);
+    }
   }
 
   const dbRows = await sql`
-    SELECT LOWER(REGEXP_REPLACE(BTRIM(term), '\s+', ' ', 'g')) AS canonical_term
+    SELECT
+      LOWER(REGEXP_REPLACE(BTRIM(term), '\s+', ' ', 'g')) AS canonical_term,
+      cluster_title
     FROM vocabulary_items
   `;
   for (const row of dbRows) {
     if (typeof row.canonical_term === "string" && row.canonical_term) {
       existingKeys.add(row.canonical_term);
+    }
+    if (typeof row.cluster_title === "string") {
+      const cluster = row.cluster_title.trim();
+      if (cluster && cluster !== "Tùy chỉnh") {
+        existingClusterSet.add(cluster);
+      }
     }
   }
 
@@ -123,12 +144,16 @@ export async function importVocabularyItemsSkipDuplicates(
     for (const customItem of overrides.customVocabulary) {
       const key = canonicalVocabularyTermKey(customItem.term);
       if (key) existingKeys.add(key);
+      const cluster = customItem.clusterTitle?.trim();
+      if (cluster && cluster !== "Tùy chỉnh") {
+        existingClusterSet.add(cluster);
+      }
     }
   }
 
   const batchSeen = new Set<string>();
   const skippedTerms: string[] = [];
-  const toInsert: VocabularyItem[] = [];
+  const toInsertCandidates: VocabularyItem[] = [];
 
   for (const rawRow of rawRows) {
     const item = normalizeIncomingVocabularyItem(rawRow, defaultClusterFallback);
@@ -143,8 +168,14 @@ export async function importVocabularyItemsSkipDuplicates(
 
     batchSeen.add(key);
     existingKeys.add(key);
-    toInsert.push(item);
+    toInsertCandidates.push(item);
   }
+
+  const existingClusters = Array.from(existingClusterSet);
+  const { repairedItems: toInsert, aiRepairedCount } =
+    toInsertCandidates.length > 0
+      ? await repairVocabularyItemsWithAi(toInsertCandidates, existingClusters)
+      : { repairedItems: [] as VocabularyItem[], aiRepairedCount: 0 };
 
   for (const item of toInsert) {
     const key = canonicalVocabularyTermKey(item.term);
@@ -181,6 +212,7 @@ export async function importVocabularyItemsSkipDuplicates(
 
   return {
     importedCount: toInsert.length,
+    aiRepairedCount,
     skippedDuplicatesCount: skippedTerms.length,
     skippedTerms,
   };
@@ -195,13 +227,18 @@ export async function upsertVocabularyItems(
     if (!normalized) continue;
     deduped.set(canonicalVocabularyTermKey(normalized.term), normalized);
   }
-  const normalizedItems = Array.from(deduped.values());
-  if (normalizedItems.length === 0) return [];
+  const normalizedCandidates = Array.from(deduped.values());
+  if (normalizedCandidates.length === 0) return [];
 
   const sql = getSql();
   if (!sql) return [];
 
   await ensureVocabularyTable();
+
+  const { repairedItems: normalizedItems } = await repairVocabularyItemsWithAi(
+    normalizedCandidates,
+    []
+  );
 
   for (const item of normalizedItems) {
     await sql`
