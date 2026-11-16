@@ -35,6 +35,10 @@ export interface UpsertResearchArticleInput {
 export const DEFAULT_RESEARCH_ARTICLES: ResearchArticle[] = [
   {
     ...EF_EPI_2025_SEED_ARTICLE,
+    sourceUrls: normalizeSeedArticleSources(
+      EF_EPI_2025_SEED_ARTICLE.slug,
+      EF_EPI_2025_SEED_ARTICLE.sourceUrls
+    ),
     createdAt: "2025-11-01T00:00:00.000Z",
     publishedAt: "2025-11-01T00:00:00.000Z",
   },
@@ -126,8 +130,8 @@ function toIsoOrNull(value: unknown): string | null {
   return null;
 }
 
-const EF_EPI_2025_REPORT_PDF_URL =
-  "https://www.ef.com/__/~/media/centralefcom/epi/v12/downloads/full-reports/ef-epi-2025-english.pdf";
+const EF_EPI_2025_INTERNAL_URL = "/research/ef-epi-2025-vietnam";
+const EF_EPI_2025_INTERNAL_LABEL = "Phân tích chi tiết EF EPI 2025 (Nội bộ SpeakIT)";
 
 function normalizeSeedArticleSources(
   slug: string,
@@ -135,9 +139,9 @@ function normalizeSeedArticleSources(
 ): ResearchSourceUrl[] {
   if (slug !== EF_EPI_2025_SEED_ARTICLE.slug) return sourceUrls;
   return sourceUrls.map((src) =>
-    src.url === "https://www.ef.com/wwen/epi/" ||
-    src.url === "https://www.ef.com/wwen/epi/regions/asia/vietnam/"
-      ? { ...src, url: EF_EPI_2025_REPORT_PDF_URL }
+    src.url.includes("ef.com/wwen/epi") ||
+    src.url.includes("ef-epi-2025-english.pdf")
+      ? { title: EF_EPI_2025_INTERNAL_LABEL, url: EF_EPI_2025_INTERNAL_URL }
       : src
   );
 }

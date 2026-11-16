@@ -287,7 +287,7 @@ export async function rewardPracticePoints(
       : "";
   const clampedPoints =
     typeof rawScore === "number" && Number.isFinite(rawScore)
-      ? Math.max(0, Math.min(1000, Math.round(rawScore)))
+      ? Math.max(0, Math.min(10000, Math.round(rawScore)))
       : 0;
 
   if (!safeScenario || clampedPoints <= 0) {

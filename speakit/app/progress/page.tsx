@@ -64,32 +64,35 @@ export default function ProgressPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    async function loadData() {
-      setIsLoading(true);
-      const [allAttempts, allWeakPoints, sessionRes] = await Promise.all([
-        storageAdapter.getAttempts(),
-        storageAdapter.getWeakPoints(),
-        initOrHydrateGuestSession(readBackupTransferCode()).catch(() => ({
-          mode: "offline" as const,
-          player: null,
-        })),
-      ]);
-
-      setAttempts(allAttempts);
-      setWeakPoints(allWeakPoints);
-      if (sessionRes.mode === "online" && sessionRes.player) {
-        saveBackupTransferCode(sessionRes.player.transferCode);
-        setGuestPlayer(sessionRes.player);
-      }
-      setPlanDays(generate7DayPlan(allWeakPoints, allAttempts));
-      setIsLoading(false);
-    }
-
     const syncGamification = () => setGamification(getGamificationState());
     const syncContent = () => setScenarios(getEffectiveScenarios());
 
+    async function loadData() {
+      setIsLoading(true);
+      try {
+        const [allAttempts, allWeakPoints, sessionRes] = await Promise.all([
+          storageAdapter.getAttempts(),
+          storageAdapter.getWeakPoints(),
+          initOrHydrateGuestSession(readBackupTransferCode()).catch(() => ({
+            mode: "offline" as const,
+            player: null,
+          })),
+        ]);
+
+        setAttempts(allAttempts);
+        setWeakPoints(allWeakPoints);
+        if (sessionRes.mode === "online" && sessionRes.player) {
+          saveBackupTransferCode(sessionRes.player.transferCode);
+          setGuestPlayer(sessionRes.player);
+        }
+        setPlanDays(generate7DayPlan(allWeakPoints, allAttempts));
+        syncGamification();
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
     loadData();
-    syncGamification();
     syncContent();
     void fetchAndCachePublicContent();
 
@@ -208,6 +211,47 @@ export default function ProgressPage() {
     link.click();
     URL.revokeObjectURL(url);
   };
+
+  if (isLoading) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-8 space-y-8 animate-pulse">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-3">
+            <div className="h-7 w-28 rounded-pill bg-ink/10" />
+            <div className="h-8 w-72 rounded-xl bg-ink/10" />
+            <div className="h-4 w-96 max-w-full rounded-lg bg-ink/10" />
+          </div>
+          <div className="h-9 w-36 rounded-pill bg-ink/10" />
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5">
+          {[0, 1, 2, 3].map((idx) => (
+            <div
+              key={idx}
+              className="bg-white border border-ink/15 rounded-2xl p-4 sm:p-5 shadow-soft space-y-2"
+            >
+              <div className="h-8 w-16 mx-auto rounded-lg bg-ink/10" />
+              <div className="h-3 w-24 mx-auto rounded bg-ink/10" />
+            </div>
+          ))}
+        </div>
+
+        <div className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-4">
+          <div className="h-5 w-48 rounded-lg bg-ink/10" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[0, 1, 2].map((idx) => (
+              <div key={idx} className="h-24 rounded-xl bg-ink/10" />
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-4">
+          <div className="h-5 w-56 rounded-lg bg-ink/10" />
+          <div className="h-32 rounded-xl bg-ink/10" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">

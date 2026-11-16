@@ -58,7 +58,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
       <div className="bg-white border border-ink/15 rounded-2xl p-6 sm:p-8 shadow-card">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           <div className="lg:col-span-7 space-y-5">
-            <div className="inline-flex items-center gap-2 rounded-pill px-3.5 py-1.5 bg-paper border border-ink/15 text-xs font-mono font-semibold text-accent">
+            <div className="inline-flex items-center gap-2 rounded-pill px-3.5 py-1.5 bg-paper border border-ink/15 text-xs font-mono font-semibold text-[#B91C1C]">
               <Headphones className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
               <span>SpeakIT · AI IT English Coach</span>
             </div>
@@ -116,7 +116,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
             className="lg:col-span-5 bg-paper border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4"
           >
             <div className="space-y-1.5">
-              <p className="text-[11px] font-mono font-semibold uppercase tracking-wider text-accent">
+              <p className="text-[11px] font-mono font-semibold uppercase tracking-wider text-[#B91C1C]">
                 EF EPI {EF_EPI_2025.year} · {EF_EPI_2025.country}
               </p>
               <h2 className="text-base font-bold text-ink">
@@ -127,67 +127,69 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
               </p>
             </div>
 
-            <div className="bg-white border border-ink/15 rounded-xl px-3 py-2.5 flex items-center justify-between gap-2">
-              <span className="text-xs font-mono text-ink-muted">
-                Điểm tổng EF EPI toàn quốc
-              </span>
-              <span className="font-mono text-sm font-bold text-ink shrink-0">
-                {EF_EPI_2025.score} điểm
-              </span>
-            </div>
+            <div className="border-t border-ink/10 pt-3 space-y-3">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-xs font-mono text-ink-muted">
+                  Điểm tổng EF EPI toàn quốc
+                </span>
+                <span className="font-mono text-sm font-bold text-ink shrink-0">
+                  {EF_EPI_2025.score} điểm
+                </span>
+              </div>
 
-            <div className="grid grid-cols-2 gap-2.5 text-xs">
-              <div className="bg-white border border-ink/15 rounded-xl p-2.5 space-y-0.5">
-                <div className="text-[11px] font-mono text-ink-muted">Xếp hạng toàn cầu</div>
-                <div className="text-sm font-mono font-bold text-ink">
-                  <span className="whitespace-nowrap">
-                    Hạng #{EF_EPI_2025.globalRank}/{EF_EPI_2025.totalCountries}
-                  </span>{" "}
-                  <span className="whitespace-nowrap">quốc gia</span>
+              <div className="grid grid-cols-2 gap-3 pt-3 border-t border-ink/10 text-xs">
+                <div className="space-y-0.5">
+                  <div className="text-[11px] font-mono text-ink-muted">Xếp hạng toàn cầu</div>
+                  <div className="text-sm font-mono font-bold text-ink">
+                    <span className="whitespace-nowrap">
+                      Hạng #{EF_EPI_2025.globalRank}/{EF_EPI_2025.totalCountries}
+                    </span>{" "}
+                    <span className="whitespace-nowrap">quốc gia</span>
+                  </div>
+                </div>
+                <div className="space-y-0.5 border-l border-ink/10 pl-3">
+                  <div className="text-[11px] font-mono text-ink-muted">
+                    Xếp hạng <span className="whitespace-nowrap">châu Á</span>
+                  </div>
+                  <div className="text-sm font-mono font-bold text-ink">
+                    <span className="whitespace-nowrap">
+                      Hạng #{EF_EPI_2025.asiaRank}/{EF_EPI_2025.totalAsiaCountries}
+                    </span>{" "}
+                    <span className="whitespace-nowrap">quốc gia</span>
+                  </div>
                 </div>
               </div>
-              <div className="bg-white border border-ink/15 rounded-xl p-2.5 space-y-0.5">
-                <div className="text-[11px] font-mono text-ink-muted">
-                  Xếp hạng <span className="whitespace-nowrap">châu Á</span>
-                </div>
-                <div className="text-sm font-mono font-bold text-ink">
-                  <span className="whitespace-nowrap">
-                    Hạng #{EF_EPI_2025.asiaRank}/{EF_EPI_2025.totalAsiaCountries}
-                  </span>{" "}
-                  <span className="whitespace-nowrap">quốc gia</span>
-                </div>
-              </div>
             </div>
 
-            <div className="space-y-2.5">
+            <div className="space-y-2.5 border-t border-ink/10 pt-3">
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs font-mono">
                   <span className="text-ink font-semibold">Kỹ năng Đọc tài liệu (Reading)</span>
                   <span className="text-ink font-bold">{EF_EPI_2025.skills.reading} điểm</span>
                 </div>
-                <div className="h-2 rounded-pill bg-white border border-ink/15 overflow-hidden">
+                <div className="h-2 rounded-pill bg-ink/10 overflow-hidden">
                   <div
-                    className="h-full bg-ink rounded-pill"
-                    style={{ width: `${readingPercent}%` }}
+                    className="h-full w-full origin-left bg-ink rounded-pill transition-transform duration-500"
+                    style={{ transform: `scaleX(${readingPercent / 100})` }}
                   />
                 </div>
               </div>
 
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs font-mono">
-                  <span className="text-accent font-semibold">Kỹ năng Nói — yếu nhất (Speaking)</span>
-                  <span className="text-accent font-bold">{EF_EPI_2025.skills.speaking} điểm</span>
+                  <span className="text-[#B91C1C] font-semibold">Kỹ năng Nói — yếu nhất (Speaking)</span>
+                  <span className="text-[#B91C1C] font-bold">{EF_EPI_2025.skills.speaking} điểm</span>
                 </div>
-                <div className="h-2 rounded-pill bg-white border border-ink/15 overflow-hidden">
+                <div className="h-2 rounded-pill bg-ink/10 overflow-hidden">
                   <div
-                    className="h-full bg-accent rounded-pill"
-                    style={{ width: `${speakingPercent}%` }}
+                    className="h-full w-full origin-left bg-accent rounded-pill transition-transform duration-500"
+                    style={{ transform: `scaleX(${speakingPercent / 100})` }}
                   />
                 </div>
               </div>
             </div>
 
-            <p className="text-xs text-ink-muted leading-relaxed">
+            <p className="text-xs text-ink-muted leading-relaxed border-t border-ink/10 pt-3">
               Kỹ năng Nói tại Việt Nam thấp hơn Đọc tới{" "}
               <span className="font-mono font-semibold text-ink">
                 {speakingVsReadingGap} điểm
@@ -211,7 +213,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
                 <Icon className="w-4 h-4 text-accent" aria-hidden="true" />
               </div>
               <div className="space-y-1">
-                <div className="text-[11px] font-mono font-bold text-accent">
+                <div className="text-[11px] font-mono font-bold text-[#B91C1C]">
                   BƯỚC {item.step}
                 </div>
                 <h3 className="text-sm font-bold text-ink">{item.title}</h3>

@@ -639,7 +639,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
           {promptParts[0].trimEnd()}
           {" "}
           <span
-            className={`inline-block min-w-[96px] mx-1 px-2.5 py-0.5 rounded-lg font-mono font-bold text-center border transition-colors ${
+            className={`inline min-w-[96px] mx-1 px-2.5 py-0.5 rounded-lg font-mono font-bold text-center border transition-colors ${
               feedback?.kind === "fixed"
                 ? "bg-ink text-white border-ink"
                 : feedback?.kind === "missed"

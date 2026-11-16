@@ -32,7 +32,7 @@ export default async function HomePage() {
           </div>
           <Link
             href="/arena"
-            className="interactive-btn-accent inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 bg-accent/10 hover:bg-accent text-accent hover:text-white border border-accent/40 text-xs font-semibold"
+            className="interactive-btn-accent inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 bg-accent/10 hover:bg-accent text-[#B91C1C] hover:text-white border border-accent/40 text-xs font-semibold"
           >
             <span>Xem bảng xếp hạng</span>
             <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -40,17 +40,17 @@ export default async function HomePage() {
         </div>
 
         {topLeaders.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 divide-y divide-ink/10 md:divide-y-0 md:divide-x border-t border-ink/10 pt-3">
             {topLeaders.map((player) => (
               <LeaderboardRowWrapper
                 key={player.id}
                 fxId={player.equippedCosmetics?.leaderboard_fx}
                 nameplateId={player.equippedCosmetics?.nameplate}
-                className="interactive-card bg-paper border border-ink/20 rounded-xl"
+                className="rounded-lg transition-colors hover:bg-paper/70"
               >
                 <Link
                   href="/arena"
-                  className="p-4 flex items-center justify-between gap-3"
+                  className="p-3.5 flex items-center justify-between gap-3"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <DiscordAvatarFrame
@@ -68,7 +68,7 @@ export default async function HomePage() {
                       <div className="text-sm font-bold text-ink break-words">
                         {player.displayName}
                       </div>
-                      <span className="inline-block text-[11px] font-mono px-2 py-0.5 rounded-pill bg-white border border-ink/15 text-ink-muted">
+                      <span className="inline-block text-[11px] font-mono px-2 py-0.5 rounded-pill bg-paper border border-ink/10 text-ink-muted">
                         {player.equippedTitle}
                       </span>
                     </div>
@@ -89,7 +89,7 @@ export default async function HomePage() {
             ))}
           </div>
         ) : (
-          <div className="bg-paper border border-ink/10 rounded-xl p-4 flex flex-wrap items-center justify-between gap-2 text-xs text-ink-muted">
+          <div className="border-t border-ink/10 pt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-ink-muted">
             <span>
               Chưa có dữ liệu bảng xếp hạng trực tuyến. Hoàn thành một vòng Arena để ghi danh #1.
             </span>
@@ -114,7 +114,7 @@ export default async function HomePage() {
               <MessageSquare className="w-4 h-4 text-accent" aria-hidden="true" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-bold text-sm text-ink group-hover:text-accent transition-colors">
+              <h3 className="font-bold text-sm text-ink group-hover:text-[#B91C1C] transition-colors">
                 Kịch bản luyện nói
               </h3>
               <p className="text-xs text-ink-muted">
@@ -123,7 +123,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-ink text-xs font-semibold transition-all">
+            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-ink text-xs font-semibold transition-colors">
               <span>Luyện kịch bản</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -139,7 +139,7 @@ export default async function HomePage() {
               <BookOpen className="w-4 h-4 text-accent" aria-hidden="true" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-bold text-sm text-ink group-hover:text-accent transition-colors">
+              <h3 className="font-bold text-sm text-ink group-hover:text-[#B91C1C] transition-colors">
                 Từ vựng IT
               </h3>
               <p className="text-xs text-ink-muted">
@@ -148,7 +148,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-ink text-xs font-semibold transition-all">
+            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-ink text-xs font-semibold transition-colors">
               <span>Ôn từ vựng</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -164,7 +164,7 @@ export default async function HomePage() {
               <Clock className="w-4 h-4 text-accent" aria-hidden="true" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-bold text-sm text-ink group-hover:text-accent transition-colors">
+              <h3 className="font-bold text-sm text-ink group-hover:text-[#B91C1C] transition-colors">
                 Kế hoạch 7 ngày
               </h3>
               <p className="text-xs text-ink-muted">
@@ -173,7 +173,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-ink text-xs font-semibold transition-all">
+            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-ink text-xs font-semibold transition-colors">
               <span>Xem lộ trình</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -189,7 +189,7 @@ export default async function HomePage() {
               <Gamepad2 className="w-4 h-4 text-accent" aria-hidden="true" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-bold text-sm text-ink group-hover:text-accent transition-colors">
+              <h3 className="font-bold text-sm text-ink group-hover:text-[#B91C1C] transition-colors">
                 IT Speaking Arena
               </h3>
               <p className="text-xs text-ink-muted">
@@ -198,7 +198,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-ink text-xs font-semibold transition-all">
+            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-ink text-xs font-semibold transition-colors">
               <span>Vào đấu trường</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -207,14 +207,14 @@ export default async function HomePage() {
 
         <Link
           href="/arena/party"
-          className="group bg-[#FAF6EF] border-2 border-[#1A1714] rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex flex-col justify-between gap-4"
+          className="group bg-[#FAF6EF] border-2 border-[#1A1714] rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] hover:translate-x-[1px] hover:translate-y-[1px] transition-transform flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-pill bg-[#E5484D] text-white flex items-center justify-center border-2 border-[#1A1714] shrink-0">
               <Siren className="w-4 h-4" aria-hidden="true" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-bold text-sm text-[#1A1714] group-hover:text-[#E5484D] transition-colors">
+              <h3 className="font-bold text-sm text-[#1A1714] group-hover:text-[#B91C1C] transition-colors">
                 Outage At 3AM (Party Mode)
               </h3>
               <p className="text-xs text-[#1A1714]/75">
@@ -223,7 +223,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-[#E5484D] text-white border-2 border-[#1A1714] text-xs font-semibold transition-all">
+            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-[#E5484D] text-white border-2 border-[#1A1714] text-xs font-semibold transition-colors">
               <span>Mở Party Mode</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -232,14 +232,14 @@ export default async function HomePage() {
 
         <Link
           href="/shop"
-          className="group bg-white border-2 border-[#1A1714] rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] hover:bg-[#FAF6EF] transition-all flex flex-col justify-between gap-4"
+          className="group bg-white border-2 border-[#1A1714] rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] hover:bg-[#FAF6EF] transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-pill bg-[#FAF6EF] text-[#E5484D] flex items-center justify-center border-2 border-[#1A1714] shrink-0">
               <ShoppingBag className="w-4 h-4" aria-hidden="true" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-bold text-sm text-[#1A1714] group-hover:text-[#E5484D] transition-colors">
+              <h3 className="font-bold text-sm text-[#1A1714] group-hover:text-[#B91C1C] transition-colors">
                 Cửa hàng Hiệu ứng
               </h3>
               <p className="text-xs text-[#1A1714]/75">
@@ -248,7 +248,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-[#FAF6EF] group-hover:bg-[#E5484D] text-[#1A1714] group-hover:text-white border-2 border-[#1A1714] text-xs font-semibold transition-all">
+            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-[#FAF6EF] group-hover:bg-[#E5484D] text-[#1A1714] group-hover:text-white border-2 border-[#1A1714] text-xs font-semibold transition-colors">
               <span>Vào cửa hàng</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>

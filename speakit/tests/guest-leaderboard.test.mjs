@@ -189,8 +189,13 @@ test("server actions clamp scores and fall back gracefully without DATABASE_URL"
     const clampedHigh = await rewardPracticePoints("daily-standup", 99999);
     assert.equal(clampedHigh.ok, true);
     assert.equal(clampedHigh.mode, "offline");
-    assert.equal(clampedHigh.awardedPoints, 1000);
+    assert.equal(clampedHigh.awardedPoints, 10000);
     assert.equal(clampedHigh.player, null);
+
+    const arenaScore = await rewardPracticePoints("bug-buster", 1070);
+    assert.equal(arenaScore.ok, true);
+    assert.equal(arenaScore.mode, "offline");
+    assert.equal(arenaScore.awardedPoints, 1070);
 
     const negativeScore = await rewardPracticePoints("daily-standup", -50);
     assert.equal(negativeScore.ok, false);
