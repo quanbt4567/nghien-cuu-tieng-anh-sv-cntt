@@ -521,78 +521,115 @@ export function GlobalLeaderboard({
             No ranked players recorded yet. Complete a speaking turn to claim #1.
           </div>
         ) : (
-          <div className="space-y-2.5">
-            {players.map((entry) => {
-              const hasNameplate = Boolean(entry.equippedCosmetics?.nameplate);
-              const hasFx = Boolean(entry.equippedCosmetics?.leaderboard_fx);
-              return (
-                <LeaderboardRowWrapper
-                  key={entry.id}
-                  fxId={entry.equippedCosmetics?.leaderboard_fx}
-                  nameplateId={entry.equippedCosmetics?.nameplate}
-                  className={`border transition-colors ${
-                    hasNameplate || hasFx
-                      ? entry.isCurrentUser
-                        ? "border-accent/40"
-                        : "border-ink/15"
-                      : entry.isCurrentUser
-                      ? "bg-accent-light/50 border-accent/40"
-                      : "bg-paper border-ink/10"
-                  }`}
-                >
-                  <div className="p-3.5 flex flex-wrap items-center justify-between gap-3">
-                    <Link
-                      href={`/profile/${entry.id}`}
-                      className="group flex items-center gap-3 min-w-0"
+          (() => {
+            const nameCounts = new Map<string, number>();
+            for (const p of players) {
+              const key = p.displayName.trim().toLowerCase();
+              nameCounts.set(key, (nameCounts.get(key) ?? 0) + 1);
+            }
+            const getRankBadgeClass = (rank: number) => {
+              if (rank === 1) {
+                return "bg-amber-400/20 border-amber-500/50 text-amber-800";
+              }
+              if (rank === 2) {
+                return "bg-slate-200/80 border-slate-400/60 text-slate-800";
+              }
+              if (rank === 3) {
+                return "bg-orange-200/70 border-orange-400/60 text-orange-900";
+              }
+              return "bg-white border-ink/15 text-ink-muted";
+            };
+            return (
+              <div className="space-y-2.5">
+                {players.map((entry) => {
+                  const hasNameplate = Boolean(entry.equippedCosmetics?.nameplate);
+                  const hasFx = Boolean(entry.equippedCosmetics?.leaderboard_fx);
+                  const isDuplicateName =
+                    (nameCounts.get(entry.displayName.trim().toLowerCase()) ?? 0) > 1;
+                  return (
+                    <LeaderboardRowWrapper
+                      key={entry.id}
+                      fxId={entry.equippedCosmetics?.leaderboard_fx}
+                      nameplateId={entry.equippedCosmetics?.nameplate}
+                      className={`border transition-colors ${
+                        hasNameplate || hasFx
+                          ? entry.isCurrentUser
+                            ? "border-accent/40"
+                            : "border-ink/15"
+                          : entry.isCurrentUser
+                          ? "bg-accent-light/50 border-accent/40"
+                          : "bg-paper border-ink/10"
+                      }`}
                     >
-                      <DiscordAvatarFrame
-                        equippedId={entry.equippedCosmetics?.avatar_decoration}
-                        fallbackRing={entry.equippedRing}
-                        size="sm"
-                      >
-                        <PlayerAvatar
-                          avatarUrl={entry.avatarUrl}
-                          displayName={entry.displayName}
-                          className={`text-xs border ${getRingBadgeClass(entry.equippedRing)}`}
-                        />
-                      </DiscordAvatarFrame>
-
-                      <div className="min-w-0">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="font-bold text-sm text-ink truncate group-hover:underline">
-                            {entry.displayName}
+                      <div className="p-3.5 flex flex-wrap items-center justify-between gap-3">
+                        <Link
+                          href={`/profile/${entry.id}`}
+                          className="group flex items-center gap-3 min-w-0"
+                        >
+                          <span
+                            className={`inline-flex items-center justify-center min-w-[2.5rem] px-2 py-1 rounded-pill border text-xs font-mono font-bold shrink-0 ${getRankBadgeClass(entry.rank)}`}
+                            aria-label={`Rank #${entry.rank}`}
+                          >
+                            #{entry.rank}
                           </span>
-                          {entry.isCurrentUser && (
-                            <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-ink text-white">
-                              You
-                            </span>
-                          )}
-                          <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-pill bg-white border border-ink/15 text-ink-muted">
-                            <Sparkles className="w-2.5 h-2.5 text-accent" />
-                            {entry.equippedTitle}
+                          <DiscordAvatarFrame
+                            equippedId={entry.equippedCosmetics?.avatar_decoration}
+                            fallbackRing={entry.equippedRing}
+                            size="sm"
+                          >
+                            <PlayerAvatar
+                              avatarUrl={entry.avatarUrl}
+                              displayName={entry.displayName}
+                              className={`text-xs border ${getRingBadgeClass(entry.equippedRing)}`}
+                            />
+                          </DiscordAvatarFrame>
+
+                          <div className="min-w-0">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="font-bold text-sm text-ink truncate group-hover:underline">
+                                {entry.displayName}
+                              </span>
+                              {isDuplicateName && (
+                                <span
+                                  className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-paper-muted border border-ink/10 text-ink-muted"
+                                  title={`Player ID: ${entry.id}`}
+                                >
+                                  #{entry.id.slice(0, 4)}
+                                </span>
+                              )}
+                              {entry.isCurrentUser && (
+                                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-ink text-white">
+                                  You
+                                </span>
+                              )}
+                              <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-pill bg-white border border-ink/15 text-ink-muted">
+                                <Sparkles className="w-2.5 h-2.5 text-accent" />
+                                {entry.equippedTitle}
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
+
+                        <div className="flex items-center gap-4 font-mono text-xs shrink-0">
+                          <span className="inline-flex items-center gap-1 text-ink-muted">
+                            <Flame className="w-3.5 h-3.5 fill-accent text-accent" />
+                            {entry.streakDays}d
+                          </span>
+                          <span className="inline-flex items-center gap-1 font-bold text-ink">
+                            <Coins className="w-3.5 h-3.5 text-accent" />
+                            {entry.itCoins}
+                          </span>
+                          <span className="text-ink-muted w-20 text-right">
+                            {entry.totalPoints.toLocaleString("en-US")} pts
                           </span>
                         </div>
                       </div>
-                    </Link>
-
-                    <div className="flex items-center gap-4 font-mono text-xs shrink-0">
-                      <span className="inline-flex items-center gap-1 text-ink-muted">
-                        <Flame className="w-3.5 h-3.5 fill-accent text-accent" />
-                        {entry.streakDays}d
-                      </span>
-                      <span className="inline-flex items-center gap-1 font-bold text-ink">
-                        <Coins className="w-3.5 h-3.5 text-accent" />
-                        {entry.itCoins}
-                      </span>
-                      <span className="text-ink-muted w-20 text-right">
-                        {entry.totalPoints.toLocaleString("en-US")} pts
-                      </span>
-                    </div>
-                  </div>
-                </LeaderboardRowWrapper>
-              );
-            })}
-          </div>
+                    </LeaderboardRowWrapper>
+                  );
+                })}
+              </div>
+            );
+          })()
         )}
       </section>
 

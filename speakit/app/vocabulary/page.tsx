@@ -49,7 +49,7 @@ const WORKSPACE_MODES: Array<{
   { id: "dictionary", label: "📚 Từ điển & Phát âm" },
   { id: "flashcard", label: "🃏 Flashcard Lật Thẻ" },
   { id: "quiz", label: "⚡ Quiz 60 Giây (+2 Coin)" },
-  { id: "cluster", label: "🎙️ Luyện Nói Theo Cụm (+3 Coin)" },
+  { id: "cluster", label: "🎙️ Nói Theo Cụm (+3 Coin)" },
 ];
 
 function readMasteredIds(): Set<string> {
@@ -319,7 +319,7 @@ export default function VocabularyPage() {
               role="tab"
               aria-selected={active}
               onClick={() => setWorkspaceMode(mode.id)}
-              className={`px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all text-center truncate ${
+              className={`px-2.5 py-2 rounded-xl text-xs sm:text-sm font-semibold leading-tight whitespace-normal sm:whitespace-nowrap transition-all text-center ${
                 active
                   ? "bg-ink text-white shadow-soft"
                   : "text-ink-muted hover:text-ink hover:bg-paper-muted/70"

@@ -20,6 +20,8 @@ import {
   VocabQuizQuestion,
 } from "../../lib/vocab-quiz";
 import { reportGuestPracticePoints } from "../../lib/guestClient";
+import { awardPracticePoints, getGamificationState } from "../../lib/gamification";
+import { storageAdapter } from "../../lib/storage";
 import {
   isSpeechRecognitionSupported,
   SpeechController,
@@ -95,10 +97,22 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
 
       const accuracy =
         totalQuestions > 0 ? Math.round((finalCorrect / totalQuestions) * 100) : 0;
-      if (accuracy >= PASSING_ACCURACY && !rewardClaimedRef.current) {
+      const passed = accuracy >= PASSING_ACCURACY;
+      if (totalQuestions > 0) {
+        void storageAdapter.saveAttempt({
+          scenario: "vocab-quiz-60s",
+          turn_index: 0,
+          transcript: `Vocab Quiz 60s: ${finalCorrect}/${totalQuestions} (${accuracy}%)${passed ? ` (+${REWARD_POINTS} pts)` : ""}`,
+          score: accuracy,
+          keywords_used: [],
+          role: getGamificationState().selectedRole,
+        });
+      }
+      if (passed && !rewardClaimedRef.current) {
         rewardClaimedRef.current = true;
         setRewardGranted(true);
-        void reportGuestPracticePoints("vocab-context-quiz", REWARD_POINTS);
+        awardPracticePoints(REWARD_POINTS);
+        void reportGuestPracticePoints("vocab-quiz-60s", REWARD_POINTS);
       }
     },
     [stopSpeech, clearAdvanceTimer]

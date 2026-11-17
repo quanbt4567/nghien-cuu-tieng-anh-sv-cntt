@@ -16,19 +16,32 @@ import {
   History,
   TrendingUp,
 } from "lucide-react";
-import { initOrHydrateGuestSession } from "../actions/leaderboard";
+import {
+  getPlayerArenaRuns,
+  initOrHydrateGuestSession,
+} from "../actions/leaderboard";
 import { SCENARIOS } from "../../data/scenarios";
 import type { PublicGuestPlayer } from "../../lib/db";
 import {
+  GUEST_PROFILE_UPDATED_EVENT,
   readBackupTransferCode,
+  readCachedGuestProfile,
   saveBackupTransferCode,
 } from "../../lib/guestClient";
 import {
+  buildUnifiedActivityHistory,
+  getArenaGameLabel,
+  mergeArenaRuns,
   mergeProfileIdentity,
-  normalizeArenaHistory,
 } from "../../lib/profileStats";
 import { storageAdapter } from "../../lib/storage";
-import { GamificationState, PracticeAttempt, Scenario, WeakPoint } from "../../lib/types";
+import {
+  ArenaRunRecord,
+  GamificationState,
+  PracticeAttempt,
+  Scenario,
+  WeakPoint,
+} from "../../lib/types";
 import { generate7DayPlan, isValidKeywordTerm, PlanDay } from "../../lib/planGenerator";
 import {
   GAMIFICATION_STORAGE_KEY,
@@ -60,27 +73,42 @@ export default function ProgressPage() {
   const [scenarios, setScenarios] = useState<Scenario[]>(SCENARIOS);
   const [gamification, setGamification] =
     useState<GamificationState>(INITIAL_GAMIFICATION);
+  const [serverArenaRuns, setServerArenaRuns] = useState<ArenaRunRecord[]>([]);
   const [guestPlayer, setGuestPlayer] = useState<PublicGuestPlayer | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const syncGamification = () => setGamification(getGamificationState());
     const syncContent = () => setScenarios(getEffectiveScenarios());
+    const syncGuestProfile = (event?: Event) => {
+      if (event instanceof CustomEvent && event.detail !== undefined) {
+        setGuestPlayer(event.detail as PublicGuestPlayer | null);
+        return;
+      }
+      const cached = readCachedGuestProfile();
+      if (cached) setGuestPlayer(cached);
+    };
 
     async function loadData() {
       setIsLoading(true);
       try {
-        const [allAttempts, allWeakPoints, sessionRes] = await Promise.all([
+        const transferCode = readBackupTransferCode();
+        const [allAttempts, allWeakPoints, sessionRes, arenaRes] = await Promise.all([
           storageAdapter.getAttempts(),
           storageAdapter.getWeakPoints(),
-          initOrHydrateGuestSession(readBackupTransferCode()).catch(() => ({
+          initOrHydrateGuestSession(transferCode).catch(() => ({
             mode: "offline" as const,
             player: null,
+          })),
+          getPlayerArenaRuns(transferCode).catch(() => ({
+            mode: "offline" as const,
+            runs: [] as ArenaRunRecord[],
           })),
         ]);
 
         setAttempts(allAttempts);
         setWeakPoints(allWeakPoints);
+        setServerArenaRuns(arenaRes.runs);
         if (sessionRes.mode === "online" && sessionRes.player) {
           saveBackupTransferCode(sessionRes.player.transferCode);
           setGuestPlayer(sessionRes.player);
@@ -94,9 +122,11 @@ export default function ProgressPage() {
 
     loadData();
     syncContent();
+    syncGuestProfile();
     void fetchAndCachePublicContent();
 
     window.addEventListener(GAMIFICATION_UPDATED_EVENT, syncGamification);
+    window.addEventListener(GUEST_PROFILE_UPDATED_EVENT, syncGuestProfile);
     window.addEventListener(CONTENT_UPDATED_EVENT, syncContent);
     const handleStorage = (event: StorageEvent) => {
       if (!event.key || event.key === GAMIFICATION_STORAGE_KEY) {
@@ -110,13 +140,14 @@ export default function ProgressPage() {
 
     return () => {
       window.removeEventListener(GAMIFICATION_UPDATED_EVENT, syncGamification);
+      window.removeEventListener(GUEST_PROFILE_UPDATED_EVENT, syncGuestProfile);
       window.removeEventListener(CONTENT_UPDATED_EVENT, syncContent);
       window.removeEventListener("storage", handleStorage);
     };
   }, []);
 
   const identity = mergeProfileIdentity(guestPlayer, gamification);
-  const arenaRuns = normalizeArenaHistory(gamification.history);
+  const arenaRuns = mergeArenaRuns(gamification.history, serverArenaRuns);
   const bugBusterRuns = arenaRuns.filter((r) => r.gameId === "bug-buster");
   const standupRuns = arenaRuns.filter((r) => r.gameId === "standup-speed-run");
   const bugBusterBest = Math.max(
@@ -167,6 +198,12 @@ export default function ProgressPage() {
   );
 
   // Best score per scenario
+  const scenarioTitleMap = new Map(scenarios.map((s) => [s.id, s.titleVI]));
+  const unifiedHistory = buildUnifiedActivityHistory(
+    attempts,
+    arenaRuns,
+    scenarioTitleMap
+  );
   const scenarioStats = scenarios.map((scenario) => {
     const scenarioAttempts = attempts.filter((a) => a.scenario === scenario.id);
     const best =
@@ -420,12 +457,14 @@ export default function ProgressPage() {
                 >
                   <div className="min-w-0">
                     <div className="text-xs font-bold text-ink truncate">
-                      {run.gameId === "bug-buster" ? "Bug Buster Arena" : "Standup Speed Run"}
+                      {getArenaGameLabel(run.gameId)}
                     </div>
                     <div className="text-[11px] font-mono text-ink-muted">
                       {run.gameId === "bug-buster"
                         ? `${run.accuracyOrWords}% chính xác`
-                        : `${run.accuracyOrWords} từ khóa`}
+                        : run.gameId === "standup-speed-run"
+                        ? `${run.accuracyOrWords} từ khóa`
+                        : `${run.accuracyOrWords} chỉ số`}
                       {run.durationSec > 0 ? ` • ${run.durationSec}s` : ""}
                       {" • "}
                       {new Date(run.createdAt).toLocaleDateString("vi-VN")}
@@ -445,6 +484,46 @@ export default function ProgressPage() {
               IT Speaking Arena
             </Link>
             !
+          </p>
+        )}
+      </section>
+
+      {/* Unified Activity & Point History */}
+      <section className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-4">
+        <div className="flex items-center justify-between border-b border-paper-muted pb-3">
+          <h2 className="text-sm font-bold text-ink uppercase tracking-wider font-mono flex items-center gap-2">
+            <History className="w-4 h-4 text-accent" />
+            <span>Lịch Sử Hoạt Động &amp; Điểm Thưởng</span>
+          </h2>
+          <span className="text-[11px] font-mono text-ink-muted">
+            {unifiedHistory.length} hoạt động
+          </span>
+        </div>
+
+        {unifiedHistory.length > 0 ? (
+          <div className="space-y-2">
+            {unifiedHistory.slice(0, 15).map((item) => (
+              <div
+                key={item.id}
+                className="bg-paper border border-ink/10 rounded-xl px-3.5 py-2.5 flex items-center justify-between gap-3"
+              >
+                <div className="min-w-0">
+                  <div className="text-xs font-bold text-ink truncate">
+                    {item.title}
+                  </div>
+                  <div className="text-[11px] font-mono text-ink-muted truncate">
+                    {item.detail} • {new Date(item.createdAt).toLocaleDateString("vi-VN")}
+                  </div>
+                </div>
+                <span className="px-2.5 py-0.5 rounded-pill bg-accent-light border border-accent/30 text-[11px] font-mono font-bold text-accent shrink-0">
+                  {item.badgeText}
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-xs text-ink-muted">
+            Chưa có hoạt động nào được ghi nhận. Hoàn thành một lượt luyện nói, Vocab Quiz 60s, Cluster Speaking hoặc trận Arena để xem lịch sử tại đây.
           </p>
         )}
       </section>

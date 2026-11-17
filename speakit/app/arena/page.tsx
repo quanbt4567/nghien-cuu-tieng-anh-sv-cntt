@@ -101,10 +101,10 @@ const ARENA_SHOWCASE_MODES: ArenaModeCard[] = [
     rewardBadge: "+10 IT-Coins",
     description:
       "Giải thích khái niệm CNTT thật dễ hiểu mà không chạm từ cấm để AI hoặc đồng đội đoán đúng.",
-    ctaLabel: "Chơi Taboo",
+    ctaLabel: "Chơi Explain It Like I'm 5",
     icon: MessageSquare,
     badgeTone: "bg-[#F59E0B] text-[#1A1714]",
-    href: "/arena/taboo",
+    href: "/arena/explain-it-like-im-5",
   },
   {
     id: "word-chain",
@@ -113,10 +113,10 @@ const ARENA_SHOWCASE_MODES: ArenaModeCard[] = [
     rewardBadge: "+8 IT-Coins",
     description:
       "Nối nhanh thuật ngữ IT theo chữ cái cuối trước khi bom máy chủ nổ, tích combo rút dây cháy.",
-    ctaLabel: "Vào Word Chain",
+    ctaLabel: "Vào Syntax Bomb",
     icon: Bomb,
     badgeTone: "bg-[#0EA5E9] text-white",
-    href: "/arena/word-chain",
+    href: "/arena/syntax-bomb",
   },
   {
     id: "bug-buster",

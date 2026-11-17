@@ -47,6 +47,7 @@ const { SCENARIOS } = jiti(resolve(__dirname, "../data/scenarios.ts"));
 const {
   initOrHydrateGuestSession,
   getTopPlayers,
+  getPlayerArenaRuns,
   rewardPracticePoints,
   purchaseAndEquipCosmetic,
   updateGuestDisplayName,
@@ -328,6 +329,13 @@ test("getTopPlayers SQL orders leaderboard by total_points DESC, effective_coins
     source,
     /ORDER BY total_points DESC, effective_coins DESC, created_at ASC/
   );
+});
+
+test("getPlayerArenaRuns falls back gracefully in offline mode", async () => {
+  await withClearedDatabaseUrl(async () => {
+    const res = await getPlayerArenaRuns("DEV-AB12CD");
+    assert.deepEqual(res, { mode: "offline", runs: [] });
+  });
 });
 
 

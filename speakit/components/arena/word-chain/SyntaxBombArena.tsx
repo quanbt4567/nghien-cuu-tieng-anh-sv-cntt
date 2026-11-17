@@ -301,20 +301,36 @@ export function SyntaxBombArena() {
     }
 
     if (room.status === "active") {
+      if (loadingAction === "start" || loadingAction === "quick_bot") {
+        return;
+      }
       const turnKey = `${room.roomCode}:${room.turnCount}:${room.currentTurnPlayerId ?? ""}`;
       if (prevTurnKeyRef.current !== turnKey) {
-        prevTurnKeyRef.current = turnKey;
         const nextFuse = Math.max(
           3,
           room.fuseSeconds || DYNAMIC_FUSE_RULES.baseFuseSeconds
         );
-        fuseTotalRef.current = nextFuse;
-        prevFuseSecRef.current = nextFuse;
-        deadlineMsRef.current = Date.now() + nextFuse * 1000;
-        nextTickAtRef.current = Date.now() + 260;
-        timeoutFiredKeyRef.current = null;
         setFuseTotalSec(nextFuse);
         setFuseRemainingSec(nextFuse);
+
+        const armTurnFuse = () => {
+          prevTurnKeyRef.current = turnKey;
+          fuseTotalRef.current = nextFuse;
+          prevFuseSecRef.current = nextFuse;
+          deadlineMsRef.current = Date.now() + nextFuse * 1000;
+          nextTickAtRef.current = Date.now() + 260;
+          timeoutFiredKeyRef.current = null;
+        };
+
+        // Start/reset the fuse only after the active battle view has mounted & painted
+        if (
+          typeof window !== "undefined" &&
+          typeof window.requestAnimationFrame === "function"
+        ) {
+          const rafId = window.requestAnimationFrame(armTurnFuse);
+          return () => window.cancelAnimationFrame(rafId);
+        }
+        armTurnFuse();
       } else if (room.fuseSeconds < prevFuseSecRef.current) {
         prevFuseSecRef.current = room.fuseSeconds;
         const capped = Date.now() + room.fuseSeconds * 1000;
@@ -346,13 +362,21 @@ export function SyntaxBombArena() {
         void syncGuestProfile();
       }
     }
-  }, [myPlayerId, room, syncGuestProfile, triggerSegfaultEffects]);
+  }, [loadingAction, myPlayerId, room, syncGuestProfile, triggerSegfaultEffects]);
 
   useEffect(() => {
-    if (!room || room.status !== "active") return;
+    if (
+      !room ||
+      room.status !== "active" ||
+      loadingAction === "start" ||
+      loadingAction === "quick_bot"
+    ) {
+      return;
+    }
     const turnKey = `${room.roomCode}:${room.turnCount}:${room.currentTurnPlayerId ?? ""}`;
 
     const interval = window.setInterval(() => {
+      if (prevTurnKeyRef.current !== turnKey) return;
       const remaining = Math.max(0, (deadlineMsRef.current - Date.now()) / 1000);
       setFuseRemainingSec(remaining);
       const urgency = Math.max(
@@ -386,6 +410,7 @@ export function SyntaxBombArena() {
     return () => window.clearInterval(interval);
   }, [
     callWordChainAction,
+    loadingAction,
     myPlayerId,
     room,
     triggerSegfaultEffects,

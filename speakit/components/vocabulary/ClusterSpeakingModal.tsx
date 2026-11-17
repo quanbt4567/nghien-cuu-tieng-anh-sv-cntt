@@ -23,8 +23,9 @@ import {
 } from "../../lib/speech";
 import {
   readBackupTransferCode,
-  saveCachedGuestProfile,
+  syncGuestProfileFromServer,
 } from "../../lib/guestClient";
+import { awardPracticePoints, getGamificationState } from "../../lib/gamification";
 import type { PublicGuestPlayer } from "../../lib/db";
 
 interface ClusterSpeakingModalProps {
@@ -264,17 +265,33 @@ export function ClusterSpeakingModal({
         throw new Error(data.error || "Không thể chấm điểm câu trả lời.");
       }
 
+      const awardedCoins = typeof data.awardedCoins === "number" ? data.awardedCoins : 0;
+      const score = typeof data.score === "number" ? data.score : 0;
+      const matchedTerms = Array.isArray(data.matchedTerms) ? data.matchedTerms : [];
+
+      void storageAdapter.saveAttempt({
+        scenario: "vocab-cluster-speaking",
+        turn_index: 0,
+        transcript: `${clusterTitle}: ${transcript.trim()}`.slice(0, 240),
+        score,
+        keywords_used: matchedTerms,
+        role: getGamificationState().selectedRole,
+      });
+
+      if (awardedCoins > 0) {
+        awardPracticePoints(awardedCoins * 1000);
+      }
       if (data.player) {
-        saveCachedGuestProfile(data.player as PublicGuestPlayer);
+        syncGuestProfileFromServer(data.player as PublicGuestPlayer);
       }
 
       setEvaluation({
-        score: data.score,
-        matchedTerms: Array.isArray(data.matchedTerms) ? data.matchedTerms : [],
+        score,
+        matchedTerms,
         missedTerms: Array.isArray(data.missedTerms) ? data.missedTerms : [],
         feedbackVI: data.feedbackVI,
         naturalnessFeedback: data.naturalnessFeedback,
-        awardedCoins: typeof data.awardedCoins === "number" ? data.awardedCoins : 0,
+        awardedCoins,
         player: data.player ?? null,
       });
     } catch (error) {

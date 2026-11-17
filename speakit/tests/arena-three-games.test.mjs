@@ -92,6 +92,7 @@ test("dataset defines >=10 duel topics, >=50 taboo cards, and >=350 A-Z IT chain
   for (const seed of SEED_STARTING_WORDS) {
     assert.equal(isItChainTerm(seed), true);
   }
+  assert.equal(DYNAMIC_FUSE_RULES.baseFuseSeconds, 18);
   assert.equal(DYNAMIC_FUSE_RULES.comboFuseSeconds, 5);
   assert.equal(DYNAMIC_FUSE_RULES.itTermMultiplier, 2);
   assert.equal(isItChainTerm("Kubernetes"), true);
@@ -212,7 +213,7 @@ test("detectTabooViolation catches stemmed inflections of taboo words and target
 test("Word Chain IT-term x2 combo reduces next fuse to 5s and detects non-IT / fouls", () => {
   assert.equal(
     computeWordChainFuseSeconds({ turnCount: 1, comboTriggered: false }),
-    12
+    18
   );
   assert.equal(
     computeWordChainFuseSeconds({ turnCount: 1, comboTriggered: true }),

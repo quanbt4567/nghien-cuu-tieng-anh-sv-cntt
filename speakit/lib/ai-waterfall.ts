@@ -16,6 +16,8 @@ import { AI_PROVIDER_SPECS, AiProviderId, ScoreResponse, ScoringProvider } from 
 export { OPENAI_WATERFALL_PROVIDERS };
 
 const PROVIDER_TIMEOUT_MS = 4000;
+const SCORING_PROVIDER_TIMEOUT_MS = 2500;
+const SCORING_TOTAL_BUDGET_MS = 5500;
 
 export interface AiProviderStatusItem {
   id: AiProviderId;
@@ -44,6 +46,7 @@ export interface AiWaterfallTextOptions {
   maxTokens?: number;
   jsonMode?: boolean;
   timeoutMs?: number;
+  totalBudgetMs?: number;
   env?: Record<string, string | undefined>;
   fetchFn?: typeof fetch;
   validate?: (text: string) => boolean;
@@ -293,9 +296,11 @@ async function runAiWaterfall<T>(
     env = process.env,
     fetchFn = fetch,
     timeoutMs = PROVIDER_TIMEOUT_MS,
+    totalBudgetMs,
   } = options;
 
   const settings = await getAiProviderSettings();
+  const waterfallStartedAt = Date.now();
 
   for (const provider of OPENAI_WATERFALL_PROVIDERS) {
     if (settings[provider.id]?.isEnabled === false) continue;
@@ -303,13 +308,22 @@ async function runAiWaterfall<T>(
     const apiKey = env[provider.envVar]?.trim();
     if (!apiKey) continue;
 
+    const elapsedMs = Date.now() - waterfallStartedAt;
+    if (totalBudgetMs !== undefined && elapsedMs >= totalBudgetMs) {
+      return null;
+    }
+    const effectiveTimeoutMs =
+      totalBudgetMs !== undefined
+        ? Math.min(timeoutMs, Math.max(100, totalBudgetMs - elapsedMs))
+        : timeoutMs;
+
     const model = env[provider.modelEnvVar]?.trim() || provider.defaultModel;
     const rawText = await callOpenAiCompatibleText(
       provider,
       options,
       apiKey,
       model,
-      timeoutMs,
+      effectiveTimeoutMs,
       fetchFn
     );
     if (!rawText) continue;
@@ -322,8 +336,16 @@ async function runAiWaterfall<T>(
 
   const geminiKey = env.GEMINI_API_KEY?.trim();
   if (geminiKey && settings.gemini?.isEnabled !== false) {
+    const elapsedMs = Date.now() - waterfallStartedAt;
+    if (totalBudgetMs !== undefined && elapsedMs >= totalBudgetMs) {
+      return null;
+    }
+    const effectiveTimeoutMs =
+      totalBudgetMs !== undefined
+        ? Math.min(timeoutMs, Math.max(100, totalBudgetMs - elapsedMs))
+        : timeoutMs;
     const geminiModel = env.GEMINI_MODEL?.trim() || DEFAULT_GEMINI_MODEL;
-    const rawText = await callGeminiText(options, geminiKey, geminiModel, timeoutMs, fetchFn);
+    const rawText = await callGeminiText(options, geminiKey, geminiModel, effectiveTimeoutMs, fetchFn);
     if (rawText) {
       const parsed = parse(rawText);
       if (parsed !== null) {
@@ -369,7 +391,7 @@ export async function evaluateWithWaterfall({
   defaultNextQuestion,
   env = process.env,
   fetchFn = fetch,
-  timeoutMs = PROVIDER_TIMEOUT_MS,
+  timeoutMs = SCORING_PROVIDER_TIMEOUT_MS,
 }: WaterfallEvaluationOptions): Promise<ScoreResponse & { provider: ScoringProvider }> {
   const inputGuard = detectInvalidEnglishInput(transcript);
   if (inputGuard.invalid) {
@@ -410,6 +432,7 @@ LANGUAGE & INPUT GUARD (STRICT):
       temperature: 0.2,
       jsonMode: true,
       timeoutMs,
+      totalBudgetMs: SCORING_TOTAL_BUDGET_MS,
       env,
       fetchFn,
     },

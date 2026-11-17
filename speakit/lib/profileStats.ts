@@ -2,8 +2,10 @@ import { findCosmeticById } from "./cosmetics";
 import type { PublicGuestPlayer } from "./db";
 import { calculateCoins, getDevTitle, pointsToNextCoin } from "./gamification";
 import type {
+  ArenaRunRecord,
   GameScoreEntry,
   GamificationState,
+  ITRole,
   PracticeAttempt,
   WeakPoint,
 } from "./types";
@@ -223,3 +225,182 @@ export function summarizeProfileActivity(
     nextCoinPoints: pointsToNextCoin(effectivePoints),
   };
 }
+
+export interface NormalizedArenaRun {
+  id: string;
+  gameId: string;
+  score: number;
+  accuracyOrWords: number;
+  durationSec: number;
+  role: ITRole | string;
+  createdAt: string;
+}
+
+export interface UnifiedActivityItem {
+  id: string;
+  kind: "attempt" | "arena";
+  title: string;
+  detail: string;
+  badgeText: string;
+  createdAt: string;
+}
+
+const ARENA_GAME_LABELS: Record<string, string> = {
+  "bug-buster": "Bug Buster Arena",
+  "standup-speed-run": "Standup Speed Run",
+  "arena:duel": "Tech Debate Duel",
+  "arena:taboo": "IT Taboo",
+  "arena:word-chain": "IT Word Chain",
+  "arena:party": "SpeakIT Party",
+};
+
+const ATTEMPT_SCENARIO_LABELS: Record<string, string> = {
+  "vocab-quiz-60s": "Vocab Quiz 60s",
+  "vocab-context-quiz": "Vocab Quiz 60s",
+  "vocab-cluster-speaking": "Cluster Speaking",
+};
+
+export function getArenaGameLabel(gameId: string): string {
+  return ARENA_GAME_LABELS[gameId] ?? gameId.replace(/^arena:/, "Arena ");
+}
+
+export function getAttemptScenarioLabel(
+  scenario: string,
+  scenarioTitleMap?: ReadonlyMap<string, string>
+): string {
+  return (
+    ATTEMPT_SCENARIO_LABELS[scenario] ??
+    scenarioTitleMap?.get(scenario) ??
+    scenario
+  );
+}
+
+/**
+ * Merges local gamification history with server-recorded speakit_arena_runs, deduplicating by id.
+ */
+export function mergeArenaRuns(
+  localHistory: readonly GameScoreEntry[],
+  serverRuns: readonly ArenaRunRecord[] = []
+): NormalizedArenaRun[] {
+  const combined: NormalizedArenaRun[] = [];
+  const seenIds = new Set<string>();
+
+  const pushNormalized = (
+    id: string,
+    gameId: string,
+    score: number,
+    accuracyOrWords: number,
+    durationSec: number,
+    role: string | null | undefined,
+    createdAt: string
+  ) => {
+    if (!id || seenIds.has(id)) return;
+    seenIds.add(id);
+    const safeScore = Number.isFinite(score) ? Math.max(0, Math.round(score)) : 0;
+    const rawMetric = Number.isFinite(accuracyOrWords)
+      ? Math.max(0, Math.round(accuracyOrWords))
+      : 0;
+    combined.push({
+      id,
+      gameId,
+      score: safeScore,
+      accuracyOrWords:
+        gameId === "bug-buster"
+          ? normalizeBugBusterAccuracy(safeScore, rawMetric)
+          : rawMetric,
+      durationSec: Number.isFinite(durationSec)
+        ? Math.max(0, Math.round(durationSec))
+        : 0,
+      role: role || "frontend",
+      createdAt:
+        typeof createdAt === "string" ? createdAt : new Date(createdAt).toISOString(),
+    });
+  };
+
+  for (const run of localHistory) {
+    if (!run || typeof run.id !== "string") continue;
+    pushNormalized(
+      run.id,
+      run.gameId,
+      run.score,
+      run.accuracyOrWords,
+      run.durationSec,
+      run.role,
+      run.createdAt
+    );
+  }
+
+  for (const run of serverRuns) {
+    if (!run || typeof run.id !== "string") continue;
+    pushNormalized(
+      run.id,
+      run.game_id,
+      Number(run.score),
+      Number(run.accuracy_or_words),
+      Number(run.duration_sec),
+      run.role,
+      run.created_at
+    );
+  }
+
+  return combined.sort((a, b) => {
+    const cmp = compareIsoDesc(a.createdAt, b.createdAt);
+    return cmp !== 0 ? cmp : a.id.localeCompare(b.id);
+  });
+}
+
+function formatArenaDetail(run: NormalizedArenaRun): string {
+  if (run.gameId === "bug-buster") {
+    return `${run.accuracyOrWords}% chính xác${run.durationSec > 0 ? ` • ${run.durationSec}s` : ""}`;
+  }
+  if (run.gameId === "standup-speed-run") {
+    return `${run.accuracyOrWords} từ khóa${run.durationSec > 0 ? ` • ${run.durationSec}s` : ""}`;
+  }
+  const parts: string[] = [];
+  if (run.accuracyOrWords > 0) parts.push(`${run.accuracyOrWords} chỉ số`);
+  if (run.durationSec > 0) parts.push(`${run.durationSec}s`);
+  return parts.length > 0 ? parts.join(" • ") : "Hoàn thành trận Arena";
+}
+
+/**
+ * Combines speaking/vocab attempts and Arena runs into a single reverse-chronological history list.
+ */
+export function buildUnifiedActivityHistory(
+  attempts: readonly PracticeAttempt[],
+  arenaRuns: readonly NormalizedArenaRun[],
+  scenarioTitleMap?: ReadonlyMap<string, string>
+): UnifiedActivityItem[] {
+  const items: UnifiedActivityItem[] = [];
+
+  for (const attempt of attempts) {
+    const title = getAttemptScenarioLabel(attempt.scenario, scenarioTitleMap);
+    const snippet = attempt.transcript?.trim()
+      ? attempt.transcript.trim().slice(0, 90)
+      : `Lượt ${attempt.turn_index + 1}`;
+    items.push({
+      id: `att:${attempt.id}`,
+      kind: "attempt",
+      title,
+      detail: snippet,
+      badgeText: `${attempt.score}/100`,
+      createdAt: attempt.created_at,
+    });
+  }
+
+  for (const run of arenaRuns) {
+    items.push({
+      id: `arena:${run.id}`,
+      kind: "arena",
+      title: getArenaGameLabel(run.gameId),
+      detail: formatArenaDetail(run),
+      badgeText: `${run.score.toLocaleString("vi-VN")} pts`,
+      createdAt: run.createdAt,
+    });
+  }
+
+  return items.sort((a, b) => {
+    const cmp = compareIsoDesc(a.createdAt, b.createdAt);
+    return cmp !== 0 ? cmp : a.id.localeCompare(b.id);
+  });
+}
+

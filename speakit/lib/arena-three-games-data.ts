@@ -1770,7 +1770,7 @@ export const SEED_STARTING_WORDS: readonly string[] = [
 ];
 
 export const DYNAMIC_FUSE_RULES = {
-  baseFuseSeconds: 12,
+  baseFuseSeconds: 18,
   minFuseSeconds: 5,
   comboFuseSeconds: 5,
   comboStreakThreshold: 2,

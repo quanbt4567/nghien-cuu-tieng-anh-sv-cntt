@@ -16,11 +16,13 @@ import {
 } from "../../lib/db";
 import { computeNextStreak } from "../../lib/gamification";
 import {
+  normalizeTransferCode,
   readExistingGuestPlayer,
   resolveOrCreateGuestSession,
   restoreByTransferCode as restoreGuestByTransferCode,
   serializePublicGuestPlayer,
 } from "../../lib/neon-auth";
+import type { ArenaRunRecord } from "../../lib/types";
 
 const COSMETIC_PRICES_JSON = JSON.stringify(
   ALL_COSMETIC_ITEMS.map((item) => ({ id: item.id, price: item.price }))
@@ -929,4 +931,54 @@ export async function unequipCosmeticSlot(
     };
   }
 }
+
+export async function getPlayerArenaRuns(
+  backupTransferCode?: string
+): Promise<{
+  mode: "online" | "offline";
+  runs: ArenaRunRecord[];
+}> {
+  const sql = getDbClient();
+  if (!sql) {
+    return { mode: "offline", runs: [] };
+  }
+
+  const ready = await ensureGuestDatabaseReady();
+  if (!ready) {
+    return { mode: "offline", runs: [] };
+  }
+
+  const player = await readExistingGuestPlayer();
+  const transferCode =
+    player?.transferCode ??
+    (backupTransferCode ? normalizeTransferCode(backupTransferCode) : null);
+  if (!transferCode) {
+    return { mode: "online", runs: [] };
+  }
+
+  try {
+    const rows = (await sql`
+      SELECT
+        id,
+        game_id,
+        score,
+        accuracy_or_words,
+        duration_sec,
+        role,
+        created_at
+      FROM speakit_arena_runs
+      WHERE transfer_code = ${transferCode}
+      ORDER BY created_at DESC
+      LIMIT 30
+    `) as ArenaRunRecord[];
+
+    return {
+      mode: "online",
+      runs: Array.isArray(rows) ? rows : [],
+    };
+  } catch {
+    return { mode: "offline", runs: [] };
+  }
+}
+
 

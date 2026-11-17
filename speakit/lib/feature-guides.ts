@@ -11,6 +11,7 @@ export interface FeatureTourStop {
 export interface FeatureGuide {
   id: string;
   routePrefix: string;
+  routeAliases?: readonly string[];
   title: string;
   subtitle: string;
   rewardBadge?: string;
@@ -316,7 +317,8 @@ export const FEATURE_GUIDES: readonly FeatureGuide[] = [
   },
   {
     id: "arena-taboo",
-    routePrefix: "/arena/taboo",
+    routePrefix: "/arena/explain-it-like-im-5",
+    routeAliases: ["/arena/taboo"],
     title: "Explain It Like I'm 5",
     subtitle: "Diễn giải khái niệm IT thật dễ hiểu mà không chạm 3 từ cấm đỏ",
     rewardBadge: "+10 IT-Coin",
@@ -374,7 +376,8 @@ export const FEATURE_GUIDES: readonly FeatureGuide[] = [
   },
   {
     id: "arena-word-chain",
-    routePrefix: "/arena/word-chain",
+    routePrefix: "/arena/syntax-bomb",
+    routeAliases: ["/arena/word-chain"],
     title: "Syntax Bomb",
     subtitle: "Nối từ tiếng Anh theo chữ cái cuối trước khi bom server nổ 0.0s",
     rewardBadge: "+8 IT-Coin",
@@ -454,14 +457,14 @@ export const FEATURE_GUIDES: readonly FeatureGuide[] = [
         placement: "bottom",
       },
       {
-        title: "4 Phòng đấu Realtime & AI Bot",
+        title: "6 Chế độ Đấu trường Arena",
         description:
-          "Khám phá 4 đấu trường tương tác: Outage At 3AM (Party), Code Review Duel (1v1), Explain It Like I'm 5 (Taboo) và Syntax Bomb (Word Chain).",
+          "Khám phá đủ 6 chế độ Arena: 4 phòng đấu Realtime/AI (Outage At 3AM, Code Review Duel, Explain It Like I'm 5, Syntax Bomb) cùng 2 chế độ Solo nhanh (Bug Buster 280s, Standup Speed Run).",
         selectors: [
           'a[href="/arena/party"]',
           'a[href="/arena/duel"]',
-          'a[href="/arena/taboo"]',
-          'a[href="/arena/word-chain"]',
+          'a[href="/arena/explain-it-like-im-5"]',
+          'a[href="/arena/syntax-bomb"]',
         ],
         matchTexts: ["Outage At 3AM (Party Mode)", "Mở Party Mode"],
         placement: "top",
@@ -862,11 +865,14 @@ export function resolveGuideForPath(pathname: string): FeatureGuide | null {
   let bestPrefixLength = -1;
 
   for (const guide of FEATURE_GUIDES) {
-    const cleanPrefix = normalizePathname(guide.routePrefix);
-    if (cleanPath === cleanPrefix || cleanPath.startsWith(`${cleanPrefix}/`)) {
-      if (cleanPrefix.length > bestPrefixLength) {
-        bestMatch = guide;
-        bestPrefixLength = cleanPrefix.length;
+    const prefixes = [guide.routePrefix, ...(guide.routeAliases ?? [])];
+    for (const prefix of prefixes) {
+      const cleanPrefix = normalizePathname(prefix);
+      if (cleanPath === cleanPrefix || cleanPath.startsWith(`${cleanPrefix}/`)) {
+        if (cleanPrefix.length > bestPrefixLength) {
+          bestMatch = guide;
+          bestPrefixLength = cleanPrefix.length;
+        }
       }
     }
   }

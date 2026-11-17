@@ -10,7 +10,10 @@ const require = createRequire(import.meta.url);
 const jiti = require("jiti")(__filename);
 
 const {
+  buildUnifiedActivityHistory,
   calculateSpentCosmeticCoins,
+  getArenaGameLabel,
+  mergeArenaRuns,
   mergeProfileIdentity,
   normalizeArenaHistory,
   normalizeBugBusterAccuracy,
@@ -343,3 +346,73 @@ test("normalizeBugBusterAccuracy preserves attempted percentages and converts le
   ]);
   assert.equal(normalized[0].accuracyOrWords, 75);
 });
+
+test("mergeArenaRuns and buildUnifiedActivityHistory combine attempts, vocab quizzes, and server arena runs", () => {
+  const localRuns = [
+    {
+      id: "run-bug-1",
+      gameId: "bug-buster",
+      score: 1500,
+      accuracyOrWords: 85,
+      durationSec: 40,
+      role: "frontend",
+      createdAt: "2026-11-17T08:00:00Z",
+    },
+  ];
+  const serverRuns = [
+    {
+      id: "run-bug-1",
+      game_id: "bug-buster",
+      score: 1500,
+      accuracy_or_words: 85,
+      duration_sec: 40,
+      role: "frontend",
+      created_at: "2026-11-17T08:00:00Z",
+    },
+    {
+      id: "duel-room1-p1",
+      game_id: "arena:duel",
+      score: 2200,
+      accuracy_or_words: 90,
+      duration_sec: 120,
+      role: "backend",
+      created_at: "2026-11-17T10:00:00Z",
+    },
+  ];
+
+  const mergedRuns = mergeArenaRuns(localRuns, serverRuns);
+  assert.equal(mergedRuns.length, 2);
+  assert.equal(mergedRuns[0].id, "duel-room1-p1");
+  assert.equal(getArenaGameLabel(mergedRuns[0].gameId), "Tech Debate Duel");
+
+  const attempts = [
+    {
+      id: "att-quiz-1",
+      scenario: "vocab-quiz-60s",
+      turn_index: 0,
+      transcript: "Vocab Quiz 60s: 5/5 (100%) (+2000 pts)",
+      score: 100,
+      keywords_used: [],
+      created_at: "2026-11-17T09:00:00Z",
+    },
+    {
+      id: "att-cluster-1",
+      scenario: "vocab-cluster-speaking",
+      turn_index: 0,
+      transcript: "CI/CD Pipeline: We deployed the build.",
+      score: 92,
+      keywords_used: ["deploy", "pipeline"],
+      created_at: "2026-11-17T11:00:00Z",
+    },
+  ];
+
+  const unified = buildUnifiedActivityHistory(attempts, mergedRuns);
+  assert.equal(unified.length, 4);
+  assert.deepEqual(
+    unified.map((u) => u.title),
+    ["Cluster Speaking", "Tech Debate Duel", "Vocab Quiz 60s", "Bug Buster Arena"]
+  );
+  assert.equal(unified[0].badgeText, "92/100");
+  assert.equal(unified[1].badgeText, "2.200 pts");
+});
+
