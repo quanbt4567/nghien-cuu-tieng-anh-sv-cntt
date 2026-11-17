@@ -109,7 +109,7 @@ export function CodeReviewDuelArena() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [copiedCode, setCopiedCode] = useState(false);
 
-  const [turnTimeLeft, setTurnTimeLeft] = useState(30);
+  const [turnTimeLeft, setTurnTimeLeft] = useState(45);
   const [transcriptInput, setTranscriptInput] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [speechError, setSpeechError] = useState<string | null>(null);
@@ -659,7 +659,7 @@ export function CodeReviewDuelArena() {
       const key = `${room.roomCode}:${room.round}:${room.currentTurnPlayerId ?? "none"}`;
       if (turnTimerKeyRef.current !== key) {
         turnTimerKeyRef.current = key;
-        setTurnTimeLeft(room.turnSeconds || 30);
+        setTurnTimeLeft(room.turnSeconds || 45);
       }
 
       const unseen = room.history.filter((entry) => !seenLogIdsRef.current.has(entry.id));
@@ -704,7 +704,7 @@ export function CodeReviewDuelArena() {
   ]);
 
   useEffect(() => {
-    if (!room || room.status !== "active") return;
+    if (!room || room.status !== "active" || loadingAction !== null) return;
     const interval = setInterval(() => {
       setTurnTimeLeft((prev) => {
         if (prev <= 1) return 0;
@@ -716,7 +716,7 @@ export function CodeReviewDuelArena() {
       });
     }, 1000);
     return () => clearInterval(interval);
-  }, [isMyTurn, room]);
+  }, [isMyTurn, loadingAction, room]);
 
   useEffect(() => {
     if (!room || room.status !== "active" || !isMyTurn) return;

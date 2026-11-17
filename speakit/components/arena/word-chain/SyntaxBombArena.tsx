@@ -123,6 +123,7 @@ export function SyntaxBombArena() {
   const nextTickAtRef = useRef<number>(0);
   const prevTurnKeyRef = useRef<string | null>(null);
   const timeoutFiredKeyRef = useRef<string | null>(null);
+  const pausedAtMsRef = useRef<number | null>(null);
   const explosionPlayedRef = useRef<string | null>(null);
   const finisherPlayedRef = useRef<string | null>(null);
   const flushedRoomRef = useRef<string | null>(null);
@@ -371,8 +372,23 @@ export function SyntaxBombArena() {
       loadingAction === "start" ||
       loadingAction === "quick_bot"
     ) {
+      pausedAtMsRef.current = null;
       return;
     }
+
+    if (loadingAction !== null) {
+      if (pausedAtMsRef.current === null) {
+        pausedAtMsRef.current = Date.now();
+      }
+      return;
+    }
+
+    if (pausedAtMsRef.current !== null) {
+      const pausedDelta = Math.max(0, Date.now() - pausedAtMsRef.current);
+      deadlineMsRef.current += pausedDelta;
+      pausedAtMsRef.current = null;
+    }
+
     const turnKey = `${room.roomCode}:${room.turnCount}:${room.currentTurnPlayerId ?? ""}`;
 
     const interval = window.setInterval(() => {
@@ -1004,7 +1020,7 @@ export function SyntaxBombArena() {
 
             <div className="text-left sm:text-right">
               <span className="px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-accent text-white">
-                {DYNAMIC_FUSE_RULES.baseFuseSeconds}s BASE FUSE • 5s COMBO
+                {DYNAMIC_FUSE_RULES.baseFuseSeconds}s BASE FUSE • {DYNAMIC_FUSE_RULES.comboFuseSeconds}s COMBO
               </span>
               <div className="mt-1 font-bold text-sm text-ink">
                 Seed Word: {room.currentWord.toUpperCase()}

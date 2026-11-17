@@ -178,7 +178,7 @@ test("checkBugBusterAnswer validates exact matches, variants, case-insensitivity
   assert.equal(IT_ROLES.length, 4);
   assert.equal(STANDUP_SPEED_QUESTIONS.length, 3);
   assert.equal(
-    STANDUP_SPEED_QUESTIONS.every((q) => q.timeLimitSec === 25),
+    STANDUP_SPEED_QUESTIONS.every((q) => q.timeLimitSec === 40),
     true
   );
 

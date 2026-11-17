@@ -104,7 +104,7 @@ export function TabooExplainArena() {
   const [isRecording, setIsRecording] = useState(false);
   const [speechError, setSpeechError] = useState<string | null>(null);
 
-  const [timeLeftSec, setTimeLeftSec] = useState(90);
+  const [timeLeftSec, setTimeLeftSec] = useState(150);
   const [cardFlipped, setCardFlipped] = useState(false);
   const [flipBadgeText, setFlipBadgeText] = useState<string | null>(null);
   const [foulFlash, setFoulFlash] = useState(false);
@@ -289,12 +289,12 @@ export function TabooExplainArena() {
   }, [room, syncGuestProfile]);
 
   useEffect(() => {
-    if (!room || room.status !== "active") return;
+    if (!room || room.status !== "active" || loadingAction !== null) return;
     const interval = window.setInterval(() => {
       setTimeLeftSec((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
     return () => window.clearInterval(interval);
-  }, [room]);
+  }, [loadingAction, room]);
 
   useEffect(() => {
     if (!room || room.status !== "active") return;

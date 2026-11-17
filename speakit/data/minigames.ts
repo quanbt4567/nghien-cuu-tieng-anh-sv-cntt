@@ -199,7 +199,7 @@ export const STANDUP_SPEED_QUESTIONS: StandupSpeedQuestion[] = [
       "merged",
       "finished",
     ],
-    timeLimitSec: 25,
+    timeLimitSec: 40,
   },
   {
     id: "standup-today",
@@ -220,7 +220,7 @@ export const STANDUP_SPEED_QUESTIONS: StandupSpeedQuestion[] = [
       "test",
       "deploy",
     ],
-    timeLimitSec: 25,
+    timeLimitSec: 40,
   },
   {
     id: "standup-blockers",
@@ -241,7 +241,7 @@ export const STANDUP_SPEED_QUESTIONS: StandupSpeedQuestion[] = [
       "dependency",
       "issue",
     ],
-    timeLimitSec: 25,
+    timeLimitSec: 40,
   },
 ];
 

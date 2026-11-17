@@ -42,8 +42,8 @@ import { SpeechController, startSpeechRecognition } from "../../lib/speech";
 import { ITRole } from "../../lib/types";
 import { FeedbackPromptModal } from "../feedback/FeedbackPromptModal";
 
-const ROUND_DURATION_SEC = 280;
-const BUG_DURATION_SEC = 20;
+const ROUND_DURATION_SEC = 360;
+const BUG_DURATION_SEC = 35;
 const BASE_FIX_POINTS = 150;
 
 interface BugBusterGameProps {

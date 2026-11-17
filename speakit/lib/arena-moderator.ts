@@ -714,7 +714,7 @@ export function createDuelRoom(options?: {
     momentum: 50,
     round: 0,
     maxRounds: 6,
-    turnSeconds: 30,
+    turnSeconds: 45,
     currentTurnPlayerId: players[0]?.id ?? null,
     currentTurnStance: players[0]?.stance ?? "author",
     winnerId: null,
@@ -1082,7 +1082,7 @@ export async function moderateDuelTurn(input: {
       temperature: 0.35,
       maxTokens: 320,
       jsonMode: true,
-      timeoutMs: 3200,
+      timeoutMs: 2000,
     });
 
     const parsed = aiRes ? extractFirstJsonObject(aiRes.text) : null;
@@ -1348,7 +1348,7 @@ export function createTabooRoom(options?: {
     maxStreak: 0,
     feverMode: false,
     score: 0,
-    turnSeconds: 90,
+    turnSeconds: 150,
     currentTurnPlayerId: players[0]?.id ?? null,
     winnerId: null,
     feed: [],
@@ -1611,7 +1611,7 @@ export async function moderateTabooTurn(input: {
       temperature: 0.3,
       maxTokens: 200,
       jsonMode: true,
-      timeoutMs: 2800,
+      timeoutMs: 1800,
     });
 
     const parsed = aiRes ? extractFirstJsonObject(aiRes.text) : null;
@@ -2177,7 +2177,7 @@ export async function moderateWordChainTurn(input: {
       temperature: 0.1,
       maxTokens: 120,
       jsonMode: true,
-      timeoutMs: 2200,
+      timeoutMs: 1400,
     });
 
     const parsed = aiRes ? extractFirstJsonObject(aiRes.text) : null;

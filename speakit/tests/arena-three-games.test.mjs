@@ -92,8 +92,8 @@ test("dataset defines >=10 duel topics, >=50 taboo cards, and >=350 A-Z IT chain
   for (const seed of SEED_STARTING_WORDS) {
     assert.equal(isItChainTerm(seed), true);
   }
-  assert.equal(DYNAMIC_FUSE_RULES.baseFuseSeconds, 18);
-  assert.equal(DYNAMIC_FUSE_RULES.comboFuseSeconds, 5);
+  assert.equal(DYNAMIC_FUSE_RULES.baseFuseSeconds, 22);
+  assert.equal(DYNAMIC_FUSE_RULES.comboFuseSeconds, 10);
   assert.equal(DYNAMIC_FUSE_RULES.itTermMultiplier, 2);
   assert.equal(isItChainTerm("Kubernetes"), true);
   assert.equal(isItChainTerm("banana"), false);
@@ -210,14 +210,14 @@ test("detectTabooViolation catches stemmed inflections of taboo words and target
   assert.deepEqual(cleanClue.matchedWords, []);
 });
 
-test("Word Chain IT-term x2 combo reduces next fuse to 5s and detects non-IT / fouls", () => {
+test("Word Chain IT-term x2 combo reduces next fuse to 10s and detects non-IT / fouls", () => {
   assert.equal(
     computeWordChainFuseSeconds({ turnCount: 1, comboTriggered: false }),
-    18
+    22
   );
   assert.equal(
     computeWordChainFuseSeconds({ turnCount: 1, comboTriggered: true }),
-    5
+    10
   );
 
   const nonIt = evaluateWordChainTurnLocal({
@@ -259,7 +259,7 @@ test("Word Chain IT-term x2 combo reduces next fuse to 5s and detects non-IT / f
   assert.equal(secondIt.nextStreak, 2);
   assert.equal(secondIt.multiplier, 2);
   assert.equal(secondIt.comboTriggered, true);
-  assert.equal(secondIt.nextFuseSeconds, 5);
+  assert.equal(secondIt.nextFuseSeconds, 10);
 
   const duplicate = evaluateWordChainTurnLocal({
     rawInput: "docker",
@@ -502,7 +502,7 @@ test("executeArenaAction awards IT-Coins once without double-awarding across Due
       });
       assert.equal(wcTurn2.status, 200);
       assert.equal(wcTurn2.body.turnResult.comboTriggered, true);
-      assert.equal(wcTurn2.body.turnResult.nextFuseSeconds, 5);
+      assert.equal(wcTurn2.body.turnResult.nextFuseSeconds, 10);
       wcRoom = wcTurn2.body.room;
     }
 

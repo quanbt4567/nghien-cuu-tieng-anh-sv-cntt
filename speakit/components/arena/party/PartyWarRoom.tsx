@@ -317,7 +317,8 @@ export function PartyWarRoom() {
       !room ||
       room.status === "lobby" ||
       room.status === "resolved" ||
-      room.status === "timed_out"
+      room.status === "timed_out" ||
+      loadingAction === "evaluate"
     ) {
       return;
     }
@@ -325,7 +326,7 @@ export function PartyWarRoom() {
       setTimeLeftSec((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
     return () => clearInterval(interval);
-  }, [room?.roomCode, room?.status]);
+  }, [loadingAction, room?.roomCode, room?.status]);
 
   useEffect(() => {
     if (!room) return;

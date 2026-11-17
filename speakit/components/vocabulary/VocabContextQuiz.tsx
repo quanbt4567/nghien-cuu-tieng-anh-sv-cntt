@@ -39,7 +39,7 @@ interface AnswerFeedback {
   isCorrect: boolean;
 }
 
-const QUIZ_DURATION_SEC = 60;
+const QUIZ_DURATION_SEC = 90;
 const QUIZ_QUESTION_COUNT = 5;
 const PASSING_ACCURACY = 80;
 const REWARD_POINTS = 2000;
@@ -260,7 +260,7 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-sm font-bold text-ink">
-                60-Second Context Recall Quiz
+                90-Second Context Recall Quiz
               </h2>
               <span className="inline-flex items-center gap-1 text-[10px] font-mono font-semibold px-2 py-0.5 rounded-pill bg-amber-100 text-amber-800 border border-amber-300/60">
                 <Coins className="w-3 h-3" />
