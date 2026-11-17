@@ -1,8 +1,9 @@
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { isAdminRequest } from "../../../../lib/adminAuth";
+import { extractDeleteIdsFromPayload } from "../../../../lib/adminBulkDelete";
 import {
-  deleteArticle,
+  deleteArticles,
   getAllAdminArticles,
   normalizeResearchCategory,
   normalizeResearchMetrics,
@@ -109,13 +110,20 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
 
-  const id = req.nextUrl.searchParams.get("id")?.trim() ?? "";
-  if (!id) {
+  let body: unknown = null;
+  try {
+    body = await req.json();
+  } catch {
+    body = null;
+  }
+
+  const ids = extractDeleteIdsFromPayload(req.nextUrl.searchParams, body);
+  if (ids.length === 0) {
     return NextResponse.json({ ok: false, error: "Article ID is required." }, { status: 400 });
   }
 
-  const removed = await deleteArticle(id);
-  if (!removed) {
+  const deletedIds = await deleteArticles(ids);
+  if (deletedIds.length === 0) {
     return NextResponse.json(
       { ok: false, error: "Failed to delete article." },
       { status: 500 }
@@ -125,5 +133,9 @@ export async function DELETE(req: NextRequest) {
   revalidatePath("/research");
   revalidatePath("/research/[slug]", "page");
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({
+    ok: true,
+    deletedIds,
+    deletedCount: deletedIds.length,
+  });
 }

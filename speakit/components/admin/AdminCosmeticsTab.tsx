@@ -27,6 +27,11 @@ import {
   type CosmeticItem,
   type CosmeticRarity,
 } from "../../lib/cosmetics";
+import {
+  AdminBulkActionBar,
+  AdminDeleteConfirmModal,
+  type DeleteConfirmRequest,
+} from "./AdminDeleteConfirmModal";
 
 interface AdminCosmeticsTabProps {
   onUnauthorized: () => void;
@@ -135,6 +140,8 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [deleteRequest, setDeleteRequest] = useState<DeleteConfirmRequest | null>(null);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -204,6 +211,55 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
     const start = (safePage - 1) * PAGE_SIZE;
     return filteredCatalog.slice(start, start + PAGE_SIZE);
   }, [filteredCatalog, safePage]);
+
+  const selectableFilteredCustom = useMemo(
+    () => filteredCatalog.filter((item) => customIds.has(item.id)),
+    [filteredCatalog, customIds]
+  );
+
+  const selectablePageCustom = useMemo(
+    () => paginatedCatalog.filter((item) => customIds.has(item.id)),
+    [paginatedCatalog, customIds]
+  );
+
+  const selectedCustomItems = useMemo(
+    () => items.filter((item) => selectedIds.has(item.id)),
+    [items, selectedIds]
+  );
+
+  const toggleSelectId = (id: string) => {
+    if (!customIds.has(id)) return;
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const allPageSelected =
+    selectablePageCustom.length > 0 &&
+    selectablePageCustom.every((item) => selectedIds.has(item.id));
+
+  const toggleSelectPage = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (allPageSelected) {
+        for (const item of selectablePageCustom) next.delete(item.id);
+      } else {
+        for (const item of selectablePageCustom) next.add(item.id);
+      }
+      return next;
+    });
+  };
+
+  const selectAllFiltered = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      for (const item of selectableFilteredCustom) next.add(item.id);
+      return next;
+    });
+  };
 
   const loadCustomCosmetics = useCallback(async () => {
     setIsLoading(true);
@@ -357,29 +413,74 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    setDeletingId(id);
+  const executeDeleteCosmetics = async (idsToDelete: string[], okText: string) => {
+    if (idsToDelete.length === 0) return false;
+    setDeletingId(idsToDelete.length === 1 ? idsToDelete[0] : "__bulk__");
     setErrorMessage(null);
     setStatusMessage(null);
     try {
-      const res = await fetch(`/api/admin/cosmetics?id=${encodeURIComponent(id)}`, {
+      const res = await fetch("/api/admin/cosmetics", {
         method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: idsToDelete }),
       });
       if (res.status === 401) {
         onUnauthorized();
-        return;
+        return false;
       }
       if (!res.ok) {
         setErrorMessage("Không thể xóa hiệu ứng.");
-        return;
+        return false;
       }
-      setItems((prev) => prev.filter((entry) => entry.id !== id));
-      setStatusMessage(`Đã xóa hiệu ứng "${id}" khỏi /shop.`);
+      const deletedSet = new Set(idsToDelete);
+      setItems((prev) => prev.filter((entry) => !deletedSet.has(entry.id)));
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        idsToDelete.forEach((id) => next.delete(id));
+        return next;
+      });
+      setStatusMessage(okText);
+      return true;
     } catch {
       setErrorMessage("Lỗi kết nối khi xóa hiệu ứng.");
+      return false;
     } finally {
       setDeletingId(null);
     }
+  };
+
+  const handleDelete = (item: CosmeticItem) => {
+    setDeleteRequest({
+      title: `Bạn có chắc chắn muốn xóa hiệu ứng "${item.name}"?`,
+      description:
+        "Hiệu ứng tùy chỉnh này sẽ bị xóa vĩnh viễn khỏi cửa hàng /shop và Neon DB.",
+      itemCount: 1,
+      itemPreviewLabels: [item.name],
+      confirmButtonLabel: "Xóa hiệu ứng",
+      onConfirm: () =>
+        executeDeleteCosmetics(
+          [item.id],
+          `Đã xóa hiệu ứng "${item.name}" khỏi /shop.`
+        ),
+    });
+  };
+
+  const handleBulkDelete = () => {
+    if (selectedCustomItems.length === 0) return;
+    const count = selectedCustomItems.length;
+    setDeleteRequest({
+      title: `Bạn có chắc chắn muốn xóa ${count} hiệu ứng tùy chỉnh đã chọn?`,
+      description:
+        "Toàn bộ hiệu ứng tùy chỉnh được chọn sẽ bị xóa khỏi cửa hàng /shop và Neon DB.",
+      itemCount: count,
+      itemPreviewLabels: selectedCustomItems.map((i) => i.name),
+      confirmButtonLabel: `Xóa ${count} hiệu ứng`,
+      onConfirm: () =>
+        executeDeleteCosmetics(
+          selectedCustomItems.map((i) => i.id),
+          `Đã xóa hàng loạt ${count} hiệu ứng tùy chỉnh khỏi /shop.`
+        ),
+    });
   };
 
   const previewScalePercent = Math.round((Number(scale) > 0 ? Number(scale) : 1.22) * 100);
@@ -897,6 +998,19 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
             </div>
           </div>
 
+          <AdminBulkActionBar
+            selectedCount={selectedCustomItems.length}
+            totalFilteredCount={selectableFilteredCustom.length}
+            allPageSelected={allPageSelected}
+            pageCount={selectablePageCustom.length}
+            itemUnitLabel="hiệu ứng tùy chỉnh"
+            disabled={deletingId !== null}
+            onToggleSelectPage={toggleSelectPage}
+            onSelectAllFiltered={selectAllFiltered}
+            onClearSelection={() => setSelectedIds(new Set())}
+            onBulkDelete={handleBulkDelete}
+          />
+
           {paginatedCatalog.length === 0 ? (
             <div className="bg-white border border-ink/15 rounded-2xl p-8 text-center text-xs text-ink-muted">
               Không tìm thấy hiệu ứng nào khớp bộ lọc.
@@ -905,16 +1019,28 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {paginatedCatalog.map((item) => {
                 const isCustom = customIds.has(item.id);
+                const isSelected = isCustom && selectedIds.has(item.id);
                 const accent = item.fallbackGlowColor ?? item.previewAccent ?? "#E5484D";
 
                 return (
                   <div
                     key={item.id}
-                    className="bg-white border border-ink/15 rounded-xl p-3.5 shadow-soft flex flex-col justify-between gap-2.5"
+                    className={`bg-white border rounded-xl p-3.5 shadow-soft flex flex-col justify-between gap-2.5 transition-colors ${
+                      isSelected ? "border-accent ring-1 ring-accent/30" : "border-ink/15"
+                    }`}
                   >
                     <div className="space-y-1.5 min-w-0">
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2 min-w-0">
+                          {isCustom && (
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() => toggleSelectId(item.id)}
+                              aria-label={`Chọn hiệu ứng ${item.name}`}
+                              className="w-4 h-4 rounded accent-[#E5484D] cursor-pointer shrink-0"
+                            />
+                          )}
                           <span
                             className="w-3 h-3 rounded-full shrink-0 border border-ink/20"
                             style={{ backgroundColor: accent }}
@@ -963,8 +1089,8 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                       {isCustom ? (
                         <button
                           type="button"
-                          disabled={deletingId === item.id}
-                          onClick={() => void handleDelete(item.id)}
+                          disabled={deletingId === item.id || deletingId === "__bulk__"}
+                          onClick={() => handleDelete(item)}
                           className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill border border-red-200 bg-red-50 text-red-700 text-[11px] font-semibold hover:bg-red-100 disabled:opacity-50 shrink-0"
                         >
                           {deletingId === item.id ? (
@@ -1014,6 +1140,11 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
           </div>
         </div>
       )}
+
+      <AdminDeleteConfirmModal
+        request={deleteRequest}
+        onClose={() => setDeleteRequest(null)}
+      />
     </div>
   );
 }

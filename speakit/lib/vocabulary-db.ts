@@ -359,3 +359,60 @@ export async function listDbVocabularyItems(): Promise<VocabularyItem[]> {
     return [];
   }
 }
+
+export async function deleteDbVocabularyItems(
+  entries: Array<{ id?: string; term?: string }>
+): Promise<number> {
+  if (!entries.length) return 0;
+  const sql = getSql();
+  if (!sql) return 0;
+
+  const ids = Array.from(
+    new Set(entries.map((e) => e.id?.trim() ?? "").filter(Boolean))
+  );
+  const terms = Array.from(
+    new Set(
+      entries
+        .map((e) => (e.term ? canonicalVocabularyTermKey(e.term) : ""))
+        .filter(Boolean)
+    )
+  );
+  if (ids.length === 0 && terms.length === 0) return 0;
+
+  try {
+    await ensureVocabularyTable();
+    const rows =
+      ids.length > 0 && terms.length > 0
+        ? await sql`
+            DELETE FROM vocabulary_items
+            WHERE id = ANY(${ids})
+              OR LOWER(REGEXP_REPLACE(BTRIM(term), '\s+', ' ', 'g')) = ANY(${terms})
+            RETURNING id
+          `
+        : ids.length > 0
+        ? await sql`
+            DELETE FROM vocabulary_items
+            WHERE id = ANY(${ids})
+            RETURNING id
+          `
+        : await sql`
+            DELETE FROM vocabulary_items
+            WHERE LOWER(REGEXP_REPLACE(BTRIM(term), '\s+', ' ', 'g')) = ANY(${terms})
+            RETURNING id
+          `;
+    return rows.length;
+  } catch {
+    return 0;
+  }
+}
+
+export async function clearDbVocabularyItems(): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  try {
+    await ensureVocabularyTable();
+    await sql`DELETE FROM vocabulary_items`;
+  } catch {
+    // Non-fatal fallback
+  }
+}

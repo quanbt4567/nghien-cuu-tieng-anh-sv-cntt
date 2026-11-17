@@ -21,10 +21,16 @@ import {
   X,
 } from "lucide-react";
 import { VOCABULARY_LIST } from "../../data/scenarios";
+import { computeVocabularyBulkDeleteOverrides } from "../../lib/adminBulkDelete";
 import { mergeVocabulary, saveLocalContentOverrides } from "../../lib/contentStore";
 import { speakText } from "../../lib/speech";
 import type { AdminContentOverrides, VocabularyItem } from "../../lib/types";
 import { AdminAiGeneratorBox, type AdminAiGenerateMeta } from "./AdminAiGeneratorBox";
+import {
+  AdminBulkActionBar,
+  AdminDeleteConfirmModal,
+  type DeleteConfirmRequest,
+} from "./AdminDeleteConfirmModal";
 import { persistAdminOverrides } from "./adminShared";
 
 interface AdminVocabTabProps {
@@ -68,6 +74,8 @@ export function AdminVocabTab({
   const [sourceFilter, setSourceFilter] = useState<VocabSourceFilter>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedExampleIds, setExpandedExampleIds] = useState<Set<string>>(new Set());
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [deleteRequest, setDeleteRequest] = useState<DeleteConfirmRequest | null>(null);
 
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -287,34 +295,121 @@ export function AdminVocabTab({
     }
   };
 
-  const handleDelete = async (item: VocabularyItem) => {
-    const isBase = BASE_VOCAB_IDS.has(item.id);
-    const nextOverrides: AdminContentOverrides = {
-      ...overrides,
-      customVocabulary: overrides.customVocabulary.filter((v) => v.id !== item.id),
-      deletedVocabIds: isBase
-        ? Array.from(new Set([...overrides.deletedVocabIds, item.id]))
-        : overrides.deletedVocabIds,
-    };
-    if (editingId === item.id) {
+  const executeDeleteItems = async (itemsToDelete: VocabularyItem[], label: string) => {
+    if (itemsToDelete.length === 0) return false;
+    const nextOverrides = computeVocabularyBulkDeleteOverrides(
+      overrides,
+      itemsToDelete,
+      BASE_VOCAB_IDS
+    );
+    const removedSet = new Set(itemsToDelete.map((i) => i.id));
+    if (editingId && removedSet.has(editingId)) {
       resetForm();
     }
-    await saveOverrides(
-      nextOverrides,
-      `Đã xóa thuật ngữ "${item.term}" khỏi danh sách hiển thị.`
-    );
+    const ok = await saveOverrides(nextOverrides, label);
+    if (ok) {
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        itemsToDelete.forEach((i) => next.delete(i.id));
+        return next;
+      });
+    }
+    return ok;
   };
 
-  const handleRestoreDefaults = async () => {
-    resetForm();
-    await saveOverrides(
-      {
-        ...overrides,
-        customVocabulary: [],
-        deletedVocabIds: [],
+  const handleDelete = (item: VocabularyItem) => {
+    setDeleteRequest({
+      title: `Bạn có chắc chắn muốn xóa thuật ngữ "${item.term}"?`,
+      description: BASE_VOCAB_IDS.has(item.id)
+        ? "Thuật ngữ mặc định này sẽ bị ẩn khỏi danh sách luyện tập và dữ liệu đồng bộ."
+        : "Thuật ngữ tùy chỉnh này sẽ bị xóa khỏi danh sách và Neon DB.",
+      itemCount: 1,
+      itemPreviewLabels: [item.term],
+      confirmButtonLabel: "Xóa thuật ngữ",
+      onConfirm: () =>
+        executeDeleteItems(
+          [item],
+          `Đã xóa thuật ngữ "${item.term}" khỏi danh sách hiển thị.`
+        ),
+    });
+  };
+
+  const selectedVocabItems = useMemo(
+    () => vocabList.filter((item) => selectedIds.has(item.id)),
+    [vocabList, selectedIds]
+  );
+
+  const toggleSelectId = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const pageVocabIds = paginatedVocab.map((v) => v.id);
+  const allPageSelected =
+    pageVocabIds.length > 0 && pageVocabIds.every((id) => selectedIds.has(id));
+
+  const toggleSelectPage = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (allPageSelected) {
+        for (const id of pageVocabIds) next.delete(id);
+      } else {
+        for (const id of pageVocabIds) next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const selectAllFiltered = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      for (const item of filteredVocab) next.add(item.id);
+      return next;
+    });
+  };
+
+  const handleBulkDelete = () => {
+    if (selectedVocabItems.length === 0) return;
+    const count = selectedVocabItems.length;
+    setDeleteRequest({
+      title: `Bạn có chắc chắn muốn xóa ${count} thuật ngữ đã chọn?`,
+      description:
+        "Các từ vựng tùy chỉnh sẽ bị xóa khỏi hệ thống và bảng Neon DB; từ vựng mặc định sẽ bị ẩn khỏi người dùng.",
+      itemCount: count,
+      itemPreviewLabels: selectedVocabItems.map((v) => v.term),
+      confirmButtonLabel: `Xóa ${count} thuật ngữ`,
+      onConfirm: () =>
+        executeDeleteItems(selectedVocabItems, `Đã xóa hàng loạt ${count} thuật ngữ.`),
+    });
+  };
+
+  const handleRestoreDefaults = () => {
+    setDeleteRequest({
+      title: "Khôi phục từ vựng về 12 thuật ngữ mặc định?",
+      description:
+        "Thao tác này sẽ xóa toàn bộ các thuật ngữ tùy chỉnh bạn đã thêm hoặc import, đồng thời hiện lại bộ 12 từ mặc định.",
+      itemCount: Math.max(1, overrides.customVocabulary.length + overrides.deletedVocabIds.length),
+      confirmButtonLabel: "Khôi phục mặc định",
+      onConfirm: async () => {
+        resetForm();
+        const ok = await saveOverrides(
+          {
+            ...overrides,
+            customVocabulary: [],
+            deletedVocabIds: [],
+          },
+          "Đã khôi phục toàn bộ từ vựng về bộ 12 thuật ngữ mặc định."
+        );
+        if (ok) {
+          setSelectedIds(new Set());
+        }
+        return ok;
       },
-      "Đã khôi phục toàn bộ từ vựng về bộ 12 thuật ngữ mặc định."
-    );
+    });
   };
 
   const handleExport = async (format: "json" | "csv") => {
@@ -868,6 +963,19 @@ export function AdminVocabTab({
             </div>
           </div>
 
+          <AdminBulkActionBar
+            selectedCount={selectedVocabItems.length}
+            totalFilteredCount={filteredVocab.length}
+            allPageSelected={allPageSelected}
+            pageCount={paginatedVocab.length}
+            itemUnitLabel="từ vựng"
+            disabled={isSaving}
+            onToggleSelectPage={toggleSelectPage}
+            onSelectAllFiltered={selectAllFiltered}
+            onClearSelection={() => setSelectedIds(new Set())}
+            onBulkDelete={handleBulkDelete}
+          />
+
           {paginatedVocab.length === 0 ? (
             <div className="bg-white border border-ink/15 rounded-2xl p-6 text-center text-xs text-ink-muted">
               Không tìm thấy thuật ngữ phù hợp với bộ lọc hiện tại.
@@ -879,6 +987,7 @@ export function AdminVocabTab({
                 const isOverridden = customIds.has(item.id);
                 const isPlaying = playingId === item.id;
                 const isExpanded = expandedExampleIds.has(item.id);
+                const isSelected = selectedIds.has(item.id);
                 const hasLongExample =
                   (item.exampleSentenceEN?.length ?? 0) > 65 ||
                   Boolean(item.exampleTranslationVI);
@@ -886,40 +995,51 @@ export function AdminVocabTab({
                 return (
                   <div
                     key={item.id}
-                    className="bg-white border border-ink/15 rounded-2xl p-3.5 shadow-soft space-y-2"
+                    className={`bg-white border rounded-2xl p-3.5 shadow-soft space-y-2 transition-colors ${
+                      isSelected ? "border-accent ring-1 ring-accent/30" : "border-ink/15"
+                    }`}
                   >
                     <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          <h3 className="text-sm font-bold font-mono text-ink">
-                            {item.term}
-                          </h3>
-                          <span className="px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-[10px] font-mono uppercase text-ink-muted">
-                            {item.partOfSpeech}
-                          </span>
-                          {item.phonetic && item.phonetic !== "/.../" ? (
-                            <span className="text-xs font-ipa text-accent font-medium">
-                              {item.phonetic}
+                      <div className="flex items-start gap-2.5 min-w-0">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleSelectId(item.id)}
+                          aria-label={`Chọn thuật ngữ ${item.term}`}
+                          className="mt-0.5 w-4 h-4 rounded accent-[#E5484D] cursor-pointer shrink-0"
+                        />
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <h3 className="text-sm font-bold font-mono text-ink">
+                              {item.term}
+                            </h3>
+                            <span className="px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-[10px] font-mono uppercase text-ink-muted">
+                              {item.partOfSpeech}
                             </span>
-                          ) : null}
-                          {item.careerLevel ? (
-                            <span className="px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-[10px] font-mono font-semibold text-ink">
-                              {item.careerLevel}
-                            </span>
-                          ) : null}
-                          {item.clusterTitle ? (
-                            <span className="px-2 py-0.5 rounded-pill bg-accent-light border border-accent/30 text-[10px] font-mono font-semibold text-ink">
-                              {item.clusterTitle}
-                            </span>
-                          ) : !isBase ? (
-                            <span className="px-2 py-0.5 rounded-pill bg-accent-light border border-accent/30 text-[10px] font-mono font-semibold text-ink">
-                              Tùy chỉnh
-                            </span>
-                          ) : isOverridden ? (
-                            <span className="px-2 py-0.5 rounded-pill bg-paper-muted border border-ink/20 text-[10px] font-mono font-semibold text-ink">
-                              Đã sửa
-                            </span>
-                          ) : null}
+                            {item.phonetic && item.phonetic !== "/.../" ? (
+                              <span className="text-xs font-ipa text-accent font-medium">
+                                {item.phonetic}
+                              </span>
+                            ) : null}
+                            {item.careerLevel ? (
+                              <span className="px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-[10px] font-mono font-semibold text-ink">
+                                {item.careerLevel}
+                              </span>
+                            ) : null}
+                            {item.clusterTitle ? (
+                              <span className="px-2 py-0.5 rounded-pill bg-accent-light border border-accent/30 text-[10px] font-mono font-semibold text-ink">
+                                {item.clusterTitle}
+                              </span>
+                            ) : !isBase ? (
+                              <span className="px-2 py-0.5 rounded-pill bg-accent-light border border-accent/30 text-[10px] font-mono font-semibold text-ink">
+                                Tùy chỉnh
+                              </span>
+                            ) : isOverridden ? (
+                              <span className="px-2 py-0.5 rounded-pill bg-paper-muted border border-ink/20 text-[10px] font-mono font-semibold text-ink">
+                                Đã sửa
+                              </span>
+                            ) : null}
+                          </div>
                         </div>
                       </div>
 
@@ -1047,6 +1167,11 @@ export function AdminVocabTab({
           </div>
         </div>
       )}
+
+      <AdminDeleteConfirmModal
+        request={deleteRequest}
+        onClose={() => setDeleteRequest(null)}
+      />
     </div>
   );
 }

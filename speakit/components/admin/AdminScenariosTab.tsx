@@ -19,6 +19,7 @@ import {
   X,
 } from "lucide-react";
 import { SCENARIOS } from "../../data/scenarios";
+import { computeScenarioBulkDeleteOverrides } from "../../lib/adminBulkDelete";
 import { mergeScenarios } from "../../lib/contentStore";
 import type {
   AdminContentOverrides,
@@ -27,6 +28,11 @@ import type {
   ScenarioTurn,
 } from "../../lib/types";
 import { AdminAiGeneratorBox, type AdminAiGenerateMeta } from "./AdminAiGeneratorBox";
+import {
+  AdminBulkActionBar,
+  AdminDeleteConfirmModal,
+  type DeleteConfirmRequest,
+} from "./AdminDeleteConfirmModal";
 import { persistAdminOverrides } from "./adminShared";
 
 interface AdminScenariosTabProps {
@@ -135,6 +141,8 @@ export function AdminScenariosTab({
   );
 
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [deleteRequest, setDeleteRequest] = useState<DeleteConfirmRequest | null>(null);
   const [aiFocusKey, setAiFocusKey] = useState(0);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [idTouched, setIdTouched] = useState(false);
@@ -428,22 +436,129 @@ export function AdminScenariosTab({
     );
   };
 
-  const handleDeleteOrRestore = async (scenario: Scenario) => {
-    const isBase = BASE_SCENARIO_IDS.has(scenario.id);
-    const nextOverrides: AdminContentOverrides = {
-      ...overrides,
-      customScenarios: overrides.customScenarios.filter((s) => s.id !== scenario.id),
-      hiddenScenarioIds: overrides.hiddenScenarioIds.filter((x) => x !== scenario.id),
-    };
-    if (editingId === scenario.id) {
+  const selectableFilteredScenarios = useMemo(
+    () => filteredScenarios.filter((s) => !BASE_SCENARIO_IDS.has(s.id)),
+    [filteredScenarios]
+  );
+
+  const selectablePageScenarios = useMemo(
+    () => paginatedScenarios.filter((s) => !BASE_SCENARIO_IDS.has(s.id)),
+    [paginatedScenarios]
+  );
+
+  const selectedCustomScenarios = useMemo(
+    () =>
+      scenarios.filter(
+        (s) => !BASE_SCENARIO_IDS.has(s.id) && selectedIds.has(s.id)
+      ),
+    [scenarios, selectedIds]
+  );
+
+  const toggleSelectId = (scenarioId: string) => {
+    if (BASE_SCENARIO_IDS.has(scenarioId)) return;
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(scenarioId)) next.delete(scenarioId);
+      else next.add(scenarioId);
+      return next;
+    });
+  };
+
+  const allPageSelected =
+    selectablePageScenarios.length > 0 &&
+    selectablePageScenarios.every((s) => selectedIds.has(s.id));
+
+  const toggleSelectPage = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (allPageSelected) {
+        for (const s of selectablePageScenarios) next.delete(s.id);
+      } else {
+        for (const s of selectablePageScenarios) next.add(s.id);
+      }
+      return next;
+    });
+  };
+
+  const selectAllFiltered = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      for (const s of selectableFilteredScenarios) next.add(s.id);
+      return next;
+    });
+  };
+
+  const executeDeleteScenarios = async (targets: Scenario[], okLabel: string) => {
+    if (targets.length === 0) return false;
+    const nextOverrides = computeScenarioBulkDeleteOverrides(
+      overrides,
+      targets,
+      BASE_SCENARIO_IDS
+    );
+    const removedSet = new Set(targets.map((s) => s.id));
+    if (editingId && removedSet.has(editingId)) {
       resetForm();
     }
-    await saveOverrides(
-      nextOverrides,
-      isBase
-        ? `Đã khôi phục kịch bản "${scenario.titleVI}" về mặc định.`
-        : `Đã xóa kịch bản tùy chỉnh "${scenario.titleVI}".`
-    );
+    const ok = await saveOverrides(nextOverrides, okLabel);
+    if (ok) {
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        targets.forEach((s) => next.delete(s.id));
+        return next;
+      });
+    }
+    return ok;
+  };
+
+  const handleBulkDeleteScenarios = () => {
+    if (selectedCustomScenarios.length === 0) return;
+    const count = selectedCustomScenarios.length;
+    setDeleteRequest({
+      title: `Bạn có chắc chắn muốn xóa ${count} kịch bản tùy chỉnh đã chọn?`,
+      description:
+        "Các kịch bản tùy chỉnh và toàn bộ 3 lượt hội thoại bên trong sẽ bị xóa khỏi danh sách và Neon DB.",
+      itemCount: count,
+      itemPreviewLabels: selectedCustomScenarios.map((s) => s.titleVI),
+      confirmButtonLabel: `Xóa ${count} kịch bản`,
+      onConfirm: () =>
+        executeDeleteScenarios(
+          selectedCustomScenarios,
+          `Đã xóa hàng loạt ${count} kịch bản tùy chỉnh.`
+        ),
+    });
+  };
+
+  const handleDeleteOrRestore = async (scenario: Scenario) => {
+    const isBase = BASE_SCENARIO_IDS.has(scenario.id);
+    if (isBase) {
+      const nextOverrides: AdminContentOverrides = {
+        ...overrides,
+        customScenarios: overrides.customScenarios.filter((s) => s.id !== scenario.id),
+        hiddenScenarioIds: overrides.hiddenScenarioIds.filter((x) => x !== scenario.id),
+      };
+      if (editingId === scenario.id) {
+        resetForm();
+      }
+      await saveOverrides(
+        nextOverrides,
+        `Đã khôi phục kịch bản "${scenario.titleVI}" về mặc định.`
+      );
+      return;
+    }
+
+    setDeleteRequest({
+      title: `Bạn có chắc chắn muốn xóa kịch bản "${scenario.titleVI}"?`,
+      description:
+        "Kịch bản tùy chỉnh này sẽ bị xóa vĩnh viễn khỏi kho tình huống và Neon DB.",
+      itemCount: 1,
+      itemPreviewLabels: [scenario.titleVI],
+      confirmButtonLabel: "Xóa kịch bản",
+      onConfirm: () =>
+        executeDeleteScenarios(
+          [scenario],
+          `Đã xóa kịch bản tùy chỉnh "${scenario.titleVI}".`
+        ),
+    });
   };
 
   return (
@@ -815,6 +930,19 @@ export function AdminScenariosTab({
             </div>
           </div>
 
+          <AdminBulkActionBar
+            selectedCount={selectedCustomScenarios.length}
+            totalFilteredCount={selectableFilteredScenarios.length}
+            allPageSelected={allPageSelected}
+            pageCount={selectablePageScenarios.length}
+            itemUnitLabel="kịch bản tùy chỉnh"
+            disabled={isSaving}
+            onToggleSelectPage={toggleSelectPage}
+            onSelectAllFiltered={selectAllFiltered}
+            onClearSelection={() => setSelectedIds(new Set())}
+            onBulkDelete={handleBulkDeleteScenarios}
+          />
+
           {paginatedScenarios.length === 0 ? (
             <div className="bg-white border border-ink/15 rounded-2xl p-6 text-center text-xs text-ink-muted">
               Không tìm thấy kịch bản nào khớp với bộ lọc hiện tại.
@@ -828,16 +956,27 @@ export function AdminScenariosTab({
                   scenario.isHidden || hiddenIds.has(scenario.id)
                 );
                 const isExpanded = expandedScenarioIds.has(scenario.id);
+                const isSelected = !isBase && selectedIds.has(scenario.id);
 
                 return (
                   <div
                     key={scenario.id}
-                    className={`bg-white border border-ink/15 rounded-2xl p-4 shadow-soft space-y-3 transition-opacity ${
-                      isHidden ? "opacity-75" : ""
-                    }`}
+                    className={`bg-white border rounded-2xl p-4 shadow-soft space-y-3 transition-all ${
+                      isSelected ? "border-accent ring-1 ring-accent/30" : "border-ink/15"
+                    } ${isHidden ? "opacity-75" : ""}`}
                   >
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-                      <div className="space-y-1.5 min-w-0 flex-1">
+                      <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                        {!isBase && (
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleSelectId(scenario.id)}
+                            aria-label={`Chọn kịch bản ${scenario.titleVI}`}
+                            className="mt-1 w-4 h-4 rounded accent-[#E5484D] cursor-pointer shrink-0"
+                          />
+                        )}
+                        <div className="space-y-1.5 min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="text-sm font-bold text-ink">
                             {scenario.titleVI}
@@ -884,6 +1023,7 @@ export function AdminScenariosTab({
                               {role}
                             </span>
                           ))}
+                        </div>
                         </div>
                       </div>
 
@@ -1023,6 +1163,11 @@ export function AdminScenariosTab({
           </div>
         </div>
       )}
+
+      <AdminDeleteConfirmModal
+        request={deleteRequest}
+        onClose={() => setDeleteRequest(null)}
+      />
     </div>
   );
 }

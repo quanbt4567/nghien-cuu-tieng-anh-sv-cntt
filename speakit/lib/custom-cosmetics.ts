@@ -78,19 +78,27 @@ export async function saveCustomCosmetic(item: CosmeticItem): Promise<CosmeticIt
   }
 }
 
-export async function deleteCustomCosmetic(id: string): Promise<boolean> {
+export async function deleteCustomCosmetics(ids: string[]): Promise<string[]> {
+  const cleanIds = Array.from(new Set(ids.map((x) => x.trim()).filter(Boolean)));
+  if (cleanIds.length === 0) return [];
+
   const ready = await ensureCustomCosmeticsTable();
   const sql = getNeonSql();
-  if (!ready || !sql || !id.trim()) return false;
+  if (!ready || !sql) return [];
 
   try {
     const rows = (await sql`
       DELETE FROM custom_cosmetics
-      WHERE id = ${id.trim()}
+      WHERE id = ANY(${cleanIds})
       RETURNING id
     `) as Array<{ id: string }>;
-    return rows.length > 0;
+    return rows.map((r) => String(r.id));
   } catch {
-    return false;
+    return [];
   }
+}
+
+export async function deleteCustomCosmetic(id: string): Promise<boolean> {
+  const deleted = await deleteCustomCosmetics([id]);
+  return deleted.length > 0;
 }

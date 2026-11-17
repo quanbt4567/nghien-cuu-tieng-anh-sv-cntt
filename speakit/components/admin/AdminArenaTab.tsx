@@ -15,9 +15,15 @@ import {
   Trash2,
 } from "lucide-react";
 import { BUG_BUSTER_CHALLENGES } from "../../data/minigames";
+import { computeArenaBulkDeleteOverrides } from "../../lib/adminBulkDelete";
 import { mergeBugChallenges } from "../../lib/contentStore";
 import type { AdminContentOverrides, BugBusterChallenge } from "../../lib/types";
 import { AdminAiGeneratorBox, type AdminAiGenerateMeta } from "./AdminAiGeneratorBox";
+import {
+  AdminBulkActionBar,
+  AdminDeleteConfirmModal,
+  type DeleteConfirmRequest,
+} from "./AdminDeleteConfirmModal";
 import { persistAdminOverrides } from "./adminShared";
 
 interface AdminArenaTabProps {
@@ -127,6 +133,8 @@ export function AdminArenaTab({
     "all" | BugBusterChallenge["category"]
   >("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [deleteRequest, setDeleteRequest] = useState<DeleteConfirmRequest | null>(null);
 
   const [aiFocusKey, setAiFocusKey] = useState(0);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -318,36 +326,128 @@ export function AdminArenaTab({
     }
   };
 
-  const handleDelete = async (challenge: BugBusterChallenge) => {
-    const isBase = BASE_CHALLENGE_IDS.has(challenge.id);
-    const nextOverrides: AdminContentOverrides = {
-      ...overrides,
-      customBugChallenges: overrides.customBugChallenges.filter(
-        (c) => c.id !== challenge.id
-      ),
-      deletedChallengeIds: isBase
-        ? Array.from(new Set([...overrides.deletedChallengeIds, challenge.id]))
-        : overrides.deletedChallengeIds,
-    };
-    if (editingId === challenge.id) {
-      resetForm();
-    }
-    await saveOverrides(
-      nextOverrides,
-      `Đã xóa thử thách "${challenge.targetWord}".`
-    );
+  const selectedChallenges = useMemo(
+    () => challenges.filter((c) => selectedIds.has(c.id)),
+    [challenges, selectedIds]
+  );
+
+  const toggleSelectId = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
   };
 
-  const handleRestoreDefaults = async () => {
-    resetForm();
-    await saveOverrides(
-      {
-        ...overrides,
-        customBugChallenges: [],
-        deletedChallengeIds: [],
-      },
-      "Đã khôi phục toàn bộ thử thách Bug Buster về mặc định."
+  const pageIds = paginatedChallenges.map((c) => c.id);
+  const allPageSelected =
+    pageIds.length > 0 && pageIds.every((id) => selectedIds.has(id));
+
+  const toggleSelectPage = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (allPageSelected) {
+        for (const id of pageIds) next.delete(id);
+      } else {
+        for (const id of pageIds) next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const selectAllFiltered = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      for (const c of filteredChallenges) next.add(c.id);
+      return next;
+    });
+  };
+
+  const executeDeleteChallenges = async (
+    targets: BugBusterChallenge[],
+    label: string
+  ) => {
+    if (targets.length === 0) return false;
+    const nextOverrides = computeArenaBulkDeleteOverrides(
+      overrides,
+      targets,
+      BASE_CHALLENGE_IDS
     );
+    const removedSet = new Set(targets.map((c) => c.id));
+    if (editingId && removedSet.has(editingId)) {
+      resetForm();
+    }
+    const ok = await saveOverrides(nextOverrides, label);
+    if (ok) {
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        targets.forEach((c) => next.delete(c.id));
+        return next;
+      });
+    }
+    return ok;
+  };
+
+  const handleDelete = (challenge: BugBusterChallenge) => {
+    setDeleteRequest({
+      title: `Bạn có chắc chắn muốn xóa thử thách "${challenge.targetWord}"?`,
+      description: BASE_CHALLENGE_IDS.has(challenge.id)
+        ? "Thử thách mặc định này sẽ bị ẩn khỏi chế độ Arena Bug Buster."
+        : "Thử thách tùy chỉnh này sẽ bị xóa vĩnh viễn khỏi Arena.",
+      itemCount: 1,
+      itemPreviewLabels: [challenge.targetWord],
+      confirmButtonLabel: "Xóa thử thách",
+      onConfirm: () =>
+        executeDeleteChallenges(
+          [challenge],
+          `Đã xóa thử thách "${challenge.targetWord}".`
+        ),
+    });
+  };
+
+  const handleBulkDelete = () => {
+    if (selectedChallenges.length === 0) return;
+    const count = selectedChallenges.length;
+    setDeleteRequest({
+      title: `Bạn có chắc chắn muốn xóa ${count} thử thách đã chọn?`,
+      description:
+        "Các thử thách tùy chỉnh sẽ bị xóa vĩnh viễn; các thử thách mặc định sẽ bị ẩn khỏi Arena.",
+      itemCount: count,
+      itemPreviewLabels: selectedChallenges.map((c) => c.targetWord),
+      confirmButtonLabel: `Xóa ${count} thử thách`,
+      onConfirm: () =>
+        executeDeleteChallenges(
+          selectedChallenges,
+          `Đã xóa hàng loạt ${count} thử thách Arena.`
+        ),
+    });
+  };
+
+  const handleRestoreDefaults = () => {
+    setDeleteRequest({
+      title: "Khôi phục toàn bộ thử thách Bug Buster về mặc định?",
+      description:
+        "Mọi thử thách tùy chỉnh bạn đã thêm sẽ bị xóa và các thử thách gốc sẽ được hiện lại.",
+      itemCount: Math.max(
+        1,
+        overrides.customBugChallenges.length + overrides.deletedChallengeIds.length
+      ),
+      confirmButtonLabel: "Khôi phục mặc định",
+      onConfirm: async () => {
+        resetForm();
+        const ok = await saveOverrides(
+          {
+            ...overrides,
+            customBugChallenges: [],
+            deletedChallengeIds: [],
+          },
+          "Đã khôi phục toàn bộ thử thách Bug Buster về mặc định."
+        );
+        if (ok) setSelectedIds(new Set());
+        return ok;
+      },
+    });
   };
 
   return (
@@ -631,6 +731,19 @@ export function AdminArenaTab({
             </div>
           </div>
 
+          <AdminBulkActionBar
+            selectedCount={selectedChallenges.length}
+            totalFilteredCount={filteredChallenges.length}
+            allPageSelected={allPageSelected}
+            pageCount={paginatedChallenges.length}
+            itemUnitLabel="thử thách"
+            disabled={isSaving}
+            onToggleSelectPage={toggleSelectPage}
+            onSelectAllFiltered={selectAllFiltered}
+            onClearSelection={() => setSelectedIds(new Set())}
+            onBulkDelete={handleBulkDelete}
+          />
+
           {paginatedChallenges.length === 0 ? (
             <div className="bg-white border border-ink/15 rounded-2xl p-8 text-center text-xs text-ink-muted">
               Không tìm thấy thử thách Bug Buster nào khớp bộ lọc.
@@ -640,15 +753,25 @@ export function AdminArenaTab({
               {paginatedChallenges.map((challenge) => {
                 const isBase = BASE_CHALLENGE_IDS.has(challenge.id);
                 const isOverridden = customIds.has(challenge.id);
+                const isSelected = selectedIds.has(challenge.id);
 
                 return (
                   <div
                     key={challenge.id}
-                    className="bg-white border border-ink/15 rounded-xl p-3.5 shadow-soft flex flex-col justify-between gap-2.5"
+                    className={`bg-white border rounded-xl p-3.5 shadow-soft flex flex-col justify-between gap-2.5 transition-colors ${
+                      isSelected ? "border-accent ring-1 ring-accent/30" : "border-ink/15"
+                    }`}
                   >
                     <div className="space-y-2 min-w-0">
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex flex-wrap items-center gap-1.5 min-w-0">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleSelectId(challenge.id)}
+                            aria-label={`Chọn thử thách ${challenge.targetWord}`}
+                            className="w-4 h-4 rounded accent-[#E5484D] cursor-pointer shrink-0"
+                          />
                           <span className="px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-[10px] font-mono uppercase text-ink-muted">
                             {challenge.category}
                           </span>
@@ -741,6 +864,11 @@ export function AdminArenaTab({
           </div>
         </div>
       )}
+
+      <AdminDeleteConfirmModal
+        request={deleteRequest}
+        onClose={() => setDeleteRequest(null)}
+      />
     </div>
   );
 }

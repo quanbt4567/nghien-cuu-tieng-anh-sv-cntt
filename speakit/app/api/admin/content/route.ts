@@ -5,6 +5,10 @@ import {
   normalizeContentOverrides,
 } from "../../../../lib/contentStore";
 import { ensureSchema, getNeonSql } from "../../../../lib/db/neon";
+import {
+  clearDbVocabularyItems,
+  deleteDbVocabularyItems,
+} from "../../../../lib/vocabulary-db";
 
 export const dynamic = "force-dynamic";
 
@@ -47,6 +51,19 @@ export async function PUT(req: NextRequest) {
   }
 
   try {
+    const existingRows = await sql`
+      SELECT payload
+      FROM speakit_custom_content
+      WHERE key = 'main'
+      LIMIT 1
+    `;
+    const prevOverrides = normalizeContentOverrides(existingRows[0]?.payload);
+    const nextVocabIds = new Set(overrides.customVocabulary.map((v) => v.id));
+    const removedVocab = prevOverrides.customVocabulary.filter(
+      (v) => !nextVocabIds.has(v.id)
+    );
+    const newlyHiddenIds = overrides.deletedVocabIds.map((id) => ({ id }));
+
     await sql`
       INSERT INTO speakit_custom_content (key, payload, updated_at)
       VALUES ('main', ${JSON.stringify(overrides)}::jsonb, NOW())
@@ -54,6 +71,13 @@ export async function PUT(req: NextRequest) {
         payload = EXCLUDED.payload,
         updated_at = NOW()
     `;
+
+    if (removedVocab.length > 0 || newlyHiddenIds.length > 0) {
+      await deleteDbVocabularyItems([
+        ...removedVocab.map((v) => ({ id: v.id, term: v.term })),
+        ...newlyHiddenIds,
+      ]);
+    }
     return NextResponse.json({ ok: true, overrides });
   } catch {
     return NextResponse.json(
@@ -85,6 +109,7 @@ export async function DELETE(req: NextRequest) {
 
   try {
     await sql`DELETE FROM speakit_custom_content WHERE key = 'main'`;
+    await clearDbVocabularyItems();
     return NextResponse.json({
       ok: true,
       overrides: createEmptyContentOverrides(),

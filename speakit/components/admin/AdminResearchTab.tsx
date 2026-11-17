@@ -25,6 +25,11 @@ import type {
   ResearchMetricItem,
   ResearchSourceUrl,
 } from "../../lib/research";
+import {
+  AdminBulkActionBar,
+  AdminDeleteConfirmModal,
+  type DeleteConfirmRequest,
+} from "./AdminDeleteConfirmModal";
 
 interface AdminResearchTabProps {
   onUnauthorized: () => void;
@@ -66,6 +71,8 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
   >("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedPreviewId, setExpandedPreviewId] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [deleteRequest, setDeleteRequest] = useState<DeleteConfirmRequest | null>(null);
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [title, setTitle] = useState("");
@@ -199,30 +206,55 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const executeDeleteArticles = async (idsToDelete: string[], okText: string) => {
+    if (idsToDelete.length === 0) return false;
     setErrorMessage(null);
     setStatusMessage(null);
     try {
-      const res = await fetch(`/api/admin/research?id=${encodeURIComponent(id)}`, {
+      const res = await fetch("/api/admin/research", {
         method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: idsToDelete }),
       });
       if (res.status === 401) {
         onUnauthorized();
-        return;
+        return false;
       }
-      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        error?: string;
+      };
       if (res.ok && data.ok !== false) {
-        if (editingId === id) {
+        if (editingId && idsToDelete.includes(editingId)) {
           resetForm();
         }
-        setStatusMessage("Đã xóa bài viết.");
+        setSelectedIds((prev) => {
+          const next = new Set(prev);
+          for (const id of idsToDelete) next.delete(id);
+          return next;
+        });
+        setStatusMessage(okText);
         await loadArticles();
-      } else {
-        setErrorMessage(data.error ?? "Không thể xóa bài viết.");
+        return true;
       }
+      setErrorMessage(data.error ?? "Không thể xóa bài viết.");
+      return false;
     } catch {
       setErrorMessage("Lỗi kết nối khi xóa bài viết.");
+      return false;
     }
+  };
+
+  const handleDelete = (article: ResearchArticle) => {
+    setDeleteRequest({
+      title: `Bạn có chắc chắn muốn xóa bài nghiên cứu "${article.title}"?`,
+      description:
+        "Bài viết và toàn bộ số liệu đính kèm sẽ bị xóa vĩnh viễn khỏi cơ sở dữ liệu.",
+      itemCount: 1,
+      itemPreviewLabels: [article.title],
+      confirmButtonLabel: "Xóa bài viết",
+      onConfirm: () => executeDeleteArticles([article.id], "Đã xóa bài viết."),
+    });
   };
 
   const handleSaveArticle = async (
@@ -318,6 +350,62 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
     const start = (safePage - 1) * PAGE_SIZE;
     return filteredArticles.slice(start, start + PAGE_SIZE);
   }, [filteredArticles, safePage]);
+
+  const selectedArticles = useMemo(
+    () => articles.filter((a) => selectedIds.has(a.id)),
+    [articles, selectedIds]
+  );
+
+  const toggleSelectId = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const pageArticleIds = paginatedArticles.map((a) => a.id);
+  const allPageSelected =
+    pageArticleIds.length > 0 && pageArticleIds.every((id) => selectedIds.has(id));
+
+  const toggleSelectPage = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (allPageSelected) {
+        for (const id of pageArticleIds) next.delete(id);
+      } else {
+        for (const id of pageArticleIds) next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const selectAllFiltered = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      for (const a of filteredArticles) next.add(a.id);
+      return next;
+    });
+  };
+
+  const handleBulkDelete = () => {
+    if (selectedArticles.length === 0) return;
+    const count = selectedArticles.length;
+    setDeleteRequest({
+      title: `Bạn có chắc chắn muốn xóa ${count} bài nghiên cứu đã chọn?`,
+      description:
+        "Tất cả bài viết đã chọn sẽ bị xóa vĩnh viễn khỏi cơ sở dữ liệu và trang /research.",
+      itemCount: count,
+      itemPreviewLabels: selectedArticles.map((a) => a.title),
+      confirmButtonLabel: `Xóa ${count} bài viết`,
+      onConfirm: () =>
+        executeDeleteArticles(
+          selectedArticles.map((a) => a.id),
+          `Đã xóa hàng loạt ${count} bài nghiên cứu.`
+        ),
+    });
+  };
 
   return (
     <div className="space-y-4">
@@ -689,6 +777,18 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
             </div>
           </div>
 
+          <AdminBulkActionBar
+            selectedCount={selectedArticles.length}
+            totalFilteredCount={filteredArticles.length}
+            allPageSelected={allPageSelected}
+            pageCount={paginatedArticles.length}
+            itemUnitLabel="bài viết"
+            onToggleSelectPage={toggleSelectPage}
+            onSelectAllFiltered={selectAllFiltered}
+            onClearSelection={() => setSelectedIds(new Set())}
+            onBulkDelete={handleBulkDelete}
+          />
+
           {paginatedArticles.length === 0 ? (
             <div className="bg-white border border-ink/15 rounded-2xl p-8 text-center text-xs text-ink-muted">
               Không có bài nghiên cứu nào khớp bộ lọc. Bấm &ldquo;+ Soạn bài / AI Tổng hợp&rdquo; để tạo bài mới.
@@ -698,15 +798,25 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
               {paginatedArticles.map((article) => {
                 const isPending = article.status === "pending_review";
                 const isExpanded = expandedPreviewId === article.id;
+                const isSelected = selectedIds.has(article.id);
 
                 return (
                   <div
                     key={article.id}
-                    className="bg-white border border-ink/15 rounded-xl p-4 shadow-soft flex flex-col justify-between gap-3"
+                    className={`bg-white border rounded-xl p-4 shadow-soft flex flex-col justify-between gap-3 transition-colors ${
+                      isSelected ? "border-accent ring-1 ring-accent/30" : "border-ink/15"
+                    }`}
                   >
                     <div className="space-y-2">
                       <div className="flex flex-wrap items-center justify-between gap-1.5">
                         <div className="flex flex-wrap items-center gap-1.5">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleSelectId(article.id)}
+                            aria-label={`Chọn bài viết ${article.title}`}
+                            className="w-4 h-4 rounded accent-[#E5484D] cursor-pointer shrink-0"
+                          />
                           <span
                             className={`px-2 py-0.5 rounded-pill text-[10px] font-mono font-bold ${
                               isPending
@@ -794,7 +904,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                         )}
                         <button
                           type="button"
-                          onClick={() => void handleDelete(article.id)}
+                          onClick={() => handleDelete(article)}
                           className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill bg-rose-500/10 border border-rose-500/30 text-rose-700 text-[11px] font-semibold hover:bg-rose-500/20"
                         >
                           <Trash2 className="w-3 h-3" />
@@ -836,6 +946,11 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
           </div>
         </div>
       )}
+
+      <AdminDeleteConfirmModal
+        request={deleteRequest}
+        onClose={() => setDeleteRequest(null)}
+      />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { isAdminRequest } from "../../../../lib/adminAuth";
+import { extractDeleteIdsFromPayload } from "../../../../lib/adminBulkDelete";
 import {
   COSMETIC_CATEGORIES,
   parseDiscordEffectJson,
@@ -10,7 +11,7 @@ import {
   type CosmeticRarity,
 } from "../../../../lib/cosmetics";
 import {
-  deleteCustomCosmetic,
+  deleteCustomCosmetics,
   listCustomCosmetics,
   saveCustomCosmetic,
 } from "../../../../lib/custom-cosmetics";
@@ -161,24 +162,20 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
 
-  let id = req.nextUrl.searchParams.get("id")?.trim() ?? "";
-  if (!id) {
-    try {
-      const body = (await req.json()) as { id?: unknown };
-      if (typeof body.id === "string") {
-        id = body.id.trim();
-      }
-    } catch {
-      id = "";
-    }
+  let body: unknown = null;
+  try {
+    body = await req.json();
+  } catch {
+    body = null;
   }
 
-  if (!id) {
+  const ids = extractDeleteIdsFromPayload(req.nextUrl.searchParams, body);
+  if (ids.length === 0) {
     return NextResponse.json({ ok: false, error: "Cosmetic ID is required." }, { status: 400 });
   }
 
-  const deleted = await deleteCustomCosmetic(id);
-  if (!deleted) {
+  const deletedIds = await deleteCustomCosmetics(ids);
+  if (deletedIds.length === 0) {
     return NextResponse.json(
       { ok: false, error: "Cosmetic not found or database unavailable." },
       { status: 404 }
@@ -188,5 +185,10 @@ export async function DELETE(req: NextRequest) {
   revalidatePath("/shop");
   revalidatePath("/profile");
 
-  return NextResponse.json({ ok: true, id });
+  return NextResponse.json({
+    ok: true,
+    id: deletedIds[0],
+    deletedIds,
+    deletedCount: deletedIds.length,
+  });
 }

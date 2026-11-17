@@ -372,20 +372,28 @@ export async function updateArticleStatus(
   }
 }
 
-export async function deleteArticle(id: string): Promise<boolean> {
+export async function deleteArticles(ids: string[]): Promise<string[]> {
+  const cleanIds = Array.from(new Set(ids.map((x) => x.trim()).filter(Boolean)));
+  if (cleanIds.length === 0) return [];
+
   const ready = await ensureGuestDatabaseReady();
   const sql = getDbClient();
-  if (!ready || !sql) return false;
+  if (!ready || !sql) return [];
 
   try {
     const rows = await sql`
       DELETE FROM research_articles
-      WHERE id = ${id}::uuid
-      RETURNING id
+      WHERE id::text = ANY(${cleanIds})
+      RETURNING id::text AS id
     `;
-    return rows.length > 0;
+    return rows.map((r) => String(r.id));
   } catch (err) {
-    console.error("[research] deleteArticle failed:", err);
-    return false;
+    console.error("[research] deleteArticles failed:", err);
+    return [];
   }
+}
+
+export async function deleteArticle(id: string): Promise<boolean> {
+  const deleted = await deleteArticles([id]);
+  return deleted.length > 0;
 }
