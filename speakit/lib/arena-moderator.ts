@@ -1,5 +1,6 @@
 import { randomBytes } from "crypto";
 import { extractFirstJsonObject, requestAiWaterfallText } from "./ai-waterfall";
+import { assertArenaAccess } from "./arena-leave-policy";
 import { EquippedCosmetics } from "./cosmetics";
 import { getDbClient, PublicGuestPlayer } from "./db";
 import { ensureSchema } from "./db/neon";
@@ -2592,6 +2593,25 @@ export async function executeArenaAction(input: {
   const action = body.action;
   if (!action) {
     return { status: 400, body: { error: "Missing arena action." } };
+  }
+
+  if (
+    (action === "create" || action === "join" || action === "start") &&
+    sessionPlayer?.id
+  ) {
+    const access = await assertArenaAccess(sessionPlayer.id);
+    if (!access.allowed) {
+      return {
+        status: 403,
+        body: {
+          error:
+            access.message ||
+            "Tài khoản đang bị khóa tạm thời vào Arena do thoát ngang quá nhiều lần.",
+          frozenUntil: access.frozenUntil,
+          permanent: access.permanent,
+        },
+      };
+    }
   }
 
   const playerInfo = pickSessionInfo(body, sessionPlayer);

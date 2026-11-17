@@ -19,6 +19,10 @@ import {
 } from "lucide-react";
 import { SCENARIOS, VOCABULARY_LIST } from "../../../data/scenarios";
 import { MicButton } from "../../../components/audio/MicButton";
+import {
+  getVietnameseGloss,
+  InteractiveEnglishText,
+} from "../../../components/common/EnglishWordTooltip";
 import { FeedbackCard } from "../../../components/feedback/FeedbackCard";
 import { ScenarioSummary } from "../../../components/feedback/ScenarioSummary";
 import {
@@ -617,30 +621,20 @@ export default function PracticePage() {
                             Math.floor(playbackProgress * promptWords.length)
                           )
                         : -1;
-                    return promptWords.map((word, idx) => {
-                      const isActive = idx === activeWordIndex;
-                      const isSpoken =
-                        activeWordIndex > -1 && idx < activeWordIndex;
-                      return (
-                        <span key={`${idx}-${word}`}>
-                          <span
-                            className={
-                              isActive
-                                ? "bg-amber-200/90 text-ink px-1 py-0.5 rounded-md transition-colors duration-100"
-                                : isSpoken
-                                ? "text-sky-700 transition-colors duration-100"
-                                : "transition-colors duration-100"
-                            }
-                          >
-                            {word}
-                          </span>
-                          {idx < promptWords.length - 1 ? " " : ""}
-                        </span>
-                      );
-                    });
+                    return (
+                      <InteractiveEnglishText
+                        text={currentTurn.questionEN}
+                        highlightMode="tts"
+                        activeHighlightIndex={activeWordIndex}
+                        spokenUntilIndex={activeWordIndex}
+                      />
+                    );
                   })()}
                   &rdquo;
                 </div>
+                <p className="text-[11px] text-ink-muted">
+                  💡 Mẹo cho người mới: Chạm vào từ tiếng Anh gạch chân để xem nghĩa tiếng Việt ngay.
+                </p>
               </div>
 
               <div className="pt-1">
@@ -655,7 +649,7 @@ export default function PracticePage() {
                     }`}
                   />
                   <span>
-                    {showHint ? "Ẩn gợi ý & từ khóa" : "Xem gợi ý & từ khóa (Hint)"}
+                    {showHint ? "Ẩn gợi ý & từ khóa" : "Xem gợi ý & từ khóa (chạm để mở)"}
                   </span>
                 </button>
 
@@ -667,14 +661,23 @@ export default function PracticePage() {
                         <span>Từ khóa gợi ý nên dùng ({currentTurn.keywords.length}):</span>
                       </div>
                       <div className="flex flex-wrap gap-1.5">
-                        {currentTurn.keywords.map((kw) => (
-                          <span
-                            key={kw}
-                            className="px-2.5 py-1 text-xs font-mono bg-paper border border-ink/15 rounded-pill text-ink"
-                          >
-                            {kw}
-                          </span>
-                        ))}
+                        {currentTurn.keywords.map((kw) => {
+                          const gloss = getVietnameseGloss(kw);
+                          return (
+                            <span
+                              key={kw}
+                              title={gloss ?? undefined}
+                              className="px-2.5 py-1 text-xs bg-paper border border-ink/15 rounded-pill text-ink inline-flex items-center gap-1.5"
+                            >
+                              <span className="font-mono font-semibold">{kw}</span>
+                              {gloss && (
+                                <span className="text-[11px] text-ink-muted">
+                                  ({gloss})
+                                </span>
+                              )}
+                            </span>
+                          );
+                        })}
                       </div>
                     </div>
 

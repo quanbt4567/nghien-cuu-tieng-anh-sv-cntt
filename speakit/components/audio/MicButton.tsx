@@ -155,7 +155,7 @@ export function MicButton({
           )}
         </button>
         <div className="text-[11px] font-mono text-ink-muted">
-          Chrome SpeechRecognition (en-US)
+          Nhận diện giọng nói tiếng Anh trên trình duyệt
         </div>
       </div>
 

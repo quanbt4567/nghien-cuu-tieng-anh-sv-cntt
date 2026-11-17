@@ -30,6 +30,8 @@ import {
 import { initOrHydrateGuestSession } from "@/app/actions/leaderboard";
 import { DiscordAvatarFrame } from "@/components/cosmetics/DiscordAvatarFrame";
 import { VictoryFinisherOverlay } from "@/components/cosmetics/VictoryFinisherOverlay";
+import { requestArenaLeave } from "@/lib/arena-leave-client";
+import { getVietnameseGloss } from "@/components/common/EnglishWordTooltip";
 import type {
   ArenaRewardSummary,
   WordChainMove,
@@ -668,7 +670,7 @@ export function SyntaxBombArena() {
     void syncGuestProfile();
   };
 
-  const handleLeaveRoom = () => {
+  const performLeave = (skipReward = false) => {
     const leavingRoom = room;
     speechControllerRef.current?.abort();
     setIsRecording(false);
@@ -678,8 +680,18 @@ export function SyntaxBombArena() {
     setLastReward(null);
     setTurnBanner(null);
     setSegfaultShake(false);
-    void flushLeavePoints(leavingRoom, true);
+    if (!skipReward) {
+      void flushLeavePoints(leavingRoom, true);
+    }
   };
+
+  const handleLeaveRoom = () =>
+    requestArenaLeave({
+      gameId: "word-chain",
+      roomCode: room?.roomCode ?? null,
+      isActive: room?.status === "active",
+      performLeave,
+    });
 
   const urgency = useMemo(() => {
     if (!room || room.status !== "active") return 0;
@@ -1090,7 +1102,7 @@ export function SyntaxBombArena() {
                 onClick={handleLeaveRoom}
                 className="px-3.5 py-2.5 rounded-xl bg-white text-ink/70 text-xs font-mono border border-ink/20 hover:border-ink hover:text-ink"
               >
-                Leave Room
+                Rời phòng
               </button>
             </div>
 
@@ -1102,7 +1114,7 @@ export function SyntaxBombArena() {
             >
               <Play className="w-4 h-4" />
               <span>
-                {loadingAction === "start" ? "Arming Bomb..." : "Ignite Fuse"}
+                {loadingAction === "start" ? "Đang chuẩn bị bom..." : "Châm ngòi nổ (Bắt đầu)"}
               </span>
             </button>
           </div>
@@ -1221,7 +1233,7 @@ export function SyntaxBombArena() {
               <div className="flex flex-col items-center md:items-start space-y-4 text-center md:text-left">
                 <div className="space-y-1">
                   <div className="text-[11px] font-mono uppercase tracking-[0.2em] text-slate-400">
-                    LAST WORD IN CHAIN
+                    TỪ VỪA NỐI TRONG CHUỖI
                   </div>
                   <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 font-mono text-2xl sm:text-3xl font-extrabold tracking-wider">
                     <span>
@@ -1232,11 +1244,16 @@ export function SyntaxBombArena() {
                     </span>
                     <ArrowRight className="w-5 h-5 text-slate-400" />
                   </div>
+                  {getVietnameseGloss(room.currentWord) && (
+                    <div className="text-xs text-cyan-300 font-sans">
+                      Nghĩa từ này: {getVietnameseGloss(room.currentWord)}
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
                   <div className="text-[11px] font-mono uppercase tracking-[0.2em] text-slate-400">
-                    REQUIRED STARTING LETTER
+                    CHỮ CÁI BẮT BUỘC TIẾP THEO
                   </div>
                   <div className="inline-flex items-center gap-4">
                     <div
@@ -1245,10 +1262,10 @@ export function SyntaxBombArena() {
                     >
                       {room.requiredChar}
                     </div>
-                    <div className="text-xs text-slate-300 max-w-[200px]">
+                    <div className="text-xs text-slate-300 max-w-[210px]">
                       {isMyTurn
-                        ? `Your turn! Speak or type a fresh English word starting with "${room.requiredChar}".`
-                        : "Waiting for opponent to defuse the bomb..."}
+                        ? `Đến lượt bạn! Nói hoặc gõ 1 từ tiếng Anh mới bắt đầu bằng chữ "${room.requiredChar}".`
+                        : "Đang chờ đối thủ nối từ để gỡ bom..."}
                     </div>
                   </div>
                 </div>
@@ -1277,15 +1294,15 @@ export function SyntaxBombArena() {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <div className="text-sm font-bold text-ink">
-                  Defuse the Bomb — Speak or Type One English Word
+                  Gỡ bom — Nói hoặc gõ 1 từ tiếng Anh
                 </div>
                 <div className="text-xs text-ink/60">
-                  Must start with{" "}
+                  Phải bắt đầu bằng chữ{" "}
                   <strong className="text-accent font-mono">
                     {room.requiredChar}
                   </strong>{" "}
-                  and not be repeated. IT terms score{" "}
-                  <strong className="text-amber-600">x2</strong>!
+                  và chưa lặp lại. Dùng từ vựng CNTT được thưởng{" "}
+                  <strong className="text-amber-600">x2 điểm</strong>!
                 </div>
               </div>
 
@@ -1302,12 +1319,12 @@ export function SyntaxBombArena() {
                 {isRecording ? (
                   <>
                     <Square className="w-3.5 h-3.5" />
-                    <span>Stop Mic</span>
+                    <span>Dừng Mic</span>
                   </>
                 ) : (
                   <>
                     <Mic className="w-3.5 h-3.5 text-accent" />
-                    <span>Speak Word (STT)</span>
+                    <span>Nói từ (Mic)</span>
                   </>
                 )}
               </button>
@@ -1334,8 +1351,8 @@ export function SyntaxBombArena() {
                 }}
                 placeholder={
                   isMyTurn
-                    ? `Type an English word starting with ${room.requiredChar}...`
-                    : "Waiting for opponent..."
+                    ? `Gõ từ tiếng Anh bắt đầu bằng chữ ${room.requiredChar}...`
+                    : "Đang chờ đối thủ..."
                 }
                 className="flex-1 px-4 py-3 rounded-xl bg-paper border-2 border-ink font-mono text-base font-bold text-ink placeholder:text-ink/40 focus:outline-none disabled:opacity-50"
               />
@@ -1347,14 +1364,14 @@ export function SyntaxBombArena() {
               >
                 <Send className="w-4 h-4" />
                 <span>
-                  {loadingAction === "turn" ? "Checking..." : "Send Word"}
+                  {loadingAction === "turn" ? "Đang kiểm tra..." : "Gửi từ"}
                 </span>
               </button>
             </div>
 
             <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-ink/15">
               <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-mono text-ink/70">
-                <span className="font-bold text-ink">Used:</span>
+                <span className="font-bold text-ink">Đã dùng:</span>
                 {room.usedWords.slice(-8).map((w) => (
                   <span
                     key={w}
@@ -1370,7 +1387,7 @@ export function SyntaxBombArena() {
                 onClick={handleLeaveRoom}
                 className="px-3.5 py-1.5 rounded-xl bg-white border border-ink/25 text-xs font-mono text-ink/70 hover:border-ink hover:text-ink"
               >
-                Leave
+                Rời phòng
               </button>
             </div>
           </section>

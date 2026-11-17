@@ -235,7 +235,7 @@ export const FEATURE_GUIDES: readonly FeatureGuide[] = [
         matchTexts: [
           "Frontend Engineer",
           "1. Choose Your Engineering Role",
-          "YOUR EXCLUSIVE CLUE",
+          "MANH MỐI RIÊNG CỦA BẠN",
         ],
         placement: "bottom",
       },
@@ -243,7 +243,7 @@ export const FEATURE_GUIDES: readonly FeatureGuide[] = [
         title: "Chọn sự cố & Tạo War Room",
         description:
           "Chọn kịch bản outage SEV-1/SEV-2 rồi bấm Create War Room để nhận mã mời 6 ký tự cho đồng đội.",
-        matchTexts: ["Create War Room", "Submit Status Report"],
+        matchTexts: ["Create War Room", "Gửi báo cáo sự cố"],
         placement: "top",
       },
       {
@@ -255,13 +255,13 @@ export const FEATURE_GUIDES: readonly FeatureGuide[] = [
         placement: "left",
       },
       {
-        title: "Ghép AI Teammates & Báo cáo Mic",
+        title: "Ghép AI đồng đội & Báo cáo Mic",
         description:
-          "Trong phòng chờ, bấm Fill with AI Teammates nếu thiếu người. Khi gọi sự cố, dùng Record Voice (STT) và nói hoàn toàn bằng tiếng Anh (nói tiếng Việt bị trừ 15 giây!).",
+          "Trong phòng chờ, bấm Thêm AI đồng đội nếu thiếu người. Khi xử lý sự cố, bấm Bật Mic nói và nói bằng tiếng Anh.",
         matchTexts: [
-          "Fill with AI Teammates",
-          "Record Voice (STT)",
-          "Stop Mic",
+          "Thêm AI đồng đội",
+          "Bật Mic nói",
+          "Dừng Mic",
         ],
         placement: "top",
       },
@@ -308,9 +308,9 @@ export const FEATURE_GUIDES: readonly FeatureGuide[] = [
       {
         title: "Âm thanh Arcade & Phản biện Mic 30s",
         description:
-          "Bật/tắt hiệu ứng âm thanh CRITICAL HIT ở góc trên; trong trận đấu, bấm Speak Argument (STT) để tung lập luận tiếng Anh trong 30 giây.",
+          "Bật/tắt hiệu ứng âm thanh CRITICAL HIT ở góc trên; trong trận đấu, bấm Nói lập luận (Mic) để nói câu tiếng Anh trong 30 giây.",
         selectors: ['button[aria-label*="arcade sound effects"]'],
-        matchTexts: ["SFX On", "SFX Off", "Speak Argument (STT)"],
+        matchTexts: ["SFX On", "SFX Off", "Nói lập luận (Mic)"],
         placement: "bottom",
       },
     ],
@@ -368,8 +368,8 @@ export const FEATURE_GUIDES: readonly FeatureGuide[] = [
       {
         title: "Mic nói gợi ý & Lật thẻ trợ giúp",
         description:
-          "Trong ván đấu, bấm Speak Clue (STT) để diễn giải bằng tiếng Anh tránh 3 từ cấm đỏ, hoặc bấm Flip Hint để xem gợi ý tiếng Việt.",
-        matchTexts: ["Speak Clue (STT)", "Flip Hint", "Skip Card"],
+          "Trong ván đấu, bấm Nói gợi ý (Mic) để giải thích bằng tiếng Anh tránh 3 từ cấm đỏ, hoặc bấm Lật gợi ý tiếng Việt nếu chưa hiểu từ.",
+        matchTexts: ["Nói gợi ý (Mic)", "Lật gợi ý tiếng Việt", "Bỏ qua thẻ"],
         placement: "top",
       },
     ],
@@ -427,8 +427,8 @@ export const FEATURE_GUIDES: readonly FeatureGuide[] = [
       {
         title: "Nối từ bằng Mic để kích hoạt Combo 5s",
         description:
-          "Trong lượt của bạn, bấm Speak Word (STT) hoặc nhập từ tiếng Anh bắt đầu bằng chữ cái cuối; nối 2 từ IT liên tiếp sẽ ép bom đối thủ còn 5 giây.",
-        matchTexts: ["Speak Word (STT)", "Send Word"],
+          "Trong lượt của bạn, bấm Nói từ (Mic) hoặc gõ từ tiếng Anh bắt đầu bằng chữ cái cuối; nối 2 từ IT liên tiếp sẽ ép bom đối thủ còn 5 giây.",
+        matchTexts: ["Nói từ (Mic)", "Gửi từ"],
         placement: "top",
       },
     ],
@@ -650,27 +650,27 @@ export const FEATURE_GUIDES: readonly FeatureGuide[] = [
       {
         title: "Danh sách Top 50 & nút làm mới",
         description:
-          "Bảng xếp hạng sắp xếp theo tổng điểm tích lũy và IT-Coin; bấm Refresh để cập nhật thứ hạng mới nhất.",
-        matchTexts: ["Refresh", "Bảng xếp hạng"],
+          "Bảng xếp hạng sắp xếp theo tổng điểm tích lũy và IT-Coin; bấm Làm mới để cập nhật thứ hạng mới nhất.",
+        matchTexts: ["Làm mới", "Bảng xếp hạng"],
         placement: "left",
       },
       {
         title: "Đổi tên hiển thị & sao chép mã DEV",
         description:
-          "Nhấn biểu tượng bút chì để đổi nickname của bạn trên bảng xếp hạng và sao chép mã DEV-XXXXXX để dự phòng.",
+          "Nhấn biểu tượng bút chì để đổi nickname của bạn trên bảng xếp hạng và bấm Sao chép mã DEV-XXXXXX để dự phòng.",
         selectors: [
           'button[aria-label="Edit display name"]',
           'input[placeholder="DEV-XXXXXX"]',
         ],
-        matchTexts: ["Copy", "Bảng xếp hạng"],
+        matchTexts: ["Sao chép", "Bảng xếp hạng"],
         placement: "bottom",
       },
       {
         title: "Khôi phục tiến độ giữa các thiết bị",
         description:
-          "Nhập mã DEV-XXXXXX của bạn từ máy hoặc trình duyệt khác rồi bấm Restore để đồng bộ lại điểm, Coin và vật phẩm.",
+          "Nhập mã DEV-XXXXXX của bạn từ máy hoặc trình duyệt khác rồi bấm Khôi phục để đồng bộ lại điểm, Coin và vật phẩm.",
         selectors: ['input[placeholder="DEV-XXXXXX"]'],
-        matchTexts: ["Restore"],
+        matchTexts: ["Khôi phục"],
         placement: "bottom",
       },
       {

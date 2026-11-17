@@ -14,23 +14,23 @@ function buildHowItWorksSteps(scenarioCount: number) {
   return [
     {
       step: "01",
-      title: "Nghe giọng AI Neural",
+      title: "Nghe câu hỏi chậm rõ bằng tiếng Anh",
       description:
-        "Nghe prompt từ 4 persona Microsoft Edge Neural TTS rõ ràng, tự nhiên theo ngữ cảnh kỹ thuật.",
+        "Nghe 4 giọng đọc AI tự nhiên theo tình huống đi làm (có nút nghe chậm từng từ cho người mới).",
       icon: Volume2,
     },
     {
       step: "02",
-      title: "Nói phản xạ tình huống thật",
+      title: "Tập nói theo mẫu câu dễ dùng",
       description:
-        `Trả lời trực tiếp qua micro cho Daily Standup, Code Review, Phỏng vấn với ${scenarioCount} tình huống công việc IT chia theo 3 cấp độ Fresher / Junior / Senior.`,
+        `Luyện trả lời qua micro với ${scenarioCount} tình huống từ mới bắt đầu (Fresher) đến đi làm thật (Junior / Senior), có gợi ý tiếng Việt chi tiết.`,
       icon: Mic,
     },
     {
       step: "03",
-      title: "Nhận điểm & Shadowing",
+      title: "Chấm điểm & nghe nhại lại (Shadowing)",
       description:
-        "AI chấm Pronunciation, Fluency, Vocabulary kèm câu mẫu chuẩn để luyện Shadowing và lưu lộ trình 7 ngày.",
+        "AI góp ý cách phát âm, độ trôi chảy và từ vựng, kèm câu mẫu để bạn nghe và nói nhại lại theo nhịp.",
       icon: Sparkles,
     },
   ];
@@ -38,10 +38,10 @@ function buildHowItWorksSteps(scenarioCount: number) {
 
 function buildFeatureHighlights(scenarioCount: number) {
   return [
-    `${scenarioCount} tình huống công việc IT`,
-    "4 giọng Microsoft Edge Neural TTS",
-    "Chấm điểm Pronunciation · Fluency · Vocabulary",
-    "IT Speaking Arena & Kế hoạch 7 ngày",
+    `${scenarioCount} tình huống công việc IT (kèm gợi ý cho người mất gốc)`,
+    "Chạm bất kỳ từ tiếng Anh nào để xem nghĩa tiếng Việt ngay",
+    "Chấm điểm Phát âm · Độ trôi chảy · Từ vựng",
+    "Đấu trường phản xạ & Kế hoạch ôn tập 7 ngày",
   ];
 }
 

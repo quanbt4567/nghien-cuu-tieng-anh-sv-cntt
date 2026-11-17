@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rewardPracticePoints } from "../../../../app/actions/leaderboard";
+import { assertArenaAccess } from "../../../../lib/arena-leave-policy";
 import {
   readExistingGuestPlayer,
   resolveOrCreateGuestSession,
@@ -152,6 +153,25 @@ export async function POST(req: NextRequest) {
     const sessionPlayer =
       (await readExistingGuestPlayer()) ??
       (await resolveOrCreateGuestSession(body.backupTransferCode));
+
+    if (
+      (action === "create" || action === "join" || action === "start") &&
+      sessionPlayer?.id
+    ) {
+      const access = await assertArenaAccess(sessionPlayer.id);
+      if (!access.allowed) {
+        return NextResponse.json(
+          {
+            error:
+              access.message ||
+              "Tài khoản đang bị khóa tạm thời vào Arena do thoát ngang quá nhiều lần.",
+            frozenUntil: access.frozenUntil,
+            permanent: access.permanent,
+          },
+          { status: 403 }
+        );
+      }
+    }
 
     const playerId =
       sessionPlayer?.id ??

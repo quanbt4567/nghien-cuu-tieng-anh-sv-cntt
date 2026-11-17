@@ -13,6 +13,7 @@ import { ScoreResponse, VoicePersonaId } from "../../lib/types";
 import { normalizeVoicePersona } from "../../lib/speech";
 import { storageAdapter } from "../../lib/storage";
 import { playTtsAudio } from "../../lib/tts-player";
+import { InteractiveEnglishText } from "../common/EnglishWordTooltip";
 
 interface FeedbackCardProps {
   result: ScoreResponse;
@@ -152,9 +153,9 @@ export function FeedbackCard({
           </div>
           <div className="p-3.5 bg-sky-500/10 rounded-xl border border-sky-500/30 text-sm text-ink leading-relaxed">
             <span className="font-semibold text-sky-700 block text-xs font-mono mb-1">
-              More Natural / Pro Phrasing:
+              Câu mẫu tự nhiên hơn (chạm từ gạch chân để xem nghĩa):
             </span>
-            "{result.betterSentence}"
+            &ldquo;<InteractiveEnglishText text={result.betterSentence} />&rdquo;
           </div>
         </div>
 
@@ -190,11 +191,11 @@ export function FeedbackCard({
         {result.pronunciationNote && (
           <div className="p-3 bg-paper-muted rounded-xl border border-ink/15 text-xs text-ink-muted space-y-1">
             <span className="font-semibold text-ink block font-mono">
-              Ước lượng phát âm (từ transcript):
+              Ước lượng phát âm (dựa trên chữ vừa nói):
             </span>
             <p>{result.pronunciationNote}</p>
             <p className="text-[11px] text-ink-faint">
-              Ước lượng dựa trên văn bản transcript khi không phân tích âm thanh trực tiếp.
+              Đánh giá dựa trên văn bản bạn vừa nói hoặc gõ vào.
             </p>
           </div>
         )}

@@ -29,6 +29,11 @@ import {
 import { initOrHydrateGuestSession } from "@/app/actions/leaderboard";
 import { DiscordAvatarFrame } from "@/components/cosmetics/DiscordAvatarFrame";
 import { VictoryFinisherOverlay } from "@/components/cosmetics/VictoryFinisherOverlay";
+import { requestArenaLeave } from "@/lib/arena-leave-client";
+import {
+  InteractiveEnglishText,
+  getVietnameseGloss,
+} from "@/components/common/EnglishWordTooltip";
 import {
   DEFAULT_EQUIPPED_COSMETICS,
   normalizeEquippedCosmetics,
@@ -580,7 +585,7 @@ export function PartyWarRoom() {
     });
   };
 
-  const handleLeaveRoom = () => {
+  const performLeave = (skipReward = false) => {
     const leavingRoom = room;
     stopCtoAudio();
     speechControllerRef.current?.abort();
@@ -597,8 +602,23 @@ export function PartyWarRoom() {
     setLastTurnFeedback(null);
     setCtoHighlight(false);
     timeoutTriggeredForRoomRef.current = null;
-    void flushUnresolvedRoomPoints(leavingRoom, true);
+    if (!skipReward) {
+      void flushUnresolvedRoomPoints(leavingRoom, true);
+    }
   };
+
+  const handleLeaveRoom = () =>
+    requestArenaLeave({
+      gameId: "party",
+      roomCode: room?.roomCode ?? null,
+      isActive: Boolean(
+        room &&
+          (room.status === "briefing" ||
+            room.status === "speaking" ||
+            room.status === "evaluating")
+      ),
+      performLeave,
+    });
 
   const handleCopyCode = async () => {
     if (!room) return;
@@ -1197,8 +1217,8 @@ export function PartyWarRoom() {
                     <Bot className="w-4 h-4 text-accent" />
                     <span>
                       {loadingAction === "fill_ai"
-                        ? "Filling AI Squad..."
-                        : "Fill with AI Teammates"}
+                        ? "Đang gọi AI đồng đội..."
+                        : "Thêm AI đồng đội"}
                     </span>
                   </button>
 
@@ -1207,7 +1227,7 @@ export function PartyWarRoom() {
                     onClick={handleLeaveRoom}
                     className="px-3.5 py-2.5 rounded-xl bg-white text-ink/70 text-xs font-mono border border-ink/20 hover:border-ink hover:text-ink"
                   >
-                    Leave Room
+                    Rời phòng
                   </button>
                 </div>
 
@@ -1223,8 +1243,8 @@ export function PartyWarRoom() {
                     <Play className="w-4 h-4" />
                     <span>
                       {loadingAction === "start"
-                        ? "Launching..."
-                        : "Start Incident Call"}
+                        ? "Đang vào ca trực..."
+                        : "Bắt đầu xử lý sự cố"}
                     </span>
                   </button>
                   {room.players.length < 3 && (
@@ -1361,16 +1381,18 @@ export function PartyWarRoom() {
               <section className="lg:col-span-2 bg-white border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="px-2.5 py-1 rounded-lg bg-ink text-white text-xs font-mono font-bold">
-                    YOUR EXCLUSIVE CLUE • {myClue.roleLabel}
+                    MANH MỐI RIÊNG CỦA BẠN • {myClue.roleLabel}
                   </span>
                   {room.currentTurnRole === selectedRole && (
                     <span className="px-2.5 py-1 rounded-full bg-accent/15 text-accent border border-accent text-[11px] font-mono font-bold">
-                      Your Turn to Report
+                      Đến lượt bạn báo cáo
                     </span>
                   )}
                 </div>
 
-                <p className="text-sm font-medium text-ink">{myClue.summary}</p>
+                <p className="text-sm font-medium text-ink">
+                  <InteractiveEnglishText text={myClue.summary} />
+                </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="p-3.5 rounded-xl bg-paper border border-ink/20 space-y-2">
@@ -1388,25 +1410,28 @@ export function PartyWarRoom() {
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-paper border border-ink/20 space-y-2">
-                    <div className="text-[11px] font-mono font-bold uppercase text-ink/60">
-                      Suspected Root Cause
+                    <div className="flex items-center justify-between gap-2 text-[11px] font-mono font-bold uppercase text-ink/60">
+                      <span>Nguyên nhân nghi vấn</span>
+                      <span className="normal-case font-sans text-ink/50">Chạm từ để dịch</span>
                     </div>
                     <p className="text-xs text-ink font-medium">
-                      {myClue.suspectedCause}
+                      <InteractiveEnglishText text={myClue.suspectedCause} />
                     </p>
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <div className="text-[11px] font-mono font-bold uppercase text-ink/60">
-                    Target English Keywords (Say these clearly)
+                    Từ khóa tiếng Anh cần nói rõ
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {myClue.targetKeywords.map((kw) => {
                       const hit = myMatchedKeywords.has(kw.toLowerCase());
+                      const gloss = getVietnameseGloss(kw);
                       return (
                         <span
                           key={kw}
+                          title={gloss ?? undefined}
                           className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold border ${
                             hit
                               ? "bg-emerald-100 border-emerald-700 text-emerald-800"
@@ -1414,6 +1439,12 @@ export function PartyWarRoom() {
                           }`}
                         >
                           {hit ? `✓ ${kw}` : kw}
+                          {gloss ? (
+                            <span className="font-sans font-normal text-ink/60">
+                              {" "}
+                              ({gloss})
+                            </span>
+                          ) : null}
                         </span>
                       );
                     })}
@@ -1488,15 +1519,14 @@ export function PartyWarRoom() {
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="text-sm font-bold text-ink">
-                        Speak or Type Your Incident Report (English Only)
+                        Nói hoặc gõ báo cáo sự cố (bằng tiếng Anh)
                       </span>
                       <span className="px-2 py-0.5 rounded bg-paper border border-ink/25 text-[11px] font-mono font-bold text-ink">
                         Lượt {nextTurnNumber} • Tiến độ {resolutionProgress}%/100%
                       </span>
                     </div>
                     <div className="text-xs text-ink/60">
-                      Explain your role&apos;s root cause and proposed fix using the
-                      target keywords above.
+                      Giải thích nguyên nhân &amp; cách sửa theo vai trò của bạn, dùng các từ khóa ở trên.
                     </div>
                   </div>
                 </div>
@@ -1514,12 +1544,12 @@ export function PartyWarRoom() {
                   {isRecording ? (
                     <>
                       <Square className="w-3.5 h-3.5" />
-                      <span>Stop Mic</span>
+                      <span>Dừng Mic</span>
                     </>
                   ) : (
                     <>
                       <Mic className="w-3.5 h-3.5 text-accent" />
-                      <span>Record Voice (STT)</span>
+                      <span>Bật Mic nói</span>
                     </>
                   )}
                 </button>
@@ -1550,7 +1580,7 @@ export function PartyWarRoom() {
                     className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-ink/25 text-xs font-mono text-ink/70 hover:border-ink hover:text-ink"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
-                    <span>Reset Room</span>
+                    <span>Chơi lại phòng mới</span>
                   </button>
 
                   <button
@@ -1558,7 +1588,7 @@ export function PartyWarRoom() {
                     onClick={handleLeaveRoom}
                     className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-ink/25 text-xs font-mono text-ink/70 hover:border-ink hover:text-ink"
                   >
-                    <span>Leave Room</span>
+                    <span>Rời phòng</span>
                   </button>
                 </div>
 
@@ -1575,10 +1605,10 @@ export function PartyWarRoom() {
                   <Send className="w-4 h-4" />
                   <span>
                     {loadingAction === "evaluate"
-                      ? "CTO Evaluating..."
+                      ? "CTO đang chấm..."
                       : humanTurnsCount > 0
-                        ? `Submit Turn ${nextTurnNumber} Report`
-                        : "Submit Status Report"}
+                        ? `Gửi báo cáo lượt ${nextTurnNumber}`
+                        : "Gửi báo cáo sự cố"}
                   </span>
                 </button>
               </div>
@@ -1788,7 +1818,7 @@ export function PartyWarRoom() {
             >
               <RotateCcw className="w-4 h-4" />
               <span>
-                {loadingAction === "reset" ? "Resetting..." : "Reset Room"}
+                {loadingAction === "reset" ? "Đang tạo lại..." : "Chơi lại phòng mới"}
               </span>
             </button>
 

@@ -28,7 +28,7 @@ export default async function HomePage() {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <Trophy className="w-4 h-4 text-accent shrink-0" aria-hidden="true" />
-            <h2 className="text-base font-bold text-ink">Top 3 Arena Leaders</h2>
+            <h2 className="text-base font-bold text-ink">Top 3 Bảng Xếp Hạng Arena</h2>
           </div>
           <Link
             href="/arena"

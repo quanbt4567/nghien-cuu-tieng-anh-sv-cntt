@@ -166,19 +166,19 @@ export function GlobalLeaderboard({
         setRestoreCode("");
         setRestoreStatus({
           ok: true,
-          message: `Restored profile ${result.player.displayName} (${result.player.transferCode}).`,
+          message: `Đã khôi phục hồ sơ ${result.player.displayName} (${result.player.transferCode}).`,
         });
         await loadLeaderboard();
       } else {
         setRestoreStatus({
           ok: false,
-          message: result.error || "Unable to restore transfer code.",
+          message: result.error || "Không thể khôi phục mã chuyển thiết bị này.",
         });
       }
     } catch {
       setRestoreStatus({
         ok: false,
-        message: "Restore failed. Please check the transfer code and retry.",
+        message: "Khôi phục thất bại. Vui lòng kiểm tra mã DEV-XXXXXX và thử lại.",
       });
     } finally {
       setIsRestoring(false);
@@ -324,7 +324,7 @@ export function GlobalLeaderboard({
               <div className="min-w-0">
                 <div className="text-[10px] font-mono uppercase text-ink-muted flex items-center gap-1">
                   <KeyRound className="w-3 h-3" />
-                  <span>Transfer Code (Backup)</span>
+                  <span>Mã khôi phục tài khoản (Backup)</span>
                 </div>
                 <div className="text-sm font-mono font-bold text-ink tracking-wider">
                   {currentPlayer.transferCode}
@@ -338,12 +338,12 @@ export function GlobalLeaderboard({
                 {copiedCode ? (
                   <>
                     <Check className="w-3.5 h-3.5 text-accent" />
-                    <span>Copied</span>
+                    <span>Đã chép</span>
                   </>
                 ) : (
                   <>
                     <Copy className="w-3.5 h-3.5" />
-                    <span>Copy</span>
+                    <span>Sao chép</span>
                   </>
                 )}
               </button>
@@ -354,10 +354,10 @@ export function GlobalLeaderboard({
             <div className="space-y-1">
               <h3 className="text-sm font-bold text-ink flex items-center gap-2">
                 <RefreshCw className="w-4 h-4 text-accent" />
-                <span>Restore Cross-Device Progress</span>
+                <span>Khôi phục tiến độ sang thiết bị khác</span>
               </h3>
               <p className="text-xs text-ink-muted">
-                Enter your <code className="font-mono text-ink">DEV-XXXXXX</code> code to move coins, streak, and rank across browsers without an account.
+                Nhập mã <code className="font-mono text-ink">DEV-XXXXXX</code> để mang điểm, chuỗi ngày và thứ hạng sang trình duyệt mới mà không cần đăng ký.
               </p>
             </div>
 
@@ -375,7 +375,7 @@ export function GlobalLeaderboard({
                 disabled={isRestoring || !restoreCode.trim()}
                 className="px-4 py-2 rounded-pill bg-ink text-white text-xs font-semibold border border-ink disabled:opacity-50"
               >
-                {isRestoring ? "Restoring..." : "Restore"}
+                {isRestoring ? "Đang khôi phục..." : "Khôi phục"}
               </button>
             </form>
 
@@ -400,15 +400,15 @@ export function GlobalLeaderboard({
             <div>
               <h3 className="text-sm font-bold text-ink flex items-center gap-2">
                 <ShoppingBag className="w-4 h-4 text-accent" />
-                <span>IT-Coin Cosmetic Armory</span>
+                <span>Kho hiệu ứng IT-Coin</span>
               </h3>
               <p className="text-xs text-ink-muted">
-                Mở khóa & trang bị nhanh 3 hiệu ứng nổi bật trên bảng xếp hạng.
+                Mở khóa &amp; trang bị nhanh 3 hiệu ứng nổi bật trên bảng xếp hạng.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <span className="px-3 py-1 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-bold text-ink">
-                Balance: {currentPlayer.itCoins} Coins
+                Số dư: {currentPlayer.itCoins} Coin
               </span>
               <Link
                 href="/shop"
@@ -497,7 +497,7 @@ export function GlobalLeaderboard({
               </span>
             </h3>
             <p className="text-xs text-ink-muted">
-              Ranked by Tổng điểm descending first, with IT-Coin as tie-breaker across all IT roles.
+              Xếp hạng theo Tổng điểm từ cao xuống thấp (nếu bằng điểm sẽ xét IT-Coin).
             </p>
           </div>
           <button
@@ -507,18 +507,18 @@ export function GlobalLeaderboard({
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-medium text-ink hover:bg-paper-muted disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
-            <span>Refresh</span>
+            <span>Làm mới</span>
           </button>
         </div>
 
         {loading && players.length === 0 ? (
           <div className="py-10 flex items-center justify-center gap-2 text-xs text-ink-muted">
             <Loader2 className="w-4 h-4 animate-spin text-accent" />
-            <span>Loading rankings...</span>
+            <span>Đang tải bảng xếp hạng...</span>
           </div>
         ) : players.length === 0 ? (
           <div className="p-8 rounded-xl bg-paper border border-ink/10 text-center text-xs text-ink-muted">
-            No ranked players recorded yet. Complete a speaking turn to claim #1.
+            Chưa có người chơi nào trên bảng xếp hạng. Hãy luyện nói 1 lượt để giữ vị trí #1!
           </div>
         ) : (
           (() => {

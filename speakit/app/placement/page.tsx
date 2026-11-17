@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { MicButton } from "../../components/audio/MicButton";
 import { FeedbackPromptModal } from "../../components/feedback/FeedbackPromptModal";
+import { InteractiveEnglishText } from "../../components/common/EnglishWordTooltip";
 import { SCENARIOS } from "../../data/scenarios";
 import {
   PLACEMENT_MCQS,
@@ -175,26 +176,46 @@ export default function PlacementPage() {
                       {q.contextVI}
                     </p>
                     <h2 className="text-base sm:text-lg font-bold text-ink">
-                      {q.questionEN}
+                      <InteractiveEnglishText text={q.questionEN} />
                     </h2>
+                    <p className="text-[11px] text-sky-700 font-medium">
+                      Mẹo cho người mới: Chạm vào từ tiếng Anh có gạch chân để xem nghĩa tiếng Việt.
+                    </p>
                   </div>
 
                   <div className="space-y-2.5">
                     {q.options.map((opt) => {
                       const isChosen = selected === opt.id;
                       return (
-                        <button
+                        <div
                           key={opt.id}
-                          type="button"
-                          onClick={() => handleSelectOption(q.id, opt.id)}
-                          className={`w-full text-left p-3.5 rounded-xl border text-xs sm:text-sm transition-all ${
+                          onClick={(e) => {
+                            if (!(e.target as HTMLElement).closest("button")) {
+                              handleSelectOption(q.id, opt.id);
+                            }
+                          }}
+                          className={`flex items-start gap-3 w-full text-left p-3.5 rounded-xl border text-xs sm:text-sm cursor-pointer transition-all ${
                             isChosen
                               ? "bg-sky-500/10 border-sky-500/40 text-ink font-semibold"
                               : "bg-paper border-ink/15 text-ink hover:bg-paper-muted"
                           }`}
                         >
-                          {opt.label}
-                        </button>
+                          <button
+                            type="button"
+                            onClick={() => handleSelectOption(q.id, opt.id)}
+                            aria-pressed={isChosen}
+                            className={`mt-0.5 px-2 py-0.5 rounded-pill border text-[11px] font-mono font-bold shrink-0 ${
+                              isChosen
+                                ? "bg-sky-600 text-white border-sky-700"
+                                : "bg-white text-ink border-ink/20 hover:border-ink"
+                            }`}
+                          >
+                            {isChosen ? `✓ ${opt.id.toUpperCase()}` : opt.id.toUpperCase()}
+                          </button>
+                          <div className="flex-1 leading-relaxed">
+                            <InteractiveEnglishText text={opt.label} />
+                          </div>
+                        </div>
                       );
                     })}
                   </div>
@@ -229,7 +250,7 @@ export default function PlacementPage() {
                   <span>Phản xạ nói ngắn (15 giây)</span>
                 </span>
                 <h2 className="text-base sm:text-lg font-bold text-ink">
-                  "Briefly explain a technical task or bug you worked on recently."
+                  &ldquo;<InteractiveEnglishText text="Briefly explain a technical task or bug you worked on recently." />&rdquo;
                 </h2>
                 <p className="text-xs text-ink-muted">
                   Nói 1–2 câu bằng tiếng Anh (hoặc gõ nhanh nếu không dùng micro).

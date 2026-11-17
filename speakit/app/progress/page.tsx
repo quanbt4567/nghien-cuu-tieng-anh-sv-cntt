@@ -304,10 +304,10 @@ export default function ProgressPage() {
           </Link>
           <h1 className="text-2xl font-bold tracking-tight text-ink flex items-center gap-2">
             <TrendingUp className="w-6 h-6 text-accent" />
-            <span>Tiến Độ Học Tập & Kế Hoạch 7 Ngày</span>
+            <span>Tiến độ học & kế hoạch 7 ngày</span>
           </h1>
           <p className="text-xs text-ink-muted mt-1.5">
-            Theo dõi số lượt luyện nói, điểm số cao nhất từng tình huống và các điểm ngữ pháp/từ khóa cần cải thiện.
+            Xem bạn đã luyện nói bao nhiêu lần, điểm cao nhất của từng tình huống và những từ cần ôn thêm.
           </p>
         </div>
 
@@ -317,10 +317,10 @@ export default function ProgressPage() {
           onClick={handleExportData}
           disabled={attempts.length === 0 && arenaRuns.length === 0}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-white border border-ink/20 text-xs font-mono font-semibold text-ink hover:bg-paper-muted shadow-soft shadow-hard-press transition-all self-start sm:self-center disabled:opacity-50 disabled:cursor-not-allowed"
-          title="Xuất file JSON chứa toàn bộ lượt luyện tập để phục vụ nghiên cứu khoa học"
+          title="Tải về file (.json) chứa toàn bộ lượt luyện tập của bạn"
         >
           <Download className="w-4 h-4 text-accent" />
-          <span>Xuất dữ liệu (.json)</span>
+          <span>Tải dữ liệu về (.json)</span>
         </button>
       </div>
 
@@ -360,7 +360,7 @@ export default function ProgressPage() {
           <div className="text-[11px] text-ink-muted mt-1">
             {isArenaOnly
               ? bugBusterRuns.length > 0
-                ? "Chính xác Bug Buster TB"
+                ? "Bug Buster: đúng trung bình"
                 : "Từ khóa Standup"
               : "Điểm trung bình"}
           </div>
@@ -402,7 +402,7 @@ export default function ProgressPage() {
         <div className="flex items-center justify-between border-b border-paper-muted pb-3">
           <h2 className="text-sm font-bold text-ink uppercase tracking-wider font-mono flex items-center gap-2">
             <Gamepad2 className="w-4 h-4 text-accent" />
-            <span>Hoạt Động IT Speaking Arena</span>
+            <span>Chơi trong IT Speaking Arena (đấu trường luyện nói)</span>
           </h2>
           <span className="text-[11px] font-mono text-ink-muted">
             {arenaRuns.length} lượt chơi
@@ -413,18 +413,18 @@ export default function ProgressPage() {
           <div className="bg-paper border border-ink/15 rounded-xl p-3.5">
             <div className="text-[11px] font-mono text-ink-muted">Bug Buster cao nhất</div>
             <div className="text-xl font-mono font-extrabold text-ink mt-0.5">
-              {bugBusterBest.toLocaleString("vi-VN")} pts
+              {bugBusterBest.toLocaleString("vi-VN")} điểm
             </div>
             <div className="text-[11px] text-ink-muted mt-0.5">
               {bugBusterRuns.length > 0
-                ? `${bugBusterRuns.length} lượt • ${avgBugAccuracy}% chính xác TB`
+                ? `${bugBusterRuns.length} lượt • ${avgBugAccuracy}% đúng trung bình`
                 : "Chưa có lượt chơi"}
             </div>
           </div>
           <div className="bg-paper border border-ink/15 rounded-xl p-3.5">
             <div className="text-[11px] font-mono text-ink-muted">Standup Speed Run cao nhất</div>
             <div className="text-xl font-mono font-extrabold text-ink mt-0.5">
-              {standupBest.toLocaleString("vi-VN")} pts
+              {standupBest.toLocaleString("vi-VN")} điểm
             </div>
             <div className="text-[11px] text-ink-muted mt-0.5">
               {standupRuns.length > 0
@@ -433,9 +433,9 @@ export default function ProgressPage() {
             </div>
           </div>
           <div className="bg-paper border border-ink/15 rounded-xl p-3.5">
-            <div className="text-[11px] font-mono text-ink-muted">Tổng điểm tích lũy</div>
+            <div className="text-[11px] font-mono text-ink-muted">Tổng điểm đã có</div>
             <div className="text-xl font-mono font-extrabold text-accent mt-0.5">
-              {identity.totalPoints.toLocaleString("vi-VN")} pts
+              {identity.totalPoints.toLocaleString("vi-VN")} điểm
             </div>
             <div className="text-[11px] text-ink-muted mt-0.5">
               {coins} IT-Coin • {devTitle.title}
@@ -461,17 +461,17 @@ export default function ProgressPage() {
                     </div>
                     <div className="text-[11px] font-mono text-ink-muted">
                       {run.gameId === "bug-buster"
-                        ? `${run.accuracyOrWords}% chính xác`
+                        ? `${run.accuracyOrWords}% đúng`
                         : run.gameId === "standup-speed-run"
                         ? `${run.accuracyOrWords} từ khóa`
-                        : `${run.accuracyOrWords} chỉ số`}
+                        : `${run.accuracyOrWords} điểm mạnh`}
                       {run.durationSec > 0 ? ` • ${run.durationSec}s` : ""}
                       {" • "}
                       {new Date(run.createdAt).toLocaleDateString("vi-VN")}
                     </div>
                   </div>
                   <span className="px-2.5 py-1 rounded-pill bg-accent-light border border-accent/30 text-xs font-mono font-bold text-accent shrink-0">
-                    {run.score.toLocaleString("vi-VN")} pts
+                    {run.score.toLocaleString("vi-VN")} điểm
                   </span>
                 </div>
               ))}
@@ -493,7 +493,7 @@ export default function ProgressPage() {
         <div className="flex items-center justify-between border-b border-paper-muted pb-3">
           <h2 className="text-sm font-bold text-ink uppercase tracking-wider font-mono flex items-center gap-2">
             <History className="w-4 h-4 text-accent" />
-            <span>Lịch Sử Hoạt Động &amp; Điểm Thưởng</span>
+            <span>Lịch sử luyện tập và điểm thưởng</span>
           </h2>
           <span className="text-[11px] font-mono text-ink-muted">
             {unifiedHistory.length} hoạt động
@@ -523,7 +523,7 @@ export default function ProgressPage() {
           </div>
         ) : (
           <p className="text-xs text-ink-muted">
-            Chưa có hoạt động nào được ghi nhận. Hoàn thành một lượt luyện nói, Vocab Quiz 60s, Cluster Speaking hoặc trận Arena để xem lịch sử tại đây.
+            Chưa có hoạt động nào được ghi nhận. Hoàn thành một lượt luyện nói, Đố từ vựng 60 giây, Nói theo cụm từ hoặc trận Arena để xem lịch sử tại đây.
           </p>
         )}
       </section>
@@ -533,10 +533,10 @@ export default function ProgressPage() {
         <div className="flex items-center justify-between border-b border-paper-muted pb-3">
           <h2 className="text-sm font-bold text-ink uppercase tracking-wider font-mono flex items-center gap-2">
             <BarChart3 className="w-4 h-4 text-accent" />
-            <span>Điểm Cao Nhất Từng Tình Huống</span>
+            <span>Điểm cao nhất từng tình huống</span>
           </h2>
           <span className="text-[11px] font-mono text-ink-muted">
-            Thang điểm 0 - 100
+            Tối đa 100 điểm
           </span>
         </div>
 
@@ -606,7 +606,7 @@ export default function ProgressPage() {
           </div>
 
           <p className="text-xs text-ink-muted font-mono">
-            Tổng {identity.totalPoints} điểm tích lũy từ hội thoại &amp; Arena minigame.
+            Tổng {identity.totalPoints} điểm tích lũy từ hội thoại và game Arena.
           </p>
         </div>
 

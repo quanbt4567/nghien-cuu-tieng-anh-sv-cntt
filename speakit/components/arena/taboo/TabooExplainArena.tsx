@@ -30,6 +30,8 @@ import {
 import { initOrHydrateGuestSession } from "@/app/actions/leaderboard";
 import { DiscordAvatarFrame } from "@/components/cosmetics/DiscordAvatarFrame";
 import { VictoryFinisherOverlay } from "@/components/cosmetics/VictoryFinisherOverlay";
+import { requestArenaLeave } from "@/lib/arena-leave-client";
+import { InteractiveEnglishText } from "@/components/common/EnglishWordTooltip";
 import type { ArenaRewardSummary, TabooRoomState } from "@/lib/arena-moderator";
 import { findTabooCardById, type TabooCard } from "@/lib/arena-three-games-data";
 import {
@@ -601,7 +603,7 @@ export function TabooExplainArena() {
     void syncGuestProfile();
   };
 
-  const handleLeaveRoom = () => {
+  const performLeave = (skipReward = false) => {
     const leavingRoom = room;
     speechControllerRef.current?.abort();
     setIsRecording(false);
@@ -612,8 +614,18 @@ export function TabooExplainArena() {
     setShowFinisher(false);
     setLastReward(null);
     setFoulBanner(null);
-    void flushLeavePoints(leavingRoom, true);
+    if (!skipReward) {
+      void flushLeavePoints(leavingRoom, true);
+    }
   };
+
+  const handleLeaveRoom = () =>
+    requestArenaLeave({
+      gameId: "taboo",
+      roomCode: room?.roomCode ?? null,
+      isActive: room?.status === "active",
+      performLeave,
+    });
 
   const orderedFeed = useMemo(
     () => (room ? [...room.feed].reverse() : []),
@@ -952,7 +964,7 @@ export function TabooExplainArena() {
                 <Bot className="w-4 h-4 text-accent" />
                 <span>
                   {loadingAction === "fill_bot"
-                    ? "Adding AI Guesser..."
+                    ? "Đang gọi AI đoán chữ..."
                     : "Chơi với AI Guesser Bot"}
                 </span>
               </button>
@@ -962,7 +974,7 @@ export function TabooExplainArena() {
                 onClick={handleLeaveRoom}
                 className="px-3.5 py-2.5 rounded-xl bg-white text-ink/70 text-xs font-mono border border-ink/20 hover:border-ink hover:text-ink"
               >
-                Leave Room
+                Rời phòng
               </button>
             </div>
 
@@ -974,7 +986,7 @@ export function TabooExplainArena() {
             >
               <Play className="w-4 h-4" />
               <span>
-                {loadingAction === "start" ? "Starting..." : "Start Taboo Round"}
+                {loadingAction === "start" ? "Đang vào trận..." : "Bắt đầu đoán thẻ"}
               </span>
             </button>
           </div>
@@ -1071,7 +1083,7 @@ export function TabooExplainArena() {
                       </span>
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-mono text-slate-400">
-                          Card {Math.min(room.currentCardIndex + 1, room.deckCardIds.length)}
+                          Thẻ {Math.min(room.currentCardIndex + 1, room.deckCardIds.length)}
                         </span>
                         {isExplainer && (
                           <button
@@ -1080,7 +1092,7 @@ export function TabooExplainArena() {
                             className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 border border-cyan-400/40 text-cyan-200 text-[11px] font-mono font-semibold hover:bg-slate-700"
                           >
                             <Lightbulb className="w-3.5 h-3.5 text-amber-300" />
-                            <span>Flip Hint</span>
+                            <span>Lật gợi ý tiếng Việt</span>
                           </button>
                         )}
                       </div>
@@ -1090,17 +1102,20 @@ export function TabooExplainArena() {
                       <>
                         <div className="text-center space-y-2 py-2">
                           <div className="text-[11px] font-mono uppercase tracking-[0.25em] text-cyan-300/80">
-                            TARGET CONCEPT
+                            TỪ CẦN GIẢI THÍCH
                           </div>
                           <div className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white drop-shadow-[0_0_16px_rgba(34,211,238,0.45)]">
                             {activeCard.term}
+                          </div>
+                          <div className="text-[11px] text-slate-300">
+                            Chưa hiểu từ này? Bấm &ldquo;Lật gợi ý tiếng Việt&rdquo; ở góc trên.
                           </div>
                         </div>
 
                         <div className="space-y-2.5">
                           <div className="flex items-center justify-center gap-1.5 text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-rose-400">
                             <Ban className="w-3.5 h-3.5" />
-                            <span>FORBIDDEN TABOO WORDS — DO NOT SAY!</span>
+                            <span>TỪ CẤM — KHÔNG ĐƯỢC NÓI!</span>
                           </div>
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             {activeCard.tabooWords.map((taboo) => (
@@ -1140,14 +1155,14 @@ export function TabooExplainArena() {
                   >
                     <div className="flex items-center justify-between">
                       <span className="px-3 py-1 rounded-full bg-amber-400/20 border border-amber-400/60 text-amber-200 text-xs font-mono font-bold uppercase">
-                        {flipBadgeText ?? "ELIF5 CONCEPT HINT"}
+                        {flipBadgeText ?? "GỢI Ý DỄ HIỂU CHO NGƯỜI MỚI"}
                       </span>
                       <button
                         type="button"
                         onClick={() => setCardFlipped(false)}
                         className="px-3 py-1 rounded-lg bg-slate-800 border border-slate-600 text-xs font-mono text-slate-200 hover:bg-slate-700"
                       >
-                        Flip Back
+                        Lật lại mặt trước
                       </button>
                     </div>
 
@@ -1158,14 +1173,14 @@ export function TabooExplainArena() {
                           {flipBadgeText}
                         </div>
                         <div className="text-xs text-slate-300">
-                          Drawing next neon concept card...
+                          Đang mở thẻ khái niệm tiếp theo...
                         </div>
                       </div>
                     ) : (
                       <div className="space-y-4">
                         <div className="p-4 rounded-xl bg-slate-900 border border-amber-400/40 space-y-1.5">
                           <div className="text-[11px] font-mono uppercase text-amber-300">
-                            Vietnamese Concept Meaning
+                            Nghĩa tiếng Việt dễ hiểu
                           </div>
                           <p className="text-sm text-slate-100">
                             {activeCard.hintVI}
@@ -1173,7 +1188,7 @@ export function TabooExplainArena() {
                         </div>
                         <div className="space-y-1.5">
                           <div className="text-[11px] font-mono uppercase text-cyan-300">
-                            Safe Angle Sparks
+                            Gợi ý cách diễn đạt an toàn
                           </div>
                           <div className="flex flex-wrap gap-2">
                             {activeCard.acceptableClues.slice(0, 4).map((spark) => (
@@ -1197,13 +1212,13 @@ export function TabooExplainArena() {
                   <div>
                     <div className="text-sm font-bold text-ink">
                       {isExplainer
-                        ? "Explain the Concept in Simple English"
-                        : "Submit Your Concept Guess"}
+                        ? "Giải thích khái niệm bằng tiếng Anh đơn giản"
+                        : "Nhập từ khóa bạn đoán được"}
                     </div>
                     <div className="text-xs text-ink/60">
                       {isExplainer
-                        ? "Use your mic or type an English clue without the red Taboo words."
-                        : "Guess the exact IT term based on the latest clue."}
+                        ? "Dùng Mic nói hoặc gõ câu mô tả tiếng Anh (tránh 3 từ cấm màu đỏ)."
+                        : "Đoán đúng thuật ngữ CNTT dựa theo gợi ý mới nhất."}
                     </div>
                   </div>
 
@@ -1219,12 +1234,12 @@ export function TabooExplainArena() {
                     {isRecording ? (
                       <>
                         <Square className="w-3.5 h-3.5" />
-                        <span>Stop Mic</span>
+                        <span>Dừng Mic</span>
                       </>
                     ) : (
                       <>
                         <Mic className="w-3.5 h-3.5 text-accent" />
-                        <span>Speak Clue (STT)</span>
+                        <span>Nói gợi ý (Mic)</span>
                       </>
                     )}
                   </button>
@@ -1247,7 +1262,7 @@ export function TabooExplainArena() {
                         void handleSubmitClue();
                       }
                     }}
-                    placeholder="Example: Think of a super fast drawer next to your desk so you never walk to the slow basement archive..."
+                    placeholder="Ví dụ dễ nói: Think of a super fast drawer next to your desk so you never walk to the slow archive..."
                     className="w-full p-3.5 rounded-xl bg-paper border-2 border-ink text-sm text-ink placeholder:text-ink/40 focus:outline-none"
                   />
                 ) : (
@@ -1261,7 +1276,7 @@ export function TabooExplainArena() {
                         void handleSubmitGuess();
                       }
                     }}
-                    placeholder="Type the IT concept name..."
+                    placeholder="Gõ tên thuật ngữ CNTT..."
                     className="w-full p-3.5 rounded-xl bg-paper border-2 border-ink text-sm text-ink placeholder:text-ink/40 focus:outline-none"
                   />
                 )}
@@ -1276,7 +1291,7 @@ export function TabooExplainArena() {
                         className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-paper border-2 border-ink text-xs font-mono font-bold text-ink hover:bg-white disabled:opacity-50"
                       >
                         <SkipForward className="w-3.5 h-3.5 text-accent" />
-                        <span>Skip Card</span>
+                        <span>Bỏ qua thẻ</span>
                       </button>
                     )}
 
@@ -1285,7 +1300,7 @@ export function TabooExplainArena() {
                       onClick={handleLeaveRoom}
                       className="px-3.5 py-2 rounded-xl bg-white border border-ink/25 text-xs font-mono text-ink/70 hover:border-ink hover:text-ink"
                     >
-                      Leave
+                      Rời phòng
                     </button>
                   </div>
 
@@ -1298,10 +1313,10 @@ export function TabooExplainArena() {
                     <Send className="w-4 h-4" />
                     <span>
                       {loadingAction === "turn"
-                        ? "AI Guesser Thinking..."
+                        ? "AI đang đoán..."
                         : isExplainer
-                          ? "Send Clue"
-                          : "Submit Guess"}
+                          ? "Gửi gợi ý"
+                          : "Gửi đáp án"}
                     </span>
                   </button>
                 </div>
@@ -1365,7 +1380,9 @@ export function TabooExplainArena() {
                           </span>
                         )}
                       </div>
-                      <p className="text-ink">&ldquo;{entry.clue}&rdquo;</p>
+                      <p className="text-ink">
+                        &ldquo;<InteractiveEnglishText text={entry.clue} />&rdquo;
+                      </p>
                       <div className="p-2 rounded-lg bg-white/80 border border-ink/15 text-ink/80">
                         <span className="font-mono font-bold text-accent">
                           Guesser:

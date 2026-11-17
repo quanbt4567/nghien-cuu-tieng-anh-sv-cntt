@@ -11,6 +11,7 @@ import {
   FileSpreadsheet,
   Gamepad2,
   Lock,
+  LogOut,
   Menu,
   MessageSquareText,
   Newspaper,
@@ -29,6 +30,7 @@ import { AdminAnalyticsTab } from "./AdminAnalyticsTab";
 import { AdminArenaTab } from "./AdminArenaTab";
 import { AdminCosmeticsTab } from "./AdminCosmeticsTab";
 import { AdminFeedbackTab } from "./AdminFeedbackTab";
+import { AdminLeavesTab } from "./AdminLeavesTab";
 import { useAdminAuth } from "./AdminLoginGate";
 import { AdminLogsTab } from "./AdminLogsTab";
 import { AdminResearchTab } from "./AdminResearchTab";
@@ -50,6 +52,7 @@ type AdminTabId =
   | "cosmetics"
   | "research"
   | "feedback"
+  | "leaves"
   | "logs"
   | "system";
 
@@ -66,6 +69,7 @@ const TABS: Array<{
   { id: "cosmetics", label: "Kho Hiệu Ứng (Discord JSON Importer)", icon: Sparkles },
   { id: "research", label: "Bài báo & Nghiên cứu", icon: Newspaper },
   { id: "feedback", label: "Góp ý (Feedback)", icon: Star },
+  { id: "leaves", label: "Thoát game", icon: LogOut },
   { id: "logs", label: "Nhật ký & Xuất CSV", icon: FileSpreadsheet },
   { id: "system", label: "Hệ thống", icon: Settings },
 ];
@@ -364,6 +368,9 @@ export function AdminShell() {
             )}
             {activeTab === "feedback" && (
               <AdminFeedbackTab onUnauthorized={() => forceLock()} />
+            )}
+            {activeTab === "leaves" && (
+              <AdminLeavesTab onUnauthorized={() => forceLock()} />
             )}
             {activeTab === "logs" && <AdminLogsTab data={data} />}
             {activeTab === "system" && (

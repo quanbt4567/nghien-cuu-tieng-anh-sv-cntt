@@ -37,6 +37,8 @@ import {
 import { initOrHydrateGuestSession } from "@/app/actions/leaderboard";
 import { DiscordAvatarFrame } from "@/components/cosmetics/DiscordAvatarFrame";
 import { VictoryFinisherOverlay } from "@/components/cosmetics/VictoryFinisherOverlay";
+import { requestArenaLeave } from "@/lib/arena-leave-client";
+import { InteractiveEnglishText } from "@/components/common/EnglishWordTooltip";
 import type {
   ArenaRewardSummary,
   DuelRoomState,
@@ -476,7 +478,7 @@ export function CodeReviewDuelArena() {
     return () => window.removeEventListener("pagehide", handlePageHide);
   }, [flushLeaveReward, room]);
 
-  const handleLeaveRoom = () => {
+  const performLeave = (skipReward = false) => {
     const leavingRoom = room;
     stopRebuttalAudio();
     speechControllerRef.current?.abort();
@@ -491,8 +493,18 @@ export function CodeReviewDuelArena() {
     turnTimerKeyRef.current = null;
     timeoutFiredKeyRef.current = null;
     finisherTriggeredRef.current = null;
-    void flushLeaveReward(leavingRoom, true);
+    if (!skipReward) {
+      void flushLeaveReward(leavingRoom, true);
+    }
   };
+
+  const handleLeaveRoom = () =>
+    requestArenaLeave({
+      gameId: "duel",
+      roomCode: room?.roomCode ?? null,
+      isActive: room?.status === "active",
+      performLeave,
+    });
 
   const handleResetDuel = () => {
     if (!room) return;
@@ -1183,7 +1195,7 @@ export function CodeReviewDuelArena() {
                     <Bot className="w-4 h-4 text-accent" />
                     <span>
                       {loadingAction === "fill_bot"
-                        ? "Summoning AI Bot..."
+                        ? "Đang gọi AI Bot..."
                         : "Đấu với AI Bot"}
                     </span>
                   </button>
@@ -1193,7 +1205,7 @@ export function CodeReviewDuelArena() {
                     onClick={handleLeaveRoom}
                     className="px-3.5 py-2.5 rounded-xl bg-white text-ink/70 text-xs font-mono border border-ink/20 hover:border-ink hover:text-ink"
                   >
-                    Leave Room
+                    Rời phòng
                   </button>
                 </div>
 
@@ -1206,7 +1218,7 @@ export function CodeReviewDuelArena() {
                   >
                     <Play className="w-4 h-4" />
                     <span>
-                      {loadingAction === "start" ? "Launching..." : "Start Duel"}
+                      {loadingAction === "start" ? "Đang vào trận..." : "Bắt đầu đấu"}
                     </span>
                   </button>
                   {room.players.length < 2 && (
@@ -1427,18 +1439,19 @@ export function CodeReviewDuelArena() {
               </div>
 
               <div className="p-3.5 rounded-xl bg-sky-50 border border-sky-200 space-y-1">
-                <div className="text-[10px] font-mono font-bold uppercase text-sky-800">
-                  Author Stance Brief
+                <div className="flex items-center justify-between gap-2 text-[10px] font-mono font-bold uppercase text-sky-800">
+                  <span>Lập trường Tác giả (bảo vệ code)</span>
+                  <span className="normal-case font-sans text-sky-700/80">Chạm từ để dịch</span>
                 </div>
                 <p className="text-xs text-ink font-medium leading-relaxed">
-                  {activeTopic.authorStance}
+                  <InteractiveEnglishText text={activeTopic.authorStance} />
                 </p>
               </div>
 
               {latestAuthorLog && (
                 <div className="p-3.5 rounded-xl bg-paper border border-ink/20 space-y-1.5">
                   <div className="flex items-center justify-between gap-2 text-[11px] font-mono font-bold">
-                    <span className="text-sky-700">Latest Argument</span>
+                    <span className="text-sky-700">Lập luận mới nhất</span>
                     <div className="flex items-center gap-2">
                       {latestAuthorLog.criticalHit && (
                         <span className="px-1.5 py-0.5 rounded bg-amber-300 text-ink border border-ink">
@@ -1537,18 +1550,19 @@ export function CodeReviewDuelArena() {
               </div>
 
               <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 space-y-1">
-                <div className="text-[10px] font-mono font-bold uppercase text-accent">
-                  Reviewer Stance Brief
+                <div className="flex items-center justify-between gap-2 text-[10px] font-mono font-bold uppercase text-accent">
+                  <span>Lập trường Reviewer (phản biện)</span>
+                  <span className="normal-case font-sans text-ink/60">Chạm từ để dịch</span>
                 </div>
                 <p className="text-xs text-ink font-medium leading-relaxed">
-                  {activeTopic.reviewerStance}
+                  <InteractiveEnglishText text={activeTopic.reviewerStance} />
                 </p>
               </div>
 
               {latestReviewerLog && (
                 <div className="p-3.5 rounded-xl bg-paper border border-ink/20 space-y-1.5">
                   <div className="flex items-center justify-between gap-2 text-[11px] font-mono font-bold">
-                    <span className="text-accent">Latest Rebuttal</span>
+                    <span className="text-accent">Phản biện mới nhất</span>
                     <div className="flex items-center gap-2">
                       {latestReviewerLog.criticalHit && (
                         <span className="px-1.5 py-0.5 rounded bg-amber-300 text-ink border border-ink">
@@ -1586,7 +1600,7 @@ export function CodeReviewDuelArena() {
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-[11px] font-mono font-bold uppercase text-ink/60">
                 <Flame className="w-3.5 h-3.5 text-accent" />
-                <span>Critical Strike Keywords (Cite 1–2 for Critical Hit!)</span>
+                <span>Từ khóa ăn điểm mạnh (Nói trúng 1–2 từ để đánh Chí mạng!)</span>
               </div>
               <div className="flex flex-wrap gap-2">
                 {activeTopic.criticalKeywords.map((kw) => {
@@ -1613,13 +1627,15 @@ export function CodeReviewDuelArena() {
                 <div>
                   <div className="text-sm font-bold text-ink">
                     {isMyTurn
-                      ? `Deliver Your ${
-                          myPlayer?.stance === "reviewer" ? "Review Critique" : "PR Defense"
-                        } (English Only)`
-                      : "Waiting for Opponent Rebuttal..."}
+                      ? `Nói ${
+                          myPlayer?.stance === "reviewer"
+                            ? "nhận xét góp ý code"
+                            : "lý do bảo vệ PR của bạn"
+                        } (bằng tiếng Anh)`
+                      : "Đang chờ đối thủ phản biện..."}
                   </div>
                   <div className="text-xs text-ink/60">
-                    Use Web Speech mic or type below before the 30s clock expires.
+                    Bấm Mic để nói hoặc gõ câu tiếng Anh bên dưới trước khi hết 30 giây.
                   </div>
                 </div>
               </div>
@@ -1637,12 +1653,12 @@ export function CodeReviewDuelArena() {
                 {isRecording ? (
                   <>
                     <Square className="w-3.5 h-3.5" />
-                    <span>Stop Mic</span>
+                    <span>Dừng Mic</span>
                   </>
                 ) : (
                   <>
                     <Mic className="w-3.5 h-3.5 text-accent" />
-                    <span>Speak Argument (STT)</span>
+                    <span>Nói lập luận (Mic)</span>
                   </>
                 )}
               </button>
@@ -1665,8 +1681,8 @@ export function CodeReviewDuelArena() {
               disabled={!isMyTurn || loadingAction === "turn"}
               placeholder={
                 isMyTurn
-                  ? "Example: Because rewriting shared history breaks local branches, we should use squash-and-merge with branch protection..."
-                  : "Waiting for opponent to finish their turn..."
+                  ? "Gợi ý dễ nói: \"I think we should merge safely after adding unit tests...\" (Hoặc bấm Mic để nói)"
+                  : "Đang chờ đối thủ trả lời lượt này..."
               }
               className="w-full p-3.5 rounded-xl bg-paper border-2 border-ink text-sm text-ink placeholder:text-ink/40 focus:outline-none disabled:opacity-60"
             />
@@ -1679,7 +1695,7 @@ export function CodeReviewDuelArena() {
                   className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-ink/25 text-xs font-mono text-ink/70 hover:border-ink hover:text-ink"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
-                  <span>Reset Duel</span>
+                  <span>Đấu lại ván mới</span>
                 </button>
 
                 <button
@@ -1687,7 +1703,7 @@ export function CodeReviewDuelArena() {
                   onClick={handleLeaveRoom}
                   className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-ink/25 text-xs font-mono text-ink/70 hover:border-ink hover:text-ink"
                 >
-                  <span>Leave Room</span>
+                  <span>Rời phòng</span>
                 </button>
               </div>
 
@@ -1699,7 +1715,7 @@ export function CodeReviewDuelArena() {
               >
                 <Send className="w-4 h-4" />
                 <span>
-                  {loadingAction === "turn" ? "Evaluating Hit..." : "Fire Rebuttal"}
+                  {loadingAction === "turn" ? "Đang chấm..." : "Gửi phản biện"}
                 </span>
               </button>
             </div>
@@ -1876,16 +1892,16 @@ export function CodeReviewDuelArena() {
 
             <div className="p-4 rounded-xl bg-paper border-2 border-ink space-y-3">
               <div className="text-xs font-mono font-bold uppercase text-ink">
-                Key Debate Takeaways
+                Tóm tắt ý chính (Chạm từ tiếng Anh để xem nghĩa)
               </div>
               <div className="space-y-2 text-xs text-ink">
                 <div className="p-2.5 rounded-lg bg-white border border-ink/15">
-                  <span className="font-mono font-bold text-sky-700">AUTHOR: </span>
-                  <span>{activeTopic.authorStance}</span>
+                  <span className="font-mono font-bold text-sky-700">TÁC GIẢ: </span>
+                  <InteractiveEnglishText text={activeTopic.authorStance} />
                 </div>
                 <div className="p-2.5 rounded-lg bg-white border border-ink/15">
                   <span className="font-mono font-bold text-accent">REVIEWER: </span>
-                  <span>{activeTopic.reviewerStance}</span>
+                  <InteractiveEnglishText text={activeTopic.reviewerStance} />
                 </div>
               </div>
               <div className="flex flex-wrap gap-1.5 pt-1">
@@ -1909,14 +1925,14 @@ export function CodeReviewDuelArena() {
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714]"
               >
                 <RotateCcw className="w-4 h-4" />
-                <span>Rematch / New Debate</span>
+                <span>Đấu lại / Đề tài mới</span>
               </button>
               <button
                 type="button"
                 onClick={handleLeaveRoom}
                 className="px-4 py-2.5 rounded-xl bg-white border-2 border-ink text-xs font-mono font-bold text-ink hover:bg-paper"
               >
-                Back to Lobby
+                Về sảnh phòng
               </button>
             </div>
 
@@ -1925,7 +1941,7 @@ export function CodeReviewDuelArena() {
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-ink text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:bg-white hover:text-ink"
             >
               <ShoppingBag className="w-4 h-4 text-accent" />
-              <span>Spend IT-Coins in Shop</span>
+              <span>Đổi thưởng Cửa hàng IT-Coin</span>
             </Link>
           </div>
         </section>
