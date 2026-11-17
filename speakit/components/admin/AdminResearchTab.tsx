@@ -484,7 +484,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
             <div className="space-y-0.5">
               <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase text-sky-700">
                 <Sparkles className="w-4 h-4 text-sky-500" />
-                <span>AI Research Curator (HackerNews + Dev.to + Tavily)</span>
+                <span>AI Research Curator (GitHub, StackOverflow, InfoQ, Lobsters, Cloudflare, arXiv &amp; Dev.to)</span>
               </div>
               <p className="text-xs text-ink-muted">
                 Tự động săn tin công nghệ & tạo bản nháp vào hàng chờ kiểm duyệt (`pending_review`).

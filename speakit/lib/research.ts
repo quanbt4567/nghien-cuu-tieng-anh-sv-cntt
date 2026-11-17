@@ -32,6 +32,9 @@ export interface UpsertResearchArticleInput {
   status?: ResearchStatus;
 }
 
+const EF_EPI_2025_INTERNAL_URL = "/research/ef-epi-2025-vietnam-it-speaking-benchmark";
+const EF_EPI_2025_INTERNAL_LABEL = "Phân tích chi tiết EF EPI 2025 (Nội bộ SpeakIT)";
+
 export const DEFAULT_RESEARCH_ARTICLES: ResearchArticle[] = [
   {
     ...EF_EPI_2025_SEED_ARTICLE,
@@ -129,9 +132,6 @@ function toIsoOrNull(value: unknown): string | null {
   if (typeof value === "string" && value.trim()) return value;
   return null;
 }
-
-const EF_EPI_2025_INTERNAL_URL = "/research/ef-epi-2025-vietnam-it-speaking-benchmark";
-const EF_EPI_2025_INTERNAL_LABEL = "Phân tích chi tiết EF EPI 2025 (Nội bộ SpeakIT)";
 
 function normalizeSeedArticleSources(
   slug: string,

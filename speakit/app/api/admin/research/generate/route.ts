@@ -5,59 +5,40 @@ import {
   requestAiWaterfallText,
 } from "../../../../../lib/ai-waterfall";
 import {
+  getAllAdminArticles,
   normalizeResearchCategory,
   normalizeResearchMetrics,
   normalizeResearchSources,
   upsertArticle,
   type ResearchCategory,
-  type ResearchMetricItem,
-  type ResearchSourceUrl,
 } from "../../../../../lib/research";
+import {
+  buildDiverseFallbackSynthesis,
+  CATEGORY_FEED_SPECS,
+  ensureUniqueHeadline,
+  parseFeedXml,
+  selectFreshDiverseSources,
+  type FetchedSourceItem,
+} from "../../../../../lib/research-sources";
 
 export const dynamic = "force-dynamic";
-
-interface FetchedSourceItem {
-  title: string;
-  url: string;
-  excerpt: string;
-  provider: string;
-}
-
-const TOPIC_CONFIG: Record<
-  ResearchCategory,
-  { label: string; devToTag: string; tavilyQuery: string }
-> = {
-  hr_interview: {
-    label: "HR Interview Trends",
-    devToTag: "career",
-    tavilyQuery: "software engineer technical interview english communication trends 2025 2026",
-  },
-  tech_news: {
-    label: "Tech & AI News",
-    devToTag: "ai",
-    tavilyQuery: "software engineering AI developer workflow trends 2025 2026",
-  },
-  benchmark: {
-    label: "IT English Benchmarks",
-    devToTag: "productivity",
-    tavilyQuery: "english proficiency IT outsourcing software developer communication report",
-  },
-  case_study: {
-    label: "Case Study",
-    devToTag: "webdev",
-    tavilyQuery: "remote software team communication standup code review case study",
-  },
-};
 
 async function fetchJsonWithTimeout<T>(
   url: string,
   init?: RequestInit,
-  timeoutMs = 3500
+  timeoutMs = 4000
 ): Promise<T | null> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const res = await fetch(url, { ...init, signal: controller.signal });
+    const res = await fetch(url, {
+      ...init,
+      headers: {
+        "User-Agent": "SpeakIT-Research-Curator/1.0",
+        ...(init?.headers ?? {}),
+      },
+      signal: controller.signal,
+    });
     if (!res.ok) return null;
     return (await res.json()) as T;
   } catch {
@@ -67,14 +48,81 @@ async function fetchJsonWithTimeout<T>(
   }
 }
 
-async function fetchHackerNewsSources(limit = 4): Promise<FetchedSourceItem[]> {
+async function fetchTextWithTimeout(
+  url: string,
+  timeoutMs = 4500
+): Promise<string | null> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "User-Agent": "SpeakIT-Research-Curator/1.0",
+        Accept: "application/rss+xml, application/atom+xml, application/xml, text/xml;q=0.9, */*;q=0.8",
+      },
+      signal: controller.signal,
+    });
+    if (!res.ok) return null;
+    return await res.text();
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchRssFeedSources(
+  provider: string,
+  feedUrl: string,
+  limit = 5
+): Promise<FetchedSourceItem[]> {
+  const xml = await fetchTextWithTimeout(feedUrl);
+  if (!xml) return [];
+  return parseFeedXml(xml, provider, limit);
+}
+
+async function fetchLobstersSources(limit = 5): Promise<FetchedSourceItem[]> {
+  const stories = await fetchJsonWithTimeout<
+    Array<{
+      title?: string;
+      url?: string;
+      score?: number;
+      tags?: string[];
+      comments_url?: string;
+    }>
+  >("https://lobste.rs/hottest.json");
+
+  if (!Array.isArray(stories)) return [];
+
+  const results: FetchedSourceItem[] = [];
+  for (const s of stories) {
+    const targetUrl = s.url?.trim() || s.comments_url?.trim() || "";
+    if (!s.title || !/^https?:\/\//i.test(targetUrl)) continue;
+    const tagStr = Array.isArray(s.tags) && s.tags.length > 0 ? s.tags.join(", ") : "engineering";
+    results.push({
+      title: s.title.trim(),
+      url: targetUrl,
+      excerpt: `Lobsters [${tagStr}] (score: ${s.score ?? 0})`,
+      provider: "Lobsters",
+    });
+    if (results.length >= limit) break;
+  }
+  return results;
+}
+
+async function fetchHackerNewsSources(
+  offset = 0,
+  limit = 5
+): Promise<FetchedSourceItem[]> {
   const topIds = await fetchJsonWithTimeout<number[]>(
     "https://hacker-news.firebaseio.com/v0/topstories.json"
   );
   if (!Array.isArray(topIds) || topIds.length === 0) return [];
 
+  const start = offset % Math.max(1, Math.min(30, topIds.length));
+  const sliceIds = topIds.slice(start, start + 12);
   const items = await Promise.all(
-    topIds.slice(0, 8).map((id) =>
+    sliceIds.map((id) =>
       fetchJsonWithTimeout<{ title?: string; url?: string; score?: number }>(
         `https://hacker-news.firebaseio.com/v0/item/${id}.json`
       )
@@ -90,7 +138,7 @@ async function fetchHackerNewsSources(limit = 4): Promise<FetchedSourceItem[]> {
     results.push({
       title: item.title.trim(),
       url: item.url.trim(),
-      excerpt: `HackerNews top story (score: ${item.score ?? 0})`,
+      excerpt: `HackerNews story (score: ${item.score ?? 0})`,
       provider: "HackerNews",
     });
     if (results.length >= limit) break;
@@ -98,7 +146,7 @@ async function fetchHackerNewsSources(limit = 4): Promise<FetchedSourceItem[]> {
   return results;
 }
 
-async function fetchDevToSources(tag: string, limit = 4): Promise<FetchedSourceItem[]> {
+async function fetchDevToSources(tag: string, limit = 5): Promise<FetchedSourceItem[]> {
   const articles = await fetchJsonWithTimeout<
     Array<{
       title?: string;
@@ -106,7 +154,7 @@ async function fetchDevToSources(tag: string, limit = 4): Promise<FetchedSourceI
       description?: string;
       public_reactions_count?: number;
     }>
-  >(`https://dev.to/api/articles?tag=${encodeURIComponent(tag)}&top=7&per_page=${limit}`);
+  >(`https://dev.to/api/articles?tag=${encodeURIComponent(tag)}&top=30&per_page=${limit}`);
 
   if (!Array.isArray(articles)) return [];
 
@@ -150,38 +198,6 @@ async function fetchTavilySources(query: string): Promise<FetchedSourceItem[]> {
     }));
 }
 
-function buildFallbackSynthesis(
-  category: ResearchCategory,
-  sources: FetchedSourceItem[]
-): {
-  title: string;
-  summary: string;
-  contentMarkdown: string;
-  metricsJson: ResearchMetricItem[];
-  sourceUrls: ResearchSourceUrl[];
-} {
-  const topicLabel = TOPIC_CONFIG[category].label;
-  const sourceUrls = normalizeResearchSources(
-    sources.map((s) => ({ title: `${s.provider}: ${s.title}`, url: s.url }))
-  );
-
-  const bulletLines =
-    sources.length > 0
-      ? sources
-          .slice(0, 5)
-          .map((s) => `- **${s.title}** (${s.provider}): ${s.excerpt}`)
-          .join("\n")
-      : "- Chưa lấy được bài viết trực tuyến mới; quản trị viên có thể bổ sung nội dung trực tiếp.";
-
-  return {
-    title: `Tổng hợp xu hướng ${topicLabel} cho kỹ sư CNTT`,
-    summary: `Tổng hợp xu hướng ${topicLabel} mới nhất từ HackerNews & Dev.to dành cho sinh viên và kỹ sư CNTT.`,
-    contentMarkdown: `## Điểm tin nổi bật (${topicLabel})\n\n${bulletLines}\n\n## Gợi ý áp dụng vào luyện nói tiếng Anh CNTT\n\n- Tóm tắt lại các chủ đề trên bằng tiếng Anh trong 3 câu (Context, Action, Result).\n- Luyện sử dụng thuật ngữ kỹ thuật chuẩn xác trong Daily Standup và Code Review.`,
-    metricsJson: [],
-    sourceUrls,
-  };
-}
-
 export async function POST(req: NextRequest) {
   if (!isAdminRequest(req)) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
@@ -193,38 +209,75 @@ export async function POST(req: NextRequest) {
   } catch {
   }
 
-  const category = normalizeResearchCategory(body.topic ?? body.category);
-  const config = TOPIC_CONFIG[category];
+  const category: ResearchCategory = normalizeResearchCategory(body.topic ?? body.category);
+  const config = CATEGORY_FEED_SPECS[category];
+  const existingArticles = await getAllAdminArticles();
+  const existingTitles = existingArticles.map((a) => a.title);
 
-  const [hnSources, devToSources, tavilySources] = await Promise.all([
-    fetchHackerNewsSources(4),
-    fetchDevToSources(config.devToTag, 4),
-    fetchTavilySources(config.tavilyQuery),
-  ]);
+  const rotatedTag =
+    config.devToTags[existingArticles.length % config.devToTags.length];
+  const hnOffset = (existingArticles.length * 6) % 24;
 
-  const allSources = [...tavilySources, ...devToSources, ...hnSources].slice(0, 8);
+  const [rssBatches, lobstersSources, hnSources, devToSources, tavilySources] =
+    await Promise.all([
+      Promise.all(
+        config.rssFeeds.map((feed) => fetchRssFeedSources(feed.provider, feed.url, 5))
+      ),
+      config.includeLobsters ? fetchLobstersSources(5) : Promise.resolve([]),
+      fetchHackerNewsSources(hnOffset, 5),
+      fetchDevToSources(rotatedTag, 5),
+      fetchTavilySources(config.tavilyQuery),
+    ]);
+
+  const rawCandidates: FetchedSourceItem[] = [
+    ...rssBatches.flat(),
+    ...lobstersSources,
+    ...tavilySources,
+    ...hnSources,
+    ...devToSources,
+  ];
+
+  const allSources = selectFreshDiverseSources(rawCandidates, existingArticles, 8);
   const verifiedSourceUrls = normalizeResearchSources(
     allSources.map((s) => ({ title: `${s.provider}: ${s.title}`, url: s.url }))
   );
 
-  let synthesized = buildFallbackSynthesis(category, allSources);
+  let synthesized = buildDiverseFallbackSynthesis(
+    category,
+    allSources,
+    existingTitles
+  );
 
   if (allSources.length > 0) {
     const sourcesContext = allSources
       .map((s, idx) => `${idx + 1}. [${s.provider}] ${s.title} (${s.url}) - ${s.excerpt}`)
       .join("\n");
 
+    const avoidTitlesBlock =
+      existingTitles.length > 0
+        ? `\nExisting article titles you MUST NOT repeat or closely paraphrase:\n${existingTitles
+            .slice(0, 15)
+            .map((t) => `- ${t}`)
+            .join("\n")}\n`
+        : "";
+
     const prompt = `You are a bilingual Vietnamese-English IT career & engineering communication researcher for SpeakIT.
-Synthesize the following real fetched tech/career sources into one structured Vietnamese research article with English technical terms for Vietnamese IT students & developers.
+Synthesize the following real fetched tech/career sources into ONE fresh, distinctive Vietnamese research article with English technical terms for Vietnamese IT students & developers.
 
 Topic Category: ${category} (${config.label})
+${avoidTitlesBlock}
 Fetched Sources:
 ${sourcesContext}
 
+Requirements:
+- Write a SPECIFIC, angle-driven Vietnamese headline mentioning the key technology/trend/finding from the fetched sources (NEVER use a generic headline like "Tổng hợp xu hướng ... cho kỹ sư CNTT").
+- Reference insights across multiple providers above.
+- Include practical IT English speaking takeaways (vocabulary, interview phrasing, standup/review sentences).
+
 Return ONLY valid JSON with this exact shape:
 {
-  "title": "Vietnamese editorial headline (max 140 chars)",
-  "summary": "2-sentence Vietnamese executive summary for readers (max 320 chars, no internal CMS/drafting labels)",
+  "title": "Specific Vietnamese editorial headline (max 140 chars)",
+  "summary": "2-sentence Vietnamese executive summary for readers mentioning the concrete insights (max 320 chars, no internal CMS/drafting labels)",
   "contentMarkdown": "Well-structured Markdown in Vietnamese using ## headings and bullet points, incorporating real insights from the sources and practical IT English speaking takeaways",
   "metricsJson": []
 }
@@ -234,8 +287,8 @@ For "metricsJson": ONLY include metric objects ({ "label": "Short metric label i
     const aiResult = await requestAiWaterfallText({
       systemInstruction: "Return strictly valid JSON only without markdown fences.",
       userPrompt: prompt,
-      temperature: 0.4,
-      maxTokens: 1200,
+      temperature: 0.65,
+      maxTokens: 1300,
       jsonMode: true,
     });
 
@@ -249,7 +302,7 @@ For "metricsJson": ONLY include metric objects ({ "label": "Short metric label i
       ) {
         const metrics = normalizeResearchMetrics(parsed.metricsJson);
         synthesized = {
-          title: parsed.title.trim(),
+          title: ensureUniqueHeadline(parsed.title, existingTitles, allSources[0]),
           summary: parsed.summary.trim(),
           contentMarkdown: parsed.contentMarkdown.trim(),
           metricsJson:
