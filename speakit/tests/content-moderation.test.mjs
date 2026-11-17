@@ -22,7 +22,18 @@ const {
 } = jiti(resolve(__dirname, "../lib/arena-moderator.ts"));
 
 test("detectSensitiveLanguage flags profanity/slurs without false positives on IT terms", () => {
-  for (const bad of ["nigga", "dick", "fuck", "bitch", "địt", "cặc", "lồn"]) {
+  for (const bad of [
+    "nigga",
+    "dick",
+    "fuck",
+    "bitch",
+    "xvideos",
+    "pornhub",
+    "duma",
+    "địt",
+    "cặc",
+    "lồn",
+  ]) {
     const res = detectSensitiveLanguage(bad);
     assert.equal(res.flagged, true, `expected sensitive flag for '${bad}'`);
     assert.equal(res.category, "sensitive");
@@ -94,6 +105,21 @@ test("Word Chain blocks sensitive words like 'nigga' and 'dick' and excludes the
     res.room.history.some((m) => m.word.toLowerCase() === "nigga"),
     false
   );
+
+  for (const [char, junk] of [
+    ["X", "xvideos"],
+    ["D", "duma"],
+    ["T", "tao"],
+    ["I", "interger"],
+  ]) {
+    const junkRes = await moderateWordChainTurn({
+      room: { ...room, requiredChar: char },
+      playerId: "p1",
+      wordInput: junk,
+    });
+    assert.equal(junkRes.turnResult.valid, false, `expected '${junk}' to be rejected`);
+    assert.equal(junkRes.room.usedWords.includes(junk), false);
+  }
 });
 
 test("clampModerationCoins bounds coin penalty to [0, 100]", () => {

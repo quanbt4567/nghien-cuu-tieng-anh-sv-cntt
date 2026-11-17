@@ -285,6 +285,22 @@ const TABOO_STOPWORDS = new Set(["a", "an", "the", "of", "in", "on", "to", "for"
 
 const CHAIN_FILLER_TOKENS = new Set(["um", "uh", "erm", "like", "word", "is", "the", "a", "an"]);
 
+const CHAIN_NON_ENGLISH_SLANG = new Set([
+  "tao",
+  "may",
+  "duma",
+  "vkl",
+  "vcl",
+  "nha",
+  "luon",
+  "vay",
+  "zay",
+  "khum",
+  "duoc",
+  "khong",
+  "chua",
+]);
+
 const GIBBERISH_VOWEL_REGEX = /[aeiouy]/;
 
 const globalForArena = globalThis as typeof globalThis & {
@@ -2211,6 +2227,20 @@ export function evaluateWordChainTurnLocal(input: {
   }
 
   const word = extractChainCandidate(input.rawInput);
+  if (word && CHAIN_NON_ENGLISH_SLANG.has(word)) {
+    return {
+      valid: false,
+      word: "",
+      isItTerm: false,
+      foulDetected: true,
+      reason: `⚠️ Từ '${word}' là tiếng lóng / tiếng Việt không dấu, không hợp lệ trong Word Chain!`,
+      nextStreak: 0,
+      multiplier: 1,
+      pointsEarned: 0,
+      comboTriggered: false,
+      nextFuseSeconds: Math.max(5, DYNAMIC_FUSE_RULES.baseFuseSeconds - 4),
+    };
+  }
   if (!word || !/^[a-z]{2,}$/.test(word)) {
     return {
       valid: false,
@@ -2387,12 +2417,12 @@ export async function moderateWordChainTurn(input: {
   if (localEval.valid && !localEval.isItTerm) {
     const aiRes = await requestAiWaterfallText({
       systemInstruction:
-        "You are a strict Word Chain referee and safety moderator for an educational IT app. Verify if the single lowercase token is: (1) a real standard English word (validEnglish), (2) a software/IT term (isItTerm), and (3) clean/safe for a classroom (sensitiveContent: true if profanity, racial/ethnic slur, sexual/NSFW term, hate speech, or vulgar slang). Respond strictly in JSON: { validEnglish: boolean, isItTerm: boolean, sensitiveContent: boolean, reason: string }.",
+        "You are a strict English dictionary & safety referee for an educational IT Word Chain game. Verify the single lowercase token: (1) sensitiveContent: true if profanity, adult/porn brand or term (e.g. xvideos, pornhub), Vietnamese swear/slang (e.g. duma, vcl, dmm), slur, hate speech, or offensive; (2) validEnglish: true ONLY if it is a real, correctly spelled standard English dictionary word (false for typos like 'interger', gibberish, Vietnamese words like 'tao'/'duma', brands or adult sites); (3) isItTerm: true if it is a real software/IT term. Respond strictly in JSON: { validEnglish: boolean, isItTerm: boolean, sensitiveContent: boolean, reason: string }.",
       userPrompt: JSON.stringify({ word: localEval.word }),
       temperature: 0.1,
-      maxTokens: 140,
+      maxTokens: 150,
       jsonMode: true,
-      timeoutMs: 1800,
+      timeoutMs: 2800,
     });
 
     const parsed = aiRes ? extractFirstJsonObject(aiRes.text) : null;
@@ -2422,16 +2452,38 @@ export async function moderateWordChainTurn(input: {
         reason: `⚠️ Cảnh báo: AI chặn từ nhạy cảm '${localEval.word}' và đã báo cáo về Admin.`,
         pointsEarned: 0,
       };
-    } else if (parsed && parsed.validEnglish === false) {
-      localEval = {
-        ...localEval,
-        valid: false,
-        reason:
-          typeof parsed.reason === "string" && parsed.reason.trim()
-            ? parsed.reason.trim()
-            : `'${localEval.word}' is not a valid English word.`,
-        pointsEarned: 0,
-      };
+    } else if (parsed) {
+      if (parsed.validEnglish !== true) {
+        localEval = {
+          ...localEval,
+          valid: false,
+          reason:
+            typeof parsed.reason === "string" && parsed.reason.trim()
+              ? parsed.reason.trim()
+              : `⚠️ '${localEval.word}' không phải từ tiếng Anh đúng chính tả hoặc không hợp lệ.`,
+          pointsEarned: 0,
+        };
+      }
+    } else {
+      // AI unavailable/timed out: fail-closed via free English dictionary API instead of accepting arbitrary words
+      let verifiedInDictionary = false;
+      try {
+        const dictRes = await fetch(
+          `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(localEval.word)}`,
+          { signal: AbortSignal.timeout(1500) }
+        );
+        verifiedInDictionary = dictRes.ok;
+      } catch {
+        verifiedInDictionary = false;
+      }
+      if (!verifiedInDictionary) {
+        localEval = {
+          ...localEval,
+          valid: false,
+          reason: `⚠️ Không xác minh được '${localEval.word}' là từ tiếng Anh đúng chính tả. Hãy thử từ tiếng Anh khác hoặc thuật ngữ CNTT.`,
+          pointsEarned: 0,
+        };
+      }
     }
   }
 
