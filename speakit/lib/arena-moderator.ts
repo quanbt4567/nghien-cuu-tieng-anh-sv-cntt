@@ -1121,7 +1121,7 @@ export async function moderateDuelTurn(input: {
 
     const aiRes = await requestAiWaterfallText({
       systemInstruction:
-        "You are a senior Staff Engineer & safety moderator judging a Code Review Duel. Check (1) sensitiveContent (true if profanity, slurs, sexual/NSFW content, hate speech, or offensive insults), (2) offTopic (true if completely unrelated to the software/code review topic), and (3) argument quality. Respond strictly in JSON: { sharpnessScore: number (0-100), isCriticalHit: boolean, vietnameseFoul: boolean, sensitiveContent: boolean, offTopic: boolean, moderationReason: string, matchedKeywords: string[], feedback: string (concise 1-sentence judge feedback), counterArgument: string (1-2 sharp spoken English rebuttal sentences from the opposing stance) }.",
+        "You are a STRICT senior Staff Engineer & zero-tolerance safety moderator judging a Code Review Duel. Be strict: (1) sensitiveContent: true for ANY profanity, slurs, sexual/NSFW references, adult sites, hate speech, harassment, or offensive insults; (2) offTopic: true for ANY greeting-only, casual chatter, filler, trolling, gibberish, or statement that does NOT meaningfully argue the software/code review topic; (3) evaluate technical sharpness honestly (0-100). Respond strictly in JSON: { sharpnessScore: number (0-100), isCriticalHit: boolean, vietnameseFoul: boolean, sensitiveContent: boolean, offTopic: boolean, moderationReason: string, matchedKeywords: string[], feedback: string (concise 1-sentence judge feedback), counterArgument: string (1-2 sharp spoken English rebuttal sentences from the opposing stance) }.",
       userPrompt: JSON.stringify({
         topic: topic.title,
         playerStance: stance,
@@ -1200,13 +1200,13 @@ export async function moderateDuelTurn(input: {
           aiProvider: aiRes.provider,
         });
         evaluated = {
-          sharpnessScore: 15,
+          sharpnessScore: 0,
           damageDealt: 0,
           criticalHit: false,
-          foulDetected: false,
+          foulDetected: true,
           matchedKeywords: [],
           feedback:
-            "⚠️ Lạc đề: Câu trả lời chưa đúng trọng tâm chủ đề Code Review (0 sát thương).",
+            "⚠️ Lạc đề nghiêm trọng: Câu trả lời không đúng trọng tâm Code Review (-18 HP & đã báo cáo Admin).",
           provider: aiRes.provider,
         };
       } else {
@@ -1740,7 +1740,7 @@ export async function moderateTabooTurn(input: {
     } else if (!evalOut.foulDetected) {
     const aiRes = await requestAiWaterfallText({
       systemInstruction:
-        "You are an enthusiastic IT teammate and safety moderator playing Tech Taboo (Explain Like I'm 5). Check (1) sensitiveContent (true if profanity, slurs, sexual/NSFW content, hate speech, or insults), (2) offTopic (true if the clue is unrelated spam/off-topic from the IT concept), and (3) whether a sharp engineer could guess the target concept. Respond strictly in JSON: { vietnameseFoul: boolean, sensitiveContent: boolean, offTopic: boolean, moderationReason: string, guessedCorrectly: boolean, aiGuess: string, reaction: string (short 1-sentence reaction) }.",
+        "You are a STRICT IT teammate and zero-tolerance safety moderator playing Tech Taboo (Explain Like I'm 5). Be strict: (1) sensitiveContent: true for ANY profanity, slurs, sexual/NSFW words, adult brands, hate speech, or insults; (2) offTopic: true for ANY unrelated chatter, trolling, gibberish, greeting-only, or clue that does not genuinely describe the IT concept; (3) decide if an engineer could accurately guess the target concept. Respond strictly in JSON: { vietnameseFoul: boolean, sensitiveContent: boolean, offTopic: boolean, moderationReason: string, guessedCorrectly: boolean, aiGuess: string, reaction: string (short 1-sentence reaction) }.",
       userPrompt: JSON.stringify({
         targetTerm: card.term,
         category: card.category,
@@ -1812,8 +1812,10 @@ export async function moderateTabooTurn(input: {
           ...evalOut,
           guessedCorrectly: false,
           aiGuess: "",
+          foulDetected: true,
+          foulType: "vietnamese",
           reaction:
-            "⚠️ Lạc đề: Gợi ý chưa liên quan đến khái niệm CNTT đang cần giải thích.",
+            "⚠️ Lạc đề nghiêm trọng: Gợi ý không liên quan đến thuật ngữ CNTT (mất chuỗi & đã báo cáo Admin).",
         };
       } else if (typeof parsed.guessedCorrectly === "boolean") {
         evalOut = {
@@ -2417,7 +2419,7 @@ export async function moderateWordChainTurn(input: {
   if (localEval.valid && !localEval.isItTerm) {
     const aiRes = await requestAiWaterfallText({
       systemInstruction:
-        "You are a strict English dictionary & safety referee for an educational IT Word Chain game. Verify the single lowercase token: (1) sensitiveContent: true if profanity, adult/porn brand or term (e.g. xvideos, pornhub), Vietnamese swear/slang (e.g. duma, vcl, dmm), slur, hate speech, or offensive; (2) validEnglish: true ONLY if it is a real, correctly spelled standard English dictionary word (false for typos like 'interger', gibberish, Vietnamese words like 'tao'/'duma', brands or adult sites); (3) isItTerm: true if it is a real software/IT term. Respond strictly in JSON: { validEnglish: boolean, isItTerm: boolean, sensitiveContent: boolean, reason: string }.",
+        "You are a ZERO-TOLERANCE English dictionary & safety referee for an educational IT Word Chain game. Verify the single lowercase token strictly: (1) sensitiveContent: true for ANY profanity, adult/porn brand or term (e.g. xvideos, pornhub), Vietnamese swear/slang (e.g. duma, vcl, dmm), slur, hate speech, sexual term, or insult; (2) validEnglish: true ONLY if it is a real, correctly spelled standard common English dictionary word (STRICTLY REJECT validEnglish: false for proper nouns, person/brand/website names like 'alice'/'google'/'xvideos', typos like 'interger', slang, gibberish, or Vietnamese words like 'tao'/'duma'); (3) isItTerm: true if it is a real software/IT term. Respond strictly in JSON: { validEnglish: boolean, isItTerm: boolean, sensitiveContent: boolean, reason: string }.",
       userPrompt: JSON.stringify({ word: localEval.word }),
       temperature: 0.1,
       maxTokens: 150,

@@ -4,6 +4,11 @@ import {
   extractFirstJsonObject,
   requestAiWaterfallText,
 } from "../../../../lib/ai-waterfall";
+import {
+  detectSensitiveLanguage,
+  recordModerationIncident,
+} from "../../../../lib/content-moderation";
+import { readExistingGuestPlayer } from "../../../../lib/neon-auth";
 
 type ScenarioType = "Standup" | "Code Review" | "Incident call";
 
@@ -212,6 +217,35 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const sensitive = detectSensitiveLanguage(transcript);
+    if (sensitive.flagged) {
+      const player = await readExistingGuestPlayer().catch(() => null);
+      void recordModerationIncident({
+        playerId: player?.id ?? null,
+        playerName: player?.displayName ?? "Khách luyện từ vựng",
+        transferCode: player?.transferCode ?? backupTransferCode ?? null,
+        source: "practice",
+        roomOrTopic: `Cụm từ: ${clusterTitle}`,
+        content: transcript,
+        category: "sensitive",
+        severity: "high",
+        reason: sensitive.reason,
+        aiProvider: "local-filter",
+      });
+      return NextResponse.json({
+        score: 0,
+        matchedTerms: [],
+        missedTerms: targetTerms,
+        coverageRatio: 0,
+        feedbackVI: `⚠️ Cảnh báo: ${sensitive.reason} Hệ thống từ chối chấm điểm và đã báo cáo Admin.`,
+        naturalnessFeedback:
+          "Vui lòng dùng câu tiếng Anh lịch sự, đúng chủ đề kỹ thuật.",
+        awardedCoins: 0,
+        player: null,
+        provider: "local",
+      });
+    }
+
     const matchedTerms = targetTerms.filter((term) =>
       isTermUsedInTranscript(transcript, term)
     );
@@ -230,9 +264,10 @@ export async function POST(req: NextRequest) {
     let naturalnessFeedback = fallbackEval.naturalnessFeedback;
     let provider: string = "local";
 
+    let flaggedModeration = false;
     const aiResult = await requestAiWaterfallText({
       systemInstruction:
-        "You are an English communication coach for Vietnamese software engineers. Evaluate how naturally and accurately the user used the target IT vocabulary in response to the prompt. Return ONLY JSON with keys: score (integer 0-100), feedbackVI (concise Vietnamese feedback on accuracy and context), naturalnessFeedback (concise Vietnamese feedback on phrasing naturalness and grammar).",
+        "You are a STRICT English communication coach & zero-tolerance safety moderator for software engineers. Check (1) sensitiveContent (true for ANY profanity, slurs, NSFW/sexual words, hate speech, or insults), (2) offTopic (true for greeting-only, spam, trolling, gibberish, or sentences unrelated to the cluster prompt), and (3) how naturally and accurately target terms are used. Return ONLY JSON: { score: number (0-100), sensitiveContent: boolean, offTopic: boolean, moderationReason: string, feedbackVI: string, naturalnessFeedback: string }.",
       userPrompt: `Cluster: "${clusterTitle}"\nPrompt: "${promptEN}"\nTarget terms: ${JSON.stringify(
         targetTerms
       )}\nMatched terms detected: ${JSON.stringify(
@@ -247,17 +282,45 @@ export async function POST(req: NextRequest) {
     if (aiResult) {
       const parsed = extractFirstJsonObject(aiResult.text);
       if (parsed) {
-        if (typeof parsed.score === "number" && Number.isFinite(parsed.score)) {
-          score = Math.max(0, Math.min(100, Math.round(parsed.score)));
-        }
-        if (typeof parsed.feedbackVI === "string" && parsed.feedbackVI.trim()) {
-          feedbackVI = parsed.feedbackVI.trim();
-        }
-        if (
-          typeof parsed.naturalnessFeedback === "string" &&
-          parsed.naturalnessFeedback.trim()
-        ) {
-          naturalnessFeedback = parsed.naturalnessFeedback.trim();
+        if (parsed.sensitiveContent === true || parsed.offTopic === true) {
+          flaggedModeration = true;
+          score = 0;
+          const isSensitive = parsed.sensitiveContent === true;
+          const modReason =
+            typeof parsed.moderationReason === "string" && parsed.moderationReason.trim()
+              ? parsed.moderationReason.trim()
+              : isSensitive
+                ? "AI phát hiện ngôn từ nhạy cảm."
+                : "AI đánh giá câu trả lời lạc đề, không bám sát câu hỏi.";
+          feedbackVI = isSensitive
+            ? "⚠️ Cảnh báo: AI phát hiện ngôn từ nhạy cảm (0 điểm, đã báo cáo Admin)."
+            : "⚠️ Lạc đề: Câu trả lời chưa đúng trọng tâm chủ đề (0 điểm).";
+          const existingPlayer = await readExistingGuestPlayer().catch(() => null);
+          void recordModerationIncident({
+            playerId: existingPlayer?.id ?? null,
+            playerName: existingPlayer?.displayName ?? "Khách luyện từ vựng",
+            transferCode: existingPlayer?.transferCode ?? backupTransferCode ?? null,
+            source: "practice",
+            roomOrTopic: `Cụm từ: ${clusterTitle}`,
+            content: transcript,
+            category: isSensitive ? "sensitive" : "off_topic",
+            severity: isSensitive ? "high" : "medium",
+            reason: modReason,
+            aiProvider: aiResult.provider,
+          });
+        } else {
+          if (typeof parsed.score === "number" && Number.isFinite(parsed.score)) {
+            score = Math.max(0, Math.min(100, Math.round(parsed.score)));
+          }
+          if (typeof parsed.feedbackVI === "string" && parsed.feedbackVI.trim()) {
+            feedbackVI = parsed.feedbackVI.trim();
+          }
+          if (
+            typeof parsed.naturalnessFeedback === "string" &&
+            parsed.naturalnessFeedback.trim()
+          ) {
+            naturalnessFeedback = parsed.naturalnessFeedback.trim();
+          }
         }
         provider = aiResult.provider;
       }
@@ -266,7 +329,7 @@ export async function POST(req: NextRequest) {
     let awardedCoins = 0;
     let player = null;
 
-    if (coverageRatio >= 0.75) {
+    if (!flaggedModeration && coverageRatio >= 0.75) {
       const reward = await rewardPracticePoints(
         "vocab-cluster-challenge",
         3000,

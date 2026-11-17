@@ -107,7 +107,7 @@ async function evaluateWithCtoWaterfall(
   }
 
   const systemInstruction =
-    "You are a CTO Incident Commander & safety moderator leading a live SEV outage war room. Check (1) sensitiveContent (true if profanity, slurs, sexual/NSFW words, hate speech, or offensive insults), (2) offTopic (true if completely unrelated to the incident/engineering), and (3) technical quality. Evaluate strictly in JSON with keys: score (integer 0-100), sensitiveContent (boolean), offTopic (boolean), moderationReason (string), matchedKeywords (string[]), missingKeywords (string[]), feedback (concise 1-2 sentence CTO feedback).";
+    "You are a STRICT CTO Incident Commander & zero-tolerance safety moderator leading a live SEV outage war room. Be strict: (1) sensitiveContent: true for ANY profanity, slurs, sexual/NSFW words, hate speech, or insults; (2) offTopic: true for ANY greeting-only, casual chatter, filler, trolling, gibberish, or text that does not genuinely address the outage/engineering role; (3) grade technical accuracy strictly. Evaluate in JSON: score (integer 0-100), sensitiveContent (boolean), offTopic (boolean), moderationReason (string), matchedKeywords (string[]), missingKeywords (string[]), feedback (concise 1-2 sentence CTO feedback).";
 
   const userPrompt = JSON.stringify({
     incident: scenario.title,
@@ -186,7 +186,7 @@ async function evaluateWithCtoWaterfall(
         });
       }
       const rawScore = Math.max(0, Math.min(100, Math.round(parsed.score)));
-      const baseScore = aiOffTopic ? Math.min(20, rawScore) : rawScore;
+      const baseScore = aiOffTopic ? 0 : rawScore;
       const adjustedScore = penalty.detected
         ? Math.max(0, baseScore - 10)
         : baseScore;
