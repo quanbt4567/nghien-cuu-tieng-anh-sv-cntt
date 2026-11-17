@@ -4,6 +4,10 @@ import {
   extractFirstJsonObject,
   requestAiWaterfallText,
 } from "../../../../lib/ai-waterfall";
+import {
+  detectSensitiveLanguage,
+  recordModerationIncident,
+} from "../../../../lib/content-moderation";
 import { getDbClient, GuestPlayerRow, PublicGuestPlayer } from "../../../../lib/db";
 import {
   readExistingGuestPlayer,
@@ -54,20 +58,56 @@ async function evaluateWithCtoWaterfall(
   role: PlayerRole,
   scenario: PartyScenario,
   playerId: string,
-  durationMs: number
+  durationMs: number,
+  moderationMeta?: {
+    playerId?: string | null;
+    playerName?: string | null;
+    transferCode?: string | null;
+    roomCode?: string | null;
+  }
 ): Promise<{
   evaluation: TurnEvaluation;
   penalty: ReturnType<typeof detectVietnamesePenalty>;
   provider: ScoringProvider;
 }> {
   const clue = scenario.clues[role];
+  const sensitive = detectSensitiveLanguage(transcript);
   const penalty = detectVietnamesePenalty(transcript);
   const expectedKeywords = Array.from(
     new Set([...clue.targetKeywords, ...scenario.targetKeywords])
   );
 
+  if (sensitive.flagged) {
+    void recordModerationIncident({
+      playerId: moderationMeta?.playerId ?? playerId,
+      playerName: moderationMeta?.playerName ?? "Player",
+      transferCode: moderationMeta?.transferCode ?? null,
+      source: "party",
+      roomOrTopic: `${moderationMeta?.roomCode ?? ""} (${scenario.title})`.trim(),
+      content: transcript,
+      category: "sensitive",
+      severity: "high",
+      reason: sensitive.reason,
+      aiProvider: "local-filter",
+    });
+    return {
+      evaluation: {
+        playerId,
+        role,
+        transcript,
+        score: 0,
+        matchedKeywords: [],
+        missingKeywords: expectedKeywords,
+        feedback: `⚠️ Cảnh báo: ${sensitive.reason} Hệ thống đã từ chối chấm điểm và báo cáo Admin.`,
+        durationMs,
+      },
+      penalty: { detected: false, matchedTokens: [], penaltySeconds: 0 },
+      provider: "local",
+    };
+  }
+
   const systemInstruction =
-    "You are a CTO Incident Commander leading a live SEV outage war room. Evaluate the engineer's spoken English status update strictly in JSON with keys: score (integer 0-100), matchedKeywords (string[]), missingKeywords (string[]), feedback (concise 1-2 sentence English CTO feedback).";
+    "You are a CTO Incident Commander & safety moderator leading a live SEV outage war room. Check (1) sensitiveContent (true if profanity, slurs, sexual/NSFW words, hate speech, or offensive insults), (2) offTopic (true if completely unrelated to the incident/engineering), and (3) technical quality. Evaluate strictly in JSON with keys: score (integer 0-100), sensitiveContent (boolean), offTopic (boolean), moderationReason (string), matchedKeywords (string[]), missingKeywords (string[]), feedback (concise 1-2 sentence CTO feedback).";
 
   const userPrompt = JSON.stringify({
     incident: scenario.title,
@@ -85,25 +125,82 @@ async function evaluateWithCtoWaterfall(
     systemInstruction,
     userPrompt,
     temperature: 0.2,
-    maxTokens: 350,
+    maxTokens: 360,
     jsonMode: true,
   });
 
   if (aiResult) {
     const parsed = extractFirstJsonObject(aiResult.text);
+    if (parsed && parsed.sensitiveContent === true) {
+      const modReason =
+        typeof parsed.moderationReason === "string" && parsed.moderationReason.trim()
+          ? parsed.moderationReason.trim()
+          : "AI phát hiện ngôn từ nhạy cảm / thiếu chuẩn mực.";
+      void recordModerationIncident({
+        playerId: moderationMeta?.playerId ?? playerId,
+        playerName: moderationMeta?.playerName ?? "Player",
+        transferCode: moderationMeta?.transferCode ?? null,
+        source: "party",
+        roomOrTopic: `${moderationMeta?.roomCode ?? ""} (${scenario.title})`.trim(),
+        content: transcript,
+        category: "sensitive",
+        severity: "high",
+        reason: modReason,
+        aiProvider: aiResult.provider,
+      });
+      return {
+        evaluation: {
+          playerId,
+          role,
+          transcript,
+          score: 0,
+          matchedKeywords: [],
+          missingKeywords: expectedKeywords,
+          feedback:
+            "⚠️ Cảnh báo: AI phát hiện từ ngữ nhạy cảm / thiếu chuẩn mực (0 điểm, đã báo cáo Admin).",
+          durationMs,
+        },
+        penalty,
+        provider: aiResult.provider,
+      };
+    }
+
     if (parsed && typeof parsed.score === "number" && Number.isFinite(parsed.score)) {
-      const baseScore = Math.max(0, Math.min(100, Math.round(parsed.score)));
+      const aiOffTopic = parsed.offTopic === true;
+      if (aiOffTopic) {
+        const modReason =
+          typeof parsed.moderationReason === "string" && parsed.moderationReason.trim()
+            ? parsed.moderationReason.trim()
+            : "AI đánh giá báo cáo lạc đề, chưa đúng trọng tâm sự cố.";
+        void recordModerationIncident({
+          playerId: moderationMeta?.playerId ?? playerId,
+          playerName: moderationMeta?.playerName ?? "Player",
+          transferCode: moderationMeta?.transferCode ?? null,
+          source: "party",
+          roomOrTopic: `${moderationMeta?.roomCode ?? ""} (${scenario.title})`.trim(),
+          content: transcript,
+          category: "off_topic",
+          severity: "medium",
+          reason: modReason,
+          aiProvider: aiResult.provider,
+        });
+      }
+      const rawScore = Math.max(0, Math.min(100, Math.round(parsed.score)));
+      const baseScore = aiOffTopic ? Math.min(20, rawScore) : rawScore;
       const adjustedScore = penalty.detected
         ? Math.max(0, baseScore - 10)
         : baseScore;
-      const matchedKeywords = Array.isArray(parsed.matchedKeywords)
-        ? parsed.matchedKeywords.filter((k): k is string => typeof k === "string")
-        : [];
+      const matchedKeywords = aiOffTopic
+        ? []
+        : Array.isArray(parsed.matchedKeywords)
+          ? parsed.matchedKeywords.filter((k): k is string => typeof k === "string")
+          : [];
       const missingKeywords = Array.isArray(parsed.missingKeywords)
         ? parsed.missingKeywords.filter((k): k is string => typeof k === "string")
         : expectedKeywords.filter((k) => !matchedKeywords.includes(k));
-      const baseFeedback =
-        typeof parsed.feedback === "string" && parsed.feedback.trim()
+      const baseFeedback = aiOffTopic
+        ? "⚠️ Lạc đề: Báo cáo chưa bám sát sự cố hiện tại. Hãy dùng đúng từ khóa vai trò của bạn!"
+        : typeof parsed.feedback === "string" && parsed.feedback.trim()
           ? parsed.feedback.trim()
           : "Status received. Continue coordinating root-cause mitigation.";
       const feedback = penalty.detected
@@ -334,7 +431,13 @@ export async function POST(req: NextRequest) {
       targetRole,
       scenario,
       playerId,
-      durationMs
+      durationMs,
+      {
+        playerId: sessionPlayer?.id ?? playerId,
+        playerName: slotPlayer?.displayName ?? sessionPlayer?.displayName ?? "Player",
+        transferCode: sessionPlayer?.transferCode ?? null,
+        roomCode: room.roomCode,
+      }
     );
 
     const previousProgress = room.resolutionProgress ?? 0;

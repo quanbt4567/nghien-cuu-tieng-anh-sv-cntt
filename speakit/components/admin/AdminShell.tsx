@@ -33,6 +33,7 @@ import { AdminFeedbackTab } from "./AdminFeedbackTab";
 import { AdminLeavesTab } from "./AdminLeavesTab";
 import { useAdminAuth } from "./AdminLoginGate";
 import { AdminLogsTab } from "./AdminLogsTab";
+import { AdminModerationTab } from "./AdminModerationTab";
 import { AdminResearchTab } from "./AdminResearchTab";
 import { AdminScenariosTab } from "./AdminScenariosTab";
 import { AdminSystemTab } from "./AdminSystemTab";
@@ -53,6 +54,7 @@ type AdminTabId =
   | "research"
   | "feedback"
   | "leaves"
+  | "moderation"
   | "logs"
   | "system";
 
@@ -70,6 +72,7 @@ const TABS: Array<{
   { id: "research", label: "Bài báo & Nghiên cứu", icon: Newspaper },
   { id: "feedback", label: "Góp ý (Feedback)", icon: Star },
   { id: "leaves", label: "Thoát game", icon: LogOut },
+  { id: "moderation", label: "Kiểm duyệt AI", icon: ShieldCheck },
   { id: "logs", label: "Nhật ký & Xuất CSV", icon: FileSpreadsheet },
   { id: "system", label: "Hệ thống", icon: Settings },
 ];
@@ -371,6 +374,9 @@ export function AdminShell() {
             )}
             {activeTab === "leaves" && (
               <AdminLeavesTab onUnauthorized={() => forceLock()} />
+            )}
+            {activeTab === "moderation" && (
+              <AdminModerationTab onUnauthorized={() => forceLock()} />
             )}
             {activeTab === "logs" && <AdminLogsTab data={data} />}
             {activeTab === "system" && (

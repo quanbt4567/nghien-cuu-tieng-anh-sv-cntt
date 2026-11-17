@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "node --test tests/gamification.test.mjs tests/admin-content.test.mjs tests/guest-leaderboard.test.mjs tests/ai-waterfall.test.mjs tests/profile.test.mjs tests/admin-ai-gen.test.mjs tests/tts.test.mjs tests/bugfix-modal-ux.test.mjs tests/ip-limit.test.mjs tests/guest-cleanup.test.mjs tests/party-game.test.mjs tests/discord-cosmetics.test.mjs tests/arena-leave-policy.test.mjs"
+    "test": "node --test tests/gamification.test.mjs tests/admin-content.test.mjs tests/guest-leaderboard.test.mjs tests/ai-waterfall.test.mjs tests/profile.test.mjs tests/admin-ai-gen.test.mjs tests/tts.test.mjs tests/bugfix-modal-ux.test.mjs tests/ip-limit.test.mjs tests/guest-cleanup.test.mjs tests/party-game.test.mjs tests/discord-cosmetics.test.mjs tests/arena-leave-policy.test.mjs tests/content-moderation.test.mjs"
   },
   "dependencies": {
     "@neon/config": "^1.14.0",

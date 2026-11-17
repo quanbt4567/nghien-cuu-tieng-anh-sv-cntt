@@ -1,6 +1,10 @@
 import { randomBytes } from "crypto";
 import { extractFirstJsonObject, requestAiWaterfallText } from "./ai-waterfall";
 import { assertArenaAccess } from "./arena-leave-policy";
+import {
+  detectSensitiveLanguage,
+  recordModerationIncident,
+} from "./content-moderation";
 import { EquippedCosmetics } from "./cosmetics";
 import { getDbClient, PublicGuestPlayer } from "./db";
 import { ensureSchema } from "./db/neon";
@@ -1031,6 +1035,11 @@ export async function moderateDuelTurn(input: {
   room: DuelRoomState;
   playerId: string;
   transcript: string;
+  moderationMeta?: {
+    playerId?: string | null;
+    playerName?: string | null;
+    transferCode?: string | null;
+  };
 }): Promise<{
   room: DuelRoomState;
   playerTurn: DuelTurnLog;
@@ -1044,6 +1053,7 @@ export async function moderateDuelTurn(input: {
   const stance: DuelStance = activePlayer?.stance ?? input.room.currentTurnStance;
   const now = new Date().toISOString();
 
+  const sensitive = detectSensitiveLanguage(input.transcript);
   const localFoul = detectVietnameseFoul(input.transcript);
   let evaluated: {
     sharpnessScore: number;
@@ -1056,7 +1066,31 @@ export async function moderateDuelTurn(input: {
     botCounterArgument?: string;
   };
 
-  if (localFoul.detected) {
+  if (sensitive.flagged) {
+    void recordModerationIncident({
+      playerId: input.moderationMeta?.playerId ?? activePlayer?.id ?? null,
+      playerName:
+        input.moderationMeta?.playerName ?? activePlayer?.displayName ?? "Player",
+      transferCode: input.moderationMeta?.transferCode ?? null,
+      source: "duel",
+      roomOrTopic: `${input.room.roomCode} (${topic.title})`,
+      content: input.transcript,
+      category: "sensitive",
+      severity: "high",
+      reason: sensitive.reason,
+      aiProvider: "local-filter",
+    });
+    evaluated = {
+      sharpnessScore: 0,
+      damageDealt: 0,
+      criticalHit: false,
+      foulDetected: true,
+      matchedKeywords: [],
+      feedback:
+        "⚠️ Cảnh báo: Phát hiện từ ngữ nhạy cảm / thiếu chuẩn mực! Trận đấu trừ 18 HP và đã báo cáo về Admin.",
+      provider: "local",
+    };
+  } else if (localFoul.detected) {
     const localEval = evaluateDuelArgumentLocal({
       transcript: input.transcript,
       stance,
@@ -1071,7 +1105,7 @@ export async function moderateDuelTurn(input: {
 
     const aiRes = await requestAiWaterfallText({
       systemInstruction:
-        "You are a senior Staff Engineer moderating a live Code Review Duel. Evaluate the player's English argument strictly in JSON: { sharpnessScore: number (0-100), isCriticalHit: boolean, vietnameseFoul: boolean, matchedKeywords: string[], feedback: string (concise 1-sentence judge feedback), counterArgument: string (1-2 sharp spoken English rebuttal sentences from the opposing stance) }.",
+        "You are a senior Staff Engineer & safety moderator judging a Code Review Duel. Check (1) sensitiveContent (true if profanity, slurs, sexual/NSFW content, hate speech, or offensive insults), (2) offTopic (true if completely unrelated to the software/code review topic), and (3) argument quality. Respond strictly in JSON: { sharpnessScore: number (0-100), isCriticalHit: boolean, vietnameseFoul: boolean, sensitiveContent: boolean, offTopic: boolean, moderationReason: string, matchedKeywords: string[], feedback: string (concise 1-sentence judge feedback), counterArgument: string (1-2 sharp spoken English rebuttal sentences from the opposing stance) }.",
       userPrompt: JSON.stringify({
         topic: topic.title,
         playerStance: stance,
@@ -1081,9 +1115,9 @@ export async function moderateDuelTurn(input: {
         generateCounter: opponentIsBot,
       }),
       temperature: 0.35,
-      maxTokens: 320,
+      maxTokens: 340,
       jsonMode: true,
-      timeoutMs: 2000,
+      timeoutMs: 2200,
     });
 
     const parsed = aiRes ? extractFirstJsonObject(aiRes.text) : null;
@@ -1093,8 +1127,39 @@ export async function moderateDuelTurn(input: {
       typeof parsed.sharpnessScore === "number" &&
       Number.isFinite(parsed.sharpnessScore)
     ) {
+      const aiSensitive = parsed.sensitiveContent === true;
+      const aiOffTopic = parsed.offTopic === true;
       const vietFoul = parsed.vietnameseFoul === true;
-      if (vietFoul) {
+      const modReason =
+        typeof parsed.moderationReason === "string" && parsed.moderationReason.trim()
+          ? parsed.moderationReason.trim()
+          : "";
+
+      if (aiSensitive) {
+        void recordModerationIncident({
+          playerId: input.moderationMeta?.playerId ?? activePlayer?.id ?? null,
+          playerName:
+            input.moderationMeta?.playerName ?? activePlayer?.displayName ?? "Player",
+          transferCode: input.moderationMeta?.transferCode ?? null,
+          source: "duel",
+          roomOrTopic: `${input.room.roomCode} (${topic.title})`,
+          content: input.transcript,
+          category: "sensitive",
+          severity: "high",
+          reason: modReason || "AI phát hiện nội dung nhạy cảm / xúc phạm.",
+          aiProvider: aiRes.provider,
+        });
+        evaluated = {
+          sharpnessScore: 0,
+          damageDealt: 0,
+          criticalHit: false,
+          foulDetected: true,
+          matchedKeywords: [],
+          feedback:
+            "⚠️ Cảnh báo: AI phát hiện ngôn từ nhạy cảm / không phù hợp (-18 HP, đã báo cáo Admin).",
+          provider: aiRes.provider,
+        };
+      } else if (vietFoul) {
         evaluated = {
           sharpnessScore: 0,
           damageDealt: 0,
@@ -1102,6 +1167,30 @@ export async function moderateDuelTurn(input: {
           foulDetected: true,
           matchedKeywords: [],
           feedback: "Foul! Non-English phrasing detected — credibility damaged (-18 HP).",
+          provider: aiRes.provider,
+        };
+      } else if (aiOffTopic) {
+        void recordModerationIncident({
+          playerId: input.moderationMeta?.playerId ?? activePlayer?.id ?? null,
+          playerName:
+            input.moderationMeta?.playerName ?? activePlayer?.displayName ?? "Player",
+          transferCode: input.moderationMeta?.transferCode ?? null,
+          source: "duel",
+          roomOrTopic: `${input.room.roomCode} (${topic.title})`,
+          content: input.transcript,
+          category: "off_topic",
+          severity: "medium",
+          reason: modReason || "AI đánh giá câu trả lời lạc đề, chưa đúng trọng tâm Code Review.",
+          aiProvider: aiRes.provider,
+        });
+        evaluated = {
+          sharpnessScore: 15,
+          damageDealt: 0,
+          criticalHit: false,
+          foulDetected: false,
+          matchedKeywords: [],
+          feedback:
+            "⚠️ Lạc đề: Câu trả lời chưa đúng trọng tâm chủ đề Code Review (0 sát thương).",
           provider: aiRes.provider,
         };
       } else {
@@ -1522,6 +1611,11 @@ export async function moderateTabooTurn(input: {
   clue: string;
   guess?: string;
   skip?: boolean;
+  moderationMeta?: {
+    playerId?: string | null;
+    playerName?: string | null;
+    transferCode?: string | null;
+  };
 }): Promise<{
   room: TabooRoomState;
   currentCard: TabooCard;
@@ -1599,10 +1693,38 @@ export async function moderateTabooTurn(input: {
         ? `Direct hit! ${card.term}!`
         : `Guessed "${input.guess.trim()}" — keep refining your clue!`,
     };
-  } else if (!evalOut.foulDetected) {
+  } else {
+    const rawTabooText = (input.guess ?? input.clue ?? "").trim();
+    const sensitive = detectSensitiveLanguage(rawTabooText);
+    if (sensitive.flagged) {
+      const actor = input.room.players.find((p) => p.id === input.playerId);
+      void recordModerationIncident({
+        playerId: input.moderationMeta?.playerId ?? actor?.id ?? null,
+        playerName:
+          input.moderationMeta?.playerName ?? actor?.displayName ?? "Player",
+        transferCode: input.moderationMeta?.transferCode ?? null,
+        source: "taboo",
+        roomOrTopic: `${input.room.roomCode} (${card.term})`,
+        content: rawTabooText,
+        category: "sensitive",
+        severity: "high",
+        reason: sensitive.reason,
+        aiProvider: "local-filter",
+      });
+      evalOut = {
+        guessedCorrectly: false,
+        aiGuess: "",
+        reaction:
+          "⚠️ Cảnh báo: Phát hiện từ ngữ nhạy cảm / thiếu chuẩn mực! Mất chuỗi điểm và đã báo cáo Admin.",
+        tabooViolated: false,
+        violatedWords: [],
+        foulDetected: true,
+        foulType: "vietnamese",
+      };
+    } else if (!evalOut.foulDetected) {
     const aiRes = await requestAiWaterfallText({
       systemInstruction:
-        "You are an enthusiastic IT teammate playing Tech Taboo (Explain Like I'm 5). Given the target IT term, acceptable clues, and the player's English explanation, decide if a sharp engineer could guess the target concept from that clue. Respond strictly in JSON: { vietnameseFoul: boolean, guessedCorrectly: boolean, aiGuess: string, reaction: string (short playful 1-sentence reaction) }.",
+        "You are an enthusiastic IT teammate and safety moderator playing Tech Taboo (Explain Like I'm 5). Check (1) sensitiveContent (true if profanity, slurs, sexual/NSFW content, hate speech, or insults), (2) offTopic (true if the clue is unrelated spam/off-topic from the IT concept), and (3) whether a sharp engineer could guess the target concept. Respond strictly in JSON: { vietnameseFoul: boolean, sensitiveContent: boolean, offTopic: boolean, moderationReason: string, guessedCorrectly: boolean, aiGuess: string, reaction: string (short 1-sentence reaction) }.",
       userPrompt: JSON.stringify({
         targetTerm: card.term,
         category: card.category,
@@ -1610,14 +1732,43 @@ export async function moderateTabooTurn(input: {
         clue: input.clue,
       }),
       temperature: 0.3,
-      maxTokens: 200,
+      maxTokens: 240,
       jsonMode: true,
-      timeoutMs: 1800,
+      timeoutMs: 2000,
     });
 
     const parsed = aiRes ? extractFirstJsonObject(aiRes.text) : null;
     if (parsed) {
-      if (parsed.vietnameseFoul === true) {
+      const actor = input.room.players.find((p) => p.id === input.playerId);
+      const modReason =
+        typeof parsed.moderationReason === "string" && parsed.moderationReason.trim()
+          ? parsed.moderationReason.trim()
+          : "";
+      if (parsed.sensitiveContent === true) {
+        void recordModerationIncident({
+          playerId: input.moderationMeta?.playerId ?? actor?.id ?? null,
+          playerName:
+            input.moderationMeta?.playerName ?? actor?.displayName ?? "Player",
+          transferCode: input.moderationMeta?.transferCode ?? null,
+          source: "taboo",
+          roomOrTopic: `${input.room.roomCode} (${card.term})`,
+          content: rawTabooText,
+          category: "sensitive",
+          severity: "high",
+          reason: modReason || "AI phát hiện từ ngữ nhạy cảm trong gợi ý.",
+          aiProvider: aiRes?.provider ?? "ai",
+        });
+        evalOut = {
+          guessedCorrectly: false,
+          aiGuess: "",
+          reaction:
+            "⚠️ Cảnh báo: AI phát hiện ngôn từ nhạy cảm / không phù hợp — mất chuỗi điểm & đã báo cáo Admin.",
+          tabooViolated: false,
+          violatedWords: [],
+          foulDetected: true,
+          foulType: "vietnamese",
+        };
+      } else if (parsed.vietnameseFoul === true) {
         evalOut = {
           guessedCorrectly: false,
           aiGuess: "",
@@ -1626,6 +1777,27 @@ export async function moderateTabooTurn(input: {
           violatedWords: [],
           foulDetected: true,
           foulType: "vietnamese",
+        };
+      } else if (parsed.offTopic === true) {
+        void recordModerationIncident({
+          playerId: input.moderationMeta?.playerId ?? actor?.id ?? null,
+          playerName:
+            input.moderationMeta?.playerName ?? actor?.displayName ?? "Player",
+          transferCode: input.moderationMeta?.transferCode ?? null,
+          source: "taboo",
+          roomOrTopic: `${input.room.roomCode} (${card.term})`,
+          content: rawTabooText,
+          category: "off_topic",
+          severity: "medium",
+          reason: modReason || "AI đánh giá gợi ý lạc đề so với thuật ngữ mục tiêu.",
+          aiProvider: aiRes?.provider ?? "ai",
+        });
+        evalOut = {
+          ...evalOut,
+          guessedCorrectly: false,
+          aiGuess: "",
+          reaction:
+            "⚠️ Lạc đề: Gợi ý chưa liên quan đến khái niệm CNTT đang cần giải thích.",
         };
       } else if (typeof parsed.guessedCorrectly === "boolean") {
         evalOut = {
@@ -1643,6 +1815,7 @@ export async function moderateTabooTurn(input: {
               : evalOut.reaction,
         };
       }
+    }
     }
   }
 
@@ -1994,6 +2167,8 @@ export function evaluateWordChainTurnLocal(input: {
   word: string;
   isItTerm: boolean;
   foulDetected: boolean;
+  sensitiveDetected?: boolean;
+  sensitiveReason?: string;
   reason: string;
   nextStreak: number;
   multiplier: 1 | 2;
@@ -2001,6 +2176,24 @@ export function evaluateWordChainTurnLocal(input: {
   comboTriggered: boolean;
   nextFuseSeconds: number;
 } {
+  const sensitive = detectSensitiveLanguage(input.rawInput);
+  if (sensitive.flagged) {
+    return {
+      valid: false,
+      word: "",
+      isItTerm: false,
+      foulDetected: true,
+      sensitiveDetected: true,
+      sensitiveReason: sensitive.reason,
+      reason: `⚠️ Cảnh báo: ${sensitive.reason} Từ này bị chặn và đã báo cáo Admin.`,
+      nextStreak: 0,
+      multiplier: 1,
+      pointsEarned: 0,
+      comboTriggered: false,
+      nextFuseSeconds: Math.max(5, DYNAMIC_FUSE_RULES.baseFuseSeconds - 4),
+    };
+  }
+
   const foul = detectVietnameseFoul(input.rawInput);
   if (foul.detected) {
     return {
@@ -2138,6 +2331,11 @@ export async function moderateWordChainTurn(input: {
   room: WordChainRoomState;
   playerId: string;
   wordInput: string;
+  moderationMeta?: {
+    playerId?: string | null;
+    playerName?: string | null;
+    transferCode?: string | null;
+  };
 }): Promise<{
   room: WordChainRoomState;
   turnResult: {
@@ -2170,19 +2368,61 @@ export async function moderateWordChainTurn(input: {
     turnCount: input.room.turnCount,
   });
 
+  if (localEval.sensitiveDetected) {
+    void recordModerationIncident({
+      playerId: input.moderationMeta?.playerId ?? player?.id ?? null,
+      playerName:
+        input.moderationMeta?.playerName ?? player?.displayName ?? "Player",
+      transferCode: input.moderationMeta?.transferCode ?? null,
+      source: "word-chain",
+      roomOrTopic: `${input.room.roomCode} (chữ ${input.room.requiredChar})`,
+      content: input.wordInput,
+      category: "sensitive",
+      severity: "high",
+      reason: localEval.sensitiveReason || localEval.reason,
+      aiProvider: "local-filter",
+    });
+  }
+
   if (localEval.valid && !localEval.isItTerm) {
     const aiRes = await requestAiWaterfallText({
       systemInstruction:
-        "You are a Word Chain referee. Verify if the single lowercase token is a real English word and whether it is a software/IT term. Respond strictly in JSON: { validEnglish: boolean, isItTerm: boolean, reason: string }.",
+        "You are a strict Word Chain referee and safety moderator for an educational IT app. Verify if the single lowercase token is: (1) a real standard English word (validEnglish), (2) a software/IT term (isItTerm), and (3) clean/safe for a classroom (sensitiveContent: true if profanity, racial/ethnic slur, sexual/NSFW term, hate speech, or vulgar slang). Respond strictly in JSON: { validEnglish: boolean, isItTerm: boolean, sensitiveContent: boolean, reason: string }.",
       userPrompt: JSON.stringify({ word: localEval.word }),
       temperature: 0.1,
-      maxTokens: 120,
+      maxTokens: 140,
       jsonMode: true,
-      timeoutMs: 1400,
+      timeoutMs: 1800,
     });
 
     const parsed = aiRes ? extractFirstJsonObject(aiRes.text) : null;
-    if (parsed && parsed.validEnglish === false) {
+    if (parsed && parsed.sensitiveContent === true) {
+      const reasonText =
+        typeof parsed.reason === "string" && parsed.reason.trim()
+          ? parsed.reason.trim()
+          : `AI phát hiện từ nhạy cảm / thiếu chuẩn mực ('${localEval.word}').`;
+      void recordModerationIncident({
+        playerId: input.moderationMeta?.playerId ?? player?.id ?? null,
+        playerName:
+          input.moderationMeta?.playerName ?? player?.displayName ?? "Player",
+        transferCode: input.moderationMeta?.transferCode ?? null,
+        source: "word-chain",
+        roomOrTopic: `${input.room.roomCode} (chữ ${input.room.requiredChar})`,
+        content: localEval.word || input.wordInput,
+        category: "sensitive",
+        severity: "high",
+        reason: reasonText,
+        aiProvider: aiRes?.provider ?? "ai",
+      });
+      localEval = {
+        ...localEval,
+        valid: false,
+        foulDetected: true,
+        sensitiveDetected: true,
+        reason: `⚠️ Cảnh báo: AI chặn từ nhạy cảm '${localEval.word}' và đã báo cáo về Admin.`,
+        pointsEarned: 0,
+      };
+    } else if (parsed && parsed.validEnglish === false) {
       localEval = {
         ...localEval,
         valid: false,
@@ -2756,6 +2996,11 @@ export async function executeArenaAction(input: {
         body: { error: "Match is not active. Start the match first." },
       };
     }
+    const moderationMeta = {
+      playerId: activePlayer?.id ?? actorPlayerId,
+      playerName: activePlayer?.displayName ?? playerInfo.displayName,
+      transferCode: activePlayer?.transferCode ?? body.backupTransferCode ?? null,
+    };
     if (existingRoom.gameType === "duel") {
       const transcript = (body.transcript ?? body.argument ?? body.text ?? "").trim();
       if (!transcript) {
@@ -2768,6 +3013,7 @@ export async function executeArenaAction(input: {
         room: existingRoom,
         playerId: actorPlayerId,
         transcript,
+        moderationMeta,
       });
       updatedRoom = res.room;
       turnResult = {
@@ -2791,6 +3037,7 @@ export async function executeArenaAction(input: {
         clue,
         guess: body.guess,
         skip: body.skip,
+        moderationMeta,
       });
       updatedRoom = res.room;
       turnResult = res.turnResult;
@@ -2806,6 +3053,7 @@ export async function executeArenaAction(input: {
         room: existingRoom,
         playerId: actorPlayerId,
         wordInput,
+        moderationMeta,
       });
       updatedRoom = res.room;
       turnResult = res.turnResult;

@@ -2,11 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { SCENARIOS } from "../../../data/scenarios";
 import { evaluateWithWaterfall } from "../../../lib/ai-waterfall";
 import {
+  detectSensitiveLanguage,
+  recordModerationIncident,
+} from "../../../lib/content-moderation";
+import {
   detectInvalidEnglishInput,
   matchesKeyword,
   normalizeTextForMatching,
   scoreLocally,
 } from "../../../lib/localScorer";
+import { readExistingGuestPlayer } from "../../../lib/neon-auth";
 import { ScoreRequestPayload } from "../../../lib/types";
 
 export async function POST(req: NextRequest) {
@@ -54,6 +59,38 @@ export async function POST(req: NextRequest) {
       hintVI: currentTurn?.hintVI,
       defaultNextQuestion,
     });
+
+    const localSensitive = detectSensitiveLanguage(transcript);
+    const aiSensitive =
+      typeof result.pronunciationNote === "string" &&
+      result.pronunciationNote.includes("[SENSITIVE]");
+    const aiOffTopic =
+      Array.isArray(result.grammarCorrections) &&
+      result.grammarCorrections.some((item) =>
+        `${item?.explanationVI ?? ""} ${item?.corrected ?? ""}`.includes(
+          "[OFF_TOPIC]"
+        )
+      );
+
+    if (localSensitive.flagged || aiSensitive || aiOffTopic) {
+      const player = await readExistingGuestPlayer().catch(() => null);
+      void recordModerationIncident({
+        playerId: player?.id ?? null,
+        playerName: player?.displayName ?? "Khách luyện nói",
+        transferCode: player?.transferCode ?? null,
+        source: "practice",
+        roomOrTopic: `${scenario} (Turn ${turnIndex + 1})`,
+        content: transcript,
+        category: localSensitive.flagged || aiSensitive ? "sensitive" : "off_topic",
+        severity: localSensitive.flagged || aiSensitive ? "high" : "medium",
+        reason: localSensitive.flagged
+          ? localSensitive.reason
+          : aiSensitive
+            ? "AI phát hiện ngôn từ nhạy cảm trong bài nói."
+            : "AI đánh giá câu trả lời lạc đề / chưa đúng trọng tâm câu hỏi.",
+        aiProvider: result.provider,
+      });
+    }
 
     if (result.score <= 0) {
       return NextResponse.json({

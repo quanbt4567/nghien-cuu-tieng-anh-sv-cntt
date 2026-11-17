@@ -10,6 +10,7 @@ import {
   buildEvaluationPrompts,
   parseEvaluationJson,
 } from "./gemini";
+import { detectSensitiveLanguage } from "./content-moderation";
 import { detectInvalidEnglishInput, scoreLocally } from "./localScorer";
 import { AI_PROVIDER_SPECS, AiProviderId, ScoreResponse, ScoringProvider } from "./types";
 
@@ -393,6 +394,33 @@ export async function evaluateWithWaterfall({
   fetchFn = fetch,
   timeoutMs = SCORING_PROVIDER_TIMEOUT_MS,
 }: WaterfallEvaluationOptions): Promise<ScoreResponse & { provider: ScoringProvider }> {
+  const sensitive = detectSensitiveLanguage(transcript);
+  if (sensitive.flagged) {
+    const blockedResult = scoreLocally({
+      transcript,
+      expectedKeywords,
+      sampleAnswerEN,
+      hintVI,
+    });
+    return {
+      ...blockedResult,
+      score: 0,
+      keywordsUsed: [],
+      pronunciationNote: `⚠️ Cảnh báo nội dung nhạy cảm: ${sensitive.reason} Hệ thống đã từ chối chấm điểm và báo cáo Admin.`,
+      grammarCorrections: [
+        {
+          original: transcript.slice(0, 120),
+          corrected: "Use professional workplace English.",
+          explanationVI:
+            "Vui lòng sử dụng ngôn từ lịch sự, đúng chuẩn mực nghề nghiệp IT.",
+        },
+      ],
+      nextQuestion: defaultNextQuestion,
+      evaluationMode: "local_rules",
+      provider: "local",
+    };
+  }
+
   const inputGuard = detectInvalidEnglishInput(transcript);
   if (inputGuard.invalid) {
     const blockedResult = scoreLocally({
@@ -421,8 +449,10 @@ export async function evaluateWithWaterfall({
 
   const guardedSystemInstruction = `${systemInstruction}
 
-LANGUAGE & INPUT GUARD (STRICT):
-- The student MUST answer in genuine English.
+LANGUAGE, SAFETY & ON-TOPIC GUARD (STRICT):
+- The student MUST answer in genuine English and stay relevant to the scenario question.
+- If the transcript contains profanity, racial/sexual slurs, NSFW words, hate speech, or offensive insults: you MUST return "score": 0, "keywordsUsed": [], and start "pronunciationNote" with "[SENSITIVE] Cảnh báo: Phát hiện ngôn từ nhạy cảm / thiếu chuẩn mực.".
+- If the transcript is completely off-topic from the workplace scenario/question: cap "score" <= 25 and include "[OFF_TOPIC] Nội dung trả lời chưa đúng trọng tâm câu hỏi." in "grammarCorrections".
 - If the transcript contains Vietnamese (with or without diacritics), Vietnamese chat/teencode (e.g. cx, dc, ko, khong, kh, vay, sao, ghi, duoc, nhung, nhieu, chua, roi, nhe, nha, zay, vl, vcl, troll), trolling, or gibberish/keyboard mash — even if 1 or 2 English words appear inside Vietnamese text (e.g. "sao ghi hell cx dc") — you MUST return "score": 0, "keywordsUsed": [], and explain in Vietnamese in "pronunciationNote" / "grammarCorrections" that the user must answer in English.`;
 
   const aiResult = await runAiWaterfall(
