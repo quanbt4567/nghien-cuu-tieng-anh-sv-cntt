@@ -16,6 +16,7 @@ import {
   resetPartyRoom,
   savePartyRoom,
   startPartyRoom,
+  timeoutPartyRoom,
 } from "../../../../lib/party-engine";
 import {
   findPartyScenarioById,
@@ -23,7 +24,14 @@ import {
   PlayerRole,
 } from "../../../../lib/party-scenarios";
 
-type RoomAction = "create" | "join" | "fill_ai" | "start" | "reset" | "leave";
+type RoomAction =
+  | "create"
+  | "join"
+  | "fill_ai"
+  | "start"
+  | "reset"
+  | "leave"
+  | "timeout";
 
 async function flushUnresolvedRoomRewards(input: {
   room: PartyRoomSnapshot;
@@ -33,7 +41,11 @@ async function flushUnresolvedRoomRewards(input: {
   backupTransferCode?: string;
 }) {
   const { room } = input;
-  if (room.status === "resolved" || room.rewardsAwarded) {
+  if (
+    room.status === "lobby" ||
+    room.status === "resolved" ||
+    room.rewardsAwarded
+  ) {
     return { flushed: false, player: null };
   }
 
@@ -243,6 +255,30 @@ export async function POST(req: NextRequest) {
             updatedAt: new Date().toISOString(),
           }
         : existingRoom;
+    } else if (action === "timeout") {
+      if (existingRoom.status === "resolved" || existingRoom.status === "lobby") {
+        updatedRoom = existingRoom;
+      } else if (existingRoom.status === "timed_out") {
+        updatedRoom = timeoutPartyRoom(existingRoom);
+      } else {
+        const timedOutRoom = timeoutPartyRoom(existingRoom);
+        const flushed = await flushUnresolvedRoomRewards({
+          room: timedOutRoom,
+          playerId,
+          displayName,
+          role: requestedRole,
+          backupTransferCode: body.backupTransferCode,
+        });
+        if (flushed.player) {
+          activePlayer = flushed.player;
+        }
+        updatedRoom = flushed.flushed
+          ? {
+              ...timedOutRoom,
+              rewardsAwarded: true,
+            }
+          : timedOutRoom;
+      }
     } else {
       return NextResponse.json(
         { error: "Unsupported room action." },

@@ -326,16 +326,17 @@ export default function PracticePage() {
         role: getGamificationState().selectedRole,
       });
 
-      await storageAdapter.recordWeakPoints(
-        scoreData.keywordsMissed,
-        scoreData.grammarCorrections.map((c) => c.original)
-      );
-
       const earned = Number.isFinite(scoreData.score)
         ? Math.max(0, Math.round(scoreData.score))
         : 0;
-      awardPracticePoints(earned);
-      void reportGuestPracticePoints(scenario.id, earned);
+      if (earned > 0) {
+        await storageAdapter.recordWeakPoints(
+          scoreData.keywordsMissed,
+          scoreData.grammarCorrections.map((c) => c.original)
+        );
+        awardPracticePoints(earned);
+        void reportGuestPracticePoints(scenario.id, earned);
+      }
       setTotalPointsEarned((prev) => prev + earned);
       if (scoreData.keywordsMissed.length > 0) {
         setMissedKeywords((prev) => {
@@ -832,14 +833,14 @@ export default function PracticePage() {
                   <p className="text-sm text-ink-muted leading-relaxed">
                     Nhấn <strong className="text-ink">Ghi âm câu trả lời</strong> ở cột bên trái (hoặc gõ câu tiếng Anh) rồi gửi để xem điểm chi tiết, từ khóa đạt chuẩn và cách diễn đạt tự nhiên hơn.
                   </p>
-                  <div className="grid grid-cols-3 gap-2 pt-1 text-center font-mono text-[11px]">
-                    <div className="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 font-semibold">
+                  <div className="grid grid-cols-3 gap-1.5 sm:gap-2 pt-1 text-center font-mono">
+                    <div className="whitespace-nowrap flex items-center justify-center leading-tight py-2.5 px-1.5 sm:px-2.5 text-[10px] sm:text-[11px] rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 font-semibold">
                       40% Từ khóa
                     </div>
-                    <div className="p-2.5 rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-700 font-semibold">
+                    <div className="whitespace-nowrap flex items-center justify-center leading-tight py-2.5 px-1.5 sm:px-2.5 text-[10px] sm:text-[11px] rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-700 font-semibold">
                       30% Đầy đủ
                     </div>
-                    <div className="p-2.5 rounded-xl bg-paper border border-ink/15 text-ink font-semibold">
+                    <div className="whitespace-nowrap flex items-center justify-center leading-tight py-2.5 px-1.5 sm:px-2.5 text-[10px] sm:text-[11px] rounded-xl bg-paper border border-ink/15 text-ink font-semibold">
                       30% Ngữ pháp
                     </div>
                   </div>

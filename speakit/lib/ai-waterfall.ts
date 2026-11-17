@@ -10,7 +10,7 @@ import {
   buildEvaluationPrompts,
   parseEvaluationJson,
 } from "./gemini";
-import { scoreLocally } from "./localScorer";
+import { detectInvalidEnglishInput, scoreLocally } from "./localScorer";
 import { AI_PROVIDER_SPECS, AiProviderId, ScoreResponse, ScoringProvider } from "./types";
 
 export { OPENAI_WATERFALL_PROVIDERS };
@@ -371,6 +371,24 @@ export async function evaluateWithWaterfall({
   fetchFn = fetch,
   timeoutMs = PROVIDER_TIMEOUT_MS,
 }: WaterfallEvaluationOptions): Promise<ScoreResponse & { provider: ScoringProvider }> {
+  const inputGuard = detectInvalidEnglishInput(transcript);
+  if (inputGuard.invalid) {
+    const blockedResult = scoreLocally({
+      transcript,
+      expectedKeywords,
+      sampleAnswerEN,
+      hintVI,
+    });
+    return {
+      ...blockedResult,
+      score: 0,
+      keywordsUsed: [],
+      nextQuestion: defaultNextQuestion,
+      evaluationMode: "local_rules",
+      provider: "local",
+    };
+  }
+
   const { systemInstruction, prompt } = buildEvaluationPrompts({
     transcript,
     scenario,
@@ -379,9 +397,15 @@ export async function evaluateWithWaterfall({
     history,
   });
 
+  const guardedSystemInstruction = `${systemInstruction}
+
+LANGUAGE & INPUT GUARD (STRICT):
+- The student MUST answer in genuine English.
+- If the transcript contains Vietnamese (with or without diacritics), Vietnamese chat/teencode (e.g. cx, dc, ko, khong, kh, vay, sao, ghi, duoc, nhung, nhieu, chua, roi, nhe, nha, zay, vl, vcl, troll), trolling, or gibberish/keyboard mash — even if 1 or 2 English words appear inside Vietnamese text (e.g. "sao ghi hell cx dc") — you MUST return "score": 0, "keywordsUsed": [], and explain in Vietnamese in "pronunciationNote" / "grammarCorrections" that the user must answer in English.`;
+
   const aiResult = await runAiWaterfall(
     {
-      systemInstruction,
+      systemInstruction: guardedSystemInstruction,
       userPrompt: prompt,
       temperature: 0.2,
       jsonMode: true,
@@ -393,6 +417,21 @@ export async function evaluateWithWaterfall({
   );
 
   if (aiResult) {
+    if (detectInvalidEnglishInput(transcript).invalid || aiResult.data.score <= 0) {
+      const safeKeywords = Array.isArray(expectedKeywords) ? expectedKeywords : [];
+      return {
+        ...aiResult.data,
+        score: 0,
+        keywordsUsed: [],
+        keywordsMissed:
+          aiResult.data.keywordsMissed.length > 0
+            ? aiResult.data.keywordsMissed
+            : safeKeywords,
+        nextQuestion: aiResult.data.nextQuestion || defaultNextQuestion,
+        provider: aiResult.provider,
+      };
+    }
+
     return {
       ...aiResult.data,
       nextQuestion: aiResult.data.nextQuestion || defaultNextQuestion,

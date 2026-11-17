@@ -145,7 +145,48 @@ interface FallbackSplash {
   life: number;
 }
 
+interface CrosshairRing {
+  x: number;
+  y: number;
+  life: number;
+  maxLife: number;
+}
+
+export const SPEAKIT_CURSOR_BURST_EVENT = "speakit-cursor-burst";
+
+export interface CursorBurstDetail {
+  x?: number;
+  y?: number;
+  effectId?: string | null;
+}
+
 const SPARKLE_COLORS = ["#FBBF24", "#F59E0B", "#FB7185", "#E5484D"];
+
+function getTouchCoords(e: TouchEvent): { x: number; y: number } | null {
+  const touch = e.touches[0] ?? e.changedTouches[0];
+  if (!touch) return null;
+  return { x: touch.clientX, y: touch.clientY };
+}
+
+function resolveBurstCoords(
+  e: Event,
+  mode: CursorMode
+): { x: number; y: number } | null {
+  const detail = (e as CustomEvent<CursorBurstDetail>).detail;
+  if (detail?.effectId && detail.effectId !== mode) return null;
+  const fallbackX = typeof window !== "undefined" ? window.innerWidth / 2 : 0;
+  const fallbackY = typeof window !== "undefined" ? window.innerHeight / 2 : 0;
+  return {
+    x:
+      typeof detail?.x === "number" && Number.isFinite(detail.x)
+        ? detail.x
+        : fallbackX,
+    y:
+      typeof detail?.y === "number" && Number.isFinite(detail.y)
+        ? detail.y
+        : fallbackY,
+  };
+}
 
 function run2DFallbackRibbon(canvas: HTMLCanvasElement): () => void {
   const ctx = canvas.getContext("2d");
@@ -166,13 +207,42 @@ function run2DFallbackRibbon(canvas: HTMLCanvasElement): () => void {
   };
   resize();
 
-  const onPointerMove = (e: PointerEvent) => {
-    nodes.unshift({ x: e.clientX, y: e.clientY, life: 1 });
+  const pushNode = (x: number, y: number) => {
+    nodes.unshift({ x, y, life: 1 });
     if (nodes.length > 22) nodes.pop();
   };
 
+  const triggerBurst = (x: number, y: number, count = 8, radius = 32) => {
+    splashes.push({ x, y, life: 1 });
+    for (let i = 0; i < count; i += 1) {
+      const t = i / Math.max(1, count - 1);
+      const angle = t * Math.PI * 1.75;
+      const r = radius * (0.25 + 0.75 * t);
+      pushNode(x + Math.cos(angle) * r, y + Math.sin(angle) * r);
+    }
+  };
+
+  const onPointerMove = (e: PointerEvent) => {
+    pushNode(e.clientX, e.clientY);
+  };
+
   const onPointerDown = (e: PointerEvent) => {
-    splashes.push({ x: e.clientX, y: e.clientY, life: 1 });
+    triggerBurst(e.clientX, e.clientY, 5, 18);
+  };
+
+  const onTouchStart = (e: TouchEvent) => {
+    const coords = getTouchCoords(e);
+    if (coords) triggerBurst(coords.x, coords.y, 5, 18);
+  };
+
+  const onTouchMove = (e: TouchEvent) => {
+    const coords = getTouchCoords(e);
+    if (coords) pushNode(coords.x, coords.y);
+  };
+
+  const onBurst = (e: Event) => {
+    const coords = resolveBurstCoords(e, "cursor-neon-laser-ribbon");
+    if (coords) triggerBurst(coords.x, coords.y);
   };
 
   const frame = (now: number) => {
@@ -225,6 +295,9 @@ function run2DFallbackRibbon(canvas: HTMLCanvasElement): () => void {
   window.addEventListener("resize", resize);
   window.addEventListener("pointermove", onPointerMove, { passive: true });
   window.addEventListener("pointerdown", onPointerDown, { passive: true });
+  window.addEventListener("touchstart", onTouchStart, { passive: true });
+  window.addEventListener("touchmove", onTouchMove, { passive: true });
+  window.addEventListener(SPEAKIT_CURSOR_BURST_EVENT, onBurst);
   rafId = window.requestAnimationFrame(frame);
 
   return () => {
@@ -232,6 +305,9 @@ function run2DFallbackRibbon(canvas: HTMLCanvasElement): () => void {
     window.removeEventListener("resize", resize);
     window.removeEventListener("pointermove", onPointerMove);
     window.removeEventListener("pointerdown", onPointerDown);
+    window.removeEventListener("touchstart", onTouchStart);
+    window.removeEventListener("touchmove", onTouchMove);
+    window.removeEventListener(SPEAKIT_CURSOR_BURST_EVENT, onBurst);
   };
 }
 
@@ -305,11 +381,11 @@ function runWebGLRibbon(canvas: HTMLCanvasElement): () => void {
   };
   resize();
 
-  const onPointerMove = (e: PointerEvent) => {
+  const pushTrailPoint = (x: number, y: number, force = false, boostSpeed?: number) => {
     const w = Math.max(window.innerWidth, 1);
     const h = Math.max(window.innerHeight, 1);
-    const nx = e.clientX / w;
-    const ny = 1 - e.clientY / h;
+    const nx = x / w;
+    const ny = 1 - y / h;
 
     if (prevX >= 0) {
       velX = nx - prevX;
@@ -319,7 +395,7 @@ function runWebGLRibbon(canvas: HTMLCanvasElement): () => void {
     prevY = ny;
 
     const now = performance.now();
-    if (now - lastEmit >= 14) {
+    if (force || now - lastEmit >= 14) {
       lastEmit = now;
       for (let i = TRAIL_COUNT - 1; i > 0; i -= 1) {
         trailData[i * 4] = trailData[(i - 1) * 4];
@@ -330,19 +406,58 @@ function runWebGLRibbon(canvas: HTMLCanvasElement): () => void {
       trailData[0] = nx;
       trailData[1] = ny;
       trailData[2] = 1;
-      trailData[3] = Math.min(1.6, Math.hypot(velX, velY) * 28);
+      trailData[3] =
+        boostSpeed ?? Math.min(1.6, Math.hypot(velX, velY) * 28);
     }
   };
 
-  const onPointerDown = (e: PointerEvent) => {
+  const pushSplash = (x: number, y: number) => {
     const w = Math.max(window.innerWidth, 1);
     const h = Math.max(window.innerHeight, 1);
     const offset = splashIndex * 4;
-    splashData[offset] = e.clientX / w;
-    splashData[offset + 1] = 1 - e.clientY / h;
+    splashData[offset] = x / w;
+    splashData[offset + 1] = 1 - y / h;
     splashData[offset + 2] = 1;
     splashData[offset + 3] = 1;
     splashIndex = (splashIndex + 1) % SPLASH_COUNT;
+  };
+
+  const triggerBurst = (x: number, y: number, count = 10, radius = 36) => {
+    pushSplash(x, y);
+    for (let i = 0; i < count; i += 1) {
+      const t = i / Math.max(1, count - 1);
+      const angle = t * Math.PI * 1.8;
+      const r = radius * (0.2 + 0.8 * t);
+      pushTrailPoint(
+        x + Math.cos(angle) * r,
+        y + Math.sin(angle) * r,
+        true,
+        1.35
+      );
+    }
+  };
+
+  const onPointerMove = (e: PointerEvent) => {
+    pushTrailPoint(e.clientX, e.clientY);
+  };
+
+  const onPointerDown = (e: PointerEvent) => {
+    triggerBurst(e.clientX, e.clientY, 5, 18);
+  };
+
+  const onTouchStart = (e: TouchEvent) => {
+    const coords = getTouchCoords(e);
+    if (coords) triggerBurst(coords.x, coords.y, 5, 18);
+  };
+
+  const onTouchMove = (e: TouchEvent) => {
+    const coords = getTouchCoords(e);
+    if (coords) pushTrailPoint(coords.x, coords.y);
+  };
+
+  const onBurst = (e: Event) => {
+    const coords = resolveBurstCoords(e, "cursor-neon-laser-ribbon");
+    if (coords) triggerBurst(coords.x, coords.y);
   };
 
   const renderFrame = (now: number) => {
@@ -377,6 +492,9 @@ function runWebGLRibbon(canvas: HTMLCanvasElement): () => void {
   window.addEventListener("resize", resize);
   window.addEventListener("pointermove", onPointerMove, { passive: true });
   window.addEventListener("pointerdown", onPointerDown, { passive: true });
+  window.addEventListener("touchstart", onTouchStart, { passive: true });
+  window.addEventListener("touchmove", onTouchMove, { passive: true });
+  window.addEventListener(SPEAKIT_CURSOR_BURST_EVENT, onBurst);
   rafId = window.requestAnimationFrame(renderFrame);
 
   return () => {
@@ -384,6 +502,9 @@ function runWebGLRibbon(canvas: HTMLCanvasElement): () => void {
     window.removeEventListener("resize", resize);
     window.removeEventListener("pointermove", onPointerMove);
     window.removeEventListener("pointerdown", onPointerDown);
+    window.removeEventListener("touchstart", onTouchStart);
+    window.removeEventListener("touchmove", onTouchMove);
+    window.removeEventListener(SPEAKIT_CURSOR_BURST_EVENT, onBurst);
     gl.getExtension("WEBGL_lose_context")?.loseContext();
     renderer = null;
   };
@@ -395,6 +516,7 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
 
   const sparkles: SparkleParticle[] = [];
   const binaries: BinaryParticle[] = [];
+  const crosshairRings: CrosshairRing[] = [];
 
   let dpr = Math.min(window.devicePixelRatio || 1, 2);
   let lastSpawnX = -999;
@@ -425,10 +547,7 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
   };
   resize();
 
-  const onPointerMove = (e: PointerEvent) => {
-    const x = e.clientX;
-    const y = e.clientY;
-
+  const syncPointer = (x: number, y: number, targetEl: EventTarget | null) => {
     if (!hasPointer) {
       hasPointer = true;
       dotX = x;
@@ -447,10 +566,74 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
     targetY = y;
 
     if (mode === "cursor-tactical-cyber-crosshair") {
-      const target = e.target instanceof Element ? e.target : null;
+      const target = targetEl instanceof Element ? targetEl : null;
       hoverTarget = target?.closest("a, button") ? 1 : 0;
+    }
+  };
+
+  const spawnBurst = (x: number, y: number, scale = 1) => {
+    hasPointer = true;
+    targetX = x;
+    targetY = y;
+    dotX = x;
+    dotY = y;
+    reticleX = x;
+    reticleY = y;
+    lastMoveX = x;
+    lastMoveY = y;
+    lastSpawnX = x;
+    lastSpawnY = y;
+
+    if (mode === "cursor-pixel-sparkle-trail") {
+      const count = Math.max(5, Math.round(12 * scale));
+      for (let i = 0; i < count; i += 1) {
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.4;
+        const speed = 42 + Math.random() * 88;
+        sparkles.push({
+          x: x + (Math.random() - 0.5) * 8,
+          y: y + (Math.random() - 0.5) * 8,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 24,
+          size: 4 + Math.floor(Math.random() * 4),
+          life: 0.72,
+          maxLife: 0.72,
+          color: SPARKLE_COLORS[Math.floor(Math.random() * SPARKLE_COLORS.length)],
+        });
+      }
+      if (sparkles.length > 64) sparkles.splice(0, sparkles.length - 64);
       return;
     }
+
+    if (mode === "cursor-binary-01-stream") {
+      const count = Math.max(5, Math.round(12 * scale));
+      for (let i = 0; i < count; i += 1) {
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.35;
+        const speed = 28 + Math.random() * 58;
+        binaries.push({
+          x: x + (Math.random() - 0.5) * 10,
+          y: y + (Math.random() - 0.5) * 10,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 28,
+          char: i % 2 === 0 ? "0" : "1",
+          life: 0.85,
+          maxLife: 0.85,
+        });
+      }
+      if (binaries.length > 52) binaries.splice(0, binaries.length - 52);
+      return;
+    }
+
+    pointerSpeed = 1;
+    crosshairRings.push({ x, y, life: 0.65, maxLife: 0.65 });
+    if (scale >= 1) {
+      crosshairRings.push({ x, y, life: 0.45, maxLife: 0.45 });
+    }
+    if (crosshairRings.length > 8) crosshairRings.splice(0, crosshairRings.length - 8);
+  };
+
+  const handleMove = (x: number, y: number, targetEl: EventTarget | null) => {
+    syncPointer(x, y, targetEl);
+    if (mode === "cursor-tactical-cyber-crosshair") return;
 
     const distSinceSpawn = Math.hypot(x - lastSpawnX, y - lastSpawnY);
 
@@ -470,7 +653,7 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
           color: SPARKLE_COLORS[Math.floor(Math.random() * SPARKLE_COLORS.length)],
         });
       }
-      if (sparkles.length > 48) sparkles.splice(0, sparkles.length - 48);
+      if (sparkles.length > 64) sparkles.splice(0, sparkles.length - 64);
     }
 
     if (mode === "cursor-binary-01-stream" && distSinceSpawn >= 14) {
@@ -485,11 +668,39 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
         life: 0.65,
         maxLife: 0.65,
       });
-      if (binaries.length > 36) binaries.splice(0, binaries.length - 36);
+      if (binaries.length > 52) binaries.splice(0, binaries.length - 52);
     }
   };
 
-  const onPointerLeave = () => {
+  const onPointerMove = (e: PointerEvent) => {
+    handleMove(e.clientX, e.clientY, e.target);
+  };
+
+  const onPointerDown = (e: PointerEvent) => {
+    syncPointer(e.clientX, e.clientY, e.target);
+    spawnBurst(e.clientX, e.clientY, 0.55);
+  };
+
+  const onTouchStart = (e: TouchEvent) => {
+    const coords = getTouchCoords(e);
+    if (!coords) return;
+    syncPointer(coords.x, coords.y, e.target);
+    spawnBurst(coords.x, coords.y, 0.55);
+  };
+
+  const onTouchMove = (e: TouchEvent) => {
+    const coords = getTouchCoords(e);
+    if (!coords) return;
+    handleMove(coords.x, coords.y, e.target);
+  };
+
+  const onBurst = (e: Event) => {
+    const coords = resolveBurstCoords(e, mode);
+    if (coords) spawnBurst(coords.x, coords.y, 1);
+  };
+
+  const onPointerLeave = (e: PointerEvent) => {
+    if (e.pointerType === "touch") return;
     hasPointer = false;
     hoverTarget = 0;
   };
@@ -534,57 +745,75 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
         b.x += b.vx * dt;
         b.y += b.vy * dt;
         const alpha = Math.max(0, b.life / b.maxLife);
-        ctx.fillStyle = `rgba(34, 197, 94, ${0.42 * alpha})`;
+        ctx.fillStyle = `rgba(22, 163, 74, ${0.72 * alpha})`;
         ctx.fillText(b.char, Math.round(b.x), Math.round(b.y));
       }
-    } else if (mode === "cursor-tactical-cyber-crosshair" && hasPointer) {
-      const stiffness = 260;
-      const damping = 24;
-      const ax = (targetX - dotX) * stiffness - dotVx * damping;
-      const ay = (targetY - dotY) * stiffness - dotVy * damping;
-      dotVx += ax * dt;
-      dotVy += ay * dt;
-      dotX += dotVx * dt;
-      dotY += dotVy * dt;
+    } else if (mode === "cursor-tactical-cyber-crosshair") {
+      for (let i = crosshairRings.length - 1; i >= 0; i -= 1) {
+        const ring = crosshairRings[i];
+        ring.life -= dt;
+        if (ring.life <= 0) {
+          crosshairRings.splice(i, 1);
+          continue;
+        }
+        const progress = 1 - ring.life / ring.maxLife;
+        const r = 12 + progress * 28;
+        ctx.beginPath();
+        ctx.arc(ring.x, ring.y, r, 0, Math.PI * 2);
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = `rgba(229, 72, 77, ${0.75 * (1 - progress)})`;
+        ctx.stroke();
+      }
 
-      const followRate = 1 - Math.exp(-18 * dt);
-      reticleX += (targetX - reticleX) * followRate;
-      reticleY += (targetY - reticleY) * followRate;
+      if (hasPointer) {
+        const stiffness = 260;
+        const damping = 24;
+        const ax = (targetX - dotX) * stiffness - dotVx * damping;
+        const ay = (targetY - dotY) * stiffness - dotVy * damping;
+        dotVx += ax * dt;
+        dotVy += ay * dt;
+        dotX += dotVx * dt;
+        dotY += dotVy * dt;
 
-      pointerSpeed *= Math.exp(-8 * dt);
-      hoverSmooth += (hoverTarget - hoverSmooth) * Math.min(1, dt * 14);
+        const followRate = 1 - Math.exp(-18 * dt);
+        reticleX += (targetX - reticleX) * followRate;
+        reticleY += (targetY - reticleY) * followRate;
 
-      const radius = 11 + pointerSpeed * 6 - hoverSmooth * 2.5;
-      const tick = 4;
-      const stroke = hoverSmooth > 0.5
-        ? `rgba(229, 72, 77, ${0.65 + hoverSmooth * 0.2})`
-        : "rgba(56, 189, 248, 0.72)";
+        pointerSpeed *= Math.exp(-8 * dt);
+        hoverSmooth += (hoverTarget - hoverSmooth) * Math.min(1, dt * 14);
 
-      ctx.strokeStyle = stroke;
-      ctx.lineWidth = 1;
+        const radius = 11 + pointerSpeed * 6 - hoverSmooth * 2.5;
+        const tick = 4;
+        const stroke = hoverSmooth > 0.5
+          ? `rgba(229, 72, 77, ${0.65 + hoverSmooth * 0.2})`
+          : "rgba(56, 189, 248, 0.72)";
 
-      const cx = Math.round(reticleX) + 0.5;
-      const cy = Math.round(reticleY) + 0.5;
+        ctx.strokeStyle = stroke;
+        ctx.lineWidth = 1;
 
-      ctx.beginPath();
-      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-      ctx.stroke();
+        const cx = Math.round(reticleX) + 0.5;
+        const cy = Math.round(reticleY) + 0.5;
 
-      ctx.beginPath();
-      ctx.moveTo(cx - radius - tick, cy);
-      ctx.lineTo(cx - radius + 1.5, cy);
-      ctx.moveTo(cx + radius - 1.5, cy);
-      ctx.lineTo(cx + radius + tick, cy);
-      ctx.moveTo(cx, cy - radius - tick);
-      ctx.lineTo(cx, cy - radius + 1.5);
-      ctx.moveTo(cx, cy + radius - 1.5);
-      ctx.lineTo(cx, cy + radius + tick);
-      ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+        ctx.stroke();
 
-      ctx.fillStyle = hoverSmooth > 0.5 ? "rgba(229, 72, 77, 0.9)" : "rgba(244, 63, 94, 0.85)";
-      ctx.beginPath();
-      ctx.arc(dotX, dotY, 2.2, 0, Math.PI * 2);
-      ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(cx - radius - tick, cy);
+        ctx.lineTo(cx - radius + 1.5, cy);
+        ctx.moveTo(cx + radius - 1.5, cy);
+        ctx.lineTo(cx + radius + tick, cy);
+        ctx.moveTo(cx, cy - radius - tick);
+        ctx.lineTo(cx, cy - radius + 1.5);
+        ctx.moveTo(cx, cy + radius - 1.5);
+        ctx.lineTo(cx, cy + radius + tick);
+        ctx.stroke();
+
+        ctx.fillStyle = hoverSmooth > 0.5 ? "rgba(229, 72, 77, 0.9)" : "rgba(244, 63, 94, 0.85)";
+        ctx.beginPath();
+        ctx.arc(dotX, dotY, 2.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
 
     rafId = window.requestAnimationFrame(frame);
@@ -592,6 +821,10 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
 
   window.addEventListener("resize", resize);
   window.addEventListener("pointermove", onPointerMove, { passive: true });
+  window.addEventListener("pointerdown", onPointerDown, { passive: true });
+  window.addEventListener("touchstart", onTouchStart, { passive: true });
+  window.addEventListener("touchmove", onTouchMove, { passive: true });
+  window.addEventListener(SPEAKIT_CURSOR_BURST_EVENT, onBurst);
   document.addEventListener("pointerleave", onPointerLeave);
   rafId = window.requestAnimationFrame(frame);
 
@@ -599,6 +832,10 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
     if (rafId) window.cancelAnimationFrame(rafId);
     window.removeEventListener("resize", resize);
     window.removeEventListener("pointermove", onPointerMove);
+    window.removeEventListener("pointerdown", onPointerDown);
+    window.removeEventListener("touchstart", onTouchStart);
+    window.removeEventListener("touchmove", onTouchMove);
+    window.removeEventListener(SPEAKIT_CURSOR_BURST_EVENT, onBurst);
     document.removeEventListener("pointerleave", onPointerLeave);
   };
 }

@@ -22,11 +22,41 @@ const {
   createPartyRoom,
   joinPartyRoom,
   fillWithAiTeammates,
+  startPartyRoom,
+  timeoutPartyRoom,
+  resetPartyRoom,
+  savePartyRoom,
+  loadPartyRoom,
   detectVietnamesePenalty,
   evaluateTurnLocal,
   computeTeamResolutionProgress,
   calculateVictoryRewards,
 } = jiti(resolve(__dirname, "../lib/party-engine.ts"));
+
+const { POST: partyRoomPost } = jiti(
+  resolve(__dirname, "../app/api/party/room/route.ts")
+);
+
+function withClearedDatabaseUrl(fn) {
+  const prevDbUrl = process.env.DATABASE_URL;
+  const prevUnpooled = process.env.DATABASE_URL_UNPOOLED;
+  delete process.env.DATABASE_URL;
+  delete process.env.DATABASE_URL_UNPOOLED;
+  return Promise.resolve()
+    .then(fn)
+    .finally(() => {
+      if (prevDbUrl === undefined) {
+        delete process.env.DATABASE_URL;
+      } else {
+        process.env.DATABASE_URL = prevDbUrl;
+      }
+      if (prevUnpooled === undefined) {
+        delete process.env.DATABASE_URL_UNPOOLED;
+      } else {
+        process.env.DATABASE_URL_UNPOOLED = prevUnpooled;
+      }
+    });
+}
 
 test("PARTY_SCENARIOS defines 5 outage scenarios with asymmetrical frontend, backend, devops clues", () => {
   assert.equal(PARTY_SCENARIOS.length, 5);
@@ -220,4 +250,160 @@ test("calculateVictoryRewards awards +15 win and +10 MVP bonus IT-Coins and reso
   assert.equal(rewards.totalMvpCoins, 25);
   assert.equal(rewards.mvpPlayerId, "human-2");
   assert.equal(rewards.mvpDisplayName, "Tuan DevOps");
+});
+
+test("timeoutPartyRoom transitions active room to timed_out idempotently while preserving partial turn points", () => {
+  const lobby = fillWithAiTeammates(
+    createPartyRoom({
+      roomCode: "TIME01",
+      hostPlayer: {
+        id: "human-1",
+        displayName: "Lan Frontend",
+        role: "frontend",
+      },
+    })
+  );
+
+  // Lobby rooms must not transition to timed_out
+  assert.equal(timeoutPartyRoom(lobby).status, "lobby");
+
+  const active = startPartyRoom(lobby);
+  assert.equal(active.status, "speaking");
+
+  const withPartialProgress = {
+    ...active,
+    resolutionProgress: 35,
+    teamScore: 82,
+    players: active.players.map((p) =>
+      p.id === "human-1" ? { ...p, score: 82, transcript: "We see retry bursts." } : p
+    ),
+    evaluations: [
+      {
+        playerId: "human-1",
+        role: "frontend",
+        transcript: "We see retry bursts and 504 timeouts on checkout.",
+        score: 82,
+        matchedKeywords: ["retry", "timeout", "checkout"],
+        missingKeywords: ["idempotency"],
+        feedback: "Good update.",
+        durationMs: 3200,
+      },
+    ],
+  };
+
+  const timedOut = timeoutPartyRoom(withPartialProgress);
+  assert.equal(timedOut.status, "timed_out");
+  assert.equal(timedOut.remainingSeconds, 0);
+  assert.equal(timedOut.currentTurnRole, null);
+  assert.equal(timedOut.resolutionProgress, 35);
+  assert.equal(timedOut.teamScore, 82);
+  assert.equal(timedOut.evaluations.length, 1);
+  assert.equal(
+    timedOut.players.find((p) => p.id === "human-1")?.score,
+    82
+  );
+
+  // Idempotent repeat call keeps exact state
+  const timedOutAgain = timeoutPartyRoom(timedOut);
+  assert.equal(timedOutAgain, timedOut);
+
+  // Resolved rooms must stay resolved
+  const resolved = { ...withPartialProgress, status: "resolved", resolutionProgress: 100 };
+  assert.equal(timeoutPartyRoom(resolved).status, "resolved");
+
+  // Resetting after timeout cleanly returns room to lobby
+  const reset = resetPartyRoom(timedOut);
+  assert.equal(reset.status, "lobby");
+  assert.equal(reset.resolutionProgress, 0);
+  assert.equal(reset.evaluations.length, 0);
+  assert.ok(reset.remainingSeconds > 0);
+});
+
+test("POST /api/party/room action=timeout transitions room idempotently and preserves partial progress", async () => {
+  await withClearedDatabaseUrl(async () => {
+    const makeReq = (body) => ({
+      json: async () => body,
+    });
+
+    const createRes = await partyRoomPost(
+      makeReq({
+        action: "create",
+        scenarioId: "production-database-deadlock",
+        role: "frontend",
+        playerId: "human-timeout-1",
+        displayName: "Minh Tester",
+      })
+    );
+    assert.equal(createRes.status, 200);
+    const created = await createRes.json();
+    const roomCode = created.room.roomCode;
+
+    const fillRes = await partyRoomPost(
+      makeReq({ action: "fill_ai", roomCode })
+    );
+    assert.equal(fillRes.status, 200);
+
+    const startRes = await partyRoomPost(
+      makeReq({ action: "start", roomCode })
+    );
+    assert.equal(startRes.status, 200);
+    const started = await startRes.json();
+
+    // Seed partial evaluation score before timeout occurs
+    await savePartyRoom({
+      ...started.room,
+      resolutionProgress: 35,
+      teamScore: 76,
+      players: started.room.players.map((p) =>
+        p.role === "frontend" ? { ...p, score: 76 } : p
+      ),
+      evaluations: [
+        {
+          playerId: started.room.players.find((p) => p.role === "frontend").id,
+          role: "frontend",
+          transcript: "Checkout timeout retry burst detected.",
+          score: 76,
+          matchedKeywords: ["checkout", "timeout", "retry"],
+          missingKeywords: ["idempotency"],
+          feedback: "Good diagnosis.",
+          durationMs: 2500,
+        },
+      ],
+    });
+
+    const timeoutRes1 = await partyRoomPost(
+      makeReq({ action: "timeout", roomCode, role: "frontend" })
+    );
+    assert.equal(timeoutRes1.status, 200);
+    const body1 = await timeoutRes1.json();
+    assert.equal(body1.room.status, "timed_out");
+    assert.equal(body1.room.remainingSeconds, 0);
+    assert.equal(body1.room.currentTurnRole, null);
+    assert.equal(body1.room.resolutionProgress, 35);
+    assert.equal(body1.room.teamScore, 76);
+    assert.equal(body1.room.evaluations.length, 1);
+
+    // Idempotent second timeout call
+    const timeoutRes2 = await partyRoomPost(
+      makeReq({ action: "timeout", roomCode, role: "frontend" })
+    );
+    assert.equal(timeoutRes2.status, 200);
+    const body2 = await timeoutRes2.json();
+    assert.equal(body2.room.status, "timed_out");
+    assert.equal(body2.room.remainingSeconds, 0);
+    assert.equal(body2.room.teamScore, 76);
+
+    const persisted = await loadPartyRoom(roomCode);
+    assert.equal(persisted?.status, "timed_out");
+    assert.equal(persisted?.teamScore, 76);
+
+    // Reset after timeout returns cleanly to lobby
+    const resetRes = await partyRoomPost(
+      makeReq({ action: "reset", roomCode, role: "frontend" })
+    );
+    assert.equal(resetRes.status, 200);
+    const resetBody = await resetRes.json();
+    assert.equal(resetBody.room.status, "lobby");
+    assert.equal(resetBody.room.resolutionProgress, 0);
+  });
 });

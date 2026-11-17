@@ -1,6 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -48,7 +56,7 @@ import {
   saveCachedGuestProfile,
 } from "../../lib/guestClient";
 import { mergeProfileIdentity } from "../../lib/profileStats";
-import { CustomCursorTrail } from "./CustomCursorTrail";
+import { CustomCursorTrail, SPEAKIT_CURSOR_BURST_EVENT } from "./CustomCursorTrail";
 import { DiscordAvatarFrame } from "./DiscordAvatarFrame";
 import { FullPageProfileEffect } from "./FullPageProfileEffect";
 import { LeaderboardRowWrapper } from "./LeaderboardRowWrapper";
@@ -307,6 +315,17 @@ function CosmeticCardThumbnail({
   );
 }
 
+function getEventCoords(e: ReactMouseEvent<HTMLElement>): { x: number; y: number } {
+  if (e.clientX > 0 || e.clientY > 0) {
+    return { x: e.clientX, y: e.clientY };
+  }
+  const rect = e.currentTarget.getBoundingClientRect();
+  return {
+    x: rect.left + rect.width / 2,
+    y: rect.top + rect.height / 2,
+  };
+}
+
 export interface CosmeticShopClientProps {
   extraItems?: CosmeticItem[];
 }
@@ -319,6 +338,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
   const [previewOverrides, setPreviewOverrides] = useState<
     Partial<EquippedCosmetics>
   >({});
+  const [lastPreviewItemId, setLastPreviewItemId] = useState<string | null>(null);
   const [themePreviewEnabled, setThemePreviewEnabled] = useState(true);
   const [micTestActive, setMicTestActive] = useState(false);
   const [finisherActive, setFinisherActive] = useState(false);
@@ -326,6 +346,13 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
   const [feedback, setFeedback] = useState<{
     ok: boolean;
     message: string;
+  } | null>(null);
+
+  const sandboxRef = useRef<HTMLElement | null>(null);
+  const pendingCursorBurstRef = useRef<{
+    x: number;
+    y: number;
+    effectId: string;
   } | null>(null);
 
   const syncFromServer = useCallback(async () => {
@@ -402,7 +429,47 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
     (cat) => Boolean(activeSandbox[cat])
   );
 
-  const handleSelectPreview = (item: CosmeticItem) => {
+  const activePreviewItem = useMemo(() => {
+    if (lastPreviewItemId) {
+      const last = catalogItems.find((item) => item.id === lastPreviewItemId);
+      if (last && previewOverrides[last.category] === last.id) {
+        return last;
+      }
+    }
+    for (const cat of COSMETIC_CATEGORIES) {
+      const overrideId = previewOverrides[cat];
+      if (overrideId) {
+        const found = catalogItems.find((item) => item.id === overrideId);
+        if (found) return found;
+      }
+    }
+    return null;
+  }, [catalogItems, lastPreviewItemId, previewOverrides]);
+
+  const dispatchCursorBurst = useCallback(
+    (x: number, y: number, effectId: string) => {
+      if (typeof window === "undefined") return;
+      window.dispatchEvent(
+        new CustomEvent(SPEAKIT_CURSOR_BURST_EVENT, {
+          detail: { x, y, effectId },
+        })
+      );
+    },
+    []
+  );
+
+  useEffect(() => {
+    const pending = pendingCursorBurstRef.current;
+    if (!pending || activeSandbox.cursor_effect !== pending.effectId) return;
+    pendingCursorBurstRef.current = null;
+    dispatchCursorBurst(pending.x, pending.y, pending.effectId);
+  }, [activeSandbox.cursor_effect, dispatchCursorBurst]);
+
+  const handleSelectPreview = (
+    item: CosmeticItem,
+    coords?: { x: number; y: number }
+  ) => {
+    setLastPreviewItemId(item.id);
     setPreviewOverrides((prev) => ({
       ...prev,
       [item.category]: item.id,
@@ -414,15 +481,38 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
       setFinisherActive(false);
       window.setTimeout(() => setFinisherActive(true), 20);
     }
+    if (item.category === "cursor_effect") {
+      const fallbackX = typeof window !== "undefined" ? window.innerWidth / 2 : 200;
+      const fallbackY = typeof window !== "undefined" ? window.innerHeight / 2 : 300;
+      const x = coords?.x ?? fallbackX;
+      const y = coords?.y ?? fallbackY;
+      if (activeSandbox.cursor_effect === item.id) {
+        dispatchCursorBurst(x, y, item.id);
+      } else {
+        pendingCursorBurstRef.current = { x, y, effectId: item.id };
+      }
+    }
+  };
+
+  const handleScrollToSandbox = () => {
+    if (sandboxRef.current && typeof sandboxRef.current.scrollIntoView === "function") {
+      sandboxRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   const handleResetToEquipped = () => {
+    setLastPreviewItemId(null);
     setPreviewOverrides({});
     setThemePreviewEnabled(true);
     setFinisherActive(false);
   };
 
   const handleClearPreview = () => {
+    setLastPreviewItemId(null);
     setPreviewOverrides({ ...DEFAULT_EQUIPPED_COSMETICS });
     setFinisherActive(false);
   };
@@ -567,7 +657,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
         onComplete={() => setFinisherActive(false)}
       />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 py-8 space-y-6 pb-20">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 py-8 space-y-6 pb-28">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <Link
@@ -585,7 +675,10 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
             </h1>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
+          <div
+            data-tour="shop-coin-balance"
+            className="flex flex-wrap items-center gap-2.5"
+          >
             <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border-2 border-[#1A1714] text-xs font-mono font-bold text-[#1A1714] shadow-[3px_3px_0_#1A1714]">
               <Coins className="w-4 h-4 text-[#E5484D]" aria-hidden="true" />
               <span>{isIdentityHydrating ? "— IT-Coins" : `${identity.itCoins} IT-Coins`}</span>
@@ -601,8 +694,9 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
         </div>
 
         <section
+          ref={sandboxRef}
           aria-label="Live Try-On Sandbox"
-          className="bg-white border-2 border-[#1A1714] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0_#1A1714] space-y-5"
+          className="scroll-mt-20 bg-white border-2 border-[#1A1714] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0_#1A1714] space-y-5"
         >
           <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-[#1A1714] pb-4">
             <div>
@@ -667,7 +761,10 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
 
           <div className="rounded-2xl border-2 border-[#1A1714] bg-[#FAF6EF] p-4 sm:p-5 shadow-[4px_4px_0_#1A1714] space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
-              <div className="lg:col-span-5 flex items-center gap-4 p-4 rounded-xl bg-white border-2 border-[#1A1714] shadow-[3px_3px_0_#1A1714]">
+              <div
+                data-tour="shop-sandbox-preview"
+                className="lg:col-span-5 flex items-center gap-4 p-4 rounded-xl bg-white border-2 border-[#1A1714] shadow-[3px_3px_0_#1A1714]"
+              >
                 <DiscordAvatarFrame
                   equippedId={activeSandbox.avatar_decoration}
                   fallbackRing={identity.equippedRing}
@@ -898,7 +995,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
             return (
               <div
                 key={item.id}
-                onClick={() => handleSelectPreview(item)}
+                onClick={(e) => handleSelectPreview(item, getEventCoords(e))}
                 className={`cursor-pointer rounded-2xl border-2 border-[#1A1714] p-4 flex flex-col justify-between gap-3.5 transition-all ${
                   isPreviewing
                     ? "bg-[#FAF6EF] shadow-[4px_4px_0_#E5484D] -translate-y-0.5"
@@ -997,7 +1094,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                   ) : (
                     <button
                       type="button"
-                      onClick={() => handleSelectPreview(item)}
+                      onClick={(e) => handleSelectPreview(item, getEventCoords(e))}
                       className="w-full py-2 px-3 rounded-xl bg-[#FAF6EF] border-2 border-[#1A1714] text-xs font-mono font-bold text-[#1A1714] shadow-[2px_2px_0_#1A1714] hover:bg-[#F0EADF]"
                     >
                       {`Unlock for ${item.price} IT-Coins`}
@@ -1009,6 +1106,44 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
           })}
         </div>
       </div>
+
+      {activePreviewItem && (
+        <div
+          role="region"
+          aria-label="Thanh xem thử hiệu ứng"
+          className="fixed bottom-3 left-3 right-14 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:bottom-5 z-30 sm:w-max sm:max-w-[calc(100vw-11rem)]"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 px-3.5 py-2.5 rounded-2xl bg-[#1A1714] text-white border-2 border-[#1A1714] shadow-[4px_4px_0_#E5484D]">
+            <div className="flex items-start sm:items-center gap-2 min-w-0">
+              <span className="w-6 h-6 rounded-lg bg-[#E5484D] text-white flex items-center justify-center shrink-0">
+                <Eye className="w-3.5 h-3.5" aria-hidden="true" />
+              </span>
+              <span className="text-xs font-semibold leading-snug">
+                {activePreviewItem.category === "cursor_effect"
+                  ? `Đang xem thử: ${activePreviewItem.name} • Chạm/vuốt màn hình để xem hiệu ứng`
+                  : `Đang xem thử: ${activePreviewItem.name}`}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-auto">
+              <button
+                type="button"
+                onClick={handleScrollToSandbox}
+                className="px-2.5 py-1.5 rounded-xl bg-[#E5484D] hover:bg-[#DC3D43] text-white text-[11px] font-mono font-bold whitespace-nowrap transition-colors"
+              >
+                Xem Sandbox ↑
+              </button>
+              <button
+                type="button"
+                onClick={handleResetToEquipped}
+                className="px-2.5 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 text-white text-[11px] font-mono font-bold whitespace-nowrap transition-colors"
+              >
+                Đặt lại
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

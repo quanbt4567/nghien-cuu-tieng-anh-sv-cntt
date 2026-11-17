@@ -14,6 +14,7 @@ const {
   GUIDE_DISABLED_STORAGE_KEY,
   GUIDE_DISMISSED_STORAGE_KEY,
   areAllGuidesDisabled,
+  computePopoverLayout,
   dismissGuide,
   isGuideDismissed,
   resetAllGuideDismissals,
@@ -212,4 +213,87 @@ test("storage helpers tolerate malformed JSON and fallback storage without remov
   assert.equal(isGuideDismissed("arena-duel", minimalStorage), true);
   resetAllGuideDismissals(minimalStorage);
   assert.equal(isGuideDismissed("arena-duel", minimalStorage), false);
+});
+
+test("/shop sandbox tour stop targets compact inner preview strip first", () => {
+  const shopGuide = resolveGuideForPath("/shop");
+  assert.ok(shopGuide);
+  const sandboxStop = shopGuide.tourStops[1];
+  assert.ok(sandboxStop);
+  assert.equal(sandboxStop.selectors[0], '[data-tour="shop-sandbox-preview"]');
+});
+
+test("computePopoverLayout docks on opposite half without overlapping target on narrow mobile screens", () => {
+  const mobileViewport = { width: 375, height: 667 };
+  const maxAllowedMobileHeight = Math.floor(mobileViewport.height * 0.44);
+
+  const tallTopSpotlight = { top: 66, left: 10, width: 355, height: 310 };
+  const tallTopLayout = computePopoverLayout(
+    tallTopSpotlight,
+    { width: 355, height: 220 },
+    mobileViewport,
+    "bottom",
+    300
+  );
+  assert.equal(tallTopLayout.docked, "bottom");
+  assert.equal(tallTopLayout.arrow, null);
+  assert.ok(tallTopLayout.maxHeight <= maxAllowedMobileHeight);
+  assert.ok(
+    tallTopLayout.top >= tallTopSpotlight.top + tallTopSpotlight.height,
+    `expected bottom dock (${tallTopLayout.top}) below target bottom (${tallTopSpotlight.top + tallTopSpotlight.height})`
+  );
+
+  const tallBottomSpotlight = { top: 320, left: 10, width: 355, height: 300 };
+  const tallBottomLayout = computePopoverLayout(
+    tallBottomSpotlight,
+    { width: 355, height: 240 },
+    mobileViewport,
+    "bottom",
+    290
+  );
+  assert.equal(tallBottomLayout.docked, "top");
+  assert.equal(tallBottomLayout.arrow, null);
+  assert.ok(tallBottomLayout.maxHeight <= maxAllowedMobileHeight);
+  assert.ok(
+    tallBottomLayout.top + Math.min(240, tallBottomLayout.maxHeight) <=
+      tallBottomSpotlight.top,
+    "expected top dock to stay strictly above tall bottom target"
+  );
+
+  const overlappingCenteredSpotlight = { top: 230, left: 10, width: 355, height: 180 };
+  const dockedFromCenter = computePopoverLayout(
+    overlappingCenteredSpotlight,
+    { width: 355, height: 250 },
+    mobileViewport,
+    "bottom",
+    164
+  );
+  assert.equal(dockedFromCenter.docked, "bottom");
+  assert.ok(
+    dockedFromCenter.top >=
+      overlappingCenteredSpotlight.top + overlappingCenteredSpotlight.height
+  );
+
+  const compactTopSpotlight = { top: 70, left: 10, width: 355, height: 90 };
+  const anchoredMobile = computePopoverLayout(
+    compactTopSpotlight,
+    { width: 355, height: 190 },
+    mobileViewport,
+    "bottom",
+    74
+  );
+  assert.equal(anchoredMobile.docked, null);
+  assert.equal(anchoredMobile.arrow?.side, "top");
+  assert.ok(anchoredMobile.top > compactTopSpotlight.top + compactTopSpotlight.height);
+
+  const desktopSpotlight = { top: 180, left: 80, width: 420, height: 240 };
+  const desktopLayout = computePopoverLayout(
+    desktopSpotlight,
+    { width: 368, height: 260 },
+    { width: 1280, height: 720 },
+    "right",
+    224
+  );
+  assert.equal(desktopLayout.docked, null);
+  assert.ok(desktopLayout.left >= desktopSpotlight.left + desktopSpotlight.width);
 });

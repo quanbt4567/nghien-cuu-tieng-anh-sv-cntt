@@ -24,43 +24,19 @@ import {
 } from "lucide-react";
 import {
   areAllGuidesDisabled,
+  computePopoverLayout,
+  DEFAULT_TOUR_POPOVER_HEIGHT,
+  DEFAULT_TOUR_POPOVER_WIDTH,
   dismissGuide,
   resolveGuideForPath,
   setAllGuidesDisabled,
   shouldAutoOpenGuide,
+  TOUR_SPOTLIGHT_PADDING,
   type FeatureTourStop,
-  type TourStopPlacement,
+  type TourPopoverArrow,
+  type TourRectBox,
+  type TourViewportSize,
 } from "../../lib/feature-guides";
-
-interface RectBox {
-  top: number;
-  left: number;
-  width: number;
-  height: number;
-}
-
-interface ViewportSize {
-  width: number;
-  height: number;
-}
-
-interface PopoverArrow {
-  side: TourStopPlacement;
-  offset: number;
-}
-
-interface PopoverLayout {
-  top: number;
-  left: number;
-  width: number;
-  arrow: PopoverArrow | null;
-}
-
-const SPOTLIGHT_PADDING = 8;
-const VIEWPORT_MARGIN = 12;
-const POPOVER_GAP = 14;
-const DEFAULT_POPOVER_WIDTH = 368;
-const DEFAULT_POPOVER_HEIGHT = 270;
 
 const CANDIDATE_TIERS = [
   'button, a, [role="tab"], input, textarea, select, label',
@@ -70,11 +46,6 @@ const CANDIDATE_TIERS = [
 
 function normalizeText(value: string | null | undefined): string {
   return (value ?? "").replace(/\s+/g, " ").trim().toLowerCase();
-}
-
-function clamp(value: number, min: number, max: number): number {
-  if (max <= min) return min;
-  return Math.min(max, Math.max(min, value));
 }
 
 function isElementVisible(el: Element): el is HTMLElement {
@@ -158,7 +129,7 @@ function findTargetElement(stop: FeatureTourStop): HTMLElement | null {
   return null;
 }
 
-function rectsClose(a: RectBox | null, b: RectBox | null): boolean {
+function rectsClose(a: TourRectBox | null, b: TourRectBox | null): boolean {
   if (a === b) return true;
   if (!a || !b) return false;
   return (
@@ -170,9 +141,9 @@ function rectsClose(a: RectBox | null, b: RectBox | null): boolean {
 }
 
 function buildSpotlightRect(
-  targetRect: RectBox | null,
-  viewport: ViewportSize
-): RectBox | null {
+  targetRect: TourRectBox | null,
+  viewport: TourViewportSize
+): TourRectBox | null {
   if (!targetRect || viewport.width <= 0 || viewport.height <= 0) return null;
   const targetRight = targetRect.left + targetRect.width;
   const targetBottom = targetRect.top + targetRect.height;
@@ -185,15 +156,15 @@ function buildSpotlightRect(
     return null;
   }
 
-  const top = Math.max(2, targetRect.top - SPOTLIGHT_PADDING);
-  const left = Math.max(2, targetRect.left - SPOTLIGHT_PADDING);
+  const top = Math.max(2, targetRect.top - TOUR_SPOTLIGHT_PADDING);
+  const left = Math.max(2, targetRect.left - TOUR_SPOTLIGHT_PADDING);
   const right = Math.min(
     viewport.width - 2,
-    targetRight + SPOTLIGHT_PADDING
+    targetRight + TOUR_SPOTLIGHT_PADDING
   );
   const bottom = Math.min(
     viewport.height - 2,
-    targetBottom + SPOTLIGHT_PADDING
+    targetBottom + TOUR_SPOTLIGHT_PADDING
   );
   const width = right - left;
   const height = bottom - top;
@@ -202,196 +173,7 @@ function buildSpotlightRect(
   return { top, left, width, height };
 }
 
-function getPlacementOrder(
-  preferred: TourStopPlacement
-): TourStopPlacement[] {
-  if (preferred === "top") return ["top", "bottom", "right", "left"];
-  if (preferred === "right") return ["right", "left", "bottom", "top"];
-  if (preferred === "left") return ["left", "right", "bottom", "top"];
-  return ["bottom", "top", "right", "left"];
-}
-
-function computePopoverLayout(
-  spotlightRect: RectBox | null,
-  cardSize: { width: number; height: number },
-  viewport: ViewportSize,
-  preferredPlacement: TourStopPlacement
-): PopoverLayout {
-  const cardWidth = Math.min(
-    DEFAULT_POPOVER_WIDTH,
-    Math.max(260, viewport.width - VIEWPORT_MARGIN * 2)
-  );
-  const cardHeight = Math.min(
-    cardSize.height > 0 ? cardSize.height : DEFAULT_POPOVER_HEIGHT,
-    Math.max(180, viewport.height - VIEWPORT_MARGIN * 2)
-  );
-
-  if (!spotlightRect) {
-    return {
-      width: cardWidth,
-      top: clamp(
-        (viewport.height - cardHeight) / 2,
-        VIEWPORT_MARGIN,
-        viewport.height - cardHeight - VIEWPORT_MARGIN
-      ),
-      left: clamp(
-        (viewport.width - cardWidth) / 2,
-        VIEWPORT_MARGIN,
-        viewport.width - cardWidth - VIEWPORT_MARGIN
-      ),
-      arrow: null,
-    };
-  }
-
-  const available: Record<TourStopPlacement, number> = {
-    bottom:
-      viewport.height -
-      (spotlightRect.top + spotlightRect.height) -
-      VIEWPORT_MARGIN,
-    top: spotlightRect.top - VIEWPORT_MARGIN,
-    right:
-      viewport.width -
-      (spotlightRect.left + spotlightRect.width) -
-      VIEWPORT_MARGIN,
-    left: spotlightRect.left - VIEWPORT_MARGIN,
-  };
-
-  const required: Record<TourStopPlacement, number> = {
-    bottom: cardHeight + POPOVER_GAP,
-    top: cardHeight + POPOVER_GAP,
-    right: cardWidth + POPOVER_GAP,
-    left: cardWidth + POPOVER_GAP,
-  };
-
-  const order = getPlacementOrder(preferredPlacement);
-  let chosen: TourStopPlacement | null =
-    order.find((side) => available[side] >= required[side]) ?? null;
-
-  if (!chosen) {
-    const fallbackPool: TourStopPlacement[] =
-      viewport.width < 640 ? ["bottom", "top"] : order;
-    let bestRatio = -1;
-    for (const side of fallbackPool) {
-      const ratio = available[side] / Math.max(1, required[side]);
-      if (ratio > bestRatio) {
-        bestRatio = ratio;
-        chosen = side;
-      }
-    }
-    chosen = chosen ?? "bottom";
-  }
-
-  const targetCenterX = spotlightRect.left + spotlightRect.width / 2;
-  const targetCenterY = spotlightRect.top + spotlightRect.height / 2;
-  const maxTop = Math.max(
-    VIEWPORT_MARGIN,
-    viewport.height - cardHeight - VIEWPORT_MARGIN
-  );
-  const maxLeft = Math.max(
-    VIEWPORT_MARGIN,
-    viewport.width - cardWidth - VIEWPORT_MARGIN
-  );
-
-  if (chosen === "bottom") {
-    const top = clamp(
-      spotlightRect.top + spotlightRect.height + POPOVER_GAP,
-      VIEWPORT_MARGIN,
-      maxTop
-    );
-    const left = clamp(
-      targetCenterX - cardWidth / 2,
-      VIEWPORT_MARGIN,
-      maxLeft
-    );
-    const fitsCleanly = top >= spotlightRect.top + spotlightRect.height - 2;
-    return {
-      width: cardWidth,
-      top,
-      left,
-      arrow: fitsCleanly
-        ? {
-            side: "top",
-            offset: clamp(targetCenterX - left, 24, cardWidth - 24),
-          }
-        : null,
-    };
-  }
-
-  if (chosen === "top") {
-    const top = clamp(
-      spotlightRect.top - cardHeight - POPOVER_GAP,
-      VIEWPORT_MARGIN,
-      maxTop
-    );
-    const left = clamp(
-      targetCenterX - cardWidth / 2,
-      VIEWPORT_MARGIN,
-      maxLeft
-    );
-    const fitsCleanly = top + cardHeight <= spotlightRect.top + 2;
-    return {
-      width: cardWidth,
-      top,
-      left,
-      arrow: fitsCleanly
-        ? {
-            side: "bottom",
-            offset: clamp(targetCenterX - left, 24, cardWidth - 24),
-          }
-        : null,
-    };
-  }
-
-  if (chosen === "right") {
-    const left = clamp(
-      spotlightRect.left + spotlightRect.width + POPOVER_GAP,
-      VIEWPORT_MARGIN,
-      maxLeft
-    );
-    const top = clamp(
-      targetCenterY - cardHeight / 2,
-      VIEWPORT_MARGIN,
-      maxTop
-    );
-    const fitsCleanly = left >= spotlightRect.left + spotlightRect.width - 2;
-    return {
-      width: cardWidth,
-      top,
-      left,
-      arrow: fitsCleanly
-        ? {
-            side: "left",
-            offset: clamp(targetCenterY - top, 24, cardHeight - 24),
-          }
-        : null,
-    };
-  }
-
-  const left = clamp(
-    spotlightRect.left - cardWidth - POPOVER_GAP,
-    VIEWPORT_MARGIN,
-    maxLeft
-  );
-  const top = clamp(
-    targetCenterY - cardHeight / 2,
-    VIEWPORT_MARGIN,
-    maxTop
-  );
-  const fitsCleanly = left + cardWidth <= spotlightRect.left + 2;
-  return {
-    width: cardWidth,
-    top,
-    left,
-    arrow: fitsCleanly
-      ? {
-          side: "right",
-          offset: clamp(targetCenterY - top, 24, cardHeight - 24),
-        }
-      : null,
-  };
-}
-
-function PopoverArrowPointer({ arrow }: { arrow: PopoverArrow }) {
+function PopoverArrowPointer({ arrow }: { arrow: TourPopoverArrow }) {
   if (arrow.side === "top") {
     return (
       <svg
@@ -489,8 +271,8 @@ export function FeatureGuideDock() {
   const [stepIndex, setStepIndex] = useState(0);
   const [autoDisabled, setAutoDisabled] = useState(false);
   const [reenabledNotice, setReenabledNotice] = useState(false);
-  const [targetRect, setTargetRect] = useState<RectBox | null>(null);
-  const [viewport, setViewport] = useState<ViewportSize>({
+  const [targetRect, setTargetRect] = useState<TourRectBox | null>(null);
+  const [viewport, setViewport] = useState<TourViewportSize>({
     width: 1280,
     height: 720,
   });
@@ -498,8 +280,8 @@ export function FeatureGuideDock() {
     width: number;
     height: number;
   }>({
-    width: DEFAULT_POPOVER_WIDTH,
-    height: DEFAULT_POPOVER_HEIGHT,
+    width: DEFAULT_TOUR_POPOVER_WIDTH,
+    height: DEFAULT_TOUR_POPOVER_HEIGHT,
   });
 
   const popoverRef = useRef<HTMLDivElement | null>(null);
@@ -621,7 +403,19 @@ export function FeatureGuideDock() {
 
       if (scrolledStepKeyRef.current !== stepKey) {
         scrolledStepKeyRef.current = stepKey;
-        if (typeof el.scrollIntoView === "function") {
+        const rectBeforeScroll = el.getBoundingClientRect();
+        if (nextVw < 640 && typeof window.scrollTo === "function") {
+          if (
+            rectBeforeScroll.top < 70 ||
+            rectBeforeScroll.bottom > nextVh * 0.48
+          ) {
+            const targetScrollY = Math.max(
+              0,
+              window.scrollY + rectBeforeScroll.top - 74
+            );
+            window.scrollTo({ top: targetScrollY, behavior: "smooth" });
+          }
+        } else if (typeof el.scrollIntoView === "function") {
           el.scrollIntoView({
             behavior: "smooth",
             block: "center",
@@ -637,7 +431,7 @@ export function FeatureGuideDock() {
         const followScroll = () => {
           const rect = el.getBoundingClientRect();
           if (el.isConnected && rect.width > 0 && rect.height > 0) {
-            const box: RectBox = {
+            const box: TourRectBox = {
               top: rect.top,
               left: rect.left,
               width: rect.width,
@@ -657,7 +451,7 @@ export function FeatureGuideDock() {
 
       const rect = el.getBoundingClientRect();
       if (rect.width > 0 && rect.height > 0) {
-        const nextBox: RectBox = {
+        const nextBox: TourRectBox = {
           top: rect.top,
           left: rect.left,
           width: rect.width,
@@ -761,9 +555,10 @@ export function FeatureGuideDock() {
         spotlightRect,
         popoverSize,
         viewport,
-        activeStop?.placement ?? "bottom"
+        activeStop?.placement ?? "bottom",
+        targetRect?.height
       ),
-    [activeStop?.placement, popoverSize, spotlightRect, viewport]
+    [activeStop?.placement, popoverSize, spotlightRect, targetRect?.height, viewport]
   );
 
   if (!guide) {
@@ -778,11 +573,12 @@ export function FeatureGuideDock() {
         type="button"
         data-feature-guide-dock="true"
         onClick={handleOpenManual}
-        aria-label={`Mở hướng dẫn: ${guide.title}`}
-        className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill bg-white hover:bg-paper-muted text-ink border border-ink/20 text-xs font-semibold shadow-card shadow-hard-press transition-all"
+        aria-label="Hướng dẫn"
+        title={`Mở hướng dẫn: ${guide.title}`}
+        className="fixed bottom-3 right-3 sm:bottom-5 sm:right-5 z-40 inline-flex items-center justify-center gap-1.5 p-2.5 sm:px-3.5 sm:py-2 rounded-pill bg-white hover:bg-paper-muted text-ink border border-ink/20 text-xs font-semibold shadow-card shadow-hard-press transition-all"
       >
         <HelpCircle className="w-4 h-4 text-accent shrink-0" aria-hidden="true" />
-        <span>Hướng dẫn</span>
+        <span className="hidden sm:inline">Hướng dẫn</span>
       </button>
 
       {isOpen && activeStop && (
@@ -867,7 +663,7 @@ export function FeatureGuideDock() {
             ref={popoverRef}
             tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
-            className="fixed z-[75] bg-white border-2 border-ink rounded-2xl shadow-[6px_6px_0_#1A1714] focus:outline-none"
+            className="fixed z-[75] bg-white border-2 border-ink rounded-xl sm:rounded-2xl shadow-[4px_4px_0_#1A1714] sm:shadow-[6px_6px_0_#1A1714] focus:outline-none"
             style={{
               top: popoverLayout.top,
               left: popoverLayout.left,
@@ -879,14 +675,17 @@ export function FeatureGuideDock() {
             )}
 
             <div
-              className="p-4 sm:p-5 space-y-3.5 overflow-y-auto"
+              className="p-3 sm:p-5 space-y-2.5 sm:space-y-3.5 overflow-y-auto max-h-[44vh] sm:max-h-none"
               style={{
-                maxHeight: Math.max(200, viewport.height - VIEWPORT_MARGIN * 2),
+                maxHeight:
+                  viewport.width < 640
+                    ? Math.max(116, popoverLayout.maxHeight - 4)
+                    : popoverLayout.maxHeight,
               }}
             >
             <div className="flex items-center justify-between gap-2">
               <div className="flex flex-wrap items-center gap-1.5 min-w-0">
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill bg-[#FFE5E5] border border-[#E5484D]/40 text-[#E5484D] text-[11px] font-mono font-bold">
+                <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-pill bg-[#FFE5E5] border border-[#E5484D]/40 text-[#E5484D] text-[10px] sm:text-[11px] font-mono font-bold">
                   <Compass className="w-3 h-3 shrink-0" aria-hidden="true" />
                   <span>
                     Bước {safeStepIndex + 1} / {totalStops}
@@ -900,11 +699,11 @@ export function FeatureGuideDock() {
                 )}
               </div>
 
-              <div className="flex items-center gap-1.5 shrink-0">
+              <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
                 <button
                   type="button"
                   onClick={handleAcknowledge}
-                  className="text-[11px] font-semibold text-ink-muted hover:text-ink px-2 py-1 rounded-pill hover:bg-paper-muted transition-colors"
+                  className="text-[11px] font-semibold text-ink-muted hover:text-ink px-2 py-0.5 sm:py-1 rounded-pill hover:bg-paper-muted transition-colors"
                 >
                   Bỏ qua
                 </button>
@@ -912,30 +711,30 @@ export function FeatureGuideDock() {
                   type="button"
                   onClick={handleAcknowledge}
                   aria-label="Đóng hướng dẫn"
-                  className="w-7 h-7 rounded-pill bg-paper border border-ink/15 text-ink-muted hover:text-ink hover:bg-paper-muted flex items-center justify-center transition-colors"
+                  className="w-6 h-6 sm:w-7 sm:h-7 rounded-pill bg-paper border border-ink/15 text-ink-muted hover:text-ink hover:bg-paper-muted flex items-center justify-center transition-colors"
                 >
                   <X className="w-3.5 h-3.5" aria-hidden="true" />
                 </button>
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <div className="text-[11px] font-mono font-semibold text-ink-muted uppercase tracking-wider truncate">
+            <div className="space-y-1 sm:space-y-1.5">
+              <div className="text-[10px] sm:text-[11px] font-mono font-semibold text-ink-muted uppercase tracking-wider truncate">
                 {guide.title}
               </div>
               <h2
                 id="feature-guide-title"
-                className="text-sm sm:text-base font-bold text-ink leading-snug"
+                className="text-[13px] sm:text-base font-bold text-ink leading-snug"
               >
                 {activeStop.title}
               </h2>
-              <p className="text-xs sm:text-[13px] text-ink-muted leading-relaxed">
+              <p className="text-xs sm:text-[13px] text-ink-muted leading-snug sm:leading-relaxed">
                 {activeStop.description}
               </p>
             </div>
 
             {isLastStep && guide.tips.length > 0 && (
-              <div className="bg-paper border border-ink/15 rounded-xl px-3 py-2 flex items-start gap-2 text-[11px] text-ink-muted leading-relaxed">
+              <div className="bg-paper border border-ink/15 rounded-xl px-2.5 py-1.5 sm:px-3 sm:py-2 flex items-start gap-2 text-[11px] text-ink-muted leading-snug sm:leading-relaxed">
                 <Lightbulb
                   className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5"
                   aria-hidden="true"
@@ -944,7 +743,7 @@ export function FeatureGuideDock() {
               </div>
             )}
 
-            <div className="flex items-center justify-center gap-1.5 pt-0.5">
+            <div className="flex items-center justify-center gap-1.5 pt-0 sm:pt-0.5">
               {tourStops.map((stop, idx) => {
                 const isCurrent = idx === safeStepIndex;
                 return (
@@ -964,12 +763,12 @@ export function FeatureGuideDock() {
               })}
             </div>
 
-            <div className="flex items-center justify-between gap-2 pt-1">
+            <div className="flex items-center justify-between gap-2 pt-0.5 sm:pt-1">
               <button
                 type="button"
                 onClick={handlePrevStep}
                 disabled={safeStepIndex === 0}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill bg-paper hover:bg-paper-muted text-ink border border-ink/20 text-xs font-semibold disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-pill bg-paper hover:bg-paper-muted text-ink border border-ink/20 text-xs font-semibold disabled:opacity-40 disabled:pointer-events-none transition-colors"
               >
                 <ArrowLeft className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                 <span>Trước</span>
@@ -978,7 +777,7 @@ export function FeatureGuideDock() {
               <button
                 type="button"
                 onClick={handleNextStep}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-[#E5484D] hover:bg-[#DC3D43] text-white border border-[#1A1714] text-xs font-bold shadow-[2px_2px_0_#1A1714] transition-all"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-pill bg-[#E5484D] hover:bg-[#DC3D43] text-white border border-[#1A1714] text-xs font-bold shadow-[2px_2px_0_#1A1714] transition-all"
               >
                 {isLastStep ? (
                   <>
@@ -1011,7 +810,7 @@ export function FeatureGuideDock() {
                 <button
                   type="button"
                   onClick={handleEnableAutoGuides}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-sky-50 hover:bg-sky-100 text-sky-800 text-[11px] font-semibold border border-sky-200 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-pill bg-sky-50 hover:bg-sky-100 text-sky-800 text-[10px] sm:text-[11px] font-semibold border border-sky-200 transition-colors"
                 >
                   <RotateCcw className="w-3 h-3 shrink-0" aria-hidden="true" />
                   <span>Bật lại hướng dẫn tự động</span>
@@ -1020,7 +819,7 @@ export function FeatureGuideDock() {
                 <button
                   type="button"
                   onClick={handleDisableAutoGuides}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper hover:bg-paper-muted text-ink-muted hover:text-ink text-[11px] font-medium border border-ink/15 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-pill bg-paper hover:bg-paper-muted text-ink-muted hover:text-ink text-[10px] sm:text-[11px] font-medium border border-ink/15 transition-colors"
                 >
                   <BellOff className="w-3 h-3 shrink-0" aria-hidden="true" />
                   <span>Tắt hướng dẫn tự động</span>

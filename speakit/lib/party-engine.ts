@@ -77,7 +77,10 @@ export interface PartyTranscriptEntry {
   timestamp: string;
 }
 
-export interface PartyRoomSnapshot extends PartyRoomState {
+export type PartyRoomLifecycleStatus = PartyRoomStatus | "timed_out";
+
+export interface PartyRoomSnapshot extends Omit<PartyRoomState, "status"> {
+  status: PartyRoomLifecycleStatus;
   resolutionProgress: number;
   remainingSeconds: number;
   totalPenaltySeconds: number;
@@ -628,6 +631,27 @@ export function startPartyRoom(room: PartyRoomSnapshot): PartyRoomSnapshot {
     ...room,
     status: "speaking" as PartyRoomStatus,
     currentTurnRole: firstRole,
+    updatedAt: now,
+  };
+}
+
+export function timeoutPartyRoom(room: PartyRoomSnapshot): PartyRoomSnapshot {
+  if (room.status === "resolved" || room.status === "lobby") {
+    return room;
+  }
+  if (
+    room.status === "timed_out" &&
+    room.remainingSeconds === 0 &&
+    room.currentTurnRole === null
+  ) {
+    return room;
+  }
+  const now = new Date().toISOString();
+  return {
+    ...room,
+    status: "timed_out",
+    currentTurnRole: null,
+    remainingSeconds: 0,
     updatedAt: now,
   };
 }

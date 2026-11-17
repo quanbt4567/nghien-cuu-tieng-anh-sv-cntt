@@ -598,7 +598,7 @@ export const FEATURE_GUIDES: readonly FeatureGuide[] = [
         title: "Số dư IT-Coin & nút kiếm thêm Coin",
         description:
           "Kiểm tra số IT-Coin hiện có tại đây hoặc nhấn Kiếm thêm Coin để sang Arena cày điểm nhanh.",
-        selectors: ['a[href="/arena"]'],
+        selectors: ['[data-tour="shop-coin-balance"]', 'a[href="/arena"]'],
         matchTexts: ["Kiếm thêm Coin"],
         placement: "bottom",
       },
@@ -606,7 +606,10 @@ export const FEATURE_GUIDES: readonly FeatureGuide[] = [
         title: "Phòng thử hiệu ứng trực tiếp (Sandbox)",
         description:
           "Mọi vật phẩm bạn nhấn chọn sẽ hiển thị xem trước ngay trên thẻ hồ sơ, khung Mic Pulse và hiệu ứng Victory Finisher.",
-        selectors: ['section[aria-label="Live Try-On Sandbox"]'],
+        selectors: [
+          '[data-tour="shop-sandbox-preview"]',
+          'section[aria-label="Live Try-On Sandbox"]',
+        ],
         matchTexts: ["Mic Pulse", "Trigger Finisher"],
         placement: "bottom",
       },
@@ -980,4 +983,290 @@ export function shouldAutoOpenGuide(
   if (areAllGuidesDisabled(store)) return false;
   if (isGuideDismissed(guide.id, store)) return false;
   return true;
+}
+
+export interface TourRectBox {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+}
+
+export interface TourViewportSize {
+  width: number;
+  height: number;
+}
+
+export interface TourPopoverArrow {
+  side: TourStopPlacement;
+  offset: number;
+}
+
+export interface TourPopoverLayout {
+  top: number;
+  left: number;
+  width: number;
+  maxHeight: number;
+  docked: "top" | "bottom" | null;
+  arrow: TourPopoverArrow | null;
+}
+
+export const TOUR_SPOTLIGHT_PADDING = 8;
+export const DEFAULT_TOUR_POPOVER_WIDTH = 368;
+export const DEFAULT_TOUR_POPOVER_HEIGHT = 270;
+const MOBILE_TOUR_POPOVER_HEIGHT = 205;
+const DESKTOP_VIEWPORT_MARGIN = 12;
+const MOBILE_VIEWPORT_MARGIN = 10;
+const DESKTOP_POPOVER_GAP = 14;
+const MOBILE_POPOVER_GAP = 10;
+
+function clampTourValue(value: number, min: number, max: number): number {
+  if (max <= min) return min;
+  return Math.min(max, Math.max(min, value));
+}
+
+function getPlacementOrder(preferred: TourStopPlacement): TourStopPlacement[] {
+  if (preferred === "top") return ["top", "bottom", "right", "left"];
+  if (preferred === "right") return ["right", "left", "bottom", "top"];
+  if (preferred === "left") return ["left", "right", "bottom", "top"];
+  return ["bottom", "top", "right", "left"];
+}
+
+export function computePopoverLayout(
+  spotlightRect: TourRectBox | null,
+  cardSize: { width: number; height: number },
+  viewport: TourViewportSize,
+  preferredPlacement: TourStopPlacement,
+  rawTargetHeight?: number
+): TourPopoverLayout {
+  const isMobile = viewport.width < 640;
+  const margin = isMobile ? MOBILE_VIEWPORT_MARGIN : DESKTOP_VIEWPORT_MARGIN;
+  const gap = isMobile ? MOBILE_POPOVER_GAP : DESKTOP_POPOVER_GAP;
+  const cardWidth = Math.min(
+    DEFAULT_TOUR_POPOVER_WIDTH,
+    Math.max(isMobile ? 240 : 260, viewport.width - margin * 2)
+  );
+  const desktopMaxHeight = Math.max(200, viewport.height - margin * 2);
+  const mobileMaxHalfHeight = Math.max(140, Math.floor(viewport.height * 0.44));
+  const rawHeight =
+    cardSize.height > 0
+      ? cardSize.height
+      : isMobile
+        ? MOBILE_TOUR_POPOVER_HEIGHT
+        : DEFAULT_TOUR_POPOVER_HEIGHT;
+
+  if (!spotlightRect) {
+    const maxHeight = isMobile ? mobileMaxHalfHeight : desktopMaxHeight;
+    const cardHeight = Math.min(rawHeight, maxHeight);
+    return {
+      width: cardWidth,
+      maxHeight,
+      docked: null,
+      top: clampTourValue(
+        (viewport.height - cardHeight) / 2,
+        margin,
+        viewport.height - cardHeight - margin
+      ),
+      left: clampTourValue(
+        (viewport.width - cardWidth) / 2,
+        margin,
+        viewport.width - cardWidth - margin
+      ),
+      arrow: null,
+    };
+  }
+
+  const targetCenterX = spotlightRect.left + spotlightRect.width / 2;
+  const targetCenterY = spotlightRect.top + spotlightRect.height / 2;
+  const maxLeft = Math.max(margin, viewport.width - cardWidth - margin);
+
+  if (isMobile) {
+    const spotlightBottom = spotlightRect.top + spotlightRect.height;
+    const availableTop = Math.max(0, spotlightRect.top - margin);
+    const availableBottom = Math.max(0, viewport.height - spotlightBottom - margin);
+    const cappedHeight = Math.min(rawHeight, mobileMaxHalfHeight);
+    const fitsBottom = availableBottom >= cappedHeight + gap;
+    const fitsTop = availableTop >= cappedHeight + gap;
+    const targetHeight = rawTargetHeight ?? spotlightRect.height;
+    const isTallTarget = targetHeight > viewport.height * 0.42;
+    const wouldOverlapPreferred =
+      preferredPlacement === "top"
+        ? !fitsTop
+        : preferredPlacement === "bottom"
+          ? !fitsBottom
+          : !fitsBottom && !fitsTop;
+
+    const left = clampTourValue(targetCenterX - cardWidth / 2, margin, maxLeft);
+
+    if (isTallTarget || (!fitsBottom && !fitsTop) || wouldOverlapPreferred) {
+      const dockSide: "top" | "bottom" =
+        availableBottom >= availableTop ? "bottom" : "top";
+      const nonOverlapRoom = Math.max(
+        0,
+        (dockSide === "bottom" ? availableBottom : availableTop) - gap
+      );
+      const maxHeight =
+        nonOverlapRoom >= 120
+          ? Math.min(mobileMaxHalfHeight, nonOverlapRoom)
+          : Math.min(mobileMaxHalfHeight, Math.max(140, nonOverlapRoom));
+      const effectiveHeight = Math.min(rawHeight, maxHeight);
+      const top =
+        dockSide === "bottom"
+          ? Math.max(margin, viewport.height - margin - effectiveHeight)
+          : margin;
+      return {
+        width: cardWidth,
+        maxHeight,
+        docked: dockSide,
+        top,
+        left,
+        arrow: null,
+      };
+    }
+
+    const side: "top" | "bottom" =
+      preferredPlacement === "top" && fitsTop
+        ? "top"
+        : fitsBottom
+          ? "bottom"
+          : "top";
+    const top =
+      side === "bottom"
+        ? spotlightBottom + gap
+        : spotlightRect.top - gap - cappedHeight;
+    return {
+      width: cardWidth,
+      maxHeight: mobileMaxHalfHeight,
+      docked: null,
+      top,
+      left,
+      arrow: {
+        side: side === "bottom" ? "top" : "bottom",
+        offset: clampTourValue(targetCenterX - left, 24, cardWidth - 24),
+      },
+    };
+  }
+
+  const cardHeight = Math.min(rawHeight, desktopMaxHeight);
+  const available: Record<TourStopPlacement, number> = {
+    bottom: viewport.height - (spotlightRect.top + spotlightRect.height) - margin,
+    top: spotlightRect.top - margin,
+    right: viewport.width - (spotlightRect.left + spotlightRect.width) - margin,
+    left: spotlightRect.left - margin,
+  };
+
+  const required: Record<TourStopPlacement, number> = {
+    bottom: cardHeight + gap,
+    top: cardHeight + gap,
+    right: cardWidth + gap,
+    left: cardWidth + gap,
+  };
+
+  const order = getPlacementOrder(preferredPlacement);
+  let chosen: TourStopPlacement | null =
+    order.find((side) => available[side] >= required[side]) ?? null;
+
+  if (!chosen) {
+    let bestRatio = -1;
+    for (const side of order) {
+      const ratio = available[side] / Math.max(1, required[side]);
+      if (ratio > bestRatio) {
+        bestRatio = ratio;
+        chosen = side;
+      }
+    }
+    chosen = chosen ?? "bottom";
+  }
+
+  const maxTop = Math.max(margin, viewport.height - cardHeight - margin);
+
+  if (chosen === "bottom") {
+    const top = clampTourValue(
+      spotlightRect.top + spotlightRect.height + gap,
+      margin,
+      maxTop
+    );
+    const left = clampTourValue(targetCenterX - cardWidth / 2, margin, maxLeft);
+    const fitsCleanly = top >= spotlightRect.top + spotlightRect.height - 2;
+    return {
+      width: cardWidth,
+      maxHeight: desktopMaxHeight,
+      docked: null,
+      top,
+      left,
+      arrow: fitsCleanly
+        ? {
+            side: "top",
+            offset: clampTourValue(targetCenterX - left, 24, cardWidth - 24),
+          }
+        : null,
+    };
+  }
+
+  if (chosen === "top") {
+    const top = clampTourValue(
+      spotlightRect.top - cardHeight - gap,
+      margin,
+      maxTop
+    );
+    const left = clampTourValue(targetCenterX - cardWidth / 2, margin, maxLeft);
+    const fitsCleanly = top + cardHeight <= spotlightRect.top + 2;
+    return {
+      width: cardWidth,
+      maxHeight: desktopMaxHeight,
+      docked: null,
+      top,
+      left,
+      arrow: fitsCleanly
+        ? {
+            side: "bottom",
+            offset: clampTourValue(targetCenterX - left, 24, cardWidth - 24),
+          }
+        : null,
+    };
+  }
+
+  if (chosen === "right") {
+    const left = clampTourValue(
+      spotlightRect.left + spotlightRect.width + gap,
+      margin,
+      maxLeft
+    );
+    const top = clampTourValue(targetCenterY - cardHeight / 2, margin, maxTop);
+    const fitsCleanly = left >= spotlightRect.left + spotlightRect.width - 2;
+    return {
+      width: cardWidth,
+      maxHeight: desktopMaxHeight,
+      docked: null,
+      top,
+      left,
+      arrow: fitsCleanly
+        ? {
+            side: "left",
+            offset: clampTourValue(targetCenterY - top, 24, cardHeight - 24),
+          }
+        : null,
+    };
+  }
+
+  const left = clampTourValue(
+    spotlightRect.left - cardWidth - gap,
+    margin,
+    maxLeft
+  );
+  const top = clampTourValue(targetCenterY - cardHeight / 2, margin, maxTop);
+  const fitsCleanly = left + cardWidth <= spotlightRect.left + 2;
+  return {
+    width: cardWidth,
+    maxHeight: desktopMaxHeight,
+    docked: null,
+    top,
+    left,
+    arrow: fitsCleanly
+      ? {
+          side: "right",
+          offset: clampTourValue(targetCenterY - top, 24, cardHeight - 24),
+        }
+      : null,
+  };
 }

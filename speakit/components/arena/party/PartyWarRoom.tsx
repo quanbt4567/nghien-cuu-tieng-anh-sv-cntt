@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   AlertTriangle,
+  ArrowDown,
+  ArrowLeft,
   Bot,
   Check,
   CheckCircle2,
@@ -39,11 +41,13 @@ import {
   readCachedGuestProfile,
   saveCachedGuestProfile,
 } from "@/lib/guestClient";
+import type { PartyRoomLifecycleStatus } from "@/lib/party-engine";
 import {
   PARTY_SCENARIOS,
   PartyRoomState,
   PartyScenario,
   PlayerRole,
+  TurnEvaluation,
   findPartyScenarioById,
 } from "@/lib/party-scenarios";
 import { SpeechController, startSpeechRecognition } from "@/lib/speech";
@@ -80,13 +84,19 @@ interface PartyTranscriptEntry {
   timestamp: string;
 }
 
-interface PartyRoomViewState extends PartyRoomState {
+interface PartyRoomViewState extends Omit<PartyRoomState, "status"> {
+  status: PartyRoomLifecycleStatus;
   resolutionProgress?: number;
+  remainingSeconds?: number;
+  totalPenaltySeconds?: number;
+  rewardsAwarded?: boolean;
+  mvpDisplayName?: string | null;
   transcript?: PartyTranscriptEntry[];
 }
 
 interface EvaluateApiResponse {
   room?: PartyRoomViewState;
+  evaluation?: TurnEvaluation;
   resolutionProgress?: number;
   penaltySeconds?: number;
   feedback?: string;
@@ -111,7 +121,7 @@ function formatClock(totalSeconds: number): string {
   return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
 }
 
-function computeProgressFromRoom(room: PartyRoomState | null): number {
+function computeProgressFromRoom(room: PartyRoomViewState | null): number {
   if (!room) return 0;
   if (room.status === "resolved") return 100;
   if (room.evaluations.length === 0) return 0;
@@ -147,6 +157,15 @@ export function PartyWarRoom() {
   const [speechError, setSpeechError] = useState<string | null>(null);
   const [mvpPlayerId, setMvpPlayerId] = useState<string | null>(null);
   const [showFinisher, setShowFinisher] = useState(false);
+  const [lastTurnFeedback, setLastTurnFeedback] = useState<{
+    score: number;
+    progressPct: number;
+    turnNumber: number;
+    feedback: string;
+    missingKeywords: string[];
+    penaltySeconds: number;
+  } | null>(null);
+  const [ctoHighlight, setCtoHighlight] = useState(false);
 
   const speechControllerRef = useRef<SpeechController | null>(null);
   const turnStartRef = useRef<number>(Date.now());
@@ -154,6 +173,11 @@ export function PartyWarRoom() {
   const finisherTriggeredRef = useRef<string | null>(null);
   const briefingSpokenRef = useRef<string | null>(null);
   const flushedRoomRef = useRef<string | null>(null);
+  const timeoutTriggeredForRoomRef = useRef<string | null>(null);
+  const mountedRef = useRef(true);
+  const ctoBoxRef = useRef<HTMLDivElement | null>(null);
+  const composerSectionRef = useRef<HTMLElement | null>(null);
+  const ctoHighlightTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const syncGuestProfile = useCallback(async () => {
     const cached = readCachedGuestProfile();
@@ -171,6 +195,7 @@ export function PartyWarRoom() {
   }, []);
 
   useEffect(() => {
+    mountedRef.current = true;
     void syncGuestProfile();
 
     const handleProfileEvent = () => {
@@ -187,6 +212,10 @@ export function PartyWarRoom() {
     window.addEventListener(GUEST_PROFILE_UPDATED_EVENT, handleProfileEvent);
     window.addEventListener("storage", handleStorage);
     return () => {
+      mountedRef.current = false;
+      if (ctoHighlightTimerRef.current) {
+        clearTimeout(ctoHighlightTimerRef.current);
+      }
       window.removeEventListener(GUEST_PROFILE_UPDATED_EVENT, handleProfileEvent);
       window.removeEventListener("storage", handleStorage);
       stopActiveTts();
@@ -232,22 +261,32 @@ export function PartyWarRoom() {
       timerInitializedForRoomRef.current = null;
       finisherTriggeredRef.current = null;
       briefingSpokenRef.current = null;
+      timeoutTriggeredForRoomRef.current = null;
+      setLastTurnFeedback(null);
+      setCtoHighlight(false);
       return;
     }
 
     if (timerInitializedForRoomRef.current !== room.roomCode) {
       timerInitializedForRoomRef.current = room.roomCode;
       flushedRoomRef.current = null;
-      setTimeLeftSec(activeScenario.estimatedMinutes * 60);
+      timeoutTriggeredForRoomRef.current = null;
+      const initialSeconds =
+        room.status === "timed_out"
+          ? 0
+          : typeof room.remainingSeconds === "number"
+            ? Math.max(0, room.remainingSeconds)
+            : activeScenario.estimatedMinutes * 60;
+      setTimeLeftSec(initialSeconds);
       const initialProgress =
-        (room as PartyRoomState & { resolutionProgress?: number })
-          .resolutionProgress ?? computeProgressFromRoom(room);
+        room.resolutionProgress ?? computeProgressFromRoom(room);
       setResolutionProgress(initialProgress);
       turnStartRef.current = Date.now();
     }
 
     if (
       room.status !== "resolved" &&
+      room.status !== "timed_out" &&
       briefingSpokenRef.current !== room.roomCode
     ) {
       briefingSpokenRef.current = room.roomCode;
@@ -256,46 +295,124 @@ export function PartyWarRoom() {
       );
     }
 
+    if (room.status === "timed_out") {
+      setTimeLeftSec(0);
+      stopCtoAudio();
+    }
+
     if (room.status === "resolved") {
       setResolutionProgress(100);
+      setLastTurnFeedback(null);
+      setCtoHighlight(false);
       if (finisherTriggeredRef.current !== room.roomCode) {
         finisherTriggeredRef.current = room.roomCode;
         setShowFinisher(true);
         void syncGuestProfile();
       }
     }
-  }, [room, activeScenario, speakCtoAlert, syncGuestProfile]);
+  }, [room, activeScenario, speakCtoAlert, stopCtoAudio, syncGuestProfile]);
 
   useEffect(() => {
-    if (!room || room.status === "lobby" || room.status === "resolved") return;
+    if (
+      !room ||
+      room.status === "lobby" ||
+      room.status === "resolved" ||
+      room.status === "timed_out"
+    ) {
+      return;
+    }
     const interval = setInterval(() => {
       setTimeLeftSec((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
     return () => clearInterval(interval);
-  }, [room]);
+  }, [room?.roomCode, room?.status]);
 
   useEffect(() => {
-    if (!room || room.status === "resolved") return;
+    if (!room) return;
+    const isActive =
+      room.status === "briefing" ||
+      room.status === "speaking" ||
+      room.status === "evaluating";
+    if (!isActive || timeLeftSec > 0) return;
+
+    stopCtoAudio();
+    speechControllerRef.current?.stop();
+    setIsRecording(false);
+
+    if (timeoutTriggeredForRoomRef.current === room.roomCode) return;
+    timeoutTriggeredForRoomRef.current = room.roomCode;
+
+    const targetRoomCode = room.roomCode;
+    void (async () => {
+      try {
+        const res = await fetch("/api/party/room", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "timeout",
+            code: targetRoomCode,
+            roomCode: targetRoomCode,
+            role: selectedRole,
+            transferCode: readBackupTransferCode(),
+            backupTransferCode: readBackupTransferCode(),
+            displayName: guestPlayer?.displayName,
+          }),
+        });
+        if (!res.ok || !mountedRef.current) return;
+        const data = (await res.json()) as RoomApiResponse;
+        const nextRoom = data.room ?? (data as unknown as PartyRoomViewState);
+        if (nextRoom && nextRoom.roomCode && mountedRef.current) {
+          setRoom(nextRoom);
+          if (nextRoom.rewardsAwarded) {
+            flushedRoomRef.current = nextRoom.roomCode;
+          }
+        }
+        if (data.player && mountedRef.current) {
+          setGuestPlayer(data.player);
+          saveCachedGuestProfile(data.player);
+        }
+      } catch {
+      }
+    })();
+  }, [
+    room?.roomCode,
+    room?.status,
+    timeLeftSec,
+    selectedRole,
+    guestPlayer?.displayName,
+    stopCtoAudio,
+  ]);
+
+  useEffect(() => {
+    if (!room || room.status === "resolved" || room.status === "timed_out") return;
+    const targetRoomCode = room.roomCode;
     const poll = setInterval(async () => {
       try {
         const res = await fetch(
-          `/api/party/room?code=${encodeURIComponent(room.roomCode)}`
+          `/api/party/room?code=${encodeURIComponent(targetRoomCode)}`
         );
         if (!res.ok) return;
         const data = (await res.json()) as RoomApiResponse;
-        const nextRoom = data.room ?? (data as unknown as PartyRoomState);
+        const nextRoom = data.room ?? (data as unknown as PartyRoomViewState);
         if (nextRoom && nextRoom.roomCode) {
           setRoom(nextRoom);
+          if (nextRoom.status === "lobby") {
+            setResolutionProgress(0);
+            setLastTurnFeedback(null);
+            return;
+          }
+          if (nextRoom.status === "timed_out") {
+            setTimeLeftSec(0);
+          }
           const nextProgress =
-            (nextRoom as PartyRoomState & { resolutionProgress?: number })
-              .resolutionProgress ?? computeProgressFromRoom(nextRoom);
+            nextRoom.resolutionProgress ?? computeProgressFromRoom(nextRoom);
           setResolutionProgress((prev) => Math.max(prev, nextProgress));
         }
       } catch {
       }
     }, 3000);
     return () => clearInterval(poll);
-  }, [room]);
+  }, [room?.roomCode, room?.status]);
 
   const callRoomAction = async (
     payload: Record<string, unknown>,
@@ -319,7 +436,7 @@ export function PartyWarRoom() {
         setErrorMsg(data.error ?? "Unable to update war room.");
         return;
       }
-      const nextRoom = data.room ?? (data as unknown as PartyRoomState);
+      const nextRoom = data.room ?? (data as unknown as PartyRoomViewState);
       if (nextRoom && nextRoom.roomCode) {
         setRoom(nextRoom);
       }
@@ -383,10 +500,11 @@ export function PartyWarRoom() {
   };
 
   const flushUnresolvedRoomPoints = useCallback(
-    async (targetRoom: PartyRoomState | null, keepalive = false) => {
+    async (targetRoom: PartyRoomViewState | null, keepalive = false) => {
       if (
         !targetRoom ||
         targetRoom.status === "resolved" ||
+        targetRoom.rewardsAwarded ||
         targetRoom.teamScore <= 0 ||
         flushedRoomRef.current === targetRoom.roomCode
       ) {
@@ -432,12 +550,19 @@ export function PartyWarRoom() {
   const handleResetRoom = () => {
     stopCtoAudio();
     speechControllerRef.current?.abort();
+    if (ctoHighlightTimerRef.current) {
+      clearTimeout(ctoHighlightTimerRef.current);
+    }
     setIsRecording(false);
     setTranscriptInput("");
     setCtoAlertText(null);
     setShowFinisher(false);
     setMvpPlayerId(null);
     setResolutionProgress(0);
+    setLastTurnFeedback(null);
+    setCtoHighlight(false);
+    setTimeLeftSec(activeScenario.estimatedMinutes * 60);
+    timeoutTriggeredForRoomRef.current = null;
     if (!room) return;
     flushedRoomRef.current = room.roomCode;
     void callRoomAction(
@@ -458,6 +583,9 @@ export function PartyWarRoom() {
     const leavingRoom = room;
     stopCtoAudio();
     speechControllerRef.current?.abort();
+    if (ctoHighlightTimerRef.current) {
+      clearTimeout(ctoHighlightTimerRef.current);
+    }
     setIsRecording(false);
     setRoom(null);
     setTranscriptInput("");
@@ -465,6 +593,9 @@ export function PartyWarRoom() {
     setShowFinisher(false);
     setMvpPlayerId(null);
     setResolutionProgress(0);
+    setLastTurnFeedback(null);
+    setCtoHighlight(false);
+    timeoutTriggeredForRoomRef.current = null;
     void flushUnresolvedRoomPoints(leavingRoom, true);
   };
 
@@ -479,6 +610,15 @@ export function PartyWarRoom() {
   };
 
   const handleToggleMic = () => {
+    if (
+      !room ||
+      room.status === "resolved" ||
+      room.status === "timed_out" ||
+      timeLeftSec <= 0
+    ) {
+      return;
+    }
+
     if (isRecording) {
       speechControllerRef.current?.stop();
       setIsRecording(false);
@@ -509,7 +649,14 @@ export function PartyWarRoom() {
   };
 
   const handleSubmitReport = async () => {
-    if (!room) return;
+    if (
+      !room ||
+      room.status === "resolved" ||
+      room.status === "timed_out" ||
+      timeLeftSec <= 0
+    ) {
+      return;
+    }
     const trimmed = transcriptInput.trim();
     if (!trimmed) {
       setErrorMsg("Speak into your mic or type your English status report first.");
@@ -537,6 +684,7 @@ export function PartyWarRoom() {
           playerId: activePlayer?.id ?? guestPlayer?.id ?? `guest-${selectedRole}`,
           transcript: trimmed,
           durationMs: Math.max(1000, Date.now() - turnStartRef.current),
+          remainingSeconds: timeLeftSec,
           runAiTurns: true,
           transferCode: readBackupTransferCode(),
           backupTransferCode: readBackupTransferCode(),
@@ -548,21 +696,25 @@ export function PartyWarRoom() {
         return;
       }
 
-      if (data.penaltySeconds && data.penaltySeconds > 0) {
-        setTimeLeftSec((prev) => Math.max(0, prev - data.penaltySeconds!));
+      const penaltySec = data.penaltySeconds ?? 0;
+      const effectiveTimeAfter = Math.max(0, timeLeftSec - penaltySec);
+      if (penaltySec > 0) {
+        setTimeLeftSec((prev) => Math.max(0, prev - penaltySec));
         setPenaltyFlash(true);
         setTimeout(() => setPenaltyFlash(false), 2600);
       }
 
+      let resolvedProgress = resolutionProgress;
       if (data.room) {
         setRoom(data.room);
         const serverProgress =
           typeof data.resolutionProgress === "number"
             ? data.resolutionProgress
-            : (data.room as PartyRoomState & { resolutionProgress?: number })
-                .resolutionProgress ?? computeProgressFromRoom(data.room);
+            : data.room.resolutionProgress ?? computeProgressFromRoom(data.room);
+        resolvedProgress = Math.max(resolutionProgress, serverProgress);
         setResolutionProgress((prev) => Math.max(prev, serverProgress));
       } else if (typeof data.resolutionProgress === "number") {
+        resolvedProgress = Math.max(resolutionProgress, data.resolutionProgress);
         setResolutionProgress((prev) =>
           Math.max(prev, data.resolutionProgress!)
         );
@@ -579,10 +731,53 @@ export function PartyWarRoom() {
       }
 
       const spokenFeedback = data.ctoFeedback ?? data.feedback;
-      if (spokenFeedback) {
+      if (
+        spokenFeedback &&
+        data.room?.status !== "timed_out" &&
+        effectiveTimeAfter > 0
+      ) {
         speakCtoAlert(spokenFeedback);
       }
 
+      if (
+        resolvedProgress < 100 &&
+        data.room?.status !== "resolved" &&
+        data.room?.status !== "timed_out" &&
+        effectiveTimeAfter > 0
+      ) {
+        const evaluationsAfter = data.room?.evaluations ?? room.evaluations;
+        const humanTurnsAfter = evaluationsAfter.filter(
+          (e) => !e.playerId.startsWith("ai-")
+        ).length;
+        setLastTurnFeedback({
+          score: data.evaluation?.score ?? 0,
+          progressPct: resolvedProgress,
+          turnNumber: humanTurnsAfter,
+          feedback:
+            spokenFeedback ??
+            "Status logged. Continue coordinating root-cause mitigation.",
+          missingKeywords: data.evaluation?.missingKeywords ?? [],
+          penaltySeconds: penaltySec,
+        });
+        if (ctoHighlightTimerRef.current) {
+          clearTimeout(ctoHighlightTimerRef.current);
+        }
+        setCtoHighlight(true);
+        ctoHighlightTimerRef.current = setTimeout(() => {
+          if (mountedRef.current) setCtoHighlight(false);
+        }, 3500);
+        requestAnimationFrame(() => {
+          ctoBoxRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        });
+      } else {
+        setLastTurnFeedback(null);
+        setCtoHighlight(false);
+      }
+
+      turnStartRef.current = Date.now();
       setTranscriptInput("");
     } catch {
       setErrorMsg("Network error submitting your incident report.");
@@ -614,6 +809,114 @@ export function PartyWarRoom() {
     }
     return [...room.players].sort((a, b) => (b.score ?? 0) - (a.score ?? 0))[0];
   }, [room, mvpPlayerId]);
+
+  const isRoomResolved = room?.status === "resolved";
+  const isRoomActiveStatus =
+    room?.status === "briefing" ||
+    room?.status === "speaking" ||
+    room?.status === "evaluating";
+  const isRoomTimedOut =
+    Boolean(room) &&
+    !isRoomResolved &&
+    (room?.status === "timed_out" || (isRoomActiveStatus && timeLeftSec <= 0));
+
+  const humanEvaluations = useMemo(
+    () => room?.evaluations.filter((e) => !e.playerId.startsWith("ai-")) ?? [],
+    [room]
+  );
+  const humanTurnsCount = humanEvaluations.length;
+  const nextTurnNumber = humanTurnsCount + 1;
+  const remainingProgress = Math.max(0, 100 - resolutionProgress);
+
+  const humanTurnPointsTotal = useMemo(
+    () => humanEvaluations.reduce((sum, ev) => sum + ev.score, 0),
+    [humanEvaluations]
+  );
+  const myBestTurnScore = useMemo(() => {
+    const roleScores = humanEvaluations
+      .filter((ev) => ev.role === selectedRole)
+      .map((ev) => ev.score);
+    const slotScore = room?.players.find((p) => p.role === selectedRole)?.score;
+    return Math.max(0, slotScore ?? 0, ...roleScores);
+  }, [humanEvaluations, room, selectedRole]);
+  const missingRoleKeywords = useMemo(
+    () =>
+      myClue.targetKeywords.filter(
+        (kw) => !myMatchedKeywords.has(kw.toLowerCase())
+      ),
+    [myClue.targetKeywords, myMatchedKeywords]
+  );
+
+  const renderPostSubmitBanner = (location: "cto" | "composer") => {
+    if (resolutionProgress >= 100 || (!lastTurnFeedback && humanTurnsCount === 0)) {
+      return null;
+    }
+    const headline = lastTurnFeedback
+      ? `✓ Đã ghi nhận báo cáo (+${lastTurnFeedback.score} pts • Tiến độ ${resolutionProgress}%/100%) — Đọc chỉ dẫn tiếp theo của CTO bên dưới và gửi báo cáo lượt tiếp để đạt 100%!`
+      : `✓ Đã ghi nhận ${humanTurnsCount} lượt báo cáo (Tiến độ ${resolutionProgress}%/100%) — Đọc chỉ dẫn tiếp theo của CTO bên dưới và gửi báo cáo lượt tiếp để đạt 100%!`;
+
+    return (
+      <div
+        role="status"
+        className="p-3.5 rounded-xl bg-emerald-50 border-2 border-emerald-700 text-emerald-950 text-xs space-y-2"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="font-bold flex items-start gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
+            <span>{headline}</span>
+          </div>
+          <div className="flex items-center gap-1.5 font-mono text-[11px] font-bold shrink-0">
+            <span className="px-2 py-0.5 rounded bg-white border border-emerald-700/40">
+              Đã nộp: {humanTurnsCount} lượt • Tiếp: Lượt {nextTurnNumber}
+            </span>
+            <span className="px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-600/40">
+              Còn {remainingProgress}%
+            </span>
+          </div>
+        </div>
+
+        {location === "cto" ? (
+          <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-emerald-900/85">
+            <span>
+              {humanTurnsCount === 1
+                ? "Gợi ý Lượt 2: Mô tả bước khắc phục (mitigation) bằng tiếng Anh cùng từ khóa mục tiêu."
+                : "Gợi ý lượt tiếp: Xác nhận hệ thống đang hồi phục và đạt ≥ 55 pts để chạm 100%."}
+            </span>
+            <button
+              type="button"
+              onClick={() =>
+                composerSectionRef.current?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "center",
+                })
+              }
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-700 text-white font-mono font-bold hover:bg-emerald-800"
+            >
+              <ArrowDown className="w-3 h-3" />
+              <span>Gửi Lượt {nextTurnNumber}</span>
+            </button>
+          </div>
+        ) : (
+          <div className="p-2.5 rounded-lg bg-white border border-emerald-700/25 text-ink space-y-1">
+            <div className="font-mono font-bold text-[11px] text-ink">
+              Chỉ dẫn tiếp theo của CTO:
+            </div>
+            <p className="text-xs text-ink/85">
+              {lastTurnFeedback?.feedback ??
+                ctoAlertText ??
+                activeScenario.incidentContext}
+            </p>
+            {lastTurnFeedback && lastTurnFeedback.missingKeywords.length > 0 && (
+              <p className="text-[11px] font-mono text-accent font-semibold">
+                Từ khóa nên bổ sung:{" "}
+                {lastTurnFeedback.missingKeywords.slice(0, 3).join(", ")}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -937,10 +1240,7 @@ export function PartyWarRoom() {
         </div>
       )}
 
-      {room &&
-        (room.status === "briefing" ||
-          room.status === "speaking" ||
-          room.status === "evaluating") && (
+      {room && isRoomActiveStatus && !isRoomTimedOut && (
           <div className="space-y-6">
             <section className="bg-white border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-4">
@@ -951,6 +1251,9 @@ export function PartyWarRoom() {
                     </span>
                     <span className="text-xs font-mono text-ink/60">
                       ROOM {room.roomCode}
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-paper border border-ink/20 text-[11px] font-mono font-bold text-ink">
+                      Lượt {nextTurnNumber} • Tiến độ {resolutionProgress}%/100%
                     </span>
                   </div>
                   <h2 className="text-xl font-bold text-ink">
@@ -1008,7 +1311,9 @@ export function PartyWarRoom() {
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs font-mono font-bold text-ink">
                   <span>INCIDENT RESOLUTION PROGRESS</span>
-                  <span>{resolutionProgress}%</span>
+                  <span>
+                    {resolutionProgress}% / 100% (Còn {remainingProgress}%)
+                  </span>
                 </div>
                 <div className="w-full h-4 rounded-full bg-paper border-2 border-ink overflow-hidden">
                   <div
@@ -1018,13 +1323,35 @@ export function PartyWarRoom() {
                 </div>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-paper border border-ink/20 text-xs text-ink/85 flex items-start gap-2.5">
+              {renderPostSubmitBanner("cto")}
+
+              <div
+                ref={ctoBoxRef}
+                className={`scroll-mt-24 p-3.5 rounded-xl border-2 text-xs flex items-start gap-2.5 transition-all duration-500 ${
+                  ctoHighlight
+                    ? "bg-amber-50 border-accent text-ink ring-4 ring-accent/25 shadow-[3px_3px_0_#1A1714]"
+                    : "bg-paper border-ink/20 text-ink/85"
+                }`}
+              >
                 <Terminal className="w-4 h-4 text-accent shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-mono font-bold text-ink">
-                    CTO Incident Commander:
-                  </span>{" "}
-                  <span>{ctoAlertText ?? activeScenario.incidentContext}</span>
+                <div className="space-y-1 flex-1">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="font-mono font-bold text-ink">
+                      CTO Incident Commander
+                      {ctoHighlight ? " • Chỉ dẫn mới" : ""}:
+                    </span>
+                    <span className="text-[11px] font-mono text-ink/60">
+                      Lượt {nextTurnNumber} • Tiến độ {resolutionProgress}%/100%
+                    </span>
+                  </div>
+                  <p>{ctoAlertText ?? activeScenario.incidentContext}</p>
+                  {lastTurnFeedback &&
+                    lastTurnFeedback.missingKeywords.length > 0 && (
+                      <p className="text-[11px] font-mono text-accent font-semibold">
+                        Từ khóa nên dùng ở lượt tiếp:{" "}
+                        {lastTurnFeedback.missingKeywords.slice(0, 3).join(", ")}
+                      </p>
+                    )}
                 </div>
               </div>
             </section>
@@ -1139,7 +1466,12 @@ export function PartyWarRoom() {
               </section>
             </div>
 
-            <section className="bg-white border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] space-y-4">
+            <section
+              ref={composerSectionRef}
+              className="scroll-mt-24 bg-white border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] space-y-4"
+            >
+              {renderPostSubmitBanner("composer")}
+
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <DiscordAvatarFrame
@@ -1153,8 +1485,13 @@ export function PartyWarRoom() {
                     </div>
                   </DiscordAvatarFrame>
                   <div>
-                    <div className="text-sm font-bold text-ink">
-                      Speak or Type Your Incident Report (English Only)
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-sm font-bold text-ink">
+                        Speak or Type Your Incident Report (English Only)
+                      </span>
+                      <span className="px-2 py-0.5 rounded bg-paper border border-ink/25 text-[11px] font-mono font-bold text-ink">
+                        Lượt {nextTurnNumber} • Tiến độ {resolutionProgress}%/100%
+                      </span>
                     </div>
                     <div className="text-xs text-ink/60">
                       Explain your role&apos;s root cause and proposed fix using the
@@ -1166,7 +1503,8 @@ export function PartyWarRoom() {
                 <button
                   type="button"
                   onClick={handleToggleMic}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs border-2 border-ink shadow-[4px_4px_0_#1A1714] ${
+                  disabled={isRoomTimedOut || timeLeftSec <= 0}
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs border-2 border-ink shadow-[4px_4px_0_#1A1714] disabled:opacity-50 disabled:cursor-not-allowed ${
                     isRecording
                       ? "bg-accent text-white animate-pulse"
                       : "bg-paper text-ink hover:bg-white"
@@ -1194,8 +1532,13 @@ export function PartyWarRoom() {
                 rows={3}
                 value={transcriptInput}
                 onChange={(e) => setTranscriptInput(e.target.value)}
-                placeholder="Example: We have a lock contention deadlock in the payment transaction. Let's add a rollback and client idempotency key..."
-                className="w-full p-3.5 rounded-xl bg-paper border-2 border-ink text-sm text-ink placeholder:text-ink/40 focus:outline-none"
+                disabled={isRoomTimedOut || timeLeftSec <= 0}
+                placeholder={
+                  humanTurnsCount === 0
+                    ? "Example: We have a lock contention deadlock in the payment transaction. Let's add a rollback and client idempotency key..."
+                    : `Lượt ${nextTurnNumber}: Describe your next mitigation or verification step in English...`
+                }
+                className="w-full p-3.5 rounded-xl bg-paper border-2 border-ink text-sm text-ink placeholder:text-ink/40 focus:outline-none disabled:opacity-50"
               />
 
               <div className="flex flex-wrap items-center justify-between gap-3">
@@ -1221,14 +1564,20 @@ export function PartyWarRoom() {
                 <button
                   type="button"
                   onClick={handleSubmitReport}
-                  disabled={loadingAction === "evaluate"}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] disabled:opacity-50"
+                  disabled={
+                    loadingAction === "evaluate" ||
+                    isRoomTimedOut ||
+                    timeLeftSec <= 0
+                  }
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send className="w-4 h-4" />
                   <span>
                     {loadingAction === "evaluate"
                       ? "CTO Evaluating..."
-                      : "Submit Status Report"}
+                      : humanTurnsCount > 0
+                        ? `Submit Turn ${nextTurnNumber} Report`
+                        : "Submit Status Report"}
                   </span>
                 </button>
               </div>
@@ -1304,6 +1653,154 @@ export function PartyWarRoom() {
             </section>
           </div>
         )}
+
+      {room && isRoomTimedOut && (
+        <section className="bg-white border-2 border-ink rounded-2xl p-6 shadow-[4px_4px_0_#1A1714] space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-ink/15">
+            <div className="space-y-1.5">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/15 border border-accent text-accent text-xs font-mono font-bold">
+                <Clock className="w-4 h-4" />
+                <span>TIME&apos;S UP • 00:00</span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-bold text-ink">
+                ⏱ HẾT GIỜ! SỰ CỐ CHƯA KHẮC PHỤC KỊP (OUTAGE ESCALATED)
+              </h2>
+              <p className="text-xs text-ink/70">
+                {activeScenario.title} — Hết thời gian xử lý ({formatClock(0)}).
+                {humanTurnsCount > 0
+                  ? " Điểm các lượt bạn đã nộp vẫn được bảo lưu."
+                  : " Chưa có báo cáo nào được hoàn tất trước khi hết giờ."}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="bg-paper border-2 border-ink rounded-xl px-4 py-2.5 text-center">
+                <div className="text-[10px] font-mono font-bold text-ink/60">
+                  TIẾN ĐỘ ĐẠT ĐƯỢC
+                </div>
+                <div className="text-2xl font-mono font-bold text-accent">
+                  {resolutionProgress}%
+                </div>
+              </div>
+              <div className="bg-paper border-2 border-ink rounded-xl px-4 py-2.5 text-center">
+                <div className="text-[10px] font-mono font-bold text-ink/60">
+                  ĐIỂM TÍCH LŨY
+                </div>
+                <div className="text-2xl font-mono font-bold text-ink">
+                  {humanTurnPointsTotal > 0 ? humanTurnPointsTotal : room.teamScore} pts
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between text-xs font-mono font-bold text-ink">
+              <span>FINAL INCIDENT PROGRESS</span>
+              <span>{resolutionProgress}% / 100%</span>
+            </div>
+            <div className="w-full h-4 rounded-full bg-paper border-2 border-ink overflow-hidden">
+              <div
+                className="h-full bg-accent transition-all duration-300"
+                style={{ width: `${Math.min(100, Math.max(0, resolutionProgress))}%` }}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 rounded-xl bg-paper border-2 border-ink space-y-3">
+              <div className="flex items-center justify-between gap-2">
+                <div className="text-xs font-mono font-bold uppercase text-ink">
+                  Accumulated Turn Points
+                </div>
+                <span className="text-[11px] font-mono font-bold text-emerald-700">
+                  Team Avg: {room.teamScore} pts • Best Role: {myBestTurnScore} pts
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+                <div className="p-2.5 rounded-lg bg-white border border-ink/15">
+                  <div className="text-[10px] text-ink/60">YOUR TURNS</div>
+                  <div className="font-bold text-ink">
+                    {humanTurnsCount} lượt ({humanTurnPointsTotal} pts)
+                  </div>
+                </div>
+                <div className="p-2.5 rounded-lg bg-white border border-ink/15">
+                  <div className="text-[10px] text-ink/60">TEAM SCORE</div>
+                  <div className="font-bold text-ink">{room.teamScore} pts</div>
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                {room.players.map((p) => (
+                  <div
+                    key={p.id}
+                    className="flex items-center justify-between text-xs font-mono px-3 py-2 rounded-lg bg-white border border-ink/15"
+                  >
+                    <span className="font-bold text-ink">
+                      {p.displayName} ({p.role})
+                    </span>
+                    <span className="text-ink/80">{p.score ?? 0} pts</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-paper border-2 border-ink space-y-3">
+              <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-ink">
+                <Terminal className="w-4 h-4 text-accent" />
+                <span>CTO Post-Incident Debrief</span>
+              </div>
+              <p className="text-xs text-ink/85 bg-white p-3 rounded-lg border border-ink/15">
+                {ctoAlertText ??
+                  (humanTurnsCount === 0
+                    ? "CTO Debrief: Chưa ghi nhận báo cáo trạng thái bằng tiếng Anh trước khi hết giờ. Lần sau hãy đọc nhanh Exclusive Clue và gửi lượt 1 sớm hơn."
+                    : "CTO Debrief: Đội đã phối hợp được một phần nhưng chưa đạt mốc 100% trước khi hết thời gian SLA.")}
+              </p>
+              {missingRoleKeywords.length > 0 && (
+                <div className="text-[11px] font-mono text-accent font-semibold">
+                  Từ khóa vai trò {myClue.roleLabel} chưa nhắc tới:{" "}
+                  {missingRoleKeywords.join(", ")}
+                </div>
+              )}
+              <div className="space-y-1.5">
+                <div className="text-[11px] font-mono font-bold uppercase text-ink/60">
+                  Checklist khắc phục mục tiêu
+                </div>
+                <ul className="space-y-1.5 text-xs text-ink/80">
+                  {activeScenario.resolutionChecklist.map((item) => (
+                    <li key={item} className="flex items-start gap-2">
+                      <AlertTriangle className="w-3.5 h-3.5 text-accent shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <button
+              type="button"
+              onClick={handleResetRoom}
+              disabled={loadingAction === "reset"}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] disabled:opacity-50"
+            >
+              <RotateCcw className="w-4 h-4" />
+              <span>
+                {loadingAction === "reset" ? "Resetting..." : "Reset Room"}
+              </span>
+            </button>
+
+            <Link
+              href="/arena"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-ink text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:bg-white hover:text-ink"
+            >
+              <ArrowLeft className="w-4 h-4 text-accent" />
+              <span>Quay lại /arena</span>
+            </Link>
+          </div>
+        </section>
+      )}
 
       {room && room.status === "resolved" && (
         <section className="bg-white border-2 border-ink rounded-2xl p-6 shadow-[4px_4px_0_#1A1714] space-y-6">

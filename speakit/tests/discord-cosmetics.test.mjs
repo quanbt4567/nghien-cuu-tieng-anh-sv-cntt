@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -163,5 +164,37 @@ test("purchaseAndEquipCosmetic, equipOwnedCosmetic, and unequipCosmeticSlot vali
     if (prevDatabaseUrl !== undefined) {
       process.env.DATABASE_URL = prevDatabaseUrl;
     }
+  }
+});
+
+test("mobile cursor trails support touch events, burst event, and shop live preview bar", () => {
+  const cursorTrailSrc = readFileSync(
+    resolve(__dirname, "../components/cosmetics/CustomCursorTrail.tsx"),
+    "utf8"
+  );
+  const shopClientSrc = readFileSync(
+    resolve(__dirname, "../components/cosmetics/CosmeticShopClient.tsx"),
+    "utf8"
+  );
+
+  for (const token of ["pointerdown", "touchstart", "touchmove", "speakit-cursor-burst"]) {
+    assert.ok(
+      cursorTrailSrc.includes(token),
+      `CustomCursorTrail.tsx missing ${token} handler`
+    );
+  }
+
+  for (const token of [
+    "SPEAKIT_CURSOR_BURST_EVENT",
+    'data-tour="shop-sandbox-preview"',
+    "Đang xem thử:",
+    "Chạm/vuốt màn hình để xem hiệu ứng",
+    "Xem Sandbox ↑",
+    "Đặt lại",
+  ]) {
+    assert.ok(
+      shopClientSrc.includes(token),
+      `CosmeticShopClient.tsx missing ${token}`
+    );
   }
 });

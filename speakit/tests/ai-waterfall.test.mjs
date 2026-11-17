@@ -328,3 +328,58 @@ test("resolveAiProviders preserves explicit provider statuses and supports legac
   assert.equal(legacyResolved.find((p) => p.id === "cerebras")?.configured, false);
 });
 
+test("waterfall blocks invalid Vietnamese/teencode input before LLM calls and clears keywords when AI returns 0", async () => {
+  let calls = 0;
+  const fetchMock = async () => {
+    calls += 1;
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({
+        choices: [
+          {
+            message: {
+              content: JSON.stringify({
+                score: 0,
+                keywordsUsed: ["endpoint"],
+                keywordsMissed: ["rollback"],
+                grammarCorrections: [],
+                betterSentence: "Yesterday I fixed the endpoint bug.",
+                pronunciationNote:
+                  "Đánh giá phát âm ước lượng từ văn bản: Vui lòng trả lời bằng tiếng Anh.",
+              }),
+            },
+          },
+        ],
+      }),
+    };
+  };
+
+  const skipped = await evaluateWithWaterfall({
+    transcript: "sao ghi hell cx đc 18đ v m",
+    scenario: "daily-standup",
+    turnIndex: 0,
+    expectedKeywords: ["endpoint", "rollback"],
+    env: { CEREBRAS_API_KEY: "k1" },
+    fetchFn: fetchMock,
+  });
+
+  assert.equal(calls, 0);
+  assert.equal(skipped.score, 0);
+  assert.deepEqual(skipped.keywordsUsed, []);
+  assert.equal(skipped.provider, "local");
+
+  const aiZero = await evaluateWithWaterfall({
+    transcript: "We checked the endpoint yesterday.",
+    scenario: "daily-standup",
+    turnIndex: 0,
+    expectedKeywords: ["endpoint", "rollback"],
+    env: { CEREBRAS_API_KEY: "k1" },
+    fetchFn: fetchMock,
+  });
+
+  assert.equal(calls, 1);
+  assert.equal(aiZero.score, 0);
+  assert.deepEqual(aiZero.keywordsUsed, []);
+});
+
