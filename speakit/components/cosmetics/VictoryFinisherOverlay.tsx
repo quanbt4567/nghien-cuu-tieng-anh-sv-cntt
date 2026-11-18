@@ -4,6 +4,18 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import confetti from "canvas-confetti";
 import { Lottie } from "lottie-react";
 import { Sparkles, Terminal, Zap, CheckCircle2 } from "lucide-react";
+import {
+  DynamicBalatro,
+  DynamicGlitchText,
+  DynamicGradientText,
+  DynamicHyperspeed,
+  DynamicLightning,
+  DynamicPixelBlast,
+  DynamicPrismaticBurst,
+  DynamicShinyText,
+  DynamicSplashCursor,
+  DynamicTrueFocus,
+} from "./reactbits";
 import "./cosmetics.css";
 
 export interface VictoryFinisherOverlayProps {
@@ -154,6 +166,18 @@ function getFinisherCallout(finisherId: string): string {
       return "QUANTUM RIPPLE PULSE";
     case "finisher-magic-aurora-crown":
       return "AURORA BOREALIS CROWN";
+    case "finisher-rb-true-focus-lock":
+      return "TACTICAL TRUE FOCUS LOCK";
+    case "finisher-rb-glitch-overdrive":
+      return "RGB GLITCH OVERDRIVE";
+    case "finisher-rb-shiny-champion":
+      return "PLATINUM SHINY CHAMPION";
+    case "finisher-rb-lightning-storm":
+      return "THUNDERSTRIKE SURGE";
+    case "finisher-pavel-fluid-supernova":
+      return "NAVIER-STOKES SUPERNOVA";
+    case "finisher-tsparticles-fireworks":
+      return "2-STAGE FIREWORKS GRAND FINALE";
     default:
       return "LGTM! APPROVED";
   }
@@ -278,6 +302,41 @@ export function VictoryFinisherOverlay({
           className="absolute inset-0 z-10 w-full h-full pointer-events-none"
         />
 
+        <div className="absolute inset-0 z-10 pointer-events-none opacity-65">
+          {resolvedId === "finisher-rb-prismatic-burst" && (
+            <DynamicPrismaticBurst
+              colors={["#EC4899", "#38BDF8", "#FBBF24", "#10B981"]}
+              lightMode
+            />
+          )}
+          {resolvedId === "finisher-rb-hyperspeed-warp" && (
+            <DynamicHyperspeed curve="racing" theme="light" interactive={false} />
+          )}
+          {resolvedId === "finisher-rb-balatro-jackpot" && (
+            <DynamicBalatro
+              color1="#E5484D"
+              color2="#F59E0B"
+              color3="#3B82F6"
+              lightMode
+              opacity={0.7}
+            />
+          )}
+          {resolvedId === "finisher-rb-pixel-blast" && (
+            <DynamicPixelBlast
+              variant="diamond"
+              color="#A855F7"
+              accentColor="#EC4899"
+              transparent
+            />
+          )}
+          {resolvedId === "finisher-rb-lightning-storm" && (
+            <DynamicLightning color="#0284C7" lightMode opacity={0.85} />
+          )}
+          {resolvedId === "finisher-pavel-fluid-supernova" && (
+            <DynamicSplashCursor theme="light" />
+          )}
+        </div>
+
         <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
           <div
             className="w-72 h-72 rounded-full border-2 animate-ping"
@@ -344,7 +403,34 @@ export function VictoryFinisherOverlay({
         )}
 
         <h3 className={`text-xl font-bold ${isMatrix ? "text-emerald-300 font-mono" : "text-ink"}`}>
-          {title}
+          {resolvedId === "finisher-rb-true-focus-lock" ? (
+            <DynamicTrueFocus
+              sentence={title}
+              blurAmount={3}
+              borderColor="#10B981"
+              glowColor="rgba(16,185,129,0.65)"
+              animationDuration={0.35}
+              pauseBetweenAnimations={0.45}
+            />
+          ) : resolvedId === "finisher-rb-glitch-overdrive" ||
+            resolvedId === "finisher-rb-pixel-blast" ? (
+            <DynamicGlitchText speed={0.7} enableShadows mode="rgb">
+              {title}
+            </DynamicGlitchText>
+          ) : resolvedId === "finisher-rb-shiny-champion" ||
+            resolvedId === "finisher-rb-hyperspeed-warp" ? (
+            <DynamicShinyText text={title} speed={1.8} color="#1A1714" shineColor="#38BDF8" />
+          ) : resolvedId === "finisher-rb-prismatic-burst" ||
+            resolvedId === "finisher-rb-balatro-jackpot" ? (
+            <DynamicGradientText
+              colors={["#E5484D", "#EC4899", "#38BDF8", "#F59E0B"]}
+              animationSpeed={2.5}
+            >
+              {title}
+            </DynamicGradientText>
+          ) : (
+            title
+          )}
         </h3>
         <p className={`text-xs font-mono ${isMatrix ? "text-emerald-400/80" : "text-ink-muted"}`}>
           {subtitle}

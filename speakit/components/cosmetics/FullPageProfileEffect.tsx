@@ -4,7 +4,36 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Lottie } from "lottie-react";
 import { Mesh, Program, Renderer, Triangle } from "ogl";
 import { findCosmeticById, type CosmeticItem } from "../../lib/cosmetics";
+import {
+  DynamicAurora,
+  DynamicBalatro,
+  DynamicFaultyTerminal,
+  DynamicFerrofluid,
+  DynamicHyperspeed,
+  DynamicIridescence,
+  DynamicLightning,
+  DynamicLiquidChrome,
+  DynamicOrb,
+  DynamicParticles,
+  DynamicSilk,
+  DynamicWaves,
+} from "./reactbits";
 import "./cosmetics.css";
+
+const REACT_BITS_THEME_IDS = new Set([
+  "theme-rb-aurora",
+  "theme-rb-hyperspeed-highway",
+  "theme-rb-particles",
+  "theme-rb-lightning",
+  "theme-rb-waves",
+  "theme-rb-silk",
+  "theme-rb-orb",
+  "theme-rb-balatro-swirl",
+  "theme-rb-liquid-chrome",
+  "theme-rb-iridescence-prism",
+  "theme-rb-faulty-terminal",
+  "theme-rb-metaballs-ferrofluid",
+]);
 
 export interface FullPageProfileEffectProps {
   themeId?: string | null;
@@ -740,7 +769,10 @@ export function FullPageProfileEffect({
     setIntroDone(false);
   }, [activeKey, resolvedItem?.assetUrl, resolvedItem?.introAssetUrl]);
 
+  const isReactBitsTheme = Boolean(resolvedThemeId && REACT_BITS_THEME_IDS.has(resolvedThemeId));
+
   useEffect(() => {
+    if (isReactBitsTheme) return;
     if (mode === undefined) return;
     if (typeof window === "undefined") return;
     const canvas = canvasRef.current;
@@ -811,15 +843,94 @@ export function FullPageProfileEffect({
       gl.getExtension("WEBGL_lose_context")?.loseContext();
       renderer = null;
     };
-  }, [mode]);
+  }, [mode, isReactBitsTheme]);
 
-  if (mode === undefined) return null;
+  if (mode === undefined && !isReactBitsTheme) return null;
 
   const blendMode = resolvedItem?.blendMode ?? "screen";
   const glowColor = resolvedItem?.fallbackGlowColor ?? resolvedItem?.previewAccent;
   const containerClass = contained
     ? "pointer-events-none absolute inset-0 z-0 overflow-hidden"
     : "pointer-events-none fixed inset-0 z-0 overflow-hidden";
+
+  if (isReactBitsTheme && resolvedThemeId) {
+    return (
+      <div aria-hidden="true" className={containerClass}>
+        <div className="pointer-events-none absolute inset-0 w-full h-full opacity-55">
+          {resolvedThemeId === "theme-rb-aurora" && (
+            <DynamicAurora
+              colorStops={["#10B981", "#06B6D4", "#F59E0B"]}
+              lightMode
+              opacity={0.65}
+              mouseInteraction={false}
+            />
+          )}
+          {resolvedThemeId === "theme-rb-hyperspeed-highway" && (
+            <DynamicHyperspeed curve="winding" theme="light" interactive={false} />
+          )}
+          {resolvedThemeId === "theme-rb-particles" && (
+            <DynamicParticles
+              particleColors={["#E5484D", "#F59E0B", "#06B6D4"]}
+              connections
+              lightMode
+              opacity={0.75}
+              moveParticlesOnHover={false}
+            />
+          )}
+          {resolvedThemeId === "theme-rb-lightning" && (
+            <DynamicLightning color="#0284C7" lightMode opacity={0.75} mouseInteraction={false} />
+          )}
+          {resolvedThemeId === "theme-rb-waves" && (
+            <DynamicWaves
+              lineColor="#0D9488"
+              accentColor="#F59E0B"
+              lightMode
+              opacity={0.65}
+              mouseInteraction={false}
+            />
+          )}
+          {resolvedThemeId === "theme-rb-silk" && (
+            <DynamicSilk color="#A855F7" sheenColor="#EC4899" lightMode mouseInteraction={false} />
+          )}
+          {resolvedThemeId === "theme-rb-orb" && (
+            <DynamicOrb
+              colors={["#6366F1", "#38BDF8", "#EC4899"]}
+              opacity={0.75}
+              followCursor={false}
+            />
+          )}
+          {resolvedThemeId === "theme-rb-balatro-swirl" && (
+            <DynamicBalatro
+              color1="#E5484D"
+              color2="#3B82F6"
+              color3="#F59E0B"
+              lightMode
+              opacity={0.55}
+              mouseInteraction={false}
+            />
+          )}
+          {resolvedThemeId === "theme-rb-liquid-chrome" && (
+            <DynamicLiquidChrome color="#94A3B8" lightMode interactive={false} />
+          )}
+          {resolvedThemeId === "theme-rb-iridescence-prism" && (
+            <DynamicIridescence color="#EC4899" opacity={0.6} mouseReact={false} />
+          )}
+          {resolvedThemeId === "theme-rb-faulty-terminal" && (
+            <DynamicFaultyTerminal tint="#22C55E" lightMode mouseReact={false} />
+          )}
+          {resolvedThemeId === "theme-rb-metaballs-ferrofluid" && (
+            <DynamicFerrofluid
+              color="#8B5CF6"
+              lightMode
+              transparent
+              opacity={0.65}
+              mouseInteraction={false}
+            />
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div aria-hidden="true" className={containerClass}>

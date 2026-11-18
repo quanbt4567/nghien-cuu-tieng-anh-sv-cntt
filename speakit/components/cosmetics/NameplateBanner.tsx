@@ -2,6 +2,13 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from "react";
 import { findCosmeticById, type CosmeticItem } from "../../lib/cosmetics";
+import {
+  DynamicDecryptedText,
+  DynamicGlitchText,
+  DynamicGradientText,
+  DynamicShinyText,
+  DynamicTrueFocus,
+} from "./reactbits";
 import "./cosmetics.css";
 
 export interface NameplateBannerProps {
@@ -244,6 +251,47 @@ export function NameplateBanner({
           <span className="animate-pulse">✦</span>
           <span className="animate-bounce">✧</span>
           <span className="animate-pulse">✦</span>
+        </span>
+      )}
+
+      {activeId === "nameplate-rb-glitch-text" && (
+        <span aria-hidden="true" className="pointer-events-none absolute top-1 right-2 z-[7] text-[10px] font-mono">
+          <DynamicGlitchText speed={0.8} enableShadows mode="rgb" fontSize="10px">
+            GLITCH_RGB
+          </DynamicGlitchText>
+        </span>
+      )}
+
+      {activeId === "nameplate-rb-shiny-text" && (
+        <span aria-hidden="true" className="pointer-events-none absolute top-1 right-2 z-[7] text-[10px] font-mono font-bold">
+          <DynamicShinyText text="PLATINUM" speed={2} color="#94A3B8" shineColor="#FFFFFF" />
+        </span>
+      )}
+
+      {activeId === "nameplate-rb-gradient-text" && (
+        <span aria-hidden="true" className="pointer-events-none absolute top-1 right-2 z-[7] text-[10px] font-mono font-bold">
+          <DynamicGradientText colors={["#EC4899", "#38BDF8", "#FBBF24"]} animationSpeed={3}>
+            SPECTRUM
+          </DynamicGradientText>
+        </span>
+      )}
+
+      {activeId === "nameplate-rb-true-focus" && (
+        <span aria-hidden="true" className="pointer-events-none absolute top-1 right-2 z-[7] text-[9px] font-mono font-bold">
+          <DynamicTrueFocus
+            sentence="TRUE FOCUS"
+            blurAmount={2}
+            borderColor="#10B981"
+            glowColor="rgba(16,185,129,0.6)"
+            animationDuration={0.4}
+            pauseBetweenAnimations={0.8}
+          />
+        </span>
+      )}
+
+      {activeId === "nameplate-rb-decrypted-matrix" && (
+        <span aria-hidden="true" className="pointer-events-none absolute top-1 right-2 z-[7] text-[10px] font-mono font-bold text-emerald-400">
+          <DynamicDecryptedText text="CIPHER_OK" animateOn="view" loop loopDelay={2200} />
         </span>
       )}
 

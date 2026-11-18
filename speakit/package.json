@@ -15,15 +15,18 @@
     "@neondatabase/serverless": "^1.2.0",
     "@supabase/supabase-js": "^2.49.1",
     "@types/canvas-confetti": "^1.9.0",
+    "@types/three": "^0.187.0",
     "canvas-confetti": "^1.9.4",
     "google-tts-api": "^2.0.2",
     "lottie-react": "^3.1.2",
     "lucide-react": "^1.16.0",
+    "motion": "^14.14.0",
     "msedge-tts": "^2.1.1",
     "next": "^14.2.24",
     "ogl": "^1.0.11",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "three": "^0.187.0"
   },
   "devDependencies": {
     "@types/node": "^20.17.19",

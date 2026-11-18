@@ -2,6 +2,17 @@
 
 import { useEffect, useRef } from "react";
 import { Mesh, Program, Renderer, Triangle } from "ogl";
+import {
+  DynamicBlobCursor,
+  DynamicClickSpark,
+  DynamicCrosshair,
+  DynamicGhostCursor,
+  DynamicPixelTrail,
+  DynamicRibbons,
+  DynamicSplashCursor,
+  DynamicSwarmCursor,
+  DynamicTargetCursor,
+} from "./reactbits";
 import "./cosmetics.css";
 
 export interface CustomCursorTrailProps {
@@ -14,13 +25,19 @@ type CursorMode =
   | "cursor-neon-laser-ribbon"
   | "cursor-tactical-cyber-crosshair"
   | "cursor-rb-splash-fluid"
+  | "cursor-rb-pixel-trail"
+  | "cursor-rb-ribbons"
   | "cursor-rb-blob-mercury"
+  | "cursor-rb-crosshair"
   | "cursor-rb-ghost-smoke"
   | "cursor-rb-antigravity-swarm"
   | "cursor-rb-click-spark"
   | "cursor-rb-target-reticle"
   | "cursor-magic-cool-confetti"
-  | "cursor-magic-meteor-tail";
+  | "cursor-magic-meteor-tail"
+  | "cursor-tholman-fairy-dust"
+  | "cursor-tholman-rainbow-chain"
+  | "cursor-tholman-springy-emoji";
 
 const VALID_MODES = new Set<CursorMode>([
   "cursor-pixel-sparkle-trail",
@@ -28,13 +45,31 @@ const VALID_MODES = new Set<CursorMode>([
   "cursor-neon-laser-ribbon",
   "cursor-tactical-cyber-crosshair",
   "cursor-rb-splash-fluid",
+  "cursor-rb-pixel-trail",
+  "cursor-rb-ribbons",
   "cursor-rb-blob-mercury",
+  "cursor-rb-crosshair",
   "cursor-rb-ghost-smoke",
   "cursor-rb-antigravity-swarm",
   "cursor-rb-click-spark",
   "cursor-rb-target-reticle",
   "cursor-magic-cool-confetti",
   "cursor-magic-meteor-tail",
+  "cursor-tholman-fairy-dust",
+  "cursor-tholman-rainbow-chain",
+  "cursor-tholman-springy-emoji",
+]);
+
+const REACT_BITS_CURSOR_MODES = new Set<CursorMode>([
+  "cursor-rb-splash-fluid",
+  "cursor-rb-pixel-trail",
+  "cursor-rb-ribbons",
+  "cursor-rb-blob-mercury",
+  "cursor-rb-crosshair",
+  "cursor-rb-ghost-smoke",
+  "cursor-rb-antigravity-swarm",
+  "cursor-rb-click-spark",
+  "cursor-rb-target-reticle",
 ]);
 
 const TRAIL_COUNT = 24;
@@ -750,7 +785,8 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
     if (
       (mode === "cursor-pixel-sparkle-trail" ||
         mode === "cursor-magic-cool-confetti" ||
-        mode === "cursor-rb-click-spark") &&
+        mode === "cursor-rb-click-spark" ||
+        mode === "cursor-tholman-fairy-dust") &&
       distSinceSpawn >= 7
     ) {
       lastSpawnX = x;
@@ -758,6 +794,8 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
       const palette =
         mode === "cursor-magic-cool-confetti"
           ? COOL_COLORS
+          : mode === "cursor-tholman-fairy-dust"
+          ? ["#D61C59", "#E7D84B", "#1B8798"]
           : mode === "cursor-rb-click-spark"
           ? ["#FBBF24", "#FDE047", "#F59E0B"]
           : SPARKLE_COLORS;
@@ -1167,6 +1205,97 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
         ctx.stroke();
       }
       ctx.globalAlpha = 1;
+    } else if (mode === "cursor-tholman-fairy-dust") {
+      ctx.font = "700 18px serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      for (let i = sparkles.length - 1; i >= 0; i -= 1) {
+        const p = sparkles[i];
+        p.life -= dt;
+        if (p.life <= 0) {
+          sparkles.splice(i, 1);
+          continue;
+        }
+        p.vy += 48 * dt;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        const scale = Math.max(0, p.life / p.maxLife);
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.scale(scale, scale);
+        ctx.fillStyle = p.color;
+        ctx.fillText("*", 0, 0);
+        ctx.restore();
+      }
+    } else if (mode === "cursor-tholman-rainbow-chain") {
+      if (hasPointer) {
+        for (let i = 0; i < meteorNodes.length; i += 1) {
+          const m = meteorNodes[i];
+          const tx = i === 0 ? targetX : meteorNodes[i - 1].x;
+          const ty = i === 0 ? targetY : meteorNodes[i - 1].y;
+          m.x += (tx - m.x) * 0.4;
+          m.y += (ty - m.y) * 0.4;
+        }
+        const bands = ["#FE0000", "#FD8C00", "#FFE500", "#119F0B", "#0644B3", "#C22EDC"];
+        for (let b = 0; b < bands.length; b += 1) {
+          ctx.beginPath();
+          ctx.strokeStyle = bands[b];
+          ctx.lineWidth = 3;
+          ctx.lineCap = "round";
+          ctx.lineJoin = "round";
+          for (let i = 0; i < meteorNodes.length; i += 1) {
+            const pt = meteorNodes[i];
+            const py = pt.y + (b - 2.5) * 3;
+            if (i === 0) ctx.moveTo(pt.x, py);
+            else ctx.lineTo(pt.x, py);
+          }
+          ctx.stroke();
+        }
+      }
+    } else if (mode === "cursor-tholman-springy-emoji") {
+      if (hasPointer) {
+        blobNodes[0].x = targetX;
+        blobNodes[0].y = targetY;
+        const SEGLEN = 10;
+        const SPRINGK = 10;
+        const RESISTANCE = 10;
+        const GRAVITY = 50;
+        for (let i = 1; i < blobNodes.length; i += 1) {
+          const node = blobNodes[i];
+          const prev = blobNodes[i - 1];
+          const dx = prev.x - node.x;
+          const dy = prev.y - node.y;
+          const len = Math.hypot(dx, dy);
+          let fx = 0;
+          let fy = 0;
+          if (len > SEGLEN) {
+            const sf = SPRINGK * (len - SEGLEN);
+            fx += (dx / len) * sf;
+            fy += (dy / len) * sf;
+          }
+          if (i < blobNodes.length - 1) {
+            const next = blobNodes[i + 1];
+            const ndx = next.x - node.x;
+            const ndy = next.y - node.y;
+            const nlen = Math.hypot(ndx, ndy);
+            if (nlen > SEGLEN) {
+              const sf = SPRINGK * (nlen - SEGLEN);
+              fx += (ndx / nlen) * sf;
+              fy += (ndy / nlen) * sf;
+            }
+          }
+          fx += -node.vx * RESISTANCE;
+          fy += -node.vy * RESISTANCE + GRAVITY;
+          node.vx += fx * dt;
+          node.vy += fy * dt;
+          node.x += node.vx * dt * 10;
+          node.y += node.vy * dt * 10;
+          ctx.fillStyle = i % 2 === 0 ? "#F59E0B" : "#E5484D";
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, Math.max(4, 10 - i), 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
     }
 
     rafId = window.requestAnimationFrame(frame);
@@ -1196,9 +1325,10 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
 export function CustomCursorTrail({ effectId }: CustomCursorTrailProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const mode = effectId && VALID_MODES.has(effectId as CursorMode) ? (effectId as CursorMode) : null;
+  const isReactBitsCursor = Boolean(mode && REACT_BITS_CURSOR_MODES.has(mode));
 
   useEffect(() => {
-    if (!mode) return;
+    if (!mode || isReactBitsCursor) return;
     if (typeof window === "undefined") return;
     const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     if (reducedMotion) return;
@@ -1211,9 +1341,48 @@ export function CustomCursorTrail({ effectId }: CustomCursorTrailProps) {
     }
 
     return run2DCursorEffect(canvas, mode);
-  }, [mode]);
+  }, [mode, isReactBitsCursor]);
 
   if (!mode) return null;
+
+  if (isReactBitsCursor) {
+    return (
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 z-50 overflow-hidden"
+      >
+        {mode === "cursor-rb-splash-fluid" && <DynamicSplashCursor theme="light" />}
+        {mode === "cursor-rb-pixel-trail" && (
+          <DynamicPixelTrail color="#F59E0B" trailColor="#E5484D" />
+        )}
+        {mode === "cursor-rb-ribbons" && (
+          <DynamicRibbons colors={["#E5484D", "#F59E0B", "#38BDF8"]} />
+        )}
+        {mode === "cursor-rb-blob-mercury" && (
+          <DynamicBlobCursor color="#38BDF8" material="jelly" hideCursor={false} />
+        )}
+        {mode === "cursor-rb-crosshair" && (
+          <DynamicCrosshair color="#0284C7" hideCursor={false} />
+        )}
+        {mode === "cursor-rb-ghost-smoke" && (
+          <DynamicGhostCursor color="#A855F7" theme="light" />
+        )}
+        {mode === "cursor-rb-antigravity-swarm" && (
+          <DynamicSwarmCursor color="#F59E0B" accentColor="#EC4899" lightMode hideCursor={false} />
+        )}
+        {mode === "cursor-rb-click-spark" && (
+          <DynamicClickSpark sparkColor={["#FBBF24", "#F59E0B", "#E5484D"]} />
+        )}
+        {mode === "cursor-rb-target-reticle" && (
+          <DynamicTargetCursor
+            cursorColor="#10B981"
+            cursorColorOnTarget="#E5484D"
+            hideDefaultCursor={false}
+          />
+        )}
+      </div>
+    );
+  }
 
   return (
     <canvas

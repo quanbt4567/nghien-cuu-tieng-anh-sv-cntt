@@ -2,6 +2,13 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from "react";
 import { findCosmeticById } from "../../lib/cosmetics";
+import {
+  DynamicElectricBorder,
+  DynamicPixelCard,
+  DynamicSpotlightCard,
+  DynamicStarBorder,
+  DynamicTiltedCard,
+} from "./reactbits";
 import "./cosmetics.css";
 
 export interface LeaderboardRowWrapperProps {
@@ -254,7 +261,93 @@ export function LeaderboardRowWrapper({
         />
       )}
 
-      <div className="relative z-10">{children}</div>
+      {fxId === "lb-rb-electric-border" && (
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[7]">
+          <DynamicElectricBorder
+            color="#38BDF8"
+            glowColor="#0284C7"
+            borderRadius={12}
+            strands={2}
+            thickness={1.5}
+            interactive={false}
+            className="w-full h-full"
+          />
+        </div>
+      )}
+
+      {fxId === "lb-rb-star-comet-border" && (
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[7]">
+          <DynamicStarBorder
+            as="div"
+            color="#FBBF24"
+            trailColor="#F59E0B"
+            radius={12}
+            stars={2}
+            sparkle
+            backgroundColor="transparent"
+            borderColor="rgba(251,191,36,0.3)"
+            className="w-full h-full"
+          />
+        </div>
+      )}
+
+      {fxId === "lb-rb-pixel-card" && (
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[4] opacity-55">
+          <DynamicPixelCard
+            variant="pink"
+            trigger="always"
+            radius={12}
+            className="w-full h-full"
+          />
+        </div>
+      )}
+
+      {fxId === "lb-rb-spotlight-card" && (
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[4] opacity-65">
+          <DynamicSpotlightCard
+            spotlightColor="#10B981"
+            ambient
+            flare
+            className="w-full h-full !bg-transparent !border-0"
+          />
+        </div>
+      )}
+
+      {fxId === "lb-aceternity-evervault-cipher" && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-[4] font-mono text-[8px] leading-3 text-emerald-400/25 overflow-hidden select-none break-all p-1"
+        >
+          01A9F3C7E2B8D4019A8F7C6B5E4D3C2B1A0F9E8D7C6B5A4F3E2D1C0B9A8F7E6D5C4B3A2F1E0D
+        </span>
+      )}
+
+      {fxId === "lb-aceternity-canvas-reveal" && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-[4] opacity-35"
+          style={{
+            backgroundImage: "radial-gradient(rgba(56,189,248,0.85) 1.2px, transparent 1.2px)",
+            backgroundSize: "8px 8px",
+          }}
+        />
+      )}
+
+      {fxId === "lb-rb-tilted-card" ? (
+        <div className="relative z-10">
+          <DynamicTiltedCard
+            containerHeight="auto"
+            containerWidth="100%"
+            scaleOnHover={1.01}
+            rotateAmplitude={6}
+            showTooltip={false}
+          >
+            {children}
+          </DynamicTiltedCard>
+        </div>
+      ) : (
+        <div className="relative z-10">{children}</div>
+      )}
     </div>
   );
 }
