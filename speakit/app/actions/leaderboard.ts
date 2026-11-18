@@ -16,8 +16,11 @@ import {
 } from "../../lib/db";
 import { computeNextStreak } from "../../lib/gamification";
 import {
+  loginWithEmailPassword,
+  logoutGuestSession,
   normalizeTransferCode,
   readExistingGuestPlayer,
+  registerWithEmailPassword,
   resolveOrCreateGuestSession,
   restoreByTransferCode as restoreGuestByTransferCode,
   serializePublicGuestPlayer,
@@ -52,6 +55,36 @@ export async function restoreByTransferCode(code: string): Promise<{
   error?: string;
 }> {
   return restoreGuestByTransferCode(code);
+}
+
+export async function registerAccountAction(input: {
+  email: string;
+  password: string;
+  displayName: string;
+  transferCode?: string;
+}): Promise<{
+  ok: boolean;
+  mode: "online" | "offline";
+  player: PublicGuestPlayer | null;
+  error?: string;
+}> {
+  return registerWithEmailPassword(input);
+}
+
+export async function loginAccountAction(input: {
+  email: string;
+  password: string;
+}): Promise<{
+  ok: boolean;
+  mode: "online" | "offline";
+  player: PublicGuestPlayer | null;
+  error?: string;
+}> {
+  return loginWithEmailPassword(input);
+}
+
+export async function logoutAccountAction(): Promise<{ ok: boolean }> {
+  return logoutGuestSession();
 }
 
 export async function getTopPlayers(limit = 50): Promise<{
@@ -369,6 +402,7 @@ export async function rewardPracticePoints(
         transfer_code,
         display_name,
         avatar_url,
+        email,
         it_coins,
         total_points,
         streak_days,
@@ -540,6 +574,7 @@ export async function purchaseAndEquipCosmetic(
         guest_players.transfer_code,
         guest_players.display_name,
         guest_players.avatar_url,
+        guest_players.email,
         guest_players.it_coins,
         guest_players.total_points,
         guest_players.streak_days,
@@ -632,6 +667,7 @@ export async function updateGuestDisplayName(
         transfer_code,
         display_name,
         avatar_url,
+        email,
         it_coins,
         total_points,
         streak_days,
@@ -727,6 +763,7 @@ export async function updateGuestAvatar(
         transfer_code,
         display_name,
         avatar_url,
+        email,
         it_coins,
         total_points,
         streak_days,
@@ -826,6 +863,7 @@ export async function equipOwnedCosmetic(
         transfer_code,
         display_name,
         avatar_url,
+        email,
         it_coins,
         total_points,
         streak_days,
@@ -905,6 +943,7 @@ export async function unequipCosmeticSlot(
         transfer_code,
         display_name,
         avatar_url,
+        email,
         it_coins,
         total_points,
         streak_days,

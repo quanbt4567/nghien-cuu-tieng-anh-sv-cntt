@@ -18,6 +18,8 @@ import {
   Gamepad2,
   History,
   KeyRound,
+  LogOut,
+  Mail,
   Mic,
   Pencil,
   RefreshCw,
@@ -34,6 +36,7 @@ import {
 import {
   getTopPlayers,
   initOrHydrateGuestSession,
+  logoutAccountAction,
   purchaseAndEquipCosmetic,
   restoreByTransferCode,
   unequipCosmeticSlot,
@@ -64,6 +67,7 @@ import {
 import {
   GUEST_PROFILE_UPDATED_EVENT,
   readBackupTransferCode,
+  requestOpenAuthModal,
   saveBackupTransferCode,
   saveCachedGuestProfile,
 } from "../../lib/guestClient";
@@ -848,11 +852,32 @@ export function ProfileView() {
                   <h2 className="text-xl font-bold text-ink truncate">
                     {identity.displayName}
                   </h2>
+                  {guestPlayer?.email && (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill bg-sky-50 border border-sky-200 text-xs font-medium text-sky-900">
+                      <Mail className="w-3 h-3 text-sky-700" aria-hidden="true" />
+                      <span>{guestPlayer.email}</span>
+                    </span>
+                  )}
                   {identity.transferCode && (
                     <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-bold text-ink">
                       <KeyRound className="w-3 h-3 text-accent" aria-hidden="true" />
                       <span>{identity.transferCode}</span>
                     </span>
+                  )}
+                  {guestPlayer?.email && (
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        await logoutAccountAction();
+                        setGuestPlayer(null);
+                        saveCachedGuestProfile(null);
+                        requestOpenAuthModal();
+                      }}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill bg-accent-light border border-accent/30 text-xs font-semibold text-accent hover:bg-accent hover:text-white transition-colors"
+                    >
+                      <LogOut className="w-3 h-3" aria-hidden="true" />
+                      <span>Đăng xuất</span>
+                    </button>
                   )}
                   <button
                     type="button"

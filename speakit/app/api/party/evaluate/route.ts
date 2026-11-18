@@ -355,6 +355,7 @@ async function awardVictoryCoins(
         device_token_hash,
         transfer_code,
         display_name,
+        email,
         it_coins,
         total_points,
         streak_days,

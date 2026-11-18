@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { SpeakItLogo } from "./SpeakItLogo";
 import {
   Home,
@@ -18,6 +18,8 @@ import {
   Flame,
   Coins,
   ChevronDown,
+  LogIn,
+  LogOut,
   Menu,
   X,
   ShoppingBag,
@@ -34,9 +36,13 @@ import {
   GUEST_PROFILE_UPDATED_EVENT,
   readBackupTransferCode,
   readCachedGuestProfile,
+  requestOpenAuthModal,
   syncGuestProfileFromServer,
 } from "../../lib/guestClient";
-import { initOrHydrateGuestSession } from "../../app/actions/leaderboard";
+import {
+  initOrHydrateGuestSession,
+  logoutAccountAction,
+} from "../../app/actions/leaderboard";
 import type { PublicGuestPlayer } from "../../lib/db";
 import { mergeProfileIdentity } from "../../lib/profileStats";
 import type { GamificationState } from "../../lib/types";
@@ -120,6 +126,7 @@ const INITIAL_GAMIFICATION: GamificationState = {
 
 export function Navbar() {
   const pathname = usePathname() ?? "";
+  const router = useRouter();
   const [hydrated, setHydrated] = useState(false);
   const [gamification, setGamification] = useState<GamificationState>(INITIAL_GAMIFICATION);
   const [guestPlayer, setGuestPlayer] = useState<PublicGuestPlayer | null>(null);
@@ -242,6 +249,16 @@ export function Navbar() {
   const homeActive = isItemActive(pathname, "/");
   const shopActive = pathname.startsWith("/shop");
 
+  const handleLogout = async () => {
+    await logoutAccountAction();
+    setGuestPlayer(null);
+    syncGuestProfileFromServer(null);
+    setOpenGroup(null);
+    setMobileOpen(false);
+    requestOpenAuthModal();
+    router.refresh();
+  };
+
   return (
     <>
       <CustomCursorTrail effectId={guestPlayer?.equippedCosmetics?.cursor_effect ?? null} />
@@ -309,6 +326,11 @@ export function Navbar() {
                         <div className="text-xs font-bold text-ink truncate">
                           {identity.displayName}
                         </div>
+                        {guestPlayer?.email && (
+                          <div className="text-[11px] text-sky-700 truncate mt-0.5">
+                            {guestPlayer.email}
+                          </div>
+                        )}
                         <div className="flex items-center justify-between gap-2 mt-0.5 text-[11px] font-mono text-ink-muted">
                           {identity.transferCode && <span>{identity.transferCode}</span>}
                           <span>{identity.totalPoints.toLocaleString("en-US")} pts</span>
@@ -334,6 +356,32 @@ export function Navbar() {
                         </Link>
                       );
                     })}
+                    {group.id === "account" && hydrated && (
+                      <div className="mt-1 pt-1 border-t border-ink/10">
+                        {guestPlayer?.email ? (
+                          <button
+                            type="button"
+                            onClick={() => void handleLogout()}
+                            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-accent hover:bg-accent-light transition-colors"
+                          >
+                            <LogOut className="w-4 h-4 shrink-0" aria-hidden="true" />
+                            <span>Đăng xuất</span>
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setOpenGroup(null);
+                              requestOpenAuthModal();
+                            }}
+                            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold text-ink hover:bg-paper-muted transition-colors"
+                          >
+                            <LogIn className="w-4 h-4 text-accent shrink-0" aria-hidden="true" />
+                            <span>Đăng nhập / Đăng ký</span>
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -387,6 +435,17 @@ export function Navbar() {
                   </span>
                 )}
               </Link>
+
+              {!guestPlayer?.email && (
+                <button
+                  type="button"
+                  onClick={() => requestOpenAuthModal()}
+                  className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-accent hover:bg-accent-hover text-white border border-ink text-xs font-bold shadow-soft transition-colors"
+                >
+                  <LogIn className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                  <span>Đăng nhập</span>
+                </button>
+              )}
 
               <Link
                 href="/arena"
@@ -443,14 +502,43 @@ export function Navbar() {
             <div className="px-3 py-2 rounded-xl bg-white border border-ink/15 flex items-center justify-between gap-2 text-xs">
               <div className="min-w-0">
                 <div className="font-bold text-ink truncate">{identity.displayName}</div>
+                {guestPlayer?.email && (
+                  <div className="text-[11px] text-sky-700 truncate">
+                    {guestPlayer.email}
+                  </div>
+                )}
                 {identity.transferCode && (
                   <div className="font-mono text-[11px] text-ink-muted">
                     {identity.transferCode}
                   </div>
                 )}
               </div>
-              <div className="font-mono text-[11px] text-ink shrink-0">
-                {identity.totalPoints.toLocaleString("en-US")} pts · {identity.itCoins} Coin
+              <div className="flex flex-col items-end gap-1 shrink-0">
+                <div className="font-mono text-[11px] text-ink">
+                  {identity.totalPoints.toLocaleString("en-US")} pts · {identity.itCoins} Coin
+                </div>
+                {guestPlayer?.email ? (
+                  <button
+                    type="button"
+                    onClick={() => void handleLogout()}
+                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-accent hover:underline"
+                  >
+                    <LogOut className="w-3 h-3" aria-hidden="true" />
+                    <span>Đăng xuất</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileOpen(false);
+                      requestOpenAuthModal();
+                    }}
+                    className="inline-flex items-center gap-1 text-[11px] font-bold text-accent hover:underline"
+                  >
+                    <LogIn className="w-3 h-3" aria-hidden="true" />
+                    <span>Đăng nhập / Đăng ký</span>
+                  </button>
+                )}
               </div>
             </div>
           )}

@@ -83,6 +83,8 @@ export interface GuestPlayerRow {
   transfer_code: string;
   display_name: string;
   avatar_url?: string | null;
+  email?: string | null;
+  password_hash?: string | null;
   it_coins: number;
   total_points: number;
   streak_days: number;
@@ -115,6 +117,7 @@ export interface PublicGuestPlayer {
   transferCode: string;
   displayName: string;
   avatarUrl?: string | null;
+  email?: string | null;
   itCoins: number;
   totalPoints: number;
   streakDays: number;
@@ -171,6 +174,19 @@ export async function initializeGuestPlayersSchema(
         sql`
           ALTER TABLE guest_players
           ADD COLUMN IF NOT EXISTS avatar_url TEXT
+        `,
+        sql`
+          ALTER TABLE guest_players
+          ADD COLUMN IF NOT EXISTS email TEXT
+        `,
+        sql`
+          ALTER TABLE guest_players
+          ADD COLUMN IF NOT EXISTS password_hash TEXT
+        `,
+        sql`
+          CREATE UNIQUE INDEX IF NOT EXISTS idx_guest_players_email_lower
+          ON guest_players (LOWER(email))
+          WHERE email IS NOT NULL
         `,
         sql`
           CREATE INDEX IF NOT EXISTS idx_guest_players_leaderboard

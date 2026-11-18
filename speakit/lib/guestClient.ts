@@ -6,6 +6,16 @@ import type { PublicGuestPlayer } from "./db";
 export const GUEST_TRANSFER_CODE_KEY = "speakit_transfer_code_v1";
 export const GUEST_PROFILE_CACHE_KEY = "speakit_guest_profile_cache_v1";
 export const GUEST_PROFILE_UPDATED_EVENT = "speakit:guest-profile-updated";
+export const OPEN_AUTH_MODAL_EVENT = "speakit:open-auth-modal";
+
+export function requestOpenAuthModal(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.dispatchEvent(new CustomEvent(OPEN_AUTH_MODAL_EVENT));
+  } catch {
+    return;
+  }
+}
 
 export function readBackupTransferCode(): string | undefined {
   if (typeof window === "undefined") return undefined;
@@ -43,6 +53,10 @@ export function readCachedGuestProfile(): PublicGuestPlayer | null {
       id: parsed.id,
       transferCode: parsed.transferCode,
       displayName: parsed.displayName,
+      email:
+        typeof parsed.email === "string" && parsed.email.trim()
+          ? parsed.email.trim().toLowerCase()
+          : null,
       itCoins: typeof parsed.itCoins === "number" && Number.isFinite(parsed.itCoins) ? parsed.itCoins : 0,
       totalPoints:
         typeof parsed.totalPoints === "number" && Number.isFinite(parsed.totalPoints)
@@ -87,18 +101,32 @@ export function notifyGuestProfileUpdated(
 
 export function saveCachedGuestProfile(player: PublicGuestPlayer | null): void {
   if (typeof window === "undefined") return;
+  let normalizedPlayer = player;
   try {
     if (player) {
-      window.localStorage.setItem(GUEST_PROFILE_CACHE_KEY, JSON.stringify(player));
-      if (player.transferCode) {
-        window.localStorage.setItem(GUEST_TRANSFER_CODE_KEY, player.transferCode);
+      if (player.email === undefined) {
+        const previous = readCachedGuestProfile();
+        if (previous && previous.id === player.id && previous.email !== undefined) {
+          normalizedPlayer = { ...player, email: previous.email };
+        }
+      }
+      window.localStorage.setItem(
+        GUEST_PROFILE_CACHE_KEY,
+        JSON.stringify(normalizedPlayer)
+      );
+      if (normalizedPlayer?.transferCode) {
+        window.localStorage.setItem(
+          GUEST_TRANSFER_CODE_KEY,
+          normalizedPlayer.transferCode
+        );
       }
     } else {
       window.localStorage.removeItem(GUEST_PROFILE_CACHE_KEY);
+      window.localStorage.removeItem(GUEST_TRANSFER_CODE_KEY);
     }
   } catch {
   }
-  notifyGuestProfileUpdated(player);
+  notifyGuestProfileUpdated(normalizedPlayer);
 }
 
 export function syncGuestProfileFromServer(
