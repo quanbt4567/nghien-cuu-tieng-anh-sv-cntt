@@ -68,9 +68,9 @@ const TABS: Array<{
   { id: "scenarios", label: "Kịch bản", icon: MessageSquareText },
   { id: "vocab", label: "Từ vựng", icon: BookOpen },
   { id: "arena", label: "Arena Games", icon: Gamepad2 },
-  { id: "cosmetics", label: "Kho Hiệu Ứng (Discord JSON Importer)", icon: Sparkles },
+  { id: "cosmetics", label: "Kho Hiệu Ứng", icon: Sparkles },
   { id: "research", label: "Bài báo & Nghiên cứu", icon: Newspaper },
-  { id: "feedback", label: "Góp ý (Feedback)", icon: Star },
+  { id: "feedback", label: "Góp ý", icon: Star },
   { id: "leaves", label: "Thoát game", icon: LogOut },
   { id: "moderation", label: "Kiểm duyệt AI", icon: ShieldCheck },
   { id: "logs", label: "Nhật ký & Xuất CSV", icon: FileSpreadsheet },
@@ -227,7 +227,7 @@ export function AdminShell() {
           mobileMenuOpen ? "translate-x-0 shadow-xl" : "-translate-x-full"
         }`}
       >
-        <div className="p-4 border-b border-ink/15 space-y-2.5 shrink-0">
+        <div className="px-4 py-3 border-b border-ink/15 space-y-1.5 shrink-0">
           <div className="flex items-center justify-between gap-2">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-pill bg-ink text-white text-[11px] font-mono font-semibold uppercase tracking-wide">
               <ShieldCheck className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
@@ -252,7 +252,7 @@ export function AdminShell() {
 
         <nav
           aria-label="Thanh điều hướng Admin"
-          className="flex-1 overflow-y-auto px-3 py-3 space-y-1"
+          className="flex-1 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden px-3 py-2 space-y-0.5"
         >
           {TABS.map(({ id, label, icon: Icon }) => {
             const isActive = activeTab === id;
@@ -265,25 +265,25 @@ export function AdminShell() {
                   setMobileMenuOpen(false);
                 }}
                 aria-current={isActive ? "page" : undefined}
-                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-pill text-xs font-medium text-left transition-all ${
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-pill text-xs font-medium text-left transition-all ${
                   isActive
                     ? "bg-ink text-white shadow-soft"
                     : "text-ink hover:bg-paper-muted"
                 }`}
               >
                 <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
-                <span className="leading-snug">{label}</span>
+                <span className="truncate">{label}</span>
               </button>
             );
           })}
         </nav>
 
-        <div className="p-3 border-t border-ink/15 space-y-2 shrink-0">
+        <div className="p-3 border-t border-ink/15 space-y-1.5 shrink-0">
           <button
             type="button"
             disabled={isRefreshing || isLoading}
             onClick={() => void refreshDashboard(true)}
-            className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-pill bg-white border border-ink/15 text-xs font-mono font-medium text-ink hover:bg-paper-muted shadow-soft transition-colors disabled:opacity-50"
+            className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-pill bg-white border border-ink/15 text-xs font-mono font-medium text-ink hover:bg-paper-muted shadow-soft transition-colors disabled:opacity-50"
           >
             <RefreshCw
               className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin" : ""}`}
@@ -292,23 +292,25 @@ export function AdminShell() {
             <span>Làm mới dữ liệu</span>
           </button>
 
-          <Link
-            href="/"
-            onClick={() => setMobileMenuOpen(false)}
-            className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-pill bg-white border border-ink/15 text-xs font-medium text-ink hover:bg-paper-muted shadow-soft transition-colors"
-          >
-            <span>Trang chủ</span>
-            <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
-          </Link>
+          <div className="grid grid-cols-2 gap-1.5">
+            <Link
+              href="/"
+              onClick={() => setMobileMenuOpen(false)}
+              className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-pill bg-white border border-ink/15 text-xs font-medium text-ink hover:bg-paper-muted shadow-soft transition-colors"
+            >
+              <span>Trang chủ</span>
+              <ArrowUpRight className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+            </Link>
 
-          <button
-            type="button"
-            onClick={() => void lockSession()}
-            className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-pill bg-accent-light border border-accent/40 text-xs font-semibold text-ink hover:bg-accent hover:text-white shadow-soft transition-colors"
-          >
-            <Lock className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>Đăng xuất</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => void lockSession()}
+              className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-pill bg-accent-light border border-accent/40 text-xs font-semibold text-ink hover:bg-accent hover:text-white shadow-soft transition-colors"
+            >
+              <Lock className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+              <span>Đăng xuất</span>
+            </button>
+          </div>
         </div>
       </aside>
 
