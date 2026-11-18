@@ -949,7 +949,7 @@ export function PartyWarRoom() {
         onComplete={() => setShowFinisher(false)}
       />
 
-      <section className="bg-white border-2 border-ink rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0_#1A1714] space-y-4">
+      <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-accent/10 border border-accent text-accent text-[11px] font-mono font-bold">
@@ -999,7 +999,7 @@ export function PartyWarRoom() {
 
       {(!room || room.status === "lobby") && (
         <div className="space-y-6">
-          <section className="bg-white border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] space-y-4">
+          <section className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4">
             <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-ink">
               1. Choose Your Engineering Role
             </h2>
@@ -1013,7 +1013,7 @@ export function PartyWarRoom() {
                     onClick={() => setSelectedRole(role.id)}
                     className={`text-left p-4 rounded-xl border-2 transition-all ${
                       active
-                        ? "bg-paper border-ink shadow-[4px_4px_0_#1A1714] -translate-x-0.5 -translate-y-0.5"
+                        ? "bg-paper border-ink shadow-soft -translate-x-0.5 -translate-y-0.5"
                         : "bg-white border-ink/20 hover:border-ink"
                     }`}
                   >
@@ -1033,7 +1033,7 @@ export function PartyWarRoom() {
 
           {!room ? (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <section className="lg:col-span-2 bg-white border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] space-y-4">
+              <section className="lg:col-span-2 bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4">
                 <div className="flex items-center justify-between">
                   <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-ink">
                     2. Create Room — Select Outage Scenario
@@ -1053,7 +1053,7 @@ export function PartyWarRoom() {
                         onClick={() => setSelectedScenarioId(scenario.id)}
                         className={`w-full text-left p-3.5 rounded-xl border-2 transition-all ${
                           active
-                            ? "bg-paper border-ink shadow-[4px_4px_0_#1A1714]"
+                            ? "bg-paper border-ink shadow-soft"
                             : "bg-white border-ink/15 hover:border-ink"
                         }`}
                       >
@@ -1086,7 +1086,7 @@ export function PartyWarRoom() {
                   type="button"
                   onClick={handleCreateRoom}
                   disabled={loadingAction === "create"}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] disabled:opacity-50"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border border-ink/15 shadow-soft hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] disabled:opacity-50"
                 >
                   <ShieldAlert className="w-4 h-4" />
                   <span>
@@ -1097,7 +1097,7 @@ export function PartyWarRoom() {
                 </button>
               </section>
 
-              <section className="bg-paper border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] flex flex-col justify-between space-y-4">
+              <section className="bg-paper border border-ink/15 rounded-2xl p-5 shadow-soft flex flex-col justify-between space-y-4">
                 <div className="space-y-3">
                   <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-ink">
                     Or Join by Invite Code
@@ -1111,7 +1111,7 @@ export function PartyWarRoom() {
                     value={joinCodeInput}
                     onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
                     placeholder="ABC123"
-                    className="w-full px-4 py-3 rounded-xl bg-white border-2 border-ink font-mono text-lg font-bold tracking-[0.25em] text-center text-ink uppercase focus:outline-none"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-ink/15 font-mono text-lg font-bold tracking-[0.25em] text-center text-ink uppercase focus:outline-none"
                   />
                 </div>
 
@@ -1119,7 +1119,7 @@ export function PartyWarRoom() {
                   type="button"
                   onClick={handleJoinRoom}
                   disabled={loadingAction === "join"}
-                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-ink text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:bg-white hover:text-ink transition-colors disabled:opacity-50"
+                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-ink text-white font-bold text-sm border border-ink/15 shadow-soft hover:bg-white hover:text-ink transition-colors disabled:opacity-50"
                 >
                   <Users className="w-4 h-4" />
                   <span>{loadingAction === "join" ? "Joining..." : "Join Room"}</span>
@@ -1127,12 +1127,12 @@ export function PartyWarRoom() {
               </section>
             </div>
           ) : (
-            <section className="bg-white border-2 border-ink rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0_#1A1714] space-y-5">
+            <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-ink/15">
                 <div>
                   <div className="text-xs font-mono text-ink/60">WAR ROOM CODE</div>
                   <div className="flex items-center gap-3 mt-1">
-                    <span className="text-2xl font-mono font-bold tracking-[0.2em] text-ink bg-paper px-3 py-1 rounded-lg border-2 border-ink">
+                    <span className="text-2xl font-mono font-bold tracking-[0.2em] text-ink bg-paper px-3 py-1 rounded-lg border border-ink/15">
                       {room.roomCode}
                     </span>
                     <button
@@ -1212,7 +1212,7 @@ export function PartyWarRoom() {
                     disabled={
                       loadingAction === "fill_ai" || room.players.length >= 3
                     }
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-paper text-ink font-bold text-xs sm:text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:bg-white disabled:opacity-50"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-paper text-ink font-bold text-xs sm:text-sm border border-ink/15 shadow-soft hover:bg-white disabled:opacity-50"
                   >
                     <Bot className="w-4 h-4 text-accent" />
                     <span>
@@ -1238,7 +1238,7 @@ export function PartyWarRoom() {
                     disabled={
                       loadingAction === "start" || room.players.length < 3
                     }
-                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:translate-x-[-1px] hover:translate-y-[-1px] disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border border-ink/15 shadow-soft hover:translate-x-[-1px] hover:translate-y-[-1px] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Play className="w-4 h-4" />
                     <span>
@@ -1263,7 +1263,7 @@ export function PartyWarRoom() {
 
       {room && isRoomActiveStatus && !isRoomTimedOut && (
           <div className="space-y-6">
-            <section className="bg-white border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] space-y-4">
+            <section className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
@@ -1290,7 +1290,7 @@ export function PartyWarRoom() {
                   )}
 
                   <div
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-ink font-mono font-bold text-lg ${
+                    className={`flex items-center gap-2 px-4 py-2 rounded-xl border border-ink/15 font-mono font-bold text-lg ${
                       penaltyFlash
                         ? "bg-accent text-white"
                         : timeLeftSec <= 60
@@ -1312,7 +1312,7 @@ export function PartyWarRoom() {
                               ctoAlertText ?? activeScenario.incidentContext
                             )
                     }
-                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-paper border-2 border-ink text-xs font-mono font-bold text-ink hover:bg-white"
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-paper border border-ink/15 text-xs font-mono font-bold text-ink hover:bg-white"
                   >
                     {isTtsPlaying ? (
                       <>
@@ -1336,7 +1336,7 @@ export function PartyWarRoom() {
                     {resolutionProgress}% / 100% (Còn {remainingProgress}%)
                   </span>
                 </div>
-                <div className="w-full h-4 rounded-full bg-paper border-2 border-ink overflow-hidden">
+                <div className="w-full h-4 rounded-full bg-paper border border-ink/15 overflow-hidden">
                   <div
                     className="h-full bg-emerald-600 transition-all duration-500"
                     style={{ width: `${Math.min(100, Math.max(0, resolutionProgress))}%` }}
@@ -1350,7 +1350,7 @@ export function PartyWarRoom() {
                 ref={ctoBoxRef}
                 className={`scroll-mt-24 p-3.5 rounded-xl border-2 text-xs flex items-start gap-2.5 transition-all duration-500 ${
                   ctoHighlight
-                    ? "bg-amber-50 border-accent text-ink ring-4 ring-accent/25 shadow-[3px_3px_0_#1A1714]"
+                    ? "bg-amber-50 border-accent text-ink ring-4 ring-accent/25 shadow-soft"
                     : "bg-paper border-ink/20 text-ink/85"
                 }`}
               >
@@ -1378,7 +1378,7 @@ export function PartyWarRoom() {
             </section>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <section className="lg:col-span-2 bg-white border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] space-y-4">
+              <section className="lg:col-span-2 bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="px-2.5 py-1 rounded-lg bg-ink text-white text-xs font-mono font-bold">
                     MANH MỐI RIÊNG CỦA BẠN • {myClue.roleLabel}
@@ -1452,7 +1452,7 @@ export function PartyWarRoom() {
                 </div>
               </section>
 
-              <section className="bg-paper border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] space-y-4">
+              <section className="bg-paper border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4">
                 <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-ink">
                   Teammates&apos; Intel (Role Summary)
                 </h3>
@@ -1500,7 +1500,7 @@ export function PartyWarRoom() {
 
             <section
               ref={composerSectionRef}
-              className="scroll-mt-24 bg-white border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] space-y-4"
+              className="scroll-mt-24 bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4"
             >
               {renderPostSubmitBanner("composer")}
 
@@ -1535,7 +1535,7 @@ export function PartyWarRoom() {
                   type="button"
                   onClick={handleToggleMic}
                   disabled={isRoomTimedOut || timeLeftSec <= 0}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs border-2 border-ink shadow-[4px_4px_0_#1A1714] disabled:opacity-50 disabled:cursor-not-allowed ${
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs border border-ink/15 shadow-soft disabled:opacity-50 disabled:cursor-not-allowed ${
                     isRecording
                       ? "bg-accent text-white animate-pulse"
                       : "bg-paper text-ink hover:bg-white"
@@ -1569,7 +1569,7 @@ export function PartyWarRoom() {
                     ? "Example: We have a lock contention deadlock in the payment transaction. Let's add a rollback and client idempotency key..."
                     : `Lượt ${nextTurnNumber}: Describe your next mitigation or verification step in English...`
                 }
-                className="w-full p-3.5 rounded-xl bg-paper border-2 border-ink text-sm text-ink placeholder:text-ink/40 focus:outline-none disabled:opacity-50"
+                className="w-full p-3.5 rounded-xl bg-paper border border-ink/15 text-sm text-ink placeholder:text-ink/40 focus:outline-none disabled:opacity-50"
               />
 
               <div className="flex flex-wrap items-center justify-between gap-3">
@@ -1600,7 +1600,7 @@ export function PartyWarRoom() {
                     isRoomTimedOut ||
                     timeLeftSec <= 0
                   }
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border border-ink/15 shadow-soft disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send className="w-4 h-4" />
                   <span>
@@ -1686,7 +1686,7 @@ export function PartyWarRoom() {
         )}
 
       {room && isRoomTimedOut && (
-        <section className="bg-white border-2 border-ink rounded-2xl p-6 shadow-[4px_4px_0_#1A1714] space-y-6">
+        <section className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-ink/15">
             <div className="space-y-1.5">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/15 border border-accent text-accent text-xs font-mono font-bold">
@@ -1705,7 +1705,7 @@ export function PartyWarRoom() {
             </div>
 
             <div className="flex items-center gap-3 shrink-0">
-              <div className="bg-paper border-2 border-ink rounded-xl px-4 py-2.5 text-center">
+              <div className="bg-paper border border-ink/15 rounded-xl px-4 py-2.5 text-center">
                 <div className="text-[10px] font-mono font-bold text-ink/60">
                   TIẾN ĐỘ ĐẠT ĐƯỢC
                 </div>
@@ -1713,7 +1713,7 @@ export function PartyWarRoom() {
                   {resolutionProgress}%
                 </div>
               </div>
-              <div className="bg-paper border-2 border-ink rounded-xl px-4 py-2.5 text-center">
+              <div className="bg-paper border border-ink/15 rounded-xl px-4 py-2.5 text-center">
                 <div className="text-[10px] font-mono font-bold text-ink/60">
                   ĐIỂM TÍCH LŨY
                 </div>
@@ -1729,7 +1729,7 @@ export function PartyWarRoom() {
               <span>FINAL INCIDENT PROGRESS</span>
               <span>{resolutionProgress}% / 100%</span>
             </div>
-            <div className="w-full h-4 rounded-full bg-paper border-2 border-ink overflow-hidden">
+            <div className="w-full h-4 rounded-full bg-paper border border-ink/15 overflow-hidden">
               <div
                 className="h-full bg-accent transition-all duration-300"
                 style={{ width: `${Math.min(100, Math.max(0, resolutionProgress))}%` }}
@@ -1738,7 +1738,7 @@ export function PartyWarRoom() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl bg-paper border-2 border-ink space-y-3">
+            <div className="p-4 rounded-xl bg-paper border border-ink/15 space-y-3">
               <div className="flex items-center justify-between gap-2">
                 <div className="text-xs font-mono font-bold uppercase text-ink">
                   Accumulated Turn Points
@@ -1776,7 +1776,7 @@ export function PartyWarRoom() {
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-paper border-2 border-ink space-y-3">
+            <div className="p-4 rounded-xl bg-paper border border-ink/15 space-y-3">
               <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-ink">
                 <Terminal className="w-4 h-4 text-accent" />
                 <span>CTO Post-Incident Debrief</span>
@@ -1814,7 +1814,7 @@ export function PartyWarRoom() {
               type="button"
               onClick={handleResetRoom}
               disabled={loadingAction === "reset"}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border border-ink/15 shadow-soft disabled:opacity-50"
             >
               <RotateCcw className="w-4 h-4" />
               <span>
@@ -1824,7 +1824,7 @@ export function PartyWarRoom() {
 
             <Link
               href="/arena"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-ink text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:bg-white hover:text-ink"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-ink text-white font-bold text-sm border border-ink/15 shadow-soft hover:bg-white hover:text-ink"
             >
               <ArrowLeft className="w-4 h-4 text-accent" />
               <span>Quay lại /arena</span>
@@ -1834,7 +1834,7 @@ export function PartyWarRoom() {
       )}
 
       {room && room.status === "resolved" && (
-        <section className="bg-white border-2 border-ink rounded-2xl p-6 shadow-[4px_4px_0_#1A1714] space-y-6">
+        <section className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-ink/15">
             <div className="space-y-1">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 border border-emerald-700 text-emerald-800 text-xs font-mono font-bold">
@@ -1846,7 +1846,7 @@ export function PartyWarRoom() {
               </h2>
             </div>
 
-            <div className="bg-paper border-2 border-ink rounded-xl px-4 py-2.5 text-center">
+            <div className="bg-paper border border-ink/15 rounded-xl px-4 py-2.5 text-center">
               <div className="text-[10px] font-mono font-bold text-ink/60">
                 TEAM SCORE
               </div>
@@ -1857,7 +1857,7 @@ export function PartyWarRoom() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl bg-paper border-2 border-ink space-y-3">
+            <div className="p-4 rounded-xl bg-paper border border-ink/15 space-y-3">
               <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-ink">
                 <Crown className="w-4 h-4 text-accent" />
                 <span>MVP & IT-Coin Rewards</span>
@@ -1902,7 +1902,7 @@ export function PartyWarRoom() {
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-paper border-2 border-ink space-y-3">
+            <div className="p-4 rounded-xl bg-paper border border-ink/15 space-y-3">
               <div className="text-xs font-mono font-bold uppercase text-ink">
                 Incident Resolution Checklist
               </div>
@@ -1921,7 +1921,7 @@ export function PartyWarRoom() {
             <button
               type="button"
               onClick={handleResetRoom}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714]"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border border-ink/15 shadow-soft"
             >
               <RotateCcw className="w-4 h-4" />
               <span>Play Another Outage</span>
@@ -1929,7 +1929,7 @@ export function PartyWarRoom() {
 
             <Link
               href="/shop"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-ink text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:bg-white hover:text-ink"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-ink text-white font-bold text-sm border border-ink/15 shadow-soft hover:bg-white hover:text-ink"
             >
               <ShoppingBag className="w-4 h-4 text-accent" />
               <span>Spend IT-Coins in Shop</span>

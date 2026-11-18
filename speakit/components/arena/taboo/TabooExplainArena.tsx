@@ -674,7 +674,7 @@ export function TabooExplainArena() {
         onComplete={() => setShowFinisher(false)}
       />
 
-      <section className="bg-white border-2 border-ink rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0_#1A1714] space-y-4">
+      <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-accent/10 border border-accent text-accent text-[11px] font-mono font-bold">
@@ -697,7 +697,7 @@ export function TabooExplainArena() {
               type="button"
               onClick={toggleMuteSfx}
               aria-label={sfxMuted ? "Unmute SFX" : "Mute SFX"}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border-2 border-ink text-xs font-mono font-bold shadow-[3px_3px_0_#1A1714] transition-colors ${
+              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-ink/15 text-xs font-mono font-bold shadow-soft transition-colors ${
                 sfxMuted
                   ? "bg-paper text-ink/60"
                   : "bg-ink text-white hover:bg-white hover:text-ink"
@@ -750,7 +750,7 @@ export function TabooExplainArena() {
 
       {!room && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <section className="lg:col-span-2 bg-white border-2 border-ink rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0_#1A1714] space-y-5">
+          <section className="lg:col-span-2 bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-ink">
                 1. Start Solo vs AI Guesser or Host a Room
@@ -774,7 +774,7 @@ export function TabooExplainArena() {
                       onClick={() => setTargetCards(count)}
                       className={`px-4 py-2 rounded-xl border-2 font-mono text-xs font-bold transition-all ${
                         active
-                          ? "bg-paper border-ink shadow-[3px_3px_0_#1A1714] text-ink"
+                          ? "bg-paper border-ink shadow-soft text-ink"
                           : "bg-white border-ink/20 text-ink/70 hover:border-ink"
                       }`}
                     >
@@ -811,7 +811,7 @@ export function TabooExplainArena() {
                 type="button"
                 onClick={handleQuickPlayBot}
                 disabled={loadingAction !== null}
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] disabled:opacity-50"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-accent text-white font-bold text-sm border border-ink/15 shadow-soft hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] disabled:opacity-50"
               >
                 <Bot className="w-4 h-4" />
                 <span>
@@ -825,7 +825,7 @@ export function TabooExplainArena() {
                 type="button"
                 onClick={handleCreateRoom}
                 disabled={loadingAction !== null}
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-paper text-ink font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:bg-white disabled:opacity-50"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-paper text-ink font-bold text-sm border border-ink/15 shadow-soft hover:bg-white disabled:opacity-50"
               >
                 <Users className="w-4 h-4 text-accent" />
                 <span>
@@ -837,7 +837,7 @@ export function TabooExplainArena() {
             </div>
           </section>
 
-          <section className="bg-paper border-2 border-ink rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0_#1A1714] flex flex-col justify-between space-y-4">
+          <section className="bg-paper border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft flex flex-col justify-between space-y-4">
             <div className="space-y-3">
               <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-ink">
                 2. Join Room by Code
@@ -852,7 +852,7 @@ export function TabooExplainArena() {
                 value={joinCodeInput}
                 onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
                 placeholder="TAB123"
-                className="w-full px-4 py-3 rounded-xl bg-white border-2 border-ink font-mono text-lg font-bold tracking-[0.25em] text-center text-ink uppercase focus:outline-none"
+                className="w-full px-4 py-3 rounded-xl bg-white border border-ink/15 font-mono text-lg font-bold tracking-[0.25em] text-center text-ink uppercase focus:outline-none"
               />
             </div>
 
@@ -860,7 +860,7 @@ export function TabooExplainArena() {
               type="button"
               onClick={handleJoinRoom}
               disabled={loadingAction !== null}
-              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-ink text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:bg-white hover:text-ink transition-colors disabled:opacity-50"
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-ink text-white font-bold text-sm border border-ink/15 shadow-soft hover:bg-white hover:text-ink transition-colors disabled:opacity-50"
             >
               <Users className="w-4 h-4" />
               <span>{loadingAction === "join" ? "Joining..." : "Join Room"}</span>
@@ -870,12 +870,12 @@ export function TabooExplainArena() {
       )}
 
       {room && room.status === "lobby" && (
-        <section className="bg-white border-2 border-ink rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0_#1A1714] space-y-5">
+        <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-ink/15">
             <div>
               <div className="text-xs font-mono text-ink/60">TABOO ROOM CODE</div>
               <div className="flex items-center gap-3 mt-1">
-                <span className="text-2xl font-mono font-bold tracking-[0.2em] text-ink bg-paper px-3 py-1 rounded-lg border-2 border-ink">
+                <span className="text-2xl font-mono font-bold tracking-[0.2em] text-ink bg-paper px-3 py-1 rounded-lg border border-ink/15">
                   {room.roomCode}
                 </span>
                 <button
@@ -912,7 +912,7 @@ export function TabooExplainArena() {
             {room.players.map((p) => (
               <div
                 key={p.id}
-                className="p-4 rounded-xl border-2 border-ink bg-paper flex items-center gap-3"
+                className="p-4 rounded-xl border border-ink/15 bg-paper flex items-center gap-3"
               >
                 <DiscordAvatarFrame
                   equippedId={
@@ -959,7 +959,7 @@ export function TabooExplainArena() {
                 disabled={
                   loadingAction !== null || room.players.some((p) => p.isBot)
                 }
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-paper text-ink font-bold text-xs sm:text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:bg-white disabled:opacity-50"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-paper text-ink font-bold text-xs sm:text-sm border border-ink/15 shadow-soft hover:bg-white disabled:opacity-50"
               >
                 <Bot className="w-4 h-4 text-accent" />
                 <span>
@@ -982,7 +982,7 @@ export function TabooExplainArena() {
               type="button"
               onClick={handleStartMatch}
               disabled={loadingAction !== null || room.players.length < 2}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:translate-x-[-1px] hover:translate-y-[-1px] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border border-ink/15 shadow-soft hover:translate-x-[-1px] hover:translate-y-[-1px] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Play className="w-4 h-4" />
               <span>
@@ -998,7 +998,7 @@ export function TabooExplainArena() {
           className={`space-y-6 ${foulFlash ? "taboo-foul-shake" : ""}`}
         >
           <section
-            className={`rounded-2xl p-4 sm:p-5 border-2 border-ink shadow-[4px_4px_0_#1A1714] transition-colors ${
+            className={`rounded-2xl p-4 sm:p-5 border border-ink/15 shadow-soft transition-colors ${
               room.feverMode
                 ? "bg-gradient-to-r from-amber-100 via-orange-50 to-rose-100"
                 : "bg-white"
@@ -1017,7 +1017,7 @@ export function TabooExplainArena() {
                 </span>
 
                 {room.feverMode ? (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-orange-500 to-rose-600 text-white text-xs font-mono font-extrabold border-2 border-ink animate-pulse shadow-[2px_2px_0_#1A1714]">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-orange-500 to-rose-600 text-white text-xs font-mono font-extrabold border border-ink/15 animate-pulse shadow-sm">
                     <Flame className="w-4 h-4 fill-yellow-300 text-yellow-200" />
                     <span>FEVER MODE • 2x STREAK ({room.streak})</span>
                   </span>
@@ -1035,7 +1035,7 @@ export function TabooExplainArena() {
 
               <div className="flex items-center gap-2.5">
                 <div
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-ink font-mono font-bold text-lg ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border border-ink/15 font-mono font-bold text-lg ${
                     timeLeftSec <= 15
                       ? "bg-accent text-white animate-pulse"
                       : "bg-paper text-ink"
@@ -1048,7 +1048,7 @@ export function TabooExplainArena() {
             </div>
 
             {foulBanner && (
-              <div className="mt-3 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-rose-600 text-white border-2 border-ink text-xs font-mono font-bold">
+              <div className="mt-3 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-rose-600 text-white border border-ink/15 text-xs font-mono font-bold">
                 <Ban className="w-4 h-4 shrink-0" />
                 <span>{foulBanner}</span>
               </div>
@@ -1207,7 +1207,7 @@ export function TabooExplainArena() {
                 </div>
               </div>
 
-              <section className="bg-white border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] space-y-4">
+              <section className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <div className="text-sm font-bold text-ink">
@@ -1225,7 +1225,7 @@ export function TabooExplainArena() {
                   <button
                     type="button"
                     onClick={handleToggleMic}
-                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs border-2 border-ink shadow-[3px_3px_0_#1A1714] ${
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs border border-ink/15 shadow-soft ${
                       isRecording
                         ? "bg-accent text-white animate-mic-listening"
                         : "bg-paper text-ink hover:bg-white"
@@ -1263,7 +1263,7 @@ export function TabooExplainArena() {
                       }
                     }}
                     placeholder="Ví dụ dễ nói: Think of a super fast drawer next to your desk so you never walk to the slow archive..."
-                    className="w-full p-3.5 rounded-xl bg-paper border-2 border-ink text-sm text-ink placeholder:text-ink/40 focus:outline-none"
+                    className="w-full p-3.5 rounded-xl bg-paper border border-ink/15 text-sm text-ink placeholder:text-ink/40 focus:outline-none"
                   />
                 ) : (
                   <input
@@ -1277,7 +1277,7 @@ export function TabooExplainArena() {
                       }
                     }}
                     placeholder="Gõ tên thuật ngữ CNTT..."
-                    className="w-full p-3.5 rounded-xl bg-paper border-2 border-ink text-sm text-ink placeholder:text-ink/40 focus:outline-none"
+                    className="w-full p-3.5 rounded-xl bg-paper border border-ink/15 text-sm text-ink placeholder:text-ink/40 focus:outline-none"
                   />
                 )}
 
@@ -1288,7 +1288,7 @@ export function TabooExplainArena() {
                         type="button"
                         onClick={handleSkipCard}
                         disabled={loadingAction !== null}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-paper border-2 border-ink text-xs font-mono font-bold text-ink hover:bg-white disabled:opacity-50"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-paper border border-ink/15 text-xs font-mono font-bold text-ink hover:bg-white disabled:opacity-50"
                       >
                         <SkipForward className="w-3.5 h-3.5 text-accent" />
                         <span>Bỏ qua thẻ</span>
@@ -1308,7 +1308,7 @@ export function TabooExplainArena() {
                     type="button"
                     onClick={isExplainer ? handleSubmitClue : handleSubmitGuess}
                     disabled={loadingAction !== null}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] disabled:opacity-50"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border border-ink/15 shadow-soft disabled:opacity-50"
                   >
                     <Send className="w-4 h-4" />
                     <span>
@@ -1323,7 +1323,7 @@ export function TabooExplainArena() {
               </section>
             </div>
 
-            <section className="lg:col-span-5 bg-paper border-2 border-ink rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] space-y-4">
+            <section className="lg:col-span-5 bg-paper border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-ink">
                   <Bot className="w-4 h-4 text-accent" />
@@ -1404,7 +1404,7 @@ export function TabooExplainArena() {
       )}
 
       {room && room.status === "finished" && (
-        <section className="bg-white border-2 border-ink rounded-2xl p-6 shadow-[4px_4px_0_#1A1714] space-y-6">
+        <section className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-ink/15">
             <div className="space-y-1">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 border border-emerald-700 text-emerald-800 text-xs font-mono font-bold">
@@ -1421,7 +1421,7 @@ export function TabooExplainArena() {
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="bg-paper border-2 border-ink rounded-xl px-4 py-2.5 text-center">
+              <div className="bg-paper border border-ink/15 rounded-xl px-4 py-2.5 text-center">
                 <div className="text-[10px] font-mono font-bold text-ink/60">
                   FINAL SCORE
                 </div>
@@ -1429,7 +1429,7 @@ export function TabooExplainArena() {
                   {room.score} pts
                 </div>
               </div>
-              <div className="bg-amber-50 border-2 border-ink rounded-xl px-4 py-2.5 text-center">
+              <div className="bg-amber-50 border border-ink/15 rounded-xl px-4 py-2.5 text-center">
                 <div className="text-[10px] font-mono font-bold text-amber-800">
                   IT-COINS EARNED
                 </div>
@@ -1468,7 +1468,7 @@ export function TabooExplainArena() {
           </div>
 
           {orderedFeed.length > 0 && (
-            <div className="p-4 rounded-xl bg-paper border-2 border-ink space-y-2.5">
+            <div className="p-4 rounded-xl bg-paper border border-ink/15 space-y-2.5">
               <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-ink">
                 <Trophy className="w-4 h-4 text-accent" />
                 <span>Clue &amp; Guess Log</span>
@@ -1509,7 +1509,7 @@ export function TabooExplainArena() {
               <button
                 type="button"
                 onClick={handleResetRoom}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714]"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border border-ink/15 shadow-soft"
               >
                 <RotateCcw className="w-4 h-4" />
                 <span>Play Again</span>
@@ -1517,7 +1517,7 @@ export function TabooExplainArena() {
               <button
                 type="button"
                 onClick={handleLeaveRoom}
-                className="px-4 py-2.5 rounded-xl bg-paper text-ink font-mono font-bold text-xs border-2 border-ink"
+                className="px-4 py-2.5 rounded-xl bg-paper text-ink font-mono font-bold text-xs border border-ink/15"
               >
                 Back to Lobby
               </button>
@@ -1525,7 +1525,7 @@ export function TabooExplainArena() {
 
             <Link
               href="/shop"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-ink text-white font-bold text-sm border-2 border-ink shadow-[4px_4px_0_#1A1714] hover:bg-white hover:text-ink"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-ink text-white font-bold text-sm border border-ink/15 shadow-soft hover:bg-white hover:text-ink"
             >
               <ShoppingBag className="w-4 h-4 text-accent" />
               <span>Spend IT-Coins in Shop</span>

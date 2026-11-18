@@ -78,7 +78,7 @@ export function AdminDeleteConfirmModal({
       }}
     >
       <div
-        className="w-full max-w-md bg-white border-2 border-ink rounded-2xl shadow-hard overflow-hidden"
+        className="w-full max-w-md bg-white border border-ink/15 rounded-2xl shadow-hard overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between gap-3 px-5 py-3.5 bg-paper border-b border-ink/15">

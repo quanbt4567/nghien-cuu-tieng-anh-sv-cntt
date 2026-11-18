@@ -663,7 +663,7 @@ export function FeatureGuideDock() {
             ref={popoverRef}
             tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
-            className="fixed z-[75] bg-white border-2 border-ink rounded-xl sm:rounded-2xl shadow-[4px_4px_0_#1A1714] sm:shadow-[6px_6px_0_#1A1714] focus:outline-none"
+            className="fixed z-[75] bg-white border border-ink/15 rounded-xl sm:rounded-2xl shadow-soft sm:shadow-soft focus:outline-none"
             style={{
               top: popoverLayout.top,
               left: popoverLayout.left,
@@ -777,7 +777,7 @@ export function FeatureGuideDock() {
               <button
                 type="button"
                 onClick={handleNextStep}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-pill bg-[#E5484D] hover:bg-[#DC3D43] text-white border border-[#1A1714] text-xs font-bold shadow-[2px_2px_0_#1A1714] transition-all"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-pill bg-[#E5484D] hover:bg-[#DC3D43] text-white border border-[#1A1714] text-xs font-bold shadow-sm transition-all"
               >
                 {isLastStep ? (
                   <>

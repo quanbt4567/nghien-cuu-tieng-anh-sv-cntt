@@ -242,7 +242,7 @@ export default function ArenaPage() {
         <div className="space-y-3">
           <div className="flex items-start justify-between gap-2">
             <div
-              className={`w-10 h-10 rounded-xl border-2 border-[#1A1714] flex items-center justify-center shrink-0 ${mode.badgeTone}`}
+              className={`w-10 h-10 rounded-xl border border-[#1A1714]/15 flex items-center justify-center shrink-0 ${mode.badgeTone}`}
             >
               <Icon className="w-5 h-5" />
             </div>
@@ -271,7 +271,7 @@ export default function ArenaPage() {
             {mode.href ? "Phòng chơi riêng" : "Chơi trực tiếp bên dưới"}
           </span>
           <span
-            className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill border-2 border-[#1A1714] text-xs font-bold shrink-0 transition-colors ${
+            className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill border border-[#1A1714]/15 text-xs font-bold shrink-0 transition-colors ${
               mode.href
                 ? "bg-[#E5484D] text-white group-hover:bg-[#1A1714]"
                 : isInlineActive
@@ -301,7 +301,7 @@ export default function ArenaPage() {
         <div className="flex items-center gap-2.5">
           <Link
             href="/shop"
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill bg-[#FAF6EF] text-[#1A1714] text-xs font-bold border-2 border-[#1A1714] shadow-[4px_4px_0_#1A1714] hover:bg-[#E5484D] hover:text-white transition-all"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill bg-[#FAF6EF] text-[#1A1714] text-xs font-bold border border-[#1A1714]/15 shadow-soft hover:bg-[#E5484D] hover:text-white transition-all"
           >
             <ShoppingBag className="w-3.5 h-3.5" />
             <span>Cửa hàng Hiệu ứng</span>
@@ -400,7 +400,7 @@ export default function ArenaPage() {
           </div>
           <Link
             href="/shop"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white text-[#1A1714] border-2 border-[#1A1714] shadow-[3px_3px_0_#1A1714] hover:bg-[#FAF6EF] text-xs font-bold transition-all"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white text-[#1A1714] border border-[#1A1714]/15 shadow-soft hover:bg-[#FAF6EF] text-xs font-bold transition-all"
           >
             <ShoppingBag className="w-3.5 h-3.5 text-[#E5484D]" />
             <span>Đổi quà tại Shop</span>
@@ -411,7 +411,7 @@ export default function ArenaPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {ARENA_SHOWCASE_MODES.map((mode) => {
             const isInlineActive = Boolean(mode.tab && activeTab === mode.tab);
-            const cardClass = `group text-left border-2 border-[#1A1714] rounded-2xl p-4 sm:p-5 shadow-[4px_4px_0_#1A1714] hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex flex-col justify-between gap-4 ${
+            const cardClass = `group text-left border border-[#1A1714]/15 rounded-2xl p-4 sm:p-5 shadow-soft hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex flex-col justify-between gap-4 ${
               mode.href
                 ? "bg-[#FAF6EF]"
                 : isInlineActive

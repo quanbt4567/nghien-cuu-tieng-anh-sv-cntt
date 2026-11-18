@@ -205,7 +205,7 @@ export function WelcomeNameModal() {
       aria-labelledby="auth-modal-title"
       className="fixed inset-0 z-50 bg-ink/60 backdrop-blur-[3px] flex items-center justify-center p-4 overflow-y-auto"
     >
-      <div className="w-full max-w-md bg-white border-2 border-ink rounded-2xl p-6 shadow-[6px_6px_0_#1A1714] space-y-5 relative my-auto">
+      <div className="w-full max-w-md bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-5 relative my-auto">
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 rounded-pill bg-accent-light border border-accent/30 flex items-center justify-center shrink-0">
             <ShieldCheck className="w-5 h-5 text-accent" aria-hidden="true" />

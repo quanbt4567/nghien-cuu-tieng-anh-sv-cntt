@@ -218,7 +218,7 @@ export function ArenaLeaveGuardHost() {
       {toastNotice && (
         <div
           role="status"
-          className={`fixed top-20 right-4 z-50 max-w-sm rounded-2xl border-2 border-ink px-4 py-3 text-xs font-medium shadow-hard flex items-start gap-2.5 ${
+          className={`fixed top-20 right-4 z-50 max-w-sm rounded-2xl border border-ink/15 px-4 py-3 text-xs font-medium shadow-hard flex items-start gap-2.5 ${
             toastNotice.tone === "warn"
               ? "bg-amber-50 text-ink"
               : "bg-emerald-50 text-ink"
@@ -246,7 +246,7 @@ export function ArenaLeaveGuardHost() {
           onClick={closeDialog}
         >
           <div
-            className="w-full max-w-md bg-white border-2 border-ink rounded-2xl shadow-hard overflow-hidden"
+            className="w-full max-w-md bg-white border border-ink/15 rounded-2xl shadow-hard overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between gap-3 px-5 py-3.5 bg-paper border-b border-ink/15">

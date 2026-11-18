@@ -207,10 +207,10 @@ export default async function HomePage() {
 
         <Link
           href="/arena/party"
-          className="group bg-[#FAF6EF] border-2 border-[#1A1714] rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] hover:translate-x-[1px] hover:translate-y-[1px] transition-transform flex flex-col justify-between gap-4"
+          className="group bg-[#FAF6EF] border border-[#1A1714]/15 rounded-2xl p-5 shadow-soft hover:translate-x-[1px] hover:translate-y-[1px] transition-transform flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-pill bg-[#E5484D] text-white flex items-center justify-center border-2 border-[#1A1714] shrink-0">
+            <div className="w-9 h-9 rounded-pill bg-[#E5484D] text-white flex items-center justify-center border border-[#1A1714]/15 shrink-0">
               <Siren className="w-4 h-4" aria-hidden="true" />
             </div>
             <div className="space-y-1">
@@ -223,7 +223,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-[#E5484D] text-white border-2 border-[#1A1714] text-xs font-semibold transition-colors">
+            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-[#E5484D] text-white border border-[#1A1714]/15 text-xs font-semibold transition-colors">
               <span>Mở Party Mode</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -232,10 +232,10 @@ export default async function HomePage() {
 
         <Link
           href="/shop"
-          className="group bg-white border-2 border-[#1A1714] rounded-2xl p-5 shadow-[4px_4px_0_#1A1714] hover:bg-[#FAF6EF] transition-colors flex flex-col justify-between gap-4"
+          className="group bg-white border border-[#1A1714]/15 rounded-2xl p-5 shadow-soft hover:bg-[#FAF6EF] transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-pill bg-[#FAF6EF] text-[#E5484D] flex items-center justify-center border-2 border-[#1A1714] shrink-0">
+            <div className="w-9 h-9 rounded-pill bg-[#FAF6EF] text-[#E5484D] flex items-center justify-center border border-[#1A1714]/15 shrink-0">
               <ShoppingBag className="w-4 h-4" aria-hidden="true" />
             </div>
             <div className="space-y-1">
@@ -248,7 +248,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-[#FAF6EF] group-hover:bg-[#E5484D] text-[#1A1714] group-hover:text-white border-2 border-[#1A1714] text-xs font-semibold transition-colors">
+            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-[#FAF6EF] group-hover:bg-[#E5484D] text-[#1A1714] group-hover:text-white border border-[#1A1714]/15 text-xs font-semibold transition-colors">
               <span>Vào cửa hàng</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
