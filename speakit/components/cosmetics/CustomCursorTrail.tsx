@@ -12,13 +12,29 @@ type CursorMode =
   | "cursor-pixel-sparkle-trail"
   | "cursor-binary-01-stream"
   | "cursor-neon-laser-ribbon"
-  | "cursor-tactical-cyber-crosshair";
+  | "cursor-tactical-cyber-crosshair"
+  | "cursor-rb-splash-fluid"
+  | "cursor-rb-blob-mercury"
+  | "cursor-rb-ghost-smoke"
+  | "cursor-rb-antigravity-swarm"
+  | "cursor-rb-click-spark"
+  | "cursor-rb-target-reticle"
+  | "cursor-magic-cool-confetti"
+  | "cursor-magic-meteor-tail";
 
 const VALID_MODES = new Set<CursorMode>([
   "cursor-pixel-sparkle-trail",
   "cursor-binary-01-stream",
   "cursor-neon-laser-ribbon",
   "cursor-tactical-cyber-crosshair",
+  "cursor-rb-splash-fluid",
+  "cursor-rb-blob-mercury",
+  "cursor-rb-ghost-smoke",
+  "cursor-rb-antigravity-swarm",
+  "cursor-rb-click-spark",
+  "cursor-rb-target-reticle",
+  "cursor-magic-cool-confetti",
+  "cursor-magic-meteor-tail",
 ]);
 
 const TRAIL_COUNT = 24;
@@ -517,6 +533,31 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
   const sparkles: SparkleParticle[] = [];
   const binaries: BinaryParticle[] = [];
   const crosshairRings: CrosshairRing[] = [];
+  const fluidBlobs: Array<{
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    radius: number;
+    life: number;
+    maxLife: number;
+    color: string;
+  }> = [];
+  const sparkRays: Array<{
+    x: number;
+    y: number;
+    angle: number;
+    speed: number;
+    length: number;
+    life: number;
+    maxLife: number;
+    color: string;
+  }> = [];
+  const blobNodes = Array.from({ length: 7 }, () => ({ x: -100, y: -100, vx: 0, vy: 0 }));
+  const meteorNodes = Array.from({ length: 16 }, () => ({ x: -100, y: -100 }));
+  const FLUID_COLORS = ["#EC4899", "#38BDF8", "#A855F7", "#F59E0B", "#10B981"];
+  const GHOST_COLORS = ["#A855F7", "#6366F1", "#38BDF8", "#C084FC"];
+  const COOL_COLORS = ["#F43F5E", "#F59E0B", "#10B981", "#3B82F6", "#A855F7", "#EC4899"];
 
   let dpr = Math.min(window.devicePixelRatio || 1, 2);
   let lastSpawnX = -999;
@@ -565,7 +606,10 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
     targetX = x;
     targetY = y;
 
-    if (mode === "cursor-tactical-cyber-crosshair") {
+    if (
+      mode === "cursor-tactical-cyber-crosshair" ||
+      mode === "cursor-rb-target-reticle"
+    ) {
       const target = targetEl instanceof Element ? targetEl : null;
       hoverTarget = target?.closest("a, button") ? 1 : 0;
     }
@@ -583,24 +627,85 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
     lastMoveY = y;
     lastSpawnX = x;
     lastSpawnY = y;
+    for (const node of blobNodes) {
+      if (node.x < 0) {
+        node.x = x;
+        node.y = y;
+      }
+    }
+    for (const m of meteorNodes) {
+      if (m.x < 0) {
+        m.x = x;
+        m.y = y;
+      }
+    }
 
-    if (mode === "cursor-pixel-sparkle-trail") {
-      const count = Math.max(5, Math.round(12 * scale));
+    if (
+      mode === "cursor-pixel-sparkle-trail" ||
+      mode === "cursor-magic-cool-confetti"
+    ) {
+      const palette = mode === "cursor-magic-cool-confetti" ? COOL_COLORS : SPARKLE_COLORS;
+      const count = Math.max(6, Math.round(14 * scale));
       for (let i = 0; i < count; i += 1) {
         const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.4;
-        const speed = 42 + Math.random() * 88;
+        const speed = 55 + Math.random() * 110;
         sparkles.push({
           x: x + (Math.random() - 0.5) * 8,
           y: y + (Math.random() - 0.5) * 8,
           vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed - 24,
-          size: 4 + Math.floor(Math.random() * 4),
-          life: 0.72,
-          maxLife: 0.72,
-          color: SPARKLE_COLORS[Math.floor(Math.random() * SPARKLE_COLORS.length)],
+          vy: Math.sin(angle) * speed - (mode === "cursor-magic-cool-confetti" ? 65 : 24),
+          size: mode === "cursor-magic-cool-confetti" ? 5 + Math.floor(Math.random() * 5) : 4 + Math.floor(Math.random() * 4),
+          life: 0.82,
+          maxLife: 0.82,
+          color: palette[Math.floor(Math.random() * palette.length)],
         });
       }
-      if (sparkles.length > 64) sparkles.splice(0, sparkles.length - 64);
+      if (sparkles.length > 72) sparkles.splice(0, sparkles.length - 72);
+      return;
+    }
+
+    if (
+      mode === "cursor-rb-splash-fluid" ||
+      mode === "cursor-rb-ghost-smoke"
+    ) {
+      const palette = mode === "cursor-rb-ghost-smoke" ? GHOST_COLORS : FLUID_COLORS;
+      const count = Math.max(6, Math.round(12 * scale));
+      for (let i = 0; i < count; i += 1) {
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.3;
+        const speed = 35 + Math.random() * 75;
+        fluidBlobs.push({
+          x,
+          y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - (mode === "cursor-rb-ghost-smoke" ? 30 : 0),
+          radius: 16 + Math.random() * 18,
+          life: 0.78,
+          maxLife: 0.78,
+          color: palette[i % palette.length],
+        });
+      }
+      if (fluidBlobs.length > 56) fluidBlobs.splice(0, fluidBlobs.length - 56);
+      return;
+    }
+
+    if (
+      mode === "cursor-rb-click-spark" ||
+      mode === "cursor-magic-meteor-tail"
+    ) {
+      const count = 12;
+      for (let i = 0; i < count; i += 1) {
+        sparkRays.push({
+          x,
+          y,
+          angle: (Math.PI * 2 * i) / count,
+          speed: 95 + (i % 2) * 35,
+          length: 12 + (i % 2) * 6,
+          life: 0.48,
+          maxLife: 0.48,
+          color: mode === "cursor-magic-meteor-tail" ? "#818CF8" : i % 2 === 0 ? "#FBBF24" : "#F59E0B",
+        });
+      }
+      if (sparkRays.length > 48) sparkRays.splice(0, sparkRays.length - 48);
       return;
     }
 
@@ -633,27 +738,63 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
 
   const handleMove = (x: number, y: number, targetEl: EventTarget | null) => {
     syncPointer(x, y, targetEl);
-    if (mode === "cursor-tactical-cyber-crosshair") return;
+    if (
+      mode === "cursor-tactical-cyber-crosshair" ||
+      mode === "cursor-rb-target-reticle"
+    ) {
+      return;
+    }
 
     const distSinceSpawn = Math.hypot(x - lastSpawnX, y - lastSpawnY);
 
-    if (mode === "cursor-pixel-sparkle-trail" && distSinceSpawn >= 7) {
+    if (
+      (mode === "cursor-pixel-sparkle-trail" ||
+        mode === "cursor-magic-cool-confetti" ||
+        mode === "cursor-rb-click-spark") &&
+      distSinceSpawn >= 7
+    ) {
       lastSpawnX = x;
       lastSpawnY = y;
+      const palette =
+        mode === "cursor-magic-cool-confetti"
+          ? COOL_COLORS
+          : mode === "cursor-rb-click-spark"
+          ? ["#FBBF24", "#FDE047", "#F59E0B"]
+          : SPARKLE_COLORS;
       const count = distSinceSpawn > 24 ? 2 : 1;
       for (let i = 0; i < count; i += 1) {
         sparkles.push({
           x: x + (Math.random() - 0.5) * 8,
           y: y + (Math.random() - 0.5) * 8,
-          vx: (Math.random() - 0.5) * 26,
-          vy: -8 + (Math.random() - 0.5) * 16,
-          size: 3 + Math.floor(Math.random() * 3),
-          life: 0.5,
-          maxLife: 0.5,
-          color: SPARKLE_COLORS[Math.floor(Math.random() * SPARKLE_COLORS.length)],
+          vx: (Math.random() - 0.5) * (mode === "cursor-magic-cool-confetti" ? 55 : 26),
+          vy: (mode === "cursor-magic-cool-confetti" ? -38 : -8) + (Math.random() - 0.5) * 18,
+          size: mode === "cursor-magic-cool-confetti" ? 4 + Math.floor(Math.random() * 4) : 3 + Math.floor(Math.random() * 3),
+          life: mode === "cursor-magic-cool-confetti" ? 0.68 : 0.5,
+          maxLife: mode === "cursor-magic-cool-confetti" ? 0.68 : 0.5,
+          color: palette[Math.floor(Math.random() * palette.length)],
         });
       }
-      if (sparkles.length > 64) sparkles.splice(0, sparkles.length - 64);
+      if (sparkles.length > 72) sparkles.splice(0, sparkles.length - 72);
+    }
+
+    if (
+      (mode === "cursor-rb-splash-fluid" || mode === "cursor-rb-ghost-smoke") &&
+      distSinceSpawn >= 8
+    ) {
+      lastSpawnX = x;
+      lastSpawnY = y;
+      const palette = mode === "cursor-rb-ghost-smoke" ? GHOST_COLORS : FLUID_COLORS;
+      fluidBlobs.push({
+        x: x + (Math.random() - 0.5) * 6,
+        y: y + (Math.random() - 0.5) * 6,
+        vx: (Math.random() - 0.5) * 22,
+        vy: mode === "cursor-rb-ghost-smoke" ? -28 - Math.random() * 18 : (Math.random() - 0.5) * 22,
+        radius: mode === "cursor-rb-ghost-smoke" ? 14 + Math.random() * 12 : 18 + Math.random() * 14,
+        life: 0.65,
+        maxLife: 0.65,
+        color: palette[Math.floor(Math.random() * palette.length)],
+      });
+      if (fluidBlobs.length > 56) fluidBlobs.splice(0, fluidBlobs.length - 56);
     }
 
     if (mode === "cursor-binary-01-stream" && distSinceSpawn >= 14) {
@@ -814,6 +955,218 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
         ctx.arc(dotX, dotY, 2.2, 0, Math.PI * 2);
         ctx.fill();
       }
+    } else if (
+      mode === "cursor-rb-splash-fluid" ||
+      mode === "cursor-rb-ghost-smoke"
+    ) {
+      ctx.save();
+      ctx.globalCompositeOperation = "lighter";
+      for (let i = fluidBlobs.length - 1; i >= 0; i -= 1) {
+        const b = fluidBlobs[i];
+        b.life -= dt;
+        if (b.life <= 0) {
+          fluidBlobs.splice(i, 1);
+          continue;
+        }
+        b.x += b.vx * dt;
+        b.y += b.vy * dt;
+        b.radius += (mode === "cursor-rb-ghost-smoke" ? 26 : 18) * dt;
+        const alpha = Math.max(0, b.life / b.maxLife) * (mode === "cursor-rb-ghost-smoke" ? 0.35 : 0.45);
+        const grad = ctx.createRadialGradient(b.x, b.y, 1, b.x, b.y, b.radius);
+        grad.addColorStop(0, b.color);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    } else if (mode === "cursor-rb-blob-mercury") {
+      if (hasPointer) {
+        for (let i = 0; i < blobNodes.length; i += 1) {
+          const node = blobNodes[i];
+          const tx = i === 0 ? targetX : blobNodes[i - 1].x;
+          const ty = i === 0 ? targetY : blobNodes[i - 1].y;
+          const rate = 1 - Math.exp(-(24 - i * 2.6) * dt);
+          node.x += (tx - node.x) * rate;
+          node.y += (ty - node.y) * rate;
+          const r = Math.max(4, 15 - i * 1.7);
+          ctx.fillStyle = i === 0 ? "rgba(56, 189, 248, 0.78)" : `rgba(14, 165, 233, ${0.62 - i * 0.07})`;
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "rgba(255, 255, 255, 0.45)";
+          ctx.beginPath();
+          ctx.arc(node.x - r * 0.28, node.y - r * 0.28, r * 0.28, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    } else if (mode === "cursor-rb-antigravity-swarm") {
+      if (hasPointer) {
+        const followRate = 1 - Math.exp(-16 * dt);
+        reticleX += (targetX - reticleX) * followRate;
+        reticleY += (targetY - reticleY) * followRate;
+        const t = now * 0.003;
+        const count = 14;
+        for (let i = 0; i < count; i += 1) {
+          const angle = (Math.PI * 2 * i) / count + t;
+          const wave = Math.sin(t * 2.4 + i * 0.9) * 5;
+          const r = 20 + wave + pointerSpeed * 10;
+          const px = reticleX + Math.cos(angle) * r;
+          const py = reticleY + Math.sin(angle) * r;
+          ctx.fillStyle = i % 2 === 0 ? "#F59E0B" : "#EC4899";
+          ctx.beginPath();
+          ctx.arc(px, py, 2.8, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        pointerSpeed *= Math.exp(-6 * dt);
+      }
+      for (let i = crosshairRings.length - 1; i >= 0; i -= 1) {
+        const ring = crosshairRings[i];
+        ring.life -= dt;
+        if (ring.life <= 0) {
+          crosshairRings.splice(i, 1);
+          continue;
+        }
+        const progress = 1 - ring.life / ring.maxLife;
+        ctx.strokeStyle = `rgba(245, 158, 11, ${0.7 * (1 - progress)})`;
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.arc(ring.x, ring.y, 14 + progress * 32, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    } else if (
+      mode === "cursor-rb-click-spark" ||
+      mode === "cursor-magic-cool-confetti"
+    ) {
+      for (let i = sparkles.length - 1; i >= 0; i -= 1) {
+        const p = sparkles[i];
+        p.life -= dt;
+        if (p.life <= 0) {
+          sparkles.splice(i, 1);
+          continue;
+        }
+        p.vy += (mode === "cursor-magic-cool-confetti" ? 140 : 42) * dt;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        const alpha = Math.max(0, p.life / p.maxLife);
+        ctx.globalAlpha = alpha * 0.92;
+        ctx.fillStyle = p.color;
+        if (mode === "cursor-magic-cool-confetti") {
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.life * 8);
+          ctx.fillRect(-p.size / 2, -p.size / 3, p.size, p.size * 0.66);
+          ctx.restore();
+        } else {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size * 0.6, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      for (let i = sparkRays.length - 1; i >= 0; i -= 1) {
+        const ray = sparkRays[i];
+        ray.life -= dt;
+        if (ray.life <= 0) {
+          sparkRays.splice(i, 1);
+          continue;
+        }
+        const progress = 1 - ray.life / ray.maxLife;
+        const dist = progress * ray.speed * 0.42;
+        const x1 = ray.x + Math.cos(ray.angle) * dist;
+        const y1 = ray.y + Math.sin(ray.angle) * dist;
+        const x2 = ray.x + Math.cos(ray.angle) * (dist + ray.length * (1 - progress * 0.5));
+        const y2 = ray.y + Math.sin(ray.angle) * (dist + ray.length * (1 - progress * 0.5));
+        ctx.strokeStyle = ray.color;
+        ctx.globalAlpha = 1 - progress;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    } else if (mode === "cursor-rb-target-reticle") {
+      if (hasPointer) {
+        const followRate = 1 - Math.exp(-20 * dt);
+        reticleX += (targetX - reticleX) * followRate;
+        reticleY += (targetY - reticleY) * followRate;
+        hoverSmooth += (hoverTarget - hoverSmooth) * Math.min(1, dt * 14);
+        const s = 14 - hoverSmooth * 3;
+        const corner = 5;
+        ctx.save();
+        ctx.translate(reticleX, reticleY);
+        ctx.rotate(hoverSmooth > 0.4 ? 0 : now * 0.0015);
+        ctx.strokeStyle = hoverSmooth > 0.4 ? "#10B981" : "#38BDF8";
+        ctx.lineWidth = 2;
+        const corners = [
+          [-s, -s, 1, 1],
+          [s, -s, -1, 1],
+          [s, s, -1, -1],
+          [-s, s, 1, -1],
+        ];
+        for (const [cx, cy, dx, dy] of corners) {
+          ctx.beginPath();
+          ctx.moveTo(cx, cy + dy * corner);
+          ctx.lineTo(cx, cy);
+          ctx.lineTo(cx + dx * corner, cy);
+          ctx.stroke();
+        }
+        ctx.fillStyle = "#10B981";
+        ctx.beginPath();
+        ctx.arc(0, 0, 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    } else if (mode === "cursor-magic-meteor-tail") {
+      if (hasPointer) {
+        for (let i = 0; i < meteorNodes.length; i += 1) {
+          const m = meteorNodes[i];
+          const tx = i === 0 ? targetX : meteorNodes[i - 1].x;
+          const ty = i === 0 ? targetY : meteorNodes[i - 1].y;
+          m.x += (tx - m.x) * 0.48;
+          m.y += (ty - m.y) * 0.48;
+        }
+        for (let i = meteorNodes.length - 1; i >= 1; i -= 1) {
+          const cur = meteorNodes[i];
+          const prev = meteorNodes[i - 1];
+          const t = 1 - i / meteorNodes.length;
+          ctx.strokeStyle = i < 5 ? `rgba(56, 189, 248, ${t * 0.85})` : `rgba(99, 102, 241, ${t * 0.7})`;
+          ctx.lineWidth = Math.max(1.2, t * 8);
+          ctx.lineCap = "round";
+          ctx.beginPath();
+          ctx.moveTo(prev.x, prev.y);
+          ctx.lineTo(cur.x, cur.y);
+          ctx.stroke();
+        }
+        const head = meteorNodes[0];
+        ctx.fillStyle = "#FFFFFF";
+        ctx.beginPath();
+        ctx.arc(head.x, head.y, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      for (let i = sparkRays.length - 1; i >= 0; i -= 1) {
+        const ray = sparkRays[i];
+        ray.life -= dt;
+        if (ray.life <= 0) {
+          sparkRays.splice(i, 1);
+          continue;
+        }
+        const progress = 1 - ray.life / ray.maxLife;
+        const dist = progress * ray.speed * 0.35;
+        ctx.strokeStyle = ray.color;
+        ctx.globalAlpha = 1 - progress;
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        ctx.moveTo(ray.x + Math.cos(ray.angle) * dist, ray.y + Math.sin(ray.angle) * dist);
+        ctx.lineTo(
+          ray.x + Math.cos(ray.angle) * (dist + ray.length),
+          ray.y + Math.sin(ray.angle) * (dist + ray.length)
+        );
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
     }
 
     rafId = window.requestAnimationFrame(frame);

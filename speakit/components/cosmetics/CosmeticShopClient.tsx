@@ -238,6 +238,19 @@ function CosmeticCardThumbnail({
             }}
           />
         )}
+        {![
+          "theme-neon-meteor-shower",
+          "theme-digital-matrix-rain",
+          "theme-aurora-cyber-grid",
+          "theme-electric-storm-surge",
+        ].includes(item.id) && (
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `radial-gradient(circle at 28% 30%, ${item.previewAccent}55, transparent 58%), radial-gradient(circle at 75% 70%, ${item.previewAccent}38, transparent 62%), repeating-linear-gradient(135deg, ${item.previewAccent}18 0px, ${item.previewAccent}18 8px, transparent 8px, transparent 16px)`,
+            }}
+          />
+        )}
         <span className="relative z-10 px-2 py-0.5 rounded bg-white/95 border border-[#1A1714] text-[10px] font-mono font-bold text-[#1A1714]">
           BACKDROP FX
         </span>
@@ -277,6 +290,27 @@ function CosmeticCardThumbnail({
             </span>
           </div>
         )}
+        {![
+          "cursor-pixel-sparkle-trail",
+          "cursor-binary-01-stream",
+          "cursor-neon-laser-ribbon",
+          "cursor-tactical-cyber-crosshair",
+        ].includes(item.id) && (
+          <div className="flex items-center gap-2">
+            <span
+              className="w-3 h-3 rounded-full border border-[#1A1714] animate-ping"
+              style={{ backgroundColor: item.previewAccent }}
+            />
+            <span
+              className="w-10 h-2 rounded-full border border-[#1A1714]"
+              style={{
+                backgroundColor: item.previewAccent,
+                boxShadow: `0 0 12px ${item.previewAccent}`,
+              }}
+            />
+            <MousePointer2 className="w-5 h-5 text-[#1A1714]" aria-hidden="true" />
+          </div>
+        )}
       </div>
     );
   }
@@ -309,6 +343,26 @@ function CosmeticCardThumbnail({
       {item.id === "finisher-matrix-override" && (
         <div className="px-3 py-1.5 rounded-lg bg-[#1A1714] border-2 border-emerald-500 text-emerald-400 font-mono text-[11px] font-bold shadow-[2px_2px_0_#16A34A]">
           OVERRIDE_01
+        </div>
+      )}
+      {![
+        "finisher-lgtm-neon-confetti",
+        "finisher-system-restored-shockwave",
+        "finisher-cyber-lightning-strike",
+        "finisher-matrix-override",
+      ].includes(item.id) && (
+        <div className="relative flex items-center justify-center">
+          <span
+            className="absolute w-16 h-16 rounded-full border-2 animate-ping opacity-35"
+            style={{ borderColor: item.previewAccent }}
+          />
+          <span
+            className="px-3 py-1.5 rounded-lg border-2 border-[#1A1714] text-white font-mono text-[10px] font-bold shadow-[2px_2px_0_#1A1714] flex items-center gap-1.5"
+            style={{ backgroundColor: item.previewAccent }}
+          >
+            <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>{item.name.replace(/^(React Bits|Magic UI):\s*/i, "").slice(0, 14).toUpperCase()}</span>
+          </span>
         </div>
       )}
     </div>

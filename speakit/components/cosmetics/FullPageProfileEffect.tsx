@@ -17,6 +17,14 @@ const THEME_MODES: Record<string, number> = {
   "theme-digital-matrix-rain": 1,
   "theme-aurora-cyber-grid": 2,
   "theme-electric-storm-surge": 3,
+  "theme-rb-balatro-swirl": 4,
+  "theme-rb-hyperspeed-highway": 5,
+  "theme-rb-liquid-chrome": 6,
+  "theme-rb-iridescence-prism": 7,
+  "theme-rb-faulty-terminal": 8,
+  "theme-rb-metaballs-ferrofluid": 9,
+  "theme-magic-retro-grid": 10,
+  "theme-magic-warp-ripple": 11,
 };
 
 const VERTEX_SHADER = `
@@ -197,6 +205,157 @@ vec4 renderStorm(vec2 uv, float aspect, float t) {
   return vec4(col * mask, clamp(alpha * mask, 0.0, 0.24));
 }
 
+vec4 renderBalatro(vec2 uv, float aspect, float t) {
+  vec2 p = (uv - 0.5) * vec2(aspect, 1.0) * 2.2;
+  float len = length(p);
+  float angle = atan(p.y, p.x) + t * 0.35 - 2.6 * exp(-len * 1.15);
+  vec2 warped = vec2(cos(angle), sin(angle)) * len;
+  for (int i = 0; i < 4; i++) {
+    float fi = float(i) + 1.0;
+    warped += 0.38 / fi * vec2(
+      sin(fi * warped.y + t * 0.9),
+      cos(fi * warped.x - t * 0.7)
+    );
+  }
+  float c1 = 0.5 + 0.5 * sin(warped.x * 2.4 + warped.y * 1.8);
+  float c2 = 0.5 + 0.5 * cos(warped.x * 1.9 - warped.y * 2.5 + t);
+  vec3 crimson = vec3(0.90, 0.28, 0.30);
+  vec3 royalBlue = vec3(0.08, 0.48, 0.88);
+  vec3 gold = vec3(0.96, 0.72, 0.16);
+  vec3 col = mix(crimson, royalBlue, smoothstep(0.2, 0.8, c1));
+  col = mix(col, gold, smoothstep(0.55, 0.95, c2) * 0.55);
+  float mask = radialEdgeMask(uv);
+  float alpha = clamp((0.16 + 0.14 * c1) * mask, 0.0, 0.28);
+  return vec4(col * alpha * 1.5, alpha);
+}
+
+vec4 renderHyperspeed(vec2 uv, float aspect, float t) {
+  vec2 p = vec2((uv.x - 0.5) * aspect, uv.y - 0.58);
+  vec3 col = vec3(0.0);
+  float alpha = 0.0;
+  float r = length(p) + 0.001;
+  float a = atan(p.y, p.x);
+  float lanes = sin(a * 22.0);
+  float streak = fract(1.2 / r - t * 1.8 + hash21(vec2(floor(a * 14.0), 3.1)));
+  float beam = smoothstep(0.45, 0.95, lanes) * smoothstep(0.55, 0.96, streak) * smoothstep(0.04, 0.42, r);
+  vec3 cyan = vec3(0.02, 0.71, 0.83);
+  vec3 magenta = vec3(0.93, 0.28, 0.60);
+  vec3 laneCol = mix(cyan, magenta, 0.5 + 0.5 * sin(a * 5.0 + t));
+  col += laneCol * beam * 1.35;
+  alpha += beam * 0.28;
+  float mask = radialEdgeMask(uv);
+  return vec4(col * mask, clamp(alpha * mask, 0.0, 0.28));
+}
+
+vec4 renderLiquidChrome(vec2 uv, float aspect, float t) {
+  vec2 p = uv * vec2(aspect, 1.0) * 3.0;
+  for (int i = 1; i < 5; i++) {
+    float fi = float(i);
+    p.x += 0.45 / fi * sin(fi * p.y + t * 0.75 + 0.4 * fi);
+    p.y += 0.45 / fi * cos(fi * p.x + t * 0.65 + 0.6 * fi);
+  }
+  float spec = 0.5 + 0.5 * sin(p.x * 2.2 + p.y * 2.2);
+  float ridge = pow(spec, 3.0);
+  vec3 slate = vec3(0.38, 0.45, 0.55);
+  vec3 chrome = vec3(0.88, 0.92, 0.98);
+  vec3 cyanTint = vec3(0.22, 0.74, 0.97);
+  vec3 col = mix(slate, chrome, ridge);
+  col = mix(col, cyanTint, 0.25 * (0.5 + 0.5 * cos(p.x - p.y)));
+  float mask = radialEdgeMask(uv);
+  float alpha = clamp((0.12 + ridge * 0.18) * mask, 0.0, 0.26);
+  return vec4(col * alpha * 1.4, alpha);
+}
+
+vec4 renderIridescence(vec2 uv, float aspect, float t) {
+  vec2 p = (uv - 0.5) * vec2(aspect, 1.0) * 2.5;
+  float d = length(p);
+  float wave = sin(p.x * 3.2 + t * 0.8) * cos(p.y * 2.8 - t * 0.6) + fbm(p * 1.6 + t * 0.25);
+  vec3 col = 0.55 + 0.45 * cos(6.28318 * (wave * 0.65 + d * 0.35 + vec3(0.0, 0.33, 0.67) + t * 0.12));
+  float sheen = smoothstep(0.15, 0.85, 0.5 + 0.5 * sin(wave * 3.14));
+  float mask = radialEdgeMask(uv);
+  float alpha = clamp((0.14 + sheen * 0.15) * mask, 0.0, 0.27);
+  return vec4(col * alpha * 1.45, alpha);
+}
+
+vec4 renderFaultyTerminal(vec2 uv, float aspect, float t) {
+  vec2 grid = vec2(52.0 * aspect, 30.0);
+  vec2 cell = floor(uv * grid);
+  vec2 f = fract(uv * grid);
+  float scan = 0.75 + 0.25 * sin(uv.y * 320.0 + t * 12.0);
+  float glitch = step(0.94, hash21(vec2(floor(uv.y * 24.0), floor(t * 6.0))));
+  float h = hash21(cell + floor(t * (1.5 + glitch * 8.0)));
+  float box = step(0.18, f.x) * step(f.x, 0.82) * step(0.18, f.y) * step(f.y, 0.82);
+  float active = step(0.72 - glitch * 0.25, h) * box;
+  vec3 green = mix(vec3(0.08, 0.72, 0.32), vec3(0.45, 0.96, 0.62), h);
+  float mask = radialEdgeMask(uv);
+  float alpha = clamp((active * 0.22 + 0.04) * scan * mask, 0.0, 0.25);
+  return vec4(green * alpha * 1.5, alpha);
+}
+
+vec4 renderFerrofluid(vec2 uv, float aspect, float t) {
+  vec2 p = vec2(uv.x * aspect, uv.y);
+  float field = 0.0;
+  for (int i = 0; i < 8; i++) {
+    float fi = float(i);
+    vec2 center = vec2(
+      (0.2 + 0.6 * hash21(vec2(fi, 1.3))) * aspect + sin(t * (0.6 + fi * 0.12) + fi * 1.9) * 0.16,
+      0.2 + 0.6 * hash21(vec2(fi, 4.7)) + cos(t * (0.5 + fi * 0.15) + fi * 2.4) * 0.14
+    );
+    float d = length(p - center) + 0.025;
+    field += 0.018 / (d * d);
+  }
+  float blob = smoothstep(0.85, 1.45, field);
+  float rim = smoothstep(1.35, 1.95, field) - smoothstep(1.95, 2.6, field);
+  vec3 violet = vec3(0.55, 0.36, 0.96);
+  vec3 cyan = vec3(0.14, 0.82, 0.94);
+  vec3 col = mix(violet, cyan, rim);
+  float mask = radialEdgeMask(uv);
+  float alpha = clamp((blob * 0.20 + rim * 0.14) * mask, 0.0, 0.28);
+  return vec4(col * alpha * 1.5, alpha);
+}
+
+vec4 renderRetroGrid(vec2 uv, float aspect, float t) {
+  float horizon = 0.56;
+  vec3 col = vec3(0.0);
+  float alpha = 0.0;
+  if (uv.y < horizon) {
+    float z = 0.18 / max(horizon - uv.y, 0.015);
+    float x = (uv.x - 0.5) * aspect * z;
+    float gx = abs(fract(x * 1.4) - 0.5);
+    float gz = abs(fract(z * 1.2 - t * 1.6) - 0.5);
+    float line = max(smoothstep(0.06, 0.0, gx), smoothstep(0.07, 0.0, gz));
+    float fade = smoothstep(0.02, 0.25, horizon - uv.y);
+    vec3 neonOrange = vec3(0.98, 0.45, 0.09);
+    vec3 magenta = vec3(0.93, 0.28, 0.60);
+    col = mix(magenta, neonOrange, uv.y / horizon) * line;
+    alpha = line * fade * 0.28;
+  } else {
+    vec2 sunPos = vec2(0.5 * aspect, 0.66);
+    float d = length(vec2(uv.x * aspect, uv.y) - sunPos);
+    float sun = smoothstep(0.16, 0.0, d);
+    float stripes = step(0.28, fract(uv.y * 45.0));
+    col = mix(vec3(0.93, 0.28, 0.60), vec3(0.98, 0.75, 0.15), (uv.y - horizon) * 3.0) * sun * stripes;
+    alpha = sun * stripes * 0.24;
+  }
+  float mask = radialEdgeMask(uv);
+  return vec4(col * mask, clamp(alpha * mask, 0.0, 0.26));
+}
+
+vec4 renderWarpRipple(vec2 uv, float aspect, float t) {
+  vec2 p = (uv - 0.5) * vec2(aspect, 1.0);
+  float r = length(p);
+  float rings = 0.5 + 0.5 * sin(r * 28.0 - t * 3.2);
+  float pulse = smoothstep(0.65, 0.98, rings) * exp(-r * 1.4);
+  float angle = atan(p.y, p.x);
+  float rays = smoothstep(0.75, 0.98, sin(angle * 12.0 + t * 1.5)) * smoothstep(0.08, 0.45, r);
+  vec3 blue = vec3(0.23, 0.51, 0.96);
+  vec3 cyan = vec3(0.02, 0.71, 0.83);
+  vec3 col = mix(blue, cyan, rays) * (pulse + rays * 0.65);
+  float mask = radialEdgeMask(uv);
+  float alpha = clamp((pulse * 0.24 + rays * 0.14) * mask, 0.0, 0.27);
+  return vec4(col * 1.35, alpha);
+}
+
 void main() {
   float aspect = uResolution.x / max(uResolution.y, 1.0);
   vec4 result = vec4(0.0);
@@ -207,8 +366,24 @@ void main() {
     result = renderMatrix(vUv, aspect, uTime);
   } else if (uMode < 2.5) {
     result = renderAurora(vUv, aspect, uTime);
-  } else {
+  } else if (uMode < 3.5) {
     result = renderStorm(vUv, aspect, uTime);
+  } else if (uMode < 4.5) {
+    result = renderBalatro(vUv, aspect, uTime);
+  } else if (uMode < 5.5) {
+    result = renderHyperspeed(vUv, aspect, uTime);
+  } else if (uMode < 6.5) {
+    result = renderLiquidChrome(vUv, aspect, uTime);
+  } else if (uMode < 7.5) {
+    result = renderIridescence(vUv, aspect, uTime);
+  } else if (uMode < 8.5) {
+    result = renderFaultyTerminal(vUv, aspect, uTime);
+  } else if (uMode < 9.5) {
+    result = renderFerrofluid(vUv, aspect, uTime);
+  } else if (uMode < 10.5) {
+    result = renderRetroGrid(vUv, aspect, uTime);
+  } else {
+    result = renderWarpRipple(vUv, aspect, uTime);
   }
 
   gl_FragColor = result;

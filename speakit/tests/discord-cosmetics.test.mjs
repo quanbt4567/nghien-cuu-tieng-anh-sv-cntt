@@ -24,8 +24,8 @@ const {
   unequipCosmeticSlot,
 } = jiti(resolve(__dirname, "../app/actions/leaderboard.ts"));
 
-test("COSMETIC_CATALOG has 24 items across all 6 categories priced 15..100 IT-Coins", () => {
-  assert.equal(COSMETIC_CATALOG.length, 24);
+test("COSMETIC_CATALOG has 72 items across all 6 categories priced 15..100 IT-Coins", () => {
+  assert.equal(COSMETIC_CATALOG.length, 72);
 
   const expectedCategories = [
     "avatar_decoration",
@@ -42,7 +42,9 @@ test("COSMETIC_CATALOG has 24 items across all 6 categories priced 15..100 IT-Co
 
   for (const category of expectedCategories) {
     const items = getCosmeticsByCategory(category);
-    assert.equal(items.length, 4, `expected 4 items in ${category}`);
+    assert.equal(items.length, 12, `expected 12 items in ${category}`);
+    assert.ok(items.some((item) => item.id.includes("-rb-")), `expected React Bits items in ${category}`);
+    assert.ok(items.some((item) => item.id.includes("-magic-")), `expected Magic UI items in ${category}`);
   }
 
   for (const item of COSMETIC_CATALOG) {

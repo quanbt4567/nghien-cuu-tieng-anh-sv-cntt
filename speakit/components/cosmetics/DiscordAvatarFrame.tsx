@@ -18,7 +18,15 @@ type AvatarEffectId =
   | "avatar-cyberpunk-overclock-ring"
   | "avatar-matrix-code-halo"
   | "avatar-inferno-hotfix-horns"
-  | "avatar-quantum-holo-visor";
+  | "avatar-quantum-holo-visor"
+  | "avatar-rb-electric-border"
+  | "avatar-rb-star-border"
+  | "avatar-rb-magic-rings"
+  | "avatar-rb-plasma-strands"
+  | "avatar-rb-crystal-ball"
+  | "avatar-magic-orbiting-circles"
+  | "avatar-magic-shine-border"
+  | "avatar-magic-neon-gradient";
 
 interface AvatarLottieConfig {
   src: string;
@@ -55,6 +63,46 @@ const AVATAR_LOTTIE_MAP: Record<AvatarEffectId, AvatarLottieConfig> = {
     filter:
       "hue-rotate(115deg) saturate(1.25) drop-shadow(0 0 10px rgba(56, 189, 248, 0.65)) drop-shadow(0 0 20px rgba(168, 85, 247, 0.5))",
     micColor: "border-[#0284C7]",
+  },
+  "avatar-rb-electric-border": {
+    src: "/lottie/cyber-ring.json",
+    filter: "hue-rotate(150deg) saturate(1.6) drop-shadow(0 0 12px rgba(56, 189, 248, 0.85))",
+    micColor: "border-[#38BDF8]",
+  },
+  "avatar-rb-star-border": {
+    src: "/lottie/inferno-aura.json",
+    filter: "hue-rotate(25deg) saturate(1.5) drop-shadow(0 0 12px rgba(251, 191, 36, 0.8))",
+    micColor: "border-[#FBBF24]",
+  },
+  "avatar-rb-magic-rings": {
+    src: "/lottie/cyber-ring.json",
+    filter: "hue-rotate(260deg) saturate(1.7) drop-shadow(0 0 14px rgba(236, 72, 153, 0.8))",
+    micColor: "border-[#EC4899]",
+  },
+  "avatar-rb-plasma-strands": {
+    src: "/lottie/matrix-pulse.json",
+    filter: "hue-rotate(165deg) saturate(1.8) drop-shadow(0 0 14px rgba(168, 85, 247, 0.85))",
+    micColor: "border-[#A855F7]",
+  },
+  "avatar-rb-crystal-ball": {
+    src: "/lottie/cyber-ring.json",
+    filter: "hue-rotate(135deg) saturate(1.5) drop-shadow(0 0 12px rgba(6, 182, 212, 0.8))",
+    micColor: "border-[#06B6D4]",
+  },
+  "avatar-magic-orbiting-circles": {
+    src: "/lottie/matrix-pulse.json",
+    filter: "drop-shadow(0 0 12px rgba(16, 185, 129, 0.75))",
+    micColor: "border-[#10B981]",
+  },
+  "avatar-magic-shine-border": {
+    src: "/lottie/inferno-aura.json",
+    filter: "saturate(1.4) drop-shadow(0 0 12px rgba(245, 158, 11, 0.75))",
+    micColor: "border-[#F59E0B]",
+  },
+  "avatar-magic-neon-gradient": {
+    src: "/lottie/cyber-ring.json",
+    filter: "hue-rotate(310deg) saturate(1.8) drop-shadow(0 0 14px rgba(244, 63, 94, 0.85))",
+    micColor: "border-[#F43F5E]",
   },
 };
 
@@ -103,6 +151,15 @@ function resolveAvatarEffect(
       return "avatar-inferno-hotfix-horns";
     case "avatar-quantum-holo-visor":
       return "avatar-quantum-holo-visor";
+    case "avatar-rb-electric-border":
+    case "avatar-rb-star-border":
+    case "avatar-rb-magic-rings":
+    case "avatar-rb-plasma-strands":
+    case "avatar-rb-crystal-ball":
+    case "avatar-magic-orbiting-circles":
+    case "avatar-magic-shine-border":
+    case "avatar-magic-neon-gradient":
+      return raw;
     default:
       return null;
   }
@@ -272,6 +329,61 @@ export function DiscordAvatarFrame({
               }}
             />
           ) : null}
+          {effectId === "avatar-rb-electric-border" && (
+            <span
+              className="absolute inset-0.5 rounded-full border-2 border-dashed border-sky-300 cosmetic-svg-spin-slow"
+              style={{ boxShadow: "0 0 12px rgba(56,189,248,0.85), inset 0 0 8px rgba(56,189,248,0.55)" }}
+            />
+          )}
+          {effectId === "avatar-rb-star-border" && (
+            <span className="absolute inset-0 rounded-full cosmetic-svg-spin-slow">
+              <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-amber-300 shadow-[0_0_10px_#FBBF24]" />
+              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-orange-400 shadow-[0_0_8px_#F97316]" />
+            </span>
+          )}
+          {effectId === "avatar-rb-magic-rings" && (
+            <>
+              <span className="absolute inset-0 rounded-full border-2 border-pink-400/80 cosmetic-svg-spin-slow" />
+              <span className="absolute -inset-1 rounded-full border border-cyan-300/75 cosmetic-svg-spin-reverse" />
+            </>
+          )}
+          {effectId === "avatar-rb-plasma-strands" && (
+            <span
+              className="absolute -inset-0.5 rounded-full border-2 border-purple-400/85 cosmetic-reticle-pulse"
+              style={{ boxShadow: "0 0 16px rgba(168,85,247,0.85), inset 0 0 10px rgba(236,72,153,0.6)" }}
+            />
+          )}
+          {effectId === "avatar-rb-crystal-ball" && (
+            <span
+              className="absolute inset-0.5 rounded-full border-2 border-cyan-300/90 cosmetic-reticle-pulse"
+              style={{ boxShadow: "0 0 14px rgba(6,182,212,0.8)" }}
+            />
+          )}
+          {effectId === "avatar-magic-orbiting-circles" && (
+            <>
+              <span className="absolute -inset-0.5 rounded-full border border-dashed border-emerald-400/70 cosmetic-svg-spin-slow">
+                <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10B981]" />
+              </span>
+              <span className="absolute inset-1 rounded-full border border-dashed border-teal-300/60 cosmetic-svg-spin-reverse">
+                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-cyan-300 shadow-[0_0_6px_#06B6D4]" />
+              </span>
+            </>
+          )}
+          {effectId === "avatar-magic-shine-border" && (
+            <span
+              className="absolute inset-0.5 rounded-full cosmetic-border-beam"
+              style={{
+                "--beam-from": "rgba(251, 191, 36, 0.95)",
+                "--beam-to": "rgba(255, 255, 255, 0.98)",
+              } as CSSProperties}
+            />
+          )}
+          {effectId === "avatar-magic-neon-gradient" && (
+            <span
+              className="absolute inset-0 rounded-full border-2 border-rose-400/90 cosmetic-reticle-pulse"
+              style={{ boxShadow: "0 0 16px rgba(244,63,94,0.85), 0 0 24px rgba(56,189,248,0.55)" }}
+            />
+          )}
         </div>
       )}
     </div>

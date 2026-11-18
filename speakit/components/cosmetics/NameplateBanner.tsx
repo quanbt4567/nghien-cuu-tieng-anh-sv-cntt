@@ -57,6 +57,62 @@ function getPalette(id?: string | null, accent?: string): { from: string; to: st
         spot: "rgba(244, 114, 182, 0.16)",
         shiny: "rgba(244, 114, 182, 0.25)",
       };
+    case "nameplate-rb-holo-mosaic":
+      return {
+        from: "rgba(236, 72, 153, 0.92)",
+        to: "rgba(56, 189, 248, 0.92)",
+        spot: "rgba(168, 85, 247, 0.22)",
+        shiny: "rgba(236, 72, 153, 0.34)",
+      };
+    case "nameplate-rb-liquid-chrome":
+      return {
+        from: "rgba(241, 245, 249, 0.95)",
+        to: "rgba(148, 163, 184, 0.92)",
+        spot: "rgba(255, 255, 255, 0.24)",
+        shiny: "rgba(255, 255, 255, 0.38)",
+      };
+    case "nameplate-rb-decrypted-matrix":
+      return {
+        from: "rgba(34, 197, 94, 0.92)",
+        to: "rgba(16, 185, 129, 0.90)",
+        spot: "rgba(34, 197, 94, 0.18)",
+        shiny: "rgba(74, 222, 128, 0.28)",
+      };
+    case "nameplate-rb-molten-metal":
+      return {
+        from: "rgba(249, 115, 22, 0.94)",
+        to: "rgba(239, 68, 68, 0.92)",
+        spot: "rgba(251, 146, 60, 0.22)",
+        shiny: "rgba(251, 191, 36, 0.30)",
+      };
+    case "nameplate-rb-silk-satin":
+      return {
+        from: "rgba(168, 85, 247, 0.90)",
+        to: "rgba(217, 70, 239, 0.88)",
+        spot: "rgba(192, 132, 252, 0.20)",
+        shiny: "rgba(216, 180, 254, 0.30)",
+      };
+    case "nameplate-magic-aurora-text":
+      return {
+        from: "rgba(6, 182, 212, 0.92)",
+        to: "rgba(16, 185, 129, 0.90)",
+        spot: "rgba(56, 189, 248, 0.20)",
+        shiny: "rgba(34, 211, 238, 0.32)",
+      };
+    case "nameplate-magic-sparkles":
+      return {
+        from: "rgba(251, 191, 36, 0.95)",
+        to: "rgba(168, 85, 247, 0.90)",
+        spot: "rgba(253, 224, 71, 0.22)",
+        shiny: "rgba(253, 224, 71, 0.34)",
+      };
+    case "nameplate-magic-neon-card":
+      return {
+        from: "rgba(244, 63, 94, 0.94)",
+        to: "rgba(56, 189, 248, 0.92)",
+        spot: "rgba(244, 63, 94, 0.22)",
+        shiny: "rgba(251, 113, 133, 0.30)",
+      };
     default: {
       const c = accent || "#E5484D";
       return {
@@ -167,6 +223,29 @@ export function NameplateBanner({
       <span aria-hidden="true" className="cosmetic-spotlight z-[4]" />
 
       <span aria-hidden="true" className="cosmetic-border-beam z-[5]" />
+
+      {activeId === "nameplate-rb-holo-mosaic" && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-[5] opacity-35"
+          style={{
+            backgroundImage:
+              "linear-gradient(135deg, rgba(236,72,153,0.45) 0%, rgba(56,189,248,0.45) 50%, rgba(251,191,36,0.45) 100%)",
+            backgroundSize: "16px 16px",
+          }}
+        />
+      )}
+
+      {activeId === "nameplate-magic-sparkles" && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-[6] flex items-center justify-around opacity-80 text-amber-300 text-[10px]"
+        >
+          <span className="animate-pulse">✦</span>
+          <span className="animate-bounce">✧</span>
+          <span className="animate-pulse">✦</span>
+        </span>
+      )}
 
       <div className="relative z-10">{children}</div>
     </div>

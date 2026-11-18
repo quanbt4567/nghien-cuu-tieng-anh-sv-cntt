@@ -57,6 +57,23 @@ function getFinisherBloomStyle(finisherId: string): CSSProperties {
         filter:
           "hue-rotate(95deg) saturate(1.15) drop-shadow(0 0 24px rgba(22, 163, 74, 0.55)) drop-shadow(0 0 44px rgba(21, 128, 61, 0.32))",
       };
+    case "finisher-rb-prismatic-burst":
+      return {
+        filter:
+          "hue-rotate(270deg) saturate(1.6) drop-shadow(0 0 26px rgba(236, 72, 153, 0.65)) drop-shadow(0 0 46px rgba(56, 189, 248, 0.45))",
+      };
+    case "finisher-rb-hyperspeed-warp":
+    case "finisher-magic-aurora-crown":
+      return {
+        filter:
+          "hue-rotate(155deg) saturate(1.5) drop-shadow(0 0 26px rgba(56, 189, 248, 0.65)) drop-shadow(0 0 46px rgba(16, 185, 129, 0.45))",
+      };
+    case "finisher-rb-pixel-blast":
+    case "finisher-magic-meteor-storm":
+      return {
+        filter:
+          "hue-rotate(210deg) saturate(1.5) drop-shadow(0 0 26px rgba(168, 85, 247, 0.65)) drop-shadow(0 0 46px rgba(99, 102, 241, 0.45))",
+      };
     default:
       return {
         filter:
@@ -68,11 +85,23 @@ function getFinisherBloomStyle(finisherId: string): CSSProperties {
 function getConfettiPalette(finisherId: string): string[] {
   switch (finisherId) {
     case "finisher-system-restored-shockwave":
+    case "finisher-magic-quantum-ripple":
       return ["#10b981", "#0d9488", "#34d399", "#a7f3d0"];
     case "finisher-cyber-lightning-strike":
+    case "finisher-magic-confetti-cannon":
       return ["#f59e0b", "#fbbf24", "#0284c7", "#fef3c7"];
     case "finisher-matrix-override":
       return ["#22c55e", "#16a34a", "#4ade80", "#bbf7d0"];
+    case "finisher-rb-prismatic-burst":
+      return ["#ec4899", "#38bdf8", "#a855f7", "#fbbf24", "#10b981"];
+    case "finisher-rb-hyperspeed-warp":
+    case "finisher-magic-aurora-crown":
+      return ["#38bdf8", "#06b6d4", "#10b981", "#a855f7"];
+    case "finisher-rb-balatro-jackpot":
+      return ["#e5484d", "#fbbf24", "#3b82f6", "#f97316"];
+    case "finisher-rb-pixel-blast":
+    case "finisher-magic-meteor-storm":
+      return ["#a855f7", "#6366f1", "#38bdf8", "#f472b6"];
     default:
       return ["#e5484d", "#f59e0b", "#0d9488", "#fde68a"];
   }
@@ -81,13 +110,52 @@ function getConfettiPalette(finisherId: string): string[] {
 function getShockwaveColor(finisherId: string): string {
   switch (finisherId) {
     case "finisher-system-restored-shockwave":
-      return "rgba(16, 185, 129, 0.32)";
+    case "finisher-magic-quantum-ripple":
+      return "rgba(16, 185, 129, 0.38)";
     case "finisher-cyber-lightning-strike":
-      return "rgba(245, 158, 11, 0.34)";
+    case "finisher-magic-confetti-cannon":
+      return "rgba(245, 158, 11, 0.36)";
     case "finisher-matrix-override":
-      return "rgba(34, 197, 94, 0.32)";
+      return "rgba(34, 197, 94, 0.34)";
+    case "finisher-rb-prismatic-burst":
+      return "rgba(236, 72, 153, 0.42)";
+    case "finisher-rb-hyperspeed-warp":
+    case "finisher-magic-aurora-crown":
+      return "rgba(56, 189, 248, 0.42)";
+    case "finisher-rb-pixel-blast":
+    case "finisher-magic-meteor-storm":
+      return "rgba(168, 85, 247, 0.40)";
     default:
-      return "rgba(229, 72, 77, 0.28)";
+      return "rgba(229, 72, 77, 0.32)";
+  }
+}
+
+function getFinisherCallout(finisherId: string): string {
+  switch (finisherId) {
+    case "finisher-matrix-override":
+      return "> OVERRIDE COMPLETE";
+    case "finisher-system-restored-shockwave":
+      return "SYSTEM RESTORED";
+    case "finisher-cyber-lightning-strike":
+      return "HIGH-VOLTAGE SURGE";
+    case "finisher-rb-prismatic-burst":
+      return "PRISMATIC RAY BURST";
+    case "finisher-rb-hyperspeed-warp":
+      return "HYPERSPEED WARP JUMP";
+    case "finisher-rb-balatro-jackpot":
+      return "ROYAL VORTEX JACKPOT";
+    case "finisher-rb-pixel-blast":
+      return "8-BIT PIXEL BLAST";
+    case "finisher-magic-meteor-storm":
+      return "CELESTIAL METEOR STORM";
+    case "finisher-magic-confetti-cannon":
+      return "5-WAY FESTIVAL CANNON";
+    case "finisher-magic-quantum-ripple":
+      return "QUANTUM RIPPLE PULSE";
+    case "finisher-magic-aurora-crown":
+      return "AURORA BOREALIS CROWN";
+    default:
+      return "LGTM! APPROVED";
   }
 }
 
@@ -265,15 +333,7 @@ export function VictoryFinisherOverlay({
           ) : (
             <Sparkles className="w-4 h-4" aria-hidden="true" />
           )}
-          <span>
-            {isMatrix
-              ? "> OVERRIDE COMPLETE"
-              : isShockwave
-                ? "SYSTEM RESTORED"
-                : isLightning
-                  ? "HIGH-VOLTAGE SURGE"
-                  : "LGTM! APPROVED"}
-          </span>
+          <span>{getFinisherCallout(resolvedId)}</span>
         </div>
 
         {isShockwave && (
