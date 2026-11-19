@@ -31,7 +31,7 @@ export default async function HomePage() {
             <h2 className="text-base font-bold text-ink">Top 3 Bảng Xếp Hạng Arena</h2>
           </div>
           <Link
-            href="/arena"
+            href="/leaderboard"
             className="interactive-btn-accent inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 bg-accent/10 hover:bg-accent text-[#B91C1C] hover:text-white border border-accent/40 text-xs font-semibold"
           >
             <span>Xem bảng xếp hạng</span>
