@@ -20,6 +20,8 @@ interface TrueFocusProps {
   cornerSize?: number;
   borderWidth?: number;
   unfocusedOpacity?: number;
+  wordClassName?: string;
+  containerClassName?: string;
 }
 
 interface FocusRect {
@@ -55,7 +57,9 @@ const TrueFocus: FC<TrueFocusProps> = ({
   pauseBetweenAnimations = 1,
   cornerSize = 16,
   borderWidth = 3,
-  unfocusedOpacity = 1
+  unfocusedOpacity = 1,
+  wordClassName = 'text-[3rem] font-black',
+  containerClassName = 'gap-[1em] justify-center flex-wrap'
 }) => {
   const words = sentence.split(separator).filter(word => word.trim() !== '');
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -151,7 +155,7 @@ const TrueFocus: FC<TrueFocusProps> = ({
 
   return (
     <div
-      className="relative flex gap-[1em] justify-center items-center flex-wrap outline-none select-none"
+      className={`relative flex items-center outline-none select-none ${containerClassName}`}
       ref={containerRef}
     >
       {focusStyle === 'highlight' && shapes && (
@@ -173,7 +177,7 @@ const TrueFocus: FC<TrueFocusProps> = ({
             ref={el => {
               wordRefs.current[index] = el;
             }}
-            className="relative text-[3rem] font-black cursor-pointer outline-none select-none"
+            className={`relative cursor-pointer outline-none select-none ${wordClassName}`}
             style={{
               filter: `blur(${isActive ? 0 : blurAmount}px)`,
               opacity: isActive ? 1 : unfocusedOpacity,

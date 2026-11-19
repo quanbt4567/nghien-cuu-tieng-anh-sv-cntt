@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import confetti from "canvas-confetti";
-import { Lottie } from "lottie-react";
 import { Sparkles, Terminal, Zap, CheckCircle2 } from "lucide-react";
 import {
   DynamicGlitchText,
@@ -18,53 +17,6 @@ export interface VictoryFinisherOverlayProps {
   title?: string;
   subtitle?: string;
   onComplete?: () => void;
-}
-
-const VICTORY_LOTTIE_URL = "/lottie/victory-burst.json";
-const victoryLottieCache = new Map<string, object>();
-let victoryLottiePending: Promise<object | null> | null = null;
-
-function loadVictoryLottie(): Promise<object | null> {
-  const cached = victoryLottieCache.get(VICTORY_LOTTIE_URL);
-  if (cached) return Promise.resolve(cached);
-  if (victoryLottiePending) return victoryLottiePending;
-
-  victoryLottiePending = fetch(VICTORY_LOTTIE_URL)
-    .then((res) => {
-      if (!res.ok) throw new Error("Failed to fetch victory-burst.json");
-      return res.json() as Promise<object>;
-    })
-    .then((json) => {
-      victoryLottieCache.set(VICTORY_LOTTIE_URL, json);
-      return json;
-    })
-    .catch(() => null)
-    .finally(() => {
-      victoryLottiePending = null;
-    });
-
-  return victoryLottiePending;
-}
-
-function getFinisherBloomStyle(finisherId: string): CSSProperties {
-  switch (finisherId) {
-    case "finisher-system-restored-shockwave":
-      return { filter: "hue-rotate(110deg)" };
-    case "finisher-cyber-lightning-strike":
-      return { filter: "saturate(1.2)" };
-    case "finisher-matrix-override":
-      return { filter: "hue-rotate(95deg) saturate(1.15)" };
-    case "finisher-rb-prismatic-burst":
-      return { filter: "hue-rotate(270deg) saturate(1.4)" };
-    case "finisher-rb-hyperspeed-warp":
-    case "finisher-magic-aurora-crown":
-      return { filter: "hue-rotate(155deg) saturate(1.35)" };
-    case "finisher-rb-pixel-blast":
-    case "finisher-magic-meteor-storm":
-      return { filter: "hue-rotate(210deg) saturate(1.35)" };
-    default:
-      return {};
-  }
 }
 
 function getConfettiPalette(finisherId: string): string[] {
@@ -166,26 +118,6 @@ export function VictoryFinisherOverlay({
   const resolvedId = finisherId || "finisher-lgtm-neon-confetti";
   const confettiCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const [fading, setFading] = useState(false);
-  const [animationData, setAnimationData] = useState<object | null>(
-    () => victoryLottieCache.get(VICTORY_LOTTIE_URL) ?? null
-  );
-
-  useEffect(() => {
-    if (!active) return;
-
-    const cached = victoryLottieCache.get(VICTORY_LOTTIE_URL);
-    if (cached) {
-      setAnimationData(cached);
-    } else {
-      let cancelled = false;
-      loadVictoryLottie().then((data) => {
-        if (!cancelled && data) setAnimationData(data);
-      });
-      return () => {
-        cancelled = true;
-      };
-    }
-  }, [active]);
 
   useEffect(() => {
     if (!active) {
@@ -327,20 +259,6 @@ export function VictoryFinisherOverlay({
             }}
           />
         </div>
-
-        {animationData && (
-          <div
-            className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none opacity-80"
-            style={getFinisherBloomStyle(resolvedId)}
-          >
-            <Lottie
-              src={animationData}
-              loop={false}
-              autoplay
-              className="w-[30rem] h-[30rem] max-w-[90vw] max-h-[90vh] pointer-events-none"
-            />
-          </div>
-        )}
       </div>
 
       <div
@@ -384,16 +302,18 @@ export function VictoryFinisherOverlay({
 
         <h3 className={`text-xl font-bold ${isMatrix ? "text-emerald-300 font-mono" : "text-ink"}`}>
           {resolvedId === "finisher-rb-true-focus-lock" ? (
-            <span className="inline-block [&_span]:!text-xl [&_span]:!font-bold [&>div]:!gap-2">
-              <DynamicTrueFocus
-                sentence={title}
-                blurAmount={3}
-                borderColor="#10B981"
-                glowColor="rgba(16,185,129,0.65)"
-                animationDuration={0.35}
-                pauseBetweenAnimations={0.45}
-              />
-            </span>
+            <DynamicTrueFocus
+              sentence={title}
+              blurAmount={3}
+              borderColor="#10B981"
+              glowColor="rgba(16,185,129,0.65)"
+              animationDuration={0.35}
+              pauseBetweenAnimations={0.45}
+              cornerSize={10}
+              borderWidth={2}
+              wordClassName="text-xl font-bold"
+              containerClassName="gap-2 justify-center flex-wrap"
+            />
           ) : resolvedId === "finisher-rb-glitch-overdrive" ||
             resolvedId === "finisher-rb-pixel-blast" ? (
             <DynamicGlitchText
