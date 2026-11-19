@@ -129,7 +129,7 @@ function CosmeticCardThumbnail({
   if (item.category === "avatar_decoration") {
     return (
       <div className="h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] flex items-center justify-center relative overflow-hidden">
-        <DiscordAvatarFrame equippedId={item.id} item={item} size="lg" micActive={micActive}>
+        <DiscordAvatarFrame equippedId={item.id} item={item} size="lg" micActive={micActive} lite>
           <div className="w-full h-full flex items-center justify-center bg-white font-mono font-bold text-base text-[#1A1714]">
             {initials}
           </div>
@@ -144,6 +144,7 @@ function CosmeticCardThumbnail({
         <NameplateBanner
           nameplateId={item.id}
           item={item}
+          lite
           className="w-full px-3 py-2.5 shadow-sm"
         >
           <div className="flex items-center justify-between gap-2">
@@ -176,6 +177,7 @@ function CosmeticCardThumbnail({
       <div className="h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] px-3 flex items-center justify-center relative overflow-hidden">
         <LeaderboardRowWrapper
           fxId={item.id}
+          lite
           className="w-full border border-[#1A1714]/15 bg-white px-3 py-2 shadow-sm"
         >
           <div className="flex items-center justify-between gap-2">

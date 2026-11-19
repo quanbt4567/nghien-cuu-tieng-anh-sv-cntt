@@ -15,6 +15,7 @@ export interface DiscordAvatarFrameProps {
   item?: CosmeticItem | null;
   size?: "xs" | "sm" | "md" | "lg" | "xl" | number;
   micActive?: boolean;
+  lite?: boolean;
   children: ReactNode;
 }
 
@@ -234,6 +235,7 @@ export function DiscordAvatarFrame({
   item,
   size = "md",
   micActive = false,
+  lite = false,
   children,
 }: DiscordAvatarFrameProps) {
   const px = typeof size === "number" ? Math.max(24, size) : SIZE_MAP[size];
@@ -251,7 +253,7 @@ export function DiscordAvatarFrame({
   }, [assetUrl]);
 
   const shouldUseLottieFallback =
-    !assetUrl || mediaFailed || assetKind === "lottie";
+    !lite && (!assetUrl || mediaFailed || assetKind === "lottie");
   const lottieUrl =
     assetKind === "lottie" && assetUrl && !mediaFailed
       ? assetUrl
@@ -342,7 +344,7 @@ export function DiscordAvatarFrame({
           }`}
           style={overlayStyle}
         >
-          {!mediaFailed && assetUrl && assetKind === "video" ? (
+          {!lite && !mediaFailed && assetUrl && assetKind === "video" ? (
             <video
               src={assetUrl}
               autoPlay
@@ -352,14 +354,14 @@ export function DiscordAvatarFrame({
               onError={() => setMediaFailed(true)}
               className="w-full h-full object-contain pointer-events-none select-none"
             />
-          ) : !mediaFailed && assetUrl && assetKind === "image" ? (
+          ) : !lite && !mediaFailed && assetUrl && assetKind === "image" ? (
             <img
               src={assetUrl}
               alt=""
               onError={() => setMediaFailed(true)}
               className="w-full h-full object-contain pointer-events-none select-none"
             />
-          ) : animationData ? (
+          ) : !lite && animationData ? (
             <Lottie
               src={animationData}
               loop
@@ -368,41 +370,52 @@ export function DiscordAvatarFrame({
             />
           ) : glowColor ? (
             <span
-              className="w-full h-full rounded-full border-2 opacity-80"
+              className="w-full h-full rounded-full border-2 opacity-85"
               style={{
                 borderColor: glowColor,
-                boxShadow: `0 0 14px ${glowColor}88`,
+                boxShadow: `0 0 12px ${glowColor}88`,
               }}
             />
           ) : null}
-          {effectId === "avatar-rb-electric-border" && (
-            <div className="absolute inset-0 rounded-full pointer-events-none">
-              <DynamicElectricBorder
-                color="#38BDF8"
-                glowColor="#0284C7"
-                borderRadius={999}
-                strands={3}
-                thickness={1.5}
-                interactive={false}
-                className="w-full h-full rounded-full"
+          {effectId === "avatar-rb-electric-border" &&
+            (lite ? (
+              <span
+                className="absolute inset-0.5 rounded-full border-2 border-dashed border-sky-400"
+                style={{ boxShadow: "0 0 10px rgba(56,189,248,0.8)" }}
               />
-            </div>
-          )}
-          {effectId === "avatar-rb-star-border" && (
-            <div className="absolute inset-0 rounded-full pointer-events-none">
-              <DynamicStarBorder
-                as="div"
-                color="#FBBF24"
-                trailColor="#F59E0B"
-                radius={999}
-                stars={2}
-                sparkle
-                backgroundColor="transparent"
-                borderColor="rgba(251,191,36,0.35)"
-                className="w-full h-full rounded-full"
-              />
-            </div>
-          )}
+            ) : (
+              <div className="absolute inset-0 rounded-full pointer-events-none">
+                <DynamicElectricBorder
+                  color="#38BDF8"
+                  glowColor="#0284C7"
+                  borderRadius={999}
+                  strands={3}
+                  thickness={1.5}
+                  interactive={false}
+                  className="w-full h-full rounded-full"
+                />
+              </div>
+            ))}
+          {effectId === "avatar-rb-star-border" &&
+            (lite ? (
+              <span className="absolute inset-0 rounded-full border-2 border-amber-400/85">
+                <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-amber-300 shadow-[0_0_8px_#FBBF24]" />
+              </span>
+            ) : (
+              <div className="absolute inset-0 rounded-full pointer-events-none">
+                <DynamicStarBorder
+                  as="div"
+                  color="#FBBF24"
+                  trailColor="#F59E0B"
+                  radius={999}
+                  stars={2}
+                  sparkle
+                  backgroundColor="transparent"
+                  borderColor="rgba(251,191,36,0.35)"
+                  className="w-full h-full rounded-full"
+                />
+              </div>
+            ))}
           {effectId === "avatar-rb-magic-rings" && (
             <>
               <span className="absolute inset-0 rounded-full border-2 border-pink-400/90 cosmetic-svg-spin-slow shadow-[0_0_12px_#EC4899]" />

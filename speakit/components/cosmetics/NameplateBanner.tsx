@@ -14,6 +14,7 @@ import "./cosmetics.css";
 export interface NameplateBannerProps {
   nameplateId?: string | null;
   item?: CosmeticItem | null;
+  lite?: boolean;
   className?: string;
   children: ReactNode;
 }
@@ -135,6 +136,7 @@ function getPalette(id?: string | null, accent?: string): { from: string; to: st
 export function NameplateBanner({
   nameplateId,
   item,
+  lite = false,
   className = "",
   children,
 }: NameplateBannerProps) {
@@ -180,7 +182,7 @@ export function NameplateBanner({
       ref={containerRef}
       onPointerMove={handlePointerMove}
       style={rootVars}
-      className={`cosmetic-dark-glass group relative rounded-xl overflow-hidden bg-zinc-950/75 backdrop-blur-md border border-white/15 text-zinc-50 shadow-sm ${className}`.trim()}
+      className={`cosmetic-dark-glass group relative rounded-xl overflow-hidden bg-zinc-950/85 ${lite ? "" : "backdrop-blur-md"} border border-white/15 text-zinc-50 shadow-sm ${className}`.trim()}
     >
       <span
         aria-hidden="true"
@@ -254,7 +256,7 @@ export function NameplateBanner({
         </span>
       )}
 
-      {activeId === "nameplate-rb-glitch-text" && (
+      {!lite && activeId === "nameplate-rb-glitch-text" && (
         <span aria-hidden="true" className="pointer-events-none absolute top-1 right-2 z-[7] text-[10px] font-mono">
           <DynamicGlitchText speed={0.8} enableShadows mode="rgb" fontSize="10px">
             GLITCH_RGB
@@ -262,13 +264,13 @@ export function NameplateBanner({
         </span>
       )}
 
-      {activeId === "nameplate-rb-shiny-text" && (
+      {!lite && activeId === "nameplate-rb-shiny-text" && (
         <span aria-hidden="true" className="pointer-events-none absolute top-1 right-2 z-[7] text-[10px] font-mono font-bold">
           <DynamicShinyText text="PLATINUM" speed={2} color="#94A3B8" shineColor="#FFFFFF" />
         </span>
       )}
 
-      {activeId === "nameplate-rb-gradient-text" && (
+      {!lite && activeId === "nameplate-rb-gradient-text" && (
         <span aria-hidden="true" className="pointer-events-none absolute top-1 right-2 z-[7] text-[10px] font-mono font-bold">
           <DynamicGradientText colors={["#EC4899", "#38BDF8", "#FBBF24"]} animationSpeed={3}>
             SPECTRUM
@@ -276,7 +278,7 @@ export function NameplateBanner({
         </span>
       )}
 
-      {activeId === "nameplate-rb-true-focus" && (
+      {!lite && activeId === "nameplate-rb-true-focus" && (
         <span aria-hidden="true" className="pointer-events-none absolute top-1 right-2 z-[7] text-[9px] font-mono font-bold">
           <DynamicTrueFocus
             sentence="TRUE FOCUS"
@@ -289,7 +291,7 @@ export function NameplateBanner({
         </span>
       )}
 
-      {activeId === "nameplate-rb-decrypted-matrix" && (
+      {!lite && activeId === "nameplate-rb-decrypted-matrix" && (
         <span aria-hidden="true" className="pointer-events-none absolute top-1 right-2 z-[7] text-[10px] font-mono font-bold text-emerald-400">
           <DynamicDecryptedText text="CIPHER_OK" animateOn="view" loop loopDelay={2200} />
         </span>

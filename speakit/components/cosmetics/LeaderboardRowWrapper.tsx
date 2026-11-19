@@ -14,6 +14,7 @@ import "./cosmetics.css";
 export interface LeaderboardRowWrapperProps {
   fxId?: string | null;
   nameplateId?: string | null;
+  lite?: boolean;
   className?: string;
   children: ReactNode;
 }
@@ -152,6 +153,7 @@ function getBeamPalette(fxId?: string | null, nameplateId?: string | null): { fr
 export function LeaderboardRowWrapper({
   fxId,
   nameplateId,
+  lite = false,
   className = "",
   children,
 }: LeaderboardRowWrapperProps) {
@@ -194,11 +196,11 @@ export function LeaderboardRowWrapper({
       ref={containerRef}
       onPointerMove={handlePointerMove}
       style={rootVars}
-      className={`cosmetic-dark-glass group relative rounded-xl overflow-hidden !bg-zinc-950/75 backdrop-blur-md border border-white/15 text-zinc-50 shadow-sm ${className}`.trim()}
+      className={`cosmetic-dark-glass group relative rounded-xl overflow-hidden !bg-zinc-950/85 ${lite ? "" : "backdrop-blur-md"} border border-white/15 text-zinc-50 shadow-sm ${className}`.trim()}
     >
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 rounded-[inherit] bg-zinc-950/75 backdrop-blur-md z-0"
+        className={`pointer-events-none absolute inset-0 rounded-[inherit] bg-zinc-950/85 ${lite ? "" : "backdrop-blur-md"} z-0`}
       />
 
       {bannerAssetUrl && !bannerFailed && (
@@ -261,7 +263,7 @@ export function LeaderboardRowWrapper({
         />
       )}
 
-      {fxId === "lb-rb-electric-border" && (
+      {!lite && fxId === "lb-rb-electric-border" && (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[7]">
           <DynamicElectricBorder
             color="#38BDF8"
@@ -275,7 +277,7 @@ export function LeaderboardRowWrapper({
         </div>
       )}
 
-      {fxId === "lb-rb-star-comet-border" && (
+      {!lite && fxId === "lb-rb-star-comet-border" && (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[7]">
           <DynamicStarBorder
             as="div"
@@ -291,7 +293,7 @@ export function LeaderboardRowWrapper({
         </div>
       )}
 
-      {fxId === "lb-rb-pixel-card" && (
+      {!lite && fxId === "lb-rb-pixel-card" && (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[4] opacity-55">
           <DynamicPixelCard
             variant="pink"
@@ -302,7 +304,7 @@ export function LeaderboardRowWrapper({
         </div>
       )}
 
-      {fxId === "lb-rb-spotlight-card" && (
+      {!lite && fxId === "lb-rb-spotlight-card" && (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[4] opacity-65">
           <DynamicSpotlightCard
             spotlightColor="#10B981"
@@ -333,7 +335,7 @@ export function LeaderboardRowWrapper({
         />
       )}
 
-      {fxId === "lb-rb-tilted-card" ? (
+      {!lite && fxId === "lb-rb-tilted-card" ? (
         <div className="relative z-10">
           <DynamicTiltedCard
             containerHeight="auto"
