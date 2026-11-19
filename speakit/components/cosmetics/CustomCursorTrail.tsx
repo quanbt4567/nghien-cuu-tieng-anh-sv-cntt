@@ -61,8 +61,6 @@ const VALID_MODES = new Set<CursorMode>([
 ]);
 
 const REACT_BITS_CURSOR_MODES = new Set<CursorMode>([
-  "cursor-rb-splash-fluid",
-  "cursor-rb-pixel-trail",
   "cursor-rb-ribbons",
   "cursor-rb-crosshair",
   "cursor-rb-ghost-smoke",
@@ -782,6 +780,7 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
 
     if (
       (mode === "cursor-pixel-sparkle-trail" ||
+        mode === "cursor-rb-pixel-trail" ||
         mode === "cursor-magic-cool-confetti" ||
         mode === "cursor-rb-click-spark" ||
         mode === "cursor-tholman-fairy-dust") &&
@@ -790,7 +789,9 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
       lastSpawnX = x;
       lastSpawnY = y;
       const palette =
-        mode === "cursor-magic-cool-confetti"
+        mode === "cursor-rb-pixel-trail"
+          ? ["#EC4899", "#F472B6", "#38BDF8", "#A855F7"]
+          : mode === "cursor-magic-cool-confetti"
           ? COOL_COLORS
           : mode === "cursor-tholman-fairy-dust"
           ? ["#D61C59", "#E7D84B", "#1B8798"]
@@ -804,7 +805,12 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
           y: y + (Math.random() - 0.5) * 8,
           vx: (Math.random() - 0.5) * (mode === "cursor-magic-cool-confetti" ? 55 : 26),
           vy: (mode === "cursor-magic-cool-confetti" ? -38 : -8) + (Math.random() - 0.5) * 18,
-          size: mode === "cursor-magic-cool-confetti" ? 4 + Math.floor(Math.random() * 4) : 3 + Math.floor(Math.random() * 3),
+          size:
+            mode === "cursor-rb-pixel-trail"
+              ? 10 + Math.floor(Math.random() * 5)
+              : mode === "cursor-magic-cool-confetti"
+              ? 4 + Math.floor(Math.random() * 4)
+              : 3 + Math.floor(Math.random() * 3),
           life: mode === "cursor-magic-cool-confetti" ? 0.68 : 0.5,
           maxLife: mode === "cursor-magic-cool-confetti" ? 0.68 : 0.5,
           color: palette[Math.floor(Math.random() * palette.length)],
@@ -889,7 +895,7 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-    if (mode === "cursor-pixel-sparkle-trail") {
+    if (mode === "cursor-pixel-sparkle-trail" || mode === "cursor-rb-pixel-trail") {
       for (let i = sparkles.length - 1; i >= 0; i -= 1) {
         const p = sparkles[i];
         p.life -= dt;
@@ -996,7 +1002,7 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
       mode === "cursor-rb-ghost-smoke"
     ) {
       ctx.save();
-      ctx.globalCompositeOperation = "lighter";
+      ctx.globalCompositeOperation = "source-over";
       for (let i = fluidBlobs.length - 1; i >= 0; i -= 1) {
         const b = fluidBlobs[i];
         b.life -= dt;
@@ -1007,7 +1013,7 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
         b.x += b.vx * dt;
         b.y += b.vy * dt;
         b.radius += (mode === "cursor-rb-ghost-smoke" ? 26 : 18) * dt;
-        const alpha = Math.max(0, b.life / b.maxLife) * (mode === "cursor-rb-ghost-smoke" ? 0.35 : 0.45);
+        const alpha = Math.max(0, b.life / b.maxLife) * (mode === "cursor-rb-ghost-smoke" ? 0.45 : 0.65);
         const grad = ctx.createRadialGradient(b.x, b.y, 1, b.x, b.y, b.radius);
         grad.addColorStop(0, b.color);
         grad.addColorStop(1, "rgba(0,0,0,0)");

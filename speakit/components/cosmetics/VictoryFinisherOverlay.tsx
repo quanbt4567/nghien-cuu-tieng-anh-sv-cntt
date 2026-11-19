@@ -49,42 +49,21 @@ function loadVictoryLottie(): Promise<object | null> {
 function getFinisherBloomStyle(finisherId: string): CSSProperties {
   switch (finisherId) {
     case "finisher-system-restored-shockwave":
-      return {
-        filter:
-          "hue-rotate(110deg) drop-shadow(0 0 24px rgba(16, 185, 129, 0.5)) drop-shadow(0 0 44px rgba(13, 148, 136, 0.3))",
-      };
+      return { filter: "hue-rotate(110deg)" };
     case "finisher-cyber-lightning-strike":
-      return {
-        filter:
-          "saturate(1.2) drop-shadow(0 0 24px rgba(245, 158, 11, 0.55)) drop-shadow(0 0 44px rgba(202, 138, 4, 0.3))",
-      };
+      return { filter: "saturate(1.2)" };
     case "finisher-matrix-override":
-      return {
-        filter:
-          "hue-rotate(95deg) saturate(1.15) drop-shadow(0 0 24px rgba(22, 163, 74, 0.55)) drop-shadow(0 0 44px rgba(21, 128, 61, 0.32))",
-      };
+      return { filter: "hue-rotate(95deg) saturate(1.15)" };
     case "finisher-rb-prismatic-burst":
-      return {
-        filter:
-          "hue-rotate(270deg) saturate(1.6) drop-shadow(0 0 26px rgba(236, 72, 153, 0.65)) drop-shadow(0 0 46px rgba(56, 189, 248, 0.45))",
-      };
+      return { filter: "hue-rotate(270deg) saturate(1.4)" };
     case "finisher-rb-hyperspeed-warp":
     case "finisher-magic-aurora-crown":
-      return {
-        filter:
-          "hue-rotate(155deg) saturate(1.5) drop-shadow(0 0 26px rgba(56, 189, 248, 0.65)) drop-shadow(0 0 46px rgba(16, 185, 129, 0.45))",
-      };
+      return { filter: "hue-rotate(155deg) saturate(1.35)" };
     case "finisher-rb-pixel-blast":
     case "finisher-magic-meteor-storm":
-      return {
-        filter:
-          "hue-rotate(210deg) saturate(1.5) drop-shadow(0 0 26px rgba(168, 85, 247, 0.65)) drop-shadow(0 0 46px rgba(99, 102, 241, 0.45))",
-      };
+      return { filter: "hue-rotate(210deg) saturate(1.35)" };
     default:
-      return {
-        filter:
-          "drop-shadow(0 0 22px rgba(229, 72, 77, 0.48)) drop-shadow(0 0 44px rgba(245, 158, 11, 0.3))",
-      };
+      return {};
   }
 }
 
@@ -298,12 +277,12 @@ export function VictoryFinisherOverlay({
 
         {resolvedId === "finisher-rb-prismatic-burst" && (
           <div
-            className="absolute inset-[-30%] z-10 pointer-events-none opacity-45 cosmetic-svg-spin-slow"
+            className="absolute inset-[-30%] z-10 pointer-events-none opacity-75 cosmetic-svg-spin-slow"
             style={{
               background:
                 "conic-gradient(from 0deg, #EC4899 0deg 30deg, transparent 30deg 60deg, #38BDF8 60deg 90deg, transparent 90deg 120deg, #FBBF24 120deg 150deg, transparent 150deg 180deg, #10B981 180deg 210deg, transparent 210deg 240deg, #A855F7 240deg 270deg, transparent 270deg 300deg, #E5484D 300deg 330deg, transparent 330deg 360deg)",
-              maskImage: "radial-gradient(circle at center, rgba(0,0,0,0.9) 0%, transparent 70%)",
-              WebkitMaskImage: "radial-gradient(circle at center, rgba(0,0,0,0.9) 0%, transparent 70%)",
+              maskImage: "radial-gradient(circle at center, rgba(0,0,0,0.95) 0%, transparent 72%)",
+              WebkitMaskImage: "radial-gradient(circle at center, rgba(0,0,0,0.95) 0%, transparent 72%)",
             }}
           />
         )}
@@ -312,14 +291,14 @@ export function VictoryFinisherOverlay({
           resolvedId === "finisher-rb-balatro-jackpot" ||
           resolvedId === "finisher-pavel-fluid-supernova") && (
           <div
-            className="absolute inset-0 z-10 pointer-events-none opacity-45"
+            className="absolute inset-0 z-10 pointer-events-none opacity-75"
             style={{
               background:
                 resolvedId === "finisher-rb-hyperspeed-warp"
-                  ? "radial-gradient(circle at center, rgba(56,189,248,0.45) 0%, rgba(236,72,153,0.28) 45%, transparent 75%)"
+                  ? "radial-gradient(circle at center, rgba(56,189,248,0.6) 0%, rgba(236,72,153,0.4) 45%, transparent 75%)"
                   : resolvedId === "finisher-rb-balatro-jackpot"
-                    ? "radial-gradient(circle at center, rgba(229,72,77,0.48) 0%, rgba(245,158,11,0.32) 45%, transparent 75%)"
-                    : "radial-gradient(circle at center, rgba(244,63,94,0.45) 0%, rgba(56,189,248,0.32) 45%, transparent 75%)",
+                    ? "radial-gradient(circle at center, rgba(229,72,77,0.6) 0%, rgba(245,158,11,0.4) 45%, transparent 75%)"
+                    : "radial-gradient(circle at center, rgba(244,63,94,0.6) 0%, rgba(56,189,248,0.4) 45%, transparent 75%)",
             }}
           />
         )}
@@ -405,17 +384,26 @@ export function VictoryFinisherOverlay({
 
         <h3 className={`text-xl font-bold ${isMatrix ? "text-emerald-300 font-mono" : "text-ink"}`}>
           {resolvedId === "finisher-rb-true-focus-lock" ? (
-            <DynamicTrueFocus
-              sentence={title}
-              blurAmount={3}
-              borderColor="#10B981"
-              glowColor="rgba(16,185,129,0.65)"
-              animationDuration={0.35}
-              pauseBetweenAnimations={0.45}
-            />
+            <span className="inline-block [&_span]:!text-xl [&_span]:!font-bold [&>div]:!gap-2">
+              <DynamicTrueFocus
+                sentence={title}
+                blurAmount={3}
+                borderColor="#10B981"
+                glowColor="rgba(16,185,129,0.65)"
+                animationDuration={0.35}
+                pauseBetweenAnimations={0.45}
+              />
+            </span>
           ) : resolvedId === "finisher-rb-glitch-overdrive" ||
             resolvedId === "finisher-rb-pixel-blast" ? (
-            <DynamicGlitchText speed={0.7} enableShadows mode="rgb">
+            <DynamicGlitchText
+              speed={0.7}
+              enableShadows
+              mode="rgb"
+              fontSize="1.25rem"
+              fontWeight={700}
+              className="!mx-0 inline-block"
+            >
               {title}
             </DynamicGlitchText>
           ) : resolvedId === "finisher-rb-shiny-champion" ||

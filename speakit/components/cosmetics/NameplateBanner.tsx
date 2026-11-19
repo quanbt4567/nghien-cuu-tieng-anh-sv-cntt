@@ -146,7 +146,14 @@ export function NameplateDisplayText({
 }) {
   if (!lite && nameplateId === "nameplate-rb-glitch-text") {
     return (
-      <DynamicGlitchText speed={0.8} enableShadows mode="rgb" className={className}>
+      <DynamicGlitchText
+        speed={0.8}
+        enableShadows
+        mode="rgb"
+        fontSize="inherit"
+        fontWeight="inherit"
+        className={`!mx-0 inline-block align-baseline ${className}`.trim()}
+      >
         {name}
       </DynamicGlitchText>
     );
@@ -175,14 +182,18 @@ export function NameplateDisplayText({
   }
   if (!lite && nameplateId === "nameplate-rb-true-focus") {
     return (
-      <DynamicTrueFocus
-        sentence={name}
-        blurAmount={1.5}
-        borderColor="#10B981"
-        glowColor="rgba(16,185,129,0.6)"
-        animationDuration={0.35}
-        pauseBetweenAnimations={0.8}
-      />
+      <span
+        className={`inline-block [&_span]:!text-sm [&_span]:!font-extrabold [&>div]:!gap-1.5 [&>div]:!justify-start ${className}`.trim()}
+      >
+        <DynamicTrueFocus
+          sentence={name}
+          blurAmount={1.5}
+          borderColor="#10B981"
+          glowColor="rgba(16,185,129,0.6)"
+          animationDuration={0.35}
+          pauseBetweenAnimations={0.8}
+        />
+      </span>
     );
   }
   if (!lite && nameplateId === "nameplate-rb-decrypted-matrix") {
