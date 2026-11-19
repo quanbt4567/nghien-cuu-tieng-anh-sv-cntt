@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   ArrowRight,
   BarChart3,
-  Compass,
   Headphones,
   Mic,
   Sparkles,
@@ -75,7 +74,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
 
             <div className="flex flex-wrap items-center gap-3 pt-1">
               <Link
-                href="/scenarios"
+                href="/placement"
                 className="interactive-btn-accent inline-flex items-center gap-2 rounded-pill px-5 py-2.5 bg-accent hover:bg-accent-hover text-white border border-ink text-sm font-semibold shadow-soft"
               >
                 <span>Bắt đầu luyện nói ngay</span>
@@ -83,19 +82,10 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
               </Link>
 
               <Link
-                href="/placement"
-                className="interactive-btn inline-flex items-center gap-2 rounded-pill px-5 py-2.5 bg-paper text-ink border border-ink/25 text-sm font-semibold"
+                href="/scenarios"
+                className="inline-flex items-center gap-1 text-xs font-medium text-ink-muted hover:text-ink underline-offset-4 hover:underline px-1.5 py-1 transition-colors"
               >
-                <Compass className="w-4 h-4 shrink-0" aria-hidden="true" />
-                <span>Kiểm tra trình độ (2 phút)</span>
-              </Link>
-
-              <Link
-                href="/research"
-                className="interactive-btn inline-flex items-center gap-1.5 rounded-pill px-3.5 py-2 bg-paper/60 border border-ink/15 text-xs font-mono font-semibold text-ink-muted hover:text-ink"
-              >
-                <BarChart3 className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-                <span>Số liệu &amp; Nghiên cứu</span>
+                <span>Hoặc chọn kịch bản trực tiếp</span>
               </Link>
             </div>
 
@@ -187,14 +177,25 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
               </div>
             </div>
 
-            <p className="text-xs text-ink-muted leading-relaxed border-t border-ink/10 pt-3">
-              Kỹ năng Nói tại Việt Nam thấp hơn Đọc tới{" "}
-              <span className="font-mono font-semibold text-ink">
-                {speakingVsReadingGap} điểm
-              </span>{" "}
-              do quen đọc docs nhưng thiếu môi trường phản xạ miệng. SpeakIT thu hẹp khoảng cách
-              này bằng hội thoại voice-first, chấm điểm AI theo lượt nói và luyện Shadowing mỗi ngày.
-            </p>
+            <div className="border-t border-ink/10 pt-3 space-y-3">
+              <p className="text-xs text-ink-muted leading-relaxed">
+                Kỹ năng Nói tại Việt Nam thấp hơn Đọc tới{" "}
+                <span className="font-mono font-semibold text-ink">
+                  {speakingVsReadingGap} điểm
+                </span>{" "}
+                do quen đọc docs nhưng thiếu môi trường phản xạ miệng. SpeakIT thu hẹp khoảng cách
+                này bằng hội thoại voice-first, chấm điểm AI theo lượt nói và luyện Shadowing mỗi ngày.
+              </p>
+
+              <Link
+                href="/research"
+                className="interactive-btn inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 bg-white border border-ink/15 text-xs font-mono font-semibold text-ink hover:text-[#B91C1C]"
+              >
+                <BarChart3 className="w-3.5 h-3.5 text-accent shrink-0" aria-hidden="true" />
+                <span>Đọc thêm số liệu &amp; nghiên cứu</span>
+                <ArrowRight className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+              </Link>
+            </div>
           </aside>
         </div>
       </div>
