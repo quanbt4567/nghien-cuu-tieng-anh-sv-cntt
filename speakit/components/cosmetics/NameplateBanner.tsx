@@ -133,6 +133,60 @@ function getPalette(id?: string | null, accent?: string): { from: string; to: st
   }
 }
 
+const SHUFFLE_GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&*";
+
+function ShuffleTextInline({ name, className = "" }: { name: string; className?: string }) {
+  const [display, setDisplay] = useState(name);
+  const [hoverTick, setHoverTick] = useState(0);
+
+  useEffect(() => {
+    let frame = 0;
+    const total = Math.max(10, name.length);
+    const id = window.setInterval(() => {
+      frame += 1;
+      const locked = Math.floor((frame / total) * name.length);
+      const next = name
+        .split("")
+        .map((ch, idx) => {
+          if (ch === " " || idx < locked) return ch;
+          return SHUFFLE_GLYPHS[(idx + frame * 3) % SHUFFLE_GLYPHS.length];
+        })
+        .join("");
+      setDisplay(next);
+      if (frame >= total) {
+        setDisplay(name);
+        window.clearInterval(id);
+      }
+    }, 45);
+    return () => window.clearInterval(id);
+  }, [name, hoverTick]);
+
+  useEffect(() => {
+    const loop = window.setInterval(() => {
+      setHoverTick((t) => t + 1);
+    }, 4200);
+    return () => window.clearInterval(loop);
+  }, []);
+
+  return (
+    <span
+      onMouseEnter={() => setHoverTick((t) => t + 1)}
+      className={`inline-block whitespace-nowrap ${className}`.trim()}
+    >
+      {display}
+    </span>
+  );
+}
+
+const SPARKLE_POSITIONS = [
+  { left: "-4%", top: "-18%", delay: "0s", color: "#FBBF24" },
+  { left: "26%", top: "-22%", delay: "0.4s", color: "#38BDF8" },
+  { left: "58%", top: "-18%", delay: "0.8s", color: "#EC4899" },
+  { left: "92%", top: "-16%", delay: "1.1s", color: "#FBBF24" },
+  { left: "14%", top: "78%", delay: "0.6s", color: "#A855F7" },
+  { left: "78%", top: "76%", delay: "1.3s", color: "#38BDF8" },
+];
+
 export function NameplateDisplayText({
   name,
   nameplateId,
@@ -144,6 +198,119 @@ export function NameplateDisplayText({
   lite?: boolean;
   className?: string;
 }) {
+  if (nameplateId === "nameplate-magic-aurora-text") {
+    return (
+      <span
+        className={`cosmetic-text-aurora inline-block whitespace-nowrap ${className}`.trim()}
+        style={{
+          backgroundImage:
+            "linear-gradient(135deg, #38BDF8, #A855F7, #EC4899, #22D3EE, #38BDF8)",
+        }}
+      >
+        {name}
+      </span>
+    );
+  }
+  if (nameplateId === "nameplate-magic-line-shadow") {
+    return (
+      <span
+        data-text={name}
+        className={`cosmetic-text-line-shadow text-white ${className}`.trim()}
+        style={{ "--line-shadow-color": "#22D3EE" } as CSSProperties}
+      >
+        {name}
+      </span>
+    );
+  }
+  if (nameplateId === "nameplate-magic-sparkles") {
+    return (
+      <span className={`relative inline-block whitespace-nowrap ${className}`.trim()}>
+        <span className="relative z-10 text-amber-100 drop-shadow-[0_0_8px_rgba(251,191,36,0.45)]">
+          {name}
+        </span>
+        {SPARKLE_POSITIONS.map((pos, idx) => (
+          <svg
+            key={idx}
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            className="cosmetic-text-sparkle-star pointer-events-none absolute z-20 w-3 h-3"
+            style={{ left: pos.left, top: pos.top, animationDelay: pos.delay }}
+          >
+            <path
+              d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4Z"
+              fill={pos.color}
+            />
+          </svg>
+        ))}
+      </span>
+    );
+  }
+  if (nameplateId === "nameplate-rb-blur-text") {
+    return (
+      <span className={`cosmetic-text-blur-pulse whitespace-nowrap text-sky-100 ${className}`.trim()}>
+        {name}
+      </span>
+    );
+  }
+  if (nameplateId === "nameplate-rb-echo-text") {
+    return (
+      <span className={`relative inline-block whitespace-nowrap ${className}`.trim()}>
+        <span
+          aria-hidden="true"
+          className="cosmetic-text-echo-layer pointer-events-none absolute inset-0 text-cyan-400/55 select-none"
+        >
+          {name}
+        </span>
+        <span
+          aria-hidden="true"
+          className="cosmetic-text-echo-layer pointer-events-none absolute inset-0 text-fuchsia-400/45 select-none"
+          style={{ animationDelay: "-1.3s" }}
+        >
+          {name}
+        </span>
+        <span className="relative z-10 text-white">{name}</span>
+      </span>
+    );
+  }
+  if (nameplateId === "nameplate-magic-neon-card") {
+    return (
+      <span
+        className={`cosmetic-text-aurora inline-block whitespace-nowrap ${className}`.trim()}
+        style={{
+          backgroundImage: "linear-gradient(90deg, #FB7185, #F472B6, #38BDF8, #FB7185)",
+        }}
+      >
+        {name}
+      </span>
+    );
+  }
+  if (nameplateId === "nameplate-aceternity-squiggly") {
+    return (
+      <span
+        className={`cosmetic-text-aurora inline-block whitespace-nowrap ${className}`.trim()}
+        style={{
+          backgroundImage: "linear-gradient(90deg, #38BDF8, #E0F2FE, #06B6D4, #38BDF8)",
+        }}
+      >
+        {name}
+      </span>
+    );
+  }
+  if (nameplateId === "nameplate-aceternity-canvas-ribbon") {
+    return (
+      <span
+        className={`cosmetic-text-aurora inline-block whitespace-nowrap ${className}`.trim()}
+        style={{
+          backgroundImage: "linear-gradient(90deg, #C084FC, #F472B6, #FBBF24, #C084FC)",
+        }}
+      >
+        {name}
+      </span>
+    );
+  }
+  if (!lite && nameplateId === "nameplate-rb-shuffle-text") {
+    return <ShuffleTextInline name={name} className={`text-amber-200 ${className}`.trim()} />;
+  }
   if (!lite && nameplateId === "nameplate-rb-glitch-text") {
     return (
       <DynamicGlitchText

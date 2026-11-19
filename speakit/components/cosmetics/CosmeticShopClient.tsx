@@ -153,7 +153,7 @@ function CosmeticCardThumbnail({
                 {initials}
               </span>
               <span className="text-xs font-bold text-white truncate">
-                {displayName}
+                <NameplateDisplayText name={displayName} nameplateId={item.id} lite />
               </span>
             </div>
             {item.id === "nameplate-terminal-pulse" ? (
