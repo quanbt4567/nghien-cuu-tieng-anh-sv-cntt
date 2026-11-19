@@ -133,6 +133,72 @@ function getPalette(id?: string | null, accent?: string): { from: string; to: st
   }
 }
 
+export function NameplateDisplayText({
+  name,
+  nameplateId,
+  lite = false,
+  className = "",
+}: {
+  name: string;
+  nameplateId?: string | null;
+  lite?: boolean;
+  className?: string;
+}) {
+  if (!lite && nameplateId === "nameplate-rb-glitch-text") {
+    return (
+      <DynamicGlitchText speed={0.8} enableShadows mode="rgb" className={className}>
+        {name}
+      </DynamicGlitchText>
+    );
+  }
+  if (!lite && nameplateId === "nameplate-rb-shiny-text") {
+    return (
+      <DynamicShinyText
+        text={name}
+        speed={2}
+        color="#E2E8F0"
+        shineColor="#FFFFFF"
+        className={className}
+      />
+    );
+  }
+  if (!lite && nameplateId === "nameplate-rb-gradient-text") {
+    return (
+      <DynamicGradientText
+        colors={["#EC4899", "#38BDF8", "#FBBF24"]}
+        animationSpeed={3}
+        className={className}
+      >
+        {name}
+      </DynamicGradientText>
+    );
+  }
+  if (!lite && nameplateId === "nameplate-rb-true-focus") {
+    return (
+      <DynamicTrueFocus
+        sentence={name}
+        blurAmount={1.5}
+        borderColor="#10B981"
+        glowColor="rgba(16,185,129,0.6)"
+        animationDuration={0.35}
+        pauseBetweenAnimations={0.8}
+      />
+    );
+  }
+  if (!lite && nameplateId === "nameplate-rb-decrypted-matrix") {
+    return (
+      <DynamicDecryptedText
+        text={name}
+        animateOn="view"
+        loop
+        loopDelay={2600}
+        className={`text-emerald-300 ${className}`.trim()}
+      />
+    );
+  }
+  return <span className={className}>{name}</span>;
+}
+
 export function NameplateBanner({
   nameplateId,
   item,
@@ -253,47 +319,6 @@ export function NameplateBanner({
           <span className="animate-pulse">✦</span>
           <span className="animate-bounce">✧</span>
           <span className="animate-pulse">✦</span>
-        </span>
-      )}
-
-      {!lite && activeId === "nameplate-rb-glitch-text" && (
-        <span aria-hidden="true" className="pointer-events-none absolute top-1 right-2 z-[7] text-[10px] font-mono">
-          <DynamicGlitchText speed={0.8} enableShadows mode="rgb" fontSize="10px">
-            GLITCH_RGB
-          </DynamicGlitchText>
-        </span>
-      )}
-
-      {!lite && activeId === "nameplate-rb-shiny-text" && (
-        <span aria-hidden="true" className="pointer-events-none absolute top-1 right-2 z-[7] text-[10px] font-mono font-bold">
-          <DynamicShinyText text="PLATINUM" speed={2} color="#94A3B8" shineColor="#FFFFFF" />
-        </span>
-      )}
-
-      {!lite && activeId === "nameplate-rb-gradient-text" && (
-        <span aria-hidden="true" className="pointer-events-none absolute top-1 right-2 z-[7] text-[10px] font-mono font-bold">
-          <DynamicGradientText colors={["#EC4899", "#38BDF8", "#FBBF24"]} animationSpeed={3}>
-            SPECTRUM
-          </DynamicGradientText>
-        </span>
-      )}
-
-      {!lite && activeId === "nameplate-rb-true-focus" && (
-        <span aria-hidden="true" className="pointer-events-none absolute top-1 right-2 z-[7] text-[9px] font-mono font-bold">
-          <DynamicTrueFocus
-            sentence="TRUE FOCUS"
-            blurAmount={2}
-            borderColor="#10B981"
-            glowColor="rgba(16,185,129,0.6)"
-            animationDuration={0.4}
-            pauseBetweenAnimations={0.8}
-          />
-        </span>
-      )}
-
-      {!lite && activeId === "nameplate-rb-decrypted-matrix" && (
-        <span aria-hidden="true" className="pointer-events-none absolute top-1 right-2 z-[7] text-[10px] font-mono font-bold text-emerald-400">
-          <DynamicDecryptedText text="CIPHER_OK" animateOn="view" loop loopDelay={2200} />
         </span>
       )}
 

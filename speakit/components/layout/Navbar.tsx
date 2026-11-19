@@ -261,7 +261,9 @@ export function Navbar() {
 
   return (
     <>
-      <CustomCursorTrail effectId={guestPlayer?.equippedCosmetics?.cursor_effect ?? null} />
+      {!shopActive && (
+        <CustomCursorTrail effectId={guestPlayer?.equippedCosmetics?.cursor_effect ?? null} />
+      )}
       <header ref={headerRef} className="sticky top-0 z-40 bg-paper border-b border-ink/15">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 h-16 flex items-center justify-between gap-2 lg:gap-4">
         <Link

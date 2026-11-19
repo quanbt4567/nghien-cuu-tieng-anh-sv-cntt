@@ -5,15 +5,9 @@ import confetti from "canvas-confetti";
 import { Lottie } from "lottie-react";
 import { Sparkles, Terminal, Zap, CheckCircle2 } from "lucide-react";
 import {
-  DynamicBalatro,
   DynamicGlitchText,
   DynamicGradientText,
-  DynamicHyperspeed,
-  DynamicLightning,
-  DynamicPixelBlast,
-  DynamicPrismaticBurst,
   DynamicShinyText,
-  DynamicSplashCursor,
   DynamicTrueFocus,
 } from "./reactbits";
 import "./cosmetics.css";
@@ -302,40 +296,47 @@ export function VictoryFinisherOverlay({
           className="absolute inset-0 z-10 w-full h-full pointer-events-none"
         />
 
-        <div className="absolute inset-0 z-10 pointer-events-none opacity-65">
-          {resolvedId === "finisher-rb-prismatic-burst" && (
-            <DynamicPrismaticBurst
-              colors={["#EC4899", "#38BDF8", "#FBBF24", "#10B981"]}
-              lightMode
-            />
-          )}
-          {resolvedId === "finisher-rb-hyperspeed-warp" && (
-            <DynamicHyperspeed curve="racing" theme="light" interactive={false} />
-          )}
-          {resolvedId === "finisher-rb-balatro-jackpot" && (
-            <DynamicBalatro
-              color1="#E5484D"
-              color2="#F59E0B"
-              color3="#3B82F6"
-              lightMode
-              opacity={0.7}
-            />
-          )}
-          {resolvedId === "finisher-rb-pixel-blast" && (
-            <DynamicPixelBlast
-              variant="diamond"
-              color="#A855F7"
-              accentColor="#EC4899"
-              transparent
-            />
-          )}
-          {resolvedId === "finisher-rb-lightning-storm" && (
-            <DynamicLightning color="#0284C7" lightMode opacity={0.85} />
-          )}
-          {resolvedId === "finisher-pavel-fluid-supernova" && (
-            <DynamicSplashCursor theme="light" />
-          )}
-        </div>
+        {resolvedId === "finisher-rb-prismatic-burst" && (
+          <div
+            className="absolute inset-[-30%] z-10 pointer-events-none opacity-45 cosmetic-svg-spin-slow"
+            style={{
+              background:
+                "conic-gradient(from 0deg, #EC4899 0deg 30deg, transparent 30deg 60deg, #38BDF8 60deg 90deg, transparent 90deg 120deg, #FBBF24 120deg 150deg, transparent 150deg 180deg, #10B981 180deg 210deg, transparent 210deg 240deg, #A855F7 240deg 270deg, transparent 270deg 300deg, #E5484D 300deg 330deg, transparent 330deg 360deg)",
+              maskImage: "radial-gradient(circle at center, rgba(0,0,0,0.9) 0%, transparent 70%)",
+              WebkitMaskImage: "radial-gradient(circle at center, rgba(0,0,0,0.9) 0%, transparent 70%)",
+            }}
+          />
+        )}
+
+        {(resolvedId === "finisher-rb-hyperspeed-warp" ||
+          resolvedId === "finisher-rb-balatro-jackpot" ||
+          resolvedId === "finisher-pavel-fluid-supernova") && (
+          <div
+            className="absolute inset-0 z-10 pointer-events-none opacity-45"
+            style={{
+              background:
+                resolvedId === "finisher-rb-hyperspeed-warp"
+                  ? "radial-gradient(circle at center, rgba(56,189,248,0.45) 0%, rgba(236,72,153,0.28) 45%, transparent 75%)"
+                  : resolvedId === "finisher-rb-balatro-jackpot"
+                    ? "radial-gradient(circle at center, rgba(229,72,77,0.48) 0%, rgba(245,158,11,0.32) 45%, transparent 75%)"
+                    : "radial-gradient(circle at center, rgba(244,63,94,0.45) 0%, rgba(56,189,248,0.32) 45%, transparent 75%)",
+            }}
+          />
+        )}
+
+        {(resolvedId === "finisher-rb-pixel-blast" ||
+          resolvedId === "finisher-rb-lightning-storm") && (
+          <div
+            className="absolute inset-0 z-10 pointer-events-none opacity-40"
+            style={{
+              backgroundImage:
+                resolvedId === "finisher-rb-pixel-blast"
+                  ? "radial-gradient(rgba(168,85,247,0.7) 2px, transparent 2px)"
+                  : "linear-gradient(135deg, rgba(2,132,199,0.35) 0%, transparent 50%, rgba(56,189,248,0.35) 100%)",
+              backgroundSize: resolvedId === "finisher-rb-pixel-blast" ? "16px 16px" : "100% 100%",
+            }}
+          />
+        )}
 
         <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
           <div

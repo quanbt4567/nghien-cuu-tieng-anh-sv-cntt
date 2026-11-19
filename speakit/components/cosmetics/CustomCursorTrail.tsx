@@ -64,11 +64,9 @@ const REACT_BITS_CURSOR_MODES = new Set<CursorMode>([
   "cursor-rb-splash-fluid",
   "cursor-rb-pixel-trail",
   "cursor-rb-ribbons",
-  "cursor-rb-blob-mercury",
   "cursor-rb-crosshair",
   "cursor-rb-ghost-smoke",
   "cursor-rb-antigravity-swarm",
-  "cursor-rb-click-spark",
   "cursor-rb-target-reticle",
 ]);
 
@@ -1348,30 +1346,41 @@ export function CustomCursorTrail({ effectId }: CustomCursorTrailProps) {
   if (isReactBitsCursor) {
     return (
       <div
+        key={mode}
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-50 overflow-hidden"
+        style={{ width: "100vw", height: "100vh" }}
       >
-        {mode === "cursor-rb-splash-fluid" && <DynamicSplashCursor theme="light" />}
+        {mode === "cursor-rb-splash-fluid" && (
+          <DynamicSplashCursor
+            size={0.35}
+            intensity={1.6}
+            force={8}
+            glow={0.75}
+            theme="light"
+          />
+        )}
         {mode === "cursor-rb-pixel-trail" && (
-          <DynamicPixelTrail color="#F59E0B" trailColor="#E5484D" />
+          <DynamicPixelTrail
+            gridSize={28}
+            trailSize={0.18}
+            maxAge={450}
+            color="#E5484D"
+            trailColor="#F59E0B"
+            glow={0.8}
+          />
         )}
         {mode === "cursor-rb-ribbons" && (
-          <DynamicRibbons colors={["#E5484D", "#F59E0B", "#38BDF8"]} />
-        )}
-        {mode === "cursor-rb-blob-mercury" && (
-          <DynamicBlobCursor color="#38BDF8" material="jelly" hideCursor={false} />
+          <DynamicRibbons colors={["#E5484D", "#F59E0B", "#0284C7"]} thickness={24} />
         )}
         {mode === "cursor-rb-crosshair" && (
-          <DynamicCrosshair color="#0284C7" hideCursor={false} />
+          <DynamicCrosshair color="#0284C7" thickness={1.5} opacity={0.85} hideCursor={false} />
         )}
         {mode === "cursor-rb-ghost-smoke" && (
-          <DynamicGhostCursor color="#A855F7" theme="light" />
+          <DynamicGhostCursor color="#9333EA" brightness={1.4} size={0.12} theme="light" />
         )}
         {mode === "cursor-rb-antigravity-swarm" && (
           <DynamicSwarmCursor color="#F59E0B" accentColor="#EC4899" lightMode hideCursor={false} />
-        )}
-        {mode === "cursor-rb-click-spark" && (
-          <DynamicClickSpark sparkColor={["#FBBF24", "#F59E0B", "#E5484D"]} />
         )}
         {mode === "cursor-rb-target-reticle" && (
           <DynamicTargetCursor

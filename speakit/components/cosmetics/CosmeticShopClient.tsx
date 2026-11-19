@@ -60,7 +60,7 @@ import { CustomCursorTrail, SPEAKIT_CURSOR_BURST_EVENT } from "./CustomCursorTra
 import { DiscordAvatarFrame } from "./DiscordAvatarFrame";
 import { FullPageProfileEffect } from "./FullPageProfileEffect";
 import { LeaderboardRowWrapper } from "./LeaderboardRowWrapper";
-import { NameplateBanner } from "./NameplateBanner";
+import { NameplateBanner, NameplateDisplayText } from "./NameplateBanner";
 import { PlayerAvatar } from "./PlayerAvatar";
 import { VictoryFinisherOverlay } from "./VictoryFinisherOverlay";
 
@@ -858,7 +858,10 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                           }`}
                         />
                       ) : (
-                        identity.displayName
+                        <NameplateDisplayText
+                          name={identity.displayName}
+                          nameplateId={activeSandbox.nameplate}
+                        />
                       )}
                     </div>
                     <div
@@ -924,7 +927,10 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                               className="inline-block h-4 w-28 rounded bg-[#1A1714]/15 animate-pulse"
                             />
                           ) : (
-                            <span>{identity.displayName}</span>
+                            <NameplateDisplayText
+                              name={identity.displayName}
+                              nameplateId={activeSandbox.nameplate}
+                            />
                           )}
                           <Crown className="w-4 h-4 text-amber-500 shrink-0" aria-hidden="true" />
                         </div>

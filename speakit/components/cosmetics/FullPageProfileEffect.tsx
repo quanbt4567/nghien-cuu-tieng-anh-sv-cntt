@@ -855,8 +855,8 @@ export function FullPageProfileEffect({
 
   if (isReactBitsTheme && resolvedThemeId) {
     return (
-      <div aria-hidden="true" className={containerClass}>
-        <div className="pointer-events-none absolute inset-0 w-full h-full opacity-55">
+      <div key={resolvedThemeId} aria-hidden="true" className={containerClass}>
+        <div className="pointer-events-none absolute inset-0 w-full h-full opacity-80">
           {resolvedThemeId === "theme-rb-aurora" && (
             <DynamicAurora
               colorStops={["#10B981", "#06B6D4", "#F59E0B"]}

@@ -307,10 +307,21 @@ export function DiscordAvatarFrame({
     lottieConfig?.filter ??
     (glowColor ? `drop-shadow(0 0 10px ${glowColor}99)` : undefined);
 
+  const isLightSafeEffect = Boolean(
+    effectId &&
+      (effectId.includes("-rb-") ||
+        effectId.includes("-magic-") ||
+        effectId.includes("-aceternity-") ||
+        effectId.includes("-tsparticles-"))
+  );
+
   const overlayStyle: CSSProperties = {
     ...boxStyle,
     filter: glowFilter,
-    mixBlendMode: resolvedItem?.blendMode === "screen" ? "screen" : "normal",
+    mixBlendMode:
+      isLightSafeEffect || resolvedItem?.blendMode !== "screen"
+        ? "normal"
+        : "screen",
   };
 
   return (
@@ -380,38 +391,46 @@ export function DiscordAvatarFrame({
           {effectId === "avatar-rb-electric-border" &&
             (lite ? (
               <span
-                className="absolute inset-0.5 rounded-full border-2 border-dashed border-sky-400"
-                style={{ boxShadow: "0 0 10px rgba(56,189,248,0.8)" }}
+                className="absolute inset-0.5 rounded-full border-2 border-dashed border-sky-500"
+                style={{ boxShadow: "0 0 10px rgba(2,132,199,0.75)" }}
               />
             ) : (
-              <div className="absolute inset-0 rounded-full pointer-events-none">
-                <DynamicElectricBorder
-                  color="#38BDF8"
-                  glowColor="#0284C7"
-                  borderRadius={999}
-                  strands={3}
-                  thickness={1.5}
-                  interactive={false}
-                  className="w-full h-full rounded-full"
+              <>
+                <span
+                  className="absolute inset-0.5 rounded-full border-2 border-dashed border-sky-500/80 cosmetic-svg-spin-slow"
+                  style={{ boxShadow: "0 0 10px rgba(2,132,199,0.7)" }}
                 />
-              </div>
+                <div className="absolute inset-0 rounded-full pointer-events-none">
+                  <DynamicElectricBorder
+                    color="#0284C7"
+                    glowColor="#38BDF8"
+                    borderRadius={999}
+                    strands={3}
+                    thickness={2}
+                    intensity={1.6}
+                    interactive={false}
+                    className="w-full h-full rounded-full"
+                  />
+                </div>
+              </>
             ))}
           {effectId === "avatar-rb-star-border" &&
             (lite ? (
-              <span className="absolute inset-0 rounded-full border-2 border-amber-400/85">
-                <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-amber-300 shadow-[0_0_8px_#FBBF24]" />
+              <span className="absolute inset-0 rounded-full border-2 border-amber-500">
+                <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_8px_#F59E0B]" />
               </span>
             ) : (
               <div className="absolute inset-0 rounded-full pointer-events-none">
                 <DynamicStarBorder
                   as="div"
-                  color="#FBBF24"
+                  color="#D97706"
                   trailColor="#F59E0B"
                   radius={999}
                   stars={2}
                   sparkle
+                  thickness={2}
                   backgroundColor="transparent"
-                  borderColor="rgba(251,191,36,0.35)"
+                  borderColor="rgba(217,119,6,0.55)"
                   className="w-full h-full rounded-full"
                 />
               </div>
