@@ -411,12 +411,8 @@ export default function ArenaPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {ARENA_SHOWCASE_MODES.map((mode) => {
             const isInlineActive = Boolean(mode.tab && activeTab === mode.tab);
-            const cardClass = `group text-left border border-[#1A1714]/15 rounded-2xl p-4 sm:p-5 shadow-soft hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex flex-col justify-between gap-4 ${
-              mode.href
-                ? "bg-[#FAF6EF]"
-                : isInlineActive
-                  ? "bg-[#FAF6EF] ring-2 ring-[#E5484D]"
-                  : "bg-white hover:bg-[#FAF6EF]"
+            const cardClass = `group text-left border border-[#1A1714]/15 rounded-2xl p-4 sm:p-5 shadow-soft hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex flex-col justify-between gap-4 bg-white ${
+              isInlineActive ? "ring-2 ring-[#E5484D]" : "hover:bg-[#FAF6EF]"
             }`;
 
             if (mode.href) {
@@ -445,7 +441,7 @@ export default function ArenaPage() {
         ref={tabSectionRef}
         role="tablist"
         aria-label="Chế độ IT Speaking Arena"
-        className="flex flex-wrap gap-2 scroll-mt-4"
+        className="inline-flex w-fit max-w-full flex-wrap gap-2 scroll-mt-4"
       >
         <button
           type="button"

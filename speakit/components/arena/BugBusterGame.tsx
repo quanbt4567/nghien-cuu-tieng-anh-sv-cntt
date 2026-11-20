@@ -83,6 +83,15 @@ const CATEGORY_LABELS: Record<BugBusterChallenge["category"], string> = {
   incident: "INCIDENT",
 };
 
+function formatHangmanBlank(targetWord: string): string {
+  const trimmed = targetWord.trim();
+  if (!trimmed) return "_ _ _ _";
+  return trimmed
+    .split(/\s+/)
+    .map((word) => Array.from(word).map(() => "_").join(" "))
+    .join("   ");
+}
+
 export function BugBusterGame({ role }: BugBusterGameProps) {
   const [phase, setPhase] = useState<"ready" | "playing" | "finished">("ready");
   const [availableChallenges, setAvailableChallenges] = useState<BugBusterChallenge[]>(
@@ -644,7 +653,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
         >
           {`${promptParts[0].trimEnd()} `}
           <span
-            className={`inline min-w-[96px] px-2.5 py-0.5 rounded-lg font-mono font-bold text-center border transition-colors ${
+            className={`inline-block min-w-[96px] px-2.5 py-0.5 rounded-lg font-mono font-bold text-center whitespace-pre border transition-colors ${
               feedback?.kind === "fixed"
                 ? "bg-ink text-white border-ink"
                 : feedback?.kind === "missed"
@@ -652,7 +661,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
                 : "bg-white text-accent border-dashed border-accent"
             }`}
           >
-            {feedback ? feedback.targetWord : "____"}
+            {feedback ? feedback.targetWord : formatHangmanBlank(currentChallenge.targetWord)}
           </span>
           {` ${promptParts.slice(1).join("____").trimStart()}`}
         </p>
