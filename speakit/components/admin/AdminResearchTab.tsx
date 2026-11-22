@@ -411,31 +411,31 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
     <div className="space-y-4">
       <div className="liquid-glass-card p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <FileText className="w-5 h-5 text-cyan-300 shrink-0" aria-hidden="true" />
+          <FileText className="w-5 h-5 text-sky-600 shrink-0" aria-hidden="true" />
           <div>
-            <h2 className="text-base font-bold text-white">
+            <h2 className="text-base font-bold text-slate-900">
               Trung Tâm Nghiên Cứu & Số Liệu ({articles.length})
             </h2>
-            <p className="text-xs text-slate-300">
+            <p className="text-xs text-slate-700">
               Quản lý bài nghiên cứu, thống kê chuẩn hóa và bản nháp AI săn tin công nghệ.
             </p>
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <div className="inline-flex rounded-full bg-slate-950/60 p-1 border border-white/15">
+          <div className="inline-flex rounded-full bg-slate-100/80 p-1 border border-slate-200/85">
             <button
               type="button"
               onClick={() => setActiveSubTab("list")}
               className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
                 activeSubTab === "list"
-                  ? "bg-cyan-500/25 border border-cyan-400/55 text-cyan-100"
-                  : "text-slate-300 hover:text-white"
+                  ? "bg-sky-500/15 border border-sky-400/60 text-sky-900"
+                  : "text-slate-700 hover:text-slate-900"
               }`}
             >
               <span>Danh sách bài nghiên cứu ({articles.length})</span>
               {pendingCount > 0 && (
-                <span className="px-1.5 py-0.2 rounded-full bg-amber-500/30 border border-amber-400/50 text-amber-100 text-[10px] font-mono">
+                <span className="px-1.5 py-0.2 rounded-full bg-amber-100 border border-amber-300/80 text-amber-800 text-[10px] font-mono">
                   {pendingCount} chờ
                 </span>
               )}
@@ -445,8 +445,8 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
               onClick={() => setActiveSubTab("compose")}
               className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
                 activeSubTab === "compose"
-                  ? "bg-cyan-500/25 border border-cyan-400/55 text-cyan-100"
-                  : "text-slate-300 hover:text-white"
+                  ? "bg-sky-500/15 border border-sky-400/60 text-sky-900"
+                  : "text-slate-700 hover:text-slate-900"
               }`}
             >
               <Plus className="w-3.5 h-3.5" aria-hidden="true" />
@@ -467,13 +467,13 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
       </div>
 
       {statusMessage && (
-        <div className="p-3 rounded-xl bg-emerald-500/20 border border-emerald-400/45 text-xs font-semibold text-emerald-100">
+        <div className="p-3 rounded-xl bg-emerald-50/90 border border-emerald-300/80 text-xs font-semibold text-emerald-800">
           {statusMessage}
         </div>
       )}
 
       {errorMessage && (
-        <div className="p-3 rounded-xl bg-rose-500/20 border border-rose-400/45 text-xs font-semibold text-rose-100">
+        <div className="p-3 rounded-xl bg-rose-50/90 border border-rose-300/80 text-xs font-semibold text-rose-800">
           {errorMessage}
         </div>
       )}
@@ -482,11 +482,11 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
         <div className="space-y-4">
           <div className="liquid-glass-card p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-0.5">
-              <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase text-cyan-300">
-                <Sparkles className="w-4 h-4 text-cyan-300" />
+              <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase text-sky-700">
+                <Sparkles className="w-4 h-4 text-sky-600" />
                 <span>AI Research Curator (GitHub, StackOverflow, InfoQ, Lobsters, Cloudflare, arXiv &amp; Dev.to)</span>
               </div>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-700">
                 Tự động săn tin công nghệ & tạo bản nháp vào hàng chờ kiểm duyệt (`pending_review`).
               </p>
             </div>
@@ -496,7 +496,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                 aria-label="Chọn chủ đề AI săn tin"
                 value={selectedTopic}
                 onChange={(e) => setSelectedTopic(e.target.value as ResearchCategory)}
-                className="liquid-glass-input px-3 py-1.5 rounded-xl text-xs font-medium [&>option]:bg-slate-950 [&>option]:text-white"
+                className="liquid-glass-input px-3 py-1.5 rounded-xl text-xs font-medium [&>option]:bg-white [&>option]:text-slate-900"
               >
                 {CATEGORY_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -522,8 +522,8 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
           </div>
 
           <section className="liquid-glass-card p-5 space-y-4">
-            <div className="flex items-center justify-between gap-2 border-b border-white/15 pb-3">
-              <h3 className="text-sm font-bold uppercase font-mono text-white">
+            <div className="flex items-center justify-between gap-2 border-b border-slate-200/85 pb-3">
+              <h3 className="text-sm font-bold uppercase font-mono text-slate-900">
                 {editingId ? "Chỉnh sửa bài báo / số liệu" : "Tạo bài báo / Số liệu mới"}
               </h3>
               <div className="flex items-center gap-2">
@@ -531,7 +531,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="inline-flex items-center gap-1 text-xs text-slate-300 hover:text-white"
+                    className="inline-flex items-center gap-1 text-xs text-slate-700 hover:text-slate-900"
                   >
                     <X className="w-3.5 h-3.5" />
                     <span>Hủy chỉnh sửa</span>
@@ -540,7 +540,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                 <button
                   type="button"
                   onClick={() => setActiveSubTab("list")}
-                  className="text-xs font-mono text-slate-300 hover:text-white"
+                  className="text-xs font-mono text-slate-700 hover:text-slate-900"
                 >
                   Quay lại danh sách
                 </button>
@@ -550,7 +550,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
             <form onSubmit={(e) => void handleSaveArticle(e, "published")} className="space-y-3.5">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="sm:col-span-2 space-y-1">
-                  <label className="text-xs font-semibold text-slate-200">Tiêu đề bài viết</label>
+                  <label className="text-xs font-semibold text-slate-700">Tiêu đề bài viết</label>
                   <input
                     type="text"
                     value={title}
@@ -561,11 +561,11 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-200">Chuyên mục</label>
+                  <label className="text-xs font-semibold text-slate-700">Chuyên mục</label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value as ResearchCategory)}
-                    className="liquid-glass-input w-full px-3 py-2 text-sm rounded-xl [&>option]:bg-slate-950 [&>option]:text-white"
+                    className="liquid-glass-input w-full px-3 py-2 text-sm rounded-xl [&>option]:bg-white [&>option]:text-slate-900"
                   >
                     {CATEGORY_OPTIONS.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -577,7 +577,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-200">Tóm tắt ngắn</label>
+                <label className="text-xs font-semibold text-slate-700">Tóm tắt ngắn</label>
                 <textarea
                   rows={2}
                   value={summary}
@@ -588,7 +588,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-200">Nội dung Markdown</label>
+                <label className="text-xs font-semibold text-slate-700">Nội dung Markdown</label>
                 <textarea
                   rows={5}
                   value={contentMarkdown}
@@ -598,9 +598,9 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                 />
               </div>
 
-              <div className="space-y-2 pt-2 border-t border-white/15">
+              <div className="space-y-2 pt-2 border-t border-slate-200/85">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-white">
+                  <span className="text-xs font-semibold text-slate-900">
                     Thẻ số liệu thống kê (Metric Cards)
                   </span>
                   <button
@@ -659,7 +659,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                         onClick={() =>
                           setMetricsJson((prev) => prev.filter((_, i) => i !== idx))
                         }
-                        className="sm:col-span-1 p-1.5 rounded-lg text-rose-300 hover:bg-rose-500/20 justify-self-end"
+                        className="sm:col-span-1 p-1.5 rounded-lg text-rose-600 hover:bg-rose-100/80 justify-self-end"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -695,7 +695,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-2.5">
               <div className="relative flex-1 max-w-md">
                 <Search
-                  className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"
+                  className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"
                   aria-hidden="true"
                 />
                 <input
@@ -719,8 +719,8 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                   }}
                   className={`px-2.5 py-1 rounded-full text-xs font-semibold border transition-colors ${
                     statusFilter === "all"
-                      ? "bg-cyan-500/25 border-cyan-400/55 text-cyan-100"
-                      : "liquid-glass-btn text-slate-300"
+                      ? "bg-sky-500/15 border-sky-400/60 text-sky-800"
+                      : "liquid-glass-btn text-slate-700"
                   }`}
                 >
                   Tất cả ({articles.length})
@@ -733,8 +733,8 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                   }}
                   className={`px-2.5 py-1 rounded-full text-xs font-semibold border transition-colors ${
                     statusFilter === "pending_review"
-                      ? "bg-amber-500/30 border-amber-400/55 text-amber-100"
-                      : "liquid-glass-btn text-slate-300"
+                      ? "bg-amber-100 border-amber-400/70 text-amber-900"
+                      : "liquid-glass-btn text-slate-700"
                   }`}
                 >
                   Chờ duyệt ({pendingCount})
@@ -747,8 +747,8 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                   }}
                   className={`px-2.5 py-1 rounded-full text-xs font-semibold border transition-colors ${
                     statusFilter === "published"
-                      ? "bg-emerald-500/30 border-emerald-400/55 text-emerald-100"
-                      : "liquid-glass-btn text-slate-300"
+                      ? "bg-emerald-100 border-emerald-400/70 text-emerald-900"
+                      : "liquid-glass-btn text-slate-700"
                   }`}
                 >
                   Đã xuất bản ({publishedCount})
@@ -767,8 +767,8 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                   }}
                   className={`px-3 py-1 rounded-full text-[11px] font-mono font-semibold border transition-colors ${
                     categoryFilter === tab.value
-                      ? "bg-cyan-500/25 border-cyan-400/55 text-cyan-100"
-                      : "liquid-glass-btn text-slate-300"
+                      ? "bg-sky-500/15 border-sky-400/60 text-sky-800"
+                      : "liquid-glass-btn text-slate-700"
                   }`}
                 >
                   {tab.label}
@@ -790,7 +790,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
           />
 
           {paginatedArticles.length === 0 ? (
-            <div className="liquid-glass-card p-8 text-center text-xs text-slate-300">
+            <div className="liquid-glass-card p-8 text-center text-xs text-slate-700">
               Không có bài nghiên cứu nào khớp bộ lọc. Bấm &ldquo;+ Soạn bài / AI Tổng hợp&rdquo; để tạo bài mới.
             </div>
           ) : (
@@ -804,7 +804,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                   <div
                     key={article.id}
                     className={`liquid-glass-card-lite p-4 flex flex-col justify-between gap-3 transition-colors ${
-                      isSelected ? "!border-cyan-400/60 ring-1 ring-cyan-400/30" : ""
+                      isSelected ? "!border-sky-400/75 ring-1 ring-sky-400/35" : ""
                     }`}
                   >
                     <div className="space-y-2">
@@ -815,50 +815,50 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                             checked={isSelected}
                             onChange={() => toggleSelectId(article.id)}
                             aria-label={`Chọn bài viết ${article.title}`}
-                            className="w-4 h-4 rounded accent-cyan-400 cursor-pointer shrink-0"
+                            className="w-4 h-4 rounded accent-sky-600 cursor-pointer shrink-0"
                           />
                           <span
                             className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold border ${
                               isPending
-                                ? "bg-amber-500/20 border-amber-400/45 text-amber-200"
-                                : "bg-emerald-500/20 border-emerald-400/45 text-emerald-200"
+                                ? "bg-amber-100/90 border-amber-300/80 text-amber-800"
+                                : "bg-emerald-100/90 border-emerald-300/80 text-emerald-800"
                             }`}
                           >
                             {isPending ? "Chờ duyệt" : "Đã xuất bản"}
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/45 text-cyan-200 text-[10px] font-mono font-semibold">
+                          <span className="px-2 py-0.5 rounded-full bg-sky-100/90 border border-sky-300/80 text-sky-800 text-[10px] font-mono font-semibold">
                             {article.category}
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-white/10 border border-white/15 text-slate-300 text-[10px] font-mono">
+                          <span className="px-2 py-0.5 rounded-full bg-slate-100/90 border border-slate-200/85 text-slate-700 text-[10px] font-mono">
                             {article.sourceType === "ai_curated" ? "AI Curated" : "Admin"}
                           </span>
                         </div>
-                        <span className="text-[10px] font-mono text-slate-400">
+                        <span className="text-[10px] font-mono text-slate-600">
                           {article.metricsJson.length} số liệu
                         </span>
                       </div>
 
-                      <h4 className="font-bold text-sm text-white line-clamp-1">
+                      <h4 className="font-bold text-sm text-slate-900 line-clamp-1">
                         {article.title}
                       </h4>
-                      <p className="text-xs text-slate-300 line-clamp-2">
+                      <p className="text-xs text-slate-700 line-clamp-2">
                         {article.summary}
                       </p>
 
                       {isExpanded && (
-                        <div className="mt-2 p-2.5 rounded-lg bg-slate-950/65 border border-white/10 max-h-36 overflow-y-auto text-[11px] font-mono text-slate-200 whitespace-pre-wrap">
+                        <div className="mt-2 p-2.5 rounded-lg bg-white/85 border border-slate-200/85 max-h-36 overflow-y-auto text-[11px] font-mono text-slate-800 whitespace-pre-wrap">
                           {article.contentMarkdown}
                         </div>
                       )}
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/10">
+                    <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200/85">
                       <button
                         type="button"
                         onClick={() =>
                           setExpandedPreviewId(isExpanded ? null : article.id)
                         }
-                        className="inline-flex items-center gap-1 text-[11px] font-mono font-semibold text-slate-300 hover:text-white"
+                        className="inline-flex items-center gap-1 text-[11px] font-mono font-semibold text-slate-700 hover:text-slate-900"
                       >
                         {isExpanded ? (
                           <>
@@ -919,7 +919,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
           )}
 
           <div className="liquid-glass-card px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
-            <span className="text-slate-300 font-mono">
+            <span className="text-slate-700 font-mono">
               Hiển thị {paginatedArticles.length} / {filteredArticles.length} bài viết · Trang{" "}
               {safePage} / {totalPages}
             </span>

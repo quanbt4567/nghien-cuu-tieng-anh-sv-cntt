@@ -262,23 +262,23 @@ export function VictoryFinisherOverlay({
       </div>
 
       <div
-        className={`cosmetic-finisher-banner relative z-30 mx-4 max-w-md w-full rounded-3xl border px-6 py-5 shadow-[0_18px_48px_rgba(0,0,0,0.65),inset_0_1px_1px_rgba(255,255,255,0.28)] text-center space-y-2 transition-opacity duration-500 ${
+        className={`cosmetic-finisher-banner relative z-30 mx-4 max-w-md w-full rounded-3xl border px-6 py-5 shadow-[0_18px_48px_rgba(15,23,42,0.16),inset_0_1px_1px_rgba(255,255,255,0.95)] text-center space-y-2 transition-opacity duration-500 ${
           fading ? "opacity-0" : "opacity-100"
         } ${
           isMatrix
-            ? "bg-slate-950/90 backdrop-blur-2xl border-emerald-400/50 text-emerald-300"
-            : "bg-slate-950/88 backdrop-blur-2xl border-cyan-400/40 text-white"
+            ? "bg-white/95 backdrop-blur-2xl border-emerald-400/75 text-emerald-900"
+            : "bg-white/95 backdrop-blur-2xl border-sky-300/80 text-slate-900"
         }`}
       >
         <div
           className={`inline-flex items-center justify-center gap-2 text-xs font-mono font-bold uppercase tracking-wider ${
             isMatrix
-              ? "text-emerald-400"
+              ? "text-emerald-700"
               : isShockwave
-                ? "text-emerald-300"
+                ? "text-emerald-700"
                 : isLightning
-                  ? "text-amber-300"
-                  : "text-cyan-300"
+                  ? "text-amber-700"
+                  : "text-sky-700"
           }`}
         >
           {isLightning ? (
@@ -294,24 +294,24 @@ export function VictoryFinisherOverlay({
         </div>
 
         {isShockwave && (
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/15 px-3 py-0.5 text-[11px] font-mono font-bold text-emerald-200">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300/80 bg-emerald-100/90 px-3 py-0.5 text-[11px] font-mono font-bold text-emerald-800">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span>ALL SERVICES HEALTHY · 200 OK</span>
           </div>
         )}
 
-        <h3 className={`text-xl font-bold ${isMatrix ? "text-emerald-300 font-mono" : "text-white"}`}>
+        <h3 className={`text-xl font-bold ${isMatrix ? "text-emerald-800 font-mono" : "text-slate-900"}`}>
           {resolvedId === "finisher-rb-true-focus-lock" ? (
             <DynamicTrueFocus
               sentence={title}
               blurAmount={3}
               borderColor="#10B981"
-              glowColor="rgba(16,185,129,0.65)"
+              glowColor="rgba(16,185,129,0.45)"
               animationDuration={0.35}
               pauseBetweenAnimations={0.45}
               cornerSize={10}
               borderWidth={2}
-              wordClassName="text-xl font-bold text-white"
+              wordClassName="text-xl font-bold text-slate-900"
               containerClassName="gap-2 justify-center flex-wrap"
             />
           ) : resolvedId === "finisher-rb-glitch-overdrive" ||
@@ -322,17 +322,17 @@ export function VictoryFinisherOverlay({
               mode="rgb"
               fontSize="1.25rem"
               fontWeight={700}
-              className="!mx-0 inline-block text-white"
+              className="!mx-0 inline-block text-slate-900"
             >
               {title}
             </DynamicGlitchText>
           ) : resolvedId === "finisher-rb-shiny-champion" ||
             resolvedId === "finisher-rb-hyperspeed-warp" ? (
-            <DynamicShinyText text={title} speed={1.8} color="#F8FAFC" shineColor="#22D3EE" />
+            <DynamicShinyText text={title} speed={1.8} color="#0F172A" shineColor="#0284C7" />
           ) : resolvedId === "finisher-rb-prismatic-burst" ||
             resolvedId === "finisher-rb-balatro-jackpot" ? (
             <DynamicGradientText
-              colors={["#F43F5E", "#EC4899", "#38BDF8", "#FBBF24"]}
+              colors={["#E11D48", "#DB2777", "#0284C7", "#D97706"]}
               animationSpeed={2.5}
             >
               {title}
@@ -341,7 +341,7 @@ export function VictoryFinisherOverlay({
             title
           )}
         </h3>
-        <p className={`text-xs font-mono ${isMatrix ? "text-emerald-300/80" : "text-slate-300"}`}>
+        <p className={`text-xs font-mono ${isMatrix ? "text-emerald-700" : "text-slate-600"}`}>
           {subtitle}
         </p>
       </div>

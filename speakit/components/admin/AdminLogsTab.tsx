@@ -34,16 +34,16 @@ function PlayerCell({
   const code = transferCode?.trim();
   if (!name && !code) {
     return (
-      <span className="font-mono text-[11px] text-slate-400">Ẩn danh</span>
+      <span className="font-mono text-[11px] text-slate-600">Ẩn danh</span>
     );
   }
   return (
     <div className="flex flex-col gap-1">
-      <span className="font-semibold text-white whitespace-nowrap">
+      <span className="font-semibold text-slate-900 whitespace-nowrap">
         {name || "Ẩn danh"}
       </span>
       {code && (
-        <span className="inline-flex w-fit px-2 py-0.5 rounded-full bg-white/10 border border-white/15 font-mono text-[10px] text-cyan-200">
+        <span className="inline-flex w-fit px-2 py-0.5 rounded-full bg-sky-100/90 border border-sky-300/80 font-mono text-[10px] text-sky-800">
           {code}
         </span>
       )}
@@ -168,8 +168,8 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
                 onClick={() => setView(tab.id)}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-mono font-medium border transition-colors ${
                   view === tab.id
-                    ? "bg-cyan-500/25 border-cyan-400/55 text-cyan-100"
-                    : "liquid-glass-btn text-slate-200"
+                    ? "bg-sky-500/15 border-sky-400/60 text-sky-800"
+                    : "liquid-glass-btn text-slate-700"
                 }`}
               >
                 {tab.label}
@@ -193,7 +193,7 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
               disabled={!hasVisibleRows}
               className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-mono font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              <FileJson className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
+              <FileJson className="w-3.5 h-3.5 text-sky-600" aria-hidden="true" />
               <span>Xuất JSON</span>
             </button>
           </div>
@@ -202,7 +202,7 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div className="relative">
             <Search
-              className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"
+              className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2"
               aria-hidden="true"
             />
             <input
@@ -217,14 +217,14 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
           {view !== "arena" && (
             <div className="relative flex items-center">
               <Filter
-                className="w-3.5 h-3.5 text-slate-400 absolute left-3.5 pointer-events-none"
+                className="w-3.5 h-3.5 text-slate-500 absolute left-3.5 pointer-events-none"
                 aria-hidden="true"
               />
               <select
                 aria-label="Lọc theo kịch bản"
                 value={scenarioFilter}
                 onChange={(e) => setScenarioFilter(e.target.value)}
-                className="liquid-glass-input w-full pl-9 pr-3 py-2 text-xs font-mono rounded-xl [&>option]:bg-slate-950 [&>option]:text-white"
+                className="liquid-glass-input w-full pl-9 pr-3 py-2 text-xs font-mono rounded-xl [&>option]:bg-white [&>option]:text-slate-900"
               >
                 <option value="all">Tất cả kịch bản</option>
                 {scenarioOptions.map((sid) => (
@@ -239,14 +239,14 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
           {view !== "practice" && (
             <div className="relative flex items-center">
               <Filter
-                className="w-3.5 h-3.5 text-slate-400 absolute left-3.5 pointer-events-none"
+                className="w-3.5 h-3.5 text-slate-500 absolute left-3.5 pointer-events-none"
                 aria-hidden="true"
               />
               <select
                 aria-label="Lọc theo Arena Game"
                 value={gameFilter}
                 onChange={(e) => setGameFilter(e.target.value)}
-                className="liquid-glass-input w-full pl-9 pr-3 py-2 text-xs font-mono rounded-xl [&>option]:bg-slate-950 [&>option]:text-white"
+                className="liquid-glass-input w-full pl-9 pr-3 py-2 text-xs font-mono rounded-xl [&>option]:bg-white [&>option]:text-slate-900"
               >
                 <option value="all">Tất cả Arena Games</option>
                 <option value="bug-buster">Bug Buster</option>
@@ -259,24 +259,24 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
 
       {view !== "arena" && (
         <section className="liquid-glass-card overflow-hidden">
-          <div className="px-5 py-4 border-b border-white/15 flex items-center justify-between">
-            <h3 className="text-sm font-bold text-white">
+          <div className="px-5 py-4 border-b border-slate-200/85 flex items-center justify-between">
+            <h3 className="text-sm font-bold text-slate-900">
               Nhật ký Lượt Luyện Nói ({filteredAttempts.length})
             </h3>
-            <span className="text-[11px] font-mono text-slate-400">
+            <span className="text-[11px] font-mono text-slate-600">
               Mới nhất xếp trước
             </span>
           </div>
 
           {filteredAttempts.length === 0 ? (
-            <div className="p-8 text-center text-xs text-slate-300">
+            <div className="p-8 text-center text-xs text-slate-700">
               Không có lượt luyện nói nào khớp bộ lọc hiện tại.
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-slate-950/65 border-b border-white/15 font-mono text-[11px] text-slate-300 uppercase">
+                  <tr className="bg-slate-100/85 border-b border-slate-200/85 font-mono text-[11px] text-slate-700 uppercase">
                     <th className="py-3 px-4">Thời gian</th>
                     <th className="py-3 px-4">Người dùng</th>
                     <th className="py-3 px-4">Kịch bản / Lượt</th>
@@ -286,10 +286,10 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
                     <th className="py-3 px-4 min-w-[260px]">Transcript</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/10">
+                <tbody className="divide-y divide-slate-200/75">
                   {filteredAttempts.map((attempt) => (
-                    <tr key={attempt.id} className="hover:bg-white/[0.04] align-top">
-                      <td className="py-3 px-4 font-mono text-[11px] text-slate-300 whitespace-nowrap">
+                    <tr key={attempt.id} className="hover:bg-sky-50/50 align-top">
+                      <td className="py-3 px-4 font-mono text-[11px] text-slate-700 whitespace-nowrap">
                         {formatDateTimeVI(attempt.created_at)}
                       </td>
                       <td className="py-3 px-4">
@@ -299,20 +299,20 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
                         />
                       </td>
                       <td className="py-3 px-4">
-                        <div className="font-semibold text-white">
+                        <div className="font-semibold text-slate-900">
                           {scenarioTitleMap.get(attempt.scenario) ?? attempt.scenario}
                         </div>
-                        <div className="font-mono text-[11px] text-slate-400">
+                        <div className="font-mono text-[11px] text-slate-600">
                           Lượt {attempt.turn_index + 1}
                         </div>
                       </td>
-                      <td className="py-3 px-4 font-mono text-[11px] text-slate-300 whitespace-nowrap">
+                      <td className="py-3 px-4 font-mono text-[11px] text-slate-700 whitespace-nowrap">
                         {attempt.role ? (ROLE_LABELS[attempt.role] ?? attempt.role) : "—"}
                       </td>
                       <td className="py-3 px-4 font-mono font-bold whitespace-nowrap">
                         <span
                           className={
-                            attempt.score >= 70 ? "text-emerald-300" : "text-amber-300"
+                            attempt.score >= 70 ? "text-emerald-700" : "text-amber-700"
                           }
                         >
                           {attempt.score}/100
@@ -324,17 +324,17 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
                             {attempt.keywords_used.map((kw, idx) => (
                               <span
                                 key={`${kw}-${idx}`}
-                                className="px-2 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/40 font-mono text-[10px] text-cyan-100"
+                                className="px-2 py-0.5 rounded-full bg-sky-100/90 border border-sky-300/80 font-mono text-[10px] text-sky-800"
                               >
                                 {kw}
                               </span>
                             ))}
                           </div>
                         ) : (
-                          <span className="text-slate-400 font-mono text-[11px]">—</span>
+                          <span className="text-slate-500 font-mono text-[11px]">—</span>
                         )}
                       </td>
-                      <td className="py-3 px-4 text-slate-100 leading-relaxed">
+                      <td className="py-3 px-4 text-slate-900 leading-relaxed">
                         {attempt.transcript}
                       </td>
                     </tr>
@@ -348,24 +348,24 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
 
       {view !== "practice" && (
         <section className="liquid-glass-card overflow-hidden">
-          <div className="px-5 py-4 border-b border-white/15 flex items-center justify-between">
-            <h3 className="text-sm font-bold text-white">
+          <div className="px-5 py-4 border-b border-slate-200/85 flex items-center justify-between">
+            <h3 className="text-sm font-bold text-slate-900">
               Nhật ký Arena Minigames ({filteredArenaRuns.length})
             </h3>
-            <span className="text-[11px] font-mono text-slate-400">
+            <span className="text-[11px] font-mono text-slate-600">
               Bug Buster &amp; Standup Speed Run
             </span>
           </div>
 
           {filteredArenaRuns.length === 0 ? (
-            <div className="p-8 text-center text-xs text-slate-300">
+            <div className="p-8 text-center text-xs text-slate-700">
               Không có lượt chơi Arena nào khớp bộ lọc hiện tại.
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-slate-950/65 border-b border-white/15 font-mono text-[11px] text-slate-300 uppercase">
+                  <tr className="bg-slate-100/85 border-b border-slate-200/85 font-mono text-[11px] text-slate-700 uppercase">
                     <th className="py-3 px-4">Thời gian</th>
                     <th className="py-3 px-4">Người dùng</th>
                     <th className="py-3 px-4">Minigame</th>
@@ -375,10 +375,10 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
                     <th className="py-3 px-4">Thời lượng</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/10">
+                <tbody className="divide-y divide-slate-200/75">
                   {filteredArenaRuns.map((run) => (
-                    <tr key={run.id} className="hover:bg-white/[0.04] align-top">
-                      <td className="py-3 px-4 font-mono text-[11px] text-slate-300 whitespace-nowrap">
+                    <tr key={run.id} className="hover:bg-sky-50/50 align-top">
+                      <td className="py-3 px-4 font-mono text-[11px] text-slate-700 whitespace-nowrap">
                         {formatDateTimeVI(run.created_at)}
                       </td>
                       <td className="py-3 px-4">
@@ -387,21 +387,21 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
                           transferCode={run.transferCode}
                         />
                       </td>
-                      <td className="py-3 px-4 font-semibold text-white">
+                      <td className="py-3 px-4 font-semibold text-slate-900">
                         {GAME_LABELS[run.game_id] ?? run.game_id}
                       </td>
-                      <td className="py-3 px-4 font-mono text-[11px] text-slate-300">
+                      <td className="py-3 px-4 font-mono text-[11px] text-slate-700">
                         {run.role ? (ROLE_LABELS[run.role] ?? run.role) : "—"}
                       </td>
-                      <td className="py-3 px-4 font-mono font-bold text-cyan-300">
+                      <td className="py-3 px-4 font-mono font-bold text-sky-700">
                         {run.score} pts
                       </td>
-                      <td className="py-3 px-4 font-mono text-slate-100">
+                      <td className="py-3 px-4 font-mono text-slate-900">
                         {run.game_id === "bug-buster"
                           ? `${run.accuracy_or_words} bug`
                           : `${run.accuracy_or_words} từ`}
                       </td>
-                      <td className="py-3 px-4 font-mono text-slate-300">
+                      <td className="py-3 px-4 font-mono text-slate-700">
                         {run.duration_sec}s
                       </td>
                     </tr>

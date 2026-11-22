@@ -204,7 +204,7 @@ export function NameplateDisplayText({
         className={`cosmetic-text-aurora inline-block whitespace-nowrap ${className}`.trim()}
         style={{
           backgroundImage:
-            "linear-gradient(135deg, #38BDF8, #A855F7, #EC4899, #22D3EE, #38BDF8)",
+            "linear-gradient(135deg, #0284C7, #7C3AED, #DB2777, #0891B2, #0284C7)",
         }}
       >
         {name}
@@ -215,8 +215,8 @@ export function NameplateDisplayText({
     return (
       <span
         data-text={name}
-        className={`cosmetic-text-line-shadow text-white ${className}`.trim()}
-        style={{ "--line-shadow-color": "#22D3EE" } as CSSProperties}
+        className={`cosmetic-text-line-shadow text-slate-900 ${className}`.trim()}
+        style={{ "--line-shadow-color": "#0EA5E9" } as CSSProperties}
       >
         {name}
       </span>
@@ -225,7 +225,7 @@ export function NameplateDisplayText({
   if (nameplateId === "nameplate-magic-sparkles") {
     return (
       <span className={`relative inline-block whitespace-nowrap ${className}`.trim()}>
-        <span className="relative z-10 text-amber-100 drop-shadow-[0_0_8px_rgba(251,191,36,0.45)]">
+        <span className="relative z-10 text-amber-800 drop-shadow-[0_1px_4px_rgba(245,158,11,0.35)]">
           {name}
         </span>
         {SPARKLE_POSITIONS.map((pos, idx) => (
@@ -247,7 +247,7 @@ export function NameplateDisplayText({
   }
   if (nameplateId === "nameplate-rb-blur-text") {
     return (
-      <span className={`cosmetic-text-blur-pulse whitespace-nowrap text-sky-100 ${className}`.trim()}>
+      <span className={`cosmetic-text-blur-pulse whitespace-nowrap text-sky-800 ${className}`.trim()}>
         {name}
       </span>
     );
@@ -257,18 +257,18 @@ export function NameplateDisplayText({
       <span className={`relative inline-block whitespace-nowrap ${className}`.trim()}>
         <span
           aria-hidden="true"
-          className="cosmetic-text-echo-layer pointer-events-none absolute inset-0 text-cyan-400/55 select-none"
+          className="cosmetic-text-echo-layer pointer-events-none absolute inset-0 text-sky-500/45 select-none"
         >
           {name}
         </span>
         <span
           aria-hidden="true"
-          className="cosmetic-text-echo-layer pointer-events-none absolute inset-0 text-fuchsia-400/45 select-none"
+          className="cosmetic-text-echo-layer pointer-events-none absolute inset-0 text-fuchsia-500/40 select-none"
           style={{ animationDelay: "-1.3s" }}
         >
           {name}
         </span>
-        <span className="relative z-10 text-white">{name}</span>
+        <span className="relative z-10 text-slate-900">{name}</span>
       </span>
     );
   }
@@ -277,7 +277,7 @@ export function NameplateDisplayText({
       <span
         className={`cosmetic-text-aurora inline-block whitespace-nowrap ${className}`.trim()}
         style={{
-          backgroundImage: "linear-gradient(90deg, #FB7185, #F472B6, #38BDF8, #FB7185)",
+          backgroundImage: "linear-gradient(90deg, #E11D48, #DB2777, #0284C7, #E11D48)",
         }}
       >
         {name}
@@ -289,7 +289,7 @@ export function NameplateDisplayText({
       <span
         className={`cosmetic-text-aurora inline-block whitespace-nowrap ${className}`.trim()}
         style={{
-          backgroundImage: "linear-gradient(90deg, #38BDF8, #E0F2FE, #06B6D4, #38BDF8)",
+          backgroundImage: "linear-gradient(90deg, #0284C7, #2563EB, #0891B2, #0284C7)",
         }}
       >
         {name}
@@ -301,7 +301,7 @@ export function NameplateDisplayText({
       <span
         className={`cosmetic-text-aurora inline-block whitespace-nowrap ${className}`.trim()}
         style={{
-          backgroundImage: "linear-gradient(90deg, #C084FC, #F472B6, #FBBF24, #C084FC)",
+          backgroundImage: "linear-gradient(90deg, #9333EA, #DB2777, #D97706, #9333EA)",
         }}
       >
         {name}
@@ -309,7 +309,7 @@ export function NameplateDisplayText({
     );
   }
   if (!lite && nameplateId === "nameplate-rb-shuffle-text") {
-    return <ShuffleTextInline name={name} className={`text-amber-200 ${className}`.trim()} />;
+    return <ShuffleTextInline name={name} className={`text-amber-800 ${className}`.trim()} />;
   }
   if (!lite && nameplateId === "nameplate-rb-glitch-text") {
     return (
@@ -330,8 +330,8 @@ export function NameplateDisplayText({
       <DynamicShinyText
         text={name}
         speed={2}
-        color="#E2E8F0"
-        shineColor="#FFFFFF"
+        color="#0F172A"
+        shineColor="#0284C7"
         className={className}
       />
     );
@@ -339,7 +339,7 @@ export function NameplateDisplayText({
   if (!lite && nameplateId === "nameplate-rb-gradient-text") {
     return (
       <DynamicGradientText
-        colors={["#EC4899", "#38BDF8", "#FBBF24"]}
+        colors={["#DB2777", "#0284C7", "#D97706"]}
         animationSpeed={3}
         className={className}
       >
@@ -353,12 +353,12 @@ export function NameplateDisplayText({
         sentence={name}
         blurAmount={1.5}
         borderColor="#10B981"
-        glowColor="rgba(16,185,129,0.6)"
+        glowColor="rgba(16,185,129,0.45)"
         animationDuration={0.35}
         pauseBetweenAnimations={0.8}
         cornerSize={7}
         borderWidth={2}
-        wordClassName="text-sm font-extrabold"
+        wordClassName="text-sm font-extrabold text-slate-900"
         containerClassName={`gap-1.5 justify-start flex-nowrap ${className}`.trim()}
       />
     );
@@ -370,7 +370,7 @@ export function NameplateDisplayText({
         animateOn="view"
         loop
         loopDelay={2600}
-        className={`text-emerald-300 ${className}`.trim()}
+        className={`text-emerald-700 ${className}`.trim()}
       />
     );
   }
@@ -426,7 +426,7 @@ export function NameplateBanner({
       ref={containerRef}
       onPointerMove={handlePointerMove}
       style={rootVars}
-      className={`cosmetic-dark-glass group relative rounded-xl overflow-hidden bg-slate-950/82 ${lite ? "" : "backdrop-blur-md"} border border-white/15 text-slate-50 shadow-[0_8px_24px_rgba(0,0,0,0.42),inset_0_1px_1px_rgba(255,255,255,0.2)] ${className}`.trim()}
+      className={`group relative rounded-xl overflow-hidden bg-white/85 ${lite ? "" : "backdrop-blur-md"} border border-slate-200/85 text-slate-900 shadow-[0_8px_24px_rgba(15,23,42,0.08),inset_0_1px_1px_rgba(255,255,255,0.95)] ${className}`.trim()}
     >
       <span
         aria-hidden="true"
@@ -443,7 +443,7 @@ export function NameplateBanner({
           playsInline
           aria-hidden="true"
           onError={() => setMediaFailed(true)}
-          className="pointer-events-none select-none absolute inset-0 w-full h-full object-cover opacity-50 z-[1]"
+          className="pointer-events-none select-none absolute inset-0 w-full h-full object-cover opacity-35 z-[1]"
           style={{
             mixBlendMode: resolvedItem?.blendMode === "screen" ? "screen" : "normal",
           }}
@@ -456,7 +456,7 @@ export function NameplateBanner({
           alt=""
           aria-hidden="true"
           onError={() => setMediaFailed(true)}
-          className="pointer-events-none select-none absolute inset-0 w-full h-full object-cover opacity-50 z-[1]"
+          className="pointer-events-none select-none absolute inset-0 w-full h-full object-cover opacity-35 z-[1]"
           style={{
             mixBlendMode: resolvedItem?.blendMode === "screen" ? "screen" : "normal",
           }}
@@ -465,7 +465,7 @@ export function NameplateBanner({
 
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-slate-950/40 z-[2]"
+        className="pointer-events-none absolute inset-0 bg-white/35 z-[2]"
       />
 
       <span
@@ -480,10 +480,10 @@ export function NameplateBanner({
       {activeId === "nameplate-rb-holo-mosaic" && (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-[5] opacity-35"
+          className="pointer-events-none absolute inset-0 z-[5] opacity-30"
           style={{
             backgroundImage:
-              "linear-gradient(135deg, rgba(236,72,153,0.45) 0%, rgba(56,189,248,0.45) 50%, rgba(251,191,36,0.45) 100%)",
+              "linear-gradient(135deg, rgba(236,72,153,0.4) 0%, rgba(56,189,248,0.4) 50%, rgba(251,191,36,0.4) 100%)",
             backgroundSize: "16px 16px",
           }}
         />
@@ -492,7 +492,7 @@ export function NameplateBanner({
       {activeId === "nameplate-magic-sparkles" && (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-[6] flex items-center justify-around opacity-80 text-amber-300 text-[10px]"
+          className="pointer-events-none absolute inset-0 z-[6] flex items-center justify-around opacity-85 text-amber-500 text-[10px]"
         >
           <span className="animate-pulse">✦</span>
           <span className="animate-bounce">✧</span>

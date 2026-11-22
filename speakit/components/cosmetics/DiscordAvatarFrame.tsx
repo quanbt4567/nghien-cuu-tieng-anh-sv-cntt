@@ -494,7 +494,7 @@ export function DiscordAvatarFrame({
             <span className="absolute -bottom-1 -right-1 flex -space-x-1.5">
               <span className="w-3.5 h-3.5 rounded-full bg-sky-400 border border-white/80 shadow-sm" />
               <span className="w-3.5 h-3.5 rounded-full bg-amber-400 border border-white/80 shadow-sm" />
-              <span className="w-4 h-3.5 rounded-full bg-slate-950 text-cyan-200 text-[7px] font-mono font-bold flex items-center justify-center border border-white/70">
+              <span className="w-4 h-3.5 rounded-full bg-white/95 text-sky-800 text-[7px] font-mono font-bold flex items-center justify-center border border-sky-300/85 shadow-sm">
                 +9
               </span>
             </span>

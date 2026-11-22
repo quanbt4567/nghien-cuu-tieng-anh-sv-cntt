@@ -53,23 +53,23 @@ function getFxAccentGlow(fxId?: string | null): string | undefined {
 function getNameplateTint(nameplateId?: string | null): string | undefined {
   switch (nameplateId) {
     case "nameplate-mesh-nebula":
-      return "linear-gradient(125deg, rgba(229, 72, 77, 0.14) 0%, rgba(24, 24, 27, 0.15) 52%, rgba(245, 158, 11, 0.12) 100%)";
+      return "linear-gradient(125deg, rgba(244, 63, 94, 0.14) 0%, rgba(255, 255, 255, 0.65) 52%, rgba(245, 158, 11, 0.14) 100%)";
     case "nameplate-terminal-pulse":
     case "nameplate-rb-decrypted-matrix":
-      return "linear-gradient(125deg, rgba(22, 163, 74, 0.16) 0%, rgba(9, 9, 11, 0.15) 58%, rgba(22, 163, 74, 0.12) 100%)";
+      return "linear-gradient(125deg, rgba(16, 185, 129, 0.14) 0%, rgba(255, 255, 255, 0.65) 58%, rgba(20, 184, 166, 0.14) 100%)";
     case "nameplate-supernova-gold":
     case "nameplate-magic-sparkles":
     case "nameplate-rb-molten-metal":
-      return "linear-gradient(125deg, rgba(245, 158, 11, 0.18) 0%, rgba(24, 24, 27, 0.15) 50%, rgba(217, 119, 6, 0.14) 100%)";
+      return "linear-gradient(125deg, rgba(245, 158, 11, 0.18) 0%, rgba(255, 255, 255, 0.65) 50%, rgba(217, 119, 6, 0.16) 100%)";
     case "nameplate-cyber-glitch":
     case "nameplate-rb-holo-mosaic":
     case "nameplate-magic-aurora-text":
-      return "linear-gradient(125deg, rgba(2, 132, 199, 0.18) 0%, rgba(9, 9, 11, 0.15) 54%, rgba(236, 72, 153, 0.16) 100%)";
+      return "linear-gradient(125deg, rgba(14, 165, 233, 0.16) 0%, rgba(255, 255, 255, 0.65) 54%, rgba(236, 72, 153, 0.14) 100%)";
     case "nameplate-rb-liquid-chrome":
-      return "linear-gradient(125deg, rgba(226, 232, 240, 0.22) 0%, rgba(15, 23, 42, 0.2) 54%, rgba(148, 163, 184, 0.18) 100%)";
+      return "linear-gradient(125deg, rgba(226, 232, 240, 0.45) 0%, rgba(255, 255, 255, 0.72) 54%, rgba(203, 213, 225, 0.45) 100%)";
     case "nameplate-rb-silk-satin":
     case "nameplate-magic-neon-card":
-      return "linear-gradient(125deg, rgba(168, 85, 247, 0.18) 0%, rgba(9, 9, 11, 0.15) 54%, rgba(244, 63, 94, 0.16) 100%)";
+      return "linear-gradient(125deg, rgba(168, 85, 247, 0.15) 0%, rgba(255, 255, 255, 0.65) 54%, rgba(244, 63, 94, 0.14) 100%)";
     default:
       return undefined;
   }
@@ -196,11 +196,11 @@ export function LeaderboardRowWrapper({
       ref={containerRef}
       onPointerMove={handlePointerMove}
       style={rootVars}
-      className={`cosmetic-dark-glass group relative rounded-2xl overflow-hidden !bg-slate-950/82 ${lite ? "" : "backdrop-blur-md"} border border-white/15 text-slate-50 shadow-[0_8px_24px_rgba(0,0,0,0.42),inset_0_1px_1px_rgba(255,255,255,0.2)] ${className}`.trim()}
+      className={`group relative rounded-2xl overflow-hidden bg-white/85 ${lite ? "" : "backdrop-blur-md"} border border-slate-200/85 text-slate-900 shadow-[0_8px_24px_rgba(15,23,42,0.08),inset_0_1px_1px_rgba(255,255,255,0.95)] ${className}`.trim()}
     >
       <span
         aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 rounded-[inherit] bg-slate-950/82 ${lite ? "" : "backdrop-blur-md"} z-0`}
+        className={`pointer-events-none absolute inset-0 rounded-[inherit] bg-white/85 ${lite ? "" : "backdrop-blur-md"} z-0`}
       />
 
       {bannerAssetUrl && !bannerFailed && (
@@ -244,10 +244,10 @@ export function LeaderboardRowWrapper({
         nameplateId === "nameplate-rb-decrypted-matrix") && (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute top-1.5 right-2.5 inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-emerald-950/85 text-[10px] font-mono font-bold text-emerald-300 border border-emerald-500/30 z-[7]"
+          className="pointer-events-none absolute top-1.5 right-2.5 inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-emerald-100/90 text-[10px] font-mono font-bold text-emerald-800 border border-emerald-300/80 z-[7]"
         >
           <span>&gt;_</span>
-          <span className="cosmetic-nameplate-terminal-cursor inline-block w-1.5 h-2.5 bg-emerald-400" />
+          <span className="cosmetic-nameplate-terminal-cursor inline-block w-1.5 h-2.5 bg-emerald-600" />
         </span>
       )}
 
@@ -257,7 +257,7 @@ export function LeaderboardRowWrapper({
           className="pointer-events-none absolute inset-0 z-[3] opacity-25"
           style={{
             backgroundImage:
-              "linear-gradient(to right, rgba(255,255,255,0.22) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.22) 1px, transparent 1px)",
+              "linear-gradient(to right, rgba(14,165,233,0.22) 1px, transparent 1px), linear-gradient(to bottom, rgba(14,165,233,0.22) 1px, transparent 1px)",
             backgroundSize: "18px 18px",
           }}
         />
@@ -318,7 +318,7 @@ export function LeaderboardRowWrapper({
       {fxId === "lb-aceternity-evervault-cipher" && (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-[4] font-mono text-[8px] leading-3 text-emerald-400/25 overflow-hidden select-none break-all p-1"
+          className="pointer-events-none absolute inset-0 z-[4] font-mono text-[8px] leading-3 text-emerald-700/30 overflow-hidden select-none break-all p-1"
         >
           01A9F3C7E2B8D4019A8F7C6B5E4D3C2B1A0F9E8D7C6B5A4F3E2D1C0B9A8F7E6D5C4B3A2F1E0D
         </span>

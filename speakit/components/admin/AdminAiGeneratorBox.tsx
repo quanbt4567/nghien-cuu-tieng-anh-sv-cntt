@@ -142,15 +142,15 @@ export function AdminAiGeneratorBox({
   };
 
   return (
-    <div className="p-4 rounded-2xl bg-slate-950/55 border border-white/15 space-y-3">
+    <div className="p-4 rounded-2xl bg-white/85 border border-slate-200/85 shadow-sm space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-cyan-300 shrink-0" aria-hidden="true" />
-          <span className="text-xs font-bold text-white">
+          <Sparkles className="w-4 h-4 text-sky-600 shrink-0" aria-hidden="true" />
+          <span className="text-xs font-bold text-slate-900">
             Trợ lý AI soạn thảo nhanh
           </span>
         </div>
-        <span className="text-[11px] font-mono text-slate-400">
+        <span className="text-[11px] font-mono text-slate-600">
           Tạo nháp tự động rồi chỉnh sửa trước khi lưu
         </span>
       </div>
@@ -193,7 +193,7 @@ export function AdminAiGeneratorBox({
 
       {quickTopics.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-[11px] font-mono text-slate-400 mr-1">
+          <span className="text-[11px] font-mono text-slate-600 mr-1">
             Gợi ý nhanh:
           </span>
           {quickTopics.map((chip) => (
@@ -213,23 +213,23 @@ export function AdminAiGeneratorBox({
       {error && (
         <div
           role="alert"
-          className="flex items-start gap-2 px-3 py-2 rounded-xl bg-rose-500/20 border border-rose-400/45 text-xs text-rose-100"
+          className="flex items-start gap-2 px-3 py-2 rounded-xl bg-rose-50/90 border border-rose-300/80 text-xs text-rose-800"
         >
-          <AlertCircle className="w-3.5 h-3.5 text-rose-300 shrink-0 mt-0.5" aria-hidden="true" />
+          <AlertCircle className="w-3.5 h-3.5 text-rose-600 shrink-0 mt-0.5" aria-hidden="true" />
           <span>{error}</span>
         </div>
       )}
 
       {lastMeta && !error && (
-        <div className="flex flex-wrap items-center gap-2 pt-0.5 text-[11px] text-slate-300">
+        <div className="flex flex-wrap items-center gap-2 pt-0.5 text-[11px] text-slate-700">
           {lastMeta.mode === "ai" ? (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/45 font-mono font-semibold text-emerald-100">
-              <CheckCircle2 className="w-3 h-3 text-emerald-300" aria-hidden="true" />
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100/90 border border-emerald-300/80 font-mono font-semibold text-emerald-800">
+              <CheckCircle2 className="w-3 h-3 text-emerald-600" aria-hidden="true" />
               <span>AI: {lastMeta.provider}</span>
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/45 font-mono font-semibold text-amber-100">
-              <Info className="w-3 h-3 text-amber-300" aria-hidden="true" />
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100/90 border border-amber-300/80 font-mono font-semibold text-amber-800">
+              <Info className="w-3 h-3 text-amber-600" aria-hidden="true" />
               <span>Mẫu gợi ý cục bộ (chưa có AI key / fallback)</span>
             </span>
           )}

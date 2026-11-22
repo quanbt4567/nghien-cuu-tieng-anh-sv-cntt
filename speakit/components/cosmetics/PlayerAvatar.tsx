@@ -24,8 +24,8 @@ export const AVATAR_PRESETS: AvatarPreset[] = [
   {
     id: "preset:terminal-dev",
     label: "Terminal Dev",
-    bgClass: "bg-slate-950",
-    textClass: "text-emerald-400",
+    bgClass: "bg-teal-600",
+    textClass: "text-white",
     icon: Terminal,
   },
   {
@@ -59,22 +59,22 @@ export const AVATAR_PRESETS: AvatarPreset[] = [
   {
     id: "preset:rocket-sre",
     label: "Rocket SRE",
-    bgClass: "bg-slate-950",
-    textClass: "text-amber-400",
+    bgClass: "bg-violet-600",
+    textClass: "text-white",
     icon: Rocket,
   },
   {
     id: "preset:coffee-coder",
     label: "Coffee Coder",
-    bgClass: "bg-amber-950",
-    textClass: "text-amber-200",
+    bgClass: "bg-amber-700",
+    textClass: "text-white",
     icon: Coffee,
   },
   {
     id: "preset:shield-sec",
     label: "Shield Sec",
-    bgClass: "bg-slate-900",
-    textClass: "text-sky-400",
+    bgClass: "bg-indigo-600",
+    textClass: "text-white",
     icon: Shield,
   },
 ];
@@ -140,7 +140,7 @@ export function PlayerAvatar({
   return (
     <div
       aria-label={`Avatar của ${displayName}`}
-      className={`w-full h-full rounded-full bg-slate-900/90 border border-white/15 flex items-center justify-center font-mono font-bold text-cyan-100 select-none ${className}`}
+      className={`w-full h-full rounded-full bg-white/85 border border-slate-200/85 flex items-center justify-center font-mono font-bold text-slate-900 select-none ${className}`}
     >
       {getPlayerInitials(displayName)}
     </div>
