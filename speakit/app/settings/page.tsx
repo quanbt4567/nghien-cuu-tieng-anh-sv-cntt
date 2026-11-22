@@ -87,24 +87,24 @@ export default function SettingsPage() {
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Trang chủ</span>
         </Link>
-        <h1 className="text-2xl font-bold tracking-tight text-white">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
           Cài Đặt Luyện Tập
         </h1>
-        <p className="text-xs text-slate-300 mt-1">
+        <p className="text-xs text-slate-600 mt-1">
           Cấu hình giọng đọc câu hỏi và quản lý bộ nhớ cục bộ.
         </p>
       </div>
 
       <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
-        <div className="flex items-center gap-2 border-b border-white/10 pb-3">
-          <Volume2 className="w-5 h-5 text-cyan-400" />
-          <h2 className="text-sm font-bold uppercase font-mono text-white">
+        <div className="flex items-center gap-2 border-b border-slate-200/85 pb-3">
+          <Volume2 className="w-5 h-5 text-sky-600" />
+          <h2 className="text-sm font-bold uppercase font-mono text-slate-900">
             Cấu hình giọng đọc câu hỏi (TTS)
           </h2>
         </div>
 
         <div className="space-y-3">
-          <label className="text-xs font-semibold text-slate-200 block">
+          <label className="text-xs font-semibold text-slate-700 block">
             Tốc độ phát âm mặc định:
           </label>
           <div className="flex flex-wrap items-center gap-2">
@@ -118,8 +118,8 @@ export default function SettingsPage() {
                 }}
                 className={`px-4 py-1.5 rounded-full text-xs font-mono font-bold border transition-all ${
                   speechRate === r
-                    ? "bg-cyan-500/25 border-cyan-400/55 text-cyan-100 shadow-[0_0_16px_rgba(6,182,212,0.28)]"
-                    : "bg-white/[0.06] text-slate-300 border-white/15 hover:bg-white/[0.14] hover:text-white"
+                    ? "bg-sky-100/90 border-sky-400 text-sky-900 shadow-sm"
+                    : "bg-white/85 text-slate-700 border-slate-200/85 hover:bg-sky-50/80 hover:text-slate-900"
                 }`}
               >
                 {r}x {r === 0.8 ? "(Chậm)" : r === 1.0 ? "(Chuẩn)" : "(Nhanh)"}
@@ -128,8 +128,8 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        <div className="space-y-3 pt-3 border-t border-white/10">
-          <label className="text-xs font-semibold text-slate-200 block">
+        <div className="space-y-3 pt-3 border-t border-slate-200/85">
+          <label className="text-xs font-semibold text-slate-700 block">
             Giọng AI phỏng vấn mặc định:
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -141,8 +141,8 @@ export default function SettingsPage() {
                   key={persona.id}
                   className={`flex items-center justify-between gap-2 p-3 rounded-2xl border transition-all ${
                     isSelected
-                      ? "bg-cyan-500/20 text-white border-cyan-400/55 shadow-[0_0_20px_rgba(6,182,212,0.22)]"
-                      : "bg-slate-950/55 text-slate-200 border-white/12 hover:bg-white/[0.08] hover:border-white/25"
+                      ? "bg-sky-100/90 text-slate-900 border-sky-400 shadow-sm"
+                      : "bg-white/85 text-slate-800 border-slate-200/85 hover:bg-sky-50/80 hover:border-sky-300"
                   }`}
                 >
                   <button
@@ -160,7 +160,7 @@ export default function SettingsPage() {
                     </div>
                     <div
                       className={`text-[11px] font-mono ${
-                        isSelected ? "text-cyan-200" : "text-slate-400"
+                        isSelected ? "text-sky-700" : "text-slate-600"
                       }`}
                     >
                       {persona.lang}
@@ -201,8 +201,8 @@ export default function SettingsPage() {
                     }}
                     className={`w-9 h-9 shrink-0 rounded-full flex items-center justify-center transition-colors ${
                       isPreviewing
-                        ? "liquid-btn-primary"
-                        : "bg-cyan-500/20 border border-cyan-400/45 text-cyan-200 hover:bg-cyan-500/35 hover:text-white"
+                        ? "liquid-btn-primary text-white"
+                        : "bg-sky-100/90 border border-sky-300 text-sky-800 hover:bg-sky-200/80"
                     }`}
                   >
                     {isPreviewing ? (
@@ -219,19 +219,19 @@ export default function SettingsPage() {
       </section>
 
       <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
-        <div className="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
+        <div className="flex items-center justify-between gap-2 border-b border-slate-200/85 pb-3">
           <div className="flex items-center gap-2">
-            <Bell className="w-5 h-5 text-emerald-400" />
-            <h2 className="text-sm font-bold uppercase font-mono text-white">
+            <Bell className="w-5 h-5 text-emerald-600" />
+            <h2 className="text-sm font-bold uppercase font-mono text-slate-900">
               Nhắc Nhở Học Tập Trong App
             </h2>
           </div>
-          <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full border border-emerald-400/40 bg-emerald-500/15 text-emerald-200">
+          <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full border border-emerald-300 bg-emerald-100/90 text-emerald-800 font-semibold">
             In-App
           </span>
         </div>
 
-        <p className="text-xs text-slate-300 leading-relaxed">
+        <p className="text-xs text-slate-600 leading-relaxed">
           Hiển thị nhắc nhở luyện nói mỗi ngày ngay trong chuông thông báo khi bạn mở SpeakIT.
         </p>
 
@@ -239,15 +239,15 @@ export default function SettingsPage() {
           <label
             className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-semibold cursor-pointer transition-all ${
               reminderEnabled
-                ? "bg-emerald-500/20 border-emerald-400/50 text-emerald-100"
-                : "bg-white/[0.05] border-white/15 text-slate-200 hover:bg-white/[0.1]"
+                ? "bg-emerald-100/90 border-emerald-400 text-emerald-900"
+                : "bg-white/85 border-slate-200/85 text-slate-700 hover:bg-sky-50/80"
             }`}
           >
             <input
               type="checkbox"
               checked={reminderEnabled}
               onChange={(e) => setReminderEnabled(e.target.checked)}
-              className="w-4 h-4 accent-emerald-400"
+              className="w-4 h-4 accent-emerald-600"
             />
             <span>Bật nhắc nhở mỗi ngày</span>
           </label>
@@ -279,7 +279,7 @@ export default function SettingsPage() {
                   : "Đã tắt nhắc nhở học tập trong app."
               );
             }}
-            className="liquid-btn-success inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all"
+            className="liquid-btn-success text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all"
           >
             <Bell className="w-3.5 h-3.5" />
             <span>Lưu lịch nhắc</span>
@@ -297,15 +297,15 @@ export default function SettingsPage() {
         {showPreviewBanner && (
           <div
             role="status"
-            className="p-3.5 rounded-2xl bg-cyan-500/15 border border-cyan-400/40 flex items-start justify-between gap-3"
+            className="p-3.5 rounded-2xl bg-sky-50/90 border border-sky-300 flex items-start justify-between gap-3"
           >
             <div className="flex items-start gap-2.5">
-              <Bell className="w-4 h-4 text-cyan-300 shrink-0 mt-0.5" aria-hidden="true" />
+              <Bell className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" aria-hidden="true" />
               <div className="space-y-0.5">
-                <div className="text-xs font-bold text-white">
+                <div className="text-xs font-bold text-slate-900">
                   SpeakIT — Đến giờ luyện nói 5 phút!
                 </div>
-                <p className="text-xs text-slate-200">
+                <p className="text-xs text-slate-700">
                   Dành 5 phút luyện phản xạ tiếng Anh CNTT để giữ streak hôm nay nhé.
                 </p>
               </div>
@@ -313,7 +313,7 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={() => setShowPreviewBanner(false)}
-              className="text-[11px] font-semibold text-cyan-200 hover:text-white shrink-0"
+              className="text-[11px] font-semibold text-sky-700 hover:text-sky-900 shrink-0"
             >
               Đóng
             </button>
@@ -323,7 +323,7 @@ export default function SettingsPage() {
         {reminderStatus && (
           <div
             role="status"
-            className="p-3 bg-emerald-500/15 rounded-xl border border-emerald-400/40 text-xs font-medium text-emerald-200"
+            className="p-3 bg-emerald-50/90 rounded-xl border border-emerald-300 text-xs font-medium text-emerald-900"
           >
             {reminderStatus}
           </div>
@@ -331,14 +331,14 @@ export default function SettingsPage() {
       </section>
 
       <section className="liquid-glass-card p-5 sm:p-6 space-y-3">
-        <div className="flex items-center gap-2 border-b border-white/10 pb-3">
-          <Trash2 className="w-5 h-5 text-rose-400" />
-          <h2 className="text-sm font-bold uppercase font-mono text-white">
+        <div className="flex items-center gap-2 border-b border-slate-200/85 pb-3">
+          <Trash2 className="w-5 h-5 text-rose-600" />
+          <h2 className="text-sm font-bold uppercase font-mono text-slate-900">
             Quản Lý Dữ Liệu Luyện Tập
           </h2>
         </div>
 
-        <p className="text-xs text-slate-300 leading-relaxed">
+        <p className="text-xs text-slate-600 leading-relaxed">
           Xóa toàn bộ lịch sử các lượt nói, điểm số và danh sách từ khóa yếu trong bộ nhớ máy này.
         </p>
 
@@ -346,7 +346,7 @@ export default function SettingsPage() {
           <button
             type="button"
             onClick={handleExportJson}
-            className="liquid-btn-primary inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all"
+            className="liquid-btn-primary text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Xuất dữ liệu JSON</span>
@@ -355,7 +355,7 @@ export default function SettingsPage() {
           <button
             type="button"
             onClick={() => setShowResetModal(true)}
-            className="liquid-btn-danger inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all"
+            className="liquid-btn-danger text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Làm mới tiến độ</span>
@@ -365,27 +365,27 @@ export default function SettingsPage() {
         {exportStatus && (
           <div
             role="status"
-            className="p-3 bg-emerald-500/15 text-emerald-200 rounded-xl border border-emerald-400/40 text-xs font-medium"
+            className="p-3 bg-emerald-50/90 text-emerald-900 rounded-xl border border-emerald-300 text-xs font-medium"
           >
             {exportStatus}
           </div>
         )}
 
         {resetStatus && (
-          <div className="p-3 bg-rose-500/15 text-rose-200 rounded-xl border border-rose-400/40 text-xs font-medium">
+          <div className="p-3 bg-rose-50/90 text-rose-900 rounded-xl border border-rose-300 text-xs font-medium">
             {resetStatus}
           </div>
         )}
       </section>
 
       {showResetModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-950/90 backdrop-blur-2xl border border-white/20 rounded-3xl p-6 max-w-sm w-full shadow-[0_24px_64px_rgba(0,0,0,0.75)] space-y-4 text-center">
-            <div className="w-12 h-12 rounded-full bg-rose-500/20 text-rose-300 flex items-center justify-center mx-auto border border-rose-400/45">
+        <div className="fixed inset-0 z-50 bg-slate-900/35 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-white/95 backdrop-blur-2xl border border-slate-200/85 rounded-3xl p-6 max-w-sm w-full shadow-[0_24px_64px_rgba(15,23,42,0.18)] space-y-4 text-center">
+            <div className="w-12 h-12 rounded-full bg-rose-100/90 text-rose-700 flex items-center justify-center mx-auto border border-rose-300">
               <AlertCircle className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-white">Xác nhận làm mới tiến độ?</h3>
-            <p className="text-xs text-slate-300">
+            <h3 className="text-lg font-bold text-slate-900">Xác nhận làm mới tiến độ?</h3>
+            <p className="text-xs text-slate-600">
               Hành động này sẽ xóa vĩnh viễn toàn bộ lịch sử các lượt luyện nói và từ khóa yếu đã lưu.
             </p>
             <div className="flex items-center justify-center gap-3 pt-2">
@@ -399,7 +399,7 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={handleResetProgress}
-                className="liquid-btn-danger px-4 py-2 rounded-full text-xs font-bold"
+                className="liquid-btn-danger text-white px-4 py-2 rounded-full text-xs font-bold"
               >
                 Đồng ý xóa
               </button>

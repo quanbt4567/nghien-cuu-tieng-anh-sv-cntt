@@ -267,38 +267,38 @@ export default function VocabularyPage() {
             <span>Trang chủ</span>
           </Link>
           <div className="min-w-0">
-            <h1 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2 leading-tight">
-              <BookOpen className="w-5 h-5 text-cyan-400 shrink-0" />
+            <h1 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2 leading-tight">
+              <BookOpen className="w-5 h-5 text-sky-600 shrink-0" />
               <span className="truncate">
                 {vocabList.length} Thuật Ngữ IT Thiết Yếu
               </span>
             </h1>
-            <p className="text-xs text-slate-300 mt-0.5 line-clamp-1">
+            <p className="text-xs text-slate-600 mt-0.5 line-clamp-1">
               Luyện phát âm chuẩn, ôn thẻ Active Recall và phản xạ ngữ cảnh kỹ thuật.
             </p>
           </div>
         </div>
 
-        <div className="w-full lg:w-72 shrink-0 bg-slate-950/55 border border-white/15 rounded-2xl px-3.5 py-2.5 space-y-1.5">
+        <div className="w-full lg:w-72 shrink-0 bg-sky-50/80 border border-slate-200/85 rounded-2xl px-3.5 py-2.5 space-y-1.5">
           <div className="flex items-center justify-between gap-2 text-xs">
-            <span className="font-semibold text-slate-200">
+            <span className="font-semibold text-slate-700">
               Đã thuộc{" "}
-              <span className="font-mono text-cyan-300">
+              <span className="font-mono text-sky-700 font-bold">
                 {validMasteredCount}/{vocabList.length}
               </span>
             </span>
             <div className="flex items-center gap-1.5 font-mono text-[11px]">
               {reviewTerms.size > 0 && (
-                <span className="px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/45 text-amber-200">
+                <span className="px-2 py-0.5 rounded-full bg-amber-100/90 border border-amber-300 text-amber-800 font-semibold">
                   {reviewTerms.size} cần ôn
                 </span>
               )}
-              <span className="font-bold text-white">{masteryPercent}%</span>
+              <span className="font-bold text-slate-900">{masteryPercent}%</span>
             </div>
           </div>
-          <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden border border-white/10">
+          <div className="w-full h-2 bg-slate-200/80 rounded-full overflow-hidden border border-slate-300/70">
             <div
-              className="h-full bg-gradient-to-r from-cyan-400 to-emerald-400 transition-all duration-300"
+              className="h-full bg-gradient-to-r from-sky-500 to-emerald-500 transition-all duration-300"
               style={{ width: `${masteryPercent}%` }}
             />
           </div>
@@ -314,12 +314,12 @@ export default function VocabularyPage() {
           const active = workspaceMode === mode.id;
           const activeClasses =
             mode.id === "dictionary"
-              ? "!bg-cyan-500/25 !border-cyan-400/50 text-cyan-200 shadow-[0_0_20px_rgba(34,211,238,0.22)]"
+              ? "!bg-sky-100/90 !border-sky-400/80 text-sky-900 shadow-sm"
               : mode.id === "flashcard"
-                ? "!bg-violet-500/25 !border-violet-400/50 text-violet-200 shadow-[0_0_20px_rgba(167,139,250,0.22)]"
+                ? "!bg-violet-100/90 !border-violet-400/80 text-violet-900 shadow-sm"
                 : mode.id === "quiz"
-                  ? "!bg-amber-500/25 !border-amber-400/50 text-amber-200 shadow-[0_0_20px_rgba(251,191,36,0.22)]"
-                  : "!bg-emerald-500/25 !border-emerald-400/50 text-emerald-200 shadow-[0_0_20px_rgba(52,211,153,0.22)]";
+                  ? "!bg-amber-100/90 !border-amber-400/80 text-amber-900 shadow-sm"
+                  : "!bg-emerald-100/90 !border-emerald-400/80 text-emerald-900 shadow-sm";
           return (
             <button
               key={mode.id}
@@ -330,7 +330,7 @@ export default function VocabularyPage() {
               className={`liquid-glass-pill px-2.5 py-2 text-xs sm:text-sm font-semibold leading-tight whitespace-normal sm:whitespace-nowrap transition-all text-center ${
                 active
                   ? activeClasses
-                  : "text-slate-300 hover:text-white hover:!border-white/35"
+                  : "text-slate-700 hover:text-slate-900 hover:!border-sky-300"
               }`}
             >
               {mode.label}
@@ -353,10 +353,10 @@ export default function VocabularyPage() {
                       setSelectedContext(pill.id);
                       setCurrentPage(1);
                     }}
-                    className={`liquid-glass-pill px-3.5 py-1.5 text-xs font-medium transition-all ${
+                    className={`liquid-glass-pill px-3.5 py-1.5 text-xs font-semibold transition-all ${
                       active
-                        ? "!bg-cyan-500/25 !border-cyan-400/50 text-cyan-200 shadow-[0_0_16px_rgba(6,182,212,0.25)]"
-                        : "text-slate-300 hover:text-white hover:!border-white/35"
+                        ? "!bg-sky-100/90 !border-sky-400/80 text-sky-900 shadow-sm"
+                        : "text-slate-700 hover:text-slate-900 hover:!border-sky-300"
                     }`}
                   >
                     {pill.label}
@@ -366,7 +366,7 @@ export default function VocabularyPage() {
             </div>
 
             <div className="relative w-full md:w-64 shrink-0">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
@@ -398,14 +398,14 @@ export default function VocabularyPage() {
               </div>
 
               <div className="liquid-glass-card-lite rounded-3xl px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="text-xs text-slate-300 font-mono">
+                <div className="text-xs text-slate-600 font-mono">
                   Hiển thị{" "}
-                  <span className="font-semibold text-white">
+                  <span className="font-semibold text-slate-900">
                     {(safePage - 1) * CARDS_PER_PAGE + 1}–
                     {Math.min(safePage * CARDS_PER_PAGE, filtered.length)}
                   </span>{" "}
                   trong tổng số{" "}
-                  <span className="font-semibold text-white">
+                  <span className="font-semibold text-slate-900">
                     {filtered.length}
                   </span>{" "}
                   thuật ngữ
@@ -434,8 +434,8 @@ export default function VocabularyPage() {
                           onClick={() => setCurrentPage(pageNum)}
                           className={`w-8 h-8 rounded-full text-xs font-mono font-semibold transition-all ${
                             active
-                              ? "liquid-btn-primary"
-                              : "bg-white/[0.06] text-slate-300 border border-white/15 hover:text-white hover:bg-white/[0.14]"
+                              ? "liquid-btn-primary text-white"
+                              : "bg-white/85 text-slate-700 border border-slate-200/85 hover:text-slate-900 hover:bg-sky-50/80"
                           }`}
                         >
                           {pageNum}
@@ -459,7 +459,7 @@ export default function VocabularyPage() {
               </div>
             </>
           ) : (
-            <div className="liquid-glass-card p-8 text-center text-xs text-slate-300">
+            <div className="liquid-glass-card p-8 text-center text-xs text-slate-600">
               {vocabList.length === 0
                 ? "Chưa có thuật ngữ nào trong thư viện."
                 : `Không tìm thấy thuật ngữ nào phù hợp với bộ lọc hiện tại${
@@ -473,8 +473,8 @@ export default function VocabularyPage() {
       {workspaceMode === "flashcard" && (
         <div className="space-y-3">
           <div className="liquid-glass-card-lite rounded-3xl px-4 py-3 flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2 text-xs font-semibold text-white">
-              <Layers className="w-4 h-4 text-violet-400" />
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-900">
+              <Layers className="w-4 h-4 text-violet-600" />
               <span>Chế độ Lật Thẻ Active Recall ({filtered.length} thuật ngữ)</span>
             </div>
             <div className="flex flex-wrap items-center gap-1.5">
@@ -485,10 +485,10 @@ export default function VocabularyPage() {
                     key={pill.id}
                     type="button"
                     onClick={() => setSelectedContext(pill.id)}
-                    className={`liquid-glass-pill px-3 py-1 text-[11px] font-medium transition-all ${
+                    className={`liquid-glass-pill px-3 py-1 text-[11px] font-semibold transition-all ${
                       active
-                        ? "!bg-violet-500/25 !border-violet-400/50 text-violet-200"
-                        : "text-slate-300 hover:text-white hover:!border-white/35"
+                        ? "!bg-violet-100/90 !border-violet-400/80 text-violet-900"
+                        : "text-slate-700 hover:text-slate-900 hover:!border-violet-300"
                     }`}
                   >
                     {pill.label}
@@ -517,21 +517,21 @@ export default function VocabularyPage() {
           {clusteredGroups.map((cluster) => (
             <div
               key={cluster.clusterTitle}
-              className="liquid-glass-card-lite rounded-3xl p-4 sm:p-5 flex flex-col justify-between gap-4 hover:!border-white/30 transition-all"
+              className="liquid-glass-card-lite rounded-3xl p-4 sm:p-5 flex flex-col justify-between gap-4 hover:!border-sky-300 transition-all"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <LayoutGrid className="w-4 h-4 text-cyan-400 shrink-0" />
-                    <h2 className="text-sm sm:text-base font-bold text-white">
+                    <LayoutGrid className="w-4 h-4 text-sky-600 shrink-0" />
+                    <h2 className="text-sm sm:text-base font-bold text-slate-900">
                       {cluster.clusterTitle}
                     </h2>
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0">
-                    <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/45 text-[10px] font-mono font-semibold text-amber-200">
+                    <span className="px-2.5 py-0.5 rounded-full bg-amber-100/90 border border-amber-300 text-[10px] font-mono font-semibold text-amber-800">
                       +3 Coin
                     </span>
-                    <span className="px-2.5 py-0.5 rounded-full bg-white/[0.08] border border-white/15 text-[11px] font-mono text-slate-300">
+                    <span className="px-2.5 py-0.5 rounded-full bg-white/85 border border-slate-200/85 text-[11px] font-mono text-slate-700">
                       {cluster.items.length} từ
                     </span>
                   </div>
@@ -541,17 +541,17 @@ export default function VocabularyPage() {
                   {cluster.items.map((item) => (
                     <span
                       key={item.id}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-950/60 border border-white/12 text-xs font-mono text-slate-200"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-sky-50/80 border border-slate-200/85 text-xs font-mono text-slate-800"
                     >
-                      <Zap className="w-3 h-3 text-cyan-400 shrink-0" />
+                      <Zap className="w-3 h-3 text-sky-600 shrink-0" />
                       <span>{item.term}</span>
                     </span>
                   ))}
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2">
-                <span className="text-[11px] text-slate-400">
+              <div className="pt-3 border-t border-slate-200/85 flex items-center justify-between gap-2">
+                <span className="text-[11px] text-slate-600">
                   Tối đa 8 thuật ngữ mỗi lượt luyện nói AI
                 </span>
                 <button
@@ -564,7 +564,7 @@ export default function VocabularyPage() {
                         .map((item) => item.term),
                     })
                   }
-                  className="liquid-btn-success inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold transition-all shrink-0"
+                  className="liquid-btn-success text-white inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold transition-all shrink-0"
                 >
                   <Mic className="w-3.5 h-3.5" />
                   <span>Luyện nói với cụm từ này</span>

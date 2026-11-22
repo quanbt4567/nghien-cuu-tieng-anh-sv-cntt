@@ -37,28 +37,28 @@ function renderMarkdownBlocks(markdown: string) {
     const formatted = block.text.replace(/\*\*(.*?)\*\*/g, "$1");
     if (block.type === "h2") {
       return (
-        <h2 key={idx} className="text-lg sm:text-xl font-bold text-white pt-3">
+        <h2 key={idx} className="text-lg sm:text-xl font-bold text-slate-900 pt-3">
           {formatted}
         </h2>
       );
     }
     if (block.type === "h3") {
       return (
-        <h3 key={idx} className="text-base font-bold text-slate-100 pt-2">
+        <h3 key={idx} className="text-base font-bold text-slate-900 pt-2">
           {formatted}
         </h3>
       );
     }
     if (block.type === "li") {
       return (
-        <div key={idx} className="flex items-start gap-2 text-sm text-slate-200 leading-relaxed pl-1">
-          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-2 shrink-0" />
+        <div key={idx} className="flex items-start gap-2 text-sm text-slate-700 leading-relaxed pl-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-sky-500 mt-2 shrink-0" />
           <span>{formatted}</span>
         </div>
       );
     }
     return (
-      <p key={idx} className="text-sm sm:text-base text-slate-200 leading-relaxed">
+      <p key={idx} className="text-sm sm:text-base text-slate-700 leading-relaxed">
         {formatted}
       </p>
     );
@@ -103,12 +103,12 @@ export default async function ResearchArticlePage({
         </Link>
 
         <div className="flex flex-wrap items-center gap-2 pt-1">
-          <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/45 text-cyan-200 text-xs font-mono font-semibold">
+          <span className="px-2.5 py-0.5 rounded-full bg-sky-100/90 border border-sky-300 text-sky-800 text-xs font-mono font-semibold">
             {article.category}
           </span>
-          <span className="inline-flex items-center gap-1 text-xs font-mono text-slate-400">
+          <span className="inline-flex items-center gap-1 text-xs font-mono text-slate-600">
             {article.sourceType === "ai_curated" && (
-              <Sparkles className="w-3.5 h-3.5 text-violet-400" />
+              <Sparkles className="w-3.5 h-3.5 text-violet-600" />
             )}
             <span>
               Xuất bản:{" "}
@@ -119,10 +119,10 @@ export default async function ResearchArticlePage({
           </span>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white leading-snug">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 leading-snug">
           {article.title}
         </h1>
-        <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+        <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
           {article.summary}
         </p>
         <div className="pt-1">
@@ -137,24 +137,24 @@ export default async function ResearchArticlePage({
 
       {article.metricsJson.length > 0 && (
         <section className="liquid-glass-card p-5 space-y-3">
-          <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase text-cyan-300">
-            <BarChart3 className="w-4 h-4 text-cyan-400" />
+          <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase text-sky-700">
+            <BarChart3 className="w-4 h-4 text-sky-600" />
             <span>Dữ liệu thống kê chính</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
             {article.metricsJson.map((metric, idx) => (
               <div
                 key={idx}
-                className="h-full p-4 rounded-2xl bg-slate-950/60 border border-white/12 flex flex-col justify-center gap-1.5"
+                className="h-full p-4 rounded-2xl bg-sky-50/80 border border-slate-200/85 flex flex-col justify-center gap-1.5"
               >
-                <div className="text-[11px] font-mono text-slate-400">
+                <div className="text-[11px] font-mono text-slate-600">
                   {metric.label}
                 </div>
-                <div className="text-2xl font-extrabold font-mono text-white">
+                <div className="text-2xl font-extrabold font-mono text-slate-900">
                   {metric.value}
                 </div>
                 {metric.highlight && (
-                  <div className="text-[11px] font-semibold text-cyan-300">
+                  <div className="text-[11px] font-semibold text-sky-700">
                     {metric.highlight}
                   </div>
                 )}
@@ -170,7 +170,7 @@ export default async function ResearchArticlePage({
 
       {article.sourceUrls.length > 0 && (
         <section className="liquid-glass-card p-5 space-y-3">
-          <h2 className="text-xs font-mono font-bold uppercase text-slate-400">
+          <h2 className="text-xs font-mono font-bold uppercase text-slate-600">
             Nguồn tham khảo
           </h2>
           <ul className="space-y-2">
@@ -180,7 +180,7 @@ export default async function ResearchArticlePage({
                   href={src.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-cyan-300 hover:text-cyan-200 hover:underline"
+                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-sky-700 hover:text-sky-900 hover:underline"
                 >
                   <span>{src.title}</span>
                   <ExternalLink className="w-3.5 h-3.5 shrink-0" />
@@ -193,13 +193,13 @@ export default async function ResearchArticlePage({
 
       <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="inline-flex items-center gap-2 text-sm font-bold text-white">
-            <Mic className="w-4 h-4 text-emerald-400" />
+          <div className="inline-flex items-center gap-2 text-sm font-bold text-slate-900">
+            <Mic className="w-4 h-4 text-emerald-600" />
             <span>Tình huống luyện nói gợi ý từ bài viết</span>
           </div>
           <Link
             href="/"
-            className="text-xs font-semibold text-cyan-300 hover:text-cyan-200 hover:underline inline-flex items-center gap-1"
+            className="text-xs font-semibold text-sky-700 hover:text-sky-900 hover:underline inline-flex items-center gap-1"
           >
             <span>Xem tất cả kịch bản</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -211,15 +211,15 @@ export default async function ResearchArticlePage({
             <Link
               key={scenario.id}
               href={`/practice/${scenario.id}`}
-              className="liquid-glass-card-lite p-4 rounded-2xl hover:!border-cyan-400/50 transition-all flex items-center justify-between gap-3"
+              className="liquid-glass-card-lite p-4 rounded-2xl hover:!border-sky-300 transition-all flex items-center justify-between gap-3"
             >
               <div className="space-y-1">
-                <div className="font-bold text-sm text-white">
+                <div className="font-bold text-sm text-slate-900">
                   {scenario.titleEN}
                 </div>
-                <div className="text-xs text-slate-300">{scenario.titleVI}</div>
+                <div className="text-xs text-slate-600">{scenario.titleVI}</div>
               </div>
-              <span className="liquid-btn-primary shrink-0 inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full text-xs font-bold">
+              <span className="liquid-btn-primary text-white shrink-0 inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full text-xs font-bold">
                 <span>Luyện</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </span>

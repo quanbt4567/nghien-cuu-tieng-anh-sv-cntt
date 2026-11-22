@@ -62,7 +62,7 @@ export function VocabFlashcardDeck({
 
   if (deck.length === 0) {
     return (
-      <div className="liquid-glass-card p-8 text-center text-xs text-slate-300">
+      <div className="liquid-glass-card p-8 text-center text-xs text-slate-600">
         Không có thuật ngữ nào trong bộ lọc hiện tại để luyện Flashcard.
       </div>
     );
@@ -140,36 +140,36 @@ export function VocabFlashcardDeck({
   if (isCompleted) {
     return (
       <div className="liquid-glass-card p-6 sm:p-8 text-center space-y-5">
-        <div className="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-400/45 text-emerald-300 flex items-center justify-center mx-auto">
+        <div className="w-12 h-12 rounded-full bg-emerald-100/90 border border-emerald-300 text-emerald-700 flex items-center justify-center mx-auto">
           <CheckCircle2 className="w-6 h-6" />
         </div>
         <div className="space-y-1">
-          <h3 className="text-lg font-bold text-white">
+          <h3 className="text-lg font-bold text-slate-900">
             Hoàn thành lượt ôn tập Flashcard!
           </h3>
-          <p className="text-xs text-slate-300">
+          <p className="text-xs text-slate-600">
             Các từ đánh dấu &quot;Chưa thuộc&quot; đã được tự động thêm vào Kế hoạch 7 ngày (/progress).
           </p>
         </div>
 
         <div className="grid grid-cols-3 gap-3 max-w-md mx-auto text-xs">
-          <div className="bg-rose-500/15 border border-rose-400/35 rounded-xl p-3">
-            <div className="font-mono font-bold text-base text-rose-200">
+          <div className="bg-rose-50/90 border border-rose-200 rounded-xl p-3">
+            <div className="font-mono font-bold text-base text-rose-800">
               {sessionStats.again}
             </div>
-            <div className="text-rose-300 mt-0.5">Chưa thuộc</div>
+            <div className="text-rose-700 mt-0.5">Chưa thuộc</div>
           </div>
-          <div className="bg-amber-500/15 border border-amber-400/35 rounded-xl p-3">
-            <div className="font-mono font-bold text-base text-amber-200">
+          <div className="bg-amber-50/90 border border-amber-200 rounded-xl p-3">
+            <div className="font-mono font-bold text-base text-amber-800">
               {sessionStats.good}
             </div>
-            <div className="text-amber-300 mt-0.5">Tạm nhớ</div>
+            <div className="text-amber-700 mt-0.5">Tạm nhớ</div>
           </div>
-          <div className="bg-emerald-500/15 border border-emerald-400/35 rounded-xl p-3">
-            <div className="font-mono font-bold text-base text-emerald-200">
+          <div className="bg-emerald-50/90 border border-emerald-200 rounded-xl p-3">
+            <div className="font-mono font-bold text-base text-emerald-800">
               {sessionStats.mastered}
             </div>
-            <div className="text-emerald-300 mt-0.5">Đã thuộc</div>
+            <div className="text-emerald-700 mt-0.5">Đã thuộc</div>
           </div>
         </div>
 
@@ -177,7 +177,7 @@ export function VocabFlashcardDeck({
           <button
             type="button"
             onClick={() => handleRestart(false)}
-            className="liquid-btn-primary inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all"
+            className="liquid-btn-primary text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Ôn lại từ đầu</span>
@@ -185,7 +185,7 @@ export function VocabFlashcardDeck({
           <button
             type="button"
             onClick={() => handleRestart(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-violet-500/25 border border-violet-400/50 text-violet-100 hover:bg-violet-500/35 text-xs font-semibold transition-all"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-violet-100/90 border border-violet-300 text-violet-900 hover:bg-violet-200/85 text-xs font-semibold transition-all"
           >
             <Shuffle className="w-3.5 h-3.5" />
             <span>Xáo trộn &amp; ôn lại</span>
@@ -200,12 +200,12 @@ export function VocabFlashcardDeck({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-        <div className="flex items-center gap-2 font-mono text-slate-300">
-          <span className="liquid-glass-pill px-3 py-1 text-white font-semibold">
+        <div className="flex items-center gap-2 font-mono text-slate-600">
+          <span className="liquid-glass-pill px-3 py-1 text-slate-900 font-semibold">
             Thẻ {currentIndex + 1} / {deck.length}
           </span>
           {isCurrentMastered && (
-            <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/45 text-emerald-200 font-medium">
+            <span className="px-2.5 py-1 rounded-full bg-emerald-100/90 border border-emerald-300 text-emerald-800 font-semibold">
               Đã thuộc
             </span>
           )}
@@ -241,7 +241,7 @@ export function VocabFlashcardDeck({
           <button
             type="button"
             onClick={() => handleRestart(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-violet-500/20 border border-violet-400/45 text-violet-100 hover:bg-violet-500/35 font-medium transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-violet-100/90 border border-violet-300 text-violet-900 hover:bg-violet-200/85 font-semibold transition-colors"
           >
             <Shuffle className="w-3.5 h-3.5" />
             <span>Xáo trộn</span>
@@ -259,10 +259,10 @@ export function VocabFlashcardDeck({
             setIsFlipped((prev) => !prev);
           }
         }}
-        className="liquid-glass-card w-full min-h-[280px] p-6 sm:p-8 cursor-pointer flex flex-col justify-between transition-all hover:!border-cyan-400/55 focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
+        className="liquid-glass-card w-full min-h-[280px] p-6 sm:p-8 cursor-pointer flex flex-col justify-between transition-all hover:!border-sky-400/70 focus:outline-none focus:ring-2 focus:ring-sky-400/50"
       >
         <div className="flex items-center justify-between gap-3">
-          <span className="text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-full bg-violet-500/20 border border-violet-400/40 text-violet-200">
+          <span className="text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-full bg-violet-100/90 border border-violet-300 text-violet-800 font-semibold">
             {isFlipped ? "Mặt sau • Nghĩa & Ví dụ" : "Mặt trước • Active Recall"}
           </span>
 
@@ -274,8 +274,8 @@ export function VocabFlashcardDeck({
             }}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-semibold transition-colors ${
               playingTarget === "word"
-                ? "liquid-btn-primary"
-                : "bg-cyan-500/20 border border-cyan-400/45 text-cyan-200 hover:bg-cyan-500/35 hover:text-white"
+                ? "liquid-btn-primary text-white"
+                : "bg-sky-100/90 border border-sky-300 text-sky-800 hover:bg-sky-200/85"
             }`}
           >
             {playingTarget === "word" ? (
@@ -289,37 +289,37 @@ export function VocabFlashcardDeck({
 
         {!isFlipped ? (
           <div className="py-8 text-center space-y-3">
-            <div className="text-3xl sm:text-4xl font-bold font-mono text-white tracking-normal">
+            <div className="text-3xl sm:text-4xl font-bold font-mono text-slate-900 tracking-normal">
               {currentItem.term}
             </div>
-            <div className="inline-block text-xs font-mono uppercase px-2.5 py-0.5 rounded-full bg-white/[0.08] border border-white/15 text-slate-300">
+            <div className="inline-block text-xs font-mono uppercase px-2.5 py-0.5 rounded-full bg-white/85 border border-slate-200/85 text-slate-700">
               {currentItem.partOfSpeech}
             </div>
-            <p className="text-xs text-slate-300 pt-3">
+            <p className="text-xs text-slate-600 pt-3">
               Bấm vào thẻ để lật xem phiên âm IPA, nghĩa tiếng Việt và ví dụ thực tế
             </p>
           </div>
         ) : (
           <div className="py-4 space-y-4">
             <div className="text-center space-y-1">
-              <div className="text-2xl font-bold font-mono text-white">
+              <div className="text-2xl font-bold font-mono text-slate-900">
                 {currentItem.term}
               </div>
-              <div className="text-base font-ipa text-cyan-300 font-medium">
+              <div className="text-base font-ipa text-sky-700 font-medium">
                 {currentItem.phonetic}
               </div>
             </div>
 
-            <div className="bg-slate-950/55 border border-white/12 rounded-xl p-3.5 text-xs sm:text-sm text-slate-100 font-medium text-center">
+            <div className="bg-sky-50/80 border border-slate-200/85 rounded-xl p-3.5 text-xs sm:text-sm text-slate-800 font-medium text-center">
               {currentItem.meaningVI}
             </div>
 
             <div
-              className="bg-slate-950/60 border border-white/15 rounded-xl p-3.5 space-y-1.5 text-xs"
+              className="bg-white/85 border border-slate-200/85 rounded-xl p-3.5 space-y-1.5 text-xs"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between gap-2">
-                <span className="font-mono text-[10px] uppercase font-bold text-slate-400">
+                <span className="font-mono text-[10px] uppercase font-bold text-slate-600">
                   Ví dụ trong công việc:
                 </span>
                 <button
@@ -327,7 +327,7 @@ export function VocabFlashcardDeck({
                   onClick={() =>
                     playSegment("sentence", currentItem.exampleSentenceEN, 0.8)
                   }
-                  className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-violet-500/20 border border-violet-400/40 text-violet-200 hover:bg-violet-500/35 hover:text-white flex items-center gap-1 font-semibold transition-colors"
+                  className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-violet-100/90 border border-violet-300 text-violet-800 hover:bg-violet-200/85 flex items-center gap-1 font-semibold transition-colors"
                 >
                   {playingTarget === "sentence" ? (
                     <VolumeX className="w-3.5 h-3.5" />
@@ -339,17 +339,17 @@ export function VocabFlashcardDeck({
                   </span>
                 </button>
               </div>
-              <div className="font-medium text-white leading-relaxed">
+              <div className="font-medium text-slate-900 leading-relaxed">
                 &quot;{currentItem.exampleSentenceEN}&quot;
               </div>
-              <div className="text-slate-300 text-[11px]">
+              <div className="text-slate-600 text-[11px]">
                 {currentItem.exampleTranslationVI}
               </div>
             </div>
           </div>
         )}
 
-        <div className="text-center text-[11px] font-mono text-slate-400">
+        <div className="text-center text-[11px] font-mono text-slate-600">
           {isFlipped ? "Chọn mức độ ghi nhớ bên dưới" : "Nhấn để lật thẻ"}
         </div>
       </div>
@@ -358,7 +358,7 @@ export function VocabFlashcardDeck({
         <button
           type="button"
           onClick={() => handleRate("again")}
-          className="liquid-btn-danger flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-semibold transition-all"
+          className="liquid-btn-danger text-white flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-semibold transition-all"
         >
           <AlertCircle className="w-4 h-4" />
           <span>Chưa thuộc (Thêm vào 7-Day Plan)</span>
@@ -367,7 +367,7 @@ export function VocabFlashcardDeck({
         <button
           type="button"
           onClick={() => handleRate("good")}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-amber-500/25 border border-amber-400/50 text-amber-100 text-xs font-semibold hover:bg-amber-500/35 transition-all shadow-[0_0_16px_rgba(245,158,11,0.2)]"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-amber-100/90 border border-amber-400 text-amber-900 text-xs font-semibold hover:bg-amber-200/85 transition-all shadow-sm"
         >
           <Clock className="w-4 h-4" />
           <span>Tạm nhớ</span>
@@ -376,7 +376,7 @@ export function VocabFlashcardDeck({
         <button
           type="button"
           onClick={() => handleRate("mastered")}
-          className="liquid-btn-success flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-semibold transition-all"
+          className="liquid-btn-success text-white flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-semibold transition-all"
         >
           <CheckCircle2 className="w-4 h-4" />
           <span>Đã thuộc</span>

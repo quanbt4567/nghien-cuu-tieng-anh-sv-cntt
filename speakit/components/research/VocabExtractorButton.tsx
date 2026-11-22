@@ -28,9 +28,9 @@ interface ExtractResponse {
 }
 
 const LEVEL_BADGE_CLASSES: Record<"Fresher" | "Junior" | "Senior", string> = {
-  Fresher: "bg-emerald-500/20 text-emerald-200 border-emerald-400/45",
-  Junior: "bg-cyan-500/20 text-cyan-200 border-cyan-400/45",
-  Senior: "bg-amber-500/20 text-amber-200 border-amber-400/45",
+  Fresher: "bg-emerald-100/90 text-emerald-800 border-emerald-300",
+  Junior: "bg-sky-100/90 text-sky-800 border-sky-300",
+  Senior: "bg-amber-100/90 text-amber-800 border-amber-300",
 };
 
 export function VocabExtractorButton({
@@ -82,8 +82,8 @@ export function VocabExtractorButton({
         disabled={loading}
         className={
           variant === "detail"
-            ? "inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-violet-500/25 border border-violet-400/50 text-violet-100 hover:bg-violet-500/35 disabled:opacity-60 text-xs font-bold transition-colors shadow-[0_0_18px_rgba(139,92,246,0.28)]"
-            : "inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-violet-500/20 border border-violet-400/45 text-violet-200 hover:bg-violet-500/30 hover:text-white disabled:opacity-60 text-xs font-semibold transition-colors"
+            ? "inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-violet-100/90 border border-violet-300 text-violet-900 hover:bg-violet-200/85 disabled:opacity-60 text-xs font-bold transition-colors shadow-sm"
+            : "inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-violet-100/90 border border-violet-300 text-violet-800 hover:bg-violet-200/85 disabled:opacity-60 text-xs font-semibold transition-colors"
         }
       >
         {loading ? (
@@ -95,13 +95,13 @@ export function VocabExtractorButton({
       </button>
 
       {error && (
-        <div className="fixed bottom-4 right-4 z-50 max-w-sm rounded-2xl bg-slate-950/90 backdrop-blur-2xl border border-rose-400/50 shadow-2xl px-4 py-3 flex items-start gap-2.5 text-xs text-rose-200">
+        <div className="fixed bottom-4 right-4 z-50 max-w-sm rounded-2xl bg-white/95 backdrop-blur-2xl border border-rose-300 shadow-2xl px-4 py-3 flex items-start gap-2.5 text-xs text-rose-800">
           <span className="flex-1">{error}</span>
           <button
             type="button"
             onClick={() => setError(null)}
             aria-label="Đóng thông báo"
-            className="text-rose-300 hover:text-white"
+            className="text-rose-600 hover:text-rose-900"
           >
             <X className="w-4 h-4" />
           </button>
@@ -110,19 +110,19 @@ export function VocabExtractorButton({
 
       {drawerOpen && (
         <div
-          className="fixed inset-0 z-50 flex justify-end bg-slate-950/75 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex justify-end bg-slate-900/35 backdrop-blur-sm"
           role="dialog"
           aria-modal="true"
           aria-label="Từ vựng CNTT vừa trích xuất"
         >
-          <div className="w-full max-w-lg h-full bg-slate-950/90 backdrop-blur-2xl border-l border-white/20 shadow-2xl flex flex-col">
-            <div className="p-4 sm:p-5 bg-white/[0.04] border-b border-white/15 flex items-start justify-between gap-3">
+          <div className="w-full max-w-lg h-full bg-white/95 backdrop-blur-2xl border-l border-slate-200/85 shadow-2xl flex flex-col">
+            <div className="p-4 sm:p-5 bg-sky-50/80 border-b border-slate-200/85 flex items-start justify-between gap-3">
               <div className="space-y-1">
-                <div className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase text-violet-300">
-                  <Sparkles className="w-3.5 h-3.5 text-violet-400" />
+                <div className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase text-violet-700">
+                  <Sparkles className="w-3.5 h-3.5 text-violet-600" />
                   <span>Cụm từ vựng: {clusterTitle}</span>
                 </div>
-                <h3 className="text-base sm:text-lg font-bold text-white">
+                <h3 className="text-base sm:text-lg font-bold text-slate-900">
                   {items.length} thuật ngữ CNTT đã trích xuất
                 </h3>
               </div>
@@ -137,16 +137,16 @@ export function VocabExtractorButton({
             </div>
 
             <div className="px-4 sm:px-5 pt-3">
-              <div className="rounded-xl bg-emerald-500/15 border border-emerald-400/40 px-3.5 py-2.5 flex items-center justify-between gap-2 text-xs text-emerald-200">
+              <div className="rounded-xl bg-emerald-50/90 border border-emerald-300 px-3.5 py-2.5 flex items-center justify-between gap-2 text-xs text-emerald-900">
                 <div className="inline-flex items-center gap-2 font-medium">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-300 shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>
                     {persistedCount > 0
                       ? `Đã đồng bộ ${persistedCount} từ vào kho từ vựng`
                       : "Đã trích xuất từ vựng (chế độ xem trước)"}
                   </span>
                 </div>
-                <span className="font-mono text-[10px] uppercase px-2 py-0.5 rounded-full bg-slate-950/60 border border-emerald-400/35 text-emerald-200">
+                <span className="font-mono text-[10px] uppercase px-2 py-0.5 rounded-full bg-white/90 border border-emerald-300 text-emerald-800 font-semibold">
                   {provider}
                 </span>
               </div>
@@ -162,15 +162,15 @@ export function VocabExtractorButton({
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div className="flex flex-wrap items-baseline gap-2">
-                        <span className="text-base font-bold text-white">
+                        <span className="text-base font-bold text-slate-900">
                           {item.term}
                         </span>
                         {item.phonetic && (
-                          <span className="text-xs font-ipa text-cyan-300">
+                          <span className="text-xs font-ipa text-sky-700">
                             {item.phonetic}
                           </span>
                         )}
-                        <span className="text-[11px] font-mono text-slate-400">
+                        <span className="text-[11px] font-mono text-slate-600">
                           ({item.partOfSpeech})
                         </span>
                       </div>
@@ -181,17 +181,17 @@ export function VocabExtractorButton({
                       </span>
                     </div>
 
-                    <p className="text-xs sm:text-sm font-medium text-slate-100">
+                    <p className="text-xs sm:text-sm font-medium text-slate-800">
                       {item.meaningVI}
                     </p>
 
                     {item.exampleSentenceEN && (
-                      <div className="rounded-xl bg-slate-950/60 border border-white/12 p-2.5 space-y-1">
-                        <p className="text-xs font-medium text-white">
+                      <div className="rounded-xl bg-sky-50/80 border border-slate-200/85 p-2.5 space-y-1">
+                        <p className="text-xs font-medium text-slate-900">
                           {item.exampleSentenceEN}
                         </p>
                         {item.exampleTranslationVI && (
-                          <p className="text-[11px] text-slate-300">
+                          <p className="text-[11px] text-slate-600">
                             {item.exampleTranslationVI}
                           </p>
                         )}
@@ -200,13 +200,13 @@ export function VocabExtractorButton({
 
                     {item.relatedTerms && item.relatedTerms.length > 0 && (
                       <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                        <span className="text-[10px] font-mono uppercase text-slate-400">
+                        <span className="text-[10px] font-mono uppercase text-slate-600">
                           Liên quan:
                         </span>
                         {item.relatedTerms.map((rel) => (
                           <span
                             key={rel}
-                            className="px-2 py-0.5 rounded-full bg-white/[0.08] border border-white/15 text-[11px] font-mono text-slate-200"
+                            className="px-2 py-0.5 rounded-full bg-white/85 border border-slate-200/85 text-[11px] font-mono text-slate-700"
                           >
                             {rel}
                           </span>
@@ -218,7 +218,7 @@ export function VocabExtractorButton({
               })}
             </div>
 
-            <div className="p-4 bg-white/[0.04] border-t border-white/15 flex items-center justify-between gap-3">
+            <div className="p-4 bg-sky-50/80 border-t border-slate-200/85 flex items-center justify-between gap-3">
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
@@ -229,7 +229,7 @@ export function VocabExtractorButton({
               <Link
                 href="/vocabulary"
                 onClick={() => setDrawerOpen(false)}
-                className="liquid-btn-primary inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all"
+                className="liquid-btn-primary text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all"
               >
                 <BookOpen className="w-3.5 h-3.5" />
                 <span>Mở kho từ vựng</span>

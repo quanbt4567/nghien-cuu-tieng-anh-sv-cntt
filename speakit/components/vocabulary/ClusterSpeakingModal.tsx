@@ -314,22 +314,22 @@ export function ClusterSpeakingModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 backdrop-blur-md p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/35 backdrop-blur-md p-4"
       role="dialog"
       aria-modal="true"
       aria-label={`Luyện nói cụm từ ${clusterTitle}`}
     >
-      <div className="bg-slate-950/90 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-[0_24px_64px_rgba(0,0,0,0.75)] w-full max-w-2xl max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-5">
+      <div className="bg-white/95 backdrop-blur-2xl border border-slate-200/85 rounded-3xl shadow-[0_24px_64px_rgba(15,23,42,0.18)] w-full max-w-2xl max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-5">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-violet-500/20 border border-violet-400/45 text-violet-200 text-[11px] font-semibold mb-1.5">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-violet-100/90 border border-violet-300 text-violet-800 text-[11px] font-semibold mb-1.5">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Cluster Speaking Drill</span>
             </div>
-            <h2 className="text-lg sm:text-xl font-bold text-white leading-snug">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 leading-snug">
               {clusterTitle}
             </h2>
-            <p className="text-xs text-slate-300 mt-0.5">
+            <p className="text-xs text-slate-600 mt-0.5">
               Dùng ít nhất 75% từ mục tiêu trong 1 lượt phản hồi tự nhiên để nhận +3 IT-Coins.
             </p>
           </div>
@@ -339,7 +339,7 @@ export function ClusterSpeakingModal({
               stopAudioAndMic();
               onClose();
             }}
-            className="liquid-glass-btn p-2 rounded-full text-slate-300 hover:text-white transition-colors"
+            className="liquid-glass-btn p-2 rounded-full text-slate-700 hover:text-slate-900 transition-colors"
             aria-label="Đóng cửa sổ"
           >
             <X className="w-4 h-4" />
@@ -347,12 +347,12 @@ export function ClusterSpeakingModal({
         </div>
 
         {isGenerating ? (
-          <div className="py-10 flex flex-col items-center justify-center gap-2 text-xs text-slate-300">
-            <Loader2 className="w-5 h-5 animate-spin text-cyan-400" />
+          <div className="py-10 flex flex-col items-center justify-center gap-2 text-xs text-slate-600">
+            <Loader2 className="w-5 h-5 animate-spin text-sky-600" />
             <span>Đang tạo tình huống kỹ thuật phù hợp...</span>
           </div>
         ) : generateError ? (
-          <div className="p-4 rounded-xl bg-rose-500/15 border border-rose-400/40 text-xs text-rose-200 flex items-center justify-between gap-3">
+          <div className="p-4 rounded-xl bg-rose-50/90 border border-rose-300 text-xs text-rose-800 flex items-center justify-between gap-3">
             <span>{generateError}</span>
             <button
               type="button"
@@ -364,9 +364,9 @@ export function ClusterSpeakingModal({
           </div>
         ) : promptData ? (
           <>
-            <div className="p-4 rounded-2xl bg-white/[0.05] border border-white/15 space-y-2.5">
+            <div className="p-4 rounded-2xl bg-sky-50/80 border border-slate-200/85 space-y-2.5">
               <div className="flex items-center justify-between gap-2">
-                <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/25 border border-cyan-400/50 text-cyan-100 text-[11px] font-mono font-semibold">
+                <span className="px-2.5 py-0.5 rounded-full bg-sky-100 border border-sky-300 text-sky-900 text-[11px] font-mono font-semibold">
                   {promptData.scenarioType}
                 </span>
                 <div className="flex items-center gap-2">
@@ -375,8 +375,8 @@ export function ClusterSpeakingModal({
                     onClick={handlePlayPrompt}
                     className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
                       isPlayingPrompt
-                        ? "liquid-btn-primary"
-                        : "bg-cyan-500/20 border border-cyan-400/45 text-cyan-200 hover:bg-cyan-500/35 hover:text-white"
+                        ? "liquid-btn-primary text-white"
+                        : "bg-sky-100/90 border border-sky-300 text-sky-800 hover:bg-sky-200/85"
                     }`}
                   >
                     {isPlayingPrompt ? (
@@ -401,22 +401,22 @@ export function ClusterSpeakingModal({
                   </button>
                 </div>
               </div>
-              <p className="text-sm font-medium text-white leading-relaxed">
+              <p className="text-sm font-medium text-slate-900 leading-relaxed">
                 {promptData.promptEN}
               </p>
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <p className="text-xs text-slate-600 leading-relaxed">
                 {promptData.promptVI}
               </p>
             </div>
 
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-semibold text-white">
+                <span className="font-semibold text-slate-900">
                   Từ mục tiêu ({liveMatchedSet.size}/{activeTargetTerms.length})
                 </span>
                 <span
                   className={`font-mono font-semibold ${
-                    coveragePercent >= 75 ? "text-emerald-300" : "text-slate-400"
+                    coveragePercent >= 75 ? "text-emerald-700" : "text-slate-600"
                   }`}
                 >
                   {coveragePercent}%
@@ -430,11 +430,11 @@ export function ClusterSpeakingModal({
                       key={term}
                       className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono border transition-all ${
                         matched
-                          ? "bg-emerald-500/20 border-emerald-400/50 text-emerald-200"
-                          : "bg-white/[0.05] border-white/15 text-slate-300"
+                          ? "bg-emerald-100/90 border-emerald-400 text-emerald-900 font-semibold"
+                          : "bg-white/85 border-slate-200/85 text-slate-700"
                       }`}
                     >
-                      {matched && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" />}
+                      {matched && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
                       <span>{term}</span>
                     </span>
                   );
@@ -447,7 +447,7 @@ export function ClusterSpeakingModal({
                 <button
                   type="button"
                   onClick={handleToggleMic}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition-all ${
+                  className={`text-white inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition-all ${
                     isListening
                       ? "liquid-btn-danger animate-pulse"
                       : "liquid-btn-success"
@@ -469,14 +469,14 @@ export function ClusterSpeakingModal({
                 <button
                   type="button"
                   onClick={() => setShowTypedFallback((prev) => !prev)}
-                  className="text-xs text-cyan-300 hover:text-cyan-200 underline"
+                  className="text-xs text-sky-700 hover:text-sky-900 font-semibold underline"
                 >
                   {showTypedFallback ? "Ẩn ô gõ chữ" : "Gõ câu trả lời"}
                 </button>
               </div>
 
               {micError && (
-                <div className="p-2.5 rounded-xl bg-amber-500/15 border border-amber-400/40 text-xs text-amber-200">
+                <div className="p-2.5 rounded-xl bg-amber-50/90 border border-amber-300 text-xs text-amber-800">
                   {micError}
                 </div>
               )}
@@ -496,7 +496,7 @@ export function ClusterSpeakingModal({
                   type="button"
                   disabled={isEvaluating || !transcript.trim()}
                   onClick={() => void handleEvaluate()}
-                  className="liquid-btn-primary inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold disabled:opacity-40 transition-all"
+                  className="liquid-btn-primary text-white inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold disabled:opacity-40 transition-all"
                 >
                   {isEvaluating ? (
                     <>
@@ -514,36 +514,36 @@ export function ClusterSpeakingModal({
             </div>
 
             {evalError && (
-              <div className="p-3 rounded-xl bg-rose-500/15 border border-rose-400/40 text-xs text-rose-200">
+              <div className="p-3 rounded-xl bg-rose-50/90 border border-rose-300 text-xs text-rose-800">
                 {evalError}
               </div>
             )}
 
             {evaluation && (
-              <div className="p-4 rounded-2xl bg-emerald-500/15 border border-emerald-400/40 space-y-3">
+              <div className="p-4 rounded-2xl bg-emerald-50/90 border border-emerald-300 space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-white">
+                    <span className="text-xs font-semibold text-slate-900">
                       Điểm phản xạ:
                     </span>
-                    <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/25 border border-cyan-400/50 text-cyan-100 text-xs font-mono font-bold">
+                    <span className="px-2.5 py-0.5 rounded-full bg-sky-100 border border-sky-300 text-sky-900 text-xs font-mono font-bold">
                       {evaluation.score}/100
                     </span>
                   </div>
                   {evaluation.awardedCoins > 0 && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/45 text-amber-200 text-xs font-semibold">
-                      <Coins className="w-3.5 h-3.5 text-amber-300" />
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100/90 border border-amber-300 text-amber-900 text-xs font-semibold">
+                      <Coins className="w-3.5 h-3.5 text-amber-600" />
                       +{evaluation.awardedCoins} IT-Coins
                     </span>
                   )}
                 </div>
 
-                <p className="text-xs text-slate-100 leading-relaxed">
-                  <strong className="font-semibold text-white">Độ chính xác ngữ cảnh:</strong>{" "}
+                <p className="text-xs text-slate-800 leading-relaxed">
+                  <strong className="font-semibold text-slate-900">Độ chính xác ngữ cảnh:</strong>{" "}
                   {evaluation.feedbackVI}
                 </p>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  <strong className="font-semibold text-white">Độ tự nhiên:</strong>{" "}
+                <p className="text-xs text-slate-700 leading-relaxed">
+                  <strong className="font-semibold text-slate-900">Độ tự nhiên:</strong>{" "}
                   {evaluation.naturalnessFeedback}
                 </p>
               </div>
