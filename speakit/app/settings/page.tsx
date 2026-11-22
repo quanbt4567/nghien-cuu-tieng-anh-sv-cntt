@@ -6,9 +6,7 @@ import { ArrowLeft, AlertCircle, Bell, Download, RotateCcw, Volume2, VolumeX, Tr
 import { storageAdapter } from "../../lib/storage";
 import {
   getSavedReminderPrefs,
-  isCapacitorAndroid,
-  scheduleDailyReminder,
-  testLocalReminderNow,
+  saveReminderPrefs,
 } from "../../lib/mobile-notifications";
 import {
   DEFAULT_VOICE_PERSONA,
@@ -33,7 +31,7 @@ export default function SettingsPage() {
   const [reminderEnabled, setReminderEnabled] = useState(false);
   const [reminderTime, setReminderTime] = useState("20:00");
   const [reminderStatus, setReminderStatus] = useState<string | null>(null);
-  const [isAndroidApp, setIsAndroidApp] = useState(false);
+  const [showPreviewBanner, setShowPreviewBanner] = useState(false);
 
   useEffect(() => {
     const settings = storageAdapter.getSettings();
@@ -44,7 +42,6 @@ export default function SettingsPage() {
     setReminderTime(
       `${String(prefs.hour).padStart(2, "0")}:${String(prefs.minute).padStart(2, "0")}`
     );
-    setIsAndroidApp(isCapacitorAndroid());
   }, []);
 
   const handleExportJson = async () => {
@@ -219,22 +216,21 @@ export default function SettingsPage() {
         </div>
       </section>
 
-      {/* 2. Daily Android Reminder */}
       <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
         <div className="flex items-center justify-between gap-2 border-b border-ink/10 pb-3">
           <div className="flex items-center gap-2">
             <Bell className="w-5 h-5 text-accent" />
             <h2 className="text-sm font-bold uppercase font-mono text-ink">
-              Nhắc Nhở Luyện Nói Hằng Ngày (App Android)
+              Nhắc Nhở Học Tập Trong App
             </h2>
           </div>
           <span className="text-[10px] font-mono px-2 py-0.5 rounded-pill border border-ink/15 bg-paper text-ink-muted">
-            {isAndroidApp ? "Android App" : "Dành cho APK"}
+            In-App
           </span>
         </div>
 
         <p className="text-xs text-ink-muted leading-relaxed">
-          Đặt giờ nhắc tự động ngay trên điện thoại (hoạt động cả khi đã đóng app Android).
+          Hiển thị nhắc nhở luyện nói mỗi ngày ngay trong chuông thông báo khi bạn mở SpeakIT.
         </p>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -260,16 +256,20 @@ export default function SettingsPage() {
         <div className="flex flex-wrap items-center gap-2.5">
           <button
             type="button"
-            onClick={async () => {
+            onClick={() => {
               const [hStr, mStr] = reminderTime.split(":");
-              const hour = Number.parseInt(hStr ?? "20", 10);
-              const minute = Number.parseInt(mStr ?? "0", 10);
-              const res = await scheduleDailyReminder(
-                Number.isFinite(hour) ? hour : 20,
-                Number.isFinite(minute) ? minute : 0,
+              const parsedHour = Number.parseInt(hStr ?? "20", 10);
+              const parsedMinute = Number.parseInt(mStr ?? "0", 10);
+              const hour = Number.isFinite(parsedHour) ? parsedHour : 20;
+              const minute = Number.isFinite(parsedMinute) ? parsedMinute : 0;
+              saveReminderPrefs({ enabled: reminderEnabled, hour, minute });
+              const hh = String(hour).padStart(2, "0");
+              const mm = String(minute).padStart(2, "0");
+              setReminderStatus(
                 reminderEnabled
+                  ? `Đã lưu lịch nhắc nhở trong app lúc ${hh}:${mm}.`
+                  : "Đã tắt nhắc nhở học tập trong app."
               );
-              setReminderStatus(res.message);
             }}
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-ink text-white hover:bg-ink/90 text-xs font-semibold shadow-soft transition-all"
           >
@@ -279,15 +279,38 @@ export default function SettingsPage() {
 
           <button
             type="button"
-            onClick={async () => {
-              const res = await testLocalReminderNow();
-              setReminderStatus(res.message);
-            }}
+            onClick={() => setShowPreviewBanner((prev) => !prev)}
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-paper border border-ink/15 text-ink hover:bg-paper-muted text-xs font-semibold shadow-soft transition-all"
           >
-            <span>Thử thông báo (3s)</span>
+            <span>Xem thử thông báo trong app</span>
           </button>
         </div>
+
+        {showPreviewBanner && (
+          <div
+            role="status"
+            className="p-3.5 rounded-xl bg-accent-light/50 border border-accent/30 flex items-start justify-between gap-3"
+          >
+            <div className="flex items-start gap-2.5">
+              <Bell className="w-4 h-4 text-accent shrink-0 mt-0.5" aria-hidden="true" />
+              <div className="space-y-0.5">
+                <div className="text-xs font-bold text-ink">
+                  SpeakIT — Đến giờ luyện nói 5 phút!
+                </div>
+                <p className="text-xs text-ink-muted">
+                  Dành 5 phút luyện phản xạ tiếng Anh CNTT để giữ streak hôm nay nhé.
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowPreviewBanner(false)}
+              className="text-[11px] font-semibold text-ink-muted hover:text-ink shrink-0"
+            >
+              Đóng
+            </button>
+          </div>
+        )}
 
         {reminderStatus && (
           <div

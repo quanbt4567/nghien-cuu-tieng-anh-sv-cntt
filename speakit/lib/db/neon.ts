@@ -121,6 +121,14 @@ export async function ensureSchema(): Promise<boolean> {
             updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
           )
         `,
+        sql`
+          CREATE TABLE IF NOT EXISTS speakit_announcements (
+            id TEXT PRIMARY KEY,
+            title TEXT NOT NULL,
+            body TEXT NOT NULL,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+          )
+        `,
       ]);
       schemaReadyUrl = url;
       return true;
