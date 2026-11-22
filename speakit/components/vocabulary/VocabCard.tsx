@@ -182,25 +182,25 @@ export function VocabCard({
 
   return (
     <div
-      className={`bg-white border rounded-2xl p-5 sm:p-6 shadow-soft space-y-4 hover:shadow-card transition-all ${
+      className={`liquid-glass-card-lite rounded-3xl p-5 sm:p-6 space-y-4 transition-all ${
         isMastered
-          ? "border-emerald-300/80"
+          ? "!border-emerald-400/50 shadow-[0_0_24px_rgba(16,185,129,0.14)]"
           : isMarkedForReview
-            ? "border-amber-300/90"
-            : "border-ink/15"
+            ? "!border-amber-400/50 shadow-[0_0_24px_rgba(245,158,11,0.14)]"
+            : "hover:!border-white/30"
       }`}
     >
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-xl font-bold font-mono text-ink tracking-normal leading-snug">
+            <h3 className="text-xl font-bold font-mono text-white tracking-normal leading-snug">
               {item.term}
             </h3>
-            <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-ink-muted tracking-normal">
+            <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-violet-500/20 border border-violet-400/40 text-violet-200 tracking-normal">
               {item.partOfSpeech}
             </span>
           </div>
-          <div className="text-sm font-ipa text-accent font-medium tracking-wide mt-1">
+          <div className="text-sm font-ipa text-cyan-300 font-medium tracking-wide mt-1">
             {item.phonetic}
           </div>
         </div>
@@ -219,10 +219,10 @@ export function VocabCard({
                 ? "Đang nghe... bấm để dừng"
                 : `Đọc thử từ "${item.term}"`
             }
-            className={`w-9 h-9 rounded-full border flex items-center justify-center shadow-soft shadow-hard-press transition-colors ${
+            className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
               isListening
-                ? "bg-red-500 border-red-600 text-white animate-pulse"
-                : "bg-paper border-ink/20 text-ink hover:bg-accent hover:text-white"
+                ? "liquid-btn-danger animate-pulse"
+                : "bg-emerald-500/20 border border-emerald-400/45 text-emerald-200 hover:bg-emerald-500/35 hover:text-white"
             }`}
           >
             {isListening ? (
@@ -240,7 +240,11 @@ export function VocabCard({
                 ? `Dừng phát âm "${item.term}"`
                 : `Phát âm từ "${item.term}"`
             }
-            className="w-9 h-9 rounded-full bg-paper border border-ink/20 flex items-center justify-center text-ink hover:bg-accent hover:text-white shadow-soft shadow-hard-press transition-colors"
+            className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
+              playingTarget === "word"
+                ? "liquid-btn-primary"
+                : "bg-cyan-500/20 border border-cyan-400/45 text-cyan-200 hover:bg-cyan-500/35 hover:text-white"
+            }`}
             title={
               playingTarget === "word"
                 ? `Dừng phát âm "${item.term}"`
@@ -260,10 +264,10 @@ export function VocabCard({
         <div
           className={`text-[11px] font-mono px-3 py-2 rounded-xl border ${
             isListening
-              ? "bg-paper border-accent/40 text-ink"
+              ? "bg-cyan-500/15 border-cyan-400/40 text-cyan-100"
               : micFeedback?.ok
-                ? "bg-emerald-50 border-emerald-200 text-emerald-800"
-                : "bg-amber-50 border-amber-200 text-amber-800"
+                ? "bg-emerald-500/15 border-emerald-400/40 text-emerald-200"
+                : "bg-amber-500/15 border-amber-400/40 text-amber-200"
           }`}
         >
           {isListening
@@ -274,19 +278,23 @@ export function VocabCard({
         </div>
       )}
 
-      <p className="text-xs text-ink font-medium leading-relaxed bg-paper/60 border border-ink/10 p-3 rounded-xl">
+      <p className="text-xs text-slate-100 font-medium leading-relaxed bg-slate-950/50 border border-white/12 p-3 rounded-xl">
         {item.meaningVI}
       </p>
 
-      <div className="bg-paper p-3.5 rounded-xl border border-ink/15 space-y-1.5 text-xs">
-        <div className="flex items-center justify-between">
-          <span className="font-mono text-[10px] uppercase font-bold text-ink-muted">
+      <div className="bg-slate-950/60 p-3.5 rounded-xl border border-white/12 space-y-1.5 text-xs">
+        <div className="flex items-center justify-between gap-2">
+          <span className="font-mono text-[10px] uppercase font-bold text-slate-400">
             Ví dụ trong công việc:
           </span>
           <button
             type="button"
             onClick={() => playSegment("sentence", item.exampleSentenceEN, 0.8)}
-            className="text-[11px] font-mono text-accent hover:underline flex items-center gap-1 font-semibold"
+            className={`text-[11px] font-mono px-2.5 py-1 rounded-full border flex items-center gap-1 font-semibold transition-colors ${
+              playingTarget === "sentence"
+                ? "bg-violet-500/30 border-violet-400/55 text-violet-100"
+                : "bg-violet-500/15 border-violet-400/35 text-violet-200 hover:bg-violet-500/25 hover:text-white"
+            }`}
           >
             {playingTarget === "sentence" ? (
               <VolumeX className="w-3.5 h-3.5" />
@@ -296,24 +304,24 @@ export function VocabCard({
             <span>{playingTarget === "sentence" ? "Dừng phát" : "Nghe câu mẫu"}</span>
           </button>
         </div>
-        <div className="font-medium text-ink leading-relaxed">
+        <div className="font-medium text-white leading-relaxed">
           "{item.exampleSentenceEN}"
         </div>
-        <div className="text-ink-muted text-[11px] pt-0.5">
+        <div className="text-slate-300 text-[11px] pt-0.5">
           {item.exampleTranslationVI}
         </div>
       </div>
 
       {(onToggleReview || onToggleMastered) && (
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-ink/10">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/10">
           {onToggleReview && (
             <button
               type="button"
               onClick={() => onToggleReview(item)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-[11px] font-medium border transition-colors ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium border transition-colors ${
                 isMarkedForReview
-                  ? "bg-amber-100 border-amber-400 text-amber-900"
-                  : "bg-paper border-ink/15 text-ink-muted hover:text-ink hover:bg-paper-muted"
+                  ? "bg-amber-500/25 border-amber-400/50 text-amber-200"
+                  : "bg-white/[0.06] border-white/15 text-slate-300 hover:text-white hover:bg-white/[0.14]"
               }`}
             >
               <BookmarkPlus className="w-3.5 h-3.5" />
@@ -325,10 +333,10 @@ export function VocabCard({
             <button
               type="button"
               onClick={() => onToggleMastered(item)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-[11px] font-medium border transition-colors ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium border transition-colors ${
                 isMastered
-                  ? "bg-emerald-100 border-emerald-400 text-emerald-900"
-                  : "bg-paper border-ink/15 text-ink-muted hover:text-ink hover:bg-paper-muted"
+                  ? "bg-emerald-500/25 border-emerald-400/50 text-emerald-200"
+                  : "bg-white/[0.06] border-white/15 text-slate-300 hover:text-white hover:bg-white/[0.14]"
               }`}
             >
               <CheckCircle2 className="w-3.5 h-3.5" />
@@ -339,7 +347,7 @@ export function VocabCard({
       )}
 
       {ttsError && (
-        <p className="text-[11px] font-mono text-red-600" role="alert">
+        <p className="text-[11px] font-mono text-rose-300" role="alert">
           {ttsError}
         </p>
       )}

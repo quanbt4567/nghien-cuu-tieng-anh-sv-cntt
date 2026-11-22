@@ -172,7 +172,6 @@ export default function ProgressPage() {
     0
   );
 
-  // Compute stats
   const totalTurns = attempts.length;
   const totalSessions = totalTurns + arenaRuns.length;
   const isArenaOnly = totalTurns === 0 && arenaRuns.length > 0;
@@ -184,7 +183,6 @@ export default function ProgressPage() {
       ? Math.round(attempts.reduce((acc, a) => acc + a.score, 0) / attempts.length)
       : 0;
 
-  // Streak calculation (days with at least 1 scenario attempt or arena run)
   const uniqueDates = new Set([
     ...attempts.map((a) => a.created_at.slice(0, 10)),
     ...arenaRuns.map((r) => r.createdAt.slice(0, 10)),
@@ -197,7 +195,6 @@ export default function ProgressPage() {
     (wp) => wp.kind === "keyword" && isValidKeywordTerm(wp.value)
   );
 
-  // Best score per scenario
   const scenarioTitleMap = new Map(scenarios.map((s) => [s.id, s.titleVI]));
   const unifiedHistory = buildUnifiedActivityHistory(
     attempts,
@@ -254,37 +251,37 @@ export default function ProgressPage() {
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-8 animate-pulse">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-3">
-            <div className="h-7 w-28 rounded-pill bg-ink/10" />
-            <div className="h-8 w-72 rounded-xl bg-ink/10" />
-            <div className="h-4 w-96 max-w-full rounded-lg bg-ink/10" />
+            <div className="h-7 w-28 rounded-full bg-white/10" />
+            <div className="h-8 w-72 rounded-xl bg-white/10" />
+            <div className="h-4 w-96 max-w-full rounded-lg bg-white/10" />
           </div>
-          <div className="h-9 w-36 rounded-pill bg-ink/10" />
+          <div className="h-9 w-36 rounded-full bg-white/10" />
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5">
           {[0, 1, 2, 3].map((idx) => (
             <div
               key={idx}
-              className="bg-white border border-ink/15 rounded-2xl p-4 sm:p-5 shadow-soft space-y-2"
+              className="liquid-glass-card-lite rounded-3xl p-4 sm:p-5 space-y-2"
             >
-              <div className="h-8 w-16 mx-auto rounded-lg bg-ink/10" />
-              <div className="h-3 w-24 mx-auto rounded bg-ink/10" />
+              <div className="h-8 w-16 mx-auto rounded-lg bg-white/10" />
+              <div className="h-3 w-24 mx-auto rounded bg-white/10" />
             </div>
           ))}
         </div>
 
-        <div className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-4">
-          <div className="h-5 w-48 rounded-lg bg-ink/10" />
+        <div className="liquid-glass-card-lite rounded-3xl p-6 space-y-4">
+          <div className="h-5 w-48 rounded-lg bg-white/10" />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[0, 1, 2].map((idx) => (
-              <div key={idx} className="h-24 rounded-xl bg-ink/10" />
+              <div key={idx} className="h-24 rounded-xl bg-white/10" />
             ))}
           </div>
         </div>
 
-        <div className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-4">
-          <div className="h-5 w-56 rounded-lg bg-ink/10" />
-          <div className="h-32 rounded-xl bg-ink/10" />
+        <div className="liquid-glass-card-lite rounded-3xl p-6 space-y-4">
+          <div className="h-5 w-56 rounded-lg bg-white/10" />
+          <div className="h-32 rounded-xl bg-white/10" />
         </div>
       </div>
     );
@@ -292,72 +289,69 @@ export default function ProgressPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
-      {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white text-ink text-xs font-medium border border-ink/15 shadow-soft hover:bg-paper-muted shadow-hard-press transition-all mb-3"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all mb-3"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Trang chủ</span>
           </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-ink flex items-center gap-2">
-            <TrendingUp className="w-6 h-6 text-accent" />
+          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+            <TrendingUp className="w-6 h-6 text-cyan-400" />
             <span>Tiến độ học & kế hoạch 7 ngày</span>
           </h1>
-          <p className="text-xs text-ink-muted mt-1.5">
+          <p className="text-xs text-slate-300 mt-1.5">
             Xem bạn đã luyện nói bao nhiêu lần, điểm cao nhất của từng tình huống và những từ cần ôn thêm.
           </p>
         </div>
 
-        {/* NCKH Data Export Button */}
         <button
           type="button"
           onClick={handleExportData}
           disabled={attempts.length === 0 && arenaRuns.length === 0}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-white border border-ink/20 text-xs font-mono font-semibold text-ink hover:bg-paper-muted shadow-soft shadow-hard-press transition-all self-start sm:self-center disabled:opacity-50 disabled:cursor-not-allowed"
+          className="liquid-glass-btn inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono font-semibold transition-all self-start sm:self-center disabled:opacity-50 disabled:cursor-not-allowed"
           title="Tải về file (.json) chứa toàn bộ lượt luyện tập của bạn"
         >
-          <Download className="w-4 h-4 text-accent" />
+          <Download className="w-4 h-4 text-cyan-300" />
           <span>Tải dữ liệu về (.json)</span>
         </button>
       </div>
 
-      {/* Metric Cards (Stat Grid with refined borders & soft shadows) */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5">
-        <div className="bg-white border border-ink/15 rounded-2xl p-4 sm:p-5 shadow-soft text-center">
-          <div className="text-2xl sm:text-3xl font-mono font-extrabold text-ink">
+        <div className="liquid-glass-card p-4 sm:p-5 text-center">
+          <div className="text-2xl sm:text-3xl font-mono font-extrabold text-white">
             {totalSessions}
           </div>
-          <div className="text-[11px] text-ink-muted mt-1">
+          <div className="text-[11px] text-slate-300 mt-1">
             Tổng lượt đã luyện
             {arenaRuns.length > 0 && (
-              <span className="block text-[10px] font-mono">
+              <span className="block text-[10px] font-mono text-slate-400">
                 ({totalTurns} hội thoại • {arenaRuns.length} Arena)
               </span>
             )}
           </div>
         </div>
 
-        <div className="bg-white border border-ink/15 rounded-2xl p-4 sm:p-5 shadow-soft text-center">
-          <div className="text-2xl sm:text-3xl font-mono font-extrabold text-accent">
+        <div className="liquid-glass-card p-4 sm:p-5 text-center">
+          <div className="text-2xl sm:text-3xl font-mono font-extrabold text-cyan-300">
             {isArenaOnly ? bestArenaScore : bestScoreOverall}
           </div>
-          <div className="text-[11px] text-ink-muted mt-1">
+          <div className="text-[11px] text-slate-300 mt-1">
             {isArenaOnly ? "Điểm Arena cao nhất" : "Điểm cao nhất"}
           </div>
         </div>
 
-        <div className="bg-white border border-ink/15 rounded-2xl p-4 sm:p-5 shadow-soft text-center">
-          <div className="text-2xl sm:text-3xl font-mono font-extrabold text-ink">
+        <div className="liquid-glass-card p-4 sm:p-5 text-center">
+          <div className="text-2xl sm:text-3xl font-mono font-extrabold text-violet-300">
             {isArenaOnly
               ? bugBusterRuns.length > 0
                 ? `${avgBugAccuracy}%`
                 : `${totalStandupKeywords}`
               : averageScore}
           </div>
-          <div className="text-[11px] text-ink-muted mt-1">
+          <div className="text-[11px] text-slate-300 mt-1">
             {isArenaOnly
               ? bugBusterRuns.length > 0
                 ? "Bug Buster: đúng trung bình"
@@ -367,29 +361,29 @@ export default function ProgressPage() {
         </div>
 
         <div
-          className={`rounded-2xl p-4 sm:p-5 shadow-soft text-center border ${
+          className={`liquid-glass-card p-4 sm:p-5 text-center ${
             currentStreak > 0
-              ? "bg-[#DCFCE7] border-[#15803D]"
-              : "bg-accent-light border-accent/30"
+              ? "!bg-emerald-500/20 !border-emerald-400/50"
+              : "!bg-amber-500/15 !border-amber-400/40"
           }`}
         >
           <div
             className={`text-2xl sm:text-3xl font-mono font-extrabold flex items-center justify-center gap-1 ${
-              currentStreak > 0 ? "text-[#15803D]" : "text-accent"
+              currentStreak > 0 ? "text-emerald-200" : "text-amber-200"
             }`}
           >
             <Flame
               className={`w-6 h-6 ${
                 currentStreak > 0
-                  ? "fill-[#16A34A] text-[#16A34A]"
-                  : "fill-accent text-accent"
+                  ? "fill-emerald-400 text-emerald-400"
+                  : "fill-amber-400 text-amber-400"
               }`}
             />
             <span>{currentStreak}</span>
           </div>
           <div
             className={`text-[11px] font-bold mt-1 ${
-              currentStreak > 0 ? "text-[#15803D]" : "text-accent"
+              currentStreak > 0 ? "text-emerald-200" : "text-amber-200"
             }`}
           >
             Ngày luyện tập
@@ -397,47 +391,46 @@ export default function ProgressPage() {
         </div>
       </div>
 
-      {/* Arena Activity & History */}
-      <section className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-4">
-        <div className="flex items-center justify-between border-b border-paper-muted pb-3">
-          <h2 className="text-sm font-bold text-ink uppercase tracking-wider font-mono flex items-center gap-2">
-            <Gamepad2 className="w-4 h-4 text-accent" />
+      <section className="liquid-glass-card p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <h2 className="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
+            <Gamepad2 className="w-4 h-4 text-cyan-400" />
             <span>Chơi trong IT Speaking Arena (đấu trường luyện nói)</span>
           </h2>
-          <span className="text-[11px] font-mono text-ink-muted">
+          <span className="text-[11px] font-mono text-slate-400">
             {arenaRuns.length} lượt chơi
           </span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="bg-paper border border-ink/15 rounded-xl p-3.5">
-            <div className="text-[11px] font-mono text-ink-muted">Bug Buster cao nhất</div>
-            <div className="text-xl font-mono font-extrabold text-ink mt-0.5">
+          <div className="bg-slate-950/55 border border-white/12 rounded-2xl p-3.5">
+            <div className="text-[11px] font-mono text-slate-400">Bug Buster cao nhất</div>
+            <div className="text-xl font-mono font-extrabold text-white mt-0.5">
               {bugBusterBest.toLocaleString("vi-VN")} điểm
             </div>
-            <div className="text-[11px] text-ink-muted mt-0.5">
+            <div className="text-[11px] text-slate-300 mt-0.5">
               {bugBusterRuns.length > 0
                 ? `${bugBusterRuns.length} lượt • ${avgBugAccuracy}% đúng trung bình`
                 : "Chưa có lượt chơi"}
             </div>
           </div>
-          <div className="bg-paper border border-ink/15 rounded-xl p-3.5">
-            <div className="text-[11px] font-mono text-ink-muted">Standup Speed Run cao nhất</div>
-            <div className="text-xl font-mono font-extrabold text-ink mt-0.5">
+          <div className="bg-slate-950/55 border border-white/12 rounded-2xl p-3.5">
+            <div className="text-[11px] font-mono text-slate-400">Standup Speed Run cao nhất</div>
+            <div className="text-xl font-mono font-extrabold text-white mt-0.5">
               {standupBest.toLocaleString("vi-VN")} điểm
             </div>
-            <div className="text-[11px] text-ink-muted mt-0.5">
+            <div className="text-[11px] text-slate-300 mt-0.5">
               {standupRuns.length > 0
                 ? `${standupRuns.length} lượt • ${totalStandupKeywords} từ khóa`
                 : "Chưa có lượt chơi"}
             </div>
           </div>
-          <div className="bg-paper border border-ink/15 rounded-xl p-3.5">
-            <div className="text-[11px] font-mono text-ink-muted">Tổng điểm đã có</div>
-            <div className="text-xl font-mono font-extrabold text-accent mt-0.5">
+          <div className="bg-slate-950/55 border border-white/12 rounded-2xl p-3.5">
+            <div className="text-[11px] font-mono text-slate-400">Tổng điểm đã có</div>
+            <div className="text-xl font-mono font-extrabold text-cyan-300 mt-0.5">
               {identity.totalPoints.toLocaleString("vi-VN")} điểm
             </div>
-            <div className="text-[11px] text-ink-muted mt-0.5">
+            <div className="text-[11px] text-amber-200/90 mt-0.5">
               {coins} IT-Coin • {devTitle.title}
             </div>
           </div>
@@ -445,21 +438,21 @@ export default function ProgressPage() {
 
         {arenaRuns.length > 0 ? (
           <div className="space-y-2 pt-1">
-            <div className="text-xs font-mono font-bold text-ink-muted flex items-center gap-1.5">
-              <History className="w-3.5 h-3.5 text-accent" />
+            <div className="text-xs font-mono font-bold text-slate-300 flex items-center gap-1.5">
+              <History className="w-3.5 h-3.5 text-cyan-400" />
               <span>Lịch sử Arena gần đây</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {arenaRuns.slice(0, 8).map((run) => (
                 <div
                   key={run.id}
-                  className="bg-paper border border-ink/10 rounded-xl p-3 flex items-center justify-between gap-3"
+                  className="bg-slate-950/55 border border-white/12 rounded-xl p-3 flex items-center justify-between gap-3"
                 >
                   <div className="min-w-0">
-                    <div className="text-xs font-bold text-ink truncate">
+                    <div className="text-xs font-bold text-white truncate">
                       {getArenaGameLabel(run.gameId)}
                     </div>
-                    <div className="text-[11px] font-mono text-ink-muted">
+                    <div className="text-[11px] font-mono text-slate-400">
                       {run.gameId === "bug-buster"
                         ? `${run.accuracyOrWords}% đúng`
                         : run.gameId === "standup-speed-run"
@@ -470,7 +463,7 @@ export default function ProgressPage() {
                       {new Date(run.createdAt).toLocaleDateString("vi-VN")}
                     </div>
                   </div>
-                  <span className="px-2.5 py-1 rounded-pill bg-accent-light border border-accent/30 text-xs font-mono font-bold text-accent shrink-0">
+                  <span className="px-2.5 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/45 text-xs font-mono font-bold text-cyan-200 shrink-0">
                     {run.score.toLocaleString("vi-VN")} điểm
                   </span>
                 </div>
@@ -478,9 +471,9 @@ export default function ProgressPage() {
             </div>
           </div>
         ) : (
-          <p className="text-xs text-ink-muted">
+          <p className="text-xs text-slate-300">
             Bạn chưa có lượt chơi Arena nào. Thử sức tại{" "}
-            <Link href="/arena" className="text-accent font-semibold hover:underline">
+            <Link href="/arena" className="text-cyan-300 font-semibold hover:underline">
               IT Speaking Arena
             </Link>
             !
@@ -488,14 +481,13 @@ export default function ProgressPage() {
         )}
       </section>
 
-      {/* Unified Activity & Point History */}
-      <section className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-4">
-        <div className="flex items-center justify-between border-b border-paper-muted pb-3">
-          <h2 className="text-sm font-bold text-ink uppercase tracking-wider font-mono flex items-center gap-2">
-            <History className="w-4 h-4 text-accent" />
+      <section className="liquid-glass-card p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <h2 className="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
+            <History className="w-4 h-4 text-violet-400" />
             <span>Lịch sử luyện tập và điểm thưởng</span>
           </h2>
-          <span className="text-[11px] font-mono text-ink-muted">
+          <span className="text-[11px] font-mono text-slate-400">
             {unifiedHistory.length} hoạt động
           </span>
         </div>
@@ -505,37 +497,36 @@ export default function ProgressPage() {
             {unifiedHistory.slice(0, 15).map((item) => (
               <div
                 key={item.id}
-                className="bg-paper border border-ink/10 rounded-xl px-3.5 py-2.5 flex items-center justify-between gap-3"
+                className="bg-slate-950/55 border border-white/10 rounded-xl px-3.5 py-2.5 flex items-center justify-between gap-3"
               >
                 <div className="min-w-0">
-                  <div className="text-xs font-bold text-ink truncate">
+                  <div className="text-xs font-bold text-white truncate">
                     {item.title}
                   </div>
-                  <div className="text-[11px] font-mono text-ink-muted truncate">
+                  <div className="text-[11px] font-mono text-slate-400 truncate">
                     {item.detail} • {new Date(item.createdAt).toLocaleDateString("vi-VN")}
                   </div>
                 </div>
-                <span className="px-2.5 py-0.5 rounded-pill bg-accent-light border border-accent/30 text-[11px] font-mono font-bold text-accent shrink-0">
+                <span className="px-2.5 py-0.5 rounded-full bg-violet-500/20 border border-violet-400/45 text-[11px] font-mono font-bold text-violet-200 shrink-0">
                   {item.badgeText}
                 </span>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-xs text-ink-muted">
+          <p className="text-xs text-slate-300">
             Chưa có hoạt động nào được ghi nhận. Hoàn thành một lượt luyện nói, Đố từ vựng 60 giây, Nói theo cụm từ hoặc trận Arena để xem lịch sử tại đây.
           </p>
         )}
       </section>
 
-      {/* Bar Chart: Best Score per Scenario */}
-      <section className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-4">
-        <div className="flex items-center justify-between border-b border-paper-muted pb-3">
-          <h2 className="text-sm font-bold text-ink uppercase tracking-wider font-mono flex items-center gap-2">
-            <BarChart3 className="w-4 h-4 text-accent" />
+      <section className="liquid-glass-card p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <h2 className="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
+            <BarChart3 className="w-4 h-4 text-cyan-400" />
             <span>Điểm cao nhất từng tình huống</span>
           </h2>
-          <span className="text-[11px] font-mono text-ink-muted">
+          <span className="text-[11px] font-mono text-slate-400">
             Tối đa 100 điểm
           </span>
         </div>
@@ -544,18 +535,18 @@ export default function ProgressPage() {
           {scenarioStats.map((st) => (
             <div key={st.id} className="space-y-1.5">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-semibold text-ink">{st.titleVI}</span>
-                <span className="font-mono text-ink-muted">
+                <span className="font-semibold text-slate-100">{st.titleVI}</span>
+                <span className="font-mono text-slate-300">
                   {st.bestScore > 0 ? `${st.bestScore} điểm (${st.turnCount} lượt)` : "Chưa luyện"}
                 </span>
               </div>
-              <div className="w-full h-3 bg-paper rounded-pill border border-ink/15 overflow-hidden p-0.5">
+              <div className="w-full h-3 bg-slate-950/70 rounded-full border border-white/15 overflow-hidden p-0.5">
                 <div
-                  className={`h-full rounded-pill transition-all duration-500 ${
+                  className={`h-full rounded-full transition-all duration-500 ${
                     st.bestScore >= 80
-                      ? "bg-accent"
+                      ? "bg-gradient-to-r from-emerald-400 to-cyan-400"
                       : st.bestScore > 0
-                      ? "bg-ink"
+                      ? "bg-gradient-to-r from-cyan-400 to-violet-400"
                       : "bg-transparent"
                   }`}
                   style={{ width: `${Math.max(st.bestScore > 0 ? 5 : 0, st.bestScore)}%` }}
@@ -566,38 +557,37 @@ export default function ProgressPage() {
         </div>
       </section>
 
-      {/* Compact Arena Summary Strip */}
       <section
         aria-label="Tóm tắt IT Speaking Arena"
-        className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+        className="liquid-glass-card p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
       >
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-ink text-white text-xs font-mono font-semibold">
-              <Award className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-500/25 border border-violet-400/50 text-violet-100 text-xs font-mono font-semibold">
+              <Award className="w-3.5 h-3.5 text-violet-300" aria-hidden="true" />
               <span>{devTitle.title}</span>
             </span>
 
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-bold text-ink">
-              <Coins className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/45 text-xs font-mono font-bold text-amber-100">
+              <Coins className="w-3.5 h-3.5 text-amber-300" aria-hidden="true" />
               <span>{coins} IT-Coin</span>
-              <span className="text-[11px] font-normal text-ink-muted">
+              <span className="text-[11px] font-normal text-amber-200/80">
                 (1000 điểm = 1 Coin)
               </span>
             </span>
 
             <span
-              className={`inline-flex items-center gap-1 px-3 py-1 rounded-pill border text-xs font-mono font-bold ${
+              className={`inline-flex items-center gap-1 px-3 py-1 rounded-full border text-xs font-mono font-bold ${
                 gamification.streakDays > 0
-                  ? "bg-[#DCFCE7] border-[#15803D] text-[#15803D]"
-                  : "bg-accent-light border-accent/30 text-accent"
+                  ? "bg-emerald-500/20 border-emerald-400/50 text-emerald-200"
+                  : "bg-cyan-500/15 border-cyan-400/40 text-cyan-200"
               }`}
             >
               <Flame
                 className={`w-3.5 h-3.5 ${
                   gamification.streakDays > 0
-                    ? "fill-[#16A34A] text-[#16A34A]"
-                    : "fill-accent text-accent"
+                    ? "fill-emerald-400 text-emerald-400"
+                    : "fill-cyan-400 text-cyan-400"
                 }`}
                 aria-hidden="true"
               />
@@ -605,7 +595,7 @@ export default function ProgressPage() {
             </span>
           </div>
 
-          <p className="text-xs text-ink-muted font-mono">
+          <p className="text-xs text-slate-300 font-mono">
             Tổng {identity.totalPoints} điểm tích lũy từ hội thoại và game Arena.
           </p>
         </div>
@@ -613,15 +603,15 @@ export default function ProgressPage() {
         <div className="flex flex-wrap items-center gap-2 shrink-0">
           <Link
             href="/vocabulary"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill bg-paper hover:bg-paper-muted text-ink text-xs font-semibold border border-ink/15 shadow-soft transition-colors"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold transition-colors"
           >
-            <BookOpen className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+            <BookOpen className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
             <span>Từ vựng IT</span>
           </Link>
 
           <Link
             href="/arena"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-accent hover:bg-accent-hover text-white text-xs font-semibold border border-accent shadow-soft transition-colors"
+            className="liquid-btn-primary inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all"
           >
             <Gamepad2 className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Vào IT Arena</span>
@@ -630,20 +620,18 @@ export default function ProgressPage() {
         </div>
       </section>
 
-      {/* 7-Day Adaptive Schedule */}
       <section>
         <SevenDayPlan days={planDays} />
       </section>
 
-      {/* Tracked Weak Points List */}
       {keywordWeakPoints.length > 0 && (
-        <section className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-3.5">
-          <div className="flex items-center justify-between border-b border-paper-muted pb-2">
-            <h3 className="text-xs font-bold font-mono uppercase text-ink flex items-center gap-1.5">
-              <AlertCircle className="w-3.5 h-3.5 text-accent" />
+        <section className="liquid-glass-card p-6 space-y-3.5">
+          <div className="flex items-center justify-between border-b border-white/10 pb-2">
+            <h3 className="text-xs font-bold font-mono uppercase text-white flex items-center gap-1.5">
+              <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
               <span>Từ khóa bạn hay quên nhất ({keywordWeakPoints.length})</span>
             </h3>
-            <span className="text-[11px] font-mono text-ink-muted">
+            <span className="text-[11px] font-mono text-slate-400">
               Xếp theo số lần bỏ sót
             </span>
           </div>
@@ -652,10 +640,10 @@ export default function ProgressPage() {
             {keywordWeakPoints.slice(0, 15).map((wp) => (
               <span
                 key={wp.id}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-paper border border-ink text-xs font-mono"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/15 border border-rose-400/40 text-xs font-mono"
               >
-                <span className="font-bold text-ink">{wp.value}</span>
-                <span className="text-[10px] text-accent font-bold">
+                <span className="font-bold text-white">{wp.value}</span>
+                <span className="text-[10px] text-rose-300 font-bold">
                   ({wp.miss_count} lần)
                 </span>
               </span>
