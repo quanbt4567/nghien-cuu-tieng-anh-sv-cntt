@@ -48,13 +48,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi" className={`${beVietnamPro.variable} ${jetbrainsMono.variable}`}>
-      <body className="bg-[#0b1530] text-slate-100 min-h-screen antialiased flex flex-col font-sans selection:bg-cyan-500/30 selection:text-cyan-100">
+      <body className="bg-[#eef6ff] text-slate-900 min-h-screen antialiased flex flex-col font-sans selection:bg-sky-200 selection:text-sky-900">
         <div
           aria-hidden="true"
           className="fixed inset-0 -z-10 pointer-events-none overflow-hidden"
           style={{
             background:
-              "radial-gradient(85% 65% at 88% 12%, rgba(14, 165, 233, 0.34) 0%, transparent 62%), radial-gradient(80% 65% at 12% 88%, rgba(139, 92, 246, 0.34) 0%, transparent 64%), radial-gradient(70% 55% at 50% 45%, rgba(30, 64, 175, 0.24) 0%, transparent 70%), linear-gradient(135deg, #0d1b3e 0%, #111838 48%, #1e1342 100%)",
+              "radial-gradient(75% 55% at 15% 10%, rgba(56, 189, 248, 0.28) 0%, transparent 65%), radial-gradient(70% 55% at 88% 18%, rgba(167, 139, 250, 0.24) 0%, transparent 65%), radial-gradient(75% 60% at 60% 90%, rgba(52, 211, 153, 0.22) 0%, transparent 65%), linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 35%, #ede9fe 72%, #ecfdf5 100%)",
           }}
         />
         <Navbar />

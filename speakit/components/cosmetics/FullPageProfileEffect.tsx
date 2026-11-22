@@ -856,42 +856,45 @@ export function FullPageProfileEffect({
   if (isReactBitsTheme && resolvedThemeId) {
     return (
       <div key={resolvedThemeId} aria-hidden="true" className={containerClass}>
-        <div className="pointer-events-none absolute inset-0 w-full h-full opacity-65">
+        <div className="pointer-events-none absolute inset-0 w-full h-full opacity-55">
           {resolvedThemeId === "theme-rb-aurora" && (
             <DynamicAurora
-              colorStops={["#10B981", "#06B6D4", "#6366F1"]}
-              opacity={0.75}
+              colorStops={["#10B981", "#06B6D4", "#F59E0B"]}
+              lightMode
+              opacity={0.65}
               mouseInteraction={false}
             />
           )}
           {resolvedThemeId === "theme-rb-hyperspeed-highway" && (
-            <DynamicHyperspeed curve="winding" theme="dark" interactive={false} />
+            <DynamicHyperspeed curve="winding" theme="light" interactive={false} />
           )}
           {resolvedThemeId === "theme-rb-particles" && (
             <DynamicParticles
-              particleColors={["#22D3EE", "#A855F7", "#F59E0B"]}
+              particleColors={["#E5484D", "#F59E0B", "#06B6D4"]}
               connections
+              lightMode
               opacity={0.75}
               moveParticlesOnHover={false}
             />
           )}
           {resolvedThemeId === "theme-rb-lightning" && (
-            <DynamicLightning color="#0EA5E9" opacity={0.75} mouseInteraction={false} />
+            <DynamicLightning color="#0284C7" lightMode opacity={0.75} mouseInteraction={false} />
           )}
           {resolvedThemeId === "theme-rb-waves" && (
             <DynamicWaves
-              lineColor="#22D3EE"
-              accentColor="#A855F7"
+              lineColor="#0D9488"
+              accentColor="#F59E0B"
+              lightMode
               opacity={0.65}
               mouseInteraction={false}
             />
           )}
           {resolvedThemeId === "theme-rb-silk" && (
-            <DynamicSilk color="#7C3AED" sheenColor="#22D3EE" mouseInteraction={false} />
+            <DynamicSilk color="#A855F7" sheenColor="#EC4899" lightMode mouseInteraction={false} />
           )}
           {resolvedThemeId === "theme-rb-orb" && (
             <DynamicOrb
-              colors={["#6366F1", "#22D3EE", "#EC4899"]}
+              colors={["#6366F1", "#38BDF8", "#EC4899"]}
               opacity={0.75}
               followCursor={false}
             />
@@ -899,31 +902,32 @@ export function FullPageProfileEffect({
           {resolvedThemeId === "theme-rb-balatro-swirl" && (
             <DynamicBalatro
               color1="#E5484D"
-              color2="#2563EB"
-              color3="#0F172A"
-              opacity={0.55}
+              color2="#3B82F6"
+              color3="#F59E0B"
+              lightMode
+              opacity={0.5}
               mouseInteraction={false}
             />
           )}
           {resolvedThemeId === "theme-rb-liquid-chrome" && (
-            <DynamicLiquidChrome color="#38BDF8" interactive={false} />
+            <DynamicLiquidChrome color="#94A3B8" lightMode interactive={false} />
           )}
           {resolvedThemeId === "theme-rb-iridescence-prism" && (
-            <DynamicIridescence color="#8B5CF6" opacity={0.55} mouseReact={false} />
+            <DynamicIridescence color="#EC4899" opacity={0.5} mouseReact={false} />
           )}
           {resolvedThemeId === "theme-rb-faulty-terminal" && (
-            <DynamicFaultyTerminal tint="#22C55E" mouseReact={false} />
+            <DynamicFaultyTerminal tint="#22C55E" lightMode mouseReact={false} />
           )}
           {resolvedThemeId === "theme-rb-metaballs-ferrofluid" && (
             <DynamicFerrofluid
-              color="#6366F1"
+              color="#8B5CF6"
+              lightMode
               transparent
-              opacity={0.65}
+              opacity={0.6}
               mouseInteraction={false}
             />
           )}
         </div>
-        <div className="pointer-events-none absolute inset-0 bg-slate-950/35" />
       </div>
     );
   }

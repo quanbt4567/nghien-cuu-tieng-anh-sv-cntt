@@ -772,6 +772,7 @@ export function ProfileView() {
 
   return (
     <div className="relative min-h-screen">
+      <FullPageProfileEffect themeId={equippedCosmetics.profile_theme} />
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 py-8 space-y-6 pb-16">
         <div className="flex flex-wrap items-center justify-between gap-3">
