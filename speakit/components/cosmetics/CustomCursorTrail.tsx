@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Mesh, Program, Renderer, Triangle } from "ogl";
 import {
   DynamicBlobCursor,
@@ -235,14 +235,54 @@ function resolveBurstCoords(
   };
 }
 
+function startVisibilityLoop(onFrame: (now: number, dt: number) => void): () => void {
+  let rafId = 0;
+  let lastFrame = performance.now();
+
+  const tick = (now: number) => {
+    if (document.hidden) {
+      rafId = 0;
+      return;
+    }
+    const dt = Math.min((now - lastFrame) / 1000, 0.05);
+    lastFrame = now;
+    onFrame(now, dt);
+    if (!document.hidden) {
+      rafId = window.requestAnimationFrame(tick);
+    } else {
+      rafId = 0;
+    }
+  };
+
+  const onVisibilityChange = () => {
+    if (document.hidden) {
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    } else if (!rafId) {
+      lastFrame = performance.now();
+      rafId = window.requestAnimationFrame(tick);
+    }
+  };
+
+  document.addEventListener("visibilitychange", onVisibilityChange);
+  if (!document.hidden) {
+    rafId = window.requestAnimationFrame(tick);
+  }
+
+  return () => {
+    if (rafId) window.cancelAnimationFrame(rafId);
+    document.removeEventListener("visibilitychange", onVisibilityChange);
+  };
+}
+
 function run2DFallbackRibbon(canvas: HTMLCanvasElement): () => void {
   const ctx = canvas.getContext("2d");
   if (!ctx) return () => {};
 
   const nodes: FallbackRibbonNode[] = [];
   const splashes: FallbackSplash[] = [];
-  let rafId = 0;
-  let lastFrame = performance.now();
   let dpr = Math.min(window.devicePixelRatio || 1, 2);
 
   const resize = () => {
@@ -292,10 +332,7 @@ function run2DFallbackRibbon(canvas: HTMLCanvasElement): () => void {
     if (coords) triggerBurst(coords.x, coords.y);
   };
 
-  const frame = (now: number) => {
-    const dt = Math.min((now - lastFrame) / 1000, 0.05);
-    lastFrame = now;
-
+  const frame = (_now: number, dt: number) => {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
@@ -335,8 +372,6 @@ function run2DFallbackRibbon(canvas: HTMLCanvasElement): () => void {
       ctx.strokeStyle = `rgba(36, 199, 235, ${0.45 * sp.life})`;
       ctx.stroke();
     }
-
-    rafId = window.requestAnimationFrame(frame);
   };
 
   window.addEventListener("resize", resize);
@@ -345,10 +380,10 @@ function run2DFallbackRibbon(canvas: HTMLCanvasElement): () => void {
   window.addEventListener("touchstart", onTouchStart, { passive: true });
   window.addEventListener("touchmove", onTouchMove, { passive: true });
   window.addEventListener(SPEAKIT_CURSOR_BURST_EVENT, onBurst);
-  rafId = window.requestAnimationFrame(frame);
+  const stopLoop = startVisibilityLoop(frame);
 
   return () => {
-    if (rafId) window.cancelAnimationFrame(rafId);
+    stopLoop();
     window.removeEventListener("resize", resize);
     window.removeEventListener("pointermove", onPointerMove);
     window.removeEventListener("pointerdown", onPointerDown);
@@ -607,8 +642,6 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
   let lastMoveY = -1;
   let hoverTarget = 0;
   let hoverSmooth = 0;
-  let rafId = 0;
-  let lastFrame = performance.now();
 
   const resize = () => {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -888,10 +921,7 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
     hoverTarget = 0;
   };
 
-  const frame = (now: number) => {
-    const dt = Math.min((now - lastFrame) / 1000, 0.05);
-    lastFrame = now;
-
+  const frame = (now: number, dt: number) => {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
@@ -1302,7 +1332,6 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
       }
     }
 
-    rafId = window.requestAnimationFrame(frame);
   };
 
   window.addEventListener("resize", resize);
@@ -1312,10 +1341,10 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
   window.addEventListener("touchmove", onTouchMove, { passive: true });
   window.addEventListener(SPEAKIT_CURSOR_BURST_EVENT, onBurst);
   document.addEventListener("pointerleave", onPointerLeave);
-  rafId = window.requestAnimationFrame(frame);
+  const stopLoop = startVisibilityLoop(frame);
 
   return () => {
-    if (rafId) window.cancelAnimationFrame(rafId);
+    stopLoop();
     window.removeEventListener("resize", resize);
     window.removeEventListener("pointermove", onPointerMove);
     window.removeEventListener("pointerdown", onPointerDown);
@@ -1328,11 +1357,22 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
 
 export function CustomCursorTrail({ effectId }: CustomCursorTrailProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [isTouchOnly, setIsTouchOnly] = useState(false);
   const mode = effectId && VALID_MODES.has(effectId as CursorMode) ? (effectId as CursorMode) : null;
   const isReactBitsCursor = Boolean(mode && REACT_BITS_CURSOR_MODES.has(mode));
 
   useEffect(() => {
-    if (!mode || isReactBitsCursor) return;
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia?.("(hover: none) and (pointer: coarse)");
+    if (!mq) return;
+    setIsTouchOnly(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setIsTouchOnly(e.matches);
+    mq.addEventListener?.("change", onChange);
+    return () => mq.removeEventListener?.("change", onChange);
+  }, []);
+
+  useEffect(() => {
+    if (!mode || isReactBitsCursor || isTouchOnly) return;
     if (typeof window === "undefined") return;
     const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     if (reducedMotion) return;
@@ -1345,9 +1385,9 @@ export function CustomCursorTrail({ effectId }: CustomCursorTrailProps) {
     }
 
     return run2DCursorEffect(canvas, mode);
-  }, [mode, isReactBitsCursor]);
+  }, [mode, isReactBitsCursor, isTouchOnly]);
 
-  if (!mode) return null;
+  if (!mode || isTouchOnly) return null;
 
   if (isReactBitsCursor) {
     return (
