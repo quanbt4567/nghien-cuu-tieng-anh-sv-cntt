@@ -217,7 +217,7 @@ export function WelcomeNameModal() {
                 : "Đăng ký tài khoản SpeakIT"}
             </h2>
             <p className="text-xs text-ink-muted leading-relaxed">
-              Vui lòng đăng nhập hoặc tạo tài khoản bằng Email &amp; Mật khẩu để lưu điểm, IT-Coin, hiệu ứng và thi đấu Arena.
+              Đăng nhập hoặc tạo tài khoản để lưu điểm, IT-Coin và thi đấu Arena.
             </p>
           </div>
         </div>

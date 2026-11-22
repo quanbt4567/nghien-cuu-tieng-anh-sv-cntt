@@ -379,7 +379,7 @@ export function DiscordAvatarFrame({
               autoplay
               className="w-full h-full pointer-events-none select-none"
             />
-          ) : glowColor ? (
+          ) : !isLightSafeEffect && glowColor ? (
             <span
               className="w-full h-full rounded-full border-2 opacity-85"
               style={{
