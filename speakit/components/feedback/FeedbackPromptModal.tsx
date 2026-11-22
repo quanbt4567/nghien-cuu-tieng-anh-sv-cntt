@@ -103,11 +103,11 @@ export function FeedbackPromptModal({
     <div
       role="dialog"
       aria-label="Phản hồi trải nghiệm"
-      className="fixed bottom-4 right-4 z-50 max-w-sm w-[calc(100%-2rem)] liquid-glass-card !bg-slate-950/90 p-4"
+      className="fixed bottom-4 right-4 z-50 max-w-sm w-[calc(100%-2rem)] liquid-glass-card !bg-white/95 border-slate-200/90 shadow-xl p-4"
     >
       {isSubmitted ? (
-        <div className="flex items-center gap-2.5 py-2 text-white">
-          <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+        <div className="flex items-center gap-2.5 py-2 text-slate-900">
+          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
           <p className="text-sm font-semibold">
             Cảm ơn bạn đã gửi góp ý cho SpeakIT!
           </p>
@@ -115,7 +115,7 @@ export function FeedbackPromptModal({
       ) : (
         <form onSubmit={(e) => void handleSubmit(e)} className="space-y-3">
           <div className="space-y-1">
-            <h3 className="text-sm font-bold text-white">
+            <h3 className="text-sm font-bold text-slate-900">
               Trải nghiệm của bạn thế nào?
             </h3>
             <div className="flex items-center gap-1.5 pt-0.5">
@@ -127,13 +127,13 @@ export function FeedbackPromptModal({
                   onClick={() => setRating(star)}
                   onMouseEnter={() => setHoveredRating(star)}
                   onMouseLeave={() => setHoveredRating(0)}
-                  className="p-1 rounded-lg hover:bg-white/10 transition-colors"
+                  className="p-1 rounded-lg hover:bg-slate-100/80 transition-colors"
                 >
                   <Star
                     className={`w-5 h-5 transition-colors ${
                       star <= activeRating
                         ? "fill-amber-400 text-amber-400"
-                        : "text-slate-500"
+                        : "text-slate-300"
                     }`}
                   />
                 </button>
@@ -151,8 +151,8 @@ export function FeedbackPromptModal({
                   onClick={() => setCategory(selected ? "" : item)}
                   className={`px-2.5 py-1 rounded-full text-[11px] font-medium border transition-colors ${
                     selected
-                      ? "bg-cyan-500/25 text-cyan-100 border-cyan-400/55"
-                      : "bg-white/[0.06] text-slate-300 border-white/15 hover:text-white hover:bg-white/[0.12]"
+                      ? "bg-sky-600 text-white border-sky-500 shadow-sm"
+                      : "bg-slate-100/80 text-slate-700 border-slate-200/85 hover:text-slate-900 hover:bg-white"
                   }`}
                 >
                   {item}

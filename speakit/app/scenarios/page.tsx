@@ -16,14 +16,14 @@ export default async function ScenariosPage() {
           href="/"
           className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all mb-3"
         >
-          <ArrowLeft className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
+          <ArrowLeft className="w-3.5 h-3.5 text-sky-600" aria-hidden="true" />
           <span>Trang chủ</span>
         </Link>
-        <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-          <MessageSquare className="w-6 h-6 text-cyan-400" aria-hidden="true" />
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+          <MessageSquare className="w-6 h-6 text-sky-600" aria-hidden="true" />
           <span>Kịch bản luyện nói IT</span>
         </h1>
-        <p className="text-xs text-slate-300 mt-1.5">
+        <p className="text-xs text-slate-600 mt-1.5">
           Chọn vai trò CNTT (Frontend, Backend, DevOps, QA) và mức độ khó phù hợp để luyện tập {scenarioCount} tình huống giao tiếp công việc thực tế.
         </p>
       </div>

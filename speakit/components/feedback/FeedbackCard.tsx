@@ -38,48 +38,48 @@ export function FeedbackCard({
     <div className="space-y-4">
       <div className="liquid-glass-card p-5 space-y-3.5">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+          <span className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono">
             Điểm đánh giá câu trả lời
           </span>
           <div className="flex items-baseline gap-1 font-mono">
             <span
               className={`text-3xl font-extrabold ${
                 isHigh
-                  ? "text-emerald-300"
+                  ? "text-emerald-600"
                   : isMedium
-                  ? "text-cyan-300"
-                  : "text-rose-300"
+                  ? "text-sky-600"
+                  : "text-rose-600"
               }`}
             >
               {result.score}
             </span>
-            <span className="text-xs text-slate-300">/100</span>
+            <span className="text-xs text-slate-600">/100</span>
           </div>
         </div>
 
-        <div className="w-full h-3.5 bg-slate-950/70 rounded-full border border-white/15 overflow-hidden p-0.5">
+        <div className="w-full h-3.5 bg-slate-200/85 rounded-full border border-slate-200/90 overflow-hidden p-0.5">
           <div
             className={`h-full rounded-full transition-all duration-500 ${
               isHigh
-                ? "bg-gradient-to-r from-emerald-400 to-teal-400"
+                ? "bg-gradient-to-r from-emerald-500 to-teal-500"
                 : isMedium
-                ? "bg-gradient-to-r from-cyan-400 to-blue-400"
-                : "bg-gradient-to-r from-rose-500 to-amber-400"
+                ? "bg-gradient-to-r from-sky-500 to-blue-600"
+                : "bg-gradient-to-r from-rose-500 to-amber-500"
             }`}
             style={{ width: `${Math.max(5, result.score)}%` }}
           />
         </div>
 
-        <div className="flex flex-wrap items-center justify-between text-[11px] font-mono text-slate-300 pt-1 border-t border-white/10">
+        <div className="flex flex-wrap items-center justify-between text-[11px] font-mono text-slate-600 pt-1 border-t border-slate-200/85">
           <span>Công thức chấm:</span>
           <span>40% Từ khóa • 30% Đầy đủ • 30% Ngữ pháp</span>
         </div>
       </div>
 
       <div className="liquid-glass-card p-5 space-y-3.5">
-        <div className="flex items-center justify-between text-xs font-bold text-white">
+        <div className="flex items-center justify-between text-xs font-bold text-slate-900">
           <span>Từ khóa kỹ thuật CNTT</span>
-          <span className="font-mono text-slate-300">
+          <span className="font-mono text-slate-600">
             {result.keywordsUsed.length}/
             {result.keywordsUsed.length + result.keywordsMissed.length} từ đã dùng
           </span>
@@ -89,9 +89,9 @@ export function FeedbackCard({
           {result.keywordsUsed.map((kw) => (
             <span
               key={kw}
-              className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-semibold rounded-full bg-emerald-500/20 border border-emerald-400/45 text-emerald-200"
+              className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-semibold rounded-full bg-emerald-100/90 border border-emerald-300/80 text-emerald-800"
             >
-              <Check className="w-3.5 h-3.5 text-emerald-300 stroke-[3]" />
+              <Check className="w-3.5 h-3.5 text-emerald-600 stroke-[3]" />
               <span>{kw}</span>
             </span>
           ))}
@@ -99,9 +99,9 @@ export function FeedbackCard({
           {result.keywordsMissed.map((kw) => (
             <span
               key={kw}
-              className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-medium rounded-full bg-rose-500/15 border border-rose-400/40 text-rose-200 line-through decoration-rose-400 decoration-2"
+              className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-medium rounded-full bg-rose-50/95 border border-rose-300/80 text-rose-700 line-through decoration-rose-500 decoration-2"
             >
-              <X className="w-3.5 h-3.5 text-rose-300 stroke-[2.5]" />
+              <X className="w-3.5 h-3.5 text-rose-600 stroke-[2.5]" />
               <span>{kw}</span>
             </span>
           ))}
@@ -110,19 +110,19 @@ export function FeedbackCard({
 
       <div className="liquid-glass-card p-5 space-y-4">
         <div className="space-y-1.5">
-          <span className="text-xs font-mono font-bold uppercase text-slate-300 flex items-center gap-1.5">
-            <MessageSquare className="w-3.5 h-3.5 text-cyan-300" />
+          <span className="text-xs font-mono font-bold uppercase text-slate-700 flex items-center gap-1.5">
+            <MessageSquare className="w-3.5 h-3.5 text-sky-600" />
             Văn bản bạn đã nói:
           </span>
-          <div className="p-3 bg-slate-950/60 rounded-xl border border-white/15 text-sm text-white font-medium leading-relaxed">
+          <div className="p-3 bg-white/75 rounded-xl border border-slate-200/85 text-sm text-slate-900 font-medium leading-relaxed">
             "{transcript}"
           </div>
         </div>
 
         <div className="space-y-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="text-xs font-mono font-bold uppercase text-cyan-300 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="text-xs font-mono font-bold uppercase text-sky-700 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-sky-600" />
               Gợi ý câu nói tự nhiên hơn:
             </span>
             <button
@@ -144,15 +144,15 @@ export function FeedbackCard({
                 });
               }}
               disabled={isPlayingBetter}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-cyan-500/20 border border-cyan-400/50 text-xs font-mono font-bold text-cyan-200 hover:bg-cyan-500/30 transition-colors disabled:opacity-50"
+              className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold transition-all disabled:opacity-60"
               title="Nghe câu mẫu phát âm chuẩn"
             >
-              <Volume2 className={`w-3.5 h-3.5 ${isPlayingBetter ? "text-cyan-300 animate-pulse" : ""}`} />
+              <Volume2 className={`w-3.5 h-3.5 ${isPlayingBetter ? "animate-pulse" : ""}`} />
               <span>{isPlayingBetter ? "Đang phát..." : "Nghe mẫu (Shadowing)"}</span>
             </button>
           </div>
-          <div className="p-3.5 bg-cyan-500/15 rounded-xl border border-cyan-400/35 text-sm text-white leading-relaxed">
-            <span className="font-semibold text-cyan-200 block text-xs font-mono mb-1">
+          <div className="p-3.5 bg-sky-50/85 rounded-xl border border-sky-200/90 text-sm text-slate-900 leading-relaxed">
+            <span className="font-semibold text-sky-700 block text-xs font-mono mb-1">
               Câu mẫu tự nhiên hơn (chạm từ gạch chân để xem nghĩa):
             </span>
             &ldquo;<InteractiveEnglishText text={result.betterSentence} />&rdquo;
@@ -161,25 +161,25 @@ export function FeedbackCard({
 
         {result.grammarCorrections.length > 0 && (
           <div className="space-y-2">
-            <span className="text-xs font-mono font-bold uppercase text-rose-300">
+            <span className="text-xs font-mono font-bold uppercase text-rose-600">
               Gợi ý diễn đạt ({result.grammarCorrections.length}):
             </span>
             <div className="space-y-2">
               {result.grammarCorrections.map((g, idx) => (
                 <div
                   key={idx}
-                  className="p-3 bg-slate-950/60 rounded-xl border border-rose-400/30 space-y-1 text-xs"
+                  className="p-3 bg-white/80 rounded-xl border border-rose-200/90 space-y-1 text-xs"
                 >
                   <div className="flex flex-wrap items-baseline gap-2">
-                    <span className="line-through text-rose-300 font-mono">
+                    <span className="line-through text-rose-600 font-mono">
                       "{g.original}"
                     </span>
-                    <span className="font-mono text-slate-400">→</span>
-                    <span className="font-mono font-bold text-emerald-300">
+                    <span className="font-mono text-slate-500">→</span>
+                    <span className="font-mono font-bold text-emerald-700">
                       "{g.corrected}"
                     </span>
                   </div>
-                  <div className="text-slate-300 font-sans pt-0.5">
+                  <div className="text-slate-700 font-sans pt-0.5">
                     {g.explanationVI}
                   </div>
                 </div>
@@ -189,12 +189,12 @@ export function FeedbackCard({
         )}
 
         {result.pronunciationNote && (
-          <div className="p-3 bg-white/[0.06] rounded-xl border border-white/15 text-xs text-slate-300 space-y-1">
-            <span className="font-semibold text-white block font-mono">
+          <div className="p-3 bg-slate-100/80 rounded-xl border border-slate-200/85 text-xs text-slate-700 space-y-1">
+            <span className="font-semibold text-slate-900 block font-mono">
               Ước lượng phát âm (dựa trên chữ vừa nói):
             </span>
             <p>{result.pronunciationNote}</p>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-slate-600">
               Đánh giá dựa trên văn bản bạn vừa nói hoặc gõ vào.
             </p>
           </div>

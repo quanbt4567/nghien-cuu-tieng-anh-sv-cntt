@@ -79,53 +79,53 @@ export default function PlacementPage() {
           href="/"
           className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all"
         >
-          <ArrowLeft className="w-3.5 h-3.5 text-cyan-300" />
+          <ArrowLeft className="w-3.5 h-3.5 text-sky-600" />
           <span>Trang chủ</span>
         </Link>
-        <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2 pt-1">
-          <Compass className="w-6 h-6 text-cyan-400 shrink-0" />
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2 pt-1">
+          <Compass className="w-6 h-6 text-sky-600 shrink-0" />
           <span>Kiểm Tra Trình Độ Nhanh (2 Phút)</span>
         </h1>
-        <p className="text-xs sm:text-sm text-slate-300">
+        <p className="text-xs sm:text-sm text-slate-600">
           Trả lời 2 câu tình huống và nói ngắn 15 giây để SpeakIT gợi ý cấp độ Fresher, Junior hoặc Senior phù hợp nhất.
         </p>
       </div>
 
       {result && recommendedScenario ? (
         <div className="liquid-glass-card p-6 space-y-5">
-          <div className="flex items-center gap-2 text-emerald-300 font-mono text-xs font-bold uppercase">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          <div className="flex items-center gap-2 text-emerald-700 font-mono text-xs font-bold uppercase">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <span>Hoàn tất đánh giá đầu vào</span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-cyan-500/15 border border-cyan-400/35 space-y-2">
+          <div className="p-4 rounded-2xl bg-sky-50/85 border border-sky-200/90 space-y-2">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-mono text-cyan-200 font-semibold">
+              <span className="text-xs font-mono text-sky-700 font-semibold">
                 Cấp độ đề xuất của bạn:
               </span>
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full bg-white/10 border border-cyan-400/40 text-cyan-100 text-xs font-mono font-bold">
+                <span className="px-2.5 py-0.5 rounded-full bg-white/85 border border-sky-300/80 text-sky-700 text-xs font-mono font-bold">
                   {result.score}/100 điểm
                 </span>
-                <span className="px-3 py-0.5 rounded-full bg-violet-500/25 border border-violet-400/50 text-violet-100 text-xs font-mono font-bold">
+                <span className="px-3 py-0.5 rounded-full bg-gradient-to-r from-violet-500 to-purple-600 text-white text-xs font-mono font-bold shadow-sm">
                   {result.level}
                 </span>
               </div>
             </div>
-            <p className="text-sm text-white leading-relaxed">{result.summaryVI}</p>
+            <p className="text-sm text-slate-900 leading-relaxed">{result.summaryVI}</p>
           </div>
 
           <div className="liquid-glass-card-lite p-4 space-y-1.5">
-            <span className="text-[11px] font-mono font-bold uppercase text-cyan-300">
+            <span className="text-[11px] font-mono font-bold uppercase text-sky-600">
               Tình huống khởi đầu phù hợp:
             </span>
-            <h2 className="text-base font-bold text-white">
+            <h2 className="text-base font-bold text-slate-900">
               {recommendedScenario.titleEN}{" "}
-              <span className="text-xs font-normal text-slate-300">
+              <span className="text-xs font-normal text-slate-600">
                 ({recommendedScenario.titleVI})
               </span>
             </h2>
-            <p className="text-xs text-slate-300">
+            <p className="text-xs text-slate-600">
               {recommendedScenario.descriptionVI}
             </p>
           </div>
@@ -148,8 +148,8 @@ export default function PlacementPage() {
         </div>
       ) : (
         <div className="liquid-glass-card p-5 sm:p-6 space-y-6">
-          <div className="flex items-center justify-between border-b border-white/10 pb-3">
-            <span className="text-xs font-mono font-bold text-cyan-300 uppercase">
+          <div className="flex items-center justify-between border-b border-slate-200/85 pb-3">
+            <span className="text-xs font-mono font-bold text-sky-600 uppercase">
               Bước {step + 1}/3
             </span>
             <div className="flex items-center gap-1.5">
@@ -158,8 +158,8 @@ export default function PlacementPage() {
                   key={idx}
                   className={`h-2 w-8 rounded-full transition-colors ${
                     idx <= step
-                      ? "bg-gradient-to-r from-cyan-400 to-blue-500 shadow-[0_0_10px_rgba(6,182,212,0.5)]"
-                      : "bg-white/10"
+                      ? "bg-gradient-to-r from-sky-500 to-blue-600 shadow-[0_0_10px_rgba(14,165,233,0.4)]"
+                      : "bg-slate-200/85"
                   }`}
                 />
               ))}
@@ -173,13 +173,13 @@ export default function PlacementPage() {
               return (
                 <div className="space-y-4">
                   <div className="space-y-1.5">
-                    <p className="text-xs text-slate-300 leading-relaxed">
+                    <p className="text-xs text-slate-600 leading-relaxed">
                       {q.contextVI}
                     </p>
-                    <h2 className="text-base sm:text-lg font-bold text-white">
+                    <h2 className="text-base sm:text-lg font-bold text-slate-900">
                       <InteractiveEnglishText text={q.questionEN} />
                     </h2>
-                    <p className="text-[11px] text-cyan-300 font-medium">
+                    <p className="text-[11px] text-sky-600 font-medium">
                       Mẹo cho người mới: Chạm vào từ tiếng Anh có gạch chân để xem nghĩa tiếng Việt.
                     </p>
                   </div>
@@ -197,8 +197,8 @@ export default function PlacementPage() {
                           }}
                           className={`flex items-start gap-3 w-full text-left p-3.5 rounded-2xl border text-xs sm:text-sm cursor-pointer transition-all ${
                             isChosen
-                              ? "bg-cyan-500/20 border-cyan-400/55 text-white font-semibold shadow-[0_0_18px_rgba(6,182,212,0.2)]"
-                              : "bg-white/[0.06] border-white/15 text-slate-200 hover:bg-white/[0.11] hover:border-white/30"
+                              ? "bg-sky-50/90 border-sky-400/80 text-slate-900 font-semibold shadow-[0_6px_18px_rgba(14,165,233,0.14)]"
+                              : "bg-white/75 border-slate-200/85 text-slate-700 hover:bg-white hover:border-sky-300/75"
                           }`}
                         >
                           <button
@@ -207,8 +207,8 @@ export default function PlacementPage() {
                             aria-pressed={isChosen}
                             className={`mt-0.5 px-2 py-0.5 rounded-full border text-[11px] font-mono font-bold shrink-0 transition-colors ${
                               isChosen
-                                ? "bg-cyan-500/35 text-cyan-100 border-cyan-300/60"
-                                : "bg-white/10 text-slate-200 border-white/20 hover:border-white/40"
+                                ? "bg-sky-600 text-white border-sky-500"
+                                : "bg-slate-100/90 text-slate-700 border-slate-200/90 hover:border-sky-300"
                             }`}
                           >
                             {isChosen ? `✓ ${opt.id.toUpperCase()}` : opt.id.toUpperCase()}
@@ -246,14 +246,14 @@ export default function PlacementPage() {
           ) : (
             <div className="space-y-5">
               <div className="space-y-1.5">
-                <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-cyan-300">
-                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-sky-600">
+                  <Sparkles className="w-3.5 h-3.5 text-sky-500" />
                   <span>Phản xạ nói ngắn (15 giây)</span>
                 </span>
-                <h2 className="text-base sm:text-lg font-bold text-white">
+                <h2 className="text-base sm:text-lg font-bold text-slate-900">
                   &ldquo;<InteractiveEnglishText text="Briefly explain a technical task or bug you worked on recently." />&rdquo;
                 </h2>
-                <p className="text-xs text-slate-300">
+                <p className="text-xs text-slate-600">
                   Nói 1–2 câu bằng tiếng Anh (hoặc gõ nhanh nếu không dùng micro).
                 </p>
               </div>
@@ -266,9 +266,9 @@ export default function PlacementPage() {
                 error={speechError}
               />
 
-              <div className="space-y-2 pt-2 border-t border-white/10">
-                <label className="inline-flex items-center gap-1.5 text-xs font-semibold text-white">
-                  <Keyboard className="w-3.5 h-3.5 text-cyan-300" />
+              <div className="space-y-2 pt-2 border-t border-slate-200/85">
+                <label className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-900">
+                  <Keyboard className="w-3.5 h-3.5 text-sky-600" />
                   <span>Nội dung câu trả lời tiếng Anh:</span>
                 </label>
                 <textarea

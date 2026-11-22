@@ -92,7 +92,7 @@ export function AudioPromptPlayer({
 
   if (!supported) {
     return (
-      <div className="text-xs font-mono text-slate-300 bg-white/[0.06] p-2 rounded-lg border border-white/15">
+      <div className="text-xs font-mono text-slate-600 bg-white/75 p-2 rounded-lg border border-slate-200/85">
         Thiết bị không hỗ trợ SpeechSynthesis. Câu hỏi hiển thị dạng văn bản.
       </div>
     );
@@ -114,7 +114,7 @@ export function AudioPromptPlayer({
         <button
           onClick={() => handlePlay(rate, voicePersona, false)}
           type="button"
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full bg-cyan-500/20 border border-cyan-400/50 text-cyan-200 hover:bg-cyan-500/30 transition-all"
+          className="liquid-btn-primary flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all"
           title="Nghe lại câu hỏi"
         >
           <RotateCcw className="w-3.5 h-3.5" />
@@ -131,10 +131,10 @@ export function AudioPromptPlayer({
           }
         }}
         type="button"
-        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border transition-all ${
+        className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-full border transition-all ${
           isPlaying && isSlowPlaying
-            ? "bg-violet-500/40 border-violet-300/70 text-white shadow-[0_0_16px_rgba(139,92,246,0.4)]"
-            : "bg-violet-500/20 border-violet-400/50 text-violet-200 hover:bg-violet-500/30"
+            ? "bg-gradient-to-r from-violet-600 to-purple-700 border-violet-300/80 text-white shadow-[0_6px_18px_rgba(139,92,246,0.4)]"
+            : "bg-gradient-to-r from-violet-500 to-purple-600 border-violet-300/60 text-white shadow-[0_4px_14px_rgba(139,92,246,0.3)] hover:brightness-105"
         }`}
         title="Nghe chậm từng từ"
       >
@@ -146,7 +146,7 @@ export function AudioPromptPlayer({
         <span>Nghe chậm</span>
       </button>
 
-      <div className="flex items-center gap-1 bg-slate-950/60 p-0.5 rounded-full border border-white/15">
+      <div className="flex items-center gap-1 bg-slate-100/85 p-0.5 rounded-full border border-slate-200/85">
         {([0.8, 1.0, 1.2] as const).map((r) => (
           <button
             key={r}
@@ -154,8 +154,8 @@ export function AudioPromptPlayer({
             onClick={() => handleRateChange(r)}
             className={`px-2 py-0.5 text-[11px] font-mono font-semibold rounded-full border transition-all ${
               rate === r
-                ? "bg-cyan-500/30 text-cyan-100 border-cyan-400/50"
-                : "text-slate-300 border-transparent hover:text-white"
+                ? "bg-sky-600 text-white border-sky-500 shadow-sm"
+                : "text-slate-600 border-transparent hover:text-slate-900"
             }`}
           >
             {r}x

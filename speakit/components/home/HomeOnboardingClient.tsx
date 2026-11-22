@@ -47,20 +47,20 @@ const ROLE_ICONS: Record<ITRole, typeof Code2> = {
 
 const ROLE_ACTIVE_STYLES: Record<ITRole, { pill: string; icon: string }> = {
   frontend: {
-    pill: "bg-cyan-500/25 text-cyan-100 border-cyan-400/55 shadow-[0_0_16px_rgba(6,182,212,0.28)]",
-    icon: "text-cyan-300",
+    pill: "bg-gradient-to-r from-sky-500 to-blue-600 text-white border-sky-300/60 shadow-[0_6px_18px_rgba(14,165,233,0.3)]",
+    icon: "text-white",
   },
   backend: {
-    pill: "bg-violet-500/25 text-violet-100 border-violet-400/55 shadow-[0_0_16px_rgba(139,92,246,0.28)]",
-    icon: "text-violet-300",
+    pill: "bg-gradient-to-r from-violet-500 to-purple-600 text-white border-violet-300/60 shadow-[0_6px_18px_rgba(139,92,246,0.3)]",
+    icon: "text-white",
   },
   qa: {
-    pill: "bg-emerald-500/25 text-emerald-100 border-emerald-400/55 shadow-[0_0_16px_rgba(16,185,129,0.28)]",
-    icon: "text-emerald-300",
+    pill: "bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-emerald-300/60 shadow-[0_6px_18px_rgba(16,185,129,0.3)]",
+    icon: "text-white",
   },
   devops: {
-    pill: "bg-amber-500/25 text-amber-100 border-amber-400/55 shadow-[0_0_16px_rgba(245,158,11,0.28)]",
-    icon: "text-amber-300",
+    pill: "bg-gradient-to-r from-amber-500 to-orange-600 text-white border-amber-300/60 shadow-[0_6px_18px_rgba(245,158,11,0.3)]",
+    icon: "text-white",
   },
 };
 
@@ -91,25 +91,25 @@ const DIFFICULTY_SECTIONS: Array<{
 
 function getDifficultyBadgeClass(level: ScenarioDifficulty): string {
   if (level === "Fresher") {
-    return "bg-emerald-500/20 text-emerald-200 border-emerald-400/40";
+    return "bg-emerald-100/90 text-emerald-700 border-emerald-300/80";
   }
   if (level === "Junior") {
-    return "bg-cyan-500/20 text-cyan-200 border-cyan-400/40";
+    return "bg-sky-100/90 text-sky-700 border-sky-300/80";
   }
-  return "bg-violet-500/20 text-violet-200 border-violet-400/45";
+  return "bg-violet-100/90 text-violet-700 border-violet-300/80";
 }
 
 function getDifficultyFilterActiveClass(level: "ALL" | ScenarioDifficulty): string {
   if (level === "Fresher") {
-    return "bg-emerald-500/25 text-emerald-100 border-emerald-400/55 shadow-[0_0_16px_rgba(16,185,129,0.28)]";
+    return "bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-emerald-300/60 shadow-[0_6px_16px_rgba(16,185,129,0.3)]";
   }
   if (level === "Junior") {
-    return "bg-cyan-500/25 text-cyan-100 border-cyan-400/55 shadow-[0_0_16px_rgba(6,182,212,0.28)]";
+    return "bg-gradient-to-r from-sky-500 to-blue-600 text-white border-sky-300/60 shadow-[0_6px_16px_rgba(14,165,233,0.3)]";
   }
   if (level === "Senior") {
-    return "bg-violet-500/25 text-violet-100 border-violet-400/55 shadow-[0_0_16px_rgba(139,92,246,0.3)]";
+    return "bg-gradient-to-r from-violet-500 to-purple-600 text-white border-violet-300/60 shadow-[0_6px_16px_rgba(139,92,246,0.3)]";
   }
-  return "bg-cyan-500/25 text-cyan-100 border-cyan-400/55 shadow-[0_0_16px_rgba(6,182,212,0.28)]";
+  return "bg-gradient-to-r from-sky-500 to-blue-600 text-white border-sky-300/60 shadow-[0_6px_16px_rgba(14,165,233,0.3)]";
 }
 
 export function HomeOnboardingClient() {
@@ -239,28 +239,28 @@ export function HomeOnboardingClient() {
       <Link
         key={scenario.id}
         href={`/practice/${scenario.id}`}
-        className={`group liquid-glass-card-lite p-5 hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgba(6,182,212,0.22)] transition-all flex flex-col justify-between gap-4 ${
+        className={`group liquid-glass-card-lite p-5 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(14,165,233,0.16)] transition-all flex flex-col justify-between gap-4 ${
           isPlacementMatch
-            ? "!border-cyan-400/60 ring-1 ring-cyan-400/30"
+            ? "!border-sky-400/80 ring-1 ring-sky-400/35"
             : isRecommended
-            ? "!border-emerald-400/45 hover:!border-emerald-300/65"
-            : "hover:!border-cyan-400/45"
+            ? "!border-emerald-400/70 hover:!border-emerald-500/80"
+            : "hover:!border-sky-400/70"
         }`}
       >
         <div className="flex items-start gap-3.5">
           <div
             className={`w-8 h-8 rounded-full flex items-center justify-center border shrink-0 font-mono font-bold text-xs transition-colors ${
               isRecommended
-                ? "bg-cyan-500/25 text-cyan-100 border-cyan-400/50"
-                : "bg-white/[0.08] text-slate-200 border-white/20 group-hover:bg-cyan-500/25 group-hover:text-cyan-100 group-hover:border-cyan-400/50"
+                ? "bg-sky-100/90 text-sky-700 border-sky-300/80"
+                : "bg-slate-100/85 text-slate-600 border-slate-200/85 group-hover:bg-sky-100/90 group-hover:text-sky-700 group-hover:border-sky-300/80"
             }`}
           >
             {String(index + 1).padStart(2, "0")}
           </div>
           <div className="min-w-0 space-y-1.5">
-            <h3 className="font-bold text-sm sm:text-base text-white group-hover:text-cyan-200 transition-colors">
+            <h3 className="font-bold text-sm sm:text-base text-slate-900 group-hover:text-sky-700 transition-colors">
               {scenario.titleEN}{" "}
-              <span className="text-xs font-normal text-slate-300">
+              <span className="text-xs font-normal text-slate-600">
                 ({scenario.titleVI})
               </span>
             </h3>
@@ -273,26 +273,26 @@ export function HomeOnboardingClient() {
                 {level}
               </span>
               {isPlacementMatch && (
-                <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-200 border border-cyan-400/40">
+                <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-sky-100/90 text-sky-700 border border-sky-300/80">
                   Đề xuất từ Placement
                 </span>
               )}
               {!isPlacementMatch && isRecommended && (
-                <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-200 border border-emerald-400/40">
+                <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100/90 text-emerald-700 border border-emerald-300/80">
                   Phù hợp với bạn
                 </span>
               )}
-              <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-white/[0.06] border border-white/15 text-slate-300">
+              <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-slate-100/80 border border-slate-200/85 text-slate-600">
                 Vai: {scenario.roleVI}
               </span>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-600 leading-relaxed">
               {scenario.descriptionVI}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-3 border-t border-white/10 text-xs font-mono text-slate-300">
+        <div className="flex items-center justify-between pt-3 border-t border-slate-200/85 text-xs font-mono text-slate-600">
           <span>{scenario.turns.length} lượt hội thoại</span>
           <span className="liquid-btn-primary inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-sans text-xs transition-all">
             <span>Thực hành</span>
@@ -309,9 +309,9 @@ export function HomeOnboardingClient() {
   return (
     <div className="space-y-8">
       {showGuideBanner && (
-        <div className="bg-cyan-500/15 border border-cyan-400/35 backdrop-blur-xl rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-white">
-            <HelpCircle className="w-4 h-4 text-cyan-300 shrink-0" aria-hidden="true" />
+        <div className="bg-sky-50/90 border border-sky-200/90 backdrop-blur-xl rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-slate-900">
+            <HelpCircle className="w-4 h-4 text-sky-600 shrink-0" aria-hidden="true" />
             <span className="font-semibold">Lần đầu sử dụng?</span>
             <Link
               href="/guide"
@@ -319,7 +319,7 @@ export function HomeOnboardingClient() {
             >
               Xem hướng dẫn 1 phút
             </Link>
-            <span className="text-slate-300">hoặc</span>
+            <span className="text-slate-600">hoặc</span>
             <Link
               href="/placement"
               className="liquid-glass-btn inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold transition-all"
@@ -331,7 +331,7 @@ export function HomeOnboardingClient() {
             type="button"
             onClick={handleDismissGuideBanner}
             aria-label="Đóng thông báo hướng dẫn"
-            className="p-1 rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-1 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -343,7 +343,7 @@ export function HomeOnboardingClient() {
         className="liquid-glass-card p-5 sm:p-6 space-y-5"
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <span className="text-xs font-mono font-semibold text-slate-300">
+          <span className="text-xs font-mono font-semibold text-slate-700">
             Chọn vai trò để gợi ý bài phù hợp:
           </span>
           <div className="flex flex-wrap items-center gap-2">
@@ -360,12 +360,12 @@ export function HomeOnboardingClient() {
                   className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold border transition-all ${
                     isSelected
                       ? roleStyle.pill
-                      : "bg-white/[0.06] text-slate-200 border-white/15 hover:border-white/30 hover:bg-white/[0.12] hover:text-white"
+                      : "bg-white/80 text-slate-700 border-slate-200/85 hover:border-sky-300/80 hover:bg-white hover:text-slate-900"
                   }`}
                 >
                   <Icon
                     className={`w-3.5 h-3.5 shrink-0 ${
-                      isSelected ? roleStyle.icon : "text-slate-300"
+                      isSelected ? roleStyle.icon : "text-slate-500"
                     }`}
                     aria-hidden="true"
                   />
@@ -377,10 +377,10 @@ export function HomeOnboardingClient() {
         </div>
 
         {recommendedScenario ? (
-          <div className="pt-4 border-t border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="pt-4 border-t border-slate-200/85 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1.5">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-mono font-semibold text-cyan-300 uppercase tracking-wide">
+                <span className="text-xs font-mono font-bold text-sky-600 uppercase tracking-wide">
                   {placement
                     ? `Đề xuất theo trình độ ${placement.level} · ~3 phút`
                     : `Đề xuất cho ${activeRole.label} · ~3 phút`}
@@ -393,19 +393,19 @@ export function HomeOnboardingClient() {
                   {getScenarioDifficulty(recommendedScenario)}
                 </span>
               </div>
-              <h2 className="text-lg font-bold tracking-tight text-white">
+              <h2 className="text-lg font-bold tracking-tight text-slate-900">
                 {recommendedScenario.titleEN}{" "}
-                <span className="text-sm font-normal text-slate-300">
+                <span className="text-sm font-normal text-slate-600">
                   ({recommendedScenario.titleVI})
                 </span>
               </h2>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 {recommendedScenario.descriptionVI}
               </p>
               <div className="pt-1">
                 <Link
                   href="/placement"
-                  className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-200 border border-cyan-400/40 text-xs font-semibold transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-sky-50/90 hover:bg-sky-100/90 text-sky-700 border border-sky-200/90 text-xs font-semibold transition-colors"
                 >
                   <Compass className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                   <span>
@@ -427,7 +427,7 @@ export function HomeOnboardingClient() {
             </Link>
           </div>
         ) : (
-          <div className="pt-4 border-t border-white/10 text-xs text-slate-300">
+          <div className="pt-4 border-t border-slate-200/85 text-xs text-slate-600">
             Hiện chưa có kịch bản nào đang mở.
           </div>
         )}
@@ -436,14 +436,14 @@ export function HomeOnboardingClient() {
       <section id="scenarios" className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-lg sm:text-xl font-bold tracking-tight text-white">
+            <h2 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900">
               Tất cả tình huống ({filteredScenarios.length})
             </h2>
-            <p className="text-xs text-slate-300 mt-0.5">
+            <p className="text-xs text-slate-600 mt-0.5">
               Chọn cấp độ Fresher, Junior hoặc Senior để luyện phản xạ nói tiếng Anh
             </p>
           </div>
-          <span className="text-xs font-mono text-slate-200 bg-white/[0.08] px-3 py-1 rounded-full border border-white/15 shrink-0">
+          <span className="text-xs font-mono text-slate-700 bg-white/80 px-3 py-1 rounded-full border border-slate-200/85 shrink-0">
             {totalTurnsCount} Lượt luyện
           </span>
         </div>
@@ -460,7 +460,7 @@ export function HomeOnboardingClient() {
                 className={`px-3.5 py-1.5 rounded-full text-xs font-mono font-semibold border transition-all ${
                   isActive
                     ? getDifficultyFilterActiveClass(level)
-                    : "bg-white/[0.06] text-slate-200 border-white/15 hover:bg-white/[0.12] hover:border-white/30 hover:text-white"
+                    : "bg-white/80 text-slate-700 border-slate-200/85 hover:bg-white hover:border-sky-300/80 hover:text-slate-900"
                 }`}
               >
                 {level === "ALL"
@@ -478,11 +478,11 @@ export function HomeOnboardingClient() {
               if (items.length === 0) return null;
               return (
                 <div key={level} className="space-y-3">
-                  <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/10">
-                    <h3 className="text-sm sm:text-base font-bold tracking-tight text-white">
+                  <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-200/85">
+                    <h3 className="text-sm sm:text-base font-bold tracking-tight text-slate-900">
                       {level} · {subtitle}
                     </h3>
-                    <span className="text-xs font-mono text-slate-300">
+                    <span className="text-xs font-mono text-slate-600">
                       {items.length} tình huống
                     </span>
                   </div>
