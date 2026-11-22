@@ -113,6 +113,14 @@ export async function ensureSchema(): Promise<boolean> {
           ALTER TABLE speakit_arena_runs
           ADD COLUMN IF NOT EXISTS transfer_code TEXT
         `,
+        sql`
+          CREATE TABLE IF NOT EXISTS speakit_push_devices (
+            token TEXT PRIMARY KEY,
+            guest_code TEXT,
+            platform TEXT NOT NULL DEFAULT 'android',
+            updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+          )
+        `,
       ]);
       schemaReadyUrl = url;
       return true;

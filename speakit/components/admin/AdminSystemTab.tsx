@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AlertCircle,
+  Bell,
   CheckCircle2,
   Cpu,
   Database,
   KeyRound,
   Layers,
   RotateCcw,
+  Send,
   ShieldAlert,
   Trash2,
 } from "lucide-react";
@@ -41,10 +43,74 @@ export function AdminSystemTab({
 }: AdminSystemTabProps) {
   const [deleteRequest, setDeleteRequest] = useState<DeleteConfirmRequest | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [pushTitle, setPushTitle] = useState("");
+  const [pushBody, setPushBody] = useState("");
+  const [pushSending, setPushSending] = useState(false);
+  const [pushConfigured, setPushConfigured] = useState<boolean | null>(null);
+  const [pushDeviceCount, setPushDeviceCount] = useState<number>(0);
   const [notice, setNotice] = useState<{
     tone: "ok" | "warn" | "error";
     text: string;
   } | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/admin/notifications")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: { configured?: boolean; deviceCount?: number } | null) => {
+        if (!active || !data) return;
+        setPushConfigured(Boolean(data.configured));
+        setPushDeviceCount(data.deviceCount ?? 0);
+      })
+      .catch(() => null);
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const handleSendBroadcast = async () => {
+    if (!pushTitle.trim() || !pushBody.trim()) {
+      setNotice({ tone: "warn", text: "Vui lòng nhập đầy đủ tiêu đề và nội dung thông báo." });
+      return;
+    }
+    setPushSending(true);
+    setNotice(null);
+    try {
+      const res = await fetch("/api/admin/notifications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: pushTitle.trim(), body: pushBody.trim() }),
+      });
+      if (res.status === 401) {
+        onUnauthorized();
+        return;
+      }
+      const data = (await res.json().catch(() => null)) as {
+        ok?: boolean;
+        sent?: number;
+        failed?: number;
+        total?: number;
+        error?: string;
+      } | null;
+      if (!res.ok || !data?.ok) {
+        setNotice({
+          tone: "error",
+          text: data?.error || "Không thể gửi thông báo đẩy FCM.",
+        });
+        return;
+      }
+      setPushTitle("");
+      setPushBody("");
+      setNotice({
+        tone: "ok",
+        text: `Đã gửi thông báo tới ${data.sent ?? 0}/${data.total ?? 0} thiết bị Android.`,
+      });
+    } catch {
+      setNotice({ tone: "error", text: "Lỗi kết nối khi gửi thông báo đẩy." });
+    } finally {
+      setPushSending(false);
+    }
+  };
 
   const handleResetContent = async () => {
     setIsProcessing(true);
@@ -370,6 +436,59 @@ export function AdminSystemTab({
               {overrides.deletedChallengeIds.length} mặc định đã ẩn
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <Bell className="w-5 h-5 text-accent" aria-hidden="true" />
+            <h2 className="text-base font-bold text-ink">
+              Thông báo đẩy Android (Firebase FCM)
+            </h2>
+          </div>
+          <div className="flex items-center gap-2 text-xs font-mono">
+            <span className="px-2.5 py-1 rounded-pill border border-ink/15 bg-paper text-ink">
+              {pushDeviceCount} thiết bị
+            </span>
+            <span
+              className={`px-2.5 py-1 rounded-pill border ${
+                pushConfigured
+                  ? "border-emerald-300 bg-emerald-50 text-emerald-800"
+                  : "border-amber-300 bg-amber-50 text-amber-800"
+              }`}
+            >
+              {pushConfigured ? "FCM Sẵn sàng" : "Thiếu FIREBASE_SERVICE_ACCOUNT_JSON"}
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-3">
+          <input
+            type="text"
+            value={pushTitle}
+            onChange={(e) => setPushTitle(e.target.value)}
+            placeholder="Tiêu đề thông báo (VD: SpeakIT cập nhật kịch bản mới!)"
+            maxLength={120}
+            className="w-full px-3.5 py-2 rounded-xl border border-ink/20 bg-paper text-xs text-ink focus:outline-none focus:border-ink"
+          />
+          <textarea
+            value={pushBody}
+            onChange={(e) => setPushBody(e.target.value)}
+            placeholder="Nội dung thông báo gửi ra màn hình khóa điện thoại Android..."
+            maxLength={500}
+            rows={2}
+            className="w-full px-3.5 py-2 rounded-xl border border-ink/20 bg-paper text-xs text-ink focus:outline-none focus:border-ink resize-none"
+          />
+          <button
+            type="button"
+            disabled={pushSending}
+            onClick={() => void handleSendBroadcast()}
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-pill bg-ink text-white text-xs font-semibold hover:bg-ink/90 transition-colors self-start disabled:opacity-50"
+          >
+            <Send className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>{pushSending ? "Đang gửi..." : "Gửi thông báo tới app Android"}</span>
+          </button>
         </div>
       </section>
 

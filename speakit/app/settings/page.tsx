@@ -2,8 +2,14 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, AlertCircle, Download, RotateCcw, Volume2, VolumeX, Trash2 } from "lucide-react";
+import { ArrowLeft, AlertCircle, Bell, Download, RotateCcw, Volume2, VolumeX, Trash2 } from "lucide-react";
 import { storageAdapter } from "../../lib/storage";
+import {
+  getSavedReminderPrefs,
+  isCapacitorAndroid,
+  scheduleDailyReminder,
+  testLocalReminderNow,
+} from "../../lib/mobile-notifications";
 import {
   DEFAULT_VOICE_PERSONA,
   TTS_VOICE_PERSONAS,
@@ -24,11 +30,21 @@ export default function SettingsPage() {
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetStatus, setResetStatus] = useState<string | null>(null);
   const [exportStatus, setExportStatus] = useState<string | null>(null);
+  const [reminderEnabled, setReminderEnabled] = useState(false);
+  const [reminderTime, setReminderTime] = useState("20:00");
+  const [reminderStatus, setReminderStatus] = useState<string | null>(null);
+  const [isAndroidApp, setIsAndroidApp] = useState(false);
 
   useEffect(() => {
     const settings = storageAdapter.getSettings();
     setSpeechRate(settings.speechRate || 1.0);
     setVoicePersona(normalizeTtsPersona(settings.voicePersona));
+    const prefs = getSavedReminderPrefs();
+    setReminderEnabled(prefs.enabled);
+    setReminderTime(
+      `${String(prefs.hour).padStart(2, "0")}:${String(prefs.minute).padStart(2, "0")}`
+    );
+    setIsAndroidApp(isCapacitorAndroid());
   }, []);
 
   const handleExportJson = async () => {
@@ -203,7 +219,87 @@ export default function SettingsPage() {
         </div>
       </section>
 
-      {/* 2. Reset Progress (Data Hygiene) */}
+      {/* 2. Daily Android Reminder */}
+      <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
+        <div className="flex items-center justify-between gap-2 border-b border-ink/10 pb-3">
+          <div className="flex items-center gap-2">
+            <Bell className="w-5 h-5 text-accent" />
+            <h2 className="text-sm font-bold uppercase font-mono text-ink">
+              Nhắc Nhở Luyện Nói Hằng Ngày (App Android)
+            </h2>
+          </div>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded-pill border border-ink/15 bg-paper text-ink-muted">
+            {isAndroidApp ? "Android App" : "Dành cho APK"}
+          </span>
+        </div>
+
+        <p className="text-xs text-ink-muted leading-relaxed">
+          Đặt giờ nhắc tự động ngay trên điện thoại (hoạt động cả khi đã đóng app Android).
+        </p>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <label className="inline-flex items-center gap-2 text-xs font-semibold text-ink cursor-pointer">
+            <input
+              type="checkbox"
+              checked={reminderEnabled}
+              onChange={(e) => setReminderEnabled(e.target.checked)}
+              className="w-4 h-4 accent-[#E5484D]"
+            />
+            <span>Bật nhắc nhở mỗi ngày</span>
+          </label>
+
+          <input
+            type="time"
+            value={reminderTime}
+            onChange={(e) => setReminderTime(e.target.value)}
+            aria-label="Giờ nhắc nhở hằng ngày"
+            className="px-3 py-1.5 rounded-xl border border-ink/20 bg-paper text-xs font-mono font-semibold text-ink"
+          />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            type="button"
+            onClick={async () => {
+              const [hStr, mStr] = reminderTime.split(":");
+              const hour = Number.parseInt(hStr ?? "20", 10);
+              const minute = Number.parseInt(mStr ?? "0", 10);
+              const res = await scheduleDailyReminder(
+                Number.isFinite(hour) ? hour : 20,
+                Number.isFinite(minute) ? minute : 0,
+                reminderEnabled
+              );
+              setReminderStatus(res.message);
+            }}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-ink text-white hover:bg-ink/90 text-xs font-semibold shadow-soft transition-all"
+          >
+            <Bell className="w-3.5 h-3.5" />
+            <span>Lưu lịch nhắc</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={async () => {
+              const res = await testLocalReminderNow();
+              setReminderStatus(res.message);
+            }}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-paper border border-ink/15 text-ink hover:bg-paper-muted text-xs font-semibold shadow-soft transition-all"
+          >
+            <span>Thử thông báo (3s)</span>
+          </button>
+        </div>
+
+        {reminderStatus && (
+          <div
+            role="status"
+            className="p-3 bg-paper rounded-xl border border-ink/15 text-xs font-medium text-ink"
+          >
+            {reminderStatus}
+          </div>
+        )}
+      </section>
+
+      {/* 3. Reset Progress (Data Hygiene) */}
       <section className="bg-paper-card border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-3">
         <div className="flex items-center gap-2 border-b border-ink/10 pb-3">
           <Trash2 className="w-5 h-5 text-accent" />

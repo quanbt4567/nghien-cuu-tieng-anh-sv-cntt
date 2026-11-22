@@ -46,6 +46,7 @@ import {
 import type { PublicGuestPlayer } from "../../lib/db";
 import { mergeProfileIdentity } from "../../lib/profileStats";
 import type { GamificationState } from "../../lib/types";
+import { registerAndroidPushToken } from "../../lib/mobile-notifications";
 import { CustomCursorTrail } from "../cosmetics/CustomCursorTrail";
 
 type NavItem = {
@@ -133,6 +134,11 @@ export function Navbar() {
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    void registerAndroidPushToken(guestPlayer?.transferCode ?? readBackupTransferCode());
+  }, [hydrated, guestPlayer?.transferCode]);
 
   useEffect(() => {
     let active = true;
