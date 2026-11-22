@@ -107,6 +107,13 @@ const RARITY_BADGE_CLASS: Record<CosmeticRarity, string> = {
   Legendary: "bg-[#E5484D] text-white border border-[#1A1714]/15",
 };
 
+const RARITY_ORDER: Record<CosmeticRarity, number> = {
+  Common: 0,
+  Rare: 1,
+  Epic: 2,
+  Legendary: 3,
+};
+
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
   if (parts.length >= 2) {
@@ -476,7 +483,15 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
   }, [extraItems]);
 
   const categoryItems = useMemo(
-    () => catalogItems.filter((item) => item.category === activeCategory),
+    () =>
+      catalogItems
+        .filter((item) => item.category === activeCategory)
+        .sort(
+          (a, b) =>
+            RARITY_ORDER[a.rarity] - RARITY_ORDER[b.rarity] ||
+            a.price - b.price ||
+            a.name.localeCompare(b.name)
+        ),
     [catalogItems, activeCategory]
   );
 
