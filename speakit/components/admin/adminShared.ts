@@ -190,9 +190,6 @@ function computeScenarioBreakdown(attempts: PracticeAttempt[]): ScenarioBreakdow
     .sort((a, b) => b.count - a.count);
 }
 
-/**
- * Merges Neon DB dashboard data with localStorage fallback records, deduplicating cleanly by id.
- */
 export async function loadMergedAdminData(
   remote: AdminDashboardResponse | null
 ): Promise<MergedAdminData> {
@@ -228,7 +225,6 @@ export async function loadMergedAdminData(
 
   const activeScenariosCount = mergeScenarios(SCENARIOS, overrides, false).length;
 
-  // Use exact list aggregates when all DB rows are present (<= 200), otherwise add unsynced local extras.
   const canComputeExactAttempts = !neonConnected || (remote?.stats.totalAttempts ?? 0) <= remoteAttempts.length;
   const totalAttempts = canComputeExactAttempts
     ? attempts.length
@@ -296,9 +292,6 @@ export async function loadMergedAdminData(
   };
 }
 
-/**
- * Always saves overrides to localStorage first, then syncs to PUT /api/admin/content.
- */
 export async function persistAdminOverrides(
   nextOverrides: AdminContentOverrides
 ): Promise<PersistResult> {

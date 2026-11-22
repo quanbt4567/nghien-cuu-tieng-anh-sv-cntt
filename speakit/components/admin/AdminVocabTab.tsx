@@ -555,13 +555,13 @@ export function AdminVocabTab({
 
   return (
     <div className="space-y-4">
-      <div className="bg-white border border-ink/15 rounded-2xl p-4 shadow-soft space-y-3">
+      <div className="liquid-glass-card p-4 space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-lg font-bold text-ink">
+            <h2 className="text-lg font-bold text-white">
               Quản Lý Thuật Ngữ CNTT ({vocabList.length})
             </h2>
-            <p className="text-xs text-ink-muted mt-0.5">
+            <p className="text-xs text-slate-300 mt-0.5">
               Thêm, chỉnh sửa phiên âm IPA, câu ví dụ và kiểm tra phát âm trực tiếp bằng Web Speech API.
             </p>
           </div>
@@ -572,7 +572,7 @@ export function AdminVocabTab({
                 type="button"
                 disabled={isSaving}
                 onClick={handleRestoreDefaults}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white border border-ink/20 text-xs font-medium text-ink hover:bg-paper-muted transition-colors disabled:opacity-50"
+                className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium disabled:opacity-50"
               >
                 <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Khôi phục mặc định</span>
@@ -581,15 +581,15 @@ export function AdminVocabTab({
             <button
               type="button"
               onClick={openCreateWithAi}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white border border-ink/20 text-xs font-semibold text-ink hover:bg-paper-muted transition-colors"
+              className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
             >
-              <Sparkles className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+              <Sparkles className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
               <span>Tạo bằng AI</span>
             </button>
             <button
               type="button"
               onClick={subTab === "form" && isFormOpen ? resetForm : openCreate}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill bg-ink text-white text-xs font-semibold hover:bg-ink/90 shadow-soft shadow-hard-press transition-all"
+              className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold"
             >
               {subTab === "form" && isFormOpen ? (
                 <>
@@ -606,14 +606,14 @@ export function AdminVocabTab({
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-ink/10">
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-white/15">
           <button
             type="button"
             onClick={() => setSubTab("list")}
-            className={`px-3.5 py-1.5 rounded-pill text-xs font-semibold transition-all ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all ${
               subTab === "list"
-                ? "bg-ink text-white shadow-soft"
-                : "bg-paper text-ink-muted hover:text-ink border border-ink/15"
+                ? "bg-cyan-500/25 border-cyan-400/55 text-cyan-100"
+                : "liquid-glass-btn text-slate-300"
             }`}
           >
             Danh sách từ vựng ({vocabList.length})
@@ -624,10 +624,10 @@ export function AdminVocabTab({
               if (!isFormOpen) openCreate();
               else setSubTab("form");
             }}
-            className={`px-3.5 py-1.5 rounded-pill text-xs font-semibold transition-all ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all ${
               subTab === "form"
-                ? "bg-ink text-white shadow-soft"
-                : "bg-paper text-ink-muted hover:text-ink border border-ink/15"
+                ? "bg-cyan-500/25 border-cyan-400/55 text-cyan-100"
+                : "liquid-glass-btn text-slate-300"
             }`}
           >
             + Thêm từ / AI Tạo nhanh
@@ -638,10 +638,10 @@ export function AdminVocabTab({
               setIsImportOpen(true);
               setSubTab("io");
             }}
-            className={`px-3.5 py-1.5 rounded-pill text-xs font-semibold transition-all ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all ${
               subTab === "io"
-                ? "bg-ink text-white shadow-soft"
-                : "bg-paper text-ink-muted hover:text-ink border border-ink/15"
+                ? "bg-cyan-500/25 border-cyan-400/55 text-cyan-100"
+                : "liquid-glass-btn text-slate-300"
             }`}
           >
             Nhập / Xuất JSON · CSV
@@ -654,29 +654,29 @@ export function AdminVocabTab({
           role={statusNotice.tone === "error" ? "alert" : "status"}
           className={`flex items-start gap-2.5 p-3.5 rounded-2xl border text-xs ${
             statusNotice.tone === "error"
-              ? "bg-accent-light border-accent/40 text-ink"
+              ? "bg-rose-500/20 border-rose-400/45 text-rose-100"
               : statusNotice.tone === "warn"
-              ? "bg-paper-muted border-ink/25 text-ink"
-              : "bg-white border-ink/20 text-ink shadow-soft"
+              ? "bg-amber-500/20 border-amber-400/45 text-amber-100"
+              : "bg-emerald-500/20 border-emerald-400/45 text-emerald-100"
           }`}
         >
           {statusNotice.tone === "ok" ? (
-            <CheckCircle2 className="w-4 h-4 text-ink shrink-0 mt-0.5" aria-hidden="true" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-300 shrink-0 mt-0.5" aria-hidden="true" />
           ) : (
-            <AlertCircle className="w-4 h-4 text-accent shrink-0 mt-0.5" aria-hidden="true" />
+            <AlertCircle className="w-4 h-4 text-rose-300 shrink-0 mt-0.5" aria-hidden="true" />
           )}
           <span>{statusNotice.text}</span>
         </div>
       )}
 
       {subTab === "io" && isImportOpen && (
-        <div className="bg-white border border-ink/20 rounded-2xl p-5 shadow-soft space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink/10 pb-3">
+        <div className="liquid-glass-card p-5 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/15 pb-3">
             <div>
-              <h3 className="text-base font-bold text-ink">
+              <h3 className="text-base font-bold text-white">
                 Nhập / Xuất Từ Vựng (JSON · CSV)
               </h3>
-              <p className="text-xs text-ink-muted">
+              <p className="text-xs text-slate-300">
                 Xuất toàn bộ danh sách hiện tại hoặc tải lên tệp JSON/CSV để đồng bộ hàng loạt.
               </p>
             </div>
@@ -685,7 +685,7 @@ export function AdminVocabTab({
                 type="button"
                 disabled={isExporting !== null}
                 onClick={() => handleExport("json")}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper border border-ink/20 text-xs font-medium text-ink hover:bg-paper-muted transition-colors disabled:opacity-50"
+                className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium disabled:opacity-50"
               >
                 <Download className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>{isExporting === "json" ? "Exporting..." : "Export JSON"}</span>
@@ -694,7 +694,7 @@ export function AdminVocabTab({
                 type="button"
                 disabled={isExporting !== null}
                 onClick={() => handleExport("csv")}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper border border-ink/20 text-xs font-medium text-ink hover:bg-paper-muted transition-colors disabled:opacity-50"
+                className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium disabled:opacity-50"
               >
                 <Download className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>{isExporting === "csv" ? "Exporting..." : "Export CSV"}</span>
@@ -705,7 +705,7 @@ export function AdminVocabTab({
           <form onSubmit={handleImportSubmit} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="block text-xs font-mono font-semibold text-ink-muted">
+                <label className="block text-xs font-mono font-semibold text-slate-300">
                   Format
                 </label>
                 <select
@@ -713,7 +713,7 @@ export function AdminVocabTab({
                   onChange={(e) =>
                     setImportFormat(e.target.value === "csv" ? "csv" : "json")
                   }
-                  className="w-full px-3.5 py-2 text-sm font-mono bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                  className="liquid-glass-input w-full px-3.5 py-2 text-sm font-mono rounded-xl [&>option]:bg-slate-950 [&>option]:text-white"
                 >
                   <option value="json">JSON</option>
                   <option value="csv">CSV (RFC-4180)</option>
@@ -721,7 +721,7 @@ export function AdminVocabTab({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-xs font-mono font-semibold text-ink-muted">
+                <label className="block text-xs font-mono font-semibold text-slate-300">
                   Upload File (.json or .csv)
                 </label>
                 <input
@@ -729,13 +729,13 @@ export function AdminVocabTab({
                   type="file"
                   accept=".json,.csv,application/json,text/csv"
                   onChange={handleImportFile}
-                  className="w-full px-3 py-1.5 text-xs bg-paper border border-ink/20 rounded-xl text-ink file:mr-3 file:px-3 file:py-1 file:rounded-pill file:border-0 file:bg-ink file:text-white file:text-xs file:font-medium"
+                  className="liquid-glass-input w-full px-3 py-1.5 text-xs rounded-xl file:mr-3 file:px-3 file:py-1 file:rounded-full file:border file:border-cyan-400/50 file:bg-cyan-500/25 file:text-cyan-100 file:text-xs file:font-medium"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-ink-muted">
+              <label className="block text-xs font-mono font-semibold text-slate-300">
                 Or Paste {importFormat.toUpperCase()} Content
               </label>
               <textarea
@@ -747,7 +747,7 @@ export function AdminVocabTab({
                     ? '[{"term":"idempotency","phonetic":"/ˌaɪ.demˈpoʊ.tən.si/","partOfSpeech":"noun","meaningVI":"Tính bất biến"}]'
                     : "term,phonetic,partOfSpeech,meaningVI,exampleSentenceEN,exampleTranslationVI"
                 }
-                className="w-full px-3.5 py-2 text-xs font-mono bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="liquid-glass-input w-full px-3.5 py-2 text-xs font-mono rounded-xl"
               />
             </div>
 
@@ -761,14 +761,14 @@ export function AdminVocabTab({
                   }
                   setSubTab("list");
                 }}
-                className="px-4 py-2 rounded-pill bg-white border border-ink/20 text-xs font-medium text-ink hover:bg-paper-muted"
+                className="liquid-glass-btn px-4 py-2 rounded-full text-xs font-medium"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isImporting}
-                className="inline-flex items-center gap-1.5 px-5 py-2 rounded-pill bg-accent text-white text-xs font-semibold hover:bg-accent-hover shadow-soft shadow-hard-press transition-all disabled:opacity-60"
+                className="liquid-btn-primary inline-flex items-center gap-1.5 px-5 py-2 rounded-full text-xs font-semibold disabled:opacity-60"
               >
                 <Upload className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>
@@ -785,16 +785,16 @@ export function AdminVocabTab({
       {subTab === "form" && (
         <form
           onSubmit={handleSubmit}
-          className="bg-white border border-ink/20 rounded-2xl p-5 shadow-soft space-y-4"
+          className="liquid-glass-card p-5 space-y-4"
         >
-          <div className="flex items-center justify-between border-b border-ink/10 pb-3">
-            <h3 className="text-base font-bold text-ink">
+          <div className="flex items-center justify-between border-b border-white/15 pb-3">
+            <h3 className="text-base font-bold text-white">
               {editingId ? `Chỉnh sửa thuật ngữ (${editingId})` : "Thêm thuật ngữ mới"}
             </h3>
             <button
               type="button"
               onClick={resetForm}
-              className="text-xs font-mono text-ink-muted hover:text-ink"
+              className="text-xs font-mono text-slate-300 hover:text-white"
             >
               Hủy
             </button>
@@ -813,7 +813,7 @@ export function AdminVocabTab({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-ink-muted">
+              <label className="block text-xs font-mono font-semibold text-slate-300">
                 Thuật ngữ tiếng Anh (term) *
               </label>
               <input
@@ -821,12 +821,12 @@ export function AdminVocabTab({
                 value={term}
                 onChange={(e) => setTerm(e.target.value)}
                 placeholder="VD: idempotency"
-                className="w-full px-3.5 py-2 text-sm font-mono bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="liquid-glass-input w-full px-3.5 py-2 text-sm font-mono rounded-xl"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-ink-muted">
+              <label className="block text-xs font-mono font-semibold text-slate-300">
                 Phiên âm IPA (phonetic)
               </label>
               <input
@@ -834,18 +834,18 @@ export function AdminVocabTab({
                 value={phonetic}
                 onChange={(e) => setPhonetic(e.target.value)}
                 placeholder="VD: /ˌaɪ.demˈpoʊ.tən.si/"
-                className="w-full px-3.5 py-2 text-sm font-ipa bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="liquid-glass-input w-full px-3.5 py-2 text-sm font-ipa rounded-xl"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-ink-muted">
+              <label className="block text-xs font-mono font-semibold text-slate-300">
                 Từ loại (partOfSpeech)
               </label>
               <select
                 value={partOfSpeech}
                 onChange={(e) => setPartOfSpeech(e.target.value)}
-                className="w-full px-3.5 py-2 text-sm font-mono bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="liquid-glass-input w-full px-3.5 py-2 text-sm font-mono rounded-xl [&>option]:bg-slate-950 [&>option]:text-white"
               >
                 {POS_OPTIONS.map((opt) => (
                   <option key={opt} value={opt}>
@@ -857,7 +857,7 @@ export function AdminVocabTab({
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-mono font-semibold text-ink-muted">
+            <label className="block text-xs font-mono font-semibold text-slate-300">
               Nghĩa tiếng Việt (meaningVI) *
             </label>
             <input
@@ -865,13 +865,13 @@ export function AdminVocabTab({
               value={meaningVI}
               onChange={(e) => setMeaningVI(e.target.value)}
               placeholder="Tính bất biến khi thực thi lặp lại cùng một yêu cầu API..."
-              className="w-full px-3.5 py-2 text-sm bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+              className="liquid-glass-input w-full px-3.5 py-2 text-sm rounded-xl"
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-ink-muted">
+              <label className="block text-xs font-mono font-semibold text-slate-300">
                 Câu ví dụ tiếng Anh (exampleSentenceEN)
               </label>
               <textarea
@@ -879,12 +879,12 @@ export function AdminVocabTab({
                 value={exampleSentenceEN}
                 onChange={(e) => setExampleSentenceEN(e.target.value)}
                 placeholder="We added an idempotency key to prevent duplicate charges."
-                className="w-full px-3.5 py-2 text-xs bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="liquid-glass-input w-full px-3.5 py-2 text-xs rounded-xl"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-ink-muted">
+              <label className="block text-xs font-mono font-semibold text-slate-300">
                 Dịch nghĩa ví dụ (exampleTranslationVI)
               </label>
               <textarea
@@ -892,7 +892,7 @@ export function AdminVocabTab({
                 value={exampleTranslationVI}
                 onChange={(e) => setExampleTranslationVI(e.target.value)}
                 placeholder="Chúng tôi thêm khóa idempotency để tránh trừ tiền trùng lặp."
-                className="w-full px-3.5 py-2 text-xs bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="liquid-glass-input w-full px-3.5 py-2 text-xs rounded-xl"
               />
             </div>
           </div>
@@ -901,14 +901,14 @@ export function AdminVocabTab({
             <button
               type="button"
               onClick={resetForm}
-              className="px-4 py-2 rounded-pill bg-white border border-ink/20 text-xs font-medium text-ink hover:bg-paper-muted"
+              className="liquid-glass-btn px-4 py-2 rounded-full text-xs font-medium"
             >
               Hủy
             </button>
             <button
               type="submit"
               disabled={isSaving}
-              className="px-5 py-2 rounded-pill bg-accent text-white text-xs font-semibold hover:bg-accent-hover shadow-soft shadow-hard-press transition-all disabled:opacity-60"
+              className="liquid-btn-primary px-5 py-2 rounded-full text-xs font-semibold disabled:opacity-60"
             >
               {isSaving ? "Đang lưu..." : editingId ? "Lưu thuật ngữ" : "Thêm & đồng bộ"}
             </button>
@@ -918,10 +918,10 @@ export function AdminVocabTab({
 
       {subTab === "list" && (
         <div className="space-y-4">
-          <div className="bg-white border border-ink/15 rounded-2xl p-3.5 shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="liquid-glass-card p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="relative flex-1">
               <Search
-                className="w-4 h-4 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
                 aria-hidden="true"
               />
               <input
@@ -932,7 +932,7 @@ export function AdminVocabTab({
                   setCurrentPage(1);
                 }}
                 placeholder="Tìm theo thuật ngữ, nghĩa tiếng Việt, từ loại..."
-                className="w-full pl-9 pr-3.5 py-1.5 text-xs bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="liquid-glass-input w-full pl-9 pr-3.5 py-1.5 text-xs rounded-xl"
               />
             </div>
 
@@ -951,10 +951,10 @@ export function AdminVocabTab({
                     setSourceFilter(tab.id);
                     setCurrentPage(1);
                   }}
-                  className={`px-3 py-1 rounded-pill text-xs font-mono transition-colors ${
+                  className={`px-3 py-1 rounded-full text-xs font-mono border transition-colors ${
                     sourceFilter === tab.id
-                      ? "bg-ink text-white font-semibold"
-                      : "bg-paper text-ink-muted hover:text-ink border border-ink/15"
+                      ? "bg-cyan-500/25 border-cyan-400/55 text-cyan-100 font-semibold"
+                      : "liquid-glass-btn text-slate-300"
                   }`}
                 >
                   {tab.label}
@@ -977,7 +977,7 @@ export function AdminVocabTab({
           />
 
           {paginatedVocab.length === 0 ? (
-            <div className="bg-white border border-ink/15 rounded-2xl p-6 text-center text-xs text-ink-muted">
+            <div className="liquid-glass-card p-6 text-center text-xs text-slate-300">
               Không tìm thấy thuật ngữ phù hợp với bộ lọc hiện tại.
             </div>
           ) : (
@@ -995,8 +995,8 @@ export function AdminVocabTab({
                 return (
                   <div
                     key={item.id}
-                    className={`bg-white border rounded-2xl p-3.5 shadow-soft space-y-2 transition-colors ${
-                      isSelected ? "border-accent ring-1 ring-accent/30" : "border-ink/15"
+                    className={`liquid-glass-card-lite p-3.5 space-y-2 transition-colors ${
+                      isSelected ? "!border-cyan-400/60 ring-1 ring-cyan-400/30" : ""
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
@@ -1006,36 +1006,36 @@ export function AdminVocabTab({
                           checked={isSelected}
                           onChange={() => toggleSelectId(item.id)}
                           aria-label={`Chọn thuật ngữ ${item.term}`}
-                          className="mt-0.5 w-4 h-4 rounded accent-[#E5484D] cursor-pointer shrink-0"
+                          className="mt-0.5 w-4 h-4 rounded accent-cyan-400 cursor-pointer shrink-0"
                         />
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-1.5">
-                            <h3 className="text-sm font-bold font-mono text-ink">
+                            <h3 className="text-sm font-bold font-mono text-white">
                               {item.term}
                             </h3>
-                            <span className="px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-[10px] font-mono uppercase text-ink-muted">
+                            <span className="px-2 py-0.5 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono uppercase text-slate-300">
                               {item.partOfSpeech}
                             </span>
                             {item.phonetic && item.phonetic !== "/.../" ? (
-                              <span className="text-xs font-ipa text-accent font-medium">
+                              <span className="text-xs font-ipa text-cyan-300 font-medium">
                                 {item.phonetic}
                               </span>
                             ) : null}
                             {item.careerLevel ? (
-                              <span className="px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-[10px] font-mono font-semibold text-ink">
+                              <span className="px-2 py-0.5 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono font-semibold text-slate-200">
                                 {item.careerLevel}
                               </span>
                             ) : null}
                             {item.clusterTitle ? (
-                              <span className="px-2 py-0.5 rounded-pill bg-accent-light border border-accent/30 text-[10px] font-mono font-semibold text-ink">
+                              <span className="px-2 py-0.5 rounded-full bg-violet-500/20 border border-violet-400/45 text-[10px] font-mono font-semibold text-violet-100">
                                 {item.clusterTitle}
                               </span>
                             ) : !isBase ? (
-                              <span className="px-2 py-0.5 rounded-pill bg-accent-light border border-accent/30 text-[10px] font-mono font-semibold text-ink">
+                              <span className="px-2 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/45 text-[10px] font-mono font-semibold text-cyan-100">
                                 Tùy chỉnh
                               </span>
                             ) : isOverridden ? (
-                              <span className="px-2 py-0.5 rounded-pill bg-paper-muted border border-ink/20 text-[10px] font-mono font-semibold text-ink">
+                              <span className="px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/45 text-[10px] font-mono font-semibold text-amber-100">
                                 Đã sửa
                               </span>
                             ) : null}
@@ -1051,8 +1051,8 @@ export function AdminVocabTab({
                           aria-label={`Nghe thử phát âm ${item.term}`}
                           className={`w-7 h-7 rounded-full border flex items-center justify-center transition-colors ${
                             isPlaying
-                              ? "bg-accent text-white border-accent"
-                              : "bg-paper text-ink border-ink/20 hover:bg-ink hover:text-white"
+                              ? "bg-cyan-500/30 text-cyan-100 border-cyan-300/60"
+                              : "liquid-glass-btn text-slate-200"
                           }`}
                         >
                           {isPlaying ? (
@@ -1066,7 +1066,7 @@ export function AdminVocabTab({
                           disabled={isSaving}
                           onClick={() => openEdit(item)}
                           aria-label={`Chỉnh sửa ${item.term}`}
-                          className="w-7 h-7 rounded-full bg-white border border-ink/20 flex items-center justify-center text-ink hover:bg-paper-muted transition-colors disabled:opacity-50"
+                          className="liquid-glass-btn w-7 h-7 rounded-full flex items-center justify-center disabled:opacity-50"
                         >
                           <Pencil className="w-3.5 h-3.5" aria-hidden="true" />
                         </button>
@@ -1075,33 +1075,33 @@ export function AdminVocabTab({
                           disabled={isSaving}
                           onClick={() => handleDelete(item)}
                           aria-label={`Xóa ${item.term}`}
-                          className="w-7 h-7 rounded-full bg-accent-light border border-accent/40 flex items-center justify-center text-ink hover:bg-accent hover:text-white transition-colors disabled:opacity-50"
+                          className="liquid-btn-danger w-7 h-7 rounded-full flex items-center justify-center disabled:opacity-50"
                         >
                           <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                         </button>
                       </div>
                     </div>
 
-                    <p className="text-xs text-ink bg-paper/70 border border-ink/10 rounded-xl px-2.5 py-1.5 leading-snug">
+                    <p className="text-xs text-slate-100 bg-slate-950/60 border border-white/10 rounded-xl px-2.5 py-1.5 leading-snug">
                       {item.meaningVI}
                     </p>
 
                     {item.exampleSentenceEN && (
-                      <div className="text-xs text-ink-muted px-1">
+                      <div className="text-xs text-slate-300 px-1">
                         <button
                           type="button"
                           onClick={() => toggleExpandExample(item.id)}
                           className="w-full text-left flex items-start justify-between gap-2 group"
                         >
                           <span
-                            className={`font-medium text-ink ${
+                            className={`font-medium text-slate-100 ${
                               !isExpanded && hasLongExample ? "line-clamp-1" : ""
                             }`}
                           >
                             &ldquo;{item.exampleSentenceEN}&rdquo;
                           </span>
                           {hasLongExample && (
-                            <span className="inline-flex items-center gap-0.5 text-[10px] font-mono text-ink-muted group-hover:text-ink shrink-0 mt-0.5">
+                            <span className="inline-flex items-center gap-0.5 text-[10px] font-mono text-slate-400 group-hover:text-white shrink-0 mt-0.5">
                               {isExpanded ? (
                                 <>
                                   <span>Thu gọn</span>
@@ -1117,7 +1117,7 @@ export function AdminVocabTab({
                           )}
                         </button>
                         {(isExpanded || !hasLongExample) && item.exampleTranslationVI && (
-                          <div className="text-[11px] mt-0.5">{item.exampleTranslationVI}</div>
+                          <div className="text-[11px] mt-0.5 text-slate-300">{item.exampleTranslationVI}</div>
                         )}
                       </div>
                     )}
@@ -1127,7 +1127,7 @@ export function AdminVocabTab({
                         {item.relatedTerms.map((rel) => (
                           <span
                             key={rel}
-                            className="px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-[10px] font-mono text-ink-muted"
+                            className="px-2 py-0.5 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono text-slate-300"
                           >
                             #{rel}
                           </span>
@@ -1140,8 +1140,8 @@ export function AdminVocabTab({
             </div>
           )}
 
-          <div className="bg-white border border-ink/15 rounded-2xl px-4 py-2.5 shadow-soft flex items-center justify-between gap-3">
-            <span className="text-xs font-mono text-ink-muted">
+          <div className="liquid-glass-card px-4 py-2.5 flex items-center justify-between gap-3">
+            <span className="text-xs font-mono text-slate-300">
               Trang {safePage} / {totalPages} ({filteredVocab.length} thuật ngữ)
             </span>
             <div className="flex items-center gap-2">
@@ -1149,7 +1149,7 @@ export function AdminVocabTab({
                 type="button"
                 disabled={safePage <= 1}
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-paper border border-ink/20 text-xs font-semibold text-ink hover:bg-paper-muted disabled:opacity-40 transition-colors"
+                className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold disabled:opacity-40"
               >
                 <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Trước</span>
@@ -1158,7 +1158,7 @@ export function AdminVocabTab({
                 type="button"
                 disabled={safePage >= totalPages}
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-paper border border-ink/20 text-xs font-semibold text-ink hover:bg-paper-muted disabled:opacity-40 transition-colors"
+                className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold disabled:opacity-40"
               >
                 <span>Sau</span>
                 <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />

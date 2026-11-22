@@ -86,8 +86,8 @@ function PromptBlankPreview({
 }) {
   if (!promptWithBlank.includes("____")) {
     return (
-      <span className="text-ink-muted italic">
-        Chưa có chỗ trống <code className="font-mono text-accent">____</code> trong câu hỏi.
+      <span className="text-slate-400 italic">
+        Chưa có chỗ trống <code className="font-mono text-cyan-300">____</code> trong câu hỏi.
       </span>
     );
   }
@@ -98,7 +98,7 @@ function PromptBlankPreview({
         <span key={idx}>
           {part}
           {idx < parts.length - 1 && (
-            <span className="inline-flex items-center px-1.5 py-0.5 mx-1 rounded bg-accent-light border border-accent/50 font-mono font-bold text-ink text-xs">
+            <span className="inline-flex items-center px-1.5 py-0.5 mx-1 rounded bg-cyan-500/20 border border-cyan-400/50 font-mono font-bold text-cyan-200 text-xs">
               {targetWord.trim() || "____"}
             </span>
           )}
@@ -452,29 +452,29 @@ export function AdminArenaTab({
 
   return (
     <div className="space-y-4">
-      <div className="bg-white border border-ink/15 rounded-2xl p-4 shadow-soft flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+      <div className="liquid-glass-card p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <Gamepad2 className="w-5 h-5 text-accent shrink-0" aria-hidden="true" />
+          <Gamepad2 className="w-5 h-5 text-cyan-300 shrink-0" aria-hidden="true" />
           <div>
-            <h2 className="text-base font-bold text-ink">
+            <h2 className="text-base font-bold text-white">
               Quản Lý Arena Bug Buster ({challenges.length})
             </h2>
-            <p className="text-xs text-ink-muted">
+            <p className="text-xs text-slate-300">
               Điền khuyết từ vựng lỗi kỹ thuật với chỗ trống{" "}
-              <code className="font-mono text-accent">____</code> và phiên âm IPA.
+              <code className="font-mono text-cyan-300">____</code> và phiên âm IPA.
             </p>
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <div className="inline-flex rounded-pill bg-paper p-1 border border-ink/15">
+          <div className="inline-flex rounded-full bg-slate-950/60 p-1 border border-white/15">
             <button
               type="button"
               onClick={() => setActiveSubTab("list")}
-              className={`px-3.5 py-1.5 rounded-pill text-xs font-semibold transition-colors ${
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
                 activeSubTab === "list"
-                  ? "bg-ink text-white shadow-soft"
-                  : "text-ink-muted hover:text-ink"
+                  ? "bg-cyan-500/25 border border-cyan-400/55 text-cyan-100"
+                  : "text-slate-300 hover:text-white"
               }`}
             >
               Danh sách thử thách Bug Buster ({challenges.length})
@@ -486,10 +486,10 @@ export function AdminArenaTab({
                   openCreate();
                 }
               }}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill text-xs font-semibold transition-colors ${
+              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
                 activeSubTab === "create"
-                  ? "bg-accent text-white shadow-soft"
-                  : "text-ink-muted hover:text-ink"
+                  ? "bg-cyan-500/25 border border-cyan-400/55 text-cyan-100"
+                  : "text-slate-300 hover:text-white"
               }`}
             >
               <Plus className="w-3.5 h-3.5" aria-hidden="true" />
@@ -501,9 +501,9 @@ export function AdminArenaTab({
             <button
               type="button"
               onClick={openCreateWithAi}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white border border-ink/20 text-xs font-semibold text-ink hover:bg-paper-muted transition-colors"
+              className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
             >
-              <Sparkles className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+              <Sparkles className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
               <span>AI Tạo nhanh</span>
             </button>
           )}
@@ -513,7 +513,7 @@ export function AdminArenaTab({
               type="button"
               disabled={isSaving}
               onClick={handleRestoreDefaults}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white border border-ink/20 text-xs font-medium text-ink hover:bg-paper-muted transition-colors disabled:opacity-50"
+              className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium disabled:opacity-50"
             >
               <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Khôi phục mặc định</span>
@@ -527,16 +527,16 @@ export function AdminArenaTab({
           role={statusNotice.tone === "error" ? "alert" : "status"}
           className={`flex items-start gap-2.5 p-3 rounded-xl border text-xs ${
             statusNotice.tone === "error"
-              ? "bg-accent-light border-accent/40 text-ink"
+              ? "bg-rose-500/20 border-rose-400/45 text-rose-100"
               : statusNotice.tone === "warn"
-              ? "bg-paper-muted border-ink/25 text-ink"
-              : "bg-white border-ink/20 text-ink shadow-soft"
+              ? "bg-amber-500/20 border-amber-400/45 text-amber-100"
+              : "bg-emerald-500/20 border-emerald-400/45 text-emerald-100"
           }`}
         >
           {statusNotice.tone === "ok" ? (
-            <CheckCircle2 className="w-4 h-4 text-ink shrink-0 mt-0.5" aria-hidden="true" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-300 shrink-0 mt-0.5" aria-hidden="true" />
           ) : (
-            <AlertCircle className="w-4 h-4 text-accent shrink-0 mt-0.5" aria-hidden="true" />
+            <AlertCircle className="w-4 h-4 text-rose-300 shrink-0 mt-0.5" aria-hidden="true" />
           )}
           <span>{statusNotice.text}</span>
         </div>
@@ -545,16 +545,16 @@ export function AdminArenaTab({
       {activeSubTab === "create" ? (
         <form
           onSubmit={handleSubmit}
-          className="bg-white border border-ink/20 rounded-2xl p-5 shadow-soft space-y-4"
+          className="liquid-glass-card p-5 space-y-4"
         >
-          <div className="flex items-center justify-between border-b border-ink/10 pb-3">
-            <h3 className="text-sm font-bold text-ink">
+          <div className="flex items-center justify-between border-b border-white/15 pb-3">
+            <h3 className="text-sm font-bold text-white">
               {editingId ? `Chỉnh sửa thử thách (${editingId})` : "Thêm thử thách Bug Buster mới"}
             </h3>
             <button
               type="button"
               onClick={resetForm}
-              className="text-xs font-mono text-ink-muted hover:text-ink"
+              className="text-xs font-mono text-slate-300 hover:text-white"
             >
               Quay lại danh sách
             </button>
@@ -574,7 +574,7 @@ export function AdminArenaTab({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
             <div className="space-y-1">
-              <label className="block text-xs font-mono font-semibold text-ink-muted">
+              <label className="block text-xs font-mono font-semibold text-slate-300">
                 Nhóm tình huống (category)
               </label>
               <select
@@ -582,7 +582,7 @@ export function AdminArenaTab({
                 onChange={(e) =>
                   setCategory(e.target.value as BugBusterChallenge["category"])
                 }
-                className="w-full px-3 py-2 text-sm font-mono bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="liquid-glass-input w-full px-3 py-2 text-sm font-mono rounded-xl [&>option]:bg-slate-950 [&>option]:text-white"
               >
                 {CATEGORY_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -593,7 +593,7 @@ export function AdminArenaTab({
             </div>
 
             <div className="space-y-1">
-              <label className="block text-xs font-mono font-semibold text-ink-muted">
+              <label className="block text-xs font-mono font-semibold text-slate-300">
                 Đáp án chính (targetWord) *
               </label>
               <input
@@ -601,12 +601,12 @@ export function AdminArenaTab({
                 value={targetWord}
                 onChange={(e) => setTargetWord(e.target.value)}
                 placeholder="VD: deadlock"
-                className="w-full px-3 py-2 text-sm font-mono bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="liquid-glass-input w-full px-3 py-2 text-sm font-mono rounded-xl"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="block text-xs font-mono font-semibold text-ink-muted">
+              <label className="block text-xs font-mono font-semibold text-slate-300">
                 Phiên âm IPA (phonetic)
               </label>
               <input
@@ -614,13 +614,13 @@ export function AdminArenaTab({
                 value={phonetic}
                 onChange={(e) => setPhonetic(e.target.value)}
                 placeholder="VD: /ˈded.lɑːk/"
-                className="w-full px-3 py-2 text-sm font-ipa bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="liquid-glass-input w-full px-3 py-2 text-sm font-ipa rounded-xl"
               />
             </div>
           </div>
 
           <div className="space-y-1">
-            <label className="block text-xs font-mono font-semibold text-ink-muted">
+            <label className="block text-xs font-mono font-semibold text-slate-300">
               Câu tình huống chứa chỗ trống ____ (promptWithBlank) *
             </label>
             <textarea
@@ -628,16 +628,16 @@ export function AdminArenaTab({
               value={promptWithBlank}
               onChange={(e) => setPromptWithBlank(e.target.value)}
               placeholder="[ERROR] Two transactions waited on each other indefinitely, causing a database ____."
-              className="w-full px-3 py-2 text-sm bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+              className="liquid-glass-input w-full px-3 py-2 text-sm rounded-xl"
             />
           </div>
 
-          <div className="p-3 rounded-xl bg-paper border border-ink/15 space-y-1">
-            <div className="flex items-center justify-between text-[11px] font-mono text-ink-muted">
+          <div className="p-3 rounded-xl bg-slate-950/60 border border-white/15 space-y-1">
+            <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
               <span>Xem trước hiển thị chỗ trống:</span>
-              {phonetic && <span className="font-ipa text-accent">{phonetic}</span>}
+              {phonetic && <span className="font-ipa text-cyan-300">{phonetic}</span>}
             </div>
-            <div className="text-xs text-ink leading-relaxed">
+            <div className="text-xs text-slate-100 leading-relaxed">
               <PromptBlankPreview
                 promptWithBlank={promptWithBlank}
                 targetWord={targetWord}
@@ -647,7 +647,7 @@ export function AdminArenaTab({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
             <div className="space-y-1">
-              <label className="block text-xs font-mono font-semibold text-ink-muted">
+              <label className="block text-xs font-mono font-semibold text-slate-300">
                 Biến thể chấp nhận (phân tách dấu phẩy)
               </label>
               <input
@@ -655,12 +655,12 @@ export function AdminArenaTab({
                 value={acceptedVariantsText}
                 onChange={(e) => setAcceptedVariantsText(e.target.value)}
                 placeholder="dead lock, deadlocks, deadlocked"
-                className="w-full px-3 py-2 text-xs font-mono bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="liquid-glass-input w-full px-3 py-2 text-xs font-mono rounded-xl"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="block text-xs font-mono font-semibold text-ink-muted">
+              <label className="block text-xs font-mono font-semibold text-slate-300">
                 Giải thích ngữ cảnh tiếng Việt (contextVI)
               </label>
               <input
@@ -668,7 +668,7 @@ export function AdminArenaTab({
                 value={contextVI}
                 onChange={(e) => setContextVI(e.target.value)}
                 placeholder="Tình trạng hai tiến trình khóa chéo tài nguyên của nhau."
-                className="w-full px-3 py-2 text-xs bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="liquid-glass-input w-full px-3 py-2 text-xs rounded-xl"
               />
             </div>
           </div>
@@ -677,14 +677,14 @@ export function AdminArenaTab({
             <button
               type="button"
               onClick={resetForm}
-              className="px-4 py-2 rounded-pill bg-white border border-ink/20 text-xs font-medium text-ink hover:bg-paper-muted"
+              className="liquid-glass-btn px-4 py-2 rounded-full text-xs font-medium"
             >
               Hủy
             </button>
             <button
               type="submit"
               disabled={isSaving}
-              className="px-5 py-2 rounded-pill bg-accent text-white text-xs font-semibold hover:bg-accent-hover shadow-soft shadow-hard-press transition-all disabled:opacity-60"
+              className="liquid-btn-primary px-5 py-2 rounded-full text-xs font-semibold disabled:opacity-60"
             >
               {isSaving ? "Đang lưu..." : editingId ? "Lưu thử thách" : "Thêm & đồng bộ"}
             </button>
@@ -692,10 +692,10 @@ export function AdminArenaTab({
         </form>
       ) : (
         <div className="space-y-3">
-          <div className="bg-white border border-ink/15 rounded-2xl p-3.5 shadow-soft flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div className="liquid-glass-card p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div className="relative flex-1 max-w-md">
               <Search
-                className="w-4 h-4 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2"
+                className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"
                 aria-hidden="true"
               />
               <input
@@ -706,7 +706,7 @@ export function AdminArenaTab({
                   setCurrentPage(1);
                 }}
                 placeholder="Tìm theo từ khóa, câu lỗi hoặc nghĩa tiếng Việt..."
-                className="w-full pl-9 pr-3 py-1.5 text-xs bg-paper border border-ink/15 rounded-pill text-ink focus:outline-none focus:border-ink"
+                className="liquid-glass-input w-full pl-9 pr-3 py-1.5 text-xs rounded-full"
               />
             </div>
 
@@ -719,10 +719,10 @@ export function AdminArenaTab({
                     setCategoryFilter(tab.value);
                     setCurrentPage(1);
                   }}
-                  className={`px-3 py-1 rounded-pill text-xs font-mono font-semibold transition-colors ${
+                  className={`px-3 py-1 rounded-full text-xs font-mono font-semibold border transition-colors ${
                     categoryFilter === tab.value
-                      ? "bg-ink text-white"
-                      : "bg-paper border border-ink/15 text-ink-muted hover:text-ink"
+                      ? "bg-cyan-500/25 border-cyan-400/55 text-cyan-100"
+                      : "liquid-glass-btn text-slate-300"
                   }`}
                 >
                   {tab.label}
@@ -745,7 +745,7 @@ export function AdminArenaTab({
           />
 
           {paginatedChallenges.length === 0 ? (
-            <div className="bg-white border border-ink/15 rounded-2xl p-8 text-center text-xs text-ink-muted">
+            <div className="liquid-glass-card p-8 text-center text-xs text-slate-300">
               Không tìm thấy thử thách Bug Buster nào khớp bộ lọc.
             </div>
           ) : (
@@ -758,8 +758,8 @@ export function AdminArenaTab({
                 return (
                   <div
                     key={challenge.id}
-                    className={`bg-white border rounded-xl p-3.5 shadow-soft flex flex-col justify-between gap-2.5 transition-colors ${
-                      isSelected ? "border-accent ring-1 ring-accent/30" : "border-ink/15"
+                    className={`liquid-glass-card-lite p-3.5 flex flex-col justify-between gap-2.5 transition-colors ${
+                      isSelected ? "!border-cyan-400/60 ring-1 ring-cyan-400/30" : ""
                     }`}
                   >
                     <div className="space-y-2 min-w-0">
@@ -770,23 +770,23 @@ export function AdminArenaTab({
                             checked={isSelected}
                             onChange={() => toggleSelectId(challenge.id)}
                             aria-label={`Chọn thử thách ${challenge.targetWord}`}
-                            className="w-4 h-4 rounded accent-[#E5484D] cursor-pointer shrink-0"
+                            className="w-4 h-4 rounded accent-cyan-400 cursor-pointer shrink-0"
                           />
-                          <span className="px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-[10px] font-mono uppercase text-ink-muted">
+                          <span className="px-2 py-0.5 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono uppercase text-slate-300">
                             {challenge.category}
                           </span>
-                          <span className="font-mono font-bold text-xs text-ink">
+                          <span className="font-mono font-bold text-xs text-white">
                             {challenge.targetWord}
                           </span>
-                          <span className="text-xs font-ipa text-accent font-medium">
+                          <span className="text-xs font-ipa text-cyan-300 font-medium">
                             {challenge.phonetic || "/.../"}
                           </span>
                           {!isBase ? (
-                            <span className="px-2 py-0.5 rounded-pill bg-accent-light border border-accent/30 text-[10px] font-mono font-semibold text-ink">
+                            <span className="px-2 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/45 text-[10px] font-mono font-semibold text-cyan-100">
                               Tùy chỉnh
                             </span>
                           ) : isOverridden ? (
-                            <span className="px-2 py-0.5 rounded-pill bg-paper-muted border border-ink/20 text-[10px] font-mono font-semibold text-ink">
+                            <span className="px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/45 text-[10px] font-mono font-semibold text-amber-100">
                               Đã sửa
                             </span>
                           ) : null}
@@ -797,7 +797,7 @@ export function AdminArenaTab({
                             type="button"
                             disabled={isSaving}
                             onClick={() => openEdit(challenge)}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill bg-white border border-ink/20 text-[11px] font-medium text-ink hover:bg-paper-muted transition-colors disabled:opacity-50"
+                            className="liquid-glass-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium disabled:opacity-50"
                           >
                             <Pencil className="w-3 h-3" aria-hidden="true" />
                             <span>Sửa</span>
@@ -806,7 +806,7 @@ export function AdminArenaTab({
                             type="button"
                             disabled={isSaving}
                             onClick={() => handleDelete(challenge)}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill bg-accent-light border border-accent/40 text-[11px] font-medium text-ink hover:bg-accent hover:text-white transition-colors disabled:opacity-50"
+                            className="liquid-btn-danger inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium disabled:opacity-50"
                           >
                             <Trash2 className="w-3 h-3" aria-hidden="true" />
                             <span>Xóa</span>
@@ -814,7 +814,7 @@ export function AdminArenaTab({
                         </div>
                       </div>
 
-                      <div className="text-xs text-ink leading-relaxed bg-paper/70 border border-ink/10 rounded-lg p-2.5">
+                      <div className="text-xs text-slate-100 leading-relaxed bg-slate-950/60 border border-white/10 rounded-lg p-2.5">
                         <PromptBlankPreview
                           promptWithBlank={challenge.promptEN}
                           targetWord={challenge.targetWord}
@@ -822,10 +822,10 @@ export function AdminArenaTab({
                       </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[11px] text-ink-muted pt-1 border-t border-ink/10">
+                    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[11px] text-slate-300 pt-1 border-t border-white/10">
                       <span className="truncate">{challenge.contextVI}</span>
                       {challenge.acceptedVariants.length > 0 && (
-                        <span className="font-mono text-[10px] text-ink-faint shrink-0">
+                        <span className="font-mono text-[10px] text-slate-400 shrink-0">
                           Biến thể: {challenge.acceptedVariants.join(", ")}
                         </span>
                       )}
@@ -836,8 +836,8 @@ export function AdminArenaTab({
             </div>
           )}
 
-          <div className="bg-white border border-ink/15 rounded-2xl px-4 py-2.5 shadow-soft flex flex-wrap items-center justify-between gap-3 text-xs">
-            <span className="text-ink-muted font-mono">
+          <div className="liquid-glass-card px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <span className="text-slate-300 font-mono">
               Hiển thị {paginatedChallenges.length} / {filteredChallenges.length} thử thách · Trang{" "}
               {safePage} / {totalPages}
             </span>
@@ -846,7 +846,7 @@ export function AdminArenaTab({
                 type="button"
                 disabled={safePage <= 1}
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-paper border border-ink/15 font-semibold text-ink hover:bg-paper-muted disabled:opacity-40"
+                className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1 rounded-full font-semibold disabled:opacity-40"
               >
                 <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Trước</span>
@@ -855,7 +855,7 @@ export function AdminArenaTab({
                 type="button"
                 disabled={safePage >= totalPages}
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-paper border border-ink/15 font-semibold text-ink hover:bg-paper-muted disabled:opacity-40"
+                className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1 rounded-full font-semibold disabled:opacity-40"
               >
                 <span>Sau</span>
                 <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />

@@ -68,7 +68,7 @@ export function AdminLoginGate({ children }: AdminLoginGateProps) {
     try {
       await fetch("/api/admin/auth", { method: "DELETE" });
     } catch {
-      // Lock client view even if network request fails
+      void 0;
     }
     setPasscode("");
     setError(null);
@@ -119,21 +119,21 @@ export function AdminLoginGate({ children }: AdminLoginGateProps) {
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen bg-paper flex items-center justify-center px-4 py-12">
+      <div className="min-h-screen bg-transparent flex items-center justify-center px-4 py-12">
         <div
           aria-busy="true"
           aria-label="Đang kiểm tra phiên quản trị"
-          className="w-full max-w-md bg-white border border-ink/15 rounded-2xl p-6 sm:p-8 shadow-soft space-y-5 animate-pulse"
+          className="w-full max-w-md liquid-glass-card p-6 sm:p-8 space-y-5 animate-pulse"
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-paper-muted" />
+            <div className="w-10 h-10 rounded-full bg-white/10" />
             <div className="space-y-2 flex-1">
-              <div className="h-4 w-40 bg-paper-muted rounded" />
-              <div className="h-3 w-56 bg-paper-muted rounded" />
+              <div className="h-4 w-40 bg-white/10 rounded" />
+              <div className="h-3 w-56 bg-white/10 rounded" />
             </div>
           </div>
-          <div className="h-10 w-full bg-paper-muted rounded-xl" />
-          <div className="h-10 w-full bg-paper-muted rounded-pill" />
+          <div className="h-10 w-full bg-white/10 rounded-xl" />
+          <div className="h-10 w-full bg-white/10 rounded-full" />
         </div>
       </div>
     );
@@ -141,17 +141,17 @@ export function AdminLoginGate({ children }: AdminLoginGateProps) {
 
   if (status === "locked") {
     return (
-      <div className="min-h-screen bg-paper flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md bg-white border border-ink/15 rounded-2xl p-6 sm:p-8 shadow-soft space-y-6">
+      <div className="min-h-screen bg-transparent flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md liquid-glass-card p-6 sm:p-8 space-y-6">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-pill bg-paper border border-ink/15 text-[11px] font-mono font-semibold uppercase tracking-wide text-ink">
-              <ShieldCheck className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+            <div className="liquid-glass-pill inline-flex items-center gap-2 px-3 py-1 text-[11px] font-mono font-semibold uppercase tracking-wide text-cyan-200">
+              <ShieldCheck className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
               <span>Admin Portal</span>
             </div>
-            <h1 className="text-2xl font-bold tracking-tight text-ink">
+            <h1 className="text-2xl font-bold tracking-tight text-white">
               Cổng Quản Trị SpeakIT
             </h1>
-            <p className="text-xs text-ink-muted leading-relaxed">
+            <p className="text-xs text-slate-300 leading-relaxed">
               Khu vực dành cho giảng viên, nhóm nghiên cứu IUH &amp; BCN để xem thống kê thực tế, xuất dữ liệu CSV/JSON và quản lý học liệu.
             </p>
           </div>
@@ -159,9 +159,9 @@ export function AdminLoginGate({ children }: AdminLoginGateProps) {
           {error && (
             <div
               role="alert"
-              className="flex items-start gap-2.5 p-3.5 rounded-xl bg-accent-light border border-accent/40 text-xs text-ink"
+              className="flex items-start gap-2.5 p-3.5 rounded-xl bg-rose-500/20 border border-rose-400/45 text-xs text-rose-100"
             >
-              <AlertCircle className="w-4 h-4 text-accent shrink-0 mt-0.5" aria-hidden="true" />
+              <AlertCircle className="w-4 h-4 text-rose-300 shrink-0 mt-0.5" aria-hidden="true" />
               <span>{error}</span>
             </div>
           )}
@@ -170,13 +170,13 @@ export function AdminLoginGate({ children }: AdminLoginGateProps) {
             <div className="space-y-1.5">
               <label
                 htmlFor="admin-passcode-input"
-                className="block text-xs font-mono font-semibold uppercase text-ink-muted"
+                className="block text-xs font-mono font-semibold uppercase text-slate-300"
               >
                 Mã truy cập (Passcode)
               </label>
               <div className="relative">
                 <Lock
-                  className="w-4 h-4 text-ink-muted absolute left-3.5 top-1/2 -translate-y-1/2"
+                  className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"
                   aria-hidden="true"
                 />
                 <input
@@ -187,13 +187,13 @@ export function AdminLoginGate({ children }: AdminLoginGateProps) {
                   placeholder="Nhập passcode quản trị..."
                   autoFocus
                   autoComplete="current-password"
-                  className="w-full pl-10 pr-10 py-2.5 text-sm font-mono bg-paper border border-ink/20 rounded-xl text-ink placeholder:text-ink-faint focus:outline-none focus:border-accent"
+                  className="liquid-glass-input w-full pl-10 pr-10 py-2.5 text-sm font-mono rounded-xl"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPasscode((prev) => !prev)}
                   aria-label={showPasscode ? "Ẩn mã truy cập" : "Hiện mã truy cập"}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted hover:text-ink"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
                 >
                   {showPasscode ? (
                     <EyeOff className="w-4 h-4" aria-hidden="true" />
@@ -207,16 +207,16 @@ export function AdminLoginGate({ children }: AdminLoginGateProps) {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-2.5 px-4 rounded-pill bg-ink text-white text-sm font-semibold hover:bg-ink/90 shadow-soft shadow-hard-press transition-all disabled:opacity-60"
+              className="liquid-btn-primary w-full py-2.5 px-4 rounded-full text-sm font-semibold transition-all disabled:opacity-60"
             >
               {isSubmitting ? "Đang xác thực..." : "Mở khóa Cổng Quản Trị"}
             </button>
           </form>
 
-          <div className="pt-2 border-t border-ink/10 flex justify-center">
+          <div className="pt-2 border-t border-white/15 flex justify-center">
             <Link
               href="/"
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-ink-muted hover:text-ink transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-300 hover:text-white transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Quay lại chế độ Người dùng</span>

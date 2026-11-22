@@ -106,12 +106,12 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="liquid-glass-card p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h2 className="text-sm font-bold text-ink">
+          <h2 className="text-sm font-bold text-white">
             Tổng hợp dữ liệu luyện tập &amp; nghiên cứu
           </h2>
-          <p className="text-xs text-ink-muted">
+          <p className="text-xs text-slate-300">
             Toàn bộ chỉ số bên dưới tổng hợp trực tiếp từ nhật ký luyện tập thực tế (không dùng dữ liệu giả lập).
           </p>
         </div>
@@ -121,7 +121,7 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
             type="button"
             onClick={() => downloadResearchCsv(attempts, arenaRuns, weakPoints)}
             disabled={!hasExportableData}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-ink text-white text-xs font-mono font-semibold hover:bg-ink/90 shadow-soft shadow-hard-press transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            className="liquid-btn-primary inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-mono font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Download className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Xuất CSV (Excel UTF-8)</span>
@@ -130,100 +130,100 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
             type="button"
             onClick={handleExportJson}
             disabled={!hasExportableData}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-white border border-ink/20 text-xs font-mono font-semibold text-ink hover:bg-paper-muted shadow-soft shadow-hard-press transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-mono font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            <FileJson className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+            <FileJson className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
             <span>Xuất JSON</span>
           </button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-2">
-          <div className="flex items-center justify-between text-ink-muted">
+        <div className="liquid-glass-card p-5 space-y-2">
+          <div className="flex items-center justify-between text-slate-300">
             <span className="text-xs font-medium">Tổng lượt luyện nói</span>
-            <MessageSquare className="w-4 h-4 text-ink-muted" aria-hidden="true" />
+            <MessageSquare className="w-4 h-4 text-cyan-300" aria-hidden="true" />
           </div>
-          <div className="text-3xl font-bold font-mono text-ink">
+          <div className="text-3xl font-bold font-mono text-white">
             {stats.totalAttempts}
           </div>
-          <div className="text-[11px] text-ink-faint">
+          <div className="text-[11px] text-slate-400">
             Trên {stats.activeScenariosCount} kịch bản đang bật
           </div>
         </div>
 
-        <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-2">
-          <div className="flex items-center justify-between text-ink-muted">
+        <div className="liquid-glass-card p-5 space-y-2">
+          <div className="flex items-center justify-between text-slate-300">
             <span className="text-xs font-medium">Điểm trung bình</span>
-            <Award className="w-4 h-4 text-accent" aria-hidden="true" />
+            <Award className="w-4 h-4 text-amber-300" aria-hidden="true" />
           </div>
-          <div className="text-3xl font-bold font-mono text-ink">
+          <div className="text-3xl font-bold font-mono text-white">
             {stats.totalAttempts > 0 ? `${stats.avgScore}` : "0"}
-            <span className="text-base font-normal text-ink-muted">/100</span>
+            <span className="text-base font-normal text-slate-400">/100</span>
           </div>
-          <div className="text-[11px] text-ink-faint">
+          <div className="text-[11px] text-slate-400">
             Tính trên tổng lượt đã chấm điểm
           </div>
         </div>
 
-        <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-2">
-          <div className="flex items-center justify-between text-ink-muted">
+        <div className="liquid-glass-card p-5 space-y-2">
+          <div className="flex items-center justify-between text-slate-300">
             <span className="text-xs font-medium">Tổng lượt Arena</span>
-            <Gamepad2 className="w-4 h-4 text-ink-muted" aria-hidden="true" />
+            <Gamepad2 className="w-4 h-4 text-emerald-300" aria-hidden="true" />
           </div>
-          <div className="text-3xl font-bold font-mono text-ink">
+          <div className="text-3xl font-bold font-mono text-white">
             {stats.totalArenaRuns}
           </div>
-          <div className="text-[11px] text-ink-faint">
+          <div className="text-[11px] text-slate-400">
             Bug Buster &amp; Standup Speed Run
           </div>
         </div>
 
-        <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-2">
-          <div className="flex items-center justify-between text-ink-muted">
+        <div className="liquid-glass-card p-5 space-y-2">
+          <div className="flex items-center justify-between text-slate-300">
             <span className="text-xs font-medium">Điểm yếu đã ghi nhận</span>
-            <AlertTriangle className="w-4 h-4 text-accent" aria-hidden="true" />
+            <AlertTriangle className="w-4 h-4 text-rose-300" aria-hidden="true" />
           </div>
-          <div className="text-3xl font-bold font-mono text-ink">
+          <div className="text-3xl font-bold font-mono text-white">
             {stats.totalWeakPoints}
           </div>
-          <div className="text-[11px] text-ink-faint">
+          <div className="text-[11px] text-slate-400">
             Từ khóa bỏ lỡ &amp; lỗi ngữ pháp
           </div>
         </div>
       </div>
 
       {roleEntries.length > 0 && (
-        <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft flex flex-wrap items-center gap-3">
-          <span className="text-xs font-mono font-semibold uppercase text-ink-muted mr-1">
+        <div className="liquid-glass-card p-5 flex flex-wrap items-center gap-3">
+          <span className="text-xs font-mono font-semibold uppercase text-slate-300 mr-1">
             Phân bố theo vai trò CNTT:
           </span>
           {roleEntries.map(([role, count]) => (
             <span
               key={role}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-paper border border-ink/15 text-xs font-mono text-ink"
+              className="liquid-glass-pill inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono text-slate-100"
             >
               <span>{ROLE_LABELS[role] ?? role}</span>
-              <span className="font-bold text-accent">{count}</span>
+              <span className="font-bold text-cyan-300">{count}</span>
             </span>
           ))}
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5">
+        <section className="liquid-glass-card p-5 sm:p-6 space-y-5">
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-bold text-ink flex items-center gap-2">
-              <BarChart3 className="w-4 h-4 text-accent" aria-hidden="true" />
+            <h2 className="text-base font-bold text-white flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 text-cyan-300" aria-hidden="true" />
               <span>Thống kê theo Kịch bản</span>
             </h2>
-            <span className="text-[11px] font-mono text-ink-muted">
+            <span className="text-[11px] font-mono text-slate-400">
               Lượt &amp; Điểm TB
             </span>
           </div>
 
           {scenarioRows.length === 0 ? (
-            <p className="text-xs text-ink-muted py-6 text-center">
+            <p className="text-xs text-slate-400 py-6 text-center">
               Chưa có kịch bản nào được ghi nhận.
             </p>
           ) : (
@@ -237,26 +237,26 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
                   <div key={row.id} className="space-y-1.5">
                     <div className="flex items-center justify-between gap-2 text-xs">
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className="font-semibold text-ink truncate">
+                        <span className="font-semibold text-white truncate">
                           {row.label}
                         </span>
                         {row.isHidden && (
-                          <span className="px-2 py-0.5 rounded-pill bg-paper-muted border border-ink/15 text-[10px] font-mono text-ink-muted shrink-0">
+                          <span className="px-2 py-0.5 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono text-slate-300 shrink-0">
                             Đang ẩn
                           </span>
                         )}
                       </div>
-                      <div className="font-mono text-ink-muted shrink-0">
-                        <span className="font-semibold text-ink">{row.count}</span> lượt
+                      <div className="font-mono text-slate-300 shrink-0">
+                        <span className="font-semibold text-white">{row.count}</span> lượt
                         {" • "}
-                        <span className="font-semibold text-accent">
+                        <span className="font-semibold text-cyan-300">
                           {row.count > 0 ? `${row.avgScore}/100` : "—"}
                         </span>
                       </div>
                     </div>
-                    <div className="h-2.5 w-full rounded-pill bg-paper-muted border border-ink/10 overflow-hidden">
+                    <div className="h-2.5 w-full rounded-full bg-slate-950/60 border border-white/10 overflow-hidden">
                       <div
-                        className="h-full rounded-pill bg-ink transition-all"
+                        className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 transition-all"
                         style={{ width: `${countPct}%` }}
                       />
                     </div>
@@ -267,19 +267,19 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
           )}
         </section>
 
-        <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5">
+        <section className="liquid-glass-card p-5 sm:p-6 space-y-5">
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-bold text-ink flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-accent" aria-hidden="true" />
+            <h2 className="text-base font-bold text-white flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-rose-300" aria-hidden="true" />
               <span>Top Điểm Yếu Sinh Viên</span>
             </h2>
-            <span className="text-[11px] font-mono text-ink-muted">
+            <span className="text-[11px] font-mono text-slate-400">
               Xếp theo miss_count
             </span>
           </div>
 
           {topWeakPoints.length === 0 ? (
-            <div className="bg-paper border border-ink/10 rounded-xl p-6 text-center text-xs text-ink-muted">
+            <div className="bg-slate-950/55 border border-white/15 rounded-xl p-6 text-center text-xs text-slate-300">
               Chưa có dữ liệu điểm yếu nào được ghi nhận. Khi người dùng hoàn thành lượt luyện nói, các từ khóa bỏ lỡ và lỗi ngữ pháp sẽ tổng hợp tại đây.
             </div>
           ) : (
@@ -292,33 +292,33 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
                 return (
                   <div
                     key={wp.id || `${wp.kind}:${wp.value}`}
-                    className="p-3 rounded-xl bg-paper border border-ink/10 space-y-1.5"
+                    className="p-3 rounded-xl bg-slate-950/55 border border-white/15 space-y-1.5"
                   >
                     <div className="flex items-center justify-between gap-2 text-xs">
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className="font-mono text-[11px] text-ink-faint w-5">
+                        <span className="font-mono text-[11px] text-slate-400 w-5">
                           #{index + 1}
                         </span>
                         <span
-                          className={`px-2 py-0.5 rounded-pill text-[10px] font-mono font-semibold border shrink-0 ${
+                          className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold border shrink-0 ${
                             wp.kind === "grammar"
-                              ? "bg-accent-light border-accent/30 text-ink"
-                              : "bg-white border-ink/15 text-ink-muted"
+                              ? "bg-rose-500/20 border-rose-400/40 text-rose-200"
+                              : "bg-cyan-500/20 border-cyan-400/40 text-cyan-200"
                           }`}
                         >
                           {wp.kind === "grammar" ? "Ngữ pháp" : "Từ khóa"}
                         </span>
-                        <span className="font-mono font-semibold text-ink truncate">
+                        <span className="font-mono font-semibold text-white truncate">
                           {wp.value}
                         </span>
                       </div>
-                      <span className="font-mono text-xs font-bold text-accent shrink-0">
+                      <span className="font-mono text-xs font-bold text-rose-300 shrink-0">
                         {wp.miss_count} lần
                       </span>
                     </div>
-                    <div className="h-1.5 w-full rounded-pill bg-white border border-ink/10 overflow-hidden">
+                    <div className="h-1.5 w-full rounded-full bg-white/10 border border-white/10 overflow-hidden">
                       <div
-                        className="h-full rounded-pill bg-accent"
+                        className="h-full rounded-full bg-gradient-to-r from-rose-400 to-amber-400"
                         style={{ width: `${barWidth}%` }}
                       />
                     </div>

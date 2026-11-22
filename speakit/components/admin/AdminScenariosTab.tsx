@@ -563,13 +563,13 @@ export function AdminScenariosTab({
 
   return (
     <div className="space-y-4">
-      <div className="bg-white border border-ink/15 rounded-2xl p-4 shadow-soft space-y-3">
+      <div className="liquid-glass-card p-4 space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-lg font-bold text-ink">
+            <h2 className="text-lg font-bold text-white">
               Quản Lý Kịch Bản Luyện Nói ({scenarios.length})
             </h2>
-            <p className="text-xs text-ink-muted mt-0.5">
+            <p className="text-xs text-slate-300 mt-0.5">
               Chỉnh sửa kịch bản mặc định, ẩn/hiện hoặc thêm tình huống CNTT mới gồm 3 lượt hội thoại.
             </p>
           </div>
@@ -578,15 +578,15 @@ export function AdminScenariosTab({
             <button
               type="button"
               onClick={openCreateWithAi}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white border border-ink/20 text-xs font-semibold text-ink hover:bg-paper-muted transition-colors"
+              className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
             >
-              <Sparkles className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+              <Sparkles className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
               <span>Tạo bằng AI</span>
             </button>
             <button
               type="button"
               onClick={subTab === "form" && isFormOpen ? resetForm : openCreateForm}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill bg-ink text-white text-xs font-semibold hover:bg-ink/90 shadow-soft shadow-hard-press transition-all"
+              className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold"
             >
               {subTab === "form" && isFormOpen ? (
                 <>
@@ -603,14 +603,14 @@ export function AdminScenariosTab({
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-ink/10">
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-white/15">
           <button
             type="button"
             onClick={() => setSubTab("list")}
-            className={`px-3.5 py-1.5 rounded-pill text-xs font-semibold transition-all ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all ${
               subTab === "list"
-                ? "bg-ink text-white shadow-soft"
-                : "bg-paper text-ink-muted hover:text-ink border border-ink/15"
+                ? "bg-cyan-500/25 border-cyan-400/55 text-cyan-100"
+                : "liquid-glass-btn text-slate-300"
             }`}
           >
             Danh sách kịch bản ({scenarios.length})
@@ -621,10 +621,10 @@ export function AdminScenariosTab({
               if (!isFormOpen) openCreateForm();
               else setSubTab("form");
             }}
-            className={`px-3.5 py-1.5 rounded-pill text-xs font-semibold transition-all ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all ${
               subTab === "form"
-                ? "bg-ink text-white shadow-soft"
-                : "bg-paper text-ink-muted hover:text-ink border border-ink/15"
+                ? "bg-cyan-500/25 border-cyan-400/55 text-cyan-100"
+                : "liquid-glass-btn text-slate-300"
             }`}
           >
             + Tạo kịch bản / AI Generator
@@ -637,16 +637,16 @@ export function AdminScenariosTab({
           role={statusNotice.tone === "error" ? "alert" : "status"}
           className={`flex items-start gap-2.5 p-3.5 rounded-2xl border text-xs ${
             statusNotice.tone === "error"
-              ? "bg-accent-light border-accent/40 text-ink"
+              ? "bg-rose-500/20 border-rose-400/45 text-rose-100"
               : statusNotice.tone === "warn"
-              ? "bg-paper-muted border-ink/25 text-ink"
-              : "bg-white border-ink/20 text-ink shadow-soft"
+              ? "bg-amber-500/20 border-amber-400/45 text-amber-100"
+              : "bg-emerald-500/20 border-emerald-400/45 text-emerald-100"
           }`}
         >
           {statusNotice.tone === "ok" ? (
-            <CheckCircle2 className="w-4 h-4 text-ink shrink-0 mt-0.5" aria-hidden="true" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-300 shrink-0 mt-0.5" aria-hidden="true" />
           ) : (
-            <AlertCircle className="w-4 h-4 text-accent shrink-0 mt-0.5" aria-hidden="true" />
+            <AlertCircle className="w-4 h-4 text-rose-300 shrink-0 mt-0.5" aria-hidden="true" />
           )}
           <span>{statusNotice.text}</span>
         </div>
@@ -655,16 +655,16 @@ export function AdminScenariosTab({
       {subTab === "form" && (
         <form
           onSubmit={handleSubmit}
-          className="bg-white border border-ink/20 rounded-2xl p-5 shadow-soft space-y-5"
+          className="liquid-glass-card p-5 space-y-5"
         >
-          <div className="flex items-center justify-between border-b border-ink/10 pb-3">
-            <h3 className="text-base font-bold text-ink">
+          <div className="flex items-center justify-between border-b border-white/15 pb-3">
+            <h3 className="text-base font-bold text-white">
               {editingId ? `Chỉnh sửa kịch bản: ${editingId}` : "Thêm kịch bản CNTT mới"}
             </h3>
             <button
               type="button"
               onClick={resetForm}
-              className="text-xs font-mono text-ink-muted hover:text-ink"
+              className="text-xs font-mono text-slate-300 hover:text-white"
             >
               Hủy
             </button>
@@ -684,7 +684,7 @@ export function AdminScenariosTab({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-ink-muted">
+              <label className="block text-xs font-mono font-semibold text-slate-300">
                 Tên tiếng Anh (titleEN) *
               </label>
               <input
@@ -692,12 +692,12 @@ export function AdminScenariosTab({
                 value={titleEN}
                 onChange={(e) => handleTitleENChange(e.target.value)}
                 placeholder="VD: Production Incident Postmortem"
-                className="w-full px-3.5 py-2 text-sm bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="liquid-glass-input w-full px-3.5 py-2 text-sm rounded-xl"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-ink-muted">
+              <label className="block text-xs font-mono font-semibold text-slate-300">
                 ID Slug (URL /practice/[id]) *
               </label>
               <input
@@ -709,12 +709,12 @@ export function AdminScenariosTab({
                   setId(slugifyId(e.target.value));
                 }}
                 placeholder="production-incident-postmortem"
-                className="w-full px-3.5 py-2 text-sm font-mono bg-paper border border-ink/20 rounded-xl text-ink disabled:opacity-60 focus:outline-none focus:border-accent"
+                className="liquid-glass-input w-full px-3.5 py-2 text-sm font-mono rounded-xl disabled:opacity-60"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-ink-muted">
+              <label className="block text-xs font-mono font-semibold text-slate-300">
                 Tên tiếng Việt (titleVI) *
               </label>
               <input
@@ -722,12 +722,12 @@ export function AdminScenariosTab({
                 value={titleVI}
                 onChange={(e) => setTitleVI(e.target.value)}
                 placeholder="VD: Họp Phân Tích Sự Cố Production"
-                className="w-full px-3.5 py-2 text-sm bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="liquid-glass-input w-full px-3.5 py-2 text-sm rounded-xl"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-ink-muted">
+              <label className="block text-xs font-mono font-semibold text-slate-300">
                 Vai trò người phỏng vấn / đối tác (roleVI) *
               </label>
               <input
@@ -735,13 +735,13 @@ export function AdminScenariosTab({
                 value={roleVI}
                 onChange={(e) => setRoleVI(e.target.value)}
                 placeholder="VD: Site Reliability Lead"
-                className="w-full px-3.5 py-2 text-sm bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="liquid-glass-input w-full px-3.5 py-2 text-sm rounded-xl"
               />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-mono font-semibold text-ink-muted">
+            <label className="block text-xs font-mono font-semibold text-slate-300">
               Mô tả ngắn tiếng Việt (descriptionVI)
             </label>
             <textarea
@@ -749,12 +749,12 @@ export function AdminScenariosTab({
               value={descriptionVI}
               onChange={(e) => setDescriptionVI(e.target.value)}
               placeholder="Mô tả mục tiêu luyện tập cho sinh viên..."
-              className="w-full px-3.5 py-2 text-sm bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+              className="liquid-glass-input w-full px-3.5 py-2 text-sm rounded-xl"
             />
           </div>
 
           <div className="space-y-2">
-            <span className="block text-xs font-mono font-semibold text-ink-muted">
+            <span className="block text-xs font-mono font-semibold text-slate-300">
               Vai trò ưu tiên đề xuất (targetRoles)
             </span>
             <div className="flex flex-wrap gap-3">
@@ -763,10 +763,10 @@ export function AdminScenariosTab({
                 return (
                   <label
                     key={role.id}
-                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-pill border text-xs font-mono cursor-pointer transition-colors ${
+                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-mono cursor-pointer transition-colors ${
                       checked
-                        ? "bg-ink text-white border-ink"
-                        : "bg-paper text-ink border-ink/20 hover:bg-paper-muted"
+                        ? "bg-cyan-500/25 border-cyan-400/55 text-cyan-100"
+                        : "liquid-glass-btn text-slate-300"
                     }`}
                   >
                     <input
@@ -783,21 +783,21 @@ export function AdminScenariosTab({
           </div>
 
           <div className="space-y-4 pt-2">
-            <h4 className="text-xs font-mono font-bold uppercase text-ink-muted">
+            <h4 className="text-xs font-mono font-bold uppercase text-slate-300">
               Nội dung 3 lượt hội thoại
             </h4>
             <div className="space-y-4">
               {turns.map((turn, idx) => (
                 <div
                   key={idx}
-                  className="p-4 rounded-2xl bg-paper border border-ink/15 space-y-3"
+                  className="p-4 rounded-2xl bg-slate-950/55 border border-white/15 space-y-3"
                 >
-                  <div className="text-xs font-mono font-bold text-accent">
+                  <div className="text-xs font-mono font-bold text-cyan-300">
                     Lượt {idx + 1} (Turn {idx})
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <label className="block text-[11px] font-mono text-ink-muted">
+                      <label className="block text-[11px] font-mono text-slate-300">
                         Câu hỏi tiếng Anh (questionEN) *
                       </label>
                       <input
@@ -805,11 +805,11 @@ export function AdminScenariosTab({
                         value={turn.questionEN}
                         onChange={(e) => updateTurn(idx, "questionEN", e.target.value)}
                         placeholder="What caused the latency spike?"
-                        className="w-full px-3 py-2 text-xs bg-white border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                        className="liquid-glass-input w-full px-3 py-2 text-xs rounded-xl"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="block text-[11px] font-mono text-ink-muted">
+                      <label className="block text-[11px] font-mono text-slate-300">
                         Từ khóa kỳ vọng (phân tách dấu phẩy) *
                       </label>
                       <input
@@ -817,11 +817,11 @@ export function AdminScenariosTab({
                         value={turn.keywordsText}
                         onChange={(e) => updateTurn(idx, "keywordsText", e.target.value)}
                         placeholder="latency, database, root cause, rollback"
-                        className="w-full px-3 py-2 text-xs font-mono bg-white border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                        className="liquid-glass-input w-full px-3 py-2 text-xs font-mono rounded-xl"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="block text-[11px] font-mono text-ink-muted">
+                      <label className="block text-[11px] font-mono text-slate-300">
                         Câu trả lời mẫu (sampleAnswerEN)
                       </label>
                       <input
@@ -831,11 +831,11 @@ export function AdminScenariosTab({
                           updateTurn(idx, "sampleAnswerEN", e.target.value)
                         }
                         placeholder="The spike was caused by an unindexed query..."
-                        className="w-full px-3 py-2 text-xs bg-white border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                        className="liquid-glass-input w-full px-3 py-2 text-xs rounded-xl"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="block text-[11px] font-mono text-ink-muted">
+                      <label className="block text-[11px] font-mono text-slate-300">
                         Gợi ý tiếng Việt (hintVI)
                       </label>
                       <input
@@ -843,7 +843,7 @@ export function AdminScenariosTab({
                         value={turn.hintVI}
                         onChange={(e) => updateTurn(idx, "hintVI", e.target.value)}
                         placeholder="Nêu nguyên nhân gốc rễ và cách khắc phục..."
-                        className="w-full px-3 py-2 text-xs bg-white border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                        className="liquid-glass-input w-full px-3 py-2 text-xs rounded-xl"
                       />
                     </div>
                   </div>
@@ -856,14 +856,14 @@ export function AdminScenariosTab({
             <button
               type="button"
               onClick={resetForm}
-              className="px-4 py-2 rounded-pill bg-white border border-ink/20 text-xs font-medium text-ink hover:bg-paper-muted"
+              className="liquid-glass-btn px-4 py-2 rounded-full text-xs font-medium"
             >
               Hủy
             </button>
             <button
               type="submit"
               disabled={isSaving}
-              className="px-5 py-2 rounded-pill bg-accent text-white text-xs font-semibold hover:bg-accent-hover shadow-soft shadow-hard-press transition-all disabled:opacity-60"
+              className="liquid-btn-primary px-5 py-2 rounded-full text-xs font-semibold disabled:opacity-60"
             >
               {isSaving
                 ? "Đang lưu..."
@@ -877,10 +877,10 @@ export function AdminScenariosTab({
 
       {subTab === "list" && (
         <div className="space-y-3">
-          <div className="bg-white border border-ink/15 rounded-2xl p-3.5 shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="liquid-glass-card p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="relative flex-1">
               <Search
-                className="w-4 h-4 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
                 aria-hidden="true"
               />
               <input
@@ -891,7 +891,7 @@ export function AdminScenariosTab({
                   setCurrentPage(1);
                 }}
                 placeholder="Tìm theo tiêu đề, ID slug, vai trò người hỏi..."
-                className="w-full pl-9 pr-3.5 py-1.5 text-xs bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                className="liquid-glass-input w-full pl-9 pr-3.5 py-1.5 text-xs rounded-xl"
               />
             </div>
 
@@ -902,10 +902,10 @@ export function AdminScenariosTab({
                   setRoleFilter("all");
                   setCurrentPage(1);
                 }}
-                className={`px-3 py-1 rounded-pill text-xs font-mono transition-colors ${
+                className={`px-3 py-1 rounded-full text-xs font-mono border transition-colors ${
                   roleFilter === "all"
-                    ? "bg-ink text-white font-semibold"
-                    : "bg-paper text-ink-muted hover:text-ink border border-ink/15"
+                    ? "bg-cyan-500/25 border-cyan-400/55 text-cyan-100 font-semibold"
+                    : "liquid-glass-btn text-slate-300"
                 }`}
               >
                 Tất cả
@@ -918,10 +918,10 @@ export function AdminScenariosTab({
                     setRoleFilter(role.id);
                     setCurrentPage(1);
                   }}
-                  className={`px-3 py-1 rounded-pill text-xs font-mono transition-colors ${
+                  className={`px-3 py-1 rounded-full text-xs font-mono border transition-colors ${
                     roleFilter === role.id
-                      ? "bg-ink text-white font-semibold"
-                      : "bg-paper text-ink-muted hover:text-ink border border-ink/15"
+                      ? "bg-cyan-500/25 border-cyan-400/55 text-cyan-100 font-semibold"
+                      : "liquid-glass-btn text-slate-300"
                   }`}
                 >
                   {role.label}
@@ -944,7 +944,7 @@ export function AdminScenariosTab({
           />
 
           {paginatedScenarios.length === 0 ? (
-            <div className="bg-white border border-ink/15 rounded-2xl p-6 text-center text-xs text-ink-muted">
+            <div className="liquid-glass-card p-6 text-center text-xs text-slate-300">
               Không tìm thấy kịch bản nào khớp với bộ lọc hiện tại.
             </div>
           ) : (
@@ -961,8 +961,8 @@ export function AdminScenariosTab({
                 return (
                   <div
                     key={scenario.id}
-                    className={`bg-white border rounded-2xl p-4 shadow-soft space-y-3 transition-all ${
-                      isSelected ? "border-accent ring-1 ring-accent/30" : "border-ink/15"
+                    className={`liquid-glass-card-lite p-4 space-y-3 transition-all ${
+                      isSelected ? "!border-cyan-400/60 ring-1 ring-cyan-400/30" : ""
                     } ${isHidden ? "opacity-75" : ""}`}
                   >
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
@@ -973,52 +973,52 @@ export function AdminScenariosTab({
                             checked={isSelected}
                             onChange={() => toggleSelectId(scenario.id)}
                             aria-label={`Chọn kịch bản ${scenario.titleVI}`}
-                            className="mt-1 w-4 h-4 rounded accent-[#E5484D] cursor-pointer shrink-0"
+                            className="mt-1 w-4 h-4 rounded accent-cyan-400 cursor-pointer shrink-0"
                           />
                         )}
                         <div className="space-y-1.5 min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="text-sm font-bold text-ink">
+                          <span className="text-sm font-bold text-white">
                             {scenario.titleVI}
                           </span>
-                          <span className="text-xs font-mono text-ink-muted">
+                          <span className="text-xs font-mono text-slate-300">
                             ({scenario.titleEN})
                           </span>
-                          <span className="px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-[10px] font-mono text-ink-muted">
+                          <span className="px-2 py-0.5 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono text-slate-300">
                             {scenario.id}
                           </span>
                           {!isBase ? (
-                            <span className="px-2 py-0.5 rounded-pill bg-accent-light border border-accent/30 text-[10px] font-mono font-semibold text-ink">
+                            <span className="px-2 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/45 text-[10px] font-mono font-semibold text-cyan-100">
                               Tùy chỉnh
                             </span>
                           ) : isOverridden ? (
-                            <span className="px-2 py-0.5 rounded-pill bg-paper-muted border border-ink/20 text-[10px] font-mono font-semibold text-ink">
+                            <span className="px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/45 text-[10px] font-mono font-semibold text-amber-100">
                               Mặc định (Đã sửa)
                             </span>
                           ) : (
-                            <span className="px-2 py-0.5 rounded-pill bg-paper border border-ink/15 text-[10px] font-mono text-ink-muted">
+                            <span className="px-2 py-0.5 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono text-slate-300">
                               Mặc định
                             </span>
                           )}
                           {isHidden && (
-                            <span className="px-2 py-0.5 rounded-pill bg-ink text-white text-[10px] font-mono">
+                            <span className="px-2 py-0.5 rounded-full bg-rose-500/20 border border-rose-400/45 text-rose-200 text-[10px] font-mono">
                               Đang ẩn
                             </span>
                           )}
                         </div>
 
-                        <p className="text-xs text-ink-muted leading-snug line-clamp-1">
+                        <p className="text-xs text-slate-300 leading-snug line-clamp-1">
                           {scenario.descriptionVI}
                         </p>
 
-                        <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-mono text-ink-muted">
-                          <span className="px-2 py-0.5 rounded-pill bg-paper border border-ink/10 text-ink">
+                        <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-mono text-slate-300">
+                          <span className="px-2 py-0.5 rounded-full bg-slate-950/60 border border-white/15 text-slate-200">
                             Vai trò hỏi: {scenario.roleVI}
                           </span>
                           {scenario.targetRoles?.map((role) => (
                             <span
                               key={role}
-                              className="px-2 py-0.5 rounded-pill bg-paper-muted border border-ink/15 text-[10px] uppercase text-ink"
+                              className="px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-400/35 text-[10px] uppercase text-cyan-200"
                             >
                               {role}
                             </span>
@@ -1031,7 +1031,7 @@ export function AdminScenariosTab({
                         <button
                           type="button"
                           onClick={() => toggleExpandScenario(scenario.id)}
-                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-medium text-ink hover:bg-paper-muted transition-colors"
+                          className="liquid-glass-btn inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-mono font-medium"
                         >
                           <span>
                             {isExpanded
@@ -1049,7 +1049,7 @@ export function AdminScenariosTab({
                           type="button"
                           disabled={isSaving}
                           onClick={() => handleToggleHidden(scenario.id)}
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-paper border border-ink/15 text-xs font-medium text-ink hover:bg-paper-muted transition-colors disabled:opacity-50"
+                          className="liquid-glass-btn inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium disabled:opacity-50"
                         >
                           {isHidden ? (
                             <>
@@ -1068,7 +1068,7 @@ export function AdminScenariosTab({
                           type="button"
                           disabled={isSaving}
                           onClick={() => openEditForm(scenario)}
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-white border border-ink/20 text-xs font-medium text-ink hover:bg-paper-muted transition-colors disabled:opacity-50"
+                          className="liquid-glass-btn inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium disabled:opacity-50"
                         >
                           <Pencil className="w-3.5 h-3.5" aria-hidden="true" />
                           <span>Sửa</span>
@@ -1079,7 +1079,7 @@ export function AdminScenariosTab({
                             type="button"
                             disabled={isSaving}
                             onClick={() => handleDeleteOrRestore(scenario)}
-                            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-accent-light border border-accent/40 text-xs font-medium text-ink hover:bg-accent hover:text-white transition-colors disabled:opacity-50"
+                            className="liquid-btn-danger inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium disabled:opacity-50"
                           >
                             <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                             <span>Xóa</span>
@@ -1089,7 +1089,7 @@ export function AdminScenariosTab({
                             type="button"
                             disabled={isSaving}
                             onClick={() => handleDeleteOrRestore(scenario)}
-                            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-white border border-ink/20 text-xs font-medium text-ink-muted hover:text-ink hover:bg-paper-muted transition-colors disabled:opacity-50"
+                            className="liquid-glass-btn inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium disabled:opacity-50"
                           >
                             <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
                             <span>Khôi phục gốc</span>
@@ -1099,30 +1099,30 @@ export function AdminScenariosTab({
                     </div>
 
                     {isExpanded && (
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 pt-2 border-t border-ink/10">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 pt-2 border-t border-white/15">
                         {scenario.turns.map((turn, idx) => (
                           <div
                             key={idx}
-                            className="p-3 rounded-xl bg-paper/70 border border-ink/10 space-y-1.5 text-xs"
+                            className="p-3 rounded-xl bg-slate-950/60 border border-white/15 space-y-1.5 text-xs"
                           >
-                            <div className="font-mono font-bold text-accent text-[11px]">
+                            <div className="font-mono font-bold text-cyan-300 text-[11px]">
                               Lượt {idx + 1}
                             </div>
-                            <div className="font-medium text-ink">
+                            <div className="font-medium text-white">
                               &ldquo;{turn.questionEN}&rdquo;
                             </div>
                             <div className="flex flex-wrap gap-1">
                               {turn.keywords.map((kw) => (
                                 <span
                                   key={kw}
-                                  className="px-1.5 py-0.5 rounded bg-white border border-ink/15 text-[10px] font-mono text-ink-muted"
+                                  className="px-1.5 py-0.5 rounded bg-white/10 border border-white/15 text-[10px] font-mono text-cyan-200"
                                 >
                                   {kw}
                                 </span>
                               ))}
                             </div>
                             {turn.hintVI && (
-                              <div className="text-[11px] text-ink-muted">
+                              <div className="text-[11px] text-slate-300">
                                 Gợi ý: {turn.hintVI}
                               </div>
                             )}
@@ -1136,8 +1136,8 @@ export function AdminScenariosTab({
             </div>
           )}
 
-          <div className="bg-white border border-ink/15 rounded-2xl px-4 py-2.5 shadow-soft flex items-center justify-between gap-3">
-            <span className="text-xs font-mono text-ink-muted">
+          <div className="liquid-glass-card px-4 py-2.5 flex items-center justify-between gap-3">
+            <span className="text-xs font-mono text-slate-300">
               Trang {safePage} / {totalPages} ({filteredScenarios.length} kịch bản)
             </span>
             <div className="flex items-center gap-2">
@@ -1145,7 +1145,7 @@ export function AdminScenariosTab({
                 type="button"
                 disabled={safePage <= 1}
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-paper border border-ink/20 text-xs font-semibold text-ink hover:bg-paper-muted disabled:opacity-40 transition-colors"
+                className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold disabled:opacity-40"
               >
                 <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Trước</span>
@@ -1154,7 +1154,7 @@ export function AdminScenariosTab({
                 type="button"
                 disabled={safePage >= totalPages}
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-paper border border-ink/20 text-xs font-semibold text-ink hover:bg-paper-muted disabled:opacity-40 transition-colors"
+                className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold disabled:opacity-40"
               >
                 <span>Sau</span>
                 <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />

@@ -196,11 +196,11 @@ export function LeaderboardRowWrapper({
       ref={containerRef}
       onPointerMove={handlePointerMove}
       style={rootVars}
-      className={`cosmetic-dark-glass group relative rounded-xl overflow-hidden !bg-zinc-950/85 ${lite ? "" : "backdrop-blur-md"} border border-white/15 text-zinc-50 shadow-sm ${className}`.trim()}
+      className={`cosmetic-dark-glass group relative rounded-2xl overflow-hidden !bg-slate-950/82 ${lite ? "" : "backdrop-blur-md"} border border-white/15 text-slate-50 shadow-[0_8px_24px_rgba(0,0,0,0.42),inset_0_1px_1px_rgba(255,255,255,0.2)] ${className}`.trim()}
     >
       <span
         aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 rounded-[inherit] bg-zinc-950/85 ${lite ? "" : "backdrop-blur-md"} z-0`}
+        className={`pointer-events-none absolute inset-0 rounded-[inherit] bg-slate-950/82 ${lite ? "" : "backdrop-blur-md"} z-0`}
       />
 
       {bannerAssetUrl && !bannerFailed && (

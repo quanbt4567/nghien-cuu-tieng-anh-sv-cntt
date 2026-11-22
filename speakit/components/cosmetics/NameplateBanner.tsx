@@ -122,7 +122,7 @@ function getPalette(id?: string | null, accent?: string): { from: string; to: st
         shiny: "rgba(251, 113, 133, 0.30)",
       };
     default: {
-      const c = accent || "#E5484D";
+      const c = accent || "#38BDF8";
       return {
         from: c,
         to: "rgba(255, 255, 255, 0.7)",
@@ -407,7 +407,7 @@ export function NameplateBanner({
   }
 
   const mediaKind = !mediaFailed ? getMediaKind(assetUrl) : null;
-  const glowColor = resolvedItem?.fallbackGlowColor ?? resolvedItem?.previewAccent ?? "#E5484D";
+  const glowColor = resolvedItem?.fallbackGlowColor ?? resolvedItem?.previewAccent ?? "#38BDF8";
   const palette = getPalette(activeId, resolvedItem?.previewAccent);
 
   const rootVars = {
@@ -426,7 +426,7 @@ export function NameplateBanner({
       ref={containerRef}
       onPointerMove={handlePointerMove}
       style={rootVars}
-      className={`cosmetic-dark-glass group relative rounded-xl overflow-hidden bg-zinc-950/85 ${lite ? "" : "backdrop-blur-md"} border border-white/15 text-zinc-50 shadow-sm ${className}`.trim()}
+      className={`cosmetic-dark-glass group relative rounded-xl overflow-hidden bg-slate-950/82 ${lite ? "" : "backdrop-blur-md"} border border-white/15 text-slate-50 shadow-[0_8px_24px_rgba(0,0,0,0.42),inset_0_1px_1px_rgba(255,255,255,0.2)] ${className}`.trim()}
     >
       <span
         aria-hidden="true"
@@ -465,7 +465,7 @@ export function NameplateBanner({
 
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-zinc-950/35 z-[2]"
+        className="pointer-events-none absolute inset-0 bg-slate-950/40 z-[2]"
       />
 
       <span

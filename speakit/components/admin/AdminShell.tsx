@@ -175,26 +175,26 @@ export function AdminShell() {
   const activeTabMeta = TABS.find((t) => t.id === activeTab) ?? TABS[0];
 
   return (
-    <div className="min-h-screen bg-paper text-ink flex flex-col lg:flex-row">
-      <header className="lg:hidden sticky top-0 z-30 bg-paper border-b border-ink/15 px-4 py-3 flex items-center justify-between gap-3">
+    <div className="min-h-screen bg-transparent text-slate-100 flex flex-col lg:flex-row">
+      <header className="lg:hidden sticky top-0 z-30 bg-slate-950/85 backdrop-blur-2xl border-b border-white/15 px-4 py-3 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5 min-w-0">
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
             aria-label="Mở menu điều hướng"
             aria-expanded={mobileMenuOpen}
-            className="inline-flex items-center justify-center w-9 h-9 rounded-pill bg-white border border-ink/15 text-ink hover:bg-paper-muted shadow-soft transition-colors shrink-0"
+            className="liquid-glass-btn inline-flex items-center justify-center w-9 h-9 rounded-full shrink-0"
           >
             <Menu className="w-4 h-4" aria-hidden="true" />
           </button>
           <div className="min-w-0">
             <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-accent shrink-0" aria-hidden="true" />
-              <span className="text-xs font-mono font-semibold uppercase tracking-wide text-ink">
+              <ShieldCheck className="w-3.5 h-3.5 text-cyan-300 shrink-0" aria-hidden="true" />
+              <span className="text-xs font-mono font-semibold uppercase tracking-wide text-white">
                 SpeakIT Admin
               </span>
             </div>
-            <p className="text-xs text-ink/70 truncate">{activeTabMeta.label}</p>
+            <p className="text-xs text-slate-300 truncate">{activeTabMeta.label}</p>
           </div>
         </div>
 
@@ -204,7 +204,7 @@ export function AdminShell() {
             disabled={isRefreshing || isLoading}
             onClick={() => void refreshDashboard(true)}
             aria-label="Làm mới dữ liệu"
-            className="inline-flex items-center justify-center w-9 h-9 rounded-pill bg-white border border-ink/15 text-ink hover:bg-paper-muted shadow-soft transition-colors disabled:opacity-50"
+            className="liquid-glass-btn inline-flex items-center justify-center w-9 h-9 rounded-full disabled:opacity-50"
           >
             <RefreshCw
               className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin" : ""}`}
@@ -216,35 +216,35 @@ export function AdminShell() {
 
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 z-40 bg-ink/40 lg:hidden"
+          className="fixed inset-0 z-40 bg-slate-950/70 backdrop-blur-sm lg:hidden"
           onClick={() => setMobileMenuOpen(false)}
           aria-hidden="true"
         />
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 shrink-0 bg-paper border-r border-ink/15 flex flex-col transition-transform duration-200 ease-out lg:sticky lg:top-0 lg:z-30 lg:h-screen lg:translate-x-0 ${
-          mobileMenuOpen ? "translate-x-0 shadow-xl" : "-translate-x-full"
+        className={`fixed inset-y-0 left-0 z-50 w-64 shrink-0 bg-slate-950/85 backdrop-blur-2xl border-r border-white/15 flex flex-col transition-transform duration-200 ease-out lg:sticky lg:top-0 lg:z-30 lg:h-screen lg:translate-x-0 ${
+          mobileMenuOpen ? "translate-x-0 shadow-[0_16px_48px_rgba(0,0,0,0.65)]" : "-translate-x-full"
         }`}
       >
-        <div className="px-4 py-3 border-b border-ink/15 space-y-1.5 shrink-0">
+        <div className="px-4 py-3 border-b border-white/15 space-y-1.5 shrink-0">
           <div className="flex items-center justify-between gap-2">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-pill bg-ink text-white text-[11px] font-mono font-semibold uppercase tracking-wide">
-              <ShieldCheck className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/45 text-cyan-100 text-[11px] font-mono font-semibold uppercase tracking-wide">
+              <ShieldCheck className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
               <span>ADMIN PORTAL</span>
             </span>
             <button
               type="button"
               onClick={() => setMobileMenuOpen(false)}
               aria-label="Đóng menu điều hướng"
-              className="lg:hidden inline-flex items-center justify-center w-8 h-8 rounded-pill bg-white border border-ink/15 text-ink hover:bg-paper-muted transition-colors"
+              className="lg:hidden liquid-glass-btn inline-flex items-center justify-center w-8 h-8 rounded-full"
             >
               <X className="w-4 h-4" aria-hidden="true" />
             </button>
           </div>
 
           <div>
-            <p className="text-sm font-bold tracking-tight text-ink">
+            <p className="text-sm font-bold tracking-tight text-white">
               SpeakIT Control Center
             </p>
           </div>
@@ -265,25 +265,25 @@ export function AdminShell() {
                   setMobileMenuOpen(false);
                 }}
                 aria-current={isActive ? "page" : undefined}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-pill text-xs font-medium text-left transition-all ${
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-full text-xs font-medium text-left transition-all border ${
                   isActive
-                    ? "bg-ink text-white shadow-soft"
-                    : "text-ink hover:bg-paper-muted"
+                    ? "bg-cyan-500/25 border-cyan-400/55 text-cyan-100 shadow-[0_0_16px_rgba(6,182,212,0.22)]"
+                    : "border-transparent text-slate-300 hover:bg-white/10 hover:text-white"
                 }`}
               >
-                <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
+                <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-cyan-300" : "text-slate-400"}`} aria-hidden="true" />
                 <span className="truncate">{label}</span>
               </button>
             );
           })}
         </nav>
 
-        <div className="p-3 border-t border-ink/15 space-y-1.5 shrink-0">
+        <div className="p-3 border-t border-white/15 space-y-1.5 shrink-0">
           <button
             type="button"
             disabled={isRefreshing || isLoading}
             onClick={() => void refreshDashboard(true)}
-            className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-pill bg-white border border-ink/15 text-xs font-mono font-medium text-ink hover:bg-paper-muted shadow-soft transition-colors disabled:opacity-50"
+            className="liquid-glass-btn w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-medium disabled:opacity-50"
           >
             <RefreshCw
               className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin" : ""}`}
@@ -296,7 +296,7 @@ export function AdminShell() {
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-pill bg-white border border-ink/15 text-xs font-medium text-ink hover:bg-paper-muted shadow-soft transition-colors"
+              className="liquid-glass-btn inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-medium"
             >
               <span>Trang chủ</span>
               <ArrowUpRight className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
@@ -305,7 +305,7 @@ export function AdminShell() {
             <button
               type="button"
               onClick={() => void lockSession()}
-              className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-pill bg-accent-light border border-accent/40 text-xs font-semibold text-ink hover:bg-accent hover:text-white shadow-soft transition-colors"
+              className="liquid-btn-danger inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-semibold"
             >
               <Lock className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
               <span>Đăng xuất</span>
@@ -319,9 +319,9 @@ export function AdminShell() {
           {loadWarning && (
           <div
             role="status"
-            className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-paper-muted border border-ink/20 text-xs text-ink"
+            className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-amber-500/15 border border-amber-400/40 text-xs text-amber-100"
           >
-            <AlertCircle className="w-4 h-4 text-accent shrink-0 mt-0.5" aria-hidden="true" />
+            <AlertCircle className="w-4 h-4 text-amber-300 shrink-0 mt-0.5" aria-hidden="true" />
             <span>{loadWarning}</span>
           </div>
         )}
@@ -332,11 +332,11 @@ export function AdminShell() {
               {[0, 1, 2, 3].map((idx) => (
                 <div
                   key={idx}
-                  className="h-28 bg-white border border-ink/15 rounded-2xl p-5"
+                  className="h-28 liquid-glass-card-lite p-5"
                 />
               ))}
             </div>
-            <div className="h-72 bg-white border border-ink/15 rounded-2xl p-6" />
+            <div className="h-72 liquid-glass-card-lite p-6" />
           </div>
         ) : (
           <>

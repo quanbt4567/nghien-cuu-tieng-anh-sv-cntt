@@ -66,36 +66,36 @@ export function AdminFeedbackTab({ onUnauthorized }: AdminFeedbackTabProps) {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft">
-          <div className="text-xs font-mono text-ink-muted uppercase">
+        <div className="liquid-glass-card p-5">
+          <div className="text-xs font-mono text-slate-300 uppercase">
             Tổng số góp ý
           </div>
-          <div className="text-2xl font-extrabold text-ink mt-1 font-mono">
+          <div className="text-2xl font-extrabold text-white mt-1 font-mono">
             {items.length}
           </div>
         </div>
 
-        <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft">
-          <div className="text-xs font-mono text-ink-muted uppercase">
+        <div className="liquid-glass-card p-5">
+          <div className="text-xs font-mono text-slate-300 uppercase">
             Điểm hài lòng trung bình
           </div>
-          <div className="text-2xl font-extrabold text-sky-700 mt-1 font-mono flex items-center gap-1.5">
+          <div className="text-2xl font-extrabold text-cyan-300 mt-1 font-mono flex items-center gap-1.5">
             <span>{averageRating}</span>
             <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
           </div>
         </div>
 
-        <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft">
-          <div className="text-xs font-mono text-ink-muted uppercase">
+        <div className="liquid-glass-card p-5">
+          <div className="text-xs font-mono text-slate-300 uppercase">
             Tỷ lệ 4–5 sao
           </div>
-          <div className="text-2xl font-extrabold text-emerald-700 mt-1 font-mono">
+          <div className="text-2xl font-extrabold text-emerald-300 mt-1 font-mono">
             {positivePct}%
           </div>
         </div>
       </div>
 
-      <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4">
+      <div className="liquid-glass-card p-5 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-1.5">
             {(["ALL", 5, 4, 3, 2, 1] as const).map((val) => {
@@ -105,10 +105,10 @@ export function AdminFeedbackTab({ onUnauthorized }: AdminFeedbackTabProps) {
                   key={String(val)}
                   type="button"
                   onClick={() => setRatingFilter(val)}
-                  className={`px-3 py-1 rounded-pill text-xs font-mono font-semibold border transition-all ${
+                  className={`px-3 py-1 rounded-full text-xs font-mono font-semibold border transition-all ${
                     active
-                      ? "bg-ink text-white border-ink"
-                      : "bg-paper text-ink border-ink/15 hover:bg-paper-muted"
+                      ? "bg-cyan-500/25 border-cyan-400/55 text-cyan-100"
+                      : "liquid-glass-btn text-slate-200"
                   }`}
                 >
                   {val === "ALL" ? "Tất cả" : `${val}★`}
@@ -121,7 +121,7 @@ export function AdminFeedbackTab({ onUnauthorized }: AdminFeedbackTabProps) {
             type="button"
             onClick={() => void loadFeedback()}
             disabled={isLoading}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper border border-ink/15 text-xs font-semibold text-ink hover:bg-paper-muted disabled:opacity-50"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
             <span>Làm mới</span>
@@ -129,13 +129,13 @@ export function AdminFeedbackTab({ onUnauthorized }: AdminFeedbackTabProps) {
         </div>
 
         {isLoading ? (
-          <div className="py-10 flex items-center justify-center gap-2 text-xs text-ink-muted">
-            <Loader2 className="w-4 h-4 animate-spin text-sky-600" />
+          <div className="py-10 flex items-center justify-center gap-2 text-xs text-slate-300">
+            <Loader2 className="w-4 h-4 animate-spin text-cyan-300" />
             <span>Đang tải danh sách góp ý...</span>
           </div>
         ) : filteredItems.length === 0 ? (
-          <div className="py-10 text-center space-y-2 text-xs text-ink-muted">
-            <MessageSquare className="w-6 h-6 mx-auto text-ink-faint" />
+          <div className="py-10 text-center space-y-2 text-xs text-slate-300">
+            <MessageSquare className="w-6 h-6 mx-auto text-slate-400" />
             <p>Chưa có góp ý nào phù hợp bộ lọc hiện tại.</p>
           </div>
         ) : (
@@ -143,43 +143,43 @@ export function AdminFeedbackTab({ onUnauthorized }: AdminFeedbackTabProps) {
             {filteredItems.map((item) => (
               <div
                 key={item.id}
-                className="p-4 rounded-xl bg-paper border border-ink/15 space-y-2"
+                className="p-4 rounded-xl bg-slate-950/55 border border-white/15 space-y-2"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="inline-flex items-center gap-0.5 text-amber-500">
+                    <span className="inline-flex items-center gap-0.5 text-amber-400">
                       {[1, 2, 3, 4, 5].map((s) => (
                         <Star
                           key={s}
                           className={`w-3.5 h-3.5 ${
                             s <= item.rating
                               ? "fill-amber-400 text-amber-400"
-                              : "text-ink/20"
+                              : "text-white/20"
                           }`}
                         />
                       ))}
                     </span>
                     {item.category && (
-                      <span className="px-2.5 py-0.5 rounded-pill bg-sky-500/10 border border-sky-500/30 text-sky-700 text-[11px] font-mono font-semibold">
+                      <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-200 text-[11px] font-mono font-semibold">
                         {item.category}
                       </span>
                     )}
                     {item.context && (
-                      <span className="px-2.5 py-0.5 rounded-pill bg-white border border-ink/15 text-ink-muted text-[11px] font-mono">
+                      <span className="px-2.5 py-0.5 rounded-full bg-white/10 border border-white/15 text-slate-300 text-[11px] font-mono">
                         {item.context}
                       </span>
                     )}
                   </div>
-                  <span className="text-[11px] font-mono text-ink-muted">
+                  <span className="text-[11px] font-mono text-slate-400">
                     {new Date(item.createdAt).toLocaleString("vi-VN")}
                   </span>
                 </div>
 
-                <p className="text-sm text-ink leading-relaxed">
+                <p className="text-sm text-slate-100 leading-relaxed">
                   {item.comment ? (
                     item.comment
                   ) : (
-                    <span className="text-ink-faint italic">
+                    <span className="text-slate-400 italic">
                       (Người dùng chỉ đánh giá sao, không nhập nhận xét)
                     </span>
                   )}

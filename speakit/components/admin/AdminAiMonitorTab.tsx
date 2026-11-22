@@ -66,37 +66,37 @@ function getStatusBadge(status: AiProviderHealthStatus): {
     case "healthy":
       return {
         label: "Healthy",
-        className: "bg-emerald-50 text-emerald-800 border-emerald-200",
+        className: "bg-emerald-500/20 text-emerald-200 border-emerald-400/45",
       };
     case "warning":
       return {
         label: "Warning >= 80%",
-        className: "bg-amber-50 text-amber-800 border-amber-200",
+        className: "bg-amber-500/20 text-amber-200 border-amber-400/45",
       };
     case "rate_limited":
       return {
         label: "Rate Limited 429",
-        className: "bg-red-50 text-red-800 border-red-200",
+        className: "bg-rose-500/20 text-rose-200 border-rose-400/45",
       };
     case "disabled":
       return {
         label: "Disabled",
-        className: "bg-zinc-100 text-zinc-600 border-zinc-200",
+        className: "bg-slate-500/20 text-slate-300 border-slate-400/35",
       };
   }
 }
 
 function getProgressBarColor(provider: AiProviderHealthItem): string {
   if (!provider.isEnabled || provider.status === "disabled") {
-    return "bg-zinc-400";
+    return "bg-slate-500";
   }
   if (provider.status === "rate_limited") {
-    return "bg-red-500";
+    return "bg-rose-500";
   }
   if (provider.status === "warning" || provider.usagePercent >= 80) {
-    return "bg-amber-500";
+    return "bg-amber-400";
   }
-  return "bg-emerald-500";
+  return "bg-emerald-400";
 }
 
 function formatShortDate(dateKey: string): string {
@@ -271,12 +271,12 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
   if (isLoading && !summary) {
     return (
       <div className="space-y-6 animate-pulse" aria-busy="true">
-        <div className="h-24 bg-white border border-ink/15 rounded-2xl p-5" />
+        <div className="h-24 liquid-glass-card-lite p-5" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {[0, 1, 2, 3, 4, 5].map((idx) => (
             <div
               key={idx}
-              className="h-64 bg-white border border-ink/15 rounded-2xl p-5"
+              className="h-64 liquid-glass-card-lite p-5"
             />
           ))}
         </div>
@@ -286,15 +286,15 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft flex flex-wrap items-center justify-between gap-4">
+      <div className="liquid-glass-card p-5 flex flex-wrap items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-2">
-            <Activity className="w-5 h-5 text-accent" aria-hidden="true" />
-            <h2 className="text-lg font-bold text-ink">
+            <Activity className="w-5 h-5 text-cyan-300" aria-hidden="true" />
+            <h2 className="text-lg font-bold text-white">
               Giám Sát 6 API AI (Waterfall Telemetry)
             </h2>
           </div>
-          <p className="text-xs text-ink-muted">
+          <p className="text-xs text-slate-300">
             Theo dõi hạn mức ngày, mã lỗi 429, độ trễ trực tiếp và bật/tắt circuit-breaker cho từng provider.
           </p>
         </div>
@@ -304,7 +304,7 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
             type="button"
             onClick={() => void loadHealth()}
             disabled={isLoading || isPinging}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-pill bg-white border border-ink/15 text-xs font-mono font-medium text-ink hover:bg-paper-muted shadow-soft transition-colors disabled:opacity-50"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-full text-xs font-mono font-medium disabled:opacity-50"
           >
             <RefreshCw
               className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`}
@@ -317,10 +317,10 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
             type="button"
             onClick={() => void handlePingAll()}
             disabled={isPinging}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-pill bg-ink text-white text-xs sm:text-sm font-semibold hover:bg-ink/90 shadow-soft transition-colors disabled:opacity-60"
+            className="liquid-btn-primary inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold disabled:opacity-60"
           >
             <Zap
-              className={`w-4 h-4 text-accent ${isPinging ? "animate-pulse" : ""}`}
+              className={`w-4 h-4 text-cyan-100 ${isPinging ? "animate-pulse" : ""}`}
               aria-hidden="true"
             />
             <span>
@@ -335,18 +335,18 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
           role="status"
           className={`flex items-start gap-2.5 p-3.5 rounded-2xl border text-xs ${
             notice.tone === "ok"
-              ? "bg-emerald-50 border-emerald-200 text-emerald-900"
+              ? "bg-emerald-500/20 border-emerald-400/45 text-emerald-100"
               : notice.tone === "warn"
-                ? "bg-amber-50 border-amber-200 text-amber-900"
-                : "bg-red-50 border-red-200 text-red-900"
+                ? "bg-amber-500/20 border-amber-400/45 text-amber-100"
+                : "bg-rose-500/20 border-rose-400/45 text-rose-100"
           }`}
         >
           {notice.tone === "ok" ? (
-            <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
+            <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-emerald-300" aria-hidden="true" />
           ) : notice.tone === "warn" ? (
-            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-amber-300" aria-hidden="true" />
           ) : (
-            <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
+            <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5 text-rose-300" aria-hidden="true" />
           )}
           <span>{notice.text}</span>
         </div>
@@ -364,8 +364,8 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
             return (
               <article
                 key={provider.id}
-                className={`bg-white border rounded-2xl p-5 shadow-soft flex flex-col justify-between gap-4 transition-opacity ${
-                  provider.isEnabled ? "border-ink/15" : "border-ink/10 opacity-80"
+                className={`liquid-glass-card-lite p-5 flex flex-col justify-between gap-4 transition-opacity ${
+                  provider.isEnabled ? "" : "opacity-75"
                 }`}
               >
                 <div className="space-y-3">
@@ -376,14 +376,14 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
                           className={`w-2.5 h-2.5 rounded-full shrink-0 ${PROVIDER_DOT_COLORS[provider.id]}`}
                           aria-hidden="true"
                         />
-                        <h3 className="text-base font-bold text-ink">
+                        <h3 className="text-base font-bold text-white">
                           {provider.label}
                         </h3>
-                        <span className="text-[11px] font-mono text-ink-muted">
+                        <span className="text-[11px] font-mono text-slate-400">
                           #{provider.priority}
                         </span>
                       </div>
-                      <p className="text-[11px] font-mono text-ink-muted mt-0.5">
+                      <p className="text-[11px] font-mono text-slate-400 mt-0.5">
                         {provider.envVar}
                       </p>
                     </div>
@@ -401,12 +401,12 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
                       }
                       className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border transition-colors disabled:opacity-50 ${
                         provider.isEnabled
-                          ? "bg-emerald-600 border-emerald-700"
-                          : "bg-zinc-300 border-zinc-400"
+                          ? "bg-emerald-500/80 border-emerald-300/60"
+                          : "bg-slate-700/80 border-white/20"
                       }`}
                     >
                       <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                        className={`inline-block h-4 w-4 transform rounded-full bg-slate-50 shadow transition-transform ${
                           provider.isEnabled ? "translate-x-6" : "translate-x-1"
                         }`}
                       />
@@ -415,24 +415,24 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
 
                   <div className="flex flex-wrap items-center gap-1.5">
                     <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-pill text-[11px] font-semibold border ${badge.className}`}
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${badge.className}`}
                     >
                       {badge.label}
                     </span>
 
                     <span
-                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill text-[11px] font-mono font-semibold border ${
+                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold border ${
                         provider.keyStatus === "Configured"
-                          ? "bg-paper-muted text-ink border-ink/15"
-                          : "bg-red-50 text-red-700 border-red-200"
+                          ? "bg-cyan-500/20 text-cyan-200 border-cyan-400/40"
+                          : "bg-rose-500/20 text-rose-200 border-rose-400/40"
                       }`}
                     >
                       <KeyRound className="w-3 h-3" aria-hidden="true" />
                       <span>{provider.keyStatus}</span>
                     </span>
 
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill text-[11px] font-mono bg-paper-muted text-ink border border-ink/10">
-                      <Clock className="w-3 h-3 text-ink-muted" aria-hidden="true" />
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-white/10 text-slate-200 border border-white/15">
+                      <Clock className="w-3 h-3 text-slate-400" aria-hidden="true" />
                       <span>
                         {provider.lastLatencyMs !== null
                           ? `${provider.lastLatencyMs} ms`
@@ -443,21 +443,21 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
 
                   <div className="space-y-1.5 pt-1">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-ink-muted font-medium">
-                        Hôm nay: <strong className="text-ink font-mono">{provider.todayRequests}</strong> /{" "}
+                      <span className="text-slate-300 font-medium">
+                        Hôm nay: <strong className="text-white font-mono">{provider.todayRequests}</strong> /{" "}
                         <span className="font-mono">{provider.dailyLimitCap}</span>
                       </span>
-                      <span className="font-mono font-semibold text-ink">
+                      <span className="font-mono font-semibold text-white">
                         {provider.usagePercent}%
                       </span>
                     </div>
-                    <div className="h-2.5 w-full rounded-full bg-paper-muted overflow-hidden border border-ink/10">
+                    <div className="h-2.5 w-full rounded-full bg-slate-950/60 overflow-hidden border border-white/15">
                       <div
                         className={`h-full rounded-full transition-all duration-300 ${barColor}`}
                         style={{ width: `${clampedPercent}%` }}
                       />
                     </div>
-                    <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-ink-muted">
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-slate-400">
                       <span>429 hôm nay: {provider.today429Count}</span>
                       <span>
                         Last HTTP: {provider.lastStatus !== null ? provider.lastStatus : "—"}
@@ -468,30 +468,30 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
                   {(provider.remainingRequestsHeader ||
                     provider.remainingTokensHeader ||
                     provider.openRouterBalance) && (
-                    <div className="rounded-xl bg-paper-muted border border-ink/10 p-2.5 space-y-1 text-[11px] font-mono text-ink">
+                    <div className="rounded-xl bg-slate-950/60 border border-white/15 p-2.5 space-y-1 text-[11px] font-mono text-slate-200">
                       {provider.remainingRequestsHeader && (
                         <div className="flex justify-between gap-2">
-                          <span className="text-ink-muted">Header Req Left:</span>
-                          <span className="font-semibold">
+                          <span className="text-slate-400">Header Req Left:</span>
+                          <span className="font-semibold text-white">
                             {provider.remainingRequestsHeader}
                           </span>
                         </div>
                       )}
                       {provider.remainingTokensHeader && (
                         <div className="flex justify-between gap-2">
-                          <span className="text-ink-muted">Header Tok Left:</span>
-                          <span className="font-semibold">
+                          <span className="text-slate-400">Header Tok Left:</span>
+                          <span className="font-semibold text-white">
                             {provider.remainingTokensHeader}
                           </span>
                         </div>
                       )}
                       {provider.openRouterBalance && (
                         <div className="flex items-center justify-between gap-2">
-                          <span className="inline-flex items-center gap-1 text-ink-muted">
+                          <span className="inline-flex items-center gap-1 text-slate-400">
                             <DollarSign className="w-3 h-3" aria-hidden="true" />
                             <span>OpenRouter Balance:</span>
                           </span>
-                          <span className="font-semibold text-emerald-700">
+                          <span className="font-semibold text-emerald-300">
                             {provider.openRouterBalance.remaining !== null
                               ? `$${provider.openRouterBalance.remaining.toFixed(4)}`
                               : provider.openRouterBalance.isFreeTier
@@ -504,10 +504,10 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
                   )}
                 </div>
 
-                <div className="pt-3 border-t border-ink/10 flex items-center justify-between gap-2">
+                <div className="pt-3 border-t border-white/15 flex items-center justify-between gap-2">
                   <label
                     htmlFor={`cap-${provider.id}`}
-                    className="text-[11px] font-semibold text-ink-muted shrink-0"
+                    className="text-[11px] font-semibold text-slate-300 shrink-0"
                   >
                     Daily Cap
                   </label>
@@ -530,7 +530,7 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
                           handleSaveCap(provider);
                         }
                       }}
-                      className="w-24 px-2.5 py-1 rounded-lg border border-ink/20 bg-paper text-xs font-mono text-ink focus:outline-none focus:border-ink"
+                      className="liquid-glass-input w-24 px-2.5 py-1 rounded-lg text-xs font-mono"
                     />
                     <button
                       type="button"
@@ -539,7 +539,7 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
                         draftVal === String(provider.dailyLimitCap)
                       }
                       onClick={() => handleSaveCap(provider)}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-ink text-white text-[11px] font-semibold hover:bg-ink/90 disabled:opacity-40 transition-colors"
+                      className="liquid-btn-success inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold disabled:opacity-40"
                     >
                       <Save className="w-3 h-3" aria-hidden="true" />
                       <span>Lưu</span>
@@ -553,13 +553,13 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
       )}
 
       {summary && (
-        <section className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4">
+        <section className="liquid-glass-card p-5 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h3 className="text-base font-bold text-ink">
+              <h3 className="text-base font-bold text-white">
                 Phân Bổ Request 7 Ngày Qua (Waterfall Routing)
               </h3>
-              <p className="text-xs text-ink-muted">
+              <p className="text-xs text-slate-300">
                 Tổng cộng {total7DayRequests} lượt gọi AI được ghi nhận trong 7 ngày gần nhất.
               </p>
             </div>
@@ -570,7 +570,7 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
                 return (
                   <span
                     key={id}
-                    className="inline-flex items-center gap-1.5 text-[11px] font-mono text-ink"
+                    className="inline-flex items-center gap-1.5 text-[11px] font-mono text-slate-200"
                   >
                     <span
                       className={`w-2.5 h-2.5 rounded-sm ${PROVIDER_COLORS[id]}`}
@@ -594,12 +594,12 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
                   key={day.dateKey}
                   className="flex flex-col items-center justify-end h-full gap-1.5"
                 >
-                  <span className="text-[11px] font-mono font-semibold text-ink">
+                  <span className="text-[11px] font-mono font-semibold text-white">
                     {day.totalRequests}
                   </span>
 
                   <div
-                    className="w-full max-w-[44px] flex-1 bg-paper-muted rounded-xl border border-ink/10 p-1 flex flex-col justify-end overflow-hidden"
+                    className="w-full max-w-[44px] flex-1 bg-slate-950/60 rounded-xl border border-white/15 p-1 flex flex-col justify-end overflow-hidden"
                     title={`${day.dateKey}: ${day.totalRequests} requests`}
                   >
                     {day.totalRequests > 0 ? (
@@ -622,11 +622,11 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
                         })}
                       </div>
                     ) : (
-                      <div className="w-full h-1 rounded bg-ink/10" />
+                      <div className="w-full h-1 rounded bg-white/15" />
                     )}
                   </div>
 
-                  <span className="text-[11px] font-mono text-ink-muted">
+                  <span className="text-[11px] font-mono text-slate-400">
                     {formatShortDate(day.dateKey)}
                   </span>
                 </div>

@@ -24,57 +24,57 @@ export const AVATAR_PRESETS: AvatarPreset[] = [
   {
     id: "preset:terminal-dev",
     label: "Terminal Dev",
-    bgClass: "bg-[#1A1714]",
-    textClass: "text-[#16A34A]",
+    bgClass: "bg-slate-950",
+    textClass: "text-emerald-400",
     icon: Terminal,
   },
   {
     id: "preset:cyber-fox",
     label: "Cyber Core",
-    bgClass: "bg-[#E5484D]",
+    bgClass: "bg-rose-600",
     textClass: "text-white",
     icon: Cpu,
   },
   {
     id: "preset:cloud-ninja",
     label: "Cloud Ninja",
-    bgClass: "bg-[#0284C7]",
+    bgClass: "bg-sky-600",
     textClass: "text-white",
     icon: Cloud,
   },
   {
     id: "preset:bug-hunter",
     label: "Bug Hunter",
-    bgClass: "bg-[#F59E0B]",
-    textClass: "text-[#1A1714]",
+    bgClass: "bg-amber-500",
+    textClass: "text-slate-950",
     icon: Bug,
   },
   {
     id: "preset:pixel-bot",
     label: "Pixel Bot",
-    bgClass: "bg-[#16A34A]",
+    bgClass: "bg-emerald-600",
     textClass: "text-white",
     icon: Bot,
   },
   {
     id: "preset:rocket-sre",
     label: "Rocket SRE",
-    bgClass: "bg-[#1A1714]",
-    textClass: "text-[#F59E0B]",
+    bgClass: "bg-slate-950",
+    textClass: "text-amber-400",
     icon: Rocket,
   },
   {
     id: "preset:coffee-coder",
     label: "Coffee Coder",
-    bgClass: "bg-[#FAF6EF]",
-    textClass: "text-[#1A1714]",
+    bgClass: "bg-amber-950",
+    textClass: "text-amber-200",
     icon: Coffee,
   },
   {
     id: "preset:shield-sec",
     label: "Shield Sec",
-    bgClass: "bg-[#0F172A]",
-    textClass: "text-[#38BDF8]",
+    bgClass: "bg-slate-900",
+    textClass: "text-sky-400",
     icon: Shield,
   },
 ];
@@ -140,7 +140,7 @@ export function PlayerAvatar({
   return (
     <div
       aria-label={`Avatar của ${displayName}`}
-      className={`w-full h-full rounded-full bg-paper flex items-center justify-center font-mono font-bold text-[#1A1714] select-none ${className}`}
+      className={`w-full h-full rounded-full bg-slate-900/90 border border-white/15 flex items-center justify-center font-mono font-bold text-cyan-100 select-none ${className}`}
     >
       {getPlayerInitials(displayName)}
     </div>

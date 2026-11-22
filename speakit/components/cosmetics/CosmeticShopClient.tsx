@@ -102,10 +102,11 @@ const CATEGORY_META: Record<
 };
 
 const RARITY_BADGE_CLASS: Record<CosmeticRarity, string> = {
-  Common: "bg-[#F0EADF] text-[#1A1714] border border-[#1A1714]/15",
-  Rare: "bg-sky-100 text-sky-900 border border-[#1A1714]/15",
-  Epic: "bg-amber-200 text-[#1A1714] border border-[#1A1714]/15",
-  Legendary: "bg-[#E5484D] text-white border border-[#1A1714]/15",
+  Common: "bg-slate-500/20 text-slate-200 border border-slate-400/35",
+  Rare: "bg-cyan-500/20 text-cyan-200 border border-cyan-400/45",
+  Epic: "bg-violet-500/25 text-violet-200 border border-violet-400/50",
+  Legendary:
+    "bg-gradient-to-r from-rose-500/30 to-amber-500/30 text-amber-100 border border-amber-300/55 shadow-[0_0_12px_rgba(244,63,94,0.28)]",
 };
 
 const RARITY_ORDER: Record<CosmeticRarity, number> = {
@@ -136,9 +137,9 @@ function CosmeticCardThumbnail({
 }) {
   if (item.category === "avatar_decoration") {
     return (
-      <div className="h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] flex items-center justify-center relative overflow-hidden">
+      <div className="h-28 rounded-xl bg-slate-950/60 border border-white/15 flex items-center justify-center relative overflow-hidden">
         <DiscordAvatarFrame equippedId={item.id} item={item} size="lg" micActive={micActive} lite>
-          <div className="w-full h-full flex items-center justify-center bg-white font-mono font-bold text-base text-[#1A1714]">
+          <div className="w-full h-full flex items-center justify-center bg-slate-900 font-mono font-bold text-base text-cyan-100">
             {initials}
           </div>
         </DiscordAvatarFrame>
@@ -148,16 +149,16 @@ function CosmeticCardThumbnail({
 
   if (item.category === "nameplate") {
     return (
-      <div className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] px-3 flex items-center justify-center relative overflow-hidden`}>
+      <div className="h-28 rounded-xl bg-slate-950/60 border border-white/15 px-3 flex items-center justify-center relative overflow-hidden">
         <NameplateBanner
           nameplateId={item.id}
           item={item}
           lite
-          className="w-full px-3 py-2.5 shadow-sm"
+          className="w-full px-3 py-2.5"
         >
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
-              <span className="w-6 h-6 rounded-full bg-white text-[#1A1714] font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+              <span className="w-6 h-6 rounded-full bg-slate-900 border border-white/20 text-cyan-100 font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
                 {initials}
               </span>
               <span className="text-xs font-bold text-white truncate">
@@ -182,22 +183,22 @@ function CosmeticCardThumbnail({
 
   if (item.category === "leaderboard_fx") {
     return (
-      <div className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] px-3 flex items-center justify-center relative overflow-hidden`}>
+      <div className="h-28 rounded-xl bg-slate-950/60 border border-white/15 px-3 flex items-center justify-center relative overflow-hidden">
         <LeaderboardRowWrapper
           fxId={item.id}
           lite
-          className="w-full border border-[#1A1714]/15 bg-white px-3 py-2 shadow-sm"
+          className="w-full px-3 py-2"
         >
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
-              <span className="w-6 h-6 rounded-full bg-[#1A1714] text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+              <span className="w-6 h-6 rounded-full bg-amber-400/20 border border-amber-300/45 text-amber-200 font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
                 #1
               </span>
-              <span className="text-xs font-bold text-[#1A1714] truncate">
+              <span className="text-xs font-bold text-white truncate">
                 {displayName}
               </span>
             </div>
-            <span className="text-[11px] font-mono font-bold text-[#E5484D] shrink-0">
+            <span className="text-[11px] font-mono font-bold text-cyan-300 shrink-0">
               2,450 pts
             </span>
           </div>
@@ -209,16 +210,16 @@ function CosmeticCardThumbnail({
   if (item.category === "profile_theme") {
     return (
       <div
-        className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] relative overflow-hidden flex items-end p-2.5 ${item.effectClass}`}
+        className={`h-28 rounded-xl bg-slate-950/60 border border-white/15 relative overflow-hidden flex items-end p-2.5 ${item.effectClass}`}
       >
         {item.id === "theme-neon-meteor-shower" && (
           <>
             <span
-              className="cosmetic-meteor-streak absolute w-[2px] h-14 rounded-full bg-gradient-to-b from-[#E5484D] via-amber-400 to-transparent"
+              className="cosmetic-meteor-streak absolute w-[2px] h-14 rounded-full bg-gradient-to-b from-rose-400 via-amber-300 to-transparent"
               style={{ left: "26%", top: "-15%", "--meteor-duration": "2.4s", "--meteor-delay": "0s" } as CSSProperties}
             />
             <span
-              className="cosmetic-meteor-streak absolute w-[2px] h-16 rounded-full bg-gradient-to-b from-[#E5484D] via-amber-400 to-transparent"
+              className="cosmetic-meteor-streak absolute w-[2px] h-16 rounded-full bg-gradient-to-b from-rose-400 via-amber-300 to-transparent"
               style={{ left: "68%", top: "-20%", "--meteor-duration": "2.8s", "--meteor-delay": "0.8s" } as CSSProperties}
             />
           </>
@@ -228,7 +229,7 @@ function CosmeticCardThumbnail({
             {["15%", "45%", "75%"].map((left, idx) => (
               <div
                 key={left}
-                className="cosmetic-matrix-col absolute top-0 text-[10px] font-mono font-bold leading-3 text-emerald-600/60 select-none whitespace-pre text-center"
+                className="cosmetic-matrix-col absolute top-0 text-[10px] font-mono font-bold leading-3 text-emerald-400/80 select-none whitespace-pre text-center"
                 style={{ left, "--col-duration": `${2.6 + idx * 0.5}s`, "--col-delay": `${idx * 0.4}s` } as CSSProperties}
               >
                 {"0\n1\n0\n1\n1\n0"}
@@ -237,14 +238,14 @@ function CosmeticCardThumbnail({
           </>
         )}
         {item.id === "theme-aurora-cyber-grid" && (
-          <div className="cosmetic-grid-plane absolute inset-0 opacity-85" />
+          <div className="cosmetic-grid-plane absolute inset-0 opacity-90" />
         )}
         {item.id === "theme-electric-storm-surge" && (
           <div
             className="cosmetic-storm-arc absolute inset-0"
             style={{
               background:
-                "radial-gradient(circle at 25% 25%, rgba(234, 179, 8, 0.35), transparent 55%), radial-gradient(circle at 75% 75%, rgba(229, 72, 77, 0.25), transparent 55%)",
+                "radial-gradient(circle at 25% 25%, rgba(234, 179, 8, 0.42), transparent 55%), radial-gradient(circle at 75% 75%, rgba(244, 63, 94, 0.32), transparent 55%)",
             }}
           />
         )}
@@ -257,11 +258,11 @@ function CosmeticCardThumbnail({
           <div
             className="absolute inset-0"
             style={{
-              background: `radial-gradient(circle at 28% 30%, ${item.previewAccent}55, transparent 58%), radial-gradient(circle at 75% 70%, ${item.previewAccent}38, transparent 62%), repeating-linear-gradient(135deg, ${item.previewAccent}18 0px, ${item.previewAccent}18 8px, transparent 8px, transparent 16px)`,
+              background: `radial-gradient(circle at 28% 30%, ${item.previewAccent}66, transparent 58%), radial-gradient(circle at 75% 70%, ${item.previewAccent}44, transparent 62%), repeating-linear-gradient(135deg, ${item.previewAccent}22 0px, ${item.previewAccent}22 8px, transparent 8px, transparent 16px)`,
             }}
           />
         )}
-        <span className="relative z-10 px-2 py-0.5 rounded bg-white/95 border border-[#1A1714]/15 text-[10px] font-mono font-bold text-[#1A1714]">
+        <span className="relative z-10 px-2 py-0.5 rounded bg-slate-950/80 border border-white/20 text-[10px] font-mono font-bold text-cyan-200">
           BACKDROP FX
         </span>
       </div>
@@ -270,33 +271,33 @@ function CosmeticCardThumbnail({
 
   if (item.category === "cursor_effect") {
     return (
-      <div className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] relative overflow-hidden flex items-center justify-center`}>
+      <div className="h-28 rounded-xl bg-slate-950/60 border border-white/15 relative overflow-hidden flex items-center justify-center">
         {item.id === "cursor-pixel-sparkle-trail" && (
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 bg-amber-500 border border-[#1A1714]/15 animate-pulse" />
-            <span className="w-3 h-3 bg-[#E5484D] border border-[#1A1714]/15 rotate-45 animate-bounce" />
-            <MousePointer2 className="w-5 h-5 text-[#1A1714]" aria-hidden="true" />
+            <span className="w-2.5 h-2.5 bg-amber-400 border border-white/25 animate-pulse" />
+            <span className="w-3 h-3 bg-rose-500 border border-white/25 rotate-45 animate-bounce" />
+            <MousePointer2 className="w-5 h-5 text-white" aria-hidden="true" />
           </div>
         )}
         {item.id === "cursor-binary-01-stream" && (
-          <div className="flex items-center gap-2 font-mono font-bold text-xs text-emerald-700">
+          <div className="flex items-center gap-2 font-mono font-bold text-xs text-emerald-400">
             <span className="animate-pulse">0</span>
             <span>1</span>
             <span className="animate-bounce">0</span>
             <span>1</span>
-            <MousePointer2 className="w-5 h-5 text-[#1A1714]" aria-hidden="true" />
+            <MousePointer2 className="w-5 h-5 text-white" aria-hidden="true" />
           </div>
         )}
         {item.id === "cursor-neon-laser-ribbon" && (
           <div className="flex items-center gap-1.5">
-            <span className="w-16 h-1.5 rounded-full bg-[#E5484D] cosmetic-cursor-laser-ribbon" />
-            <MousePointer2 className="w-5 h-5 text-[#1A1714]" aria-hidden="true" />
+            <span className="w-16 h-1.5 rounded-full bg-rose-500 cosmetic-cursor-laser-ribbon" />
+            <MousePointer2 className="w-5 h-5 text-white" aria-hidden="true" />
           </div>
         )}
         {item.id === "cursor-tactical-cyber-crosshair" && (
           <div className="relative flex items-center justify-center">
-            <span className="w-12 h-12 rounded-full border-2 border-dashed border-sky-600 cosmetic-cursor-cyber-crosshair flex items-center justify-center">
-              <span className="w-2 h-2 rounded-full bg-[#E5484D]" />
+            <span className="w-12 h-12 rounded-full border-2 border-dashed border-cyan-400 cosmetic-cursor-cyber-crosshair flex items-center justify-center">
+              <span className="w-2 h-2 rounded-full bg-rose-500" />
             </span>
           </div>
         )}
@@ -308,17 +309,17 @@ function CosmeticCardThumbnail({
         ].includes(item.id) && (
           <div className="flex items-center gap-2">
             <span
-              className="w-3 h-3 rounded-full border border-[#1A1714]/15 animate-ping"
+              className="w-3 h-3 rounded-full border border-white/25 animate-ping"
               style={{ backgroundColor: item.previewAccent }}
             />
             <span
-              className="w-10 h-2 rounded-full border border-[#1A1714]/15"
+              className="w-10 h-2 rounded-full border border-white/25"
               style={{
                 backgroundColor: item.previewAccent,
-                boxShadow: `0 0 12px ${item.previewAccent}`,
+                boxShadow: `0 0 14px ${item.previewAccent}`,
               }}
             />
-            <MousePointer2 className="w-5 h-5 text-[#1A1714]" aria-hidden="true" />
+            <MousePointer2 className="w-5 h-5 text-white" aria-hidden="true" />
           </div>
         )}
       </div>
@@ -326,32 +327,32 @@ function CosmeticCardThumbnail({
   }
 
   return (
-    <div className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] relative overflow-hidden flex items-center justify-center px-3`}>
+    <div className="h-28 rounded-xl bg-slate-950/60 border border-white/15 relative overflow-hidden flex items-center justify-center px-3">
       {item.id === "finisher-lgtm-neon-confetti" && (
         <div className="flex items-center gap-2">
-          <span className="px-2 py-1 rounded bg-emerald-500 text-white border border-[#1A1714]/15 font-mono text-[10px] font-bold rotate-[-4deg] shadow-sm">
+          <span className="px-2 py-1 rounded bg-emerald-500/85 text-white border border-emerald-300/45 font-mono text-[10px] font-bold rotate-[-4deg] shadow-sm">
             LGTM!
           </span>
-          <span className="w-2.5 h-2.5 bg-[#E5484D] border border-[#1A1714]/15 rotate-12" />
-          <span className="w-2.5 h-2.5 bg-amber-400 border border-[#1A1714]/15 -rotate-12" />
+          <span className="w-2.5 h-2.5 bg-rose-500 border border-white/25 rotate-12" />
+          <span className="w-2.5 h-2.5 bg-amber-400 border border-white/25 -rotate-12" />
         </div>
       )}
       {item.id === "finisher-system-restored-shockwave" && (
         <div className="relative flex items-center justify-center">
-          <span className="absolute w-14 h-14 rounded-full border-2 border-teal-500 animate-ping opacity-40" />
-          <span className="px-2.5 py-1 rounded-full bg-teal-600 text-white border border-[#1A1714]/15 font-mono text-[10px] font-bold">
+          <span className="absolute w-14 h-14 rounded-full border-2 border-teal-400 animate-ping opacity-45" />
+          <span className="px-2.5 py-1 rounded-full bg-teal-500/85 text-white border border-teal-300/50 font-mono text-[10px] font-bold">
             200 OK
           </span>
         </div>
       )}
       {item.id === "finisher-cyber-lightning-strike" && (
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-300 border border-[#1A1714]/15 shadow-sm">
-          <Zap className="w-4 h-4 text-[#1A1714] fill-[#1A1714]" aria-hidden="true" />
-          <span className="font-mono text-[11px] font-bold text-[#1A1714]">STRIKE</span>
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-400/25 border border-amber-300/50 shadow-[0_0_14px_rgba(251,191,36,0.28)]">
+          <Zap className="w-4 h-4 text-amber-300 fill-amber-300" aria-hidden="true" />
+          <span className="font-mono text-[11px] font-bold text-amber-100">STRIKE</span>
         </div>
       )}
       {item.id === "finisher-matrix-override" && (
-        <div className="px-3 py-1.5 rounded-lg bg-[#1A1714] border-2 border-emerald-500 text-emerald-400 font-mono text-[11px] font-bold shadow-sm">
+        <div className="px-3 py-1.5 rounded-lg bg-slate-950 border-2 border-emerald-400 text-emerald-300 font-mono text-[11px] font-bold shadow-[0_0_12px_rgba(16,185,129,0.35)]">
           OVERRIDE_01
         </div>
       )}
@@ -363,11 +364,11 @@ function CosmeticCardThumbnail({
       ].includes(item.id) && (
         <div className="relative flex items-center justify-center">
           <span
-            className="absolute w-16 h-16 rounded-full border-2 animate-ping opacity-35"
+            className="absolute w-16 h-16 rounded-full border-2 animate-ping opacity-40"
             style={{ borderColor: item.previewAccent }}
           />
           <span
-            className="px-3 py-1.5 rounded-lg border border-[#1A1714]/15 text-white font-mono text-[10px] font-bold shadow-sm flex items-center gap-1.5"
+            className="px-3 py-1.5 rounded-lg border border-white/25 text-white font-mono text-[10px] font-bold shadow-sm flex items-center gap-1.5"
             style={{ backgroundColor: item.previewAccent }}
           >
             <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
@@ -717,7 +718,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
   const initials = getInitials(identity.displayName);
 
   return (
-    <div className="relative min-h-screen bg-[#FAF6EF]">
+    <div className="relative min-h-screen bg-transparent text-slate-100">
       <FullPageProfileEffect
         themeId={themePreviewEnabled ? activeSandbox.profile_theme : null}
         item={themePreviewEnabled ? activeThemeItem : null}
@@ -736,13 +737,13 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
           <div className="flex items-center gap-3">
             <Link
               href="/profile"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white text-[#1A1714] text-xs font-bold border border-[#1A1714]/15 shadow-soft hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-soft transition-all"
+              className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all"
             >
               <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Hồ sơ</span>
             </Link>
-            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-[#1A1714] flex items-center gap-2">
-              <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-[#E5484D] text-white border border-[#1A1714]/15 shadow-sm">
+            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
+              <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-500/80 to-blue-600/80 text-white border border-cyan-300/50 shadow-[0_0_18px_rgba(6,182,212,0.4)]">
                 <ShoppingBag className="w-5 h-5" aria-hidden="true" />
               </span>
               <span>IT-Coin Live Try-On Studio</span>
@@ -753,15 +754,15 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
             data-tour="shop-coin-balance"
             className="flex flex-wrap items-center gap-2.5"
           >
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-[#1A1714]/15 text-xs font-mono font-bold text-[#1A1714] shadow-soft">
-              <Coins className="w-4 h-4 text-[#E5484D]" aria-hidden="true" />
+            <span className="liquid-glass-pill inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-mono font-bold text-amber-200">
+              <Coins className="w-4 h-4 text-amber-400" aria-hidden="true" />
               <span>{isIdentityHydrating ? "— IT-Coins" : `${identity.itCoins} IT-Coins`}</span>
             </span>
             <Link
               href="/arena"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1A1714] text-white text-xs font-bold border border-[#1A1714]/15 shadow-soft hover:translate-x-[1px] hover:translate-y-[1px] transition-all"
+              className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all"
             >
-              <Gamepad2 className="w-4 h-4 text-[#E5484D]" aria-hidden="true" />
+              <Gamepad2 className="w-4 h-4 text-cyan-100" aria-hidden="true" />
               <span>Kiếm thêm Coin</span>
             </Link>
           </div>
@@ -770,15 +771,15 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
         <section
           ref={sandboxRef}
           aria-label="Live Try-On Sandbox"
-          className="scroll-mt-20 bg-white border border-[#1A1714]/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5"
+          className="scroll-mt-20 liquid-glass-card p-5 sm:p-6 space-y-5"
         >
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-[#1A1714] pb-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/15 pb-4">
             <div>
-              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#E5484D] text-white border border-[#1A1714]/15 text-[11px] font-mono font-bold uppercase tracking-wider shadow-sm">
-                <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-200 border border-cyan-400/45 text-[11px] font-mono font-bold uppercase tracking-wider">
+                <Sparkles className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
                 <span>Live Try-On Sandbox</span>
               </div>
-              <p className="text-xs font-medium text-[#59534C] mt-1.5">
+              <p className="text-xs font-medium text-slate-300 mt-1.5">
                 All 6 cosmetic slots render live below. Click any card in the catalog to mix &amp; match before unlocking.
               </p>
             </div>
@@ -787,10 +788,10 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
               <button
                 type="button"
                 onClick={() => setMicTestActive((v) => !v)}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#1A1714]/15 text-xs font-mono font-bold shadow-sm transition-all ${
+                className={`liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all ${
                   micTestActive
-                    ? "bg-[#E5484D] text-white"
-                    : "bg-[#FAF6EF] text-[#1A1714] hover:bg-[#F0EADF]"
+                    ? "!bg-cyan-500/30 !border-cyan-300/60 !text-cyan-100 shadow-[0_0_16px_rgba(6,182,212,0.35)]"
+                    : ""
                 }`}
               >
                 <Mic className="w-3.5 h-3.5" aria-hidden="true" />
@@ -803,9 +804,9 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                   setFinisherActive(false);
                   window.setTimeout(() => setFinisherActive(true), 20);
                 }}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#1A1714] text-white text-xs font-mono font-bold border border-[#1A1714]/15 shadow-sm hover:bg-[#1A1714]/90 transition-all"
+                className="liquid-btn-danger inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all"
               >
-                <Flame className="w-3.5 h-3.5 text-[#E5484D]" aria-hidden="true" />
+                <Flame className="w-3.5 h-3.5 text-rose-100" aria-hidden="true" />
                 <span>Trigger Finisher</span>
               </button>
 
@@ -813,7 +814,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                 <button
                   type="button"
                   onClick={handleClearPreview}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAF6EF] text-[#1A1714] text-xs font-mono font-bold border border-[#1A1714]/15 shadow-sm hover:bg-[#F0EADF] transition-all"
+                  className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all"
                 >
                   <Eraser className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>Clear Preview</span>
@@ -824,7 +825,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                 <button
                   type="button"
                   onClick={handleResetToEquipped}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-200 text-[#1A1714] text-xs font-mono font-bold border border-[#1A1714]/15 shadow-sm hover:bg-amber-300 transition-all"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/25 hover:bg-amber-500/35 text-amber-100 text-xs font-mono font-bold border border-amber-300/50 transition-all"
                 >
                   <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>Reset to Equipped</span>
@@ -833,11 +834,11 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
             </div>
           </div>
 
-          <div className="rounded-2xl border border-[#1A1714]/15 bg-[#FAF6EF] p-4 sm:p-5 shadow-soft space-y-4">
+          <div className="rounded-2xl border border-white/15 bg-slate-950/60 p-4 sm:p-5 space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
               <div
                 data-tour="shop-sandbox-preview"
-                className="lg:col-span-5 flex items-center gap-4 p-4 rounded-xl bg-white border border-[#1A1714]/15 shadow-soft"
+                className="lg:col-span-5 flex items-center gap-4 p-4 rounded-xl bg-slate-900/70 border border-white/15"
               >
                 <DiscordAvatarFrame
                   equippedId={activeSandbox.avatar_decoration}
@@ -860,20 +861,14 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     className={
                       activeSandbox.nameplate
                         ? "px-2.5 py-1.5"
-                        : "rounded-lg border border-[#1A1714]/15 px-2.5 py-1.5 bg-[#FAF6EF]"
+                        : "rounded-lg border border-white/15 px-2.5 py-1.5 bg-slate-950/65"
                     }
                   >
-                    <div
-                      className={`text-sm font-extrabold truncate ${
-                        activeSandbox.nameplate ? "text-white" : "text-[#1A1714]"
-                      }`}
-                    >
+                    <div className="text-sm font-extrabold truncate text-white">
                       {isIdentityHydrating ? (
                         <span
                           aria-label="Đang tải hồ sơ"
-                          className={`inline-block h-4 w-28 rounded animate-pulse align-middle ${
-                            activeSandbox.nameplate ? "bg-white/25" : "bg-[#1A1714]/15"
-                          }`}
+                          className="inline-block h-4 w-28 rounded animate-pulse align-middle bg-white/20"
                         />
                       ) : (
                         <NameplateDisplayText
@@ -882,11 +877,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                         />
                       )}
                     </div>
-                    <div
-                      className={`text-[11px] font-mono truncate ${
-                        activeSandbox.nameplate ? "text-zinc-300" : "text-[#59534C]"
-                      }`}
-                    >
+                    <div className="text-[11px] font-mono truncate text-slate-300">
                       {isIdentityHydrating ? "—" : (identity.transferCode ?? "DEV-SANDBOX")} • {identity.equippedTitle}
                     </div>
                   </NameplateBanner>
@@ -895,10 +886,10 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     <button
                       type="button"
                       onClick={() => setThemePreviewEnabled((v) => !v)}
-                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border border-[#1A1714]/15 text-[10px] font-mono font-bold transition-colors ${
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border text-[10px] font-mono font-bold transition-colors ${
                         themePreviewEnabled && activeSandbox.profile_theme
-                          ? "bg-[#E5484D] text-white"
-                          : "bg-white text-[#1A1714]"
+                          ? "bg-cyan-500/25 border-cyan-400/55 text-cyan-100"
+                          : "bg-white/10 border-white/20 text-slate-200 hover:bg-white/15"
                       }`}
                     >
                       <Layers className="w-3 h-3" aria-hidden="true" />
@@ -906,8 +897,8 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                         Theme FX: {themePreviewEnabled ? "ON" : "OFF"}
                       </span>
                     </button>
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-white border border-[#1A1714]/15 text-[10px] font-mono font-bold text-[#1A1714]">
-                      <MousePointer2 className="w-3 h-3 text-[#E5484D]" aria-hidden="true" />
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-white/10 border border-white/20 text-[10px] font-mono font-bold text-slate-200">
+                      <MousePointer2 className="w-3 h-3 text-cyan-300" aria-hidden="true" />
                       <span>{activeSandbox.cursor_effect ? "Cursor Live" : "Default Cursor"}</span>
                     </span>
                   </div>
@@ -918,11 +909,11 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                 <LeaderboardRowWrapper
                   fxId={activeSandbox.leaderboard_fx}
                   nameplateId={activeSandbox.nameplate}
-                  className="border border-[#1A1714]/15 bg-white p-4 shadow-soft"
+                  className="border border-white/15 bg-slate-900/70 p-4"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
-                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#1A1714] text-white font-mono text-xs font-bold shrink-0">
+                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-400/20 border border-amber-300/45 text-amber-200 font-mono text-xs font-bold shrink-0">
                         #1
                       </span>
                       <DiscordAvatarFrame
@@ -938,11 +929,11 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                         />
                       </DiscordAvatarFrame>
                       <div className="min-w-0">
-                        <div className="text-sm font-extrabold text-[#1A1714] truncate flex items-center gap-1.5">
+                        <div className="text-sm font-extrabold text-white truncate flex items-center gap-1.5">
                           {isIdentityHydrating ? (
                             <span
                               aria-label="Đang tải hồ sơ"
-                              className="inline-block h-4 w-28 rounded bg-[#1A1714]/15 animate-pulse"
+                              className="inline-block h-4 w-28 rounded bg-white/20 animate-pulse"
                             />
                           ) : (
                             <NameplateDisplayText
@@ -950,19 +941,19 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                               nameplateId={activeSandbox.nameplate}
                             />
                           )}
-                          <Crown className="w-4 h-4 text-amber-500 shrink-0" aria-hidden="true" />
+                          <Crown className="w-4 h-4 text-amber-400 shrink-0" aria-hidden="true" />
                         </div>
-                        <div className="text-[11px] font-mono text-[#59534C] truncate">
+                        <div className="text-[11px] font-mono text-slate-300 truncate">
                           Live Identity Card • Leaderboard &amp; Nameplate FX
                         </div>
                       </div>
                     </div>
 
                     <div className="text-right shrink-0 font-mono">
-                      <div className="text-sm font-extrabold text-[#1A1714]">
+                      <div className="text-sm font-extrabold text-white">
                         {isIdentityHydrating ? "— pts" : `${identity.totalPoints.toLocaleString("vi-VN")} pts`}
                       </div>
-                      <div className="text-[11px] text-[#E5484D] font-bold">
+                      <div className="text-[11px] text-amber-300 font-bold">
                         {isIdentityHydrating ? "— IT-Coins" : `${identity.itCoins} IT-Coins`}
                       </div>
                     </div>
@@ -984,29 +975,29 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     key={cat}
                     type="button"
                     onClick={() =>
-                  startTransition(() => {
-                    setActiveCategory(cat);
-                    setShowAllCatalog(false);
-                  })
-                }
-                    className={`text-left rounded-xl border border-[#1A1714]/15 p-2.5 transition-all ${
+                      startTransition(() => {
+                        setActiveCategory(cat);
+                        setShowAllCatalog(false);
+                      })
+                    }
+                    className={`text-left rounded-xl border p-2.5 transition-all ${
                       activeCategory === cat
-                        ? "bg-white shadow-sm"
-                        : "bg-white/80 hover:bg-white"
+                        ? "bg-cyan-500/20 border-cyan-400/55 shadow-[0_0_16px_rgba(6,182,212,0.2)]"
+                        : "bg-white/[0.06] border-white/15 hover:bg-white/[0.11]"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-1">
-                      <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold uppercase text-[#59534C]">
-                        <Icon className="w-3 h-3 text-[#E5484D]" aria-hidden="true" />
+                      <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold uppercase text-slate-300">
+                        <Icon className="w-3 h-3 text-cyan-300" aria-hidden="true" />
                         <span>{meta.shortLabel}</span>
                       </span>
                       {isOverridden && (
-                        <span className="px-1.5 py-0.5 rounded bg-[#E5484D] text-white text-[9px] font-mono font-bold uppercase">
+                        <span className="px-1.5 py-0.5 rounded bg-cyan-500/30 border border-cyan-300/50 text-cyan-100 text-[9px] font-mono font-bold uppercase">
                           Try
                         </span>
                       )}
                     </div>
-                    <div className="text-xs font-bold text-[#1A1714] truncate mt-1">
+                    <div className="text-xs font-bold text-white truncate mt-1">
                       {activeItem?.name ?? "None"}
                     </div>
                   </button>
@@ -1019,10 +1010,10 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
         {feedback && (
           <div
             role="status"
-            className={`px-4 py-3 rounded-xl border border-[#1A1714]/15 text-xs font-bold shadow-soft ${
+            className={`px-4 py-3 rounded-xl border text-xs font-bold ${
               feedback.ok
-                ? "bg-white text-[#1A1714]"
-                : "bg-[#FFE5E5] text-[#E5484D]"
+                ? "bg-emerald-500/15 border-emerald-400/45 text-emerald-100"
+                : "bg-rose-500/20 border-rose-400/50 text-rose-100"
             }`}
           >
             {feedback.message}
@@ -1050,14 +1041,14 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     setShowAllCatalog(false);
                   })
                 }
-                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#1A1714]/15 text-xs font-bold transition-all ${
+                className={`liquid-glass-pill inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold transition-all ${
                   selected
-                    ? "bg-[#1A1714] text-white shadow-soft"
-                    : "bg-white text-[#1A1714] shadow-soft hover:bg-[#F0EADF]"
+                    ? "!bg-cyan-500/25 !border-cyan-400/55 text-cyan-100 shadow-[0_0_18px_rgba(6,182,212,0.28)]"
+                    : "text-slate-200 hover:bg-white/10 hover:text-white"
                 }`}
               >
                 <Icon
-                  className={`w-3.5 h-3.5 ${selected ? "text-[#E5484D]" : "text-[#59534C]"}`}
+                  className={`w-3.5 h-3.5 ${selected ? "text-cyan-300" : "text-slate-400"}`}
                   aria-hidden="true"
                 />
                 <span>{meta.label}</span>
@@ -1086,10 +1077,10 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
               <div
                 key={item.id}
                 onClick={(e) => handleSelectPreview(item, getEventCoords(e))}
-                className={`cursor-pointer rounded-2xl border border-[#1A1714]/15 p-4 flex flex-col justify-between gap-3.5 transition-all ${
+                className={`cursor-pointer liquid-glass-card-lite p-4 flex flex-col justify-between gap-3.5 transition-all ${
                   isPreviewing
-                    ? "bg-[#FAF6EF] shadow-soft -translate-y-0.5"
-                    : "bg-white shadow-soft hover:-translate-y-0.5"
+                    ? "!border-cyan-400/60 shadow-[0_0_24px_rgba(6,182,212,0.25)] -translate-y-0.5"
+                    : "hover:-translate-y-0.5 hover:border-white/25"
                 }`}
               >
                 <div className="space-y-3">
@@ -1105,12 +1096,12 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     <div className="flex items-center gap-1.5">
                       {statusLabel && (
                         <span
-                          className={`inline-flex items-center gap-1 text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-lg border border-[#1A1714]/15 ${
+                          className={`inline-flex items-center gap-1 text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-lg border ${
                             isPreviewing
-                              ? "bg-[#E5484D] text-white"
+                              ? "bg-cyan-500/25 border-cyan-400/55 text-cyan-100"
                               : isEquipped
-                                ? "bg-[#1A1714] text-white"
-                                : "bg-emerald-100 text-emerald-900"
+                                ? "bg-emerald-500/25 border-emerald-400/55 text-emerald-100"
+                                : "bg-white/12 border-white/25 text-slate-200"
                           }`}
                         >
                           {isPreviewing && <Eye className="w-2.5 h-2.5" aria-hidden="true" />}
@@ -1129,34 +1120,34 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
 
                   <div>
                     <div className="flex items-baseline justify-between gap-2">
-                      <h3 className="text-sm font-extrabold text-[#1A1714]">
+                      <h3 className="text-sm font-extrabold text-white">
                         {item.name}
                       </h3>
-                      <span className="text-xs font-mono font-bold text-[#E5484D] shrink-0">
+                      <span className="text-xs font-mono font-bold text-amber-300 shrink-0">
                         {item.price} IT-Coins
                       </span>
                     </div>
-                    <p className="text-xs text-[#59534C] mt-1 leading-relaxed">
+                    <p className="text-xs text-slate-300 mt-1 leading-relaxed">
                       {item.description}
                     </p>
                   </div>
                 </div>
 
                 <div
-                  className="space-y-2 pt-2.5 border-t-2 border-[#F0EADF]"
+                  className="space-y-2 pt-2.5 border-t border-white/15"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {isEquipped ? (
                     <div className="flex items-center gap-2">
-                      <span className="flex-1 inline-flex items-center justify-center gap-1 py-2 px-3 rounded-xl bg-[#1A1714] text-white border border-[#1A1714]/15 text-xs font-mono font-bold">
-                        <Check className="w-3.5 h-3.5 text-[#E5484D]" aria-hidden="true" />
+                      <span className="flex-1 inline-flex items-center justify-center gap-1 py-2 px-3 rounded-xl liquid-btn-success text-xs font-mono font-bold">
+                        <Check className="w-3.5 h-3.5 text-emerald-100" aria-hidden="true" />
                         <span>Equipped</span>
                       </span>
                       <button
                         type="button"
                         disabled={busyItemId === item.id || !isOnline}
                         onClick={() => handleUnequip(item.category, item.id)}
-                        className="px-3 py-2 rounded-xl bg-[#FAF6EF] border border-[#1A1714]/15 text-xs font-mono font-bold text-[#1A1714] shadow-sm hover:bg-[#F0EADF] disabled:opacity-50"
+                        className="px-3 py-2 rounded-xl liquid-glass-btn text-xs font-mono font-bold disabled:opacity-50"
                       >
                         Unequip
                       </button>
@@ -1166,7 +1157,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                       type="button"
                       disabled={busyItemId === item.id || !isOnline}
                       onClick={() => handleEquipOwned(item)}
-                      className="w-full py-2 px-3 rounded-xl bg-white border border-[#1A1714]/15 text-xs font-mono font-bold text-[#1A1714] shadow-sm hover:bg-[#FAF6EF] disabled:opacity-50"
+                      className="w-full py-2 px-3 rounded-xl liquid-btn-success text-xs font-mono font-bold disabled:opacity-50"
                     >
                       {busyItemId === item.id ? "Equipping..." : "Owned • Equip"}
                     </button>
@@ -1175,7 +1166,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                       type="button"
                       disabled={busyItemId === item.id}
                       onClick={() => handleBuyAndEquip(item)}
-                      className="w-full py-2 px-3 rounded-xl bg-[#E5484D] hover:bg-[#DC3D43] text-white border border-[#1A1714]/15 text-xs font-mono font-bold shadow-sm disabled:opacity-50"
+                      className="w-full py-2 px-3 rounded-xl liquid-btn-primary text-xs font-mono font-bold disabled:opacity-50"
                     >
                       {busyItemId === item.id
                         ? "Unlocking..."
@@ -1185,7 +1176,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     <button
                       type="button"
                       onClick={(e) => handleSelectPreview(item, getEventCoords(e))}
-                      className="w-full py-2 px-3 rounded-xl bg-[#FAF6EF] border border-[#1A1714]/15 text-xs font-mono font-bold text-[#1A1714] shadow-sm hover:bg-[#F0EADF]"
+                      className="w-full py-2 px-3 rounded-xl liquid-btn-primary opacity-75 hover:opacity-100 text-xs font-mono font-bold"
                     >
                       {`Unlock for ${item.price} IT-Coins`}
                     </button>
@@ -1201,7 +1192,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
             <button
               type="button"
               onClick={() => setShowAllCatalog(true)}
-              className="px-5 py-2.5 rounded-pill bg-white border border-ink/15 text-xs font-bold text-ink shadow-soft hover:bg-paper transition-colors"
+              className="px-5 py-2.5 rounded-full liquid-glass-btn text-xs font-bold transition-all"
             >
               Xem thêm {categoryItems.length - 8} mẫu khác ({categoryItems.length} tổng cộng)
             </button>
@@ -1215,12 +1206,12 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
           aria-label="Thanh xem thử hiệu ứng"
           className="fixed bottom-20 left-3 right-14 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:bottom-20 md:bottom-5 z-30 sm:w-max sm:max-w-[calc(100vw-11rem)]"
         >
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 px-3.5 py-2.5 rounded-2xl bg-[#1A1714] text-white border border-[#1A1714]/15 shadow-soft">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 px-3.5 py-2.5 rounded-2xl bg-slate-950/90 backdrop-blur-2xl text-white border border-cyan-400/40 shadow-[0_12px_36px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.25)]">
             <div className="flex items-start sm:items-center gap-2 min-w-0">
-              <span className="w-6 h-6 rounded-lg bg-[#E5484D] text-white flex items-center justify-center shrink-0">
+              <span className="w-6 h-6 rounded-lg bg-cyan-500/25 border border-cyan-400/50 text-cyan-200 flex items-center justify-center shrink-0">
                 <Eye className="w-3.5 h-3.5" aria-hidden="true" />
               </span>
-              <span className="text-xs font-semibold leading-snug">
+              <span className="text-xs font-semibold leading-snug text-slate-100">
                 {activePreviewItem.category === "cursor_effect"
                   ? `Đang xem thử: ${activePreviewItem.name} • Chạm/vuốt màn hình để xem hiệu ứng`
                   : `Đang xem thử: ${activePreviewItem.name}`}
@@ -1231,14 +1222,14 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
               <button
                 type="button"
                 onClick={handleScrollToSandbox}
-                className="px-2.5 py-1.5 rounded-xl bg-[#E5484D] hover:bg-[#DC3D43] text-white text-[11px] font-mono font-bold whitespace-nowrap transition-colors"
+                className="px-2.5 py-1.5 rounded-xl liquid-btn-primary text-[11px] font-mono font-bold whitespace-nowrap"
               >
                 Xem Sandbox ↑
               </button>
               <button
                 type="button"
                 onClick={handleResetToEquipped}
-                className="px-2.5 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 text-white text-[11px] font-mono font-bold whitespace-nowrap transition-colors"
+                className="px-2.5 py-1.5 rounded-xl liquid-glass-btn text-[11px] font-mono font-bold whitespace-nowrap"
               >
                 Đặt lại
               </button>

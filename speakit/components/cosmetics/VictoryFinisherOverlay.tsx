@@ -262,12 +262,12 @@ export function VictoryFinisherOverlay({
       </div>
 
       <div
-        className={`cosmetic-finisher-banner relative z-30 mx-4 max-w-md w-full rounded-2xl border-2 px-6 py-5 shadow-hard text-center space-y-2 transition-opacity duration-500 ${
+        className={`cosmetic-finisher-banner relative z-30 mx-4 max-w-md w-full rounded-3xl border px-6 py-5 shadow-[0_18px_48px_rgba(0,0,0,0.65),inset_0_1px_1px_rgba(255,255,255,0.28)] text-center space-y-2 transition-opacity duration-500 ${
           fading ? "opacity-0" : "opacity-100"
         } ${
           isMatrix
-            ? "border-emerald-500 bg-ink text-emerald-400"
-            : "border-ink bg-paper text-ink"
+            ? "bg-slate-950/90 backdrop-blur-2xl border-emerald-400/50 text-emerald-300"
+            : "bg-slate-950/88 backdrop-blur-2xl border-cyan-400/40 text-white"
         }`}
       >
         <div
@@ -275,10 +275,10 @@ export function VictoryFinisherOverlay({
             isMatrix
               ? "text-emerald-400"
               : isShockwave
-                ? "text-emerald-600"
+                ? "text-emerald-300"
                 : isLightning
-                  ? "text-amber-600"
-                  : "text-accent"
+                  ? "text-amber-300"
+                  : "text-cyan-300"
           }`}
         >
           {isLightning ? (
@@ -294,13 +294,13 @@ export function VictoryFinisherOverlay({
         </div>
 
         {isShockwave && (
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-600/35 bg-emerald-50 px-3 py-0.5 text-[11px] font-mono font-bold text-emerald-700">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/15 px-3 py-0.5 text-[11px] font-mono font-bold text-emerald-200">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             <span>ALL SERVICES HEALTHY · 200 OK</span>
           </div>
         )}
 
-        <h3 className={`text-xl font-bold ${isMatrix ? "text-emerald-300 font-mono" : "text-ink"}`}>
+        <h3 className={`text-xl font-bold ${isMatrix ? "text-emerald-300 font-mono" : "text-white"}`}>
           {resolvedId === "finisher-rb-true-focus-lock" ? (
             <DynamicTrueFocus
               sentence={title}
@@ -311,7 +311,7 @@ export function VictoryFinisherOverlay({
               pauseBetweenAnimations={0.45}
               cornerSize={10}
               borderWidth={2}
-              wordClassName="text-xl font-bold"
+              wordClassName="text-xl font-bold text-white"
               containerClassName="gap-2 justify-center flex-wrap"
             />
           ) : resolvedId === "finisher-rb-glitch-overdrive" ||
@@ -322,17 +322,17 @@ export function VictoryFinisherOverlay({
               mode="rgb"
               fontSize="1.25rem"
               fontWeight={700}
-              className="!mx-0 inline-block"
+              className="!mx-0 inline-block text-white"
             >
               {title}
             </DynamicGlitchText>
           ) : resolvedId === "finisher-rb-shiny-champion" ||
             resolvedId === "finisher-rb-hyperspeed-warp" ? (
-            <DynamicShinyText text={title} speed={1.8} color="#1A1714" shineColor="#38BDF8" />
+            <DynamicShinyText text={title} speed={1.8} color="#F8FAFC" shineColor="#22D3EE" />
           ) : resolvedId === "finisher-rb-prismatic-burst" ||
             resolvedId === "finisher-rb-balatro-jackpot" ? (
             <DynamicGradientText
-              colors={["#E5484D", "#EC4899", "#38BDF8", "#F59E0B"]}
+              colors={["#F43F5E", "#EC4899", "#38BDF8", "#FBBF24"]}
               animationSpeed={2.5}
             >
               {title}
@@ -341,7 +341,7 @@ export function VictoryFinisherOverlay({
             title
           )}
         </h3>
-        <p className={`text-xs font-mono ${isMatrix ? "text-emerald-400/80" : "text-ink-muted"}`}>
+        <p className={`text-xs font-mono ${isMatrix ? "text-emerald-300/80" : "text-slate-300"}`}>
           {subtitle}
         </p>
       </div>

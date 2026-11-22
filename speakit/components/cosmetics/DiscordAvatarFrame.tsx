@@ -290,7 +290,7 @@ export function DiscordAvatarFrame({
   const hasEffect = Boolean(resolvedItem || lottieConfig);
   const glowColor =
     resolvedItem?.fallbackGlowColor ?? resolvedItem?.previewAccent ?? undefined;
-  const micColor = lottieConfig?.micColor ?? "border-[#E5484D]";
+  const micColor = lottieConfig?.micColor ?? "border-cyan-400";
   const scale = resolvedItem?.scale ?? 1.22;
   const isDefaultScale = Math.abs(scale - 1.22) < 0.001;
 
@@ -391,19 +391,19 @@ export function DiscordAvatarFrame({
           {effectId === "avatar-rb-electric-border" &&
             (lite ? (
               <span
-                className="absolute inset-0.5 rounded-full border-2 border-dashed border-sky-500"
-                style={{ boxShadow: "0 0 10px rgba(2,132,199,0.75)" }}
+                className="absolute inset-0.5 rounded-full border-2 border-dashed border-sky-400"
+                style={{ boxShadow: "0 0 12px rgba(56,189,248,0.85)" }}
               />
             ) : (
               <>
                 <span
-                  className="absolute inset-0.5 rounded-full border-2 border-dashed border-sky-500/80 cosmetic-svg-spin-slow"
-                  style={{ boxShadow: "0 0 10px rgba(2,132,199,0.7)" }}
+                  className="absolute inset-0.5 rounded-full border-2 border-dashed border-sky-400/85 cosmetic-svg-spin-slow"
+                  style={{ boxShadow: "0 0 12px rgba(56,189,248,0.8)" }}
                 />
                 <div className="absolute inset-0 rounded-full pointer-events-none">
                   <DynamicElectricBorder
-                    color="#0284C7"
-                    glowColor="#38BDF8"
+                    color="#38BDF8"
+                    glowColor="#67E8F9"
                     borderRadius={999}
                     strands={3}
                     thickness={2}
@@ -416,21 +416,21 @@ export function DiscordAvatarFrame({
             ))}
           {effectId === "avatar-rb-star-border" &&
             (lite ? (
-              <span className="absolute inset-0 rounded-full border-2 border-amber-500">
-                <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_8px_#F59E0B]" />
+              <span className="absolute inset-0 rounded-full border-2 border-amber-400">
+                <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_10px_#FBBF24]" />
               </span>
             ) : (
               <div className="absolute inset-0 rounded-full pointer-events-none">
                 <DynamicStarBorder
                   as="div"
-                  color="#D97706"
+                  color="#FBBF24"
                   trailColor="#F59E0B"
                   radius={999}
                   stars={2}
                   sparkle
                   thickness={2}
                   backgroundColor="transparent"
-                  borderColor="rgba(217,119,6,0.55)"
+                  borderColor="rgba(251,191,36,0.55)"
                   className="w-full h-full rounded-full"
                 />
               </div>
@@ -492,9 +492,9 @@ export function DiscordAvatarFrame({
           )}
           {effectId === "avatar-magic-avatar-circles" && (
             <span className="absolute -bottom-1 -right-1 flex -space-x-1.5">
-              <span className="w-3.5 h-3.5 rounded-full bg-sky-500 border border-white shadow-sm" />
-              <span className="w-3.5 h-3.5 rounded-full bg-amber-400 border border-white shadow-sm" />
-              <span className="w-4 h-3.5 rounded-full bg-[#1A1714] text-white text-[7px] font-mono font-bold flex items-center justify-center border border-white">
+              <span className="w-3.5 h-3.5 rounded-full bg-sky-400 border border-white/80 shadow-sm" />
+              <span className="w-3.5 h-3.5 rounded-full bg-amber-400 border border-white/80 shadow-sm" />
+              <span className="w-4 h-3.5 rounded-full bg-slate-950 text-cyan-200 text-[7px] font-mono font-bold flex items-center justify-center border border-white/70">
                 +9
               </span>
             </span>
