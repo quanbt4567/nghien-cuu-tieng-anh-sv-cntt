@@ -46,6 +46,7 @@ import type { PublicGuestPlayer } from "../../lib/db";
 import { mergeProfileIdentity } from "../../lib/profileStats";
 import type { GamificationState } from "../../lib/types";
 import { CustomCursorTrail } from "../cosmetics/CustomCursorTrail";
+import { FullPageProfileEffect } from "../cosmetics/FullPageProfileEffect";
 import { InAppNotificationBell } from "./InAppNotificationBell";
 
 type NavItem = {
@@ -301,6 +302,9 @@ export function Navbar() {
 
   return (
     <>
+      {!shopActive && !pathname.startsWith("/profile/") && (
+        <FullPageProfileEffect themeId={guestPlayer?.equippedCosmetics?.profile_theme ?? null} />
+      )}
       {!shopActive && (
         <CustomCursorTrail effectId={guestPlayer?.equippedCosmetics?.cursor_effect ?? null} />
       )}
