@@ -37,6 +37,7 @@ export default async function HomePage() {
           </div>
           <Link
             href="/leaderboard"
+            prefetch
             className="interactive-btn-accent inline-flex items-center gap-1.5 rounded-[6px] md:rounded-pill px-3.5 py-1.5 bg-white md:bg-accent/10 hover:bg-[#ba2223] md:hover:bg-accent text-[#142161] md:text-[#B91C1C] hover:text-white border border-[#142161] md:border-accent/40 text-xs font-semibold"
           >
             <span>Xem bảng xếp hạng</span>

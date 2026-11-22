@@ -55,6 +55,7 @@ export function GlobalLeaderboard({
     initialBoard?.mode ?? "online"
   );
   const [loading, setLoading] = useState(!initialBoard);
+  const [showAllRows, setShowAllRows] = useState(false);
   const [players, setPlayers] = useState<LeaderboardEntry[]>(
     initialBoard?.players ?? []
   );
@@ -539,18 +540,21 @@ export function GlobalLeaderboard({
               }
               return "bg-white border-ink/15 text-ink-muted";
             };
+            const visiblePlayers = showAllRows ? players : players.slice(0, 15);
             return (
               <div className="space-y-2.5">
-                {players.map((entry) => {
+                {visiblePlayers.map((entry) => {
                   const hasNameplate = Boolean(entry.equippedCosmetics?.nameplate);
                   const hasFx = Boolean(entry.equippedCosmetics?.leaderboard_fx);
                   const isDuplicateName =
                     (nameCounts.get(entry.displayName.trim().toLowerCase()) ?? 0) > 1;
+                  const useLite = entry.rank > 3;
                   return (
                     <LeaderboardRowWrapper
                       key={entry.id}
                       fxId={entry.equippedCosmetics?.leaderboard_fx}
                       nameplateId={entry.equippedCosmetics?.nameplate}
+                      lite={useLite}
                       className={`border transition-colors ${
                         hasNameplate || hasFx
                           ? entry.isCurrentUser
@@ -576,6 +580,7 @@ export function GlobalLeaderboard({
                             equippedId={entry.equippedCosmetics?.avatar_decoration}
                             fallbackRing={entry.equippedRing}
                             size="sm"
+                            lite={useLite}
                           >
                             <PlayerAvatar
                               avatarUrl={entry.avatarUrl}
@@ -627,6 +632,17 @@ export function GlobalLeaderboard({
                     </LeaderboardRowWrapper>
                   );
                 })}
+                {!showAllRows && players.length > 15 && (
+                  <div className="flex justify-center pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowAllRows(true)}
+                      className="px-4 py-2 rounded-pill bg-white border border-ink/15 text-xs font-bold text-ink shadow-soft hover:bg-paper transition-colors"
+                    >
+                      Xem thêm {players.length - 15} học viên khác
+                    </button>
+                  </div>
+                )}
               </div>
             );
           })()
