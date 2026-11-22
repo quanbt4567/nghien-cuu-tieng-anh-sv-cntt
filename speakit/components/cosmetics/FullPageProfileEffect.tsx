@@ -565,7 +565,7 @@ function ConstellationCanvas({ contained }: { contained: boolean }) {
       const rect = canvas.parentElement?.getBoundingClientRect();
       width = Math.max(1, Math.floor(rect?.width || window.innerWidth));
       height = Math.max(1, Math.floor(rect?.height || window.innerHeight));
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -788,7 +788,7 @@ export function FullPageProfileEffect({
         alpha: true,
         premultipliedAlpha: false,
         antialias: true,
-        dpr: Math.min(window.devicePixelRatio || 1, 2),
+        dpr: Math.min(window.devicePixelRatio || 1, 1.25),
       });
     } catch {
       return;

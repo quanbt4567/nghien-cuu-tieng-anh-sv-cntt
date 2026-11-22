@@ -127,15 +127,21 @@ function CosmeticCardThumbnail({
   displayName,
   initials,
   micActive,
+  paused = false,
 }: {
   item: CosmeticItem;
   displayName: string;
   initials: string;
   micActive: boolean;
+  paused?: boolean;
 }) {
+  const pauseClass = paused
+    ? "max-md:[&_*]:!animate-none max-md:[&_*::before]:!animate-none max-md:[&_*::after]:!animate-none"
+    : "";
+
   if (item.category === "avatar_decoration") {
     return (
-      <div className="h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] flex items-center justify-center relative overflow-hidden">
+      <div className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] flex items-center justify-center relative overflow-hidden ${pauseClass}`}>
         <DiscordAvatarFrame equippedId={item.id} item={item} size="lg" micActive={micActive} lite>
           <div className="w-full h-full flex items-center justify-center bg-white font-mono font-bold text-base text-[#1A1714]">
             {initials}
@@ -147,7 +153,7 @@ function CosmeticCardThumbnail({
 
   if (item.category === "nameplate") {
     return (
-      <div className="h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] px-3 flex items-center justify-center relative overflow-hidden">
+      <div className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] px-3 flex items-center justify-center relative overflow-hidden ${pauseClass}`}>
         <NameplateBanner
           nameplateId={item.id}
           item={item}
@@ -181,7 +187,7 @@ function CosmeticCardThumbnail({
 
   if (item.category === "leaderboard_fx") {
     return (
-      <div className="h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] px-3 flex items-center justify-center relative overflow-hidden">
+      <div className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] px-3 flex items-center justify-center relative overflow-hidden ${pauseClass}`}>
         <LeaderboardRowWrapper
           fxId={item.id}
           lite
@@ -208,7 +214,7 @@ function CosmeticCardThumbnail({
   if (item.category === "profile_theme") {
     return (
       <div
-        className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] relative overflow-hidden flex items-end p-2.5 ${item.effectClass}`}
+        className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] relative overflow-hidden flex items-end p-2.5 ${item.effectClass} ${pauseClass}`}
       >
         {item.id === "theme-neon-meteor-shower" && (
           <>
@@ -269,7 +275,7 @@ function CosmeticCardThumbnail({
 
   if (item.category === "cursor_effect") {
     return (
-      <div className="h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] relative overflow-hidden flex items-center justify-center">
+      <div className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] relative overflow-hidden flex items-center justify-center ${pauseClass}`}>
         {item.id === "cursor-pixel-sparkle-trail" && (
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 bg-amber-500 border border-[#1A1714]/15 animate-pulse" />
@@ -325,7 +331,7 @@ function CosmeticCardThumbnail({
   }
 
   return (
-    <div className="h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] relative overflow-hidden flex items-center justify-center px-3">
+    <div className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] relative overflow-hidden flex items-center justify-center px-3 ${pauseClass}`}>
       {item.id === "finisher-lgtm-neon-confetti" && (
         <div className="flex items-center gap-2">
           <span className="px-2 py-1 rounded bg-emerald-500 text-white border border-[#1A1714]/15 font-mono text-[10px] font-bold rotate-[-4deg] shadow-sm">
@@ -1073,6 +1079,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
               <div
                 key={item.id}
                 onClick={(e) => handleSelectPreview(item, getEventCoords(e))}
+                style={{ contentVisibility: "auto", containIntrinsicSize: "260px" }}
                 className={`cursor-pointer rounded-2xl border border-[#1A1714]/15 p-4 flex flex-col justify-between gap-3.5 transition-all ${
                   isPreviewing
                     ? "bg-[#FAF6EF] shadow-soft -translate-y-0.5"
@@ -1112,6 +1119,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     displayName={isIdentityHydrating ? "—" : identity.displayName}
                     initials={isIdentityHydrating ? "--" : initials}
                     micActive={micTestActive}
+                    paused={!isPreviewing && !isEquipped}
                   />
 
                   <div>
