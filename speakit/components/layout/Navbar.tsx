@@ -47,6 +47,7 @@ import type { PublicGuestPlayer } from "../../lib/db";
 import { mergeProfileIdentity } from "../../lib/profileStats";
 import type { GamificationState } from "../../lib/types";
 import { CustomCursorTrail } from "../cosmetics/CustomCursorTrail";
+import { InAppNotificationBell } from "./InAppNotificationBell";
 
 type NavItem = {
   href: string;
@@ -482,6 +483,8 @@ export function Navbar() {
                   {identity.totalPoints.toLocaleString("en-US")} pts
                 </span>
               </Link>
+
+              <InAppNotificationBell lastPracticeDate={gamification.lastPracticeDate} />
             </div>
           )}
 
