@@ -1049,7 +1049,7 @@ export function CodeReviewDuelArena() {
                     type="button"
                     onClick={() => void handleQuickBotMatch()}
                     disabled={Boolean(loadingAction)}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-500/85 to-purple-600/85 hover:from-violet-500/95 hover:to-purple-600/95 text-white font-bold text-sm border border-violet-300/60 shadow-[0_0_22px_rgba(139,92,246,0.42),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-500 hover:to-purple-600 text-white font-bold text-sm border border-violet-300/60 shadow-[0_0_22px_rgba(139,92,246,0.42),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50"
                   >
                     <Bot className="w-4 h-4" />
                     <span>
@@ -1212,7 +1212,7 @@ export function CodeReviewDuelArena() {
                     type="button"
                     onClick={handleStartDuel}
                     disabled={loadingAction === "start" || room.players.length < 2}
-                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-violet-500/85 to-purple-600/85 hover:from-violet-500/95 hover:to-purple-600/95 text-white font-bold text-sm border border-violet-300/60 shadow-[0_0_22px_rgba(139,92,246,0.42),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-500 hover:to-purple-600 text-white font-bold text-sm border border-violet-300/60 shadow-[0_0_22px_rgba(139,92,246,0.42),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Play className="w-4 h-4" />
                     <span>
@@ -1709,7 +1709,7 @@ export function CodeReviewDuelArena() {
                 type="button"
                 onClick={() => void handleSubmitArgument()}
                 disabled={!isMyTurn || loadingAction === "turn"}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-500/85 to-purple-600/85 hover:from-violet-500/95 hover:to-purple-600/95 text-white font-bold text-sm border border-violet-300/60 shadow-[0_0_20px_rgba(139,92,246,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-500 hover:to-purple-600 text-white font-bold text-sm border border-violet-300/60 shadow-[0_0_20px_rgba(139,92,246,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50"
               >
                 <Send className="w-4 h-4" />
                 <span>
@@ -1920,7 +1920,7 @@ export function CodeReviewDuelArena() {
               <button
                 type="button"
                 onClick={handleResetDuel}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-500/85 to-purple-600/85 hover:from-violet-500/95 hover:to-purple-600/95 text-white font-bold text-sm border border-violet-300/60 shadow-[0_0_20px_rgba(139,92,246,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)]"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-500 hover:to-purple-600 text-white font-bold text-sm border border-violet-300/60 shadow-[0_0_20px_rgba(139,92,246,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)]"
               >
                 <RotateCcw className="w-4 h-4" />
                 <span>Đấu lại / Đề tài mới</span>

@@ -743,7 +743,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
               <span>Hồ sơ</span>
             </Link>
             <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
-              <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-500/80 to-blue-600/80 text-white border border-cyan-300/50 shadow-[0_0_18px_rgba(6,182,212,0.4)]">
+              <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 text-white border border-cyan-300/50 shadow-[0_0_18px_rgba(6,182,212,0.4)]">
                 <ShoppingBag className="w-5 h-5" aria-hidden="true" />
               </span>
               <span>IT-Coin Live Try-On Studio</span>

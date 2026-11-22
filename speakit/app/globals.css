@@ -60,8 +60,8 @@ select option {
 }
 
 .liquid-glass-btn {
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.30);
+  background: rgba(103, 232, 249, 0.16);
+  border: 1px solid rgba(165, 243, 252, 0.5);
   color: #ffffff;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.32);
   transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease, color 150ms ease;
@@ -78,16 +78,16 @@ select option {
 }
 
 .liquid-btn-primary {
-  background: linear-gradient(90deg, rgba(6, 182, 212, 0.82), rgba(37, 99, 235, 0.82));
+  background: linear-gradient(90deg, #22d3ee, #3b82f6);
   border: 1px solid rgba(103, 232, 249, 0.6);
   color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 0 24px rgba(6, 182, 212, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 28px rgba(34, 211, 238, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.5);
   transition: transform 150ms ease, background 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
 }
 
 .liquid-btn-primary:hover {
-  background: linear-gradient(90deg, rgba(6, 182, 212, 0.92), rgba(37, 99, 235, 0.92));
+  background: linear-gradient(90deg, #67e8f9, #60a5fa);
   border-color: rgba(165, 243, 252, 0.78);
   box-shadow: 0 0 28px rgba(34, 211, 238, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.6);
 }
@@ -97,16 +97,16 @@ select option {
 }
 
 .liquid-btn-danger {
-  background: linear-gradient(90deg, rgba(244, 63, 94, 0.86), rgba(220, 38, 38, 0.86));
+  background: linear-gradient(90deg, #fb7185, #ef4444);
   border: 1px solid rgba(253, 164, 175, 0.6);
   color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 0 24px rgba(244, 63, 94, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 28px rgba(251, 113, 133, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.45);
   transition: transform 150ms ease, background 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
 }
 
 .liquid-btn-danger:hover {
-  background: linear-gradient(90deg, rgba(244, 63, 94, 0.95), rgba(220, 38, 38, 0.95));
+  background: linear-gradient(90deg, #fda4af, #f87171);
   border-color: rgba(254, 205, 211, 0.78);
   box-shadow: 0 0 28px rgba(244, 63, 94, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.55);
 }
@@ -116,16 +116,16 @@ select option {
 }
 
 .liquid-btn-success {
-  background: linear-gradient(90deg, rgba(16, 185, 129, 0.82), rgba(13, 148, 136, 0.82));
+  background: linear-gradient(90deg, #34d399, #14b8a6);
   border: 1px solid rgba(110, 231, 183, 0.6);
   color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 26px rgba(52, 211, 153, 0.58), inset 0 1px 1px rgba(255, 255, 255, 0.45);
   transition: transform 150ms ease, background 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
 }
 
 .liquid-btn-success:hover {
-  background: linear-gradient(90deg, rgba(16, 185, 129, 0.92), rgba(13, 148, 136, 0.92));
+  background: linear-gradient(90deg, #6ee7b7, #2dd4bf);
   border-color: rgba(167, 243, 208, 0.78);
   box-shadow: 0 0 26px rgba(16, 185, 129, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.55);
 }

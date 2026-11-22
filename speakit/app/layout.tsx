@@ -54,24 +54,10 @@ export default function RootLayout({
           className="fixed inset-0 -z-10 pointer-events-none overflow-hidden bg-[#050811]"
         >
           <div
-            className="liquid-orb-drift absolute -top-36 -left-32 w-[560px] h-[560px] rounded-full"
+            className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(circle, rgba(37, 99, 235, 0.30) 0%, rgba(37, 99, 235, 0.10) 42%, transparent 72%)",
-            }}
-          />
-          <div
-            className="liquid-orb-drift-slow absolute top-[18%] -right-36 w-[540px] h-[540px] rounded-full"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(6, 182, 212, 0.24) 0%, rgba(6, 182, 212, 0.08) 42%, transparent 72%)",
-            }}
-          />
-          <div
-            className="liquid-orb-drift-delayed absolute -bottom-40 left-[22%] w-[600px] h-[600px] rounded-full"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(124, 58, 237, 0.28) 0%, rgba(124, 58, 237, 0.09) 42%, transparent 72%)",
+                "radial-gradient(120% 70% at 50% -10%, rgba(56, 120, 255, 0.28) 0%, transparent 60%), radial-gradient(90% 60% at 100% 100%, rgba(139, 92, 246, 0.22) 0%, transparent 65%), radial-gradient(80% 50% at 0% 85%, rgba(6, 182, 212, 0.16) 0%, transparent 65%), linear-gradient(180deg, #0a1226 0%, #070c1c 55%, #050811 100%)",
             }}
           />
         </div>

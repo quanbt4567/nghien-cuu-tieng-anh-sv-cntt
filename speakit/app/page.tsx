@@ -129,7 +129,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-cyan-500/15 group-hover:bg-cyan-500/30 text-cyan-200 group-hover:text-white border border-cyan-400/40 text-xs font-semibold transition-colors">
+            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-gradient-to-r from-cyan-400 to-blue-500 text-white border border-cyan-200/60 shadow-[0_0_20px_rgba(34,211,238,0.55),inset_0_1px_1px_rgba(255,255,255,0.5)] group-hover:brightness-110 text-xs font-bold transition-all">
               <span>Luyện kịch bản</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -154,7 +154,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-violet-500/15 group-hover:bg-violet-500/30 text-violet-200 group-hover:text-white border border-violet-400/40 text-xs font-semibold transition-colors">
+            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-gradient-to-r from-violet-400 to-purple-500 text-white border border-violet-200/60 shadow-[0_0_20px_rgba(167,139,250,0.55),inset_0_1px_1px_rgba(255,255,255,0.5)] group-hover:brightness-110 text-xs font-bold transition-all">
               <span>Ôn từ vựng</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -179,7 +179,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-emerald-500/15 group-hover:bg-emerald-500/30 text-emerald-200 group-hover:text-white border border-emerald-400/40 text-xs font-semibold transition-colors">
+            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-gradient-to-r from-emerald-400 to-teal-500 text-white border border-emerald-200/60 shadow-[0_0_20px_rgba(52,211,153,0.55),inset_0_1px_1px_rgba(255,255,255,0.5)] group-hover:brightness-110 text-xs font-bold transition-all">
               <span>Xem lộ trình</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -204,7 +204,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-amber-500/15 group-hover:bg-amber-500/30 text-amber-200 group-hover:text-white border border-amber-400/40 text-xs font-semibold transition-colors">
+            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-gradient-to-r from-amber-400 to-orange-500 text-white border border-amber-200/60 shadow-[0_0_20px_rgba(251,191,36,0.55),inset_0_1px_1px_rgba(255,255,255,0.5)] group-hover:brightness-110 text-xs font-bold transition-all">
               <span>Vào đấu trường</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -254,7 +254,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-fuchsia-500/15 group-hover:bg-fuchsia-500/30 text-fuchsia-200 group-hover:text-white border border-fuchsia-400/40 text-xs font-semibold transition-colors">
+            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-gradient-to-r from-fuchsia-400 to-pink-500 text-white border border-fuchsia-200/60 shadow-[0_0_20px_rgba(232,121,249,0.55),inset_0_1px_1px_rgba(255,255,255,0.5)] group-hover:brightness-110 text-xs font-bold transition-all">
               <span>Vào cửa hàng</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>

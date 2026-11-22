@@ -437,7 +437,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
         <button
           type="button"
           onClick={startRun}
-          className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-pill bg-gradient-to-r from-indigo-500/85 to-blue-600/85 hover:from-indigo-500/95 hover:to-blue-600/95 text-white text-sm font-bold border border-indigo-300/60 shadow-[0_0_22px_rgba(99,102,241,0.42),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all"
+          className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-pill bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-500 hover:to-blue-600 text-white text-sm font-bold border border-indigo-300/60 shadow-[0_0_22px_rgba(99,102,241,0.42),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all"
         >
           <Play className="w-4 h-4 fill-white" />
           <span>Bắt đầu Standup Speed Run</span>
@@ -585,7 +585,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
         <button
           type="button"
           onClick={startRun}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-pill bg-gradient-to-r from-indigo-500/85 to-blue-600/85 hover:from-indigo-500/95 hover:to-blue-600/95 text-white text-sm font-bold border border-indigo-300/60 shadow-[0_0_22px_rgba(99,102,241,0.42),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-pill bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-500 hover:to-blue-600 text-white text-sm font-bold border border-indigo-300/60 shadow-[0_0_22px_rgba(99,102,241,0.42),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all"
         >
           <RotateCcw className="w-4 h-4" />
           <span>Chạy lại</span>
@@ -833,7 +833,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
             type="button"
             onClick={() => void submitCurrentTurn(false)}
             disabled={isEvaluating || !answerText.trim()}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-pill bg-gradient-to-r from-indigo-500/85 to-blue-600/85 hover:from-indigo-500/95 hover:to-blue-600/95 text-white text-xs sm:text-sm font-bold border border-indigo-300/60 shadow-[0_0_20px_rgba(99,102,241,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-pill bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-500 hover:to-blue-600 text-white text-xs sm:text-sm font-bold border border-indigo-300/60 shadow-[0_0_20px_rgba(99,102,241,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
           >
             {isEvaluating ? (
               <>

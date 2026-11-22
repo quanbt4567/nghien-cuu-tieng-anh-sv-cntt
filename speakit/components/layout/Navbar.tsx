@@ -324,7 +324,7 @@ export function Navbar() {
             className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-all shrink-0 whitespace-nowrap ${
               homeActive
                 ? "bg-cyan-500/25 border-cyan-400/50 text-cyan-200 shadow-[0_0_16px_rgba(6,182,212,0.28)]"
-                : "bg-white/[0.06] text-slate-200 border-white/15 hover:border-white/30 hover:bg-white/[0.14] hover:text-white"
+                : "bg-white/[0.14] text-white border-white/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] hover:border-cyan-300/60 hover:bg-white/[0.22]"
             }`}
           >
             <Home className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
@@ -345,7 +345,7 @@ export function Navbar() {
                   className={`flex items-center gap-1 lg:gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-all whitespace-nowrap ${
                     active || isOpen
                       ? "bg-cyan-500/25 border-cyan-400/50 text-cyan-200 shadow-[0_0_16px_rgba(6,182,212,0.28)]"
-                      : "bg-white/[0.06] text-slate-200 border-white/15 hover:border-white/30 hover:bg-white/[0.14] hover:text-white"
+                      : "bg-white/[0.14] text-white border-white/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] hover:border-cyan-300/60 hover:bg-white/[0.22]"
                   }`}
                 >
                   <span>{group.label}</span>
@@ -439,7 +439,7 @@ export function Navbar() {
                   className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-all shrink-0 whitespace-nowrap ${
                     shopActive
                       ? "bg-cyan-500/25 border-cyan-400/50 text-cyan-200 shadow-[0_0_16px_rgba(6,182,212,0.28)]"
-                      : "bg-white/[0.06] text-slate-200 border-white/15 hover:border-white/30 hover:bg-white/[0.14] hover:text-white"
+                      : "bg-white/[0.14] text-white border-white/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] hover:border-cyan-300/60 hover:bg-white/[0.22]"
                   }`}
                 >
                   <ShoppingBag className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
@@ -467,7 +467,7 @@ export function Navbar() {
                     ? `${identity.displayName} (${identity.transferCode})`
                     : identity.displayName
                 }
-                className="hidden md:flex shrink-0 items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-white/[0.08] border border-white/20 hover:border-cyan-300/45 hover:bg-white/[0.14] text-xs text-slate-100 transition-colors max-w-[120px] lg:max-w-[165px] xl:max-w-[220px]"
+                className="hidden 2xl:flex shrink-0 items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-white/[0.12] border border-white/20 hover:border-cyan-300/45 hover:bg-white/[0.14] text-xs text-slate-100 transition-colors max-w-[120px] lg:max-w-[165px] xl:max-w-[220px]"
               >
                 <User className="w-3.5 h-3.5 text-cyan-400 shrink-0" aria-hidden="true" />
                 <span className="font-semibold truncate hidden sm:inline md:hidden lg:inline">{identity.displayName}</span>

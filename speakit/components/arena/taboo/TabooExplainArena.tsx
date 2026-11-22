@@ -809,7 +809,7 @@ export function TabooExplainArena() {
                 type="button"
                 onClick={handleQuickPlayBot}
                 disabled={loadingAction !== null}
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500/85 to-orange-500/85 hover:from-amber-500/95 hover:to-orange-500/95 text-white font-bold text-sm border border-amber-300/60 shadow-[0_0_22px_rgba(245,158,11,0.42),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-sm border border-amber-300/60 shadow-[0_0_22px_rgba(245,158,11,0.42),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50"
               >
                 <Bot className="w-4 h-4" />
                 <span>
@@ -980,7 +980,7 @@ export function TabooExplainArena() {
               type="button"
               onClick={handleStartMatch}
               disabled={loadingAction !== null || room.players.length < 2}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500/85 to-orange-500/85 hover:from-amber-500/95 hover:to-orange-500/95 text-white font-bold text-sm border border-amber-300/60 shadow-[0_0_22px_rgba(245,158,11,0.42),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-sm border border-amber-300/60 shadow-[0_0_22px_rgba(245,158,11,0.42),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Play className="w-4 h-4" />
               <span>
@@ -1306,7 +1306,7 @@ export function TabooExplainArena() {
                     type="button"
                     onClick={isExplainer ? handleSubmitClue : handleSubmitGuess}
                     disabled={loadingAction !== null}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500/85 to-orange-500/85 hover:from-amber-500/95 hover:to-orange-500/95 text-white font-bold text-sm border border-amber-300/60 shadow-[0_0_20px_rgba(245,158,11,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-sm border border-amber-300/60 shadow-[0_0_20px_rgba(245,158,11,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50"
                   >
                     <Send className="w-4 h-4" />
                     <span>
@@ -1507,7 +1507,7 @@ export function TabooExplainArena() {
               <button
                 type="button"
                 onClick={handleResetRoom}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500/85 to-orange-500/85 hover:from-amber-500/95 hover:to-orange-500/95 text-white font-bold text-sm border border-amber-300/60 shadow-[0_0_20px_rgba(245,158,11,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)]"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-sm border border-amber-300/60 shadow-[0_0_20px_rgba(245,158,11,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)]"
               >
                 <RotateCcw className="w-4 h-4" />
                 <span>Play Again</span>

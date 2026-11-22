@@ -97,7 +97,7 @@ const ARENA_SHOWCASE_MODES: ArenaModeCard[] = [
     icon: Swords,
     badgeTone: "bg-violet-500/20 text-violet-300 border-violet-400/45",
     buttonTone:
-      "bg-gradient-to-r from-violet-500/85 to-purple-600/85 hover:from-violet-500/95 hover:to-purple-600/95 text-white border border-violet-300/60 shadow-[0_0_20px_rgba(139,92,246,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)]",
+      "bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-500 hover:to-purple-600 text-white border border-violet-300/60 shadow-[0_0_20px_rgba(139,92,246,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)]",
     cardAccent: "hover:border-violet-400/45",
     href: "/arena/duel",
   },
@@ -112,7 +112,7 @@ const ARENA_SHOWCASE_MODES: ArenaModeCard[] = [
     icon: MessageSquare,
     badgeTone: "bg-amber-500/20 text-amber-300 border-amber-400/45",
     buttonTone:
-      "bg-gradient-to-r from-amber-500/85 to-orange-500/85 hover:from-amber-500/95 hover:to-orange-500/95 text-white border border-amber-300/60 shadow-[0_0_20px_rgba(245,158,11,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)]",
+      "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-500 hover:to-orange-500 text-white border border-amber-300/60 shadow-[0_0_20px_rgba(245,158,11,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)]",
     cardAccent: "hover:border-amber-400/45",
     href: "/arena/explain-it-like-im-5",
   },
@@ -155,7 +155,7 @@ const ARENA_SHOWCASE_MODES: ArenaModeCard[] = [
     icon: Timer,
     badgeTone: "bg-indigo-500/20 text-indigo-300 border-indigo-400/45",
     buttonTone:
-      "bg-gradient-to-r from-indigo-500/85 to-blue-600/85 hover:from-indigo-500/95 hover:to-blue-600/95 text-white border border-indigo-300/60 shadow-[0_0_20px_rgba(99,102,241,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)]",
+      "bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-500 hover:to-blue-600 text-white border border-indigo-300/60 shadow-[0_0_20px_rgba(99,102,241,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)]",
     cardAccent: "hover:border-indigo-400/45",
     tab: "standup-speed-run",
   },
@@ -478,7 +478,7 @@ export default function ArenaPage() {
           onClick={() => setActiveTab("standup-speed-run")}
           className={`inline-flex items-center gap-2 px-4 py-2 rounded-pill text-xs sm:text-sm font-semibold transition-all ${
             activeTab === "standup-speed-run"
-              ? "bg-gradient-to-r from-indigo-500/85 to-blue-600/85 text-white border border-indigo-300/60 shadow-[0_0_20px_rgba(99,102,241,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)]"
+              ? "bg-gradient-to-r from-indigo-500 to-blue-600 text-white border border-indigo-300/60 shadow-[0_0_20px_rgba(99,102,241,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)]"
               : "liquid-glass-pill text-slate-300 hover:text-white hover:border-white/35"
           }`}
         >
