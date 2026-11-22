@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  startTransition,
   useCallback,
   useEffect,
   useMemo,
@@ -986,7 +987,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                   <button
                     key={cat}
                     type="button"
-                    onClick={() => setActiveCategory(cat)}
+                    onClick={() => startTransition(() => setActiveCategory(cat))}
                     className={`text-left rounded-xl border border-[#1A1714]/15 p-2.5 transition-all ${
                       activeCategory === cat
                         ? "bg-white shadow-sm"
@@ -1042,7 +1043,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                 type="button"
                 role="tab"
                 aria-selected={selected}
-                onClick={() => setActiveCategory(cat)}
+                onClick={() => startTransition(() => setActiveCategory(cat))}
                 className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#1A1714]/15 text-xs font-bold transition-all ${
                   selected
                     ? "bg-[#1A1714] text-white shadow-soft"

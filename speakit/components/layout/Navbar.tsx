@@ -21,6 +21,7 @@ import {
   LogIn,
   LogOut,
   ShoppingBag,
+  ShieldCheck,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -138,7 +139,12 @@ export function Navbar() {
   const [gamification, setGamification] = useState<GamificationState>(INITIAL_GAMIFICATION);
   const [guestPlayer, setGuestPlayer] = useState<PublicGuestPlayer | null>(null);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
   const headerRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    setPendingHref(null);
+  }, [pathname]);
 
   useEffect(() => {
     let active = true;
@@ -270,7 +276,7 @@ export function Navbar() {
       {!shopActive && (
         <CustomCursorTrail effectId={guestPlayer?.equippedCosmetics?.cursor_effect ?? null} />
       )}
-      <header ref={headerRef} className="sticky top-0 z-40 bg-paper border-b border-ink/15">
+      <header ref={headerRef} className="sticky top-0 z-40 bg-white/90 md:bg-paper backdrop-blur-md md:backdrop-blur-none border-b border-ink/10 md:border-ink/15">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 h-14 md:h-16 flex items-center justify-between gap-2 lg:gap-4">
         <Link
           href="/"
@@ -482,6 +488,17 @@ export function Navbar() {
               </Link>
 
               <InAppNotificationBell lastPracticeDate={gamification.lastPracticeDate} />
+
+              {guestPlayer?.email?.trim().toLowerCase() === "minhquanthcsbt@gmail.com" && (
+                <Link
+                  href="/admin"
+                  aria-label="Mở trang quản trị Admin"
+                  className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-pill bg-ink text-white border border-ink shadow-soft text-xs font-semibold hover:bg-ink/90 transition-colors"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" aria-hidden="true" />
+                  <span className="hidden sm:inline">Admin</span>
+                </Link>
+              )}
             </div>
           )}
         </div>
@@ -495,11 +512,15 @@ export function Navbar() {
         >
           <div className="grid grid-cols-5 max-w-lg mx-auto">
             {MOBILE_TABS.map(({ href, label, icon: Icon }) => {
-              const active = isItemActive(pathname, href);
+              const active = pendingHref ? pendingHref === href : isItemActive(pathname, href);
               return (
                 <Link
                   key={href}
                   href={href}
+                  prefetch
+                  onClick={() => {
+                    if (pathname !== href) setPendingHref(href);
+                  }}
                   aria-current={active ? "page" : undefined}
                   className={`flex flex-col items-center justify-center gap-0.5 min-h-[54px] px-1 py-1.5 text-[11px] active:scale-95 transition-transform ${
                     active
