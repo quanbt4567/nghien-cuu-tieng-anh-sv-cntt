@@ -575,7 +575,7 @@ export function FeatureGuideDock() {
         onClick={handleOpenManual}
         aria-label="Hướng dẫn"
         title={`Mở hướng dẫn: ${guide.title}`}
-        className="fixed bottom-3 right-3 sm:bottom-5 sm:right-5 z-40 inline-flex items-center justify-center gap-1.5 p-2.5 sm:px-3.5 sm:py-2 rounded-pill bg-white hover:bg-paper-muted text-ink border border-ink/20 text-xs font-semibold shadow-card shadow-hard-press transition-all"
+        className="fixed bottom-20 right-3 md:bottom-5 md:right-5 z-40 inline-flex items-center justify-center gap-1.5 p-2.5 sm:px-3.5 sm:py-2 rounded-pill bg-white hover:bg-paper-muted text-ink border border-ink/20 text-xs font-semibold shadow-card shadow-hard-press transition-all"
       >
         <HelpCircle className="w-4 h-4 text-accent shrink-0" aria-hidden="true" />
         <span className="hidden sm:inline">Hướng dẫn</span>
