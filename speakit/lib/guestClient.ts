@@ -1,9 +1,11 @@
 "use client";
 
 import { rewardPracticePoints } from "../app/actions/leaderboard";
+import { normalizeEquippedCosmetics } from "./cosmetics";
 import type { PublicGuestPlayer } from "./db";
 
 export const GUEST_TRANSFER_CODE_KEY = "speakit_transfer_code_v1";
+export const GUEST_SESSION_TOKEN_KEY = "speakit_session_token_v1";
 export const GUEST_PROFILE_CACHE_KEY = "speakit_guest_profile_cache_v1";
 export const GUEST_PROFILE_UPDATED_EVENT = "speakit:guest-profile-updated";
 export const OPEN_AUTH_MODAL_EVENT = "speakit:open-auth-modal";
@@ -35,6 +37,30 @@ export function saveBackupTransferCode(code: string): void {
   }
 }
 
+export function readBackupSessionToken(): string | undefined {
+  if (typeof window === "undefined") return undefined;
+  try {
+    const raw = window.localStorage.getItem(GUEST_SESSION_TOKEN_KEY)?.trim();
+    return raw || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+export function saveBackupSessionToken(token: string | null | undefined): void {
+  if (typeof window === "undefined") return;
+  try {
+    const cleaned = typeof token === "string" ? token.trim() : "";
+    if (cleaned) {
+      window.localStorage.setItem(GUEST_SESSION_TOKEN_KEY, cleaned);
+    } else {
+      window.localStorage.removeItem(GUEST_SESSION_TOKEN_KEY);
+    }
+  } catch {
+    return;
+  }
+}
+
 export function readCachedGuestProfile(): PublicGuestPlayer | null {
   if (typeof window === "undefined") return null;
   try {
@@ -53,6 +79,10 @@ export function readCachedGuestProfile(): PublicGuestPlayer | null {
       id: parsed.id,
       transferCode: parsed.transferCode,
       displayName: parsed.displayName,
+      avatarUrl:
+        typeof parsed.avatarUrl === "string" && parsed.avatarUrl.length > 0
+          ? parsed.avatarUrl
+          : null,
       email:
         typeof parsed.email === "string" && parsed.email.trim()
           ? parsed.email.trim().toLowerCase()
@@ -75,6 +105,7 @@ export function readCachedGuestProfile(): PublicGuestPlayer | null {
         typeof parsed.equippedRing === "string" && parsed.equippedRing
           ? parsed.equippedRing
           : "default",
+      equippedCosmetics: normalizeEquippedCosmetics(parsed.equippedCosmetics),
       ownedItems: Array.isArray(parsed.ownedItems)
         ? parsed.ownedItems.filter((item): item is string => typeof item === "string")
         : [],
@@ -123,6 +154,7 @@ export function saveCachedGuestProfile(player: PublicGuestPlayer | null): void {
     } else {
       window.localStorage.removeItem(GUEST_PROFILE_CACHE_KEY);
       window.localStorage.removeItem(GUEST_TRANSFER_CODE_KEY);
+      window.localStorage.removeItem(GUEST_SESSION_TOKEN_KEY);
     }
   } catch {
   }
@@ -161,7 +193,8 @@ export async function reportGuestPracticePoints(
     const res = await rewardPracticePoints(
       scenarioId,
       awardedPoints,
-      readBackupTransferCode()
+      readBackupTransferCode(),
+      readBackupSessionToken()
     );
     if (res.player) {
       saveCachedGuestProfile(res.player);

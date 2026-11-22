@@ -338,6 +338,57 @@ test("getPlayerArenaRuns falls back gracefully in offline mode", async () => {
   });
 });
 
+test("guestClient caches and clears backup session token alongside profile and transfer code", () => {
+  const {
+    GUEST_SESSION_TOKEN_KEY,
+    GUEST_TRANSFER_CODE_KEY,
+    GUEST_PROFILE_CACHE_KEY,
+    readBackupSessionToken,
+    saveBackupSessionToken,
+    readCachedGuestProfile,
+    saveCachedGuestProfile,
+  } = jiti(resolve(__dirname, "../lib/guestClient.ts"));
+
+  const win = installWindowMock();
+  try {
+    assert.equal(readBackupSessionToken(), undefined);
+    saveBackupSessionToken("  tok_123456789012345678901234567890  ");
+    assert.equal(
+      readBackupSessionToken(),
+      "tok_123456789012345678901234567890"
+    );
+
+    saveCachedGuestProfile({
+      id: "acc-99",
+      transferCode: "DEV-9988AA",
+      displayName: "Minh Quân",
+      avatarUrl: "preset:cyber-fox",
+      email: "MinhQuan@Gmail.com",
+      itCoins: 25,
+      totalPoints: 25000,
+      streakDays: 7,
+      lastPracticeDate: "2026-11-22",
+      equippedTitle: "Lead Tech Speaker",
+      equippedRing: "default",
+      ownedItems: ["title-bug-whisperer"],
+    });
+
+    const cached = readCachedGuestProfile();
+    assert.equal(cached?.email, "minhquan@gmail.com");
+    assert.equal(cached?.avatarUrl, "preset:cyber-fox");
+    assert.equal(win.store.get(GUEST_TRANSFER_CODE_KEY), "DEV-9988AA");
+
+    saveCachedGuestProfile(null);
+    assert.equal(readCachedGuestProfile(), null);
+    assert.equal(readBackupSessionToken(), undefined);
+    assert.equal(win.store.has(GUEST_SESSION_TOKEN_KEY), false);
+    assert.equal(win.store.has(GUEST_TRANSFER_CODE_KEY), false);
+    assert.equal(win.store.has(GUEST_PROFILE_CACHE_KEY), false);
+  } finally {
+    win.restore();
+  }
+});
+
 
 
 

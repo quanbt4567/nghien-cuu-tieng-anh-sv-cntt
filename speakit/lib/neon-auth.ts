@@ -13,6 +13,7 @@ import {
 } from "./profileStats";
 
 export const GUEST_SESSION_COOKIE_NAME = "speakit_session_token";
+export const GUEST_SESSION_STORAGE_KEY = "speakit_session_token_v1";
 export const GUEST_TRANSFER_STORAGE_KEY = "speakit_transfer_code_v1";
 export const GUEST_COOKIE_MAX_AGE_SECONDS = 400 * 24 * 60 * 60;
 export const MAX_GUEST_ACCOUNTS_PER_IP_24H = 3;
@@ -59,6 +60,13 @@ export async function cleanupExpiredZeroCoinGuests(options?: {
         AND updated_at < NOW() - INTERVAL '7 days'
       RETURNING id
     `) as Array<{ id: string }>;
+    try {
+      await sql`
+        DELETE FROM guest_sessions
+        WHERE expires_at < NOW()
+      `;
+    } catch {
+    }
     return deleted.length;
   } catch {
     return 0;
@@ -176,6 +184,15 @@ export function normalizeTransferCode(code: string): string | null {
   return cleaned;
 }
 
+export function normalizeSessionToken(raw: unknown): string | null {
+  if (typeof raw !== "string") return null;
+  const cleaned = raw.trim();
+  if (cleaned.length < 24 || cleaned.length > 256) return null;
+  if (normalizeTransferCode(cleaned)) return null;
+  if (!/^[A-Za-z0-9_-]+$/.test(cleaned)) return null;
+  return cleaned;
+}
+
 export function parseOwnedItems(raw: unknown): string[] {
   if (Array.isArray(raw)) {
     return raw.filter((item): item is string => typeof item === "string");
@@ -221,17 +238,174 @@ export function serializePublicGuestPlayer(
   };
 }
 
-function setGuestSessionCookie(rawToken: string): void {
-  cookies().set(GUEST_SESSION_COOKIE_NAME, rawToken, {
+export function shouldUseSecureCookie(
+  headersList?: { get(name: string): string | null | undefined } | null
+): boolean {
+  let targetHeaders = headersList;
+  if (targetHeaders === undefined) {
+    try {
+      targetHeaders = headers();
+    } catch {
+      targetHeaders = null;
+    }
+  }
+  if (targetHeaders) {
+    const forwardedProto = targetHeaders
+      .get("x-forwarded-proto")
+      ?.split(",")[0]
+      ?.trim()
+      .toLowerCase();
+    if (forwardedProto === "https") return true;
+    if (forwardedProto === "http") return false;
+    const origin = targetHeaders.get("origin") || targetHeaders.get("referer") || "";
+    if (origin.startsWith("https://")) return true;
+    if (origin.startsWith("http://")) return false;
+  }
+  return process.env.NODE_ENV === "production";
+}
+
+export function buildSessionCookieOptions(
+  secure: boolean,
+  maxAgeSeconds = GUEST_COOKIE_MAX_AGE_SECONDS,
+  nowMs = Date.now()
+): {
+  httpOnly: true;
+  sameSite: "lax";
+  path: "/";
+  maxAge: number;
+  expires: Date;
+  secure: boolean;
+} {
+  return {
     httpOnly: true,
     sameSite: "lax",
     path: "/",
-    maxAge: GUEST_COOKIE_MAX_AGE_SECONDS,
-    secure: process.env.NODE_ENV === "production",
-  });
+    maxAge: maxAgeSeconds,
+    expires: maxAgeSeconds <= 0 ? new Date(0) : new Date(nowMs + maxAgeSeconds * 1000),
+    secure,
+  };
 }
 
-export async function readExistingGuestPlayer(): Promise<PublicGuestPlayer | null> {
+function setGuestSessionCookie(rawToken: string): void {
+  try {
+    cookies().set(
+      GUEST_SESSION_COOKIE_NAME,
+      rawToken,
+      buildSessionCookieOptions(shouldUseSecureCookie())
+    );
+  } catch {
+  }
+}
+
+function clearGuestSessionCookie(): void {
+  try {
+    cookies().set(
+      GUEST_SESSION_COOKIE_NAME,
+      "",
+      buildSessionCookieOptions(shouldUseSecureCookie(), 0)
+    );
+  } catch {
+    try {
+      cookies().delete(GUEST_SESSION_COOKIE_NAME);
+    } catch {
+    }
+  }
+}
+
+function readSessionCookie(): string | null {
+  try {
+    const value = cookies().get(GUEST_SESSION_COOKIE_NAME)?.value?.trim();
+    if (!value || value.length > 256) return null;
+    return value;
+  } catch {
+    return null;
+  }
+}
+
+async function createSessionForPlayer(
+  sql: NonNullable<ReturnType<typeof getDbClient>>,
+  playerId: string,
+  rawToken: string
+): Promise<void> {
+  const tokenHash = hashDeviceToken(rawToken);
+  await sql`
+    INSERT INTO guest_sessions (
+      token_hash,
+      player_id,
+      created_at,
+      last_used_at,
+      expires_at
+    )
+    VALUES (
+      ${tokenHash},
+      ${playerId},
+      NOW(),
+      NOW(),
+      NOW() + INTERVAL '400 days'
+    )
+    ON CONFLICT (token_hash) DO UPDATE
+    SET
+      player_id = EXCLUDED.player_id,
+      last_used_at = NOW(),
+      expires_at = NOW() + INTERVAL '400 days'
+  `;
+}
+
+async function touchSessionForPlayer(
+  sql: NonNullable<ReturnType<typeof getDbClient>>,
+  playerId: string,
+  rawToken: string
+): Promise<void> {
+  try {
+    await createSessionForPlayer(sql, playerId, rawToken);
+  } catch {
+  }
+}
+
+async function findPlayerByRawToken(
+  sql: NonNullable<ReturnType<typeof getDbClient>>,
+  rawToken: string
+): Promise<PublicGuestPlayer | null> {
+  const cleaned = typeof rawToken === "string" ? rawToken.trim() : "";
+  if (!cleaned || cleaned.length > 256) return null;
+  const tokenHash = hashDeviceToken(cleaned);
+  const rows = (await sql`
+    SELECT
+      gp.id,
+      gp.device_token_hash,
+      gp.transfer_code,
+      gp.display_name,
+      gp.avatar_url,
+      gp.email,
+      gp.it_coins,
+      gp.total_points,
+      gp.streak_days,
+      gp.last_practice_date,
+      gp.equipped_title,
+      gp.equipped_ring,
+      gp.equipped_cosmetics,
+      gp.owned_items,
+      gp.created_at,
+      gp.updated_at
+    FROM guest_players gp
+    WHERE gp.device_token_hash = ${tokenHash}
+       OR gp.id = (
+         SELECT gs.player_id
+         FROM guest_sessions gs
+         WHERE gs.token_hash = ${tokenHash}
+           AND gs.expires_at > NOW()
+         LIMIT 1
+       )
+    LIMIT 1
+  `) as GuestPlayerRow[];
+
+  if (rows.length === 0) return null;
+  return serializePublicGuestPlayer(rows[0]);
+}
+
+export async function readExistingGuestPlayer(
+  backupSessionToken?: string
+): Promise<PublicGuestPlayer | null> {
   const sql = getDbClient();
   if (!sql) return null;
 
@@ -240,51 +414,108 @@ export async function readExistingGuestPlayer(): Promise<PublicGuestPlayer | nul
 
   void cleanupExpiredZeroCoinGuests();
 
-  const rawToken = cookies().get(GUEST_SESSION_COOKIE_NAME)?.value;
-  if (!rawToken) return null;
-
   try {
-    const tokenHash = hashDeviceToken(rawToken);
-    const rows = (await sql`
-      SELECT
-        id,
-        device_token_hash,
-        transfer_code,
-        display_name,
-        avatar_url,
-        email,
-        it_coins,
-        total_points,
-        streak_days,
-        last_practice_date,
-        equipped_title,
-        equipped_ring,
-        equipped_cosmetics,
-        owned_items,
-        created_at,
-        updated_at
-      FROM guest_players
-      WHERE device_token_hash = ${tokenHash}
-      LIMIT 1
-    `) as GuestPlayerRow[];
+    const cookieToken = readSessionCookie();
+    if (cookieToken) {
+      const player = await findPlayerByRawToken(sql, cookieToken);
+      if (player) return player;
+    }
 
-    if (rows.length === 0) return null;
-    return serializePublicGuestPlayer(rows[0]);
+    const candidateBackup = normalizeSessionToken(backupSessionToken);
+    if (candidateBackup && candidateBackup !== cookieToken) {
+      const player = await findPlayerByRawToken(sql, candidateBackup);
+      if (player) {
+        await touchSessionForPlayer(sql, player.id, candidateBackup);
+        setGuestSessionCookie(candidateBackup);
+        return player;
+      }
+    }
+
+    return null;
   } catch {
     return null;
   }
 }
 
+export async function hydrateGuestSession(
+  backupTransferCode?: string,
+  backupSessionToken?: string
+): Promise<{
+  mode: "online" | "offline";
+  player: PublicGuestPlayer | null;
+  sessionToken?: string;
+}> {
+  const sql = getDbClient();
+  if (!sql) {
+    return { mode: "offline", player: null };
+  }
+
+  const ready = await ensureGuestDatabaseReady();
+  if (!ready) {
+    return { mode: "offline", player: null };
+  }
+
+  void cleanupExpiredZeroCoinGuests();
+
+  try {
+    const cookieToken = readSessionCookie();
+    if (cookieToken) {
+      const player = await findPlayerByRawToken(sql, cookieToken);
+      if (player) {
+        await touchSessionForPlayer(sql, player.id, cookieToken);
+        setGuestSessionCookie(cookieToken);
+        return { mode: "online", player, sessionToken: cookieToken };
+      }
+    }
+
+    const candidateBackupToken =
+      normalizeSessionToken(backupSessionToken) ??
+      normalizeSessionToken(backupTransferCode);
+
+    if (candidateBackupToken && candidateBackupToken !== cookieToken) {
+      const player = await findPlayerByRawToken(sql, candidateBackupToken);
+      if (player) {
+        await touchSessionForPlayer(sql, player.id, candidateBackupToken);
+        setGuestSessionCookie(candidateBackupToken);
+        return { mode: "online", player, sessionToken: candidateBackupToken };
+      }
+    }
+
+    const normalizedBackupCode =
+      typeof backupTransferCode === "string"
+        ? normalizeTransferCode(backupTransferCode)
+        : null;
+
+    if (normalizedBackupCode) {
+      const restored = await restoreByTransferCode(normalizedBackupCode);
+      if (restored.ok && restored.player) {
+        return {
+          mode: "online",
+          player: restored.player,
+          ...(restored.sessionToken ? { sessionToken: restored.sessionToken } : {}),
+        };
+      }
+    }
+
+    return { mode: "online", player: null };
+  } catch {
+    return { mode: "offline", player: null };
+  }
+}
+
 export async function resolveOrCreateGuestSession(
-  _backupTransferCode?: string
+  backupTransferCode?: string,
+  backupSessionToken?: string
 ): Promise<PublicGuestPlayer | null> {
-  return readExistingGuestPlayer();
+  const session = await hydrateGuestSession(backupTransferCode, backupSessionToken);
+  return session.player;
 }
 
 export async function restoreByTransferCode(code: string): Promise<{
   ok: boolean;
   mode: "online" | "offline";
   player: PublicGuestPlayer | null;
+  sessionToken?: string;
   error?: string;
 }> {
   const normalized = normalizeTransferCode(code);
@@ -382,11 +613,13 @@ export async function restoreByTransferCode(code: string): Promise<{
       };
     }
 
+    await createSessionForPlayer(sql, updated[0].id, rawToken);
     setGuestSessionCookie(rawToken);
     return {
       ok: true,
       mode: "online",
       player: serializePublicGuestPlayer(updated[0]),
+      sessionToken: rawToken,
     };
   } catch {
     return {
@@ -407,6 +640,7 @@ export async function registerWithEmailPassword(input: {
   ok: boolean;
   mode: "online" | "offline";
   player: PublicGuestPlayer | null;
+  sessionToken?: string;
   error?: string;
 }> {
   const email = normalizeEmail(input.email);
@@ -551,11 +785,13 @@ export async function registerWithEmailPassword(input: {
       `) as GuestPlayerRow[];
 
       if (updated.length > 0) {
+        await createSessionForPlayer(sql, updated[0].id, rawToken);
         setGuestSessionCookie(rawToken);
         return {
           ok: true,
           mode: "online",
           player: serializePublicGuestPlayer(updated[0]),
+          sessionToken: rawToken,
         };
       }
 
@@ -624,11 +860,13 @@ export async function registerWithEmailPassword(input: {
         `) as GuestPlayerRow[];
 
         if (inserted.length > 0) {
+          await createSessionForPlayer(sql, inserted[0].id, rawToken);
           setGuestSessionCookie(rawToken);
           return {
             ok: true,
             mode: "online",
             player: serializePublicGuestPlayer(inserted[0]),
+            sessionToken: rawToken,
           };
         }
       } catch {
@@ -659,6 +897,7 @@ export async function loginWithEmailPassword(input: {
   ok: boolean;
   mode: "online" | "offline";
   player: PublicGuestPlayer | null;
+  sessionToken?: string;
   error?: string;
 }> {
   const email = normalizeEmail(input.email);
@@ -720,11 +959,9 @@ export async function loginWithEmailPassword(input: {
     }
 
     const rawToken = generateSessionToken();
-    const tokenHash = hashDeviceToken(rawToken);
     const updated = (await sql`
       UPDATE guest_players
       SET
-        device_token_hash = ${tokenHash},
         updated_at = NOW()
       WHERE id = ${rows[0].id}
       RETURNING
@@ -755,11 +992,13 @@ export async function loginWithEmailPassword(input: {
       };
     }
 
+    await createSessionForPlayer(sql, updated[0].id, rawToken);
     setGuestSessionCookie(rawToken);
     return {
       ok: true,
       mode: "online",
       player: serializePublicGuestPlayer(updated[0]),
+      sessionToken: rawToken,
     };
   } catch {
     return {
@@ -771,29 +1010,39 @@ export async function loginWithEmailPassword(input: {
   }
 }
 
-export async function logoutGuestSession(): Promise<{ ok: boolean }> {
+export async function logoutGuestSession(
+  backupSessionToken?: string
+): Promise<{ ok: boolean }> {
+  const rawTokens = new Set<string>();
+  const cookieToken = readSessionCookie();
+  if (cookieToken) rawTokens.add(cookieToken);
+  const normalizedBackup = normalizeSessionToken(backupSessionToken);
+  if (normalizedBackup) rawTokens.add(normalizedBackup);
+
   try {
-    const rawToken = cookies().get(GUEST_SESSION_COOKIE_NAME)?.value;
-    if (rawToken) {
+    if (rawTokens.size > 0) {
       const sql = getDbClient();
       if (sql && (await ensureGuestDatabaseReady())) {
-        const oldHash = hashDeviceToken(rawToken);
-        const rotatedHash = hashDeviceToken(generateSessionToken());
-        await sql`
-          UPDATE guest_players
-          SET device_token_hash = ${rotatedHash},
-              updated_at = NOW()
-          WHERE device_token_hash = ${oldHash}
-        `;
+        for (const rawToken of rawTokens) {
+          const oldHash = hashDeviceToken(rawToken);
+          await sql`
+            DELETE FROM guest_sessions
+            WHERE token_hash = ${oldHash}
+          `;
+          const rotatedHash = hashDeviceToken(generateSessionToken());
+          await sql`
+            UPDATE guest_players
+            SET device_token_hash = ${rotatedHash},
+                updated_at = NOW()
+            WHERE device_token_hash = ${oldHash}
+          `;
+        }
       }
     }
   } catch {
   }
 
-  try {
-    cookies().delete(GUEST_SESSION_COOKIE_NAME);
-  } catch {
-  }
+  clearGuestSessionCookie();
   return { ok: true };
 }
 

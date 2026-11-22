@@ -201,6 +201,23 @@ export async function initializeGuestPlayersSchema(
           ON guest_players (it_coins, updated_at)
         `,
         sql`
+          CREATE TABLE IF NOT EXISTS guest_sessions (
+            token_hash TEXT PRIMARY KEY,
+            player_id TEXT NOT NULL REFERENCES guest_players(id) ON DELETE CASCADE,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            last_used_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            expires_at TIMESTAMPTZ NOT NULL DEFAULT (NOW() + INTERVAL '400 days')
+          )
+        `,
+        sql`
+          CREATE INDEX IF NOT EXISTS idx_guest_sessions_player_id
+          ON guest_sessions (player_id)
+        `,
+        sql`
+          CREATE INDEX IF NOT EXISTS idx_guest_sessions_expires_at
+          ON guest_sessions (expires_at)
+        `,
+        sql`
           CREATE TABLE IF NOT EXISTS research_articles (
             id UUID PRIMARY KEY,
             slug VARCHAR(160) UNIQUE NOT NULL,

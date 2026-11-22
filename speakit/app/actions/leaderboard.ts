@@ -16,6 +16,7 @@ import {
 } from "../../lib/db";
 import { computeNextStreak } from "../../lib/gamification";
 import {
+  hydrateGuestSession,
   loginWithEmailPassword,
   logoutGuestSession,
   normalizeTransferCode,
@@ -36,22 +37,21 @@ function getUtcTodayDate(): string {
 }
 
 export async function initOrHydrateGuestSession(
-  backupTransferCode?: string
+  backupTransferCode?: string,
+  backupSessionToken?: string
 ): Promise<{
   mode: "online" | "offline";
   player: PublicGuestPlayer | null;
+  sessionToken?: string;
 }> {
-  const player = await resolveOrCreateGuestSession(backupTransferCode);
-  if (!player) {
-    return { mode: "offline", player: null };
-  }
-  return { mode: "online", player };
+  return hydrateGuestSession(backupTransferCode, backupSessionToken);
 }
 
 export async function restoreByTransferCode(code: string): Promise<{
   ok: boolean;
   mode: "online" | "offline";
   player: PublicGuestPlayer | null;
+  sessionToken?: string;
   error?: string;
 }> {
   return restoreGuestByTransferCode(code);
@@ -66,6 +66,7 @@ export async function registerAccountAction(input: {
   ok: boolean;
   mode: "online" | "offline";
   player: PublicGuestPlayer | null;
+  sessionToken?: string;
   error?: string;
 }> {
   return registerWithEmailPassword(input);
@@ -78,16 +79,22 @@ export async function loginAccountAction(input: {
   ok: boolean;
   mode: "online" | "offline";
   player: PublicGuestPlayer | null;
+  sessionToken?: string;
   error?: string;
 }> {
   return loginWithEmailPassword(input);
 }
 
-export async function logoutAccountAction(): Promise<{ ok: boolean }> {
-  return logoutGuestSession();
+export async function logoutAccountAction(
+  backupSessionToken?: string
+): Promise<{ ok: boolean }> {
+  return logoutGuestSession(backupSessionToken);
 }
 
-export async function getTopPlayers(limit = 50): Promise<{
+export async function getTopPlayers(
+  limit = 50,
+  backupSessionToken?: string
+): Promise<{
   mode: "online" | "offline";
   players: LeaderboardEntry[];
   currentPlayer: PublicGuestPlayer | null;
@@ -119,7 +126,7 @@ export async function getTopPlayers(limit = 50): Promise<{
       : 50;
 
   try {
-    const currentPlayer = await readExistingGuestPlayer();
+    const currentPlayer = await readExistingGuestPlayer(backupSessionToken);
 
     const rows = (await sql`
       WITH active_players AS (
@@ -309,7 +316,8 @@ export async function getTopPlayers(limit = 50): Promise<{
 export async function rewardPracticePoints(
   scenarioId: string,
   rawScore: number,
-  backupTransferCode?: string
+  backupTransferCode?: string,
+  backupSessionToken?: string
 ): Promise<{
   ok: boolean;
   mode: "online" | "offline";
@@ -344,7 +352,10 @@ export async function rewardPracticePoints(
     };
   }
 
-  const player = await resolveOrCreateGuestSession(backupTransferCode);
+  const player = await resolveOrCreateGuestSession(
+    backupTransferCode,
+    backupSessionToken
+  );
   if (!player) {
     return {
       ok: true,
@@ -443,7 +454,8 @@ export async function rewardPracticePoints(
 export async function purchaseAndEquipCosmetic(
   itemId: string,
   price: number,
-  backupTransferCode?: string
+  backupTransferCode?: string,
+  backupSessionToken?: string
 ): Promise<{
   ok: boolean;
   mode: "online" | "offline";
@@ -479,7 +491,10 @@ export async function purchaseAndEquipCosmetic(
     };
   }
 
-  const player = await resolveOrCreateGuestSession(backupTransferCode);
+  const player = await resolveOrCreateGuestSession(
+    backupTransferCode,
+    backupSessionToken
+  );
   if (!player) {
     return {
       ok: false,
@@ -515,6 +530,7 @@ export async function purchaseAndEquipCosmetic(
           transfer_code,
           display_name,
           avatar_url,
+          email,
           it_coins,
           total_points,
           streak_days,
@@ -613,7 +629,8 @@ export async function purchaseAndEquipCosmetic(
 
 export async function updateGuestDisplayName(
   rawName: string,
-  backupTransferCode?: string
+  backupTransferCode?: string,
+  backupSessionToken?: string
 ): Promise<{
   ok: boolean;
   mode: "online" | "offline";
@@ -644,7 +661,10 @@ export async function updateGuestDisplayName(
     };
   }
 
-  const player = await resolveOrCreateGuestSession(backupTransferCode);
+  const player = await resolveOrCreateGuestSession(
+    backupTransferCode,
+    backupSessionToken
+  );
   if (!player) {
     return {
       ok: false,
@@ -697,7 +717,8 @@ export async function updateGuestDisplayName(
 
 export async function updateGuestAvatar(
   rawAvatarUrl: string | null,
-  backupTransferCode?: string
+  backupTransferCode?: string,
+  backupSessionToken?: string
 ): Promise<{
   ok: boolean;
   mode: "online" | "offline";
@@ -740,7 +761,10 @@ export async function updateGuestAvatar(
     };
   }
 
-  const player = await resolveOrCreateGuestSession(backupTransferCode);
+  const player = await resolveOrCreateGuestSession(
+    backupTransferCode,
+    backupSessionToken
+  );
   if (!player) {
     return {
       ok: false,
@@ -794,7 +818,8 @@ export async function updateGuestAvatar(
 export async function equipOwnedCosmetic(
   category: CosmeticCategory,
   itemId: string,
-  backupTransferCode?: string
+  backupTransferCode?: string,
+  backupSessionToken?: string
 ): Promise<{
   ok: boolean;
   mode: "online" | "offline";
@@ -830,7 +855,10 @@ export async function equipOwnedCosmetic(
     };
   }
 
-  const player = await resolveOrCreateGuestSession(backupTransferCode);
+  const player = await resolveOrCreateGuestSession(
+    backupTransferCode,
+    backupSessionToken
+  );
   if (!player) {
     return {
       ok: false,
@@ -893,7 +921,8 @@ export async function equipOwnedCosmetic(
 
 export async function unequipCosmeticSlot(
   category: CosmeticCategory,
-  backupTransferCode?: string
+  backupTransferCode?: string,
+  backupSessionToken?: string
 ): Promise<{
   ok: boolean;
   mode: "online" | "offline";
@@ -919,7 +948,10 @@ export async function unequipCosmeticSlot(
     };
   }
 
-  const player = await resolveOrCreateGuestSession(backupTransferCode);
+  const player = await resolveOrCreateGuestSession(
+    backupTransferCode,
+    backupSessionToken
+  );
   if (!player) {
     return {
       ok: false,
@@ -972,7 +1004,8 @@ export async function unequipCosmeticSlot(
 }
 
 export async function getPlayerArenaRuns(
-  backupTransferCode?: string
+  backupTransferCode?: string,
+  backupSessionToken?: string
 ): Promise<{
   mode: "online" | "offline";
   runs: ArenaRunRecord[];
@@ -987,7 +1020,7 @@ export async function getPlayerArenaRuns(
     return { mode: "offline", runs: [] };
   }
 
-  const player = await readExistingGuestPlayer();
+  const player = await readExistingGuestPlayer(backupSessionToken);
   const transferCode =
     player?.transferCode ??
     (backupTransferCode ? normalizeTransferCode(backupTransferCode) : null);

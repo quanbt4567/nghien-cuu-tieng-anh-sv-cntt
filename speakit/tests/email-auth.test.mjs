@@ -10,6 +10,12 @@ const require = createRequire(import.meta.url);
 const jiti = require("jiti")(__filename);
 
 const {
+  GUEST_COOKIE_MAX_AGE_SECONDS,
+  GUEST_SESSION_STORAGE_KEY,
+  buildSessionCookieOptions,
+  shouldUseSecureCookie,
+  generateSessionToken,
+  normalizeSessionToken,
   normalizeEmail,
   validatePassword,
   hashPassword,
@@ -124,4 +130,78 @@ test("registerWithEmailPassword and loginWithEmailPassword validate inputs and d
     assert.equal(loginOffline.ok, false);
     assert.equal(loginOffline.mode, "offline");
   });
+});
+
+test("buildSessionCookieOptions and shouldUseSecureCookie configure persistent 400-day HttpOnly cookies", () => {
+  assert.equal(GUEST_SESSION_STORAGE_KEY, "speakit_session_token_v1");
+  assert.ok(GUEST_COOKIE_MAX_AGE_SECONDS >= 90 * 24 * 60 * 60);
+
+  const nowMs = 1700000000000;
+  const opts = buildSessionCookieOptions(true, GUEST_COOKIE_MAX_AGE_SECONDS, nowMs);
+  assert.equal(opts.httpOnly, true);
+  assert.equal(opts.sameSite, "lax");
+  assert.equal(opts.path, "/");
+  assert.equal(opts.secure, true);
+  assert.equal(opts.maxAge, GUEST_COOKIE_MAX_AGE_SECONDS);
+  assert.equal(opts.expires.getTime(), nowMs + GUEST_COOKIE_MAX_AGE_SECONDS * 1000);
+
+  const clearOpts = buildSessionCookieOptions(false, 0, nowMs);
+  assert.equal(clearOpts.maxAge, 0);
+  assert.equal(clearOpts.expires.getTime(), 0);
+  assert.equal(clearOpts.secure, false);
+
+  const httpsHeaders = new Headers({ "x-forwarded-proto": "https" });
+  assert.equal(shouldUseSecureCookie(httpsHeaders), true);
+
+  const httpHeaders = new Headers({ "x-forwarded-proto": "http" });
+  assert.equal(shouldUseSecureCookie(httpHeaders), false);
+
+  const originHttp = new Headers({ origin: "http://localhost:3000" });
+  assert.equal(shouldUseSecureCookie(originHttp), false);
+
+  const originHttps = new Headers({ origin: "https://speakit-bcn.vercel.app" });
+  assert.equal(shouldUseSecureCookie(originHttps), true);
+});
+
+test("normalizeSessionToken accepts 256-bit session tokens and rejects DEV-XXXXXX transfer codes", () => {
+  const token = generateSessionToken();
+  assert.equal(normalizeSessionToken(token), token);
+  assert.equal(normalizeSessionToken(`  ${token}  `), token);
+  assert.equal(normalizeSessionToken("DEV-AB12CD"), null);
+  assert.equal(normalizeSessionToken("short-token"), null);
+  assert.equal(normalizeSessionToken("invalid token with spaces and !@#"), null);
+  assert.equal(normalizeSessionToken(null), null);
+});
+
+test("multi-device session persistence and cosmetic equip keep email intact", async () => {
+  const { readFileSync } = await import("node:fs");
+  const authSource = readFileSync(
+    resolve(__dirname, "../lib/neon-auth.ts"),
+    "utf8"
+  );
+  const schemaSource = readFileSync(
+    resolve(__dirname, "../lib/db/schema.ts"),
+    "utf8"
+  );
+  const leaderboardSource = readFileSync(
+    resolve(__dirname, "../app/actions/leaderboard.ts"),
+    "utf8"
+  );
+
+  assert.match(schemaSource, /CREATE TABLE IF NOT EXISTS guest_sessions/);
+  assert.match(authSource, /INSERT INTO guest_sessions/);
+
+  const loginSection = authSource.slice(
+    authSource.indexOf("export async function loginWithEmailPassword")
+  );
+  assert.equal(
+    /UPDATE guest_players[\s\S]*?SET[\s\S]*?device_token_hash\s*=/.test(loginSection.split("export async function logoutGuestSession")[0]),
+    false
+  );
+
+  const alreadyOwnedEquipBlock = leaderboardSource.slice(
+    leaderboardSource.indexOf("if (alreadyOwned)"),
+    leaderboardSource.indexOf("WITH target AS")
+  );
+  assert.match(alreadyOwnedEquipBlock, /RETURNING[\s\S]*?\bemail\b/);
 });
