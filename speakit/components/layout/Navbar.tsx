@@ -276,7 +276,7 @@ export function Navbar() {
       {!shopActive && (
         <CustomCursorTrail effectId={guestPlayer?.equippedCosmetics?.cursor_effect ?? null} />
       )}
-      <header ref={headerRef} className="sticky top-0 z-40 bg-white/90 md:bg-paper backdrop-blur-md md:backdrop-blur-none border-b border-ink/10 md:border-ink/15">
+      <header ref={headerRef} className="sticky top-0 z-40 bg-white md:bg-paper border-b border-ink/10 md:border-ink/15">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 h-14 md:h-16 flex items-center justify-between gap-2 lg:gap-4">
         <Link
           href="/"
@@ -508,7 +508,7 @@ export function Navbar() {
       {!hideBottomTabBar && (
         <nav
           aria-label="Điều hướng nhanh di động"
-          className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-ink/10 shadow-[0_-6px_24px_rgba(26,23,20,0.06)] pb-safe"
+          className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-ink/10 shadow-[0_-4px_16px_rgba(26,23,20,0.06)] pb-safe"
         >
           <div className="grid grid-cols-5 max-w-lg mx-auto">
             {MOBILE_TABS.map(({ href, label, icon: Icon }) => {

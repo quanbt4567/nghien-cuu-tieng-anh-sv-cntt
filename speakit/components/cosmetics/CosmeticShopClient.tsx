@@ -128,21 +128,15 @@ function CosmeticCardThumbnail({
   displayName,
   initials,
   micActive,
-  paused = false,
 }: {
   item: CosmeticItem;
   displayName: string;
   initials: string;
   micActive: boolean;
-  paused?: boolean;
 }) {
-  const pauseClass = paused
-    ? "max-md:[&_*]:!animate-none max-md:[&_*::before]:!animate-none max-md:[&_*::after]:!animate-none"
-    : "";
-
   if (item.category === "avatar_decoration") {
     return (
-      <div className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] flex items-center justify-center relative overflow-hidden ${pauseClass}`}>
+      <div className="h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] flex items-center justify-center relative overflow-hidden">
         <DiscordAvatarFrame equippedId={item.id} item={item} size="lg" micActive={micActive} lite>
           <div className="w-full h-full flex items-center justify-center bg-white font-mono font-bold text-base text-[#1A1714]">
             {initials}
@@ -154,7 +148,7 @@ function CosmeticCardThumbnail({
 
   if (item.category === "nameplate") {
     return (
-      <div className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] px-3 flex items-center justify-center relative overflow-hidden ${pauseClass}`}>
+      <div className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] px-3 flex items-center justify-center relative overflow-hidden`}>
         <NameplateBanner
           nameplateId={item.id}
           item={item}
@@ -188,7 +182,7 @@ function CosmeticCardThumbnail({
 
   if (item.category === "leaderboard_fx") {
     return (
-      <div className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] px-3 flex items-center justify-center relative overflow-hidden ${pauseClass}`}>
+      <div className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] px-3 flex items-center justify-center relative overflow-hidden`}>
         <LeaderboardRowWrapper
           fxId={item.id}
           lite
@@ -215,7 +209,7 @@ function CosmeticCardThumbnail({
   if (item.category === "profile_theme") {
     return (
       <div
-        className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] relative overflow-hidden flex items-end p-2.5 ${item.effectClass} ${pauseClass}`}
+        className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] relative overflow-hidden flex items-end p-2.5 ${item.effectClass}`}
       >
         {item.id === "theme-neon-meteor-shower" && (
           <>
@@ -276,7 +270,7 @@ function CosmeticCardThumbnail({
 
   if (item.category === "cursor_effect") {
     return (
-      <div className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] relative overflow-hidden flex items-center justify-center ${pauseClass}`}>
+      <div className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] relative overflow-hidden flex items-center justify-center`}>
         {item.id === "cursor-pixel-sparkle-trail" && (
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 bg-amber-500 border border-[#1A1714]/15 animate-pulse" />
@@ -332,7 +326,7 @@ function CosmeticCardThumbnail({
   }
 
   return (
-    <div className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] relative overflow-hidden flex items-center justify-center px-3 ${pauseClass}`}>
+    <div className={`h-28 rounded-xl border border-[#1A1714]/15 bg-[#FAF6EF] relative overflow-hidden flex items-center justify-center px-3`}>
       {item.id === "finisher-lgtm-neon-confetti" && (
         <div className="flex items-center gap-2">
           <span className="px-2 py-1 rounded bg-emerald-500 text-white border border-[#1A1714]/15 font-mono text-[10px] font-bold rotate-[-4deg] shadow-sm">
@@ -412,6 +406,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
   const [themePreviewEnabled, setThemePreviewEnabled] = useState(true);
   const [micTestActive, setMicTestActive] = useState(false);
   const [finisherActive, setFinisherActive] = useState(false);
+  const [showAllCatalog, setShowAllCatalog] = useState(false);
   const [busyItemId, setBusyItemId] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<{
     ok: boolean;
@@ -429,6 +424,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
     const cached = readCachedGuestProfile();
     if (cached) {
       setGuestPlayer(cached);
+      setLoading(false);
     }
     try {
       const backup = readBackupTransferCode();
@@ -987,7 +983,12 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                   <button
                     key={cat}
                     type="button"
-                    onClick={() => startTransition(() => setActiveCategory(cat))}
+                    onClick={() =>
+                  startTransition(() => {
+                    setActiveCategory(cat);
+                    setShowAllCatalog(false);
+                  })
+                }
                     className={`text-left rounded-xl border border-[#1A1714]/15 p-2.5 transition-all ${
                       activeCategory === cat
                         ? "bg-white shadow-sm"
@@ -1043,7 +1044,12 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                 type="button"
                 role="tab"
                 aria-selected={selected}
-                onClick={() => startTransition(() => setActiveCategory(cat))}
+                onClick={() =>
+                  startTransition(() => {
+                    setActiveCategory(cat);
+                    setShowAllCatalog(false);
+                  })
+                }
                 className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#1A1714]/15 text-xs font-bold transition-all ${
                   selected
                     ? "bg-[#1A1714] text-white shadow-soft"
@@ -1061,7 +1067,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {categoryItems.map((item) => {
+          {(showAllCatalog ? categoryItems : categoryItems.slice(0, 8)).map((item) => {
             const isOwned = identity.ownedItems.includes(item.id);
             const isEquipped = equipped[item.category] === item.id;
             const isPreviewing = activeSandbox[item.category] === item.id;
@@ -1080,7 +1086,6 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
               <div
                 key={item.id}
                 onClick={(e) => handleSelectPreview(item, getEventCoords(e))}
-                style={{ contentVisibility: "auto", containIntrinsicSize: "260px" }}
                 className={`cursor-pointer rounded-2xl border border-[#1A1714]/15 p-4 flex flex-col justify-between gap-3.5 transition-all ${
                   isPreviewing
                     ? "bg-[#FAF6EF] shadow-soft -translate-y-0.5"
@@ -1120,7 +1125,6 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     displayName={isIdentityHydrating ? "—" : identity.displayName}
                     initials={isIdentityHydrating ? "--" : initials}
                     micActive={micTestActive}
-                    paused={!isPreviewing && !isEquipped}
                   />
 
                   <div>
@@ -1191,13 +1195,25 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
             );
           })}
         </div>
+
+        {!showAllCatalog && categoryItems.length > 8 && (
+          <div className="flex justify-center pt-2">
+            <button
+              type="button"
+              onClick={() => setShowAllCatalog(true)}
+              className="px-5 py-2.5 rounded-pill bg-white border border-ink/15 text-xs font-bold text-ink shadow-soft hover:bg-paper transition-colors"
+            >
+              Xem thêm {categoryItems.length - 8} mẫu khác ({categoryItems.length} tổng cộng)
+            </button>
+          </div>
+        )}
       </div>
 
       {activePreviewItem && (
         <div
           role="region"
           aria-label="Thanh xem thử hiệu ứng"
-          className="fixed bottom-3 left-3 right-14 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:bottom-5 z-30 sm:w-max sm:max-w-[calc(100vw-11rem)]"
+          className="fixed bottom-20 left-3 right-14 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:bottom-20 md:bottom-5 z-30 sm:w-max sm:max-w-[calc(100vw-11rem)]"
         >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 px-3.5 py-2.5 rounded-2xl bg-[#1A1714] text-white border border-[#1A1714]/15 shadow-soft">
             <div className="flex items-start sm:items-center gap-2 min-w-0">
