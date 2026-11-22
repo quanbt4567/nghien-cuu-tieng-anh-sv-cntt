@@ -127,23 +127,19 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-ink/10 text-xs">
+              <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3 pt-3 border-t border-ink/10 text-xs">
                 <div className="space-y-0.5">
                   <div className="text-[11px] font-mono text-ink-muted">Xếp hạng toàn cầu</div>
                   <div className="text-xs sm:text-sm font-mono font-bold text-ink">
-                    <span className="whitespace-nowrap">
-                      Hạng #{EF_EPI_2025.globalRank}/{EF_EPI_2025.totalCountries} quốc gia
-                    </span>
+                    Hạng #{EF_EPI_2025.globalRank}/{EF_EPI_2025.totalCountries} quốc gia
                   </div>
                 </div>
-                <div className="space-y-0.5 pt-2.5 border-t sm:pt-0 sm:border-t-0 sm:border-l border-ink/10 sm:pl-3">
+                <div className="space-y-0.5">
                   <div className="text-[11px] font-mono text-ink-muted">
-                    Xếp hạng <span className="whitespace-nowrap">châu Á</span>
+                    Xếp hạng châu Á
                   </div>
                   <div className="text-xs sm:text-sm font-mono font-bold text-ink">
-                    <span className="whitespace-nowrap">
-                      Hạng #{EF_EPI_2025.asiaRank}/{EF_EPI_2025.totalAsiaCountries} quốc gia
-                    </span>
+                    Hạng #{EF_EPI_2025.asiaRank}/{EF_EPI_2025.totalAsiaCountries} quốc gia
                   </div>
                 </div>
               </div>
