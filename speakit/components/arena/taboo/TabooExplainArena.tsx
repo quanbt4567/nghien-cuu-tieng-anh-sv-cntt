@@ -674,21 +674,21 @@ export function TabooExplainArena() {
         onComplete={() => setShowFinisher(false)}
       />
 
-      <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
+      <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-accent/10 border border-accent text-accent text-[11px] font-mono font-bold">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/45 text-amber-200 text-[11px] font-mono font-bold">
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
               <span>TECH TABOO • EXPLAIN IT LIKE I&apos;M 5</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-ink tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
               Explain It Like I&apos;m 5
             </h1>
-            <p className="text-xs sm:text-sm text-ink/70">
+            <p className="text-xs sm:text-sm text-slate-300">
               Describe IT concepts in plain English without saying the 3 glowing
               red forbidden words. Hit a{" "}
-              <strong className="text-accent">3-streak</strong> for{" "}
-              <strong className="text-amber-600">FEVER MODE 2x</strong>!
+              <strong className="text-cyan-300">3-streak</strong> for{" "}
+              <strong className="text-amber-300">FEVER MODE 2x</strong>!
             </p>
           </div>
 
@@ -697,42 +697,40 @@ export function TabooExplainArena() {
               type="button"
               onClick={toggleMuteSfx}
               aria-label={sfxMuted ? "Unmute SFX" : "Mute SFX"}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-ink/15 text-xs font-mono font-bold shadow-soft transition-colors ${
-                sfxMuted
-                  ? "bg-paper text-ink/60"
-                  : "bg-ink text-white hover:bg-white hover:text-ink"
+              className={`liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
+                sfxMuted ? "text-slate-400" : "text-white"
               }`}
             >
               {sfxMuted ? (
                 <>
-                  <VolumeX className="w-4 h-4 text-accent" />
+                  <VolumeX className="w-4 h-4 text-rose-300" />
                   <span>SFX Muted</span>
                 </>
               ) : (
                 <>
-                  <Volume2 className="w-4 h-4 text-emerald-400" />
+                  <Volume2 className="w-4 h-4 text-emerald-300" />
                   <span>SFX On</span>
                 </>
               )}
             </button>
 
-            <div className="flex items-center gap-3 bg-paper border border-ink/20 rounded-2xl px-3.5 py-2">
+            <div className="liquid-glass-pill flex items-center gap-3 px-3.5 py-2">
               <DiscordAvatarFrame
                 equippedId={equippedCosmetics.avatar_decoration}
                 fallbackRing={guestPlayer?.equippedRing}
                 size="sm"
                 micActive={isRecording}
               >
-                <div className="w-8 h-8 rounded-full bg-ink text-white flex items-center justify-center text-xs font-mono font-bold">
+                <div className="w-8 h-8 rounded-full bg-amber-500/80 border border-amber-300/40 text-white flex items-center justify-center text-xs font-mono font-bold">
                   {(guestPlayer?.displayName ?? "DV").slice(0, 2).toUpperCase()}
                 </div>
               </DiscordAvatarFrame>
               <div className="text-xs">
-                <div className="font-bold text-ink">
+                <div className="font-bold text-white">
                   {guestPlayer?.displayName ?? "Guest Engineer"}
                 </div>
-                <div className="font-mono text-ink/70 flex items-center gap-1">
-                  <Coins className="w-3.5 h-3.5 text-accent" />
+                <div className="font-mono text-amber-200 flex items-center gap-1">
+                  <Coins className="w-3.5 h-3.5 text-amber-300" />
                   <span>{guestPlayer?.itCoins ?? 0} IT-Coins</span>
                 </div>
               </div>
@@ -741,8 +739,8 @@ export function TabooExplainArena() {
         </div>
 
         {errorMsg && (
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-accent/10 border border-accent text-accent text-xs font-medium">
-            <AlertTriangle className="w-4 h-4 shrink-0" />
+          <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-rose-500/15 border border-rose-400/40 text-rose-200 text-xs font-medium">
+            <AlertTriangle className="w-4 h-4 text-rose-300 shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
@@ -750,18 +748,18 @@ export function TabooExplainArena() {
 
       {!room && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <section className="lg:col-span-2 bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5">
+          <section className="lg:col-span-2 liquid-glass-card p-5 sm:p-6 space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-ink">
+              <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-white">
                 1. Start Solo vs AI Guesser or Host a Room
               </h2>
-              <span className="text-xs font-mono text-ink/60">
+              <span className="text-xs font-mono text-slate-400">
                 50 IT Concept Cards
               </span>
             </div>
 
             <div className="space-y-2">
-              <div className="text-xs font-mono font-bold uppercase text-ink/70">
+              <div className="text-xs font-mono font-bold uppercase text-slate-300">
                 Target Cards per Match
               </div>
               <div className="flex flex-wrap gap-2.5">
@@ -772,10 +770,10 @@ export function TabooExplainArena() {
                       key={count}
                       type="button"
                       onClick={() => setTargetCards(count)}
-                      className={`px-4 py-2 rounded-xl border-2 font-mono text-xs font-bold transition-all ${
+                      className={`px-4 py-2 rounded-xl border font-mono text-xs font-bold transition-all ${
                         active
-                          ? "bg-paper border-ink shadow-soft text-ink"
-                          : "bg-white border-ink/20 text-ink/70 hover:border-ink"
+                          ? "bg-amber-500/25 border-amber-400/60 shadow-[0_0_16px_rgba(245,158,11,0.3)] text-amber-100"
+                          : "bg-slate-950/50 border-white/15 text-slate-300 hover:border-amber-400/45"
                       }`}
                     >
                       {count} Cards
@@ -785,8 +783,8 @@ export function TabooExplainArena() {
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-paper border border-ink/20 space-y-2 text-xs text-ink/80">
-              <div className="font-mono font-bold uppercase text-ink">
+            <div className="p-4 rounded-xl bg-slate-950/55 border border-white/15 space-y-2 text-xs text-slate-200">
+              <div className="font-mono font-bold uppercase text-white">
                 Rules &amp; Combo Multipliers
               </div>
               <ul className="space-y-1">
@@ -800,7 +798,7 @@ export function TabooExplainArena() {
                 </li>
                 <li>
                   • Solve 3 cards in a row to ignite{" "}
-                  <strong className="text-amber-600">FEVER MODE 2x</strong>{" "}
+                  <strong className="text-amber-300">FEVER MODE 2x</strong>{" "}
                   points (+500 pts/card) and earn up to +12 IT-Coins!
                 </li>
               </ul>
@@ -811,7 +809,7 @@ export function TabooExplainArena() {
                 type="button"
                 onClick={handleQuickPlayBot}
                 disabled={loadingAction !== null}
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-accent text-white font-bold text-sm border border-ink/15 shadow-soft hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] disabled:opacity-50"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500/85 to-orange-500/85 hover:from-amber-500/95 hover:to-orange-500/95 text-white font-bold text-sm border border-amber-300/60 shadow-[0_0_22px_rgba(245,158,11,0.42),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50"
               >
                 <Bot className="w-4 h-4" />
                 <span>
@@ -825,9 +823,9 @@ export function TabooExplainArena() {
                 type="button"
                 onClick={handleCreateRoom}
                 disabled={loadingAction !== null}
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-paper text-ink font-bold text-sm border border-ink/15 shadow-soft hover:bg-white disabled:opacity-50"
+                className="liquid-glass-btn inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm disabled:opacity-50"
               >
-                <Users className="w-4 h-4 text-accent" />
+                <Users className="w-4 h-4 text-amber-300" />
                 <span>
                   {loadingAction === "create"
                     ? "Creating Room..."
@@ -837,12 +835,12 @@ export function TabooExplainArena() {
             </div>
           </section>
 
-          <section className="bg-paper border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft flex flex-col justify-between space-y-4">
+          <section className="liquid-glass-card p-5 sm:p-6 flex flex-col justify-between space-y-4">
             <div className="space-y-3">
-              <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-ink">
+              <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-white">
                 2. Join Room by Code
               </h2>
-              <p className="text-xs text-ink/75">
+              <p className="text-xs text-slate-300">
                 Enter a 6-character invite code from a friend to team up in
                 Explain It Like I&apos;m 5.
               </p>
@@ -852,7 +850,7 @@ export function TabooExplainArena() {
                 value={joinCodeInput}
                 onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
                 placeholder="TAB123"
-                className="w-full px-4 py-3 rounded-xl bg-white border border-ink/15 font-mono text-lg font-bold tracking-[0.25em] text-center text-ink uppercase focus:outline-none"
+                className="liquid-glass-input w-full px-4 py-3 rounded-xl font-mono text-lg font-bold tracking-[0.25em] text-center uppercase focus:outline-none"
               />
             </div>
 
@@ -860,7 +858,7 @@ export function TabooExplainArena() {
               type="button"
               onClick={handleJoinRoom}
               disabled={loadingAction !== null}
-              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-ink text-white font-bold text-sm border border-ink/15 shadow-soft hover:bg-white hover:text-ink transition-colors disabled:opacity-50"
+              className="liquid-btn-primary w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm transition-all disabled:opacity-50"
             >
               <Users className="w-4 h-4" />
               <span>{loadingAction === "join" ? "Joining..." : "Join Room"}</span>
@@ -870,22 +868,22 @@ export function TabooExplainArena() {
       )}
 
       {room && room.status === "lobby" && (
-        <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-ink/15">
+        <section className="liquid-glass-card p-5 sm:p-6 space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/15">
             <div>
-              <div className="text-xs font-mono text-ink/60">TABOO ROOM CODE</div>
+              <div className="text-xs font-mono text-slate-400">TABOO ROOM CODE</div>
               <div className="flex items-center gap-3 mt-1">
-                <span className="text-2xl font-mono font-bold tracking-[0.2em] text-ink bg-paper px-3 py-1 rounded-lg border border-ink/15">
+                <span className="text-2xl font-mono font-bold tracking-[0.2em] text-cyan-200 bg-slate-950/65 px-3 py-1 rounded-lg border border-cyan-400/40">
                   {room.roomCode}
                 </span>
                 <button
                   type="button"
                   onClick={handleCopyCode}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-ink/25 text-xs font-mono font-semibold text-ink hover:border-ink"
+                  className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold"
                 >
                   {copiedCode ? (
                     <>
-                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                      <Check className="w-3.5 h-3.5 text-emerald-300" />
                       <span>Copied</span>
                     </>
                   ) : (
@@ -899,10 +897,10 @@ export function TabooExplainArena() {
             </div>
 
             <div className="text-left sm:text-right">
-              <span className="px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-accent text-white">
+              <span className="px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-amber-500/25 border border-amber-400/50 text-amber-200">
                 {room.targetCards} CARDS • {room.turnSeconds}s
               </span>
-              <div className="mt-1 font-bold text-sm text-ink">
+              <div className="mt-1 font-bold text-sm text-white">
                 Waiting for Guesser or AI Bot
               </div>
             </div>
@@ -912,7 +910,7 @@ export function TabooExplainArena() {
             {room.players.map((p) => (
               <div
                 key={p.id}
-                className="p-4 rounded-xl border border-ink/15 bg-paper flex items-center gap-3"
+                className="p-4 rounded-xl border border-white/20 bg-slate-950/55 flex items-center gap-3"
               >
                 <DiscordAvatarFrame
                   equippedId={
@@ -923,19 +921,19 @@ export function TabooExplainArena() {
                   fallbackRing={p.equippedRing}
                   size="sm"
                 >
-                  <div className="w-9 h-9 rounded-full bg-ink text-white flex items-center justify-center text-xs font-mono font-bold">
+                  <div className="w-9 h-9 rounded-full bg-amber-500/80 border border-amber-300/40 text-white flex items-center justify-center text-xs font-mono font-bold">
                     {p.isBot ? "AI" : p.displayName.slice(0, 2).toUpperCase()}
                   </div>
                 </DiscordAvatarFrame>
                 <div className="min-w-0">
-                  <div className="text-[11px] font-mono text-ink/60">
+                  <div className="text-[11px] font-mono text-slate-400">
                     {p.isBot
                       ? "AI GUESSER"
                       : p.isHost
                         ? "HOST • EXPLAINER"
                         : "TEAMMATE • GUESSER"}
                   </div>
-                  <div className="font-bold text-sm text-ink truncate">
+                  <div className="font-bold text-sm text-white truncate">
                     {p.displayName}
                   </div>
                 </div>
@@ -943,8 +941,8 @@ export function TabooExplainArena() {
             ))}
 
             {room.players.length < 2 && (
-              <div className="p-4 rounded-xl border-2 border-dashed border-ink/30 bg-white flex items-center justify-between gap-3">
-                <div className="text-xs font-mono text-ink/60">
+              <div className="p-4 rounded-xl border border-dashed border-white/25 bg-slate-950/35 flex items-center justify-between gap-3">
+                <div className="text-xs font-mono text-slate-400">
                   Waiting for 2nd player or AI Guesser Bot...
                 </div>
               </div>
@@ -959,9 +957,9 @@ export function TabooExplainArena() {
                 disabled={
                   loadingAction !== null || room.players.some((p) => p.isBot)
                 }
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-paper text-ink font-bold text-xs sm:text-sm border border-ink/15 shadow-soft hover:bg-white disabled:opacity-50"
+                className="liquid-glass-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm disabled:opacity-50"
               >
-                <Bot className="w-4 h-4 text-accent" />
+                <Bot className="w-4 h-4 text-amber-300" />
                 <span>
                   {loadingAction === "fill_bot"
                     ? "Đang gọi AI đoán chữ..."
@@ -972,7 +970,7 @@ export function TabooExplainArena() {
               <button
                 type="button"
                 onClick={handleLeaveRoom}
-                className="px-3.5 py-2.5 rounded-xl bg-white text-ink/70 text-xs font-mono border border-ink/20 hover:border-ink hover:text-ink"
+                className="liquid-glass-btn px-3.5 py-2.5 rounded-xl text-xs font-mono text-slate-300 hover:text-white"
               >
                 Rời phòng
               </button>
@@ -982,7 +980,7 @@ export function TabooExplainArena() {
               type="button"
               onClick={handleStartMatch}
               disabled={loadingAction !== null || room.players.length < 2}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border border-ink/15 shadow-soft hover:translate-x-[-1px] hover:translate-y-[-1px] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500/85 to-orange-500/85 hover:from-amber-500/95 hover:to-orange-500/95 text-white font-bold text-sm border border-amber-300/60 shadow-[0_0_22px_rgba(245,158,11,0.42),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Play className="w-4 h-4" />
               <span>
@@ -998,34 +996,34 @@ export function TabooExplainArena() {
           className={`space-y-6 ${foulFlash ? "taboo-foul-shake" : ""}`}
         >
           <section
-            className={`rounded-2xl p-4 sm:p-5 border border-ink/15 shadow-soft transition-colors ${
+            className={`liquid-glass-card p-4 sm:p-5 transition-colors ${
               room.feverMode
-                ? "bg-gradient-to-r from-amber-100 via-orange-50 to-rose-100"
-                : "bg-white"
+                ? "!bg-gradient-to-r !from-amber-500/20 !via-orange-500/15 !to-rose-500/20 !border-amber-400/55"
+                : ""
             }`}
           >
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex flex-wrap items-center gap-2.5">
-                <span className="px-2.5 py-1 rounded-lg bg-ink text-white text-xs font-mono font-bold">
+                <span className="liquid-glass-pill px-3 py-1 text-xs font-mono font-bold text-white">
                   ROOM {room.roomCode}
                 </span>
-                <span className="px-2.5 py-1 rounded-lg bg-paper border border-ink text-xs font-mono font-bold text-ink">
+                <span className="liquid-glass-pill px-3 py-1 text-xs font-mono font-bold text-cyan-200">
                   SOLVED {room.solvedCount}/{room.targetCards}
                 </span>
-                <span className="px-2.5 py-1 rounded-lg bg-emerald-100 border border-emerald-700 text-emerald-800 text-xs font-mono font-bold">
+                <span className="px-3 py-1 rounded-pill bg-emerald-500/20 border border-emerald-400/50 text-emerald-200 text-xs font-mono font-bold">
                   {room.score} PTS
                 </span>
 
                 {room.feverMode ? (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-orange-500 to-rose-600 text-white text-xs font-mono font-extrabold border border-ink/15 animate-pulse shadow-sm">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-rose-600 text-white text-xs font-mono font-extrabold border border-amber-300/60 animate-pulse shadow-[0_0_20px_rgba(245,158,11,0.5)]">
                     <Flame className="w-4 h-4 fill-yellow-300 text-yellow-200" />
                     <span>FEVER MODE • 2x STREAK ({room.streak})</span>
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-paper border border-ink/30 text-xs font-mono font-bold text-ink">
+                  <span className="liquid-glass-pill inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold text-slate-200">
                     <Flame
                       className={`w-3.5 h-3.5 ${
-                        room.streak > 0 ? "text-orange-500" : "text-ink/40"
+                        room.streak > 0 ? "text-amber-400" : "text-slate-500"
                       }`}
                     />
                     <span>Streak {room.streak}/3 for FEVER 2x</span>
@@ -1035,10 +1033,10 @@ export function TabooExplainArena() {
 
               <div className="flex items-center gap-2.5">
                 <div
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border border-ink/15 font-mono font-bold text-lg ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-pill font-mono font-bold text-lg ${
                     timeLeftSec <= 15
-                      ? "bg-accent text-white animate-pulse"
-                      : "bg-paper text-ink"
+                      ? "liquid-btn-danger animate-pulse"
+                      : "liquid-glass-pill text-cyan-200"
                   }`}
                 >
                   <Clock className="w-4 h-4" />
@@ -1048,8 +1046,8 @@ export function TabooExplainArena() {
             </div>
 
             {foulBanner && (
-              <div className="mt-3 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-rose-600 text-white border border-ink/15 text-xs font-mono font-bold">
-                <Ban className="w-4 h-4 shrink-0" />
+              <div className="mt-3 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-rose-500/25 text-rose-100 border border-rose-400/60 text-xs font-mono font-bold">
+                <Ban className="w-4 h-4 text-rose-300 shrink-0" />
                 <span>{foulBanner}</span>
               </div>
             )}
@@ -1067,7 +1065,7 @@ export function TabooExplainArena() {
                   }}
                 >
                   <div
-                    className={`col-start-1 row-start-1 rounded-2xl p-6 border-2 bg-slate-950 text-white space-y-6 ${
+                    className={`col-start-1 row-start-1 rounded-2xl p-6 border-2 bg-slate-950/90 backdrop-blur-xl text-white space-y-6 ${
                       room.feverMode
                         ? "border-amber-400 shadow-[0_0_32px_rgba(251,146,60,0.45)]"
                         : "border-cyan-400 shadow-[0_0_28px_rgba(34,211,238,0.28)]"
@@ -1146,7 +1144,7 @@ export function TabooExplainArena() {
                   </div>
 
                   <div
-                    className="col-start-1 row-start-1 rounded-2xl p-6 border-2 border-amber-400 bg-slate-950 text-white shadow-[0_0_28px_rgba(251,191,36,0.35)] flex flex-col justify-between space-y-5"
+                    className="col-start-1 row-start-1 rounded-2xl p-6 border-2 border-amber-400 bg-slate-950/90 backdrop-blur-xl text-white shadow-[0_0_28px_rgba(251,191,36,0.35)] flex flex-col justify-between space-y-5"
                     style={{
                       backfaceVisibility: "hidden",
                       WebkitBackfaceVisibility: "hidden",
@@ -1207,15 +1205,15 @@ export function TabooExplainArena() {
                 </div>
               </div>
 
-              <section className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4">
+              <section className="liquid-glass-card p-5 space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <div className="text-sm font-bold text-ink">
+                    <div className="text-sm font-bold text-white">
                       {isExplainer
                         ? "Giải thích khái niệm bằng tiếng Anh đơn giản"
                         : "Nhập từ khóa bạn đoán được"}
                     </div>
-                    <div className="text-xs text-ink/60">
+                    <div className="text-xs text-slate-300">
                       {isExplainer
                         ? "Dùng Mic nói hoặc gõ câu mô tả tiếng Anh (tránh 3 từ cấm màu đỏ)."
                         : "Đoán đúng thuật ngữ CNTT dựa theo gợi ý mới nhất."}
@@ -1225,10 +1223,10 @@ export function TabooExplainArena() {
                   <button
                     type="button"
                     onClick={handleToggleMic}
-                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs border border-ink/15 shadow-soft ${
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs transition-all ${
                       isRecording
-                        ? "bg-accent text-white animate-mic-listening"
-                        : "bg-paper text-ink hover:bg-white"
+                        ? "liquid-btn-danger animate-mic-listening"
+                        : "liquid-glass-btn"
                     }`}
                   >
                     {isRecording ? (
@@ -1238,7 +1236,7 @@ export function TabooExplainArena() {
                       </>
                     ) : (
                       <>
-                        <Mic className="w-3.5 h-3.5 text-accent" />
+                        <Mic className="w-3.5 h-3.5 text-amber-300" />
                         <span>Nói gợi ý (Mic)</span>
                       </>
                     )}
@@ -1246,7 +1244,7 @@ export function TabooExplainArena() {
                 </div>
 
                 {speechError && (
-                  <div className="text-xs text-accent font-medium">
+                  <div className="text-xs text-rose-300 font-medium">
                     {speechError}
                   </div>
                 )}
@@ -1263,7 +1261,7 @@ export function TabooExplainArena() {
                       }
                     }}
                     placeholder="Ví dụ dễ nói: Think of a super fast drawer next to your desk so you never walk to the slow archive..."
-                    className="w-full p-3.5 rounded-xl bg-paper border border-ink/15 text-sm text-ink placeholder:text-ink/40 focus:outline-none"
+                    className="liquid-glass-input w-full p-3.5 rounded-xl text-sm focus:outline-none"
                   />
                 ) : (
                   <input
@@ -1277,7 +1275,7 @@ export function TabooExplainArena() {
                       }
                     }}
                     placeholder="Gõ tên thuật ngữ CNTT..."
-                    className="w-full p-3.5 rounded-xl bg-paper border border-ink/15 text-sm text-ink placeholder:text-ink/40 focus:outline-none"
+                    className="liquid-glass-input w-full p-3.5 rounded-xl text-sm focus:outline-none"
                   />
                 )}
 
@@ -1288,9 +1286,9 @@ export function TabooExplainArena() {
                         type="button"
                         onClick={handleSkipCard}
                         disabled={loadingAction !== null}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-paper border border-ink/15 text-xs font-mono font-bold text-ink hover:bg-white disabled:opacity-50"
+                        className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-mono font-bold disabled:opacity-50"
                       >
-                        <SkipForward className="w-3.5 h-3.5 text-accent" />
+                        <SkipForward className="w-3.5 h-3.5 text-amber-300" />
                         <span>Bỏ qua thẻ</span>
                       </button>
                     )}
@@ -1298,7 +1296,7 @@ export function TabooExplainArena() {
                     <button
                       type="button"
                       onClick={handleLeaveRoom}
-                      className="px-3.5 py-2 rounded-xl bg-white border border-ink/25 text-xs font-mono text-ink/70 hover:border-ink hover:text-ink"
+                      className="liquid-glass-btn px-3.5 py-2 rounded-xl text-xs font-mono text-slate-300 hover:text-white"
                     >
                       Rời phòng
                     </button>
@@ -1308,14 +1306,14 @@ export function TabooExplainArena() {
                     type="button"
                     onClick={isExplainer ? handleSubmitClue : handleSubmitGuess}
                     disabled={loadingAction !== null}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border border-ink/15 shadow-soft disabled:opacity-50"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500/85 to-orange-500/85 hover:from-amber-500/95 hover:to-orange-500/95 text-white font-bold text-sm border border-amber-300/60 shadow-[0_0_20px_rgba(245,158,11,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50"
                   >
                     <Send className="w-4 h-4" />
                     <span>
                       {loadingAction === "turn"
                         ? "AI đang đoán..."
                         : isExplainer
-                          ? "Gửi gợi ý"
+                           ? "Gửi gợi ý"
                           : "Gửi đáp án"}
                     </span>
                   </button>
@@ -1323,24 +1321,24 @@ export function TabooExplainArena() {
               </section>
             </div>
 
-            <section className="lg:col-span-5 bg-paper border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4">
+            <section className="lg:col-span-5 liquid-glass-card p-5 space-y-4">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-ink">
-                  <Bot className="w-4 h-4 text-accent" />
+                <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-white">
+                  <Bot className="w-4 h-4 text-amber-300" />
                   <span>Live Guesser Feed</span>
                 </div>
-                <span className="text-[11px] font-mono text-ink/60">
+                <span className="text-[11px] font-mono text-slate-400">
                   {room.feed.length} clues
                 </span>
               </div>
 
               {orderedFeed.length === 0 ? (
-                <div className="p-6 rounded-xl bg-white border border-dashed border-ink/30 text-center space-y-2">
-                  <Bot className="w-7 h-7 text-accent mx-auto" />
-                  <div className="text-xs font-bold text-ink">
+                <div className="p-6 rounded-xl bg-slate-950/50 border border-dashed border-white/20 text-center space-y-2">
+                  <Bot className="w-7 h-7 text-amber-300 mx-auto" />
+                  <div className="text-xs font-bold text-white">
                     ByteBot is waiting for your first clue!
                   </div>
-                  <p className="text-[11px] text-ink/65">
+                  <p className="text-[11px] text-slate-300">
                     Describe the concept simply without saying any red Taboo
                     words.
                   </p>
@@ -1350,45 +1348,45 @@ export function TabooExplainArena() {
                   {orderedFeed.map((entry) => (
                     <div
                       key={entry.id}
-                      className={`p-3.5 rounded-xl border-2 text-xs space-y-2 ${
+                      className={`p-3.5 rounded-xl border text-xs space-y-2 ${
                         entry.foulDetected || entry.tabooViolated
-                          ? "bg-rose-50 border-rose-500"
+                          ? "bg-rose-500/15 border-rose-400/60"
                           : entry.guessedCorrectly
-                            ? "bg-emerald-50 border-emerald-600"
-                            : "bg-white border-ink/20"
+                            ? "bg-emerald-500/15 border-emerald-400/60"
+                            : "bg-slate-950/55 border-white/15"
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2 font-mono font-bold">
-                        <span className="text-ink truncate">
+                        <span className="text-white truncate">
                           {entry.displayName} • {entry.cardTerm}
                         </span>
                         {entry.guessedCorrectly ? (
-                          <span className="px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px]">
+                          <span className="px-2 py-0.5 rounded bg-emerald-500/30 border border-emerald-400/50 text-emerald-100 text-[10px]">
                             +{entry.pointsAwarded} ({entry.multiplier}x)
                           </span>
                         ) : entry.tabooViolated ? (
-                          <span className="px-2 py-0.5 rounded bg-rose-600 text-white text-[10px]">
+                          <span className="px-2 py-0.5 rounded bg-rose-500/30 border border-rose-400/50 text-rose-100 text-[10px]">
                             TABOO FOUL
                           </span>
                         ) : entry.foulDetected ? (
-                          <span className="px-2 py-0.5 rounded bg-rose-600 text-white text-[10px]">
+                          <span className="px-2 py-0.5 rounded bg-rose-500/30 border border-rose-400/50 text-rose-100 text-[10px]">
                             VI FOUL
                           </span>
                         ) : (
-                          <span className="px-2 py-0.5 rounded bg-ink/10 text-ink text-[10px]">
+                          <span className="px-2 py-0.5 rounded bg-white/10 text-slate-300 text-[10px]">
                             MISS
                           </span>
                         )}
                       </div>
-                      <p className="text-ink">
+                      <p className="text-slate-100">
                         &ldquo;<InteractiveEnglishText text={entry.clue} />&rdquo;
                       </p>
-                      <div className="p-2 rounded-lg bg-white/80 border border-ink/15 text-ink/80">
-                        <span className="font-mono font-bold text-accent">
+                      <div className="p-2 rounded-lg bg-slate-950/60 border border-white/12 text-slate-200">
+                        <span className="font-mono font-bold text-amber-300">
                           Guesser:
                         </span>{" "}
                         {entry.aiGuess ? (
-                          <span className="font-bold text-ink">
+                          <span className="font-bold text-white">
                             &ldquo;{entry.aiGuess}&rdquo; —{" "}
                           </span>
                         ) : null}
@@ -1404,10 +1402,10 @@ export function TabooExplainArena() {
       )}
 
       {room && room.status === "finished" && (
-        <section className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-ink/15">
+        <section className="liquid-glass-card p-6 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/15">
             <div className="space-y-1">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 border border-emerald-700 text-emerald-800 text-xs font-mono font-bold">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/50 text-emerald-200 text-xs font-mono font-bold">
                 <CheckCircle2 className="w-4 h-4" />
                 <span>
                   {room.solvedCount >= room.targetCards
@@ -1415,25 +1413,25 @@ export function TabooExplainArena() {
                     : "ROUND FINISHED"}
                 </span>
               </div>
-              <h2 className="text-2xl font-bold text-ink">
+              <h2 className="text-2xl font-bold text-white">
                 Explain It Like I&apos;m 5 — Match Recap
               </h2>
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="bg-paper border border-ink/15 rounded-xl px-4 py-2.5 text-center">
-                <div className="text-[10px] font-mono font-bold text-ink/60">
+              <div className="bg-slate-950/55 border border-white/15 rounded-xl px-4 py-2.5 text-center">
+                <div className="text-[10px] font-mono font-bold text-slate-400">
                   FINAL SCORE
                 </div>
-                <div className="text-2xl font-mono font-bold text-ink">
+                <div className="text-2xl font-mono font-bold text-white">
                   {room.score} pts
                 </div>
               </div>
-              <div className="bg-amber-50 border border-ink/15 rounded-xl px-4 py-2.5 text-center">
-                <div className="text-[10px] font-mono font-bold text-amber-800">
+              <div className="bg-amber-500/15 border border-amber-400/40 rounded-xl px-4 py-2.5 text-center">
+                <div className="text-[10px] font-mono font-bold text-amber-300">
                   IT-COINS EARNED
                 </div>
-                <div className="text-2xl font-mono font-bold text-accent">
+                <div className="text-2xl font-mono font-bold text-amber-200">
                   +{estimatedCoins}
                 </div>
               </div>
@@ -1441,55 +1439,55 @@ export function TabooExplainArena() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="p-4 rounded-xl bg-paper border border-ink/20 text-center">
-              <div className="text-[11px] font-mono text-ink/60">SOLVED</div>
-              <div className="text-xl font-mono font-bold text-ink">
+            <div className="p-4 rounded-xl bg-slate-950/50 border border-white/15 text-center">
+              <div className="text-[11px] font-mono text-slate-400">SOLVED</div>
+              <div className="text-xl font-mono font-bold text-white">
                 {room.solvedCount}/{room.targetCards}
               </div>
             </div>
-            <div className="p-4 rounded-xl bg-paper border border-ink/20 text-center">
-              <div className="text-[11px] font-mono text-ink/60">MAX STREAK</div>
-              <div className="text-xl font-mono font-bold text-orange-600">
+            <div className="p-4 rounded-xl bg-slate-950/50 border border-white/15 text-center">
+              <div className="text-[11px] font-mono text-slate-400">MAX STREAK</div>
+              <div className="text-xl font-mono font-bold text-amber-300">
                 {room.maxStreak}x
               </div>
             </div>
-            <div className="p-4 rounded-xl bg-paper border border-ink/20 text-center">
-              <div className="text-[11px] font-mono text-ink/60">FOULS</div>
-              <div className="text-xl font-mono font-bold text-rose-600">
+            <div className="p-4 rounded-xl bg-slate-950/50 border border-white/15 text-center">
+              <div className="text-[11px] font-mono text-slate-400">FOULS</div>
+              <div className="text-xl font-mono font-bold text-rose-300">
                 {room.foulCount}
               </div>
             </div>
-            <div className="p-4 rounded-xl bg-paper border border-ink/20 text-center">
-              <div className="text-[11px] font-mono text-ink/60">FEVER 2x</div>
-              <div className="text-xl font-mono font-bold text-amber-600">
+            <div className="p-4 rounded-xl bg-slate-950/50 border border-white/15 text-center">
+              <div className="text-[11px] font-mono text-slate-400">FEVER 2x</div>
+              <div className="text-xl font-mono font-bold text-emerald-300">
                 {room.maxStreak >= 3 ? "UNLOCKED" : "NOT HIT"}
               </div>
             </div>
           </div>
 
           {orderedFeed.length > 0 && (
-            <div className="p-4 rounded-xl bg-paper border border-ink/15 space-y-2.5">
-              <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-ink">
-                <Trophy className="w-4 h-4 text-accent" />
+            <div className="p-4 rounded-xl bg-slate-950/50 border border-white/15 space-y-2.5">
+              <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-white">
+                <Trophy className="w-4 h-4 text-amber-300" />
                 <span>Clue &amp; Guess Log</span>
               </div>
               <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
                 {orderedFeed.map((entry) => (
                   <div
                     key={entry.id}
-                    className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 rounded-lg bg-white border border-ink/15 text-xs"
+                    className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 rounded-lg bg-white/[0.05] border border-white/12 text-xs"
                   >
                     <div className="min-w-0">
-                      <span className="font-mono font-bold text-ink">
+                      <span className="font-mono font-bold text-white">
                         {entry.cardTerm}:
                       </span>{" "}
-                      <span className="text-ink/80">&ldquo;{entry.clue}&rdquo;</span>
+                      <span className="text-slate-300">&ldquo;{entry.clue}&rdquo;</span>
                     </div>
                     <span
                       className={`font-mono font-bold ${
                         entry.guessedCorrectly
-                          ? "text-emerald-700"
-                          : "text-rose-600"
+                          ? "text-emerald-300"
+                          : "text-rose-300"
                       }`}
                     >
                       {entry.guessedCorrectly
@@ -1509,7 +1507,7 @@ export function TabooExplainArena() {
               <button
                 type="button"
                 onClick={handleResetRoom}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-sm border border-ink/15 shadow-soft"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500/85 to-orange-500/85 hover:from-amber-500/95 hover:to-orange-500/95 text-white font-bold text-sm border border-amber-300/60 shadow-[0_0_20px_rgba(245,158,11,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)]"
               >
                 <RotateCcw className="w-4 h-4" />
                 <span>Play Again</span>
@@ -1517,7 +1515,7 @@ export function TabooExplainArena() {
               <button
                 type="button"
                 onClick={handleLeaveRoom}
-                className="px-4 py-2.5 rounded-xl bg-paper text-ink font-mono font-bold text-xs border border-ink/15"
+                className="liquid-glass-btn px-4 py-2.5 rounded-xl font-mono font-bold text-xs"
               >
                 Back to Lobby
               </button>
@@ -1525,9 +1523,9 @@ export function TabooExplainArena() {
 
             <Link
               href="/shop"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-ink text-white font-bold text-sm border border-ink/15 shadow-soft hover:bg-white hover:text-ink"
+              className="liquid-btn-primary inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm"
             >
-              <ShoppingBag className="w-4 h-4 text-accent" />
+              <ShoppingBag className="w-4 h-4" />
               <span>Spend IT-Coins in Shop</span>
             </Link>
           </div>

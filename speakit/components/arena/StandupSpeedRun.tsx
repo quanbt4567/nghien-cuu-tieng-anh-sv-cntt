@@ -395,27 +395,27 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
 
   if (phase === "ready") {
     return (
-      <section className="bg-white border border-ink/15 rounded-2xl p-6 sm:p-8 shadow-soft space-y-6">
+      <section className="liquid-glass-card p-6 sm:p-8 space-y-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-2 max-w-xl">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-accent-light text-accent text-xs font-mono font-bold border border-accent/25">
-              <Timer className="w-3.5 h-3.5" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-indigo-500/20 text-indigo-200 text-xs font-mono font-bold border border-indigo-400/45">
+              <Timer className="w-3.5 h-3.5 text-indigo-300" />
               <span>3 câu hỏi Daily Standup • 25 giây / câu</span>
             </span>
-            <h2 className="text-xl sm:text-2xl font-bold text-ink">
+            <h2 className="text-xl sm:text-2xl font-bold text-white">
               Standup Speed Run
             </h2>
-            <p className="text-sm text-ink-muted leading-relaxed">
+            <p className="text-sm text-slate-300 leading-relaxed">
               Trả lời nhanh 3 câu hỏi kinh điển (Yesterday, Today, Blockers)
               trong tối đa 25 giây mỗi câu. Điểm tốc độ ={" "}
-              <code className="font-mono font-bold text-ink">
+              <code className="font-mono font-bold text-cyan-300">
                 điểm lượt × 3 + giây dư × 4
               </code>
               .
             </p>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-paper border border-ink/15 flex items-center justify-center shrink-0">
-            <Timer className="w-6 h-6 text-accent" />
+          <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-400/45 flex items-center justify-center shrink-0">
+            <Timer className="w-6 h-6 text-indigo-300" />
           </div>
         </div>
 
@@ -423,13 +423,13 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
           {STANDUP_SPEED_QUESTIONS.map((q, idx) => (
             <div
               key={q.id}
-              className="bg-paper border border-ink/15 rounded-xl p-3.5 space-y-1"
+              className="bg-slate-950/50 border border-white/15 rounded-xl p-3.5 space-y-1"
             >
-              <div className="font-mono font-bold text-accent">
+              <div className="font-mono font-bold text-indigo-300">
                 Câu 0{idx + 1} • {q.timeLimitSec}s
               </div>
-              <div className="font-semibold text-ink">{q.labelVI}</div>
-              <p className="text-ink-muted">"{q.questionEN}"</p>
+              <div className="font-semibold text-white">{q.labelVI}</div>
+              <p className="text-slate-300">"{q.questionEN}"</p>
             </div>
           ))}
         </div>
@@ -437,7 +437,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
         <button
           type="button"
           onClick={startRun}
-          className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-pill bg-accent text-white text-sm font-bold border border-accent shadow-soft hover:bg-accent-hover shadow-hard-press transition-all"
+          className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-pill bg-gradient-to-r from-indigo-500/85 to-blue-600/85 hover:from-indigo-500/95 hover:to-blue-600/95 text-white text-sm font-bold border border-indigo-300/60 shadow-[0_0_22px_rgba(99,102,241,0.42),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all"
         >
           <Play className="w-4 h-4 fill-white" />
           <span>Bắt đầu Standup Speed Run</span>
@@ -448,59 +448,58 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
 
   if (phase === "finished" && summary) {
     return (
-      <section className="bg-white border border-ink/15 rounded-2xl p-6 sm:p-8 shadow-soft space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-paper-muted pb-4">
+      <section className="liquid-glass-card p-6 sm:p-8 space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/15 pb-4">
           <div className="space-y-1">
-            <span className="text-xs font-mono font-bold uppercase text-accent">
+            <span className="text-xs font-mono font-bold uppercase text-indigo-300">
               Kết quả Standup Speed Run
             </span>
-            <h2 className="text-2xl font-bold text-ink">
+            <h2 className="text-2xl font-bold text-white">
               Hoàn tất 3 lượt Daily Standup!
             </h2>
           </div>
-          <div className="px-4 py-2 rounded-pill bg-ink text-white font-mono text-sm font-bold">
+          <div className="liquid-glass-pill px-4 py-2 font-mono text-sm font-bold text-cyan-200 border-cyan-400/45">
             +{summary.totalScore} điểm
           </div>
         </div>
 
-        {/* Honest AI vs Local Scoring Disclosure (Principle V) */}
-        <div className="bg-paper border border-ink/15 rounded-xl p-3 text-xs text-ink-muted flex flex-wrap items-center justify-between gap-2">
+        <div className="bg-slate-950/50 border border-white/15 rounded-xl p-3 text-xs text-slate-300 flex flex-wrap items-center justify-between gap-2">
           <span>
-            <strong className="text-ink">Phương thức chấm điểm:</strong>{" "}
+            <strong className="text-white">Phương thức chấm điểm:</strong>{" "}
             {summary.usedAi
               ? "AI Gemini (đánh giá phát âm ước lượng từ văn bản transcript)"
               : "Bộ quy tắc từ khóa cục bộ (rule-based matching, ước lượng từ văn bản)"}
           </span>
-          <span className="font-mono text-[11px] px-2.5 py-0.5 rounded-pill bg-white border border-ink/15 text-ink">
+          <span className="font-mono text-[11px] px-2.5 py-0.5 rounded-pill bg-indigo-500/20 border border-indigo-400/40 text-indigo-200">
             {summary.usedAi ? "AI + Speed Bonus" : "Local Rules + Speed Bonus"}
           </span>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-paper border border-ink/15 rounded-xl p-3.5 text-center">
-            <div className="text-2xl font-mono font-bold text-ink">
+          <div className="bg-slate-950/50 border border-white/15 rounded-xl p-3.5 text-center">
+            <div className="text-2xl font-mono font-bold text-white">
               {summary.totalScore}
             </div>
-            <div className="text-[11px] text-ink-muted mt-1">Tổng điểm Run</div>
+            <div className="text-[11px] text-slate-400 mt-1">Tổng điểm Run</div>
           </div>
-          <div className="bg-paper border border-ink/15 rounded-xl p-3.5 text-center">
-            <div className="text-2xl font-mono font-bold text-accent">
+          <div className="bg-slate-950/50 border border-white/15 rounded-xl p-3.5 text-center">
+            <div className="text-2xl font-mono font-bold text-emerald-300">
               {summary.totalKeywordsUsed}
             </div>
-            <div className="text-[11px] text-ink-muted mt-1">Từ khóa đạt</div>
+            <div className="text-[11px] text-slate-400 mt-1">Từ khóa đạt</div>
           </div>
-          <div className="bg-paper border border-ink/15 rounded-xl p-3.5 text-center">
-            <div className="text-2xl font-mono font-bold text-ink">
+          <div className="bg-slate-950/50 border border-white/15 rounded-xl p-3.5 text-center">
+            <div className="text-2xl font-mono font-bold text-cyan-300">
               {summary.durationSec}s
             </div>
-            <div className="text-[11px] text-ink-muted mt-1">Tổng thời gian</div>
+            <div className="text-[11px] text-slate-400 mt-1">Tổng thời gian</div>
           </div>
-          <div className="bg-accent-light border border-accent/30 rounded-xl p-3.5 text-center">
-            <div className="text-2xl font-mono font-bold text-accent flex items-center justify-center gap-1">
-              <Coins className="w-5 h-5" />
+          <div className="bg-amber-500/15 border border-amber-400/35 rounded-xl p-3.5 text-center">
+            <div className="text-2xl font-mono font-bold text-amber-200 flex items-center justify-center gap-1">
+              <Coins className="w-5 h-5 text-amber-300" />
               <span>{summary.totalCoins}</span>
             </div>
-            <div className="text-[11px] text-ink font-medium mt-1">
+            <div className="text-[11px] text-amber-100/90 font-medium mt-1">
               Số dư IT-Coin •{" "}
               {summary.coinsEarnedNow > 0
                 ? `+${summary.coinsEarnedNow} IT-Coin`
@@ -509,40 +508,39 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
           </div>
         </div>
 
-        {/* Per-Question Breakdown */}
         <div className="space-y-3">
-          <h3 className="text-sm font-bold text-ink">
+          <h3 className="text-sm font-bold text-white">
             Chi tiết từng lượt Standup
           </h3>
           {summary.turns.map((turn, idx) => (
             <div
               key={turn.question.id}
-              className="bg-paper border border-ink/15 rounded-2xl p-4 space-y-2.5"
+              className="bg-slate-950/55 border border-white/15 rounded-2xl p-4 space-y-2.5"
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="text-xs font-bold text-ink">
-                  <span className="font-mono text-accent mr-1.5">
+                <div className="text-xs font-bold text-white">
+                  <span className="font-mono text-indigo-300 mr-1.5">
                     0{idx + 1}.
                   </span>
                   {turn.question.questionEN}
                 </div>
                 <div className="flex items-center gap-2 font-mono text-xs">
-                  <span className="px-2.5 py-0.5 rounded-pill bg-white border border-ink/15 text-ink">
+                  <span className="px-2.5 py-0.5 rounded-pill bg-white/[0.08] border border-white/15 text-slate-200">
                     {turn.turnScore}/100
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-pill bg-ink text-white font-bold">
+                  <span className="px-2.5 py-0.5 rounded-pill bg-cyan-500/20 border border-cyan-400/40 text-cyan-200 font-bold">
                     +{turn.speedPoints} pts
                   </span>
                 </div>
               </div>
 
               {turn.skipped ? (
-                <p className="text-xs text-ink-muted italic">
+                <p className="text-xs text-slate-400 italic">
                   Đã bỏ qua hoặc hết giờ khi chưa nhập câu trả lời.
                 </p>
               ) : (
                 <>
-                  <p className="text-xs text-ink bg-white border border-ink/10 rounded-xl p-2.5">
+                  <p className="text-xs text-slate-100 bg-white/[0.05] border border-white/12 rounded-xl p-2.5">
                     "{turn.transcript}"
                   </p>
                   <div className="flex flex-wrap items-center justify-between gap-2 text-[11px]">
@@ -551,19 +549,19 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
                         turn.keywordsUsed.map((kw) => (
                           <span
                             key={kw}
-                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-pill bg-white border border-ink/15 font-mono text-ink"
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-pill bg-emerald-500/15 border border-emerald-400/35 font-mono text-emerald-200"
                           >
-                            <Check className="w-3 h-3 text-accent" />
+                            <Check className="w-3 h-3 text-emerald-300" />
                             <span>{kw}</span>
                           </span>
                         ))
                       ) : (
-                        <span className="text-ink-muted">
+                        <span className="text-slate-400">
                           Chưa khớp từ khóa gợi ý
                         </span>
                       )}
                     </div>
-                    <span className="font-mono text-ink-muted">
+                    <span className="font-mono text-slate-400">
                       {turn.evaluationMode === "ai"
                         ? "AI (Gemini)"
                         : "Local Rules"}
@@ -573,8 +571,8 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
                     </span>
                   </div>
                   {turn.betterSentence && (
-                    <div className="text-[11px] text-ink-muted pt-1 border-t border-ink/10">
-                      <strong className="text-ink">Gợi ý mượt hơn:</strong>{" "}
+                    <div className="text-[11px] text-slate-300 pt-1.5 border-t border-white/10">
+                      <strong className="text-cyan-200">Gợi ý mượt hơn:</strong>{" "}
                       "{turn.betterSentence}"
                     </div>
                   )}
@@ -587,7 +585,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
         <button
           type="button"
           onClick={startRun}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-pill bg-accent text-white text-sm font-bold border border-accent shadow-soft hover:bg-accent-hover shadow-hard-press transition-all"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-pill bg-gradient-to-r from-indigo-500/85 to-blue-600/85 hover:from-indigo-500/95 hover:to-blue-600/95 text-white text-sm font-bold border border-indigo-300/60 shadow-[0_0_22px_rgba(99,102,241,0.42),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all"
         >
           <RotateCcw className="w-4 h-4" />
           <span>Chạy lại</span>
@@ -606,8 +604,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
   );
 
   return (
-    <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-7 shadow-soft space-y-5">
-      {/* Turn & Countdown Bar */}
+    <section className="liquid-glass-card p-5 sm:p-7 space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           {STANDUP_SPEED_QUESTIONS.map((q, idx) => (
@@ -615,10 +612,10 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
               key={q.id}
               className={`px-3 py-1 rounded-pill text-xs font-mono font-bold border ${
                 idx === questionIdx
-                  ? "bg-accent text-white border-accent"
+                  ? "bg-indigo-500/30 text-indigo-100 border-indigo-400/60 shadow-[0_0_14px_rgba(99,102,241,0.35)]"
                   : idx < questionIdx
-                  ? "bg-ink text-white border-ink"
-                  : "bg-paper text-ink-faint border-ink/15"
+                  ? "bg-emerald-500/20 text-emerald-200 border-emerald-400/45"
+                  : "liquid-glass-pill text-slate-400"
               }`}
             >
               Câu {idx + 1}/3
@@ -627,10 +624,10 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
         </div>
 
         <span
-          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-pill font-mono text-xs font-bold border ${
+          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-pill font-mono text-xs font-bold ${
             timeLeft <= 5
-              ? "bg-accent text-white border-accent animate-pulse"
-              : "bg-paper text-ink border-ink/20"
+              ? "liquid-btn-danger animate-pulse"
+              : "liquid-glass-pill text-cyan-200"
           }`}
         >
           <Clock className="w-3.5 h-3.5" />
@@ -638,46 +635,47 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
         </span>
       </div>
 
-      <div className="w-full h-2.5 bg-paper rounded-pill border border-ink/15 overflow-hidden">
+      <div className="w-full h-2.5 bg-slate-950/65 rounded-pill border border-white/15 overflow-hidden">
         <div
           className={`h-full transition-all duration-500 ${
-            timeLeft <= 5 ? "bg-accent" : "bg-ink"
+            timeLeft <= 5
+              ? "bg-gradient-to-r from-rose-500 to-red-500"
+              : "bg-gradient-to-r from-indigo-400 to-cyan-400"
           }`}
           style={{ width: `${progressPct}%` }}
         />
       </div>
 
-      {/* Question Card */}
-      <div className="bg-paper border border-ink/15 rounded-2xl p-5 space-y-3">
+      <div className="bg-slate-950/55 border border-white/15 rounded-2xl p-5 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="text-xs font-mono font-bold uppercase text-accent">
+          <span className="text-xs font-mono font-bold uppercase text-indigo-300">
             {currentQuestion.labelVI}
           </span>
           <button
             type="button"
             onClick={handleSpeakQuestion}
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-white border border-ink/15 text-xs font-mono font-semibold text-ink hover:bg-paper-muted transition-colors"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-xs font-mono font-semibold transition-all"
           >
             <Volume2
               className={`w-3.5 h-3.5 ${
-                isPlayingTts ? "text-accent animate-pulse" : ""
+                isPlayingTts ? "text-cyan-300 animate-pulse" : "text-indigo-300"
               }`}
             />
             <span>{isPlayingTts ? "Đang đọc..." : "Nghe câu hỏi"}</span>
           </button>
         </div>
 
-        <h3 className="text-lg sm:text-xl font-bold text-ink">
+        <h3 className="text-lg sm:text-xl font-bold text-white">
           "{currentQuestion.questionEN}"
         </h3>
 
-        <p className="text-xs text-ink-muted">{currentQuestion.hintVI}</p>
+        <p className="text-xs text-slate-300">{currentQuestion.hintVI}</p>
 
         <div className="flex flex-wrap gap-1.5 pt-1">
           {currentQuestion.expectedKeywords.slice(0, 6).map((kw) => (
             <span
               key={kw}
-              className="px-2 py-0.5 rounded-pill bg-white border border-ink/15 text-[11px] font-mono text-ink-muted"
+              className="px-2.5 py-0.5 rounded-pill bg-white/[0.08] border border-white/15 text-[11px] font-mono text-cyan-200"
             >
               {kw}
             </span>
@@ -685,17 +683,16 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
         </div>
       </div>
 
-      {/* Voice + Inline Typed Fallback Textarea (Principle III) */}
       <div className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <button
             type="button"
             onClick={handleToggleMic}
             disabled={isEvaluating || turnFeedback !== null}
-            className={`inline-flex items-center gap-2.5 px-5 py-2.5 rounded-pill font-semibold text-xs border transition-all disabled:opacity-50 ${
+            className={`inline-flex items-center gap-2.5 px-5 py-2.5 rounded-pill font-semibold text-xs transition-all disabled:opacity-50 ${
               isRecording
-                ? "bg-accent text-white border-accent animate-mic-listening shadow-card"
-                : "bg-ink text-white border-ink shadow-soft hover:bg-ink-muted"
+                ? "liquid-btn-danger animate-mic-listening"
+                : "liquid-btn-primary"
             }`}
           >
             {isRecording ? (
@@ -706,10 +703,10 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
                   className="flex items-end gap-0.5 h-3.5"
                   aria-hidden="true"
                 >
-                  <span className="w-0.5 h-2 bg-white rounded-full animate-pulse" />
-                  <span className="w-0.5 h-3.5 bg-white rounded-full animate-pulse [animation-delay:120ms]" />
-                  <span className="w-0.5 h-1.5 bg-white rounded-full animate-pulse [animation-delay:240ms]" />
-                  <span className="w-0.5 h-3 bg-white rounded-full animate-pulse [animation-delay:360ms]" />
+                  <span className="w-0.5 h-2 bg-white/90 rounded-full animate-pulse" />
+                  <span className="w-0.5 h-3.5 bg-white/90 rounded-full animate-pulse [animation-delay:120ms]" />
+                  <span className="w-0.5 h-1.5 bg-white/90 rounded-full animate-pulse [animation-delay:240ms]" />
+                  <span className="w-0.5 h-3 bg-white/90 rounded-full animate-pulse [animation-delay:360ms]" />
                 </span>
               </>
             ) : (
@@ -720,7 +717,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
             )}
           </button>
 
-          <span className="inline-flex items-center gap-1 text-[11px] font-mono text-ink-muted">
+          <span className="inline-flex items-center gap-1 text-[11px] font-mono text-slate-400">
             <Keyboard className="w-3.5 h-3.5" />
             <span>Hoặc gõ trực tiếp bên dưới</span>
           </span>
@@ -734,27 +731,27 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
           disabled={isEvaluating || turnFeedback !== null}
           placeholder="Ví dụ: Yesterday I fixed the login API timeout and merged my pull request..."
           aria-label="Câu trả lời Daily Standup bằng tiếng Anh"
-          className="w-full p-3.5 rounded-2xl bg-paper border border-ink/20 text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:border-accent resize-none disabled:opacity-60"
+          className="liquid-glass-input w-full p-3.5 rounded-2xl text-sm focus:outline-none resize-none disabled:opacity-60"
         />
 
         {speechError && (
-          <p className="text-xs text-accent bg-accent-light border border-accent/40 rounded-xl px-3.5 py-2">
+          <p className="text-xs text-rose-200 bg-rose-500/15 border border-rose-400/40 rounded-xl px-3.5 py-2">
             {speechError}
           </p>
         )}
       </div>
 
       {turnFeedback && (
-        <div className="bg-paper border border-ink/20 rounded-2xl p-4 space-y-2.5">
+        <div className="bg-slate-950/60 border border-white/15 rounded-2xl p-4 space-y-2.5">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="text-xs font-mono font-bold uppercase text-accent">
+            <span className="text-xs font-mono font-bold uppercase text-cyan-300">
               {turnFeedback.skipped ? "Đã bỏ qua lượt" : "Kết quả lượt vừa rồi"}
             </span>
             <div className="flex items-center gap-2 font-mono text-xs">
-              <span className="px-2.5 py-0.5 rounded-pill bg-white border border-ink/15 text-ink">
+              <span className="px-2.5 py-0.5 rounded-pill bg-white/[0.08] border border-white/15 text-slate-200">
                 {turnFeedback.turnScore}/100
               </span>
-              <span className="px-2.5 py-0.5 rounded-pill bg-ink text-white font-bold">
+              <span className="px-2.5 py-0.5 rounded-pill bg-emerald-500/20 border border-emerald-400/45 text-emerald-200 font-bold">
                 +{turnFeedback.speedPoints} pts
               </span>
             </div>
@@ -768,35 +765,35 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
                     turnFeedback.keywordsUsed.map((kw) => (
                       <span
                         key={kw}
-                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-pill bg-white border border-ink/15 font-mono text-ink"
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-pill bg-emerald-500/15 border border-emerald-400/35 font-mono text-emerald-200"
                       >
-                        <Check className="w-3 h-3 text-accent" />
+                        <Check className="w-3 h-3 text-emerald-300" />
                         <span>{kw}</span>
                       </span>
                     ))
                   ) : (
-                    <span className="text-ink-muted">
+                    <span className="text-slate-400">
                       Chưa khớp từ khóa gợi ý
                     </span>
                   )}
                 </div>
                 {turnFeedback.timeBonus > 0 && (
-                  <span className="font-mono text-ink-muted">
+                  <span className="font-mono text-amber-300">
                     Bonus tốc độ +{turnFeedback.timeBonus}
                   </span>
                 )}
               </div>
 
               {turnFeedback.betterSentence && (
-                <p className="text-xs text-ink-muted pt-1 border-t border-ink/10">
-                  <strong className="text-ink">Gợi ý mượt hơn:</strong> "
+                <p className="text-xs text-slate-300 pt-1.5 border-t border-white/10">
+                  <strong className="text-cyan-200">Gợi ý mượt hơn:</strong> "
                   {turnFeedback.betterSentence}"
                 </p>
               )}
 
               {turnFeedback.pronunciationNote && (
-                <p className="text-xs text-ink-muted">
-                  <strong className="text-ink">Gợi ý phát âm:</strong>{" "}
+                <p className="text-xs text-slate-300">
+                  <strong className="text-amber-200">Gợi ý phát âm:</strong>{" "}
                   {turnFeedback.pronunciationNote}
                 </p>
               )}
@@ -810,7 +807,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
           <button
             type="button"
             onClick={handleNextTurn}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-pill bg-accent text-white text-xs sm:text-sm font-bold border border-accent shadow-soft hover:bg-accent-hover transition-all"
+            className="liquid-btn-primary inline-flex items-center gap-2 px-6 py-2.5 rounded-pill text-xs sm:text-sm font-bold transition-all"
           >
             <span>
               {questionIdx === STANDUP_SPEED_QUESTIONS.length - 1
@@ -826,7 +823,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
             type="button"
             onClick={() => void submitCurrentTurn(true)}
             disabled={isEvaluating}
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-pill bg-paper-muted text-ink text-xs font-semibold border border-ink/15 hover:bg-paper-subtle disabled:opacity-50 transition-colors"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-4 py-2.5 rounded-pill text-xs font-semibold disabled:opacity-50 transition-all"
           >
             <SkipForward className="w-3.5 h-3.5" />
             <span>Bỏ qua câu này</span>
@@ -836,7 +833,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
             type="button"
             onClick={() => void submitCurrentTurn(false)}
             disabled={isEvaluating || !answerText.trim()}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-pill bg-accent text-white text-xs sm:text-sm font-bold border border-accent shadow-soft hover:bg-accent-hover disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-pill bg-gradient-to-r from-indigo-500/85 to-blue-600/85 hover:from-indigo-500/95 hover:to-blue-600/95 text-white text-xs sm:text-sm font-bold border border-indigo-300/60 shadow-[0_0_20px_rgba(99,102,241,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
           >
             {isEvaluating ? (
               <>

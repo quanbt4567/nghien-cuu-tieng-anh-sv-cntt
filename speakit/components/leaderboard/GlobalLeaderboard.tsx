@@ -252,7 +252,7 @@ export function GlobalLeaderboard({
     <div className="space-y-6 pb-20">
       {mode === "online" && currentPlayer && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <section className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4">
+          <section className="liquid-glass-card p-5 space-y-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3">
                 <DiscordAvatarFrame
@@ -269,7 +269,7 @@ export function GlobalLeaderboard({
                 <div>
                   {!isEditingName ? (
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-ink text-sm">
+                      <span className="font-bold text-white text-sm">
                         {currentPlayer.displayName}
                       </span>
                       <button
@@ -279,7 +279,7 @@ export function GlobalLeaderboard({
                           setIsEditingName(true);
                         }}
                         aria-label="Edit display name"
-                        className="p-1 rounded-pill hover:bg-paper-muted text-ink-muted hover:text-ink"
+                        className="p-1 rounded-pill hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
                       >
                         <Pencil className="w-3.5 h-3.5" />
                       </button>
@@ -292,53 +292,53 @@ export function GlobalLeaderboard({
                         onChange={(e) => setDraftName(e.target.value)}
                         maxLength={24}
                         placeholder="Display name"
-                        className="px-2.5 py-1 text-xs border border-ink/20 rounded-lg bg-paper focus:outline-none focus:border-ink w-36"
+                        className="liquid-glass-input px-2.5 py-1 text-xs rounded-lg focus:outline-none w-36"
                       />
                       <button
                         type="submit"
                         disabled={isSavingName}
-                        className="px-2.5 py-1 text-xs font-semibold rounded-pill bg-ink text-white"
+                        className="liquid-btn-primary px-2.5 py-1 text-xs font-semibold rounded-pill"
                       >
                         {isSavingName ? "..." : "Save"}
                       </button>
                     </form>
                   )}
-                  <div className="text-[11px] font-mono text-ink-muted flex items-center gap-1.5 mt-0.5">
-                    <Award className="w-3 h-3 text-accent" />
+                  <div className="text-[11px] font-mono text-slate-300 flex items-center gap-1.5 mt-0.5">
+                    <Award className="w-3 h-3 text-cyan-300" />
                     <span>{currentPlayer.equippedTitle}</span>
                   </div>
                 </div>
               </div>
 
               <div className="text-right font-mono">
-                <div className="text-sm font-bold text-ink flex items-center justify-end gap-1">
-                  <Coins className="w-3.5 h-3.5 text-accent" />
+                <div className="text-sm font-bold text-amber-200 flex items-center justify-end gap-1">
+                  <Coins className="w-3.5 h-3.5 text-amber-300" />
                   <span>{currentPlayer.itCoins}</span>
                 </div>
-                <div className="text-[11px] text-ink-muted">
+                <div className="text-[11px] text-slate-300">
                   {currentPlayer.totalPoints.toLocaleString("en-US")} pts
                 </div>
               </div>
             </div>
 
-            <div className="p-3 bg-paper rounded-xl border border-ink/10 flex items-center justify-between gap-2">
+            <div className="p-3 bg-slate-950/55 rounded-xl border border-white/15 flex items-center justify-between gap-2">
               <div className="min-w-0">
-                <div className="text-[10px] font-mono uppercase text-ink-muted flex items-center gap-1">
-                  <KeyRound className="w-3 h-3" />
+                <div className="text-[10px] font-mono uppercase text-slate-400 flex items-center gap-1">
+                  <KeyRound className="w-3 h-3 text-cyan-300" />
                   <span>Mã khôi phục tài khoản (Backup)</span>
                 </div>
-                <div className="text-sm font-mono font-bold text-ink tracking-wider">
+                <div className="text-sm font-mono font-bold text-cyan-200 tracking-wider">
                   {currentPlayer.transferCode}
                 </div>
               </div>
               <button
                 type="button"
                 onClick={handleCopyCode}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white border border-ink/15 text-xs font-mono font-medium text-ink hover:bg-paper-muted"
+                className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-xs font-mono font-medium"
               >
                 {copiedCode ? (
                   <>
-                    <Check className="w-3.5 h-3.5 text-accent" />
+                    <Check className="w-3.5 h-3.5 text-emerald-300" />
                     <span>Đã chép</span>
                   </>
                 ) : (
@@ -351,14 +351,14 @@ export function GlobalLeaderboard({
             </div>
           </section>
 
-          <section className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-3">
+          <section className="liquid-glass-card p-5 space-y-3">
             <div className="space-y-1">
-              <h3 className="text-sm font-bold text-ink flex items-center gap-2">
-                <RefreshCw className="w-4 h-4 text-accent" />
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <RefreshCw className="w-4 h-4 text-cyan-300" />
                 <span>Khôi phục tiến độ sang thiết bị khác</span>
               </h3>
-              <p className="text-xs text-ink-muted">
-                Nhập mã <code className="font-mono text-ink">DEV-XXXXXX</code> để mang điểm, chuỗi ngày và thứ hạng sang trình duyệt mới mà không cần đăng ký.
+              <p className="text-xs text-slate-300">
+                Nhập mã <code className="font-mono text-cyan-200">DEV-XXXXXX</code> để mang điểm, chuỗi ngày và thứ hạng sang trình duyệt mới mà không cần đăng ký.
               </p>
             </div>
 
@@ -369,12 +369,12 @@ export function GlobalLeaderboard({
                 onChange={(e) => setRestoreCode(e.target.value)}
                 placeholder="DEV-XXXXXX"
                 maxLength={10}
-                className="flex-1 px-3 py-2 text-xs font-mono uppercase bg-paper border border-ink/15 rounded-xl text-ink focus:outline-none focus:border-ink"
+                className="liquid-glass-input flex-1 px-3 py-2 text-xs font-mono uppercase rounded-xl focus:outline-none"
               />
               <button
                 type="submit"
                 disabled={isRestoring || !restoreCode.trim()}
-                className="px-4 py-2 rounded-pill bg-ink text-white text-xs font-semibold border border-ink disabled:opacity-50"
+                className="liquid-btn-primary px-4 py-2 rounded-pill text-xs font-semibold disabled:opacity-50"
               >
                 {isRestoring ? "Đang khôi phục..." : "Khôi phục"}
               </button>
@@ -384,8 +384,8 @@ export function GlobalLeaderboard({
               <div
                 className={`text-xs p-2.5 rounded-xl border ${
                   restoreStatus.ok
-                    ? "bg-paper border-ink/20 text-ink"
-                    : "bg-accent-light border-accent/30 text-accent"
+                    ? "bg-emerald-500/15 border-emerald-400/40 text-emerald-200"
+                    : "bg-rose-500/15 border-rose-400/40 text-rose-200"
                 }`}
               >
                 {restoreStatus.message}
@@ -396,24 +396,24 @@ export function GlobalLeaderboard({
       )}
 
       {mode === "online" && currentPlayer && (
-        <section className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4">
+        <section className="liquid-glass-card p-5 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h3 className="text-sm font-bold text-ink flex items-center gap-2">
-                <ShoppingBag className="w-4 h-4 text-accent" />
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <ShoppingBag className="w-4 h-4 text-cyan-300" />
                 <span>Kho hiệu ứng IT-Coin</span>
               </h3>
-              <p className="text-xs text-ink-muted">
+              <p className="text-xs text-slate-300">
                 Mở khóa &amp; trang bị nhanh 3 hiệu ứng nổi bật trên bảng xếp hạng.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="px-3 py-1 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-bold text-ink">
+              <span className="liquid-glass-pill px-3 py-1 text-xs font-mono font-bold text-amber-200">
                 Số dư: {currentPlayer.itCoins} Coin
               </span>
               <Link
                 href="/shop"
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-accent text-white text-xs font-mono font-semibold hover:bg-accent-hover transition-colors"
+                className="liquid-btn-primary inline-flex items-center gap-1 px-3.5 py-1 rounded-pill text-xs font-mono font-semibold transition-all"
               >
                 <span>Xem thêm tại Cửa hàng →</span>
               </Link>
@@ -421,7 +421,7 @@ export function GlobalLeaderboard({
           </div>
 
           {shopNotice && (
-            <div className="p-2.5 rounded-xl bg-accent-light border border-accent/30 text-xs text-accent">
+            <div className="p-2.5 rounded-xl bg-rose-500/15 border border-rose-400/40 text-xs text-rose-200">
               {shopNotice}
             </div>
           )}
@@ -439,18 +439,18 @@ export function GlobalLeaderboard({
               return (
                 <div
                   key={item.id}
-                  className="p-3.5 rounded-xl bg-paper border border-ink/15 flex flex-col justify-between gap-3"
+                  className="p-3.5 rounded-xl bg-slate-950/55 border border-white/15 flex flex-col justify-between gap-3"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-bold text-ink">
+                      <span className="text-xs font-bold text-white">
                         {item.name}
                       </span>
-                      <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-white border border-ink/15 text-ink-muted">
+                      <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-white/[0.08] border border-white/15 text-slate-300">
                         {item.kind}
                       </span>
                     </div>
-                    <p className="text-[11px] text-ink-muted">
+                    <p className="text-[11px] text-slate-300">
                       {item.description}
                     </p>
                   </div>
@@ -463,14 +463,14 @@ export function GlobalLeaderboard({
                       (!isOwned && !canAfford)
                     }
                     onClick={() => handleCosmeticAction(item.id, item.price)}
-                    className={`w-full py-1.5 px-3 rounded-pill text-xs font-mono font-semibold border transition-all ${
+                    className={`w-full py-1.5 px-3 rounded-pill text-xs font-mono font-semibold transition-all ${
                       isEquipped
-                        ? "bg-ink text-white border-ink opacity-90"
+                        ? "liquid-btn-success opacity-95"
                         : isOwned
-                        ? "bg-white text-ink border-ink/20 hover:bg-paper-muted"
+                        ? "liquid-glass-btn"
                         : canAfford
-                        ? "bg-accent text-white border-accent hover:bg-accent-hover"
-                        : "bg-paper-muted text-ink-faint border-ink/10 cursor-not-allowed"
+                        ? "liquid-btn-primary"
+                        : "bg-white/[0.05] text-slate-500 border border-white/10 cursor-not-allowed"
                     }`}
                   >
                     {busyItemId === item.id
@@ -488,16 +488,16 @@ export function GlobalLeaderboard({
         </section>
       )}
 
-      <section className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
+      <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h3 className="text-base font-bold text-ink flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-accent" />
+            <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <Trophy className="w-5 h-5 text-amber-300" />
               <span>
                 Bảng xếp hạng ({players.length} học viên · tối đa Top 50)
               </span>
             </h3>
-            <p className="text-xs text-ink-muted">
+            <p className="text-xs text-slate-300">
               Xếp hạng theo Tổng điểm từ cao xuống thấp (nếu bằng điểm sẽ xét IT-Coin).
             </p>
           </div>
@@ -505,7 +505,7 @@ export function GlobalLeaderboard({
             type="button"
             onClick={() => loadLeaderboard()}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-medium text-ink hover:bg-paper-muted disabled:opacity-50"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-xs font-mono font-medium disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
             <span>Làm mới</span>
@@ -513,12 +513,12 @@ export function GlobalLeaderboard({
         </div>
 
         {loading && players.length === 0 ? (
-          <div className="py-10 flex items-center justify-center gap-2 text-xs text-ink-muted">
-            <Loader2 className="w-4 h-4 animate-spin text-accent" />
+          <div className="py-10 flex items-center justify-center gap-2 text-xs text-slate-300">
+            <Loader2 className="w-4 h-4 animate-spin text-cyan-300" />
             <span>Đang tải bảng xếp hạng...</span>
           </div>
         ) : players.length === 0 ? (
-          <div className="p-8 rounded-xl bg-paper border border-ink/10 text-center text-xs text-ink-muted">
+          <div className="p-8 rounded-xl bg-slate-950/50 border border-white/12 text-center text-xs text-slate-300">
             Chưa có người chơi nào trên bảng xếp hạng. Hãy luyện nói 1 lượt để giữ vị trí #1!
           </div>
         ) : (
@@ -530,15 +530,15 @@ export function GlobalLeaderboard({
             }
             const getRankBadgeClass = (rank: number) => {
               if (rank === 1) {
-                return "bg-amber-400/20 border-amber-500/50 text-amber-800";
+                return "bg-amber-400/20 border-amber-300/40 text-amber-200 shadow-[0_0_12px_rgba(251,191,36,0.28)]";
               }
               if (rank === 2) {
-                return "bg-slate-200/80 border-slate-400/60 text-slate-800";
+                return "bg-slate-300/20 border-slate-200/40 text-slate-100 shadow-[0_0_12px_rgba(203,213,225,0.22)]";
               }
               if (rank === 3) {
-                return "bg-orange-200/70 border-orange-400/60 text-orange-900";
+                return "bg-orange-400/20 border-orange-300/40 text-orange-200 shadow-[0_0_12px_rgba(251,146,60,0.24)]";
               }
-              return "bg-white border-ink/15 text-ink-muted";
+              return "bg-white/[0.06] border-white/15 text-slate-300";
             };
             const visiblePlayers = showAllRows ? players : players.slice(0, 15);
             return (
@@ -555,14 +555,14 @@ export function GlobalLeaderboard({
                       fxId={entry.equippedCosmetics?.leaderboard_fx}
                       nameplateId={entry.equippedCosmetics?.nameplate}
                       lite={useLite}
-                      className={`border transition-colors ${
+                      className={`liquid-glass-card-lite transition-colors ${
                         hasNameplate || hasFx
                           ? entry.isCurrentUser
-                            ? "border-accent/40"
-                            : "border-ink/15"
+                            ? "border-cyan-400/50"
+                            : "border-white/15"
                           : entry.isCurrentUser
-                          ? "bg-accent-light/50 border-accent/40"
-                          : "bg-paper border-ink/10"
+                          ? "!bg-cyan-500/15 border-cyan-400/50"
+                          : "border-white/12"
                       }`}
                     >
                       <div className="p-3.5 flex flex-wrap items-center justify-between gap-3">
@@ -591,24 +591,24 @@ export function GlobalLeaderboard({
 
                           <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-2">
-                              <span className="font-bold text-sm text-ink truncate group-hover:underline">
+                              <span className="font-bold text-sm text-white truncate group-hover:underline">
                                 {entry.displayName}
                               </span>
                               {isDuplicateName && (
                                 <span
-                                  className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-paper-muted border border-ink/10 text-ink-muted"
+                                  className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/10 border border-white/15 text-slate-300"
                                   title={`Player ID: ${entry.id}`}
                                 >
                                   #{entry.id.slice(0, 4)}
                                 </span>
                               )}
                               {entry.isCurrentUser && (
-                                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-ink text-white">
+                                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-cyan-500/25 border border-cyan-400/50 text-cyan-100 font-bold">
                                   You
                                 </span>
                               )}
-                              <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-pill bg-white border border-ink/15 text-ink-muted">
-                                <Sparkles className="w-2.5 h-2.5 text-accent" />
+                              <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-pill bg-white/[0.08] border border-white/15 text-slate-200">
+                                <Sparkles className="w-2.5 h-2.5 text-cyan-300" />
                                 {entry.equippedTitle}
                               </span>
                             </div>
@@ -616,15 +616,15 @@ export function GlobalLeaderboard({
                         </Link>
 
                         <div className="flex items-center gap-4 font-mono text-xs shrink-0">
-                          <span className="inline-flex items-center gap-1 text-ink-muted">
-                            <Flame className="w-3.5 h-3.5 fill-accent text-accent" />
+                          <span className="inline-flex items-center gap-1 text-slate-300">
+                            <Flame className="w-3.5 h-3.5 fill-amber-400 text-amber-300" />
                             {entry.streakDays}d
                           </span>
-                          <span className="inline-flex items-center gap-1 font-bold text-ink">
-                            <Coins className="w-3.5 h-3.5 text-accent" />
+                          <span className="inline-flex items-center gap-1 font-bold text-amber-200">
+                            <Coins className="w-3.5 h-3.5 text-amber-300" />
                             {entry.itCoins}
                           </span>
-                          <span className="text-ink-muted w-20 text-right">
+                          <span className="text-slate-200 w-20 text-right">
                             {entry.totalPoints.toLocaleString("en-US")} pts
                           </span>
                         </div>
@@ -637,7 +637,7 @@ export function GlobalLeaderboard({
                     <button
                       type="button"
                       onClick={() => setShowAllRows(true)}
-                      className="px-4 py-2 rounded-pill bg-white border border-ink/15 text-xs font-bold text-ink shadow-soft hover:bg-paper transition-colors"
+                      className="liquid-glass-btn px-4 py-2 rounded-pill text-xs font-bold transition-all"
                     >
                       Xem thêm {players.length - 15} học viên khác
                     </button>
@@ -650,7 +650,7 @@ export function GlobalLeaderboard({
       </section>
 
       {activeEntry && (
-        <div className="sticky bottom-3 z-20 bg-ink text-white border border-ink rounded-2xl p-3.5 sm:px-5 shadow-card flex flex-wrap items-center justify-between gap-3">
+        <div className="sticky bottom-3 z-20 bg-slate-950/88 backdrop-blur-2xl text-white border border-cyan-400/35 rounded-2xl p-3.5 sm:px-5 shadow-[0_12px_36px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.25)] flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <DiscordAvatarFrame
               equippedId={activeEntry.equippedCosmetics?.avatar_decoration}
@@ -666,26 +666,28 @@ export function GlobalLeaderboard({
             <div>
               <div className="text-xs font-bold flex items-center gap-2">
                 <span>{activeEntry.displayName}</span>
-                <span className="px-2 py-0.5 rounded-pill bg-white/15 text-[10px] font-mono">
+                <span className="px-2 py-0.5 rounded-pill bg-cyan-500/20 border border-cyan-400/40 text-cyan-100 text-[10px] font-mono">
                   {activeEntry.equippedTitle}
                 </span>
               </div>
-              <div className="text-[11px] font-mono text-white/75">
+              <div className="text-[11px] font-mono text-slate-300">
                 Hạng #{activeEntry.rank}
               </div>
             </div>
           </div>
 
           <div className="flex items-center gap-4 font-mono text-xs">
-            <span className="inline-flex items-center gap-1">
-              <Flame className="w-3.5 h-3.5 fill-accent text-accent" />
+            <span className="inline-flex items-center gap-1 text-slate-200">
+              <Flame className="w-3.5 h-3.5 fill-amber-400 text-amber-300" />
               {activeEntry.streakDays}d
             </span>
-            <span className="inline-flex items-center gap-1 font-bold">
-              <Coins className="w-3.5 h-3.5 text-accent" />
+            <span className="inline-flex items-center gap-1 font-bold text-amber-200">
+              <Coins className="w-3.5 h-3.5 text-amber-300" />
               {activeEntry.itCoins} Coins
             </span>
-            <span>{activeEntry.totalPoints.toLocaleString("en-US")} pts</span>
+            <span className="text-cyan-200 font-bold">
+              {activeEntry.totalPoints.toLocaleString("en-US")} pts
+            </span>
           </div>
         </div>
       )}

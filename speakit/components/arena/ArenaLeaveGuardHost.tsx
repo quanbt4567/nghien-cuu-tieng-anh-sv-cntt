@@ -218,19 +218,24 @@ export function ArenaLeaveGuardHost() {
       {toastNotice && (
         <div
           role="status"
-          className={`fixed top-20 right-4 z-50 max-w-sm rounded-2xl border border-ink/15 px-4 py-3 text-xs font-medium shadow-hard flex items-start gap-2.5 ${
+          className={`fixed top-20 right-4 z-50 max-w-sm rounded-2xl border backdrop-blur-2xl px-4 py-3 text-xs font-medium shadow-[0_12px_36px_rgba(0,0,0,0.65)] flex items-start gap-2.5 ${
             toastNotice.tone === "warn"
-              ? "bg-amber-50 text-ink"
-              : "bg-emerald-50 text-ink"
+              ? "bg-slate-950/92 border-amber-400/50 text-amber-100"
+              : "bg-slate-950/92 border-emerald-400/50 text-emerald-100"
           }`}
         >
-          <ShieldAlert className="w-4 h-4 text-accent shrink-0 mt-0.5" aria-hidden="true" />
+          <ShieldAlert
+            className={`w-4 h-4 shrink-0 mt-0.5 ${
+              toastNotice.tone === "warn" ? "text-amber-300" : "text-emerald-300"
+            }`}
+            aria-hidden="true"
+          />
           <span className="flex-1 leading-relaxed">{toastNotice.text}</span>
           <button
             type="button"
             onClick={() => setToastNotice(null)}
             aria-label="Đóng thông báo"
-            className="text-ink-muted hover:text-ink"
+            className="text-slate-400 hover:text-white transition-colors"
           >
             <X className="w-3.5 h-3.5" aria-hidden="true" />
           </button>
@@ -239,22 +244,22 @@ export function ArenaLeaveGuardHost() {
 
       {activeRequest && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/55 backdrop-blur-[1px] p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 backdrop-blur-md p-4"
           role="dialog"
           aria-modal="true"
           aria-labelledby="arena-leave-title"
           onClick={closeDialog}
         >
           <div
-            className="w-full max-w-md bg-white border border-ink/15 rounded-2xl shadow-hard overflow-hidden"
+            className="w-full max-w-md bg-slate-950/92 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-[0_24px_64px_rgba(0,0,0,0.75),inset_0_1px_1px_rgba(255,255,255,0.22)] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between gap-3 px-5 py-3.5 bg-paper border-b border-ink/15">
+            <div className="flex items-center justify-between gap-3 px-5 py-3.5 bg-white/[0.06] border-b border-white/15">
               <div className="flex items-center gap-2">
-                <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-500 text-white">
+                <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-500/25 border border-amber-400/50 text-amber-300">
                   <AlertTriangle className="w-3.5 h-3.5" aria-hidden="true" />
                 </span>
-                <span className="text-xs font-mono font-bold uppercase text-ink">
+                <span className="text-xs font-mono font-bold uppercase text-white">
                   Trận đấu đang diễn ra
                 </span>
               </div>
@@ -263,7 +268,7 @@ export function ArenaLeaveGuardHost() {
                 disabled={submittingMode !== null}
                 onClick={closeDialog}
                 aria-label="Đóng hộp thoại"
-                className="w-7 h-7 rounded-full border border-ink/15 bg-white flex items-center justify-center text-ink-muted hover:text-ink disabled:opacity-50"
+                className="w-7 h-7 rounded-full liquid-glass-btn flex items-center justify-center text-slate-300 hover:text-white disabled:opacity-50"
               >
                 <X className="w-3.5 h-3.5" aria-hidden="true" />
               </button>
@@ -271,37 +276,37 @@ export function ArenaLeaveGuardHost() {
 
             <div className="p-5 space-y-4">
               <div className="space-y-1.5">
-                <h3 id="arena-leave-title" className="text-base font-bold text-ink">
+                <h3 id="arena-leave-title" className="text-base font-bold text-white">
                   Bạn muốn rời khỏi {GAME_NAMES_VI[activeRequest.gameId] ?? "trận đấu"} giữa chừng?
                 </h3>
-                <p className="text-xs text-ink-muted leading-relaxed">
+                <p className="text-xs text-slate-300 leading-relaxed">
                   Thoát ngang khi đang chơi sẽ không nhận được điểm thưởng của ván này và bị trừ{" "}
-                  <strong className="text-rose-700">{FORFEIT_PENALTY_COINS} IT-Coin</strong>. Nếu
+                  <strong className="text-rose-300">{FORFEIT_PENALTY_COINS} IT-Coin</strong>. Nếu
                   thoát quá {limit} lần, tài khoản Arena sẽ bị khóa tạm thời.
                 </p>
               </div>
 
-              <div className="p-3 rounded-xl bg-paper border border-ink/15 text-xs space-y-1">
+              <div className="p-3 rounded-xl bg-white/[0.05] border border-white/15 text-xs space-y-1">
                 {loadingStatus ? (
-                  <div className="flex items-center gap-1.5 text-ink-muted">
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <div className="flex items-center gap-1.5 text-slate-300">
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-cyan-300" />
                     <span>Đang kiểm tra lịch sử thoát của bạn...</span>
                   </div>
                 ) : (
                   <>
                     <div className="flex items-center justify-between font-mono">
-                      <span className="text-ink-muted">Số lần thoát ngang hiện tại:</span>
-                      <span className="font-bold text-ink">
+                      <span className="text-slate-300">Số lần thoát ngang hiện tại:</span>
+                      <span className="font-bold text-white">
                         {leaveCount} / {limit} lần
                       </span>
                     </div>
                     {remaining <= 2 && (
-                      <p className="text-[11px] font-semibold text-rose-700">
+                      <p className="text-[11px] font-semibold text-rose-300">
                         Cảnh báo: Bạn chỉ còn {remaining} lần nữa là sẽ bị tạm khóa tài khoản!
                       </p>
                     )}
                     {statusInfo?.frozen && (
-                      <p className="text-[11px] font-semibold text-rose-700 flex items-center gap-1">
+                      <p className="text-[11px] font-semibold text-rose-300 flex items-center gap-1">
                         <Clock className="w-3 h-3" />
                         <span>
                           {statusInfo.permanent
@@ -317,7 +322,7 @@ export function ArenaLeaveGuardHost() {
               {errorText && (
                 <div
                   role="alert"
-                  className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-800 font-medium"
+                  className="p-3 rounded-xl bg-rose-500/15 border border-rose-400/40 text-xs text-rose-200 font-medium"
                 >
                   {errorText}
                 </div>
@@ -328,7 +333,7 @@ export function ArenaLeaveGuardHost() {
                   <div className="space-y-1.5">
                     <label
                       htmlFor="arena-leave-reason"
-                      className="block text-xs font-semibold text-ink"
+                      className="block text-xs font-semibold text-white"
                     >
                       Ghi rõ lý do thoát để Admin xét duyệt ({REASON_MIN_LENGTH}–{REASON_MAX_LENGTH} ký tự):
                     </label>
@@ -339,9 +344,9 @@ export function ArenaLeaveGuardHost() {
                       value={reason}
                       onChange={(e) => setReason(e.target.value)}
                       placeholder="Ví dụ: Micro bị lỗi không thu âm được, hoặc mạng bị rớt giữa ván..."
-                      className="w-full px-3 py-2 text-xs bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent"
+                      className="liquid-glass-input w-full px-3 py-2 text-xs rounded-xl focus:outline-none"
                     />
-                    <div className="flex items-center justify-between text-[11px] font-mono text-ink-muted">
+                    <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
                       <span>Hợp lý sẽ được tha, không hợp lý Admin sẽ trừ Coin.</span>
                       <span>
                         {reason.trim().length}/{REASON_MAX_LENGTH}
@@ -354,14 +359,14 @@ export function ArenaLeaveGuardHost() {
                       type="button"
                       disabled={submittingMode !== null}
                       onClick={() => setShowReasonForm(false)}
-                      className="px-3.5 py-2 rounded-pill bg-paper border border-ink/20 text-xs font-semibold text-ink hover:bg-paper-muted"
+                      className="liquid-glass-btn px-3.5 py-2 rounded-pill text-xs font-semibold"
                     >
                       Quay lại
                     </button>
                     <button
                       type="submit"
                       disabled={submittingMode !== null}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-pill bg-ink text-white text-xs font-bold hover:bg-ink/90 disabled:opacity-50"
+                      className="liquid-btn-primary inline-flex items-center gap-1.5 px-4 py-2 rounded-pill text-xs font-bold disabled:opacity-50"
                     >
                       {submittingMode === "reason" ? (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -373,12 +378,12 @@ export function ArenaLeaveGuardHost() {
                   </div>
                 </form>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   <button
                     type="button"
                     disabled={submittingMode !== null}
                     onClick={closeDialog}
-                    className="w-full py-2.5 px-4 rounded-pill bg-ink text-white text-xs font-bold hover:bg-ink/90 transition-colors"
+                    className="liquid-btn-primary w-full py-2.5 px-4 rounded-pill text-xs font-bold transition-all"
                   >
                     Ở lại chơi tiếp
                   </button>
@@ -387,7 +392,7 @@ export function ArenaLeaveGuardHost() {
                     type="button"
                     disabled={submittingMode !== null}
                     onClick={() => setShowReasonForm(true)}
-                    className="w-full py-2.5 px-4 rounded-pill bg-paper border border-ink/25 text-ink text-xs font-semibold hover:bg-paper-muted transition-colors"
+                    className="liquid-glass-btn w-full py-2.5 px-4 rounded-pill text-xs font-semibold transition-all"
                   >
                     Xin thoát có lý do (chờ Admin duyệt)
                   </button>
@@ -396,7 +401,7 @@ export function ArenaLeaveGuardHost() {
                     type="button"
                     disabled={submittingMode !== null}
                     onClick={() => void handleForfeitLeave()}
-                    className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-4 rounded-pill bg-rose-50 border border-rose-300 text-rose-700 text-xs font-semibold hover:bg-rose-100 transition-colors disabled:opacity-50"
+                    className="liquid-btn-danger w-full inline-flex items-center justify-center gap-1.5 py-2 px-4 rounded-pill text-xs font-semibold transition-all disabled:opacity-50"
                   >
                     {submittingMode === "forfeit" ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />

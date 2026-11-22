@@ -18,16 +18,16 @@ export default async function LeaderboardPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
+        <div className="space-y-2.5">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-xs font-mono text-ink-muted hover:text-ink mb-2"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-xs font-mono text-slate-200 hover:text-white transition-all"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Trang chủ</span>
           </Link>
-          <h1 className="text-2xl sm:text-3xl font-bold text-ink flex items-center gap-2.5">
-            <Trophy className="w-6 h-6 text-accent" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2.5">
+            <Trophy className="w-6 h-6 text-amber-300" />
             <span>Bảng xếp hạng</span>
           </h1>
         </div>
