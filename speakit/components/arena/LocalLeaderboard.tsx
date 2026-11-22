@@ -36,41 +36,41 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
       <section className="liquid-glass-card p-5 sm:p-6 space-y-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-1">
-            <span className="text-xs font-mono font-bold uppercase text-cyan-300 flex items-center gap-1.5">
+            <span className="text-xs font-mono font-bold uppercase text-sky-700 flex items-center gap-1.5">
               <Award className="w-4 h-4" />
               <span>Danh hiệu Dev Speaker hiện tại</span>
             </span>
-            <h2 className="text-2xl font-bold text-white">{devTitle.title}</h2>
+            <h2 className="text-2xl font-bold text-slate-900">{devTitle.title}</h2>
           </div>
 
-          <div className="liquid-glass-pill px-4 py-2 font-mono text-sm font-bold text-white">
+          <div className="liquid-glass-pill px-4 py-2 font-mono text-sm font-bold text-slate-900">
             {state.totalPoints.toLocaleString("vi-VN")} điểm tích lũy
           </div>
         </div>
 
         <div className="space-y-2">
           <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-            <span className="text-slate-300">
+            <span className="text-slate-600">
               {devTitle.nextTitle && devTitle.nextThreshold !== null ? (
                 <>
                   Tiến độ lên{" "}
-                  <strong className="text-white">{devTitle.nextTitle}</strong> (
+                  <strong className="text-slate-900">{devTitle.nextTitle}</strong> (
                   {devTitle.nextThreshold.toLocaleString("vi-VN")} điểm)
                 </>
               ) : (
-                <strong className="text-emerald-300">
+                <strong className="text-emerald-700">
                   Bạn đã đạt cấp bậc cao nhất tại SpeakIT Arena
                 </strong>
               )}
             </span>
-            <span className="font-mono font-bold text-cyan-300">
+            <span className="font-mono font-bold text-sky-700">
               {devTitle.progressPct}%
             </span>
           </div>
 
-          <div className="w-full h-3 bg-slate-950/65 rounded-pill border border-white/15 overflow-hidden p-0.5">
+          <div className="w-full h-3 bg-slate-200/80 rounded-pill border border-slate-300/70 overflow-hidden p-0.5">
             <div
-              className="h-full rounded-pill bg-gradient-to-r from-cyan-400 to-emerald-400 transition-all duration-500"
+              className="h-full rounded-pill bg-gradient-to-r from-sky-500 to-emerald-500 transition-all duration-500"
               style={{ width: `${Math.max(4, devTitle.progressPct)}%` }}
             />
           </div>
@@ -85,20 +85,20 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
                 key={tier.name}
                 className={`rounded-xl p-3 border text-xs transition-colors ${
                   isCurrent
-                    ? "bg-cyan-500/20 text-white border-cyan-400/50 shadow-[0_0_18px_rgba(6,182,212,0.22)]"
+                    ? "bg-sky-100/90 text-slate-900 border-sky-400/70 shadow-[0_4px_14px_rgba(14,165,233,0.16)]"
                     : isUnlocked
-                    ? "bg-emerald-500/15 border-emerald-400/35 text-emerald-100"
-                    : "bg-slate-950/50 border-white/10 text-slate-400"
+                    ? "bg-emerald-50/90 border-emerald-300/80 text-emerald-900"
+                    : "bg-slate-100/80 border-slate-200/85 text-slate-600"
                 }`}
               >
                 <div className="font-bold">{tier.name}</div>
                 <div
                   className={`font-mono text-[11px] mt-0.5 ${
                     isCurrent
-                      ? "text-cyan-200"
+                      ? "text-sky-800"
                       : isUnlocked
-                      ? "text-emerald-200/80"
-                      : "text-slate-400"
+                      ? "text-emerald-700"
+                      : "text-slate-500"
                   }`}
                 >
                   {tier.range}
@@ -112,39 +112,39 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
       <section className="grid sm:grid-cols-2 gap-4">
         <div className="liquid-glass-card p-5 flex items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-emerald-300">
+            <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-emerald-700">
               <Bug className="w-4 h-4" />
               <span>Kỷ lục cá nhân</span>
             </div>
-            <h3 className="text-base font-bold text-white">Bug Buster 280s</h3>
-            <p className="text-xs text-slate-300">
+            <h3 className="text-base font-bold text-slate-900">Bug Buster 280s</h3>
+            <p className="text-xs text-slate-600">
               Điểm cao nhất trong 1 vòng 280 giây
             </p>
           </div>
           <div className="text-right font-mono">
-            <div className="text-2xl font-bold text-emerald-300">
+            <div className="text-2xl font-bold text-emerald-700">
               {state.personalBests["bug-buster"].toLocaleString("vi-VN")}
             </div>
-            <div className="text-[11px] text-slate-400">điểm</div>
+            <div className="text-[11px] text-slate-600">điểm</div>
           </div>
         </div>
 
         <div className="liquid-glass-card p-5 flex items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-indigo-300">
+            <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-indigo-700">
               <Timer className="w-4 h-4" />
               <span>Kỷ lục cá nhân</span>
             </div>
-            <h3 className="text-base font-bold text-white">Standup Speed Run</h3>
-            <p className="text-xs text-slate-300">
+            <h3 className="text-base font-bold text-slate-900">Standup Speed Run</h3>
+            <p className="text-xs text-slate-600">
               Điểm cao nhất trong 3 câu Standup
             </p>
           </div>
           <div className="text-right font-mono">
-            <div className="text-2xl font-bold text-indigo-300">
+            <div className="text-2xl font-bold text-indigo-700">
               {state.personalBests["standup-speed-run"].toLocaleString("vi-VN")}
             </div>
-            <div className="text-[11px] text-slate-400">điểm</div>
+            <div className="text-[11px] text-slate-600">điểm</div>
           </div>
         </div>
       </section>
@@ -152,24 +152,24 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
       <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-amber-300" />
-            <h3 className="text-base sm:text-lg font-bold text-white">
+            <Trophy className="w-5 h-5 text-amber-500" />
+            <h3 className="text-base sm:text-lg font-bold text-slate-900">
               Bảng thành tích cá nhân
             </h3>
           </div>
         </div>
 
         {rankedHistory.length === 0 ? (
-          <div className="bg-slate-950/50 border border-white/12 rounded-xl p-6 text-center text-xs text-slate-300">
+          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-6 text-center text-xs text-slate-600">
             Chưa có lượt chơi nào được lưu. Hãy hoàn thành một vòng{" "}
-            <strong className="text-white">Bug Buster 280s</strong> hoặc{" "}
-            <strong className="text-white">Standup Speed Run</strong> để ghi danh!
+            <strong className="text-slate-900">Bug Buster 280s</strong> hoặc{" "}
+            <strong className="text-slate-900">Standup Speed Run</strong> để ghi danh!
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="border-b border-white/15 text-slate-400 font-mono uppercase text-[11px]">
+                <tr className="border-b border-slate-200/85 text-slate-600 font-mono uppercase text-[11px]">
                   <th className="py-2.5 pr-3">#</th>
                   <th className="py-2.5 pr-3">Chế độ</th>
                   <th className="py-2.5 pr-3">Vai trò</th>
@@ -178,28 +178,28 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
                   <th className="py-2.5 text-right">Ngày</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/10">
+              <tbody className="divide-y divide-slate-200/70">
                 {rankedHistory.map((entry, idx) => (
-                  <tr key={entry.id} className="hover:bg-white/[0.04] transition-colors">
-                    <td className="py-2.5 pr-3 font-mono font-bold text-slate-400">
+                  <tr key={entry.id} className="hover:bg-slate-100/60 transition-colors">
+                    <td className="py-2.5 pr-3 font-mono font-bold text-slate-600">
                       {idx + 1}
                     </td>
-                    <td className="py-2.5 pr-3 font-semibold text-white whitespace-nowrap">
+                    <td className="py-2.5 pr-3 font-semibold text-slate-900 whitespace-nowrap">
                       {GAME_LABELS[entry.gameId]}
                     </td>
                     <td className="py-2.5 pr-3 whitespace-nowrap">
-                      <span className="px-2 py-0.5 rounded-pill bg-white/[0.08] border border-white/15 font-mono text-[11px] text-slate-200">
+                      <span className="px-2 py-0.5 rounded-pill bg-slate-100/90 border border-slate-200/85 font-mono text-[11px] text-slate-700">
                         {getRoleLabel(entry.role)}
                       </span>
                     </td>
-                    <td className="py-2.5 pr-3 text-right font-mono font-bold text-cyan-300 whitespace-nowrap">
+                    <td className="py-2.5 pr-3 text-right font-mono font-bold text-sky-700 whitespace-nowrap">
                       {entry.score.toLocaleString("vi-VN")}
                     </td>
-                    <td className="py-2.5 pr-3 text-right font-mono text-slate-200 whitespace-nowrap">
+                    <td className="py-2.5 pr-3 text-right font-mono text-slate-700 whitespace-nowrap">
                       {entry.accuracyOrWords}{" "}
                       {entry.gameId === "bug-buster" ? "bug" : "từ khóa"}
                     </td>
-                    <td className="py-2.5 text-right font-mono text-slate-400 whitespace-nowrap">
+                    <td className="py-2.5 text-right font-mono text-slate-600 whitespace-nowrap">
                       {new Date(entry.createdAt).toLocaleDateString("vi-VN")}
                     </td>
                   </tr>

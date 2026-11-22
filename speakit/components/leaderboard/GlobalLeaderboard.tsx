@@ -269,7 +269,7 @@ export function GlobalLeaderboard({
                 <div>
                   {!isEditingName ? (
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-white text-sm">
+                      <span className="font-bold text-slate-900 text-sm">
                         {currentPlayer.displayName}
                       </span>
                       <button
@@ -279,7 +279,7 @@ export function GlobalLeaderboard({
                           setIsEditingName(true);
                         }}
                         aria-label="Edit display name"
-                        className="p-1 rounded-pill hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+                        className="p-1 rounded-pill hover:bg-slate-200/70 text-slate-600 hover:text-slate-900 transition-colors"
                       >
                         <Pencil className="w-3.5 h-3.5" />
                       </button>
@@ -303,31 +303,31 @@ export function GlobalLeaderboard({
                       </button>
                     </form>
                   )}
-                  <div className="text-[11px] font-mono text-slate-300 flex items-center gap-1.5 mt-0.5">
-                    <Award className="w-3 h-3 text-cyan-300" />
+                  <div className="text-[11px] font-mono text-slate-600 flex items-center gap-1.5 mt-0.5">
+                    <Award className="w-3 h-3 text-sky-600" />
                     <span>{currentPlayer.equippedTitle}</span>
                   </div>
                 </div>
               </div>
 
               <div className="text-right font-mono">
-                <div className="text-sm font-bold text-amber-200 flex items-center justify-end gap-1">
-                  <Coins className="w-3.5 h-3.5 text-amber-300" />
+                <div className="text-sm font-bold text-amber-700 flex items-center justify-end gap-1">
+                  <Coins className="w-3.5 h-3.5 text-amber-600" />
                   <span>{currentPlayer.itCoins}</span>
                 </div>
-                <div className="text-[11px] text-slate-300">
+                <div className="text-[11px] text-slate-600">
                   {currentPlayer.totalPoints.toLocaleString("en-US")} pts
                 </div>
               </div>
             </div>
 
-            <div className="p-3 bg-slate-950/55 rounded-xl border border-white/15 flex items-center justify-between gap-2">
+            <div className="p-3 bg-white/80 rounded-xl border border-slate-200/85 flex items-center justify-between gap-2">
               <div className="min-w-0">
-                <div className="text-[10px] font-mono uppercase text-slate-400 flex items-center gap-1">
-                  <KeyRound className="w-3 h-3 text-cyan-300" />
+                <div className="text-[10px] font-mono uppercase text-slate-600 flex items-center gap-1">
+                  <KeyRound className="w-3 h-3 text-sky-600" />
                   <span>Mã khôi phục tài khoản (Backup)</span>
                 </div>
-                <div className="text-sm font-mono font-bold text-cyan-200 tracking-wider">
+                <div className="text-sm font-mono font-bold text-sky-700 tracking-wider">
                   {currentPlayer.transferCode}
                 </div>
               </div>
@@ -338,7 +338,7 @@ export function GlobalLeaderboard({
               >
                 {copiedCode ? (
                   <>
-                    <Check className="w-3.5 h-3.5 text-emerald-300" />
+                    <Check className="w-3.5 h-3.5 text-emerald-600" />
                     <span>Đã chép</span>
                   </>
                 ) : (
@@ -353,12 +353,12 @@ export function GlobalLeaderboard({
 
           <section className="liquid-glass-card p-5 space-y-3">
             <div className="space-y-1">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <RefreshCw className="w-4 h-4 text-cyan-300" />
+              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <RefreshCw className="w-4 h-4 text-sky-600" />
                 <span>Khôi phục tiến độ sang thiết bị khác</span>
               </h3>
-              <p className="text-xs text-slate-300">
-                Nhập mã <code className="font-mono text-cyan-200">DEV-XXXXXX</code> để mang điểm, chuỗi ngày và thứ hạng sang trình duyệt mới mà không cần đăng ký.
+              <p className="text-xs text-slate-600">
+                Nhập mã <code className="font-mono text-sky-700">DEV-XXXXXX</code> để mang điểm, chuỗi ngày và thứ hạng sang trình duyệt mới mà không cần đăng ký.
               </p>
             </div>
 
@@ -384,8 +384,8 @@ export function GlobalLeaderboard({
               <div
                 className={`text-xs p-2.5 rounded-xl border ${
                   restoreStatus.ok
-                    ? "bg-emerald-500/15 border-emerald-400/40 text-emerald-200"
-                    : "bg-rose-500/15 border-rose-400/40 text-rose-200"
+                    ? "bg-emerald-50 border-emerald-300/80 text-emerald-800"
+                    : "bg-rose-50 border-rose-300/80 text-rose-800"
                 }`}
               >
                 {restoreStatus.message}
@@ -399,16 +399,16 @@ export function GlobalLeaderboard({
         <section className="liquid-glass-card p-5 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <ShoppingBag className="w-4 h-4 text-cyan-300" />
+              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <ShoppingBag className="w-4 h-4 text-sky-600" />
                 <span>Kho hiệu ứng IT-Coin</span>
               </h3>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-600">
                 Mở khóa &amp; trang bị nhanh 3 hiệu ứng nổi bật trên bảng xếp hạng.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="liquid-glass-pill px-3 py-1 text-xs font-mono font-bold text-amber-200">
+              <span className="liquid-glass-pill px-3 py-1 text-xs font-mono font-bold text-amber-700">
                 Số dư: {currentPlayer.itCoins} Coin
               </span>
               <Link
@@ -421,7 +421,7 @@ export function GlobalLeaderboard({
           </div>
 
           {shopNotice && (
-            <div className="p-2.5 rounded-xl bg-rose-500/15 border border-rose-400/40 text-xs text-rose-200">
+            <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-300/80 text-xs text-rose-800">
               {shopNotice}
             </div>
           )}
@@ -439,18 +439,18 @@ export function GlobalLeaderboard({
               return (
                 <div
                   key={item.id}
-                  className="p-3.5 rounded-xl bg-slate-950/55 border border-white/15 flex flex-col justify-between gap-3"
+                  className="p-3.5 rounded-xl bg-white/80 border border-slate-200/85 flex flex-col justify-between gap-3"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-bold text-white">
+                      <span className="text-xs font-bold text-slate-900">
                         {item.name}
                       </span>
-                      <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-white/[0.08] border border-white/15 text-slate-300">
+                      <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-slate-100/90 border border-slate-200/85 text-slate-600">
                         {item.kind}
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-300">
+                    <p className="text-[11px] text-slate-600">
                       {item.description}
                     </p>
                   </div>
@@ -470,7 +470,7 @@ export function GlobalLeaderboard({
                         ? "liquid-glass-btn"
                         : canAfford
                         ? "liquid-btn-primary"
-                        : "bg-white/[0.05] text-slate-500 border border-white/10 cursor-not-allowed"
+                        : "bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed"
                     }`}
                   >
                     {busyItemId === item.id
@@ -491,13 +491,13 @@ export function GlobalLeaderboard({
       <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-amber-300" />
+            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+              <Trophy className="w-5 h-5 text-amber-500" />
               <span>
                 Bảng xếp hạng ({players.length} học viên · tối đa Top 50)
               </span>
             </h3>
-            <p className="text-xs text-slate-300">
+            <p className="text-xs text-slate-600">
               Xếp hạng theo Tổng điểm từ cao xuống thấp (nếu bằng điểm sẽ xét IT-Coin).
             </p>
           </div>
@@ -513,12 +513,12 @@ export function GlobalLeaderboard({
         </div>
 
         {loading && players.length === 0 ? (
-          <div className="py-10 flex items-center justify-center gap-2 text-xs text-slate-300">
-            <Loader2 className="w-4 h-4 animate-spin text-cyan-300" />
+          <div className="py-10 flex items-center justify-center gap-2 text-xs text-slate-600">
+            <Loader2 className="w-4 h-4 animate-spin text-sky-600" />
             <span>Đang tải bảng xếp hạng...</span>
           </div>
         ) : players.length === 0 ? (
-          <div className="p-8 rounded-xl bg-slate-950/50 border border-white/12 text-center text-xs text-slate-300">
+          <div className="p-8 rounded-xl bg-white/80 border border-slate-200/85 text-center text-xs text-slate-600">
             Chưa có người chơi nào trên bảng xếp hạng. Hãy luyện nói 1 lượt để giữ vị trí #1!
           </div>
         ) : (
@@ -530,15 +530,15 @@ export function GlobalLeaderboard({
             }
             const getRankBadgeClass = (rank: number) => {
               if (rank === 1) {
-                return "bg-amber-400/20 border-amber-300/40 text-amber-200 shadow-[0_0_12px_rgba(251,191,36,0.28)]";
+                return "bg-amber-100 border-amber-300 text-amber-800 shadow-[0_2px_10px_rgba(245,158,11,0.22)]";
               }
               if (rank === 2) {
-                return "bg-slate-300/20 border-slate-200/40 text-slate-100 shadow-[0_0_12px_rgba(203,213,225,0.22)]";
+                return "bg-slate-200/90 border-slate-300 text-slate-800 shadow-[0_2px_10px_rgba(100,116,139,0.18)]";
               }
               if (rank === 3) {
-                return "bg-orange-400/20 border-orange-300/40 text-orange-200 shadow-[0_0_12px_rgba(251,146,60,0.24)]";
+                return "bg-orange-100 border-orange-300 text-orange-800 shadow-[0_2px_10px_rgba(249,115,22,0.2)]";
               }
-              return "bg-white/[0.06] border-white/15 text-slate-300";
+              return "bg-slate-100/90 border-slate-200/85 text-slate-700";
             };
             const visiblePlayers = showAllRows ? players : players.slice(0, 15);
             return (
@@ -558,11 +558,11 @@ export function GlobalLeaderboard({
                       className={`liquid-glass-card-lite transition-colors ${
                         hasNameplate || hasFx
                           ? entry.isCurrentUser
-                            ? "border-cyan-400/50"
-                            : "border-white/15"
+                            ? "border-sky-400/70"
+                            : "border-slate-200/85"
                           : entry.isCurrentUser
-                          ? "!bg-cyan-500/15 border-cyan-400/50"
-                          : "border-white/12"
+                          ? "!bg-sky-50/90 border-sky-400/70"
+                          : "border-slate-200/85"
                       }`}
                     >
                       <div className="p-3.5 flex flex-wrap items-center justify-between gap-3">
@@ -591,24 +591,24 @@ export function GlobalLeaderboard({
 
                           <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-2">
-                              <span className="font-bold text-sm text-white truncate group-hover:underline">
+                              <span className="font-bold text-sm text-slate-900 truncate group-hover:underline">
                                 {entry.displayName}
                               </span>
                               {isDuplicateName && (
                                 <span
-                                  className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/10 border border-white/15 text-slate-300"
+                                  className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200/85 text-slate-600"
                                   title={`Player ID: ${entry.id}`}
                                 >
                                   #{entry.id.slice(0, 4)}
                                 </span>
                               )}
                               {entry.isCurrentUser && (
-                                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-cyan-500/25 border border-cyan-400/50 text-cyan-100 font-bold">
+                                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-sky-100 border border-sky-300 text-sky-800 font-bold">
                                   You
                                 </span>
                               )}
-                              <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-pill bg-white/[0.08] border border-white/15 text-slate-200">
-                                <Sparkles className="w-2.5 h-2.5 text-cyan-300" />
+                              <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-pill bg-slate-100/90 border border-slate-200/85 text-slate-700">
+                                <Sparkles className="w-2.5 h-2.5 text-sky-600" />
                                 {entry.equippedTitle}
                               </span>
                             </div>
@@ -616,15 +616,15 @@ export function GlobalLeaderboard({
                         </Link>
 
                         <div className="flex items-center gap-4 font-mono text-xs shrink-0">
-                          <span className="inline-flex items-center gap-1 text-slate-300">
-                            <Flame className="w-3.5 h-3.5 fill-amber-400 text-amber-300" />
+                          <span className="inline-flex items-center gap-1 text-slate-700">
+                            <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
                             {entry.streakDays}d
                           </span>
-                          <span className="inline-flex items-center gap-1 font-bold text-amber-200">
-                            <Coins className="w-3.5 h-3.5 text-amber-300" />
+                          <span className="inline-flex items-center gap-1 font-bold text-amber-700">
+                            <Coins className="w-3.5 h-3.5 text-amber-600" />
                             {entry.itCoins}
                           </span>
-                          <span className="text-slate-200 w-20 text-right">
+                          <span className="text-slate-800 w-20 text-right">
                             {entry.totalPoints.toLocaleString("en-US")} pts
                           </span>
                         </div>
@@ -650,7 +650,7 @@ export function GlobalLeaderboard({
       </section>
 
       {activeEntry && (
-        <div className="sticky bottom-3 z-20 bg-slate-950/88 backdrop-blur-2xl text-white border border-cyan-400/35 rounded-2xl p-3.5 sm:px-5 shadow-[0_12px_36px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.25)] flex flex-wrap items-center justify-between gap-3">
+        <div className="sticky bottom-3 z-20 bg-white/95 backdrop-blur-2xl text-slate-900 border border-sky-300/80 rounded-2xl p-3.5 sm:px-5 shadow-[0_12px_36px_rgba(15,23,42,0.12),inset_0_1px_1px_rgba(255,255,255,0.95)] flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <DiscordAvatarFrame
               equippedId={activeEntry.equippedCosmetics?.avatar_decoration}
@@ -666,26 +666,26 @@ export function GlobalLeaderboard({
             <div>
               <div className="text-xs font-bold flex items-center gap-2">
                 <span>{activeEntry.displayName}</span>
-                <span className="px-2 py-0.5 rounded-pill bg-cyan-500/20 border border-cyan-400/40 text-cyan-100 text-[10px] font-mono">
+                <span className="px-2 py-0.5 rounded-pill bg-sky-100 border border-sky-300/80 text-sky-800 text-[10px] font-mono">
                   {activeEntry.equippedTitle}
                 </span>
               </div>
-              <div className="text-[11px] font-mono text-slate-300">
+              <div className="text-[11px] font-mono text-slate-600">
                 Hạng #{activeEntry.rank}
               </div>
             </div>
           </div>
 
           <div className="flex items-center gap-4 font-mono text-xs">
-            <span className="inline-flex items-center gap-1 text-slate-200">
-              <Flame className="w-3.5 h-3.5 fill-amber-400 text-amber-300" />
+            <span className="inline-flex items-center gap-1 text-slate-700">
+              <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
               {activeEntry.streakDays}d
             </span>
-            <span className="inline-flex items-center gap-1 font-bold text-amber-200">
-              <Coins className="w-3.5 h-3.5 text-amber-300" />
+            <span className="inline-flex items-center gap-1 font-bold text-amber-700">
+              <Coins className="w-3.5 h-3.5 text-amber-600" />
               {activeEntry.itCoins} Coins
             </span>
-            <span className="text-cyan-200 font-bold">
+            <span className="text-sky-700 font-bold">
               {activeEntry.totalPoints.toLocaleString("en-US")} pts
             </span>
           </div>

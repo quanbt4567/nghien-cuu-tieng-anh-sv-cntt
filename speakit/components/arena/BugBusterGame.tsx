@@ -430,41 +430,41 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
       <section className="liquid-glass-card p-6 sm:p-8 space-y-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-2 max-w-xl">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-emerald-500/20 text-emerald-200 text-xs font-mono font-bold border border-emerald-400/45">
-              <Zap className="w-3.5 h-3.5 text-emerald-300" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-emerald-100 text-emerald-800 text-xs font-mono font-bold border border-emerald-300/80">
+              <Zap className="w-3.5 h-3.5 text-emerald-600" />
               <span>Thử thách phản xạ từ vựng 280 giây</span>
             </span>
-            <h2 className="text-xl sm:text-2xl font-bold text-white">
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
               Bug Buster 280s
             </h2>
-            <p className="text-sm text-slate-300 leading-relaxed">
+            <p className="text-sm text-slate-600 leading-relaxed">
               Đọc nhanh log lỗi, code review hoặc thông báo sự cố production và
               nói (hoặc gõ) đúng thuật ngữ tiếng Anh còn thiếu trong ô{" "}
-              <code className="font-mono font-bold text-cyan-300">____</code>.
+              <code className="font-mono font-bold text-sky-700">____</code>.
             </p>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-400/45 flex items-center justify-center shrink-0">
-            <Bug className="w-6 h-6 text-emerald-300" />
+          <div className="w-12 h-12 rounded-2xl bg-emerald-100 border border-emerald-300/80 flex items-center justify-center shrink-0">
+            <Bug className="w-6 h-6 text-emerald-700" />
           </div>
         </div>
 
         <div className="grid sm:grid-cols-3 gap-3 text-xs">
-          <div className="bg-slate-950/50 border border-white/15 rounded-xl p-3.5 space-y-1">
-            <div className="font-mono font-bold text-white">280s Tổng vòng</div>
-            <p className="text-slate-300">
+          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-3.5 space-y-1">
+            <div className="font-mono font-bold text-slate-900">280s Tổng vòng</div>
+            <p className="text-slate-600">
               Giải quyết {availableChallenges.length} câu (14 câu × 20s) trước khi hết giờ.
             </p>
           </div>
-          <div className="bg-slate-950/50 border border-white/15 rounded-xl p-3.5 space-y-1">
-            <div className="font-mono font-bold text-white">20s / Mỗi bug</div>
-            <p className="text-slate-300">
-              Đúng thưởng <strong className="text-emerald-300">+150 điểm</strong> +{" "}
-              <strong className="text-cyan-300">5 điểm/giây dư</strong>.
+          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-3.5 space-y-1">
+            <div className="font-mono font-bold text-slate-900">20s / Mỗi bug</div>
+            <p className="text-slate-600">
+              Đúng thưởng <strong className="text-emerald-700">+150 điểm</strong> +{" "}
+              <strong className="text-sky-700">5 điểm/giây dư</strong>.
             </p>
           </div>
-          <div className="bg-slate-950/50 border border-white/15 rounded-xl p-3.5 space-y-1">
-            <div className="font-mono font-bold text-white">Mic hoặc Gõ phím</div>
-            <p className="text-slate-300">
+          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-3.5 space-y-1">
+            <div className="font-mono font-bold text-slate-900">Mic hoặc Gõ phím</div>
+            <p className="text-slate-600">
               Ô gõ văn bản luôn sẵn sàng nếu trình duyệt không bật micro.
             </p>
           </div>
@@ -481,7 +481,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
         </button>
 
         {availableChallenges.length === 0 && (
-          <p className="text-xs text-rose-300 font-medium">
+          <p className="text-xs text-rose-600 font-medium">
             Hiện chưa có thử thách Bug Buster nào khả dụng. Vui lòng kiểm tra lại trong Cổng Quản trị.
           </p>
         )}
@@ -492,37 +492,37 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
   if (phase === "finished" && summary) {
     return (
       <section className="liquid-glass-card p-6 sm:p-8 space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/15 pb-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/85 pb-4">
           <div className="space-y-1">
-            <span className="text-xs font-mono font-bold uppercase text-emerald-300">
+            <span className="text-xs font-mono font-bold uppercase text-emerald-700">
               Kết quả Bug Buster 280s
             </span>
-            <h2 className="text-2xl font-bold text-white">
+            <h2 className="text-2xl font-bold text-slate-900">
               {summary.endedEarly
                 ? "Đã kết thúc sớm phiên xử lý sự cố"
                 : "Hoàn thành phiên xử lý sự cố!"}
             </h2>
           </div>
-          <div className="liquid-glass-pill px-4 py-2 font-mono text-sm font-bold text-emerald-200 border-emerald-400/45">
+          <div className="liquid-glass-pill px-4 py-2 font-mono text-sm font-bold text-emerald-800 border-emerald-300/80">
             +{summary.score} điểm
           </div>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-slate-950/50 border border-white/15 rounded-xl p-3.5 text-center">
-            <div className="text-2xl font-mono font-bold text-white">
+          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-3.5 text-center">
+            <div className="text-2xl font-mono font-bold text-slate-900">
               {summary.score}
             </div>
-            <div className="text-[11px] text-slate-400 mt-1">Điểm vòng chơi</div>
+            <div className="text-[11px] text-slate-600 mt-1">Điểm vòng chơi</div>
           </div>
-          <div className="bg-slate-950/50 border border-white/15 rounded-xl p-3.5 text-center">
-            <div className="text-2xl font-mono font-bold text-emerald-300">
+          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-3.5 text-center">
+            <div className="text-2xl font-mono font-bold text-emerald-700">
               {summary.fixedCount}
-              <span className="text-xs text-slate-400">
+              <span className="text-xs text-slate-500">
                 /{summary.attemptedCount}
               </span>
             </div>
-            <div className="text-[11px] text-slate-400 mt-1">
+            <div className="text-[11px] text-slate-600 mt-1">
               Bug đã sửa (
               {summary.attemptedCount > 0
                 ? Math.round((summary.fixedCount / summary.attemptedCount) * 100)
@@ -530,18 +530,18 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
               %)
             </div>
           </div>
-          <div className="bg-slate-950/50 border border-white/15 rounded-xl p-3.5 text-center">
-            <div className="text-2xl font-mono font-bold text-cyan-300">
+          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-3.5 text-center">
+            <div className="text-2xl font-mono font-bold text-sky-700">
               {summary.durationSec}s
             </div>
-            <div className="text-[11px] text-slate-400 mt-1">Thời gian</div>
+            <div className="text-[11px] text-slate-600 mt-1">Thời gian</div>
           </div>
-          <div className="bg-amber-500/15 border border-amber-400/35 rounded-xl p-3.5 text-center">
-            <div className="text-2xl font-mono font-bold text-amber-200 flex items-center justify-center gap-1">
-              <Coins className="w-5 h-5 text-amber-300" />
+          <div className="bg-amber-50/90 border border-amber-300/80 rounded-xl p-3.5 text-center">
+            <div className="text-2xl font-mono font-bold text-amber-800 flex items-center justify-center gap-1">
+              <Coins className="w-5 h-5 text-amber-600" />
               <span>{summary.totalCoins}</span>
             </div>
-            <div className="text-[11px] text-amber-100/90 font-medium mt-1">
+            <div className="text-[11px] text-amber-800 font-medium mt-1">
               Số dư IT-Coin •{" "}
               {summary.coinsEarnedNow > 0
                 ? `+${summary.coinsEarnedNow} IT-Coin`
@@ -579,16 +579,16 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
             className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-pill font-mono text-xs font-bold ${
               totalTimeLeft <= 10
                 ? "liquid-btn-danger animate-pulse"
-                : "liquid-glass-pill text-cyan-200"
+                : "liquid-glass-pill text-sky-700"
             }`}
           >
             <Clock className="w-3.5 h-3.5" />
             <span>{totalTimeLeft}s</span>
           </span>
-          <span className="liquid-glass-pill px-3 py-1 font-mono text-xs font-bold text-emerald-200">
+          <span className="liquid-glass-pill px-3 py-1 font-mono text-xs font-bold text-emerald-700">
             Điểm: {score}
           </span>
-          <span className="liquid-glass-pill px-3 py-1 font-mono text-xs text-slate-200">
+          <span className="liquid-glass-pill px-3 py-1 font-mono text-xs text-slate-700">
             Fixed: {fixedCount} • #{challengeIndex + 1}/{deck.length}
           </span>
         </div>
@@ -603,27 +603,27 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
       </div>
 
       <div className="space-y-1.5">
-        <div className="flex items-center justify-between text-[11px] font-mono text-slate-300">
+        <div className="flex items-center justify-between text-[11px] font-mono text-slate-600">
           <span>Thời gian cho bug hiện tại</span>
-          <span className={bugTimeLeft <= 3 ? "text-rose-300 font-bold" : "text-cyan-200"}>
+          <span className={bugTimeLeft <= 3 ? "text-rose-600 font-bold" : "text-sky-700"}>
             {bugTimeLeft}s / {BUG_DURATION_SEC}s
           </span>
         </div>
-        <div className="w-full h-2.5 bg-slate-950/65 rounded-pill border border-white/15 overflow-hidden">
+        <div className="w-full h-2.5 bg-slate-200/80 rounded-pill border border-slate-300/70 overflow-hidden">
           <div
             className={`h-full transition-all duration-500 ${
               bugTimeLeft <= 3
                 ? "bg-gradient-to-r from-rose-500 to-red-500"
-                : "bg-gradient-to-r from-emerald-400 to-cyan-400"
+                : "bg-gradient-to-r from-emerald-500 to-sky-500"
             }`}
             style={{ width: `${bugBarPct}%` }}
           />
         </div>
       </div>
 
-      <div className="bg-slate-950/55 border border-white/15 rounded-2xl p-5 space-y-4">
+      <div className="bg-white/85 border border-slate-200/85 rounded-2xl p-5 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="px-2.5 py-0.5 rounded-pill bg-cyan-500/20 border border-cyan-400/40 font-mono text-[10px] font-bold text-cyan-200">
+          <span className="px-2.5 py-0.5 rounded-pill bg-sky-100 border border-sky-300/80 font-mono text-[10px] font-bold text-sky-800">
             {CATEGORY_LABELS[currentChallenge.category]}
           </span>
           <button
@@ -632,9 +632,9 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
             className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-[11px] font-mono font-medium transition-all"
           >
             {showPhonetic ? (
-              <EyeOff className="w-3 h-3 text-cyan-300" />
+              <EyeOff className="w-3 h-3 text-sky-600" />
             ) : (
-              <Eye className="w-3 h-3 text-cyan-300" />
+              <Eye className="w-3 h-3 text-sky-600" />
             )}
             <span>{showPhonetic ? "Ẩn phiên âm" : "Gợi ý phiên âm IPA"}</span>
           </button>
@@ -645,16 +645,16 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
             "____",
             feedback ? feedback.targetWord : "____"
           )}
-          className="text-base sm:text-lg font-medium text-white leading-relaxed whitespace-pre-wrap"
+          className="text-base sm:text-lg font-medium text-slate-900 leading-relaxed whitespace-pre-wrap"
         >
           {`${promptParts[0].trimEnd()} `}
           <span
             className={`inline-block min-w-[96px] px-2.5 py-0.5 rounded-lg font-mono font-bold text-center whitespace-pre border transition-colors ${
               feedback?.kind === "fixed"
-                ? "bg-emerald-500/25 text-emerald-200 border-emerald-400/60"
+                ? "bg-emerald-100 text-emerald-800 border-emerald-400"
                 : feedback?.kind === "missed"
-                ? "bg-rose-500/25 text-rose-200 border-rose-400/60"
-                : "bg-slate-950/65 text-cyan-300 border-dashed border-cyan-400/50"
+                ? "bg-rose-100 text-rose-800 border-rose-400"
+                : "bg-sky-50 text-sky-700 border-dashed border-sky-400"
             }`}
           >
             {feedback ? feedback.targetWord : formatHangmanBlank(currentChallenge.targetWord)}
@@ -662,15 +662,15 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
           {` ${promptParts.slice(1).join("____").trimStart()}`}
         </p>
 
-        <div className="text-xs text-slate-300 bg-white/[0.05] border border-white/12 rounded-xl p-3 space-y-1">
+        <div className="text-xs text-slate-600 bg-slate-100/80 border border-slate-200/85 rounded-xl p-3 space-y-1">
           <div>
-            <strong className="text-white">Ngữ cảnh:</strong>{" "}
+            <strong className="text-slate-900">Ngữ cảnh:</strong>{" "}
             {currentChallenge.contextVI}
           </div>
           {showPhonetic && (
             <div className="pt-1 flex items-center gap-2">
-              <span className="font-mono text-[11px] text-slate-400">IPA:</span>
-              <span className="font-ipa text-sm font-semibold text-cyan-300">
+              <span className="font-mono text-[11px] text-slate-600">IPA:</span>
+              <span className="font-ipa text-sm font-semibold text-sky-700">
                 {currentChallenge.phonetic}
               </span>
             </div>
@@ -682,15 +682,15 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
         <div
           className={`rounded-xl p-3.5 border flex items-center justify-between gap-3 text-sm font-bold ${
             feedback.kind === "fixed"
-              ? "bg-emerald-500/20 text-emerald-100 border-emerald-400/50"
-              : "bg-rose-500/20 text-rose-100 border-rose-400/50"
+              ? "bg-emerald-50 text-emerald-900 border-emerald-300"
+              : "bg-rose-50 text-rose-900 border-rose-300"
           }`}
         >
           <div className="flex items-center gap-2">
             {feedback.kind === "fixed" ? (
-              <CheckCircle2 className="w-5 h-5 text-emerald-300 shrink-0" />
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
             ) : (
-              <XCircle className="w-5 h-5 text-rose-300 shrink-0" />
+              <XCircle className="w-5 h-5 text-rose-600 shrink-0" />
             )}
             <span>
               {feedback.kind === "fixed"
@@ -699,7 +699,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
             </span>
           </div>
           {feedback.kind === "fixed" && (
-            <span className="font-mono text-xs px-2.5 py-1 rounded-pill bg-emerald-400/25 border border-emerald-300/45 text-emerald-100">
+            <span className="font-mono text-xs px-2.5 py-1 rounded-pill bg-emerald-100 border border-emerald-300 text-emerald-800">
               +{feedback.pointsEarned} pts
             </span>
           )}
@@ -740,7 +740,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
 
         <form onSubmit={handleSubmitTyped} className="flex-1 flex gap-2">
           <div className="relative flex-1">
-            <Keyboard className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Keyboard className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               ref={inputRef}
               type="text"
@@ -764,7 +764,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
       </div>
 
       {speechError && (
-        <p className="text-xs text-rose-200 bg-rose-500/15 border border-rose-400/40 rounded-xl px-3.5 py-2">
+        <p className="text-xs text-rose-800 bg-rose-50 border border-rose-300/80 rounded-xl px-3.5 py-2">
           {speechError}
         </p>
       )}

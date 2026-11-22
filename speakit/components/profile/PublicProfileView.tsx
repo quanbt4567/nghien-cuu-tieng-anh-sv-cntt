@@ -113,17 +113,17 @@ export function PublicProfileView({ profile }: { profile: PublicProfileData }) {
                   className={
                     hasNameplate
                       ? "px-3.5 py-2.5"
-                      : "rounded-xl border border-white/15 px-3.5 py-2.5 bg-slate-950/55"
+                      : "rounded-xl border border-slate-200/85 px-3.5 py-2.5 bg-white/80"
                   }
                 >
-                  <h1 className="text-lg sm:text-xl font-bold truncate text-white">
+                  <h1 className="text-lg sm:text-xl font-bold truncate text-slate-900">
                     {profile.displayName}
                   </h1>
-                  <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-slate-300">
+                  <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-slate-600">
                     <span>{profile.equippedTitle}</span>
                     {profile.createdAt && (
                       <span className="inline-flex items-center gap-1">
-                        <Calendar className="w-3 h-3 text-cyan-300" aria-hidden="true" />
+                        <Calendar className="w-3 h-3 text-sky-600" aria-hidden="true" />
                         <span>Tham gia {formatDate(profile.createdAt)}</span>
                       </span>
                     )}
@@ -131,63 +131,63 @@ export function PublicProfileView({ profile }: { profile: PublicProfileData }) {
                 </NameplateBanner>
 
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-cyan-500/20 border border-cyan-400/40 text-cyan-100 text-xs font-mono font-semibold">
-                    <Award className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-sky-100 border border-sky-300/80 text-sky-800 text-xs font-mono font-semibold">
+                    <Award className="w-3.5 h-3.5 text-sky-600" aria-hidden="true" />
                     <span>{profile.devTitle}</span>
                   </span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-amber-500/20 border border-amber-400/40 text-xs font-mono font-bold text-amber-200">
-                    <Flame className="w-3.5 h-3.5 fill-amber-400 text-amber-300" aria-hidden="true" />
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-amber-100 border border-amber-300/80 text-xs font-mono font-bold text-amber-800">
+                    <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" aria-hidden="true" />
                     <span>{profile.streakDays} ngày streak</span>
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="md:text-right shrink-0 bg-slate-950/55 border border-white/15 rounded-xl px-4 py-3 font-mono">
-              <div className="text-[11px] uppercase text-slate-400">Tổng điểm tích lũy</div>
-              <div className="text-xl font-bold text-cyan-300">
+            <div className="md:text-right shrink-0 bg-white/80 border border-slate-200/85 rounded-xl px-4 py-3 font-mono">
+              <div className="text-[11px] uppercase text-slate-600">Tổng điểm tích lũy</div>
+              <div className="text-xl font-bold text-sky-700">
                 {profile.totalPoints.toLocaleString("vi-VN")} pts
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="bg-slate-950/50 border border-white/15 rounded-xl p-3.5 space-y-1">
-              <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase text-slate-400">
-                <Trophy className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
+            <div className="bg-white/80 border border-slate-200/85 rounded-xl p-3.5 space-y-1">
+              <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase text-slate-600">
+                <Trophy className="w-3.5 h-3.5 text-sky-600" aria-hidden="true" />
                 <span>Tổng điểm</span>
               </div>
-              <div className="text-base font-bold font-mono text-white">
+              <div className="text-base font-bold font-mono text-slate-900">
                 {profile.totalPoints.toLocaleString("vi-VN")}
               </div>
             </div>
 
-            <div className="bg-slate-950/50 border border-white/15 rounded-xl p-3.5 space-y-1">
-              <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase text-slate-400">
-                <Coins className="w-3.5 h-3.5 text-amber-300" aria-hidden="true" />
+            <div className="bg-white/80 border border-slate-200/85 rounded-xl p-3.5 space-y-1">
+              <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase text-slate-600">
+                <Coins className="w-3.5 h-3.5 text-amber-600" aria-hidden="true" />
                 <span>IT-Coin</span>
               </div>
-              <div className="text-base font-bold font-mono text-amber-200">
+              <div className="text-base font-bold font-mono text-amber-700">
                 {profile.itCoins.toLocaleString("vi-VN")}
               </div>
             </div>
 
-            <div className="bg-slate-950/50 border border-white/15 rounded-xl p-3.5 space-y-1">
-              <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase text-slate-400">
-                <Flame className="w-3.5 h-3.5 text-emerald-300" aria-hidden="true" />
+            <div className="bg-white/80 border border-slate-200/85 rounded-xl p-3.5 space-y-1">
+              <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase text-slate-600">
+                <Flame className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
                 <span>Streak</span>
               </div>
-              <div className="text-base font-bold font-mono text-emerald-200">
+              <div className="text-base font-bold font-mono text-emerald-700">
                 {profile.streakDays} ngày
               </div>
             </div>
 
-            <div className="bg-slate-950/50 border border-white/15 rounded-xl p-3.5 space-y-1">
-              <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase text-slate-400">
-                <Package className="w-3.5 h-3.5 text-violet-300" aria-hidden="true" />
+            <div className="bg-white/80 border border-slate-200/85 rounded-xl p-3.5 space-y-1">
+              <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase text-slate-600">
+                <Package className="w-3.5 h-3.5 text-violet-600" aria-hidden="true" />
                 <span>Vật phẩm sở hữu</span>
               </div>
-              <div className="text-base font-bold font-mono text-white">
+              <div className="text-base font-bold font-mono text-slate-900">
                 {profile.ownedCount}
               </div>
             </div>
@@ -199,17 +199,17 @@ export function PublicProfileView({ profile }: { profile: PublicProfileData }) {
           className="liquid-glass-card p-5 space-y-3"
         >
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-cyan-300" aria-hidden="true" />
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-sky-600" aria-hidden="true" />
               <span>Trang bị hiệu ứng đang dùng</span>
             </h2>
-            <span className="text-[11px] font-mono text-slate-400">
+            <span className="text-[11px] font-mono text-slate-600">
               {equippedBadges.length} đang bật
             </span>
           </div>
 
           {equippedBadges.length === 0 ? (
-            <p className="text-xs text-slate-300 bg-slate-950/50 border border-white/12 rounded-xl p-3.5">
+            <p className="text-xs text-slate-600 bg-white/80 border border-slate-200/85 rounded-xl p-3.5">
               Người chơi này chưa trang bị hiệu ứng Discord-style nào.
             </p>
           ) : (
@@ -217,13 +217,13 @@ export function PublicProfileView({ profile }: { profile: PublicProfileData }) {
               {equippedBadges.map(({ category, label, item }) => (
                 <span
                   key={category}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-slate-950/55 border border-white/15 text-xs font-medium text-white"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white/85 border border-slate-200/85 text-xs font-medium text-slate-900"
                 >
-                  <span className="text-[10px] font-mono uppercase text-slate-400">
+                  <span className="text-[10px] font-mono uppercase text-slate-600">
                     {label}:
                   </span>
-                  <span className="font-semibold text-cyan-200">{item.name}</span>
-                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-pill bg-white/[0.08] border border-white/15 text-amber-200">
+                  <span className="font-semibold text-sky-700">{item.name}</span>
+                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-pill bg-amber-100 border border-amber-300/80 text-amber-800">
                     {item.rarity}
                   </span>
                 </span>
@@ -237,17 +237,17 @@ export function PublicProfileView({ profile }: { profile: PublicProfileData }) {
           className="liquid-glass-card p-5 space-y-3"
         >
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-              <Gamepad2 className="w-4 h-4 text-emerald-300" aria-hidden="true" />
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-2">
+              <Gamepad2 className="w-4 h-4 text-emerald-600" aria-hidden="true" />
               <span>Trận Arena gần đây</span>
             </h2>
-            <span className="text-[11px] font-mono text-slate-400">
+            <span className="text-[11px] font-mono text-slate-600">
               {profile.recentArenaRuns.length} trận
             </span>
           </div>
 
           {profile.recentArenaRuns.length === 0 ? (
-            <p className="text-xs text-slate-300 bg-slate-950/50 border border-white/12 rounded-xl p-3.5">
+            <p className="text-xs text-slate-600 bg-white/80 border border-slate-200/85 rounded-xl p-3.5">
               Chưa có trận Arena nào được ghi nhận công khai.
             </p>
           ) : (
@@ -255,11 +255,11 @@ export function PublicProfileView({ profile }: { profile: PublicProfileData }) {
               {profile.recentArenaRuns.map((run) => (
                 <div
                   key={run.id}
-                  className="liquid-glass-card-lite p-3 space-y-1 border-white/12"
+                  className="liquid-glass-card-lite p-3 space-y-1 border-slate-200/85"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-bold text-white truncate flex items-center gap-1.5">
-                      <Gamepad2 className="w-3.5 h-3.5 text-emerald-300 shrink-0" aria-hidden="true" />
+                    <span className="text-xs font-bold text-slate-900 truncate flex items-center gap-1.5">
+                      <Gamepad2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" aria-hidden="true" />
                       <span>
                         {run.gameId === "bug-buster"
                           ? "Bug Buster Arena"
@@ -268,16 +268,16 @@ export function PublicProfileView({ profile }: { profile: PublicProfileData }) {
                           : run.gameId}
                       </span>
                       {run.role && (
-                        <span className="px-2 py-0.5 rounded-pill bg-white/[0.08] border border-white/15 text-[10px] font-mono text-slate-300 uppercase">
+                        <span className="px-2 py-0.5 rounded-pill bg-slate-100/90 border border-slate-200/85 text-[10px] font-mono text-slate-600 uppercase">
                           {run.role}
                         </span>
                       )}
                     </span>
-                    <span className="px-2 py-0.5 rounded-pill bg-emerald-500/20 border border-emerald-400/40 text-[11px] font-mono font-bold text-emerald-200 shrink-0">
+                    <span className="px-2 py-0.5 rounded-pill bg-emerald-100 border border-emerald-300/80 text-[11px] font-mono font-bold text-emerald-800 shrink-0">
                       {run.score.toLocaleString("vi-VN")} pts
                     </span>
                   </div>
-                  <div className="flex items-center justify-between gap-2 text-[11px] font-mono text-slate-400">
+                  <div className="flex items-center justify-between gap-2 text-[11px] font-mono text-slate-600">
                     <span>
                       {run.gameId === "bug-buster"
                         ? `${run.accuracyOrWords}% chính xác`

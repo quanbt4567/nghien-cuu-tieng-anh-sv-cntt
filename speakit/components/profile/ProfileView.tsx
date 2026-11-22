@@ -71,9 +71,7 @@ import {
   saveBackupTransferCode,
   saveCachedGuestProfile,
 } from "../../lib/guestClient";
-import { CustomCursorTrail } from "../cosmetics/CustomCursorTrail";
 import { DiscordAvatarFrame } from "../cosmetics/DiscordAvatarFrame";
-import { FullPageProfileEffect } from "../cosmetics/FullPageProfileEffect";
 import { LeaderboardRowWrapper } from "../cosmetics/LeaderboardRowWrapper";
 import { AVATAR_PRESETS, PlayerAvatar } from "../cosmetics/PlayerAvatar";
 import {
@@ -747,18 +745,18 @@ export function ProfileView() {
         aria-live="polite"
       >
         <div className="flex items-center justify-between gap-3">
-          <div className="h-8 w-28 rounded-pill bg-white/10 border border-white/15 animate-pulse" />
-          <div className="h-5 w-44 rounded-pill bg-white/10 border border-white/15 animate-pulse" />
+          <div className="h-8 w-28 rounded-pill bg-white/80 border border-slate-200/85 animate-pulse" />
+          <div className="h-5 w-44 rounded-pill bg-white/80 border border-slate-200/85 animate-pulse" />
         </div>
         <div className="liquid-glass-card p-6 space-y-4">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-white/10 border border-white/15 shrink-0 animate-pulse" />
+            <div className="w-16 h-16 rounded-full bg-slate-200/70 border border-slate-200/85 shrink-0 animate-pulse" />
             <div className="space-y-2 flex-1">
-              <div className="h-6 w-48 rounded-lg bg-white/10 animate-pulse" />
-              <div className="h-4 w-72 rounded-lg bg-white/10 animate-pulse" />
+              <div className="h-6 w-48 rounded-lg bg-slate-200/70 animate-pulse" />
+              <div className="h-4 w-72 rounded-lg bg-slate-200/70 animate-pulse" />
             </div>
           </div>
-          <p className="text-xs font-mono text-slate-300">
+          <p className="text-xs font-mono text-slate-600">
             Đang tải hồ sơ SpeakIT và đồng bộ phiên khách...
           </p>
         </div>
@@ -772,8 +770,6 @@ export function ProfileView() {
 
   return (
     <div className="relative min-h-screen">
-      <FullPageProfileEffect themeId={equippedCosmetics.profile_theme} />
-
       <div className="relative z-10 max-w-5xl mx-auto px-4 py-8 space-y-6 pb-16">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
@@ -784,8 +780,8 @@ export function ProfileView() {
               <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Trang chủ</span>
             </Link>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white flex items-center gap-2 ml-1">
-              <User className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-300 shrink-0" aria-hidden="true" />
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2 ml-1">
+              <User className="w-5 h-5 sm:w-6 sm:h-6 text-sky-600 shrink-0" aria-hidden="true" />
               <span>Hồ sơ người dùng</span>
             </h1>
           </div>
@@ -814,9 +810,9 @@ export function ProfileView() {
           </div>
         </div>
 
-        <p className="text-xs sm:text-sm text-slate-300 liquid-glass-card-lite px-4 py-2.5">
+        <p className="text-xs sm:text-sm text-slate-600 liquid-glass-card-lite px-4 py-2.5">
           Đổi tên hiển thị, lưu mã khôi phục thiết bị DEV-XXXXXX và dùng IT-Coin mở khóa hiệu ứng Discord-style tại{" "}
-          <Link href="/shop" className="font-semibold text-cyan-300 hover:text-cyan-200 hover:underline">
+          <Link href="/shop" className="font-semibold text-sky-700 hover:text-sky-600 hover:underline">
             IT-Coin Shop
           </Link>
           .
@@ -848,18 +844,18 @@ export function ProfileView() {
             <div className="min-w-0 space-y-2 flex-1">
               {!isEditingName ? (
                 <div className="flex flex-wrap items-center gap-2">
-                  <h2 className="text-xl font-bold text-white truncate">
+                  <h2 className="text-xl font-bold text-slate-900 truncate">
                     {identity.displayName}
                   </h2>
                   {guestPlayer?.email && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill bg-cyan-500/20 border border-cyan-400/40 text-xs font-medium text-cyan-100">
-                      <Mail className="w-3 h-3 text-cyan-300" aria-hidden="true" />
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill bg-sky-100 border border-sky-300/80 text-xs font-medium text-sky-800">
+                      <Mail className="w-3 h-3 text-sky-600" aria-hidden="true" />
                       <span>{guestPlayer.email}</span>
                     </span>
                   )}
                   {identity.transferCode && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill bg-slate-950/60 border border-white/15 text-xs font-mono font-bold text-cyan-200">
-                      <KeyRound className="w-3 h-3 text-cyan-300" aria-hidden="true" />
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill bg-white/80 border border-slate-200/85 text-xs font-mono font-bold text-sky-700">
+                      <KeyRound className="w-3 h-3 text-sky-600" aria-hidden="true" />
                       <span>{identity.transferCode}</span>
                     </span>
                   )}
@@ -951,7 +947,7 @@ export function ProfileView() {
                 <p
                   role="status"
                   className={`text-xs font-medium ${
-                    nameFeedback.ok ? "text-emerald-300" : "text-rose-300"
+                    nameFeedback.ok ? "text-emerald-700" : "text-rose-700"
                   }`}
                 >
                   {nameFeedback.message}
@@ -959,16 +955,16 @@ export function ProfileView() {
               )}
 
               {isAvatarPanelOpen && (
-                <div className="mt-2 p-3 rounded-xl bg-slate-950/65 border border-white/15 space-y-3">
+                <div className="mt-2 p-3 rounded-xl bg-white/85 border border-slate-200/85 space-y-3">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-bold text-white">
+                    <span className="text-xs font-bold text-slate-900">
                       Chọn Avatar Preset hoặc tải ảnh lên
                     </span>
                     <button
                       type="button"
                       onClick={() => setIsAvatarPanelOpen(false)}
                       aria-label="Đóng bảng chọn avatar"
-                      className="p-1 rounded-pill text-slate-400 hover:text-white hover:bg-white/10"
+                      className="p-1 rounded-pill text-slate-500 hover:text-slate-900 hover:bg-slate-200/70"
                     >
                       <X className="w-3.5 h-3.5" aria-hidden="true" />
                     </button>
@@ -988,8 +984,8 @@ export function ProfileView() {
                           aria-label={preset.label}
                           className={`group flex flex-col items-center gap-1 p-1.5 rounded-xl border transition-all disabled:opacity-50 ${
                             isSelected
-                              ? "border-cyan-400 bg-cyan-500/20 shadow-[0_0_14px_rgba(6,182,212,0.3)]"
-                              : "border-white/15 bg-white/[0.05] hover:border-white/35"
+                              ? "border-sky-400 bg-sky-100/90 shadow-[0_2px_10px_rgba(14,165,233,0.2)]"
+                              : "border-slate-200/85 bg-slate-100/80 hover:border-sky-300"
                           }`}
                         >
                           <span
@@ -997,7 +993,7 @@ export function ProfileView() {
                           >
                             <PresetIcon className="w-4 h-4" strokeWidth={2.2} aria-hidden="true" />
                           </span>
-                          <span className="text-[10px] font-mono text-slate-200 truncate w-full text-center">
+                          <span className="text-[10px] font-mono text-slate-700 truncate w-full text-center">
                             {preset.label.split(" ")[0]}
                           </span>
                         </button>
@@ -1037,7 +1033,7 @@ export function ProfileView() {
                     <p
                       role="status"
                       className={`text-xs font-medium ${
-                        avatarFeedback.ok ? "text-emerald-300" : "text-rose-300"
+                        avatarFeedback.ok ? "text-emerald-700" : "text-rose-700"
                       }`}
                     >
                       {avatarFeedback.message}
@@ -1047,52 +1043,52 @@ export function ProfileView() {
               )}
 
               <div className="flex flex-wrap items-center gap-2 pt-0.5">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-cyan-500/20 border border-cyan-400/40 text-cyan-100 text-xs font-mono font-semibold">
-                  <Award className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-sky-100 border border-sky-300/80 text-sky-800 text-xs font-mono font-semibold">
+                  <Award className="w-3.5 h-3.5 text-sky-600" aria-hidden="true" />
                   <span>{identity.equippedTitle}</span>
                 </span>
 
                 {identity.mode === "online" && (
                   <Link
                     href="/arena"
-                    className="liquid-glass-pill inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold text-white hover:border-cyan-400/50 transition-colors"
+                    className="liquid-glass-pill inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold text-slate-900 hover:border-sky-400/60 transition-colors"
                   >
-                    <Trophy className="w-3.5 h-3.5 text-amber-300" aria-hidden="true" />
+                    <Trophy className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
                     <span>
                       {globalRank !== null ? `#${globalRank} Toàn cầu` : "Hạng toàn cầu"}
                     </span>
                   </Link>
                 )}
 
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-emerald-500/20 border border-emerald-400/40 text-xs font-mono font-bold text-emerald-200">
-                  <Flame className="w-3.5 h-3.5 fill-emerald-400 text-emerald-300" aria-hidden="true" />
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-emerald-100 border border-emerald-300/80 text-xs font-mono font-bold text-emerald-800">
+                  <Flame className="w-3.5 h-3.5 fill-emerald-500 text-emerald-600" aria-hidden="true" />
                   <span>{identity.streakDays} ngày streak</span>
                 </span>
 
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-amber-500/20 border border-amber-400/40 text-xs font-mono font-bold text-amber-200">
-                  <Coins className="w-3.5 h-3.5 text-amber-300" aria-hidden="true" />
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-amber-100 border border-amber-300/80 text-xs font-mono font-bold text-amber-800">
+                  <Coins className="w-3.5 h-3.5 text-amber-600" aria-hidden="true" />
                   <span>{identity.itCoins} IT-Coin</span>
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="md:text-right shrink-0 bg-slate-950/55 border border-white/15 rounded-xl px-4 py-3 font-mono">
-            <div className="text-[11px] uppercase text-slate-400">Tổng điểm tích lũy</div>
-            <div className="text-xl font-bold text-cyan-300">
+          <div className="md:text-right shrink-0 bg-white/80 border border-slate-200/85 rounded-xl px-4 py-3 font-mono">
+            <div className="text-[11px] uppercase text-slate-600">Tổng điểm tích lũy</div>
+            <div className="text-xl font-bold text-sky-700">
               {identity.totalPoints.toLocaleString("vi-VN")} pts
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-slate-950/50 border border-white/15 rounded-xl p-4 space-y-2">
+          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-4 space-y-2">
             <div className="flex items-center justify-between gap-2 text-xs">
-              <span className="font-semibold text-white">
+              <span className="font-semibold text-slate-900">
                 {activity.devTitle.nextTitle && activity.devTitle.nextThreshold !== null ? (
                   <>
                     Lộ trình lên{" "}
-                    <span className="font-mono text-cyan-300">
+                    <span className="font-mono text-sky-700">
                       {activity.devTitle.nextTitle}
                     </span>
                   </>
@@ -1100,7 +1096,7 @@ export function ProfileView() {
                   "Cấp bậc cao nhất: Lead Tech Speaker"
                 )}
               </span>
-              <span className="font-mono font-bold text-emerald-300">
+              <span className="font-mono font-bold text-emerald-700">
                 {activity.devTitle.progressPct}%
               </span>
             </div>
@@ -1110,10 +1106,10 @@ export function ProfileView() {
               aria-valuenow={activity.devTitle.progressPct}
               aria-valuemin={0}
               aria-valuemax={100}
-              className="w-full h-2.5 bg-slate-900/80 rounded-pill border border-white/15 overflow-hidden"
+              className="w-full h-2.5 bg-slate-200/80 rounded-pill border border-slate-300/70 overflow-hidden"
             >
               <div
-                className="h-full bg-gradient-to-r from-emerald-400 to-cyan-400 transition-all duration-500"
+                className="h-full bg-gradient-to-r from-emerald-500 to-sky-500 transition-all duration-500"
                 style={{
                   width: `${Math.max(
                     activity.devTitle.progressPct > 0 ? 4 : 0,
@@ -1122,7 +1118,7 @@ export function ProfileView() {
                 }}
               />
             </div>
-            <p className="text-[11px] font-mono text-slate-400">
+            <p className="text-[11px] font-mono text-slate-600">
               {activity.devTitle.nextTitle && activity.devTitle.nextThreshold !== null
                 ? `Còn ${Math.max(
                     0,
@@ -1132,12 +1128,12 @@ export function ProfileView() {
             </p>
           </div>
 
-          <div className="bg-slate-950/50 border border-white/15 rounded-xl p-4 space-y-2">
+          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-4 space-y-2">
             <div className="flex items-center justify-between gap-2 text-xs">
-              <span className="font-semibold text-white">
+              <span className="font-semibold text-slate-900">
                 Tiến độ +1 IT-Coin tiếp theo
               </span>
-              <span className="font-mono font-bold text-amber-300">
+              <span className="font-mono font-bold text-amber-700">
                 {coinEarnedInTier} / {POINTS_PER_COIN} pts
               </span>
             </div>
@@ -1147,16 +1143,16 @@ export function ProfileView() {
               aria-valuenow={coinProgressPct}
               aria-valuemin={0}
               aria-valuemax={100}
-              className="w-full h-2.5 bg-slate-900/80 rounded-pill border border-white/15 overflow-hidden"
+              className="w-full h-2.5 bg-slate-200/80 rounded-pill border border-slate-300/70 overflow-hidden"
             >
               <div
-                className="h-full bg-gradient-to-r from-amber-400 to-orange-400 transition-all duration-500"
+                className="h-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-500"
                 style={{
                   width: `${Math.max(coinEarnedInTier > 0 ? 4 : 0, coinProgressPct)}%`,
                 }}
               />
             </div>
-            <p className="text-[11px] font-mono text-slate-400">
+            <p className="text-[11px] font-mono text-slate-600">
               Còn {activity.nextCoinPoints.toLocaleString("vi-VN")} điểm để nhận +1 IT-Coin (1.000 điểm = 1 Coin)
             </p>
           </div>
@@ -1171,10 +1167,10 @@ export function ProfileView() {
         >
           <div className="space-y-3">
             <div className="flex items-center justify-between gap-2">
-              <h2 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono">
                 Vai trò CNTT của bạn
               </h2>
-              <span className="text-[11px] font-mono text-slate-400">
+              <span className="text-[11px] font-mono text-slate-600">
                 Đồng bộ toàn app
               </span>
             </div>
@@ -1191,13 +1187,13 @@ export function ProfileView() {
                     onClick={() => handleSelectRole(role.id)}
                     className={`flex items-center gap-2 px-3.5 py-2.5 rounded-pill border text-xs font-semibold transition-all text-left ${
                       isSelected
-                        ? "bg-cyan-500/25 text-white border-cyan-400/60 shadow-[0_0_16px_rgba(6,182,212,0.3)]"
-                        : "bg-slate-950/50 text-slate-300 border-white/15 hover:bg-white/10 hover:text-white"
+                        ? "bg-sky-100/90 text-slate-900 border-sky-400/80 shadow-[0_4px_14px_rgba(14,165,233,0.18)]"
+                        : "bg-white/80 text-slate-700 border-slate-200/85 hover:bg-slate-100/80 hover:text-slate-900"
                     }`}
                   >
                     <Icon
                       className={`w-4 h-4 shrink-0 ${
-                        isSelected ? "text-cyan-300" : "text-slate-400"
+                        isSelected ? "text-sky-600" : "text-slate-500"
                       }`}
                       aria-hidden="true"
                     />
@@ -1207,8 +1203,8 @@ export function ProfileView() {
               })}
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/50 border border-white/12 rounded-xl p-3">
-              <strong className="text-white">{activeRole.label}:</strong>{" "}
+            <p className="text-xs text-slate-600 leading-relaxed bg-white/80 border border-slate-200/85 rounded-xl p-3">
+              <strong className="text-slate-900">{activeRole.label}:</strong>{" "}
               {activeRole.taglineVI}
             </p>
           </div>
@@ -1227,19 +1223,19 @@ export function ProfileView() {
           className="liquid-glass-card p-5 space-y-4"
         >
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-1.5">
-              <KeyRound className="w-4 h-4 text-cyan-300" aria-hidden="true" />
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-1.5">
+              <KeyRound className="w-4 h-4 text-sky-600" aria-hidden="true" />
               <span>Mã chuyển thiết bị</span>
             </h2>
           </div>
 
           {identity.transferCode ? (
-            <div className="p-3.5 bg-slate-950/55 border border-white/15 rounded-xl flex items-center justify-between gap-3">
+            <div className="p-3.5 bg-white/80 border border-slate-200/85 rounded-xl flex items-center justify-between gap-3">
               <div className="min-w-0">
-                <div className="text-[10px] font-mono uppercase text-slate-400">
+                <div className="text-[10px] font-mono uppercase text-slate-600">
                   Mã sao lưu cá nhân (Transfer Code)
                 </div>
-                <div className="text-base font-mono font-bold text-cyan-200 tracking-wider mt-0.5">
+                <div className="text-base font-mono font-bold text-sky-700 tracking-wider mt-0.5">
                   {identity.transferCode}
                 </div>
               </div>
@@ -1252,7 +1248,7 @@ export function ProfileView() {
               >
                 {copiedCode ? (
                   <>
-                    <Check className="w-3.5 h-3.5 text-emerald-300" aria-hidden="true" />
+                    <Check className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
                     <span>Đã chép</span>
                   </>
                 ) : (
@@ -1264,22 +1260,22 @@ export function ProfileView() {
               </button>
             </div>
           ) : (
-            <div className="p-3.5 bg-slate-950/50 border border-white/15 rounded-xl text-xs text-slate-300">
-              Mã <code className="font-mono text-cyan-200">DEV-XXXXXX</code> sẽ tự động được cấp cho hồ sơ của bạn để đồng bộ tiến độ giữa các thiết bị.
+            <div className="p-3.5 bg-white/80 border border-slate-200/85 rounded-xl text-xs text-slate-600">
+              Mã <code className="font-mono text-sky-700">DEV-XXXXXX</code> sẽ tự động được cấp cho hồ sơ của bạn để đồng bộ tiến độ giữa các thiết bị.
             </div>
           )}
 
           {copiedCode && (
             <div
               role="status"
-              className="text-xs font-mono text-emerald-200 bg-emerald-500/15 border border-emerald-400/40 rounded-xl px-3 py-2"
+              className="text-xs font-mono text-emerald-800 bg-emerald-50 border border-emerald-300/80 rounded-xl px-3 py-2"
             >
               Đã sao chép mã chuyển thiết bị vào clipboard!
             </div>
           )}
 
           {copyNote && (
-            <div className="text-xs text-rose-200 bg-rose-500/15 border border-rose-400/40 rounded-xl px-3 py-2">
+            <div className="text-xs text-rose-800 bg-rose-50 border border-rose-300/80 rounded-xl px-3 py-2">
               {copyNote}
             </div>
           )}
@@ -1287,7 +1283,7 @@ export function ProfileView() {
           <form onSubmit={handleRestoreSubmit} className="space-y-2">
             <label
               htmlFor="restore-transfer-code"
-              className="block text-xs font-semibold text-white"
+              className="block text-xs font-semibold text-slate-900"
             >
               Khôi phục hồ sơ từ thiết bị khác
             </label>
@@ -1320,8 +1316,8 @@ export function ProfileView() {
               role="status"
               className={`text-xs p-2.5 rounded-xl border ${
                 restoreFeedback.ok
-                  ? "bg-emerald-500/15 border-emerald-400/40 text-emerald-200"
-                  : "bg-rose-500/15 border-rose-400/40 text-rose-200"
+                  ? "bg-emerald-50 border-emerald-300/80 text-emerald-800"
+                  : "bg-rose-50 border-rose-300/80 text-rose-800"
               }`}
             >
               {restoreFeedback.message}
@@ -1336,17 +1332,17 @@ export function ProfileView() {
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-              <ShoppingBag className="w-4 h-4 text-amber-300" aria-hidden="true" />
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-2">
+              <ShoppingBag className="w-4 h-4 text-amber-600" aria-hidden="true" />
               <span>IT-Coin Cosmetic Armory</span>
             </h2>
-            <p className="text-xs text-slate-300 mt-0.5">
+            <p className="text-xs text-slate-600 mt-0.5">
               Đã sở hữu {identity.ownedItems.length}/{COSMETIC_CATALOG.length} hiệu ứng · Xem nhanh tối đa 4 vật phẩm nổi bật.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="liquid-glass-pill px-3 py-1.5 text-xs font-mono font-bold text-amber-200">
+            <span className="liquid-glass-pill px-3 py-1.5 text-xs font-mono font-bold text-amber-700">
               {identity.itCoins} IT-Coin
             </span>
             <Link
@@ -1363,8 +1359,8 @@ export function ProfileView() {
             role="status"
             className={`p-3 rounded-xl border text-xs ${
               shopFeedback.ok
-                ? "bg-emerald-500/15 border-emerald-400/40 text-emerald-200"
-                : "bg-rose-500/15 border-rose-400/40 text-rose-200"
+                ? "bg-emerald-50 border-emerald-300/80 text-emerald-800"
+                : "bg-rose-50 border-rose-300/80 text-rose-800"
             }`}
           >
             {shopFeedback.message}
@@ -1383,25 +1379,25 @@ export function ProfileView() {
             return (
               <div
                 key={item.id}
-                className="p-3.5 rounded-xl bg-slate-950/55 border border-white/15 flex flex-col justify-between gap-2.5"
+                className="p-3.5 rounded-xl bg-white/80 border border-slate-200/85 flex flex-col justify-between gap-2.5"
               >
                 <div className="space-y-1">
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
                       <span
                         aria-hidden="true"
-                        className="w-2.5 h-2.5 rounded-full shrink-0 border border-white/30"
+                        className="w-2.5 h-2.5 rounded-full shrink-0 border border-slate-300"
                         style={{ backgroundColor: item.previewAccent }}
                       />
-                      <span className="text-xs font-bold text-white truncate">
+                      <span className="text-xs font-bold text-slate-900 truncate">
                         {item.name}
                       </span>
                     </div>
-                    <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded-pill bg-white/[0.08] border border-white/15 text-amber-200 shrink-0">
+                    <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded-pill bg-amber-100 border border-amber-300/80 text-amber-800 shrink-0">
                       {item.rarity}
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-300 line-clamp-1">
+                  <p className="text-[11px] text-slate-600 line-clamp-1">
                     {item.description}
                   </p>
                 </div>
@@ -1435,7 +1431,7 @@ export function ProfileView() {
                     {busyItemId === item.id ? "Đang cập nhật..." : "Trang bị nhanh"}
                   </button>
                 ) : (
-                  <span className="w-full inline-flex items-center justify-center py-1 px-2.5 rounded-pill text-[11px] font-mono font-semibold border bg-white/[0.06] text-slate-300 border-white/15">
+                  <span className="w-full inline-flex items-center justify-center py-1 px-2.5 rounded-pill text-[11px] font-mono font-semibold border bg-slate-100/90 text-slate-600 border-slate-200/85">
                     Xem trước · {item.price} Coin
                   </span>
                 )}
@@ -1444,13 +1440,13 @@ export function ProfileView() {
           })}
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/15 text-xs">
-          <span className="text-slate-300">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200/85 text-xs">
+          <span className="text-slate-600">
             Khám phá toàn bộ {COSMETIC_CATALOG.length} hiệu ứng viền, bảng tên và chủ đề hồ sơ.
           </span>
           <Link
             href="/shop"
-            className="inline-flex items-center gap-1 font-semibold text-cyan-300 hover:text-cyan-200 hover:underline"
+            className="inline-flex items-center gap-1 font-semibold text-sky-700 hover:text-sky-600 hover:underline"
           >
             <span>Mua thêm tại Cửa hàng</span>
             <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -1462,13 +1458,13 @@ export function ProfileView() {
         aria-label="Tổng quan hoạt động luyện nói và Arena"
         className="liquid-glass-card p-5 sm:p-6 space-y-5"
       >
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/15 pb-3">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/85 pb-3">
           <div>
-            <h2 className="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-              <History className="w-4 h-4 text-emerald-300" aria-hidden="true" />
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-2">
+              <History className="w-4 h-4 text-emerald-600" aria-hidden="true" />
               <span>Hoạt động Luyện nói &amp; Arena</span>
             </h2>
-            <p className="text-xs text-slate-300 mt-0.5">
+            <p className="text-xs text-slate-600 mt-0.5">
               {activity.scenariosPracticed > 0
                 ? `Đã luyện ${activity.scenariosPracticed} tình huống khác nhau (${localSpeakingCount} lượt nói${localArenaCount > 0 ? `, ${localArenaCount} trận Arena` : ""}).`
                 : localArenaCount > 0
@@ -1480,7 +1476,7 @@ export function ProfileView() {
           </div>
           <Link
             href="/progress"
-            className="inline-flex items-center gap-1 text-xs font-mono font-semibold text-cyan-300 hover:text-cyan-200 transition-colors"
+            className="inline-flex items-center gap-1 text-xs font-mono font-semibold text-sky-700 hover:text-sky-600 transition-colors"
           >
             <span>Xem kế hoạch 7 ngày</span>
             <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -1488,21 +1484,21 @@ export function ProfileView() {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-          <div className="bg-slate-950/50 border border-white/15 rounded-xl p-3.5 text-center">
-            <div className="text-2xl font-mono font-extrabold text-white">
+          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-3.5 text-center">
+            <div className="text-2xl font-mono font-extrabold text-slate-900">
               {summaryStats.totalSessions > 0
                 ? summaryStats.totalSessions
                 : hasCloudPoints
                   ? identity.totalPoints.toLocaleString("vi-VN")
                   : 0}
             </div>
-            <div className="text-[11px] text-slate-300 mt-1 flex items-center justify-center gap-1">
+            <div className="text-[11px] text-slate-600 mt-1 flex items-center justify-center gap-1">
               {localSpeakingCount === 0 && localArenaCount > 0 ? (
-                <Gamepad2 className="w-3 h-3 text-emerald-300" aria-hidden="true" />
+                <Gamepad2 className="w-3 h-3 text-emerald-600" aria-hidden="true" />
               ) : (localSpeakingCount > 0 && localArenaCount > 0) || (localSpeakingCount === 0 && hasCloudPoints) ? (
-                <Trophy className="w-3 h-3 text-amber-300" aria-hidden="true" />
+                <Trophy className="w-3 h-3 text-amber-500" aria-hidden="true" />
               ) : (
-                <Mic className="w-3 h-3 text-cyan-300" aria-hidden="true" />
+                <Mic className="w-3 h-3 text-sky-600" aria-hidden="true" />
               )}
               <span>
                 {localSpeakingCount > 0 && localArenaCount > 0
@@ -1518,51 +1514,51 @@ export function ProfileView() {
             </div>
           </div>
 
-          <div className="bg-slate-950/50 border border-white/15 rounded-xl p-3.5 text-center">
-            <div className="text-2xl font-mono font-extrabold text-cyan-300">
+          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-3.5 text-center">
+            <div className="text-2xl font-mono font-extrabold text-sky-700">
               {summaryStats.averageScore}
             </div>
-            <div className="text-[11px] text-slate-300 mt-1">Điểm TB</div>
+            <div className="text-[11px] text-slate-600 mt-1">Điểm TB</div>
           </div>
 
-          <div className="bg-slate-950/50 border border-white/15 rounded-xl p-3.5 text-center">
-            <div className="text-2xl font-mono font-extrabold text-amber-300">
+          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-3.5 text-center">
+            <div className="text-2xl font-mono font-extrabold text-amber-600">
               {summaryStats.bestScore}
             </div>
-            <div className="text-[11px] text-slate-300 mt-1">Điểm cao nhất</div>
+            <div className="text-[11px] text-slate-600 mt-1">Điểm cao nhất</div>
           </div>
 
-          <div className="bg-slate-950/50 border border-white/15 rounded-xl p-3.5 text-center">
-            <div className="text-2xl font-mono font-extrabold text-emerald-300">
+          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-3.5 text-center">
+            <div className="text-2xl font-mono font-extrabold text-emerald-700">
               {activity.bugBusterBest}
             </div>
-            <div className="text-[11px] text-slate-300 mt-1 flex items-center justify-center gap-1">
-              <Bug className="w-3 h-3 text-emerald-300" aria-hidden="true" />
+            <div className="text-[11px] text-slate-600 mt-1 flex items-center justify-center gap-1">
+              <Bug className="w-3 h-3 text-emerald-600" aria-hidden="true" />
               <span>Bug Buster Best</span>
             </div>
           </div>
 
-          <div className="col-span-2 sm:col-span-1 bg-slate-950/50 border border-white/15 rounded-xl p-3.5 text-center">
-            <div className="text-2xl font-mono font-extrabold text-indigo-300">
+          <div className="col-span-2 sm:col-span-1 bg-white/80 border border-slate-200/85 rounded-xl p-3.5 text-center">
+            <div className="text-2xl font-mono font-extrabold text-indigo-700">
               {activity.standupBest}
             </div>
-            <div className="text-[11px] text-slate-300 mt-1 flex items-center justify-center gap-1">
-              <Timer className="w-3 h-3 text-indigo-300" aria-hidden="true" />
+            <div className="text-[11px] text-slate-600 mt-1 flex items-center justify-center gap-1">
+              <Timer className="w-3 h-3 text-indigo-600" aria-hidden="true" />
               <span>Standup Best</span>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <div className="bg-slate-950/50 border border-white/15 rounded-2xl p-4 space-y-3">
+          <div className="bg-white/80 border border-slate-200/85 rounded-2xl p-4 space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h3 className="text-xs font-bold font-mono uppercase text-white flex items-center gap-1.5">
-                <AlertCircle className="w-3.5 h-3.5 text-amber-300" aria-hidden="true" />
+              <h3 className="text-xs font-bold font-mono uppercase text-slate-900 flex items-center gap-1.5">
+                <AlertCircle className="w-3.5 h-3.5 text-amber-600" aria-hidden="true" />
                 <span>Từ khóa &amp; điểm yếu hay gặp</span>
               </h3>
               <Link
                 href="/vocabulary"
-                className="inline-flex items-center gap-1 text-[11px] font-semibold text-cyan-300 hover:text-cyan-200 hover:underline"
+                className="inline-flex items-center gap-1 text-[11px] font-semibold text-sky-700 hover:text-sky-600 hover:underline"
               >
                 <BookOpen className="w-3 h-3" aria-hidden="true" />
                 <span>Ôn từ vựng</span>
@@ -1570,8 +1566,8 @@ export function ProfileView() {
             </div>
 
             {activity.topWeakPoints.length === 0 ? (
-              <div className="bg-white/[0.05] border border-white/12 rounded-xl p-4 space-y-2.5">
-                <p className="text-xs text-slate-300">
+              <div className="bg-slate-100/80 border border-slate-200/85 rounded-xl p-4 space-y-2.5">
+                <p className="text-xs text-slate-600">
                   Chưa ghi nhận từ khóa hay lỗi ngữ pháp nào. Hãy luyện nói ít nhất 1 lượt để SpeakIT tổng hợp điểm cần cải thiện.
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -1600,19 +1596,19 @@ export function ProfileView() {
                   return (
                     <div
                       key={wp.id}
-                      className="flex flex-wrap items-center justify-between gap-2 bg-white/[0.05] border border-white/12 rounded-xl px-3 py-2"
+                      className="flex flex-wrap items-center justify-between gap-2 bg-slate-100/80 border border-slate-200/85 rounded-xl px-3 py-2"
                     >
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-amber-500/20 border border-amber-400/35 text-amber-200 shrink-0">
+                        <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-amber-100 border border-amber-300/80 text-amber-800 shrink-0">
                           {wp.kind === "keyword" ? "Từ khóa" : "Ngữ pháp"}
                         </span>
-                        <span className="text-xs font-mono font-bold text-white truncate">
+                        <span className="text-xs font-mono font-bold text-slate-900 truncate">
                           {wp.value}
                         </span>
                       </div>
 
                       <div className="flex items-center gap-2 shrink-0">
-                        <span className="text-[11px] font-mono font-bold text-rose-300">
+                        <span className="text-[11px] font-mono font-bold text-rose-700">
                           {wp.miss_count} lần
                         </span>
                         <Link
@@ -1629,23 +1625,23 @@ export function ProfileView() {
             )}
           </div>
 
-          <div className="bg-slate-950/50 border border-white/15 rounded-2xl p-4 space-y-3">
+          <div className="bg-white/80 border border-slate-200/85 rounded-2xl p-4 space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h3 className="text-xs font-bold font-mono uppercase text-white flex items-center gap-1.5">
-                <Mic className="w-3.5 h-3.5 text-emerald-300" aria-hidden="true" />
+              <h3 className="text-xs font-bold font-mono uppercase text-slate-900 flex items-center gap-1.5">
+                <Mic className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
                 <span>Lượt luyện nói &amp; Arena gần đây</span>
               </h3>
               <Link
                 href="/scenarios"
-                className="text-[11px] font-semibold text-cyan-300 hover:text-cyan-200 transition-colors"
+                className="text-[11px] font-semibold text-sky-700 hover:text-sky-600 transition-colors"
               >
                 Chọn kịch bản mới →
               </Link>
             </div>
 
             {activity.recentAttempts.length === 0 && recentArenaRuns.length === 0 ? (
-              <div className="bg-white/[0.05] border border-white/12 rounded-xl p-4 space-y-2.5">
-                <p className="text-xs text-slate-300">
+              <div className="bg-slate-100/80 border border-slate-200/85 rounded-xl p-4 space-y-2.5">
+                <p className="text-xs text-slate-600">
                   {hasCloudPoints
                     ? `Tài khoản ${identity.transferCode ?? ""} đã tích lũy ${identity.totalPoints.toLocaleString("vi-VN")} điểm. Hãy luyện thêm một tình huống hoặc trận Arena để xem chi tiết tại đây.`
                     : "Bạn chưa có lượt luyện nói nào được ghi nhận."}
@@ -1663,7 +1659,7 @@ export function ProfileView() {
                       href="/arena"
                       className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill text-xs font-semibold transition-all"
                     >
-                      <Gamepad2 className="w-3.5 h-3.5 text-emerald-300" aria-hidden="true" />
+                      <Gamepad2 className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
                       <span>Vào Arena</span>
                     </Link>
                   )}
@@ -1678,22 +1674,22 @@ export function ProfileView() {
                     <Link
                       key={attempt.id}
                       href={`/practice/${attempt.scenario}`}
-                      className="block liquid-glass-card-lite hover:border-cyan-400/45 p-3 transition-colors space-y-1"
+                      className="block liquid-glass-card-lite hover:border-sky-400/60 p-3 transition-colors space-y-1"
                     >
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs font-bold text-white truncate">
+                        <span className="text-xs font-bold text-slate-900 truncate">
                           {titleVI}
                         </span>
-                        <span className="px-2 py-0.5 rounded-pill bg-cyan-500/20 border border-cyan-400/40 text-[11px] font-mono font-bold text-cyan-200 shrink-0">
+                        <span className="px-2 py-0.5 rounded-pill bg-sky-100 border border-sky-300/80 text-[11px] font-mono font-bold text-sky-800 shrink-0">
                           {attempt.score}/100
                         </span>
                       </div>
-                      <div className="flex items-center justify-between gap-2 text-[11px] font-mono text-slate-400">
+                      <div className="flex items-center justify-between gap-2 text-[11px] font-mono text-slate-600">
                         <span>Lượt {attempt.turn_index + 1}</span>
                         <span>{formatAttemptDate(attempt.created_at)}</span>
                       </div>
                       {attempt.transcript && (
-                        <p className="text-xs text-slate-300 line-clamp-2 pt-0.5">
+                        <p className="text-xs text-slate-600 line-clamp-2 pt-0.5">
                           “{attempt.transcript}”
                         </p>
                       )}
@@ -1704,20 +1700,20 @@ export function ProfileView() {
                   <Link
                     key={run.id}
                     href="/arena"
-                    className="block liquid-glass-card-lite hover:border-emerald-400/45 p-3 transition-colors space-y-1"
+                    className="block liquid-glass-card-lite hover:border-emerald-400/60 p-3 transition-colors space-y-1"
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-bold text-white truncate flex items-center gap-1.5">
-                        <Gamepad2 className="w-3.5 h-3.5 text-emerald-300 shrink-0" aria-hidden="true" />
+                      <span className="text-xs font-bold text-slate-900 truncate flex items-center gap-1.5">
+                        <Gamepad2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" aria-hidden="true" />
                         <span>
                           {run.gameId === "bug-buster" ? "Bug Buster Arena" : "Standup Speed Run"}
                         </span>
                       </span>
-                      <span className="px-2 py-0.5 rounded-pill bg-emerald-500/20 border border-emerald-400/40 text-[11px] font-mono font-bold text-emerald-200 shrink-0">
+                      <span className="px-2 py-0.5 rounded-pill bg-emerald-100 border border-emerald-300/80 text-[11px] font-mono font-bold text-emerald-800 shrink-0">
                         {run.score.toLocaleString("vi-VN")} pts
                       </span>
                     </div>
-                    <div className="flex items-center justify-between gap-2 text-[11px] font-mono text-slate-400">
+                    <div className="flex items-center justify-between gap-2 text-[11px] font-mono text-slate-600">
                       <span>
                         {run.gameId === "bug-buster"
                           ? `${run.accuracyOrWords}% chính xác`

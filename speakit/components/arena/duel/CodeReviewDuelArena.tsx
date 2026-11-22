@@ -843,17 +843,17 @@ export function CodeReviewDuelArena() {
       <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-violet-500/20 border border-violet-400/45 text-violet-200 text-[11px] font-mono font-bold">
-              <Swords className="w-3.5 h-3.5 text-violet-300" />
+            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-violet-100 border border-violet-300/80 text-violet-800 text-[11px] font-mono font-bold">
+              <Swords className="w-3.5 h-3.5 text-violet-600" />
               <span>1V1 CODE REVIEW DUEL • PVP / AI BOT</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
               Code Review Duel: PR Battleground
             </h1>
-            <p className="text-xs sm:text-sm text-slate-300">
+            <p className="text-xs sm:text-sm text-slate-600">
               Debate real engineering tradeoffs in English in 30s alternating turns.
-              Land sharp keywords for a <strong className="text-amber-300">CRITICAL HIT!</strong>{" "}
-              and avoid Vietnamese (<strong className="text-rose-300">-18 HP</strong> foul).
+              Land sharp keywords for a <strong className="text-amber-700">CRITICAL HIT!</strong>{" "}
+              and avoid Vietnamese (<strong className="text-rose-600">-18 HP</strong> foul).
             </p>
           </div>
 
@@ -863,17 +863,17 @@ export function CodeReviewDuelArena() {
               onClick={handleToggleSfxMute}
               aria-label={sfxMuted ? "Unmute arcade sound effects" : "Mute arcade sound effects"}
               className={`liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
-                sfxMuted ? "text-slate-400" : "text-white"
+                sfxMuted ? "text-slate-500" : "text-slate-900"
               }`}
             >
               {sfxMuted ? (
                 <>
-                  <VolumeX className="w-4 h-4 text-rose-300" />
+                  <VolumeX className="w-4 h-4 text-rose-600" />
                   <span>SFX Off</span>
                 </>
               ) : (
                 <>
-                  <Volume2 className="w-4 h-4 text-emerald-300" />
+                  <Volume2 className="w-4 h-4 text-emerald-600" />
                   <span>SFX On</span>
                 </>
               )}
@@ -886,16 +886,16 @@ export function CodeReviewDuelArena() {
                 size="sm"
                 micActive={isRecording}
               >
-                <div className="w-8 h-8 rounded-full bg-violet-600/80 border border-violet-300/40 text-white flex items-center justify-center text-xs font-mono font-bold">
+                <div className="w-8 h-8 rounded-full bg-violet-600 border border-violet-300/60 text-white flex items-center justify-center text-xs font-mono font-bold">
                   {(guestPlayer?.displayName ?? "DV").slice(0, 2).toUpperCase()}
                 </div>
               </DiscordAvatarFrame>
               <div className="text-xs">
-                <div className="font-bold text-white">
+                <div className="font-bold text-slate-900">
                   {guestPlayer?.displayName ?? "Guest Engineer"}
                 </div>
-                <div className="font-mono text-amber-200 flex items-center gap-1">
-                  <Coins className="w-3.5 h-3.5 text-amber-300" />
+                <div className="font-mono text-amber-700 flex items-center gap-1">
+                  <Coins className="w-3.5 h-3.5 text-amber-600" />
                   <span>{guestPlayer?.itCoins ?? 0} IT-Coins</span>
                 </div>
               </div>
@@ -904,8 +904,8 @@ export function CodeReviewDuelArena() {
         </div>
 
         {errorMsg && (
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-rose-500/15 border border-rose-400/40 text-rose-200 text-xs font-medium">
-            <AlertTriangle className="w-4 h-4 text-rose-300 shrink-0" />
+          <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-rose-50 border border-rose-300/80 text-rose-800 text-xs font-medium">
+            <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
@@ -914,7 +914,7 @@ export function CodeReviewDuelArena() {
       {(!room || room.status === "lobby") && (
         <div className="space-y-6">
           <section className="liquid-glass-card p-5 space-y-4">
-            <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-white">
+            <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900">
               1. Pick Your Debate Stance
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -924,21 +924,21 @@ export function CodeReviewDuelArena() {
                 disabled={Boolean(room)}
                 className={`text-left p-4 rounded-xl border transition-all ${
                   selectedStance === "author"
-                    ? "bg-sky-500/20 border-sky-400/60 shadow-[0_0_20px_rgba(14,165,233,0.28)]"
-                    : "bg-slate-950/50 border-white/15 hover:border-sky-400/45"
+                    ? "bg-sky-50/95 border-sky-400/80 shadow-[0_6px_20px_rgba(14,165,233,0.18)]"
+                    : "bg-white/80 border-slate-200/85 hover:border-sky-400/60"
                 } disabled:opacity-75`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold px-2.5 py-0.5 rounded bg-sky-500/30 border border-sky-300/45 text-sky-100">
-                    <GitPullRequest className="w-3.5 h-3.5 text-sky-300" />
+                  <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold px-2.5 py-0.5 rounded bg-sky-100 border border-sky-300/80 text-sky-800">
+                    <GitPullRequest className="w-3.5 h-3.5 text-sky-600" />
                     <span>AUTHOR</span>
                   </span>
                   {selectedStance === "author" && (
-                    <Check className="w-4 h-4 text-sky-300" />
+                    <Check className="w-4 h-4 text-sky-600" />
                   )}
                 </div>
-                <div className="mt-2 font-bold text-sm text-white">PR Author</div>
-                <div className="mt-1 text-xs text-slate-300">
+                <div className="mt-2 font-bold text-sm text-slate-900">PR Author</div>
+                <div className="mt-1 text-xs text-slate-600">
                   Defend shipping velocity, pragmatic engineering tradeoffs, and why
                   your pull request should merge now.
                 </div>
@@ -950,21 +950,21 @@ export function CodeReviewDuelArena() {
                 disabled={Boolean(room)}
                 className={`text-left p-4 rounded-xl border transition-all ${
                   selectedStance === "reviewer"
-                    ? "bg-violet-500/20 border-violet-400/60 shadow-[0_0_20px_rgba(139,92,246,0.28)]"
-                    : "bg-slate-950/50 border-white/15 hover:border-violet-400/45"
+                    ? "bg-violet-50/95 border-violet-400/80 shadow-[0_6px_20px_rgba(139,92,246,0.18)]"
+                    : "bg-white/80 border-slate-200/85 hover:border-violet-400/60"
                 } disabled:opacity-75`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold px-2.5 py-0.5 rounded bg-violet-500/30 border border-violet-300/45 text-violet-100">
-                    <Shield className="w-3.5 h-3.5 text-violet-300" />
+                  <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold px-2.5 py-0.5 rounded bg-violet-100 border border-violet-300/80 text-violet-800">
+                    <Shield className="w-3.5 h-3.5 text-violet-600" />
                     <span>REVIEWER</span>
                   </span>
                   {selectedStance === "reviewer" && (
-                    <Check className="w-4 h-4 text-violet-300" />
+                    <Check className="w-4 h-4 text-violet-600" />
                   )}
                 </div>
-                <div className="mt-2 font-bold text-sm text-white">Staff Reviewer</div>
-                <div className="mt-1 text-xs text-slate-300">
+                <div className="mt-2 font-bold text-sm text-slate-900">Staff Reviewer</div>
+                <div className="mt-1 text-xs text-slate-600">
                   Block risky patterns, challenge hidden production failure modes,
                   and protect long-term maintainability.
                 </div>
@@ -976,10 +976,10 @@ export function CodeReviewDuelArena() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <section className="lg:col-span-2 liquid-glass-card p-5 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-white">
+                  <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900">
                     2. Choose Engineering Debate Topic
                   </h2>
-                  <span className="text-xs font-mono text-slate-400">
+                  <span className="text-xs font-mono text-slate-600">
                     {DUEL_TOPICS.length} debates
                   </span>
                 </div>
@@ -994,23 +994,23 @@ export function CodeReviewDuelArena() {
                         onClick={() => setSelectedTopicId(topic.id)}
                         className={`liquid-glass-card-lite text-left p-3.5 transition-all flex flex-col justify-between gap-2 ${
                           active
-                            ? "!bg-violet-500/20 !border-violet-400/60 shadow-[0_0_18px_rgba(139,92,246,0.28)]"
-                            : "hover:border-white/30"
+                            ? "!bg-violet-50/95 !border-violet-400/80 shadow-[0_6px_18px_rgba(139,92,246,0.18)]"
+                            : "hover:border-violet-300/70"
                         }`}
                       >
                         <div className="space-y-1.5">
                           <div className="flex items-center justify-between gap-2">
-                            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-violet-500/25 border border-violet-300/40 text-violet-200">
+                            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-violet-100 border border-violet-300/80 text-violet-800">
                               #{String(index + 1).padStart(2, "0")}
                             </span>
-                            <span className="text-[10px] font-mono text-slate-400">
+                            <span className="text-[10px] font-mono text-slate-600">
                               6 Rounds • 30s/turn
                             </span>
                           </div>
-                          <div className="font-bold text-sm text-white leading-snug">
+                          <div className="font-bold text-sm text-slate-900 leading-snug">
                             {topic.title}
                           </div>
-                          <p className="text-xs text-slate-300 leading-relaxed">
+                          <p className="text-xs text-slate-600 leading-relaxed">
                             {topic.contextVI}
                           </p>
                         </div>
@@ -1019,7 +1019,7 @@ export function CodeReviewDuelArena() {
                           {topic.criticalKeywords.slice(0, 3).map((kw) => (
                             <span
                               key={kw}
-                              className="px-1.5 py-0.5 rounded bg-slate-950/60 border border-white/15 text-[10px] font-mono text-cyan-200"
+                              className="px-1.5 py-0.5 rounded bg-sky-50 border border-sky-200/85 text-[10px] font-mono text-sky-800"
                             >
                               {kw}
                             </span>
@@ -1037,7 +1037,7 @@ export function CodeReviewDuelArena() {
                     disabled={Boolean(loadingAction)}
                     className="liquid-glass-btn inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm disabled:opacity-50"
                   >
-                    <Users className="w-4 h-4 text-violet-300" />
+                    <Users className="w-4 h-4 text-violet-600" />
                     <span>
                       {loadingAction === "create"
                         ? "Creating Room..."
@@ -1049,7 +1049,7 @@ export function CodeReviewDuelArena() {
                     type="button"
                     onClick={() => void handleQuickBotMatch()}
                     disabled={Boolean(loadingAction)}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-500 hover:to-purple-600 text-white font-bold text-sm border border-violet-300/60 shadow-[0_0_22px_rgba(139,92,246,0.42),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-500 hover:to-purple-600 text-white font-bold text-sm border border-violet-300/60 shadow-[0_8px_22px_rgba(139,92,246,0.34),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50"
                   >
                     <Bot className="w-4 h-4" />
                     <span>
@@ -1063,10 +1063,10 @@ export function CodeReviewDuelArena() {
 
               <section className="liquid-glass-card p-5 flex flex-col justify-between space-y-4">
                 <div className="space-y-3">
-                  <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-white">
+                  <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900">
                     Or Join by 6-Char Code
                   </h2>
-                  <p className="text-xs text-slate-300">
+                  <p className="text-xs text-slate-600">
                     Enter the 6-character duel room code shared by your opponent to
                     claim the open stance.
                   </p>
@@ -1093,11 +1093,11 @@ export function CodeReviewDuelArena() {
             </div>
           ) : (
             <section className="liquid-glass-card p-5 sm:p-6 space-y-5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/15">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/85">
                 <div>
-                  <div className="text-xs font-mono text-slate-400">DUEL ROOM CODE</div>
+                  <div className="text-xs font-mono text-slate-600">DUEL ROOM CODE</div>
                   <div className="flex items-center gap-3 mt-1">
-                    <span className="text-2xl font-mono font-bold tracking-[0.2em] text-cyan-200 bg-slate-950/65 px-3 py-1 rounded-lg border border-cyan-400/40">
+                    <span className="text-2xl font-mono font-bold tracking-[0.2em] text-sky-700 bg-sky-50 px-3 py-1 rounded-lg border border-sky-300/80">
                       {room.roomCode}
                     </span>
                     <button
@@ -1107,7 +1107,7 @@ export function CodeReviewDuelArena() {
                     >
                       {copiedCode ? (
                         <>
-                          <Check className="w-3.5 h-3.5 text-emerald-300" />
+                          <Check className="w-3.5 h-3.5 text-emerald-600" />
                           <span>Copied</span>
                         </>
                       ) : (
@@ -1121,13 +1121,13 @@ export function CodeReviewDuelArena() {
                 </div>
 
                 <div className="text-left sm:text-right max-w-md">
-                  <span className="px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-violet-500/25 border border-violet-300/45 text-violet-100">
+                  <span className="px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-violet-100 border border-violet-300/80 text-violet-800">
                     {room.maxRounds} ROUNDS • {room.turnSeconds}S TURN
                   </span>
-                  <div className="mt-1 font-bold text-base text-white">
+                  <div className="mt-1 font-bold text-base text-slate-900">
                     {activeTopic.title}
                   </div>
-                  <p className="text-xs text-slate-300 mt-0.5">{activeTopic.contextVI}</p>
+                  <p className="text-xs text-slate-600 mt-0.5">{activeTopic.contextVI}</p>
                 </div>
               </div>
 
@@ -1140,8 +1140,8 @@ export function CodeReviewDuelArena() {
                     key={stance}
                     className={`p-4 rounded-xl border ${
                       slot
-                        ? "bg-slate-950/55 border-white/20"
-                        : "bg-slate-950/35 border-dashed border-white/20"
+                        ? "bg-white/80 border-slate-200/85"
+                        : "bg-slate-100/70 border-dashed border-slate-300"
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -1164,16 +1164,16 @@ export function CodeReviewDuelArena() {
                       </DiscordAvatarFrame>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-mono font-bold uppercase text-slate-400">
+                          <span className="text-xs font-mono font-bold uppercase text-slate-600">
                             {label}
                           </span>
                           {slot?.isBot && (
-                            <span className="px-1.5 py-0.5 rounded bg-violet-500/25 border border-violet-400/45 text-violet-200 text-[10px] font-mono font-bold">
+                            <span className="px-1.5 py-0.5 rounded bg-violet-100 border border-violet-300/80 text-violet-800 text-[10px] font-mono font-bold">
                               AI BOT
                             </span>
                           )}
                         </div>
-                        <div className="font-bold text-sm text-white truncate">
+                        <div className="font-bold text-sm text-slate-900 truncate">
                           {slot ? slot.displayName : "Waiting for challenger..."}
                         </div>
                       </div>
@@ -1190,7 +1190,7 @@ export function CodeReviewDuelArena() {
                     disabled={loadingAction === "fill_bot" || room.players.length >= 2}
                     className="liquid-glass-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm disabled:opacity-50"
                   >
-                    <Bot className="w-4 h-4 text-violet-300" />
+                    <Bot className="w-4 h-4 text-violet-600" />
                     <span>
                       {loadingAction === "fill_bot"
                         ? "Đang gọi AI Bot..."
@@ -1201,7 +1201,7 @@ export function CodeReviewDuelArena() {
                   <button
                     type="button"
                     onClick={handleLeaveRoom}
-                    className="liquid-glass-btn px-3.5 py-2.5 rounded-xl text-xs font-mono text-slate-300 hover:text-white"
+                    className="liquid-glass-btn px-3.5 py-2.5 rounded-xl text-xs font-mono text-slate-700 hover:text-slate-900"
                   >
                     Rời phòng
                   </button>
@@ -1212,7 +1212,7 @@ export function CodeReviewDuelArena() {
                     type="button"
                     onClick={handleStartDuel}
                     disabled={loadingAction === "start" || room.players.length < 2}
-                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-500 hover:to-purple-600 text-white font-bold text-sm border border-violet-300/60 shadow-[0_0_22px_rgba(139,92,246,0.42),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-500 hover:to-purple-600 text-white font-bold text-sm border border-violet-300/60 shadow-[0_8px_22px_rgba(139,92,246,0.34),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Play className="w-4 h-4" />
                     <span>
@@ -1220,7 +1220,7 @@ export function CodeReviewDuelArena() {
                     </span>
                   </button>
                   {room.players.length < 2 && (
-                    <span className="text-xs font-mono text-slate-400">
+                    <span className="text-xs font-mono text-slate-600">
                       Share room code {room.roomCode} or click Đấu với AI Bot.
                     </span>
                   )}
@@ -1256,17 +1256,17 @@ export function CodeReviewDuelArena() {
                     }
                   />
                 ))}
-                <div className="duel-crit-banner px-6 py-3 rounded-2xl bg-slate-950/92 backdrop-blur-xl border-2 border-amber-400 shadow-[0_0_32px_rgba(245,158,11,0.55)] flex items-center gap-2.5">
-                  <Zap className="w-7 h-7 text-amber-300 fill-amber-300" />
+                <div className="duel-crit-banner px-6 py-3 rounded-2xl bg-white/95 backdrop-blur-xl border-2 border-amber-400 shadow-[0_12px_36px_rgba(245,158,11,0.35)] flex items-center gap-2.5">
+                  <Zap className="w-7 h-7 text-amber-500 fill-amber-400" />
                   <div className="text-center">
-                    <div className="text-xl sm:text-2xl font-black tracking-tight text-amber-200">
+                    <div className="text-xl sm:text-2xl font-black tracking-tight text-amber-700">
                       {critFx.label}
                     </div>
-                    <div className="text-xs font-mono font-bold text-rose-300">
+                    <div className="text-xs font-mono font-bold text-rose-600">
                       -{critFx.damage} HP CREDIBILITY SHATTERED
                     </div>
                   </div>
-                  <Sparkles className="w-6 h-6 text-amber-300" />
+                  <Sparkles className="w-6 h-6 text-amber-500" />
                 </div>
               </div>
             </div>
@@ -1276,29 +1276,29 @@ export function CodeReviewDuelArena() {
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="space-y-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="liquid-glass-pill px-3 py-0.5 text-xs font-mono font-bold text-violet-200">
+                  <span className="liquid-glass-pill px-3 py-0.5 text-xs font-mono font-bold text-violet-700">
                     ROUND {room.round} / {room.maxRounds}
                   </span>
-                  <span className="liquid-glass-pill px-3 py-0.5 text-xs font-mono text-slate-300">
+                  <span className="liquid-glass-pill px-3 py-0.5 text-xs font-mono text-slate-700">
                     ROOM {room.roomCode}
                   </span>
                   <span
                     className={`px-3 py-0.5 rounded-full text-xs font-mono font-bold border ${
                       isMyTurn
-                        ? "bg-emerald-500/20 border-emerald-400/50 text-emerald-200"
-                        : "liquid-glass-pill text-slate-300"
+                        ? "bg-emerald-100 border-emerald-300/80 text-emerald-800"
+                        : "liquid-glass-pill text-slate-700"
                     }`}
                   >
                     {isMyTurn ? "YOUR TURN TO DEBATE" : "OPPONENT TURN..."}
                   </span>
                 </div>
-                <h2 className="text-xl font-bold text-white">{activeTopic.title}</h2>
-                <p className="text-xs text-slate-300">{activeTopic.contextVI}</p>
+                <h2 className="text-xl font-bold text-slate-900">{activeTopic.title}</h2>
+                <p className="text-xs text-slate-600">{activeTopic.contextVI}</p>
               </div>
 
               <div className="flex flex-wrap items-center gap-3">
                 {foulFx && (
-                  <span className="px-3 py-1 rounded-full bg-rose-500/25 text-rose-200 text-xs font-mono font-bold border border-rose-400/60 animate-pulse">
+                  <span className="px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-mono font-bold border border-rose-300 animate-pulse">
                     {foulFx}
                   </span>
                 )}
@@ -1307,7 +1307,7 @@ export function CodeReviewDuelArena() {
                   className={`flex items-center gap-2 px-4 py-2 rounded-pill font-mono font-bold text-lg ${
                     foulFx || turnTimeLeft <= 5
                       ? "liquid-btn-danger animate-pulse"
-                      : "liquid-glass-pill text-cyan-200"
+                      : "liquid-glass-pill text-sky-700"
                   }`}
                 >
                   <Clock className="w-4 h-4" />
@@ -1330,12 +1330,12 @@ export function CodeReviewDuelArena() {
                   >
                     {isTtsPlaying ? (
                       <>
-                        <VolumeX className="w-4 h-4 text-rose-300" />
+                        <VolumeX className="w-4 h-4 text-rose-600" />
                         <span>Stop Voice</span>
                       </>
                     ) : (
                       <>
-                        <Volume2 className="w-4 h-4 text-cyan-300" />
+                        <Volume2 className="w-4 h-4 text-sky-600" />
                         <span>Replay Rebuttal</span>
                       </>
                     )}
@@ -1346,24 +1346,24 @@ export function CodeReviewDuelArena() {
 
             <div className="space-y-2 pt-1">
               <div className="flex items-center justify-between text-xs font-mono font-bold">
-                <span className="text-sky-300">
+                <span className="text-sky-700">
                   AUTHOR MOMENTUM • {room.momentum}%
                 </span>
-                <span className="text-slate-400 uppercase">Tug-of-War Credibility</span>
-                <span className="text-violet-300">
+                <span className="text-slate-600 uppercase">Tug-of-War Credibility</span>
+                <span className="text-violet-700">
                   {100 - room.momentum}% • REVIEWER
                 </span>
               </div>
-              <div className="relative w-full h-5 rounded-full bg-violet-600/50 border border-white/20 overflow-hidden">
+              <div className="relative w-full h-5 rounded-full bg-violet-200/80 border border-slate-200/85 overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-sky-500 to-cyan-400 transition-all duration-500 ease-out"
+                  className="h-full bg-gradient-to-r from-sky-500 to-cyan-500 transition-all duration-500 ease-out"
                   style={{ width: `${Math.min(100, Math.max(0, room.momentum))}%` }}
                 />
                 <div
-                  className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-slate-950 border border-white/40 shadow-[0_0_12px_rgba(255,255,255,0.35)] flex items-center justify-center transition-all duration-500 ease-out"
+                  className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white border border-slate-300 shadow-[0_4px_12px_rgba(15,23,42,0.18)] flex items-center justify-center transition-all duration-500 ease-out"
                   style={{ left: `${Math.min(96, Math.max(4, room.momentum))}%` }}
                 >
-                  <Swords className="w-3.5 h-3.5 text-white" />
+                  <Swords className="w-3.5 h-3.5 text-slate-900" />
                 </div>
               </div>
             </div>
@@ -1374,7 +1374,7 @@ export function CodeReviewDuelArena() {
               className={`liquid-glass-card p-5 space-y-4 transition-all ${
                 room.currentTurnStance === "author" ||
                 (isBotRoom && myPlayer?.stance === "author")
-                  ? "!border-sky-400/60 ring-2 ring-sky-400/30"
+                  ? "!border-sky-400/80 ring-2 ring-sky-400/40"
                   : ""
               }`}
             >
@@ -1399,65 +1399,65 @@ export function CodeReviewDuelArena() {
                   </DiscordAvatarFrame>
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <span className="font-bold text-sm text-white truncate">
+                      <span className="font-bold text-sm text-slate-900 truncate">
                         {authorSlot?.displayName ?? "PR Author"}
                       </span>
                       {myPlayer?.id === authorSlot?.id && (
-                        <span className="px-1.5 py-0.5 rounded bg-cyan-500/25 border border-cyan-400/50 text-cyan-100 text-[10px] font-mono font-bold">
+                        <span className="px-1.5 py-0.5 rounded bg-sky-100 border border-sky-300/80 text-sky-800 text-[10px] font-mono font-bold">
                           YOU
                         </span>
                       )}
                       {authorSlot?.isBot && (
-                        <span className="px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-200 border border-sky-400/40 text-[10px] font-mono font-bold">
+                        <span className="px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-300/80 text-[10px] font-mono font-bold">
                           BOT
                         </span>
                       )}
                     </div>
-                    <div className="text-[11px] font-mono text-slate-400">
+                    <div className="text-[11px] font-mono text-slate-600">
                       {authorSlot?.score ?? 0} pts • {authorSlot?.criticalHits ?? 0} Crits
                     </div>
                   </div>
                 </div>
 
                 <div className="text-right shrink-0">
-                  <div className="text-lg font-mono font-black text-sky-300">
+                  <div className="text-lg font-mono font-black text-sky-700">
                     {room.authorHp} HP
                   </div>
-                  <div className="text-[10px] font-mono text-slate-400">
+                  <div className="text-[10px] font-mono text-slate-600">
                     {authorSlot?.fouls ?? 0} fouls
                   </div>
                 </div>
               </div>
 
-              <div className="w-full h-3 rounded-full bg-slate-950/65 border border-white/15 overflow-hidden">
+              <div className="w-full h-3 rounded-full bg-slate-200/80 border border-slate-300/70 overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-sky-500 to-cyan-400 transition-all duration-500"
+                  className="h-full bg-gradient-to-r from-sky-500 to-cyan-500 transition-all duration-500"
                   style={{ width: `${Math.min(100, Math.max(0, room.authorHp))}%` }}
                 />
               </div>
 
-              <div className="p-3.5 rounded-xl bg-sky-500/15 border border-sky-400/35 space-y-1">
-                <div className="flex items-center justify-between gap-2 text-[10px] font-mono font-bold uppercase text-sky-200">
+              <div className="p-3.5 rounded-xl bg-sky-50/90 border border-sky-200/85 space-y-1">
+                <div className="flex items-center justify-between gap-2 text-[10px] font-mono font-bold uppercase text-sky-800">
                   <span>Lập trường Tác giả (bảo vệ code)</span>
-                  <span className="normal-case font-sans text-sky-200/80">Chạm từ để dịch</span>
+                  <span className="normal-case font-sans text-sky-700">Chạm từ để dịch</span>
                 </div>
-                <p className="text-xs text-slate-100 font-medium leading-relaxed">
+                <p className="text-xs text-slate-800 font-medium leading-relaxed">
                   <InteractiveEnglishText text={activeTopic.authorStance} />
                 </p>
               </div>
 
               {latestAuthorLog && (
-                <div className="p-3.5 rounded-xl bg-slate-950/55 border border-white/15 space-y-1.5">
+                <div className="p-3.5 rounded-xl bg-white/85 border border-slate-200/85 space-y-1.5">
                   <div className="flex items-center justify-between gap-2 text-[11px] font-mono font-bold">
-                    <span className="text-sky-300">Lập luận mới nhất</span>
+                    <span className="text-sky-700">Lập luận mới nhất</span>
                     <div className="flex items-center gap-2">
                       {latestAuthorLog.criticalHit && (
-                        <span className="px-1.5 py-0.5 rounded bg-amber-500/25 text-amber-200 border border-amber-400/50">
+                        <span className="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300/80">
                           CRIT -{latestAuthorLog.damageDealt} HP
                         </span>
                       )}
                       {latestAuthorLog.foulDetected && (
-                        <span className="px-1.5 py-0.5 rounded bg-rose-500/25 border border-rose-400/50 text-rose-200">
+                        <span className="px-1.5 py-0.5 rounded bg-rose-100 border border-rose-300/80 text-rose-800">
                           FOUL -18 HP
                         </span>
                       )}
@@ -1468,14 +1468,14 @@ export function CodeReviewDuelArena() {
                             speakRebuttal(latestAuthorLog.transcript, "author")
                           }
                           aria-label="Play author rebuttal audio"
-                          className="p-1 rounded hover:bg-white/10 border border-white/15"
+                          className="p-1 rounded hover:bg-slate-200/70 border border-slate-200/85"
                         >
-                          <Volume2 className="w-3.5 h-3.5 text-sky-300" />
+                          <Volume2 className="w-3.5 h-3.5 text-sky-600" />
                         </button>
                       )}
                     </div>
                   </div>
-                  <p className="text-xs text-slate-100">&ldquo;{latestAuthorLog.transcript}&rdquo;</p>
+                  <p className="text-xs text-slate-800">&ldquo;{latestAuthorLog.transcript}&rdquo;</p>
                 </div>
               )}
             </section>
@@ -1484,7 +1484,7 @@ export function CodeReviewDuelArena() {
               className={`liquid-glass-card p-5 space-y-4 transition-all ${
                 room.currentTurnStance === "reviewer" ||
                 (isBotRoom && myPlayer?.stance === "reviewer")
-                  ? "!border-violet-400/60 ring-2 ring-violet-400/30"
+                  ? "!border-violet-400/80 ring-2 ring-violet-400/40"
                   : ""
               }`}
             >
@@ -1509,21 +1509,21 @@ export function CodeReviewDuelArena() {
                   </DiscordAvatarFrame>
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <span className="font-bold text-sm text-white truncate">
+                      <span className="font-bold text-sm text-slate-900 truncate">
                         {reviewerSlot?.displayName ?? "Staff Reviewer"}
                       </span>
                       {myPlayer?.id === reviewerSlot?.id && (
-                        <span className="px-1.5 py-0.5 rounded bg-cyan-500/25 border border-cyan-400/50 text-cyan-100 text-[10px] font-mono font-bold">
+                        <span className="px-1.5 py-0.5 rounded bg-sky-100 border border-sky-300/80 text-sky-800 text-[10px] font-mono font-bold">
                           YOU
                         </span>
                       )}
                       {reviewerSlot?.isBot && (
-                        <span className="px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-200 border border-violet-400/40 text-[10px] font-mono font-bold">
+                        <span className="px-1.5 py-0.5 rounded bg-violet-100 text-violet-800 border border-violet-300/80 text-[10px] font-mono font-bold">
                           BOT
                         </span>
                       )}
                     </div>
-                    <div className="text-[11px] font-mono text-slate-400">
+                    <div className="text-[11px] font-mono text-slate-600">
                       {reviewerSlot?.score ?? 0} pts • {reviewerSlot?.criticalHits ?? 0}{" "}
                       Crits
                     </div>
@@ -1531,44 +1531,44 @@ export function CodeReviewDuelArena() {
                 </div>
 
                 <div className="text-right shrink-0">
-                  <div className="text-lg font-mono font-black text-violet-300">
+                  <div className="text-lg font-mono font-black text-violet-700">
                     {room.reviewerHp} HP
                   </div>
-                  <div className="text-[10px] font-mono text-slate-400">
+                  <div className="text-[10px] font-mono text-slate-600">
                     {reviewerSlot?.fouls ?? 0} fouls
                   </div>
                 </div>
               </div>
 
-              <div className="w-full h-3 rounded-full bg-slate-950/65 border border-white/15 overflow-hidden">
+              <div className="w-full h-3 rounded-full bg-slate-200/80 border border-slate-300/70 overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-violet-500 to-purple-500 transition-all duration-500"
                   style={{ width: `${Math.min(100, Math.max(0, room.reviewerHp))}%` }}
                 />
               </div>
 
-              <div className="p-3.5 rounded-xl bg-violet-500/15 border border-violet-400/35 space-y-1">
-                <div className="flex items-center justify-between gap-2 text-[10px] font-mono font-bold uppercase text-violet-200">
+              <div className="p-3.5 rounded-xl bg-violet-50/90 border border-violet-200/85 space-y-1">
+                <div className="flex items-center justify-between gap-2 text-[10px] font-mono font-bold uppercase text-violet-800">
                   <span>Lập trường Reviewer (phản biện)</span>
-                  <span className="normal-case font-sans text-violet-200/80">Chạm từ để dịch</span>
+                  <span className="normal-case font-sans text-violet-700">Chạm từ để dịch</span>
                 </div>
-                <p className="text-xs text-slate-100 font-medium leading-relaxed">
+                <p className="text-xs text-slate-800 font-medium leading-relaxed">
                   <InteractiveEnglishText text={activeTopic.reviewerStance} />
                 </p>
               </div>
 
               {latestReviewerLog && (
-                <div className="p-3.5 rounded-xl bg-slate-950/55 border border-white/15 space-y-1.5">
+                <div className="p-3.5 rounded-xl bg-white/85 border border-slate-200/85 space-y-1.5">
                   <div className="flex items-center justify-between gap-2 text-[11px] font-mono font-bold">
-                    <span className="text-violet-300">Phản biện mới nhất</span>
+                    <span className="text-violet-700">Phản biện mới nhất</span>
                     <div className="flex items-center gap-2">
                       {latestReviewerLog.criticalHit && (
-                        <span className="px-1.5 py-0.5 rounded bg-amber-500/25 text-amber-200 border border-amber-400/50">
+                        <span className="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300/80">
                           CRIT -{latestReviewerLog.damageDealt} HP
                         </span>
                       )}
                       {latestReviewerLog.foulDetected && (
-                        <span className="px-1.5 py-0.5 rounded bg-rose-500/25 border border-rose-400/50 text-rose-200">
+                        <span className="px-1.5 py-0.5 rounded bg-rose-100 border border-rose-300/80 text-rose-800">
                           FOUL -18 HP
                         </span>
                       )}
@@ -1579,14 +1579,14 @@ export function CodeReviewDuelArena() {
                             speakRebuttal(latestReviewerLog.transcript, "reviewer")
                           }
                           aria-label="Play reviewer rebuttal audio"
-                          className="p-1 rounded hover:bg-white/10 border border-white/15"
+                          className="p-1 rounded hover:bg-slate-200/70 border border-slate-200/85"
                         >
-                          <Volume2 className="w-3.5 h-3.5 text-violet-300" />
+                          <Volume2 className="w-3.5 h-3.5 text-violet-600" />
                         </button>
                       )}
                     </div>
                   </div>
-                  <p className="text-xs text-slate-100">
+                  <p className="text-xs text-slate-800">
                     &ldquo;{latestReviewerLog.transcript}&rdquo;
                   </p>
                 </div>
@@ -1596,8 +1596,8 @@ export function CodeReviewDuelArena() {
 
           <section className="liquid-glass-card p-5 space-y-4">
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-[11px] font-mono font-bold uppercase text-slate-300">
-                <Flame className="w-3.5 h-3.5 text-amber-300" />
+              <div className="flex items-center gap-2 text-[11px] font-mono font-bold uppercase text-slate-700">
+                <Flame className="w-3.5 h-3.5 text-amber-600" />
                 <span>Từ khóa ăn điểm mạnh (Nói trúng 1–2 từ để đánh Chí mạng!)</span>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -1608,8 +1608,8 @@ export function CodeReviewDuelArena() {
                       key={kw}
                       className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold border ${
                         hit
-                          ? "bg-emerald-500/20 border-emerald-400/50 text-emerald-200"
-                          : "bg-slate-950/55 border-white/15 text-slate-200"
+                          ? "bg-emerald-100 border-emerald-300/80 text-emerald-800"
+                          : "bg-white/80 border-slate-200/85 text-slate-700"
                       }`}
                     >
                       {hit ? `✓ ${kw}` : kw}
@@ -1619,11 +1619,11 @@ export function CodeReviewDuelArena() {
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-white/15">
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-200/85">
               <div className="flex items-center gap-3">
-                <Code2 className="w-5 h-5 text-violet-300 shrink-0" />
+                <Code2 className="w-5 h-5 text-violet-600 shrink-0" />
                 <div>
-                  <div className="text-sm font-bold text-white">
+                  <div className="text-sm font-bold text-slate-900">
                     {isMyTurn
                       ? `Nói ${
                           myPlayer?.stance === "reviewer"
@@ -1632,7 +1632,7 @@ export function CodeReviewDuelArena() {
                         } (bằng tiếng Anh)`
                       : "Đang chờ đối thủ phản biện..."}
                   </div>
-                  <div className="text-xs text-slate-300">
+                  <div className="text-xs text-slate-600">
                     Bấm Mic để nói hoặc gõ câu tiếng Anh bên dưới trước khi hết 30 giây.
                   </div>
                 </div>
@@ -1655,7 +1655,7 @@ export function CodeReviewDuelArena() {
                   </>
                 ) : (
                   <>
-                    <Mic className="w-3.5 h-3.5 text-cyan-300" />
+                    <Mic className="w-3.5 h-3.5 text-sky-600" />
                     <span>Nói lập luận (Mic)</span>
                   </>
                 )}
@@ -1663,7 +1663,7 @@ export function CodeReviewDuelArena() {
             </div>
 
             {speechError && (
-              <div className="text-xs text-rose-300 font-medium">{speechError}</div>
+              <div className="text-xs text-rose-700 font-medium">{speechError}</div>
             )}
 
             <textarea
@@ -1709,7 +1709,7 @@ export function CodeReviewDuelArena() {
                 type="button"
                 onClick={() => void handleSubmitArgument()}
                 disabled={!isMyTurn || loadingAction === "turn"}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-500 hover:to-purple-600 text-white font-bold text-sm border border-violet-300/60 shadow-[0_0_20px_rgba(139,92,246,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-500 hover:to-purple-600 text-white font-bold text-sm border border-violet-300/60 shadow-[0_8px_20px_rgba(139,92,246,0.34),inset_0_1px_1px_rgba(255,255,255,0.45)] transition-all disabled:opacity-50"
               >
                 <Send className="w-4 h-4" />
                 <span>
@@ -1719,8 +1719,8 @@ export function CodeReviewDuelArena() {
             </div>
 
             {room.history.length > 0 && (
-              <div className="pt-4 border-t border-white/15 space-y-2.5">
-                <div className="text-xs font-mono font-bold uppercase text-slate-400">
+              <div className="pt-4 border-t border-slate-200/85 space-y-2.5">
+                <div className="text-xs font-mono font-bold uppercase text-slate-600">
                   Live Code Review Feed
                 </div>
                 <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
@@ -1729,15 +1729,15 @@ export function CodeReviewDuelArena() {
                       key={entry.id}
                       className={`p-3 rounded-xl border text-xs space-y-1 ${
                         entry.foulDetected
-                          ? "bg-rose-500/15 border-rose-400/50"
+                          ? "bg-rose-50 border-rose-300/80"
                           : entry.criticalHit
-                            ? "bg-amber-500/15 border-amber-400/50"
-                            : "bg-slate-950/55 border-white/15"
+                            ? "bg-amber-50 border-amber-300/80"
+                            : "bg-white/80 border-slate-200/85"
                       }`}
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2 font-mono font-bold">
                         <div className="flex items-center gap-2 min-w-0">
-                          <span className="text-white truncate">{entry.displayName}</span>
+                          <span className="text-slate-900 truncate">{entry.displayName}</span>
                           <span
                             className={`uppercase px-1.5 py-0.5 rounded text-[10px] text-white ${
                               entry.stance === "author" ? "bg-sky-600" : "bg-violet-600"
@@ -1746,18 +1746,18 @@ export function CodeReviewDuelArena() {
                             {entry.stance}
                           </span>
                           {entry.criticalHit && (
-                            <span className="px-1.5 py-0.5 rounded bg-amber-500/25 text-amber-200 border border-amber-400/50 text-[10px]">
+                            <span className="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300/80 text-[10px]">
                               CRITICAL HIT!
                             </span>
                           )}
                           {entry.foulDetected && (
-                            <span className="px-1.5 py-0.5 rounded bg-rose-500/25 border border-rose-400/50 text-rose-200 text-[10px]">
+                            <span className="px-1.5 py-0.5 rounded bg-rose-100 border border-rose-300/80 text-rose-800 text-[10px]">
                               FOUL -18 HP
                             </span>
                           )}
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
-                          <span className="text-slate-300">
+                          <span className="text-slate-700">
                             {entry.foulDetected
                               ? "-18 self HP"
                               : `-${entry.damageDealt} HP`}
@@ -1770,15 +1770,15 @@ export function CodeReviewDuelArena() {
                                   speakRebuttal(entry.transcript, entry.stance)
                                 }
                                 aria-label="Listen to rebuttal"
-                                className="p-1 rounded bg-white/10 border border-white/20 hover:bg-white/20"
+                                className="p-1 rounded bg-slate-100 border border-slate-200/85 hover:bg-slate-200"
                               >
-                                <Volume2 className="w-3 h-3 text-cyan-300" />
+                                <Volume2 className="w-3 h-3 text-sky-600" />
                               </button>
                             )}
                         </div>
                       </div>
-                      <p className="text-slate-100">&ldquo;{entry.transcript}&rdquo;</p>
-                      <p className="text-slate-300 font-medium">Judge: {entry.feedback}</p>
+                      <p className="text-slate-800">&ldquo;{entry.transcript}&rdquo;</p>
+                      <p className="text-slate-600 font-medium">Judge: {entry.feedback}</p>
                     </div>
                   ))}
                 </div>
@@ -1790,13 +1790,13 @@ export function CodeReviewDuelArena() {
 
       {room && room.status === "finished" && (
         <section className="liquid-glass-card p-6 space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/15">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/85">
             <div className="space-y-1">
               <div
                 className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-mono font-bold ${
                   didHumanWin
-                    ? "bg-emerald-500/20 border-emerald-400/50 text-emerald-200"
-                    : "bg-amber-500/20 border-amber-400/50 text-amber-200"
+                    ? "bg-emerald-100 border-emerald-300/80 text-emerald-800"
+                    : "bg-amber-100 border-amber-300/80 text-amber-800"
                 }`}
               >
                 <Crown className="w-4 h-4" />
@@ -1806,25 +1806,25 @@ export function CodeReviewDuelArena() {
                     : "MATCH CONCLUDED • REVIEW COMPLETE"}
                 </span>
               </div>
-              <h2 className="text-2xl font-bold text-white">
+              <h2 className="text-2xl font-bold text-slate-900">
                 {activeTopic.title}
               </h2>
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="bg-slate-950/55 border border-white/15 rounded-xl px-4 py-2 text-center">
-                <div className="text-[10px] font-mono font-bold text-slate-400">
+              <div className="bg-white/80 border border-slate-200/85 rounded-xl px-4 py-2 text-center">
+                <div className="text-[10px] font-mono font-bold text-slate-600">
                   IT-COIN REWARD
                 </div>
-                <div className="text-xl font-mono font-bold text-emerald-300">
+                <div className="text-xl font-mono font-bold text-emerald-700">
                   {lastReward ? `+${lastReward.awardedCoins} IT-Coins` : "Synced"}
                 </div>
               </div>
-              <div className="bg-slate-950/55 border border-white/15 rounded-xl px-4 py-2 text-center">
-                <div className="text-[10px] font-mono font-bold text-slate-400">
+              <div className="bg-white/80 border border-slate-200/85 rounded-xl px-4 py-2 text-center">
+                <div className="text-[10px] font-mono font-bold text-slate-600">
                   YOUR BALANCE
                 </div>
-                <div className="text-xl font-mono font-bold text-amber-200">
+                <div className="text-xl font-mono font-bold text-amber-700">
                   {guestPlayer?.itCoins ?? 0}
                 </div>
               </div>
@@ -1832,13 +1832,13 @@ export function CodeReviewDuelArena() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl bg-slate-950/50 border border-white/15 space-y-3">
-              <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-white">
-                <Crown className="w-4 h-4 text-amber-300" />
+            <div className="p-4 rounded-xl bg-white/80 border border-slate-200/85 space-y-3">
+              <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-slate-900">
+                <Crown className="w-4 h-4 text-amber-500" />
                 <span>Duel Winner & Scoreboard</span>
               </div>
               {winnerPlayer && (
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.06] border border-white/15">
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-100/80 border border-slate-200/85">
                   <DiscordAvatarFrame
                     equippedId={
                       myPlayer?.id === winnerPlayer.id
@@ -1857,10 +1857,10 @@ export function CodeReviewDuelArena() {
                     </div>
                   </DiscordAvatarFrame>
                   <div>
-                    <div className="font-bold text-sm text-white">
+                    <div className="font-bold text-sm text-slate-900">
                       {winnerPlayer.displayName} (Winner)
                     </div>
-                    <div className="text-xs font-mono text-slate-300 uppercase">
+                    <div className="text-xs font-mono text-slate-600 uppercase">
                       Stance: {winnerPlayer.stance} • {winnerPlayer.criticalHits ?? 0}{" "}
                       Critical Hits
                     </div>
@@ -1874,12 +1874,12 @@ export function CodeReviewDuelArena() {
                   return (
                     <div
                       key={p.id}
-                      className="flex items-center justify-between text-xs font-mono px-3 py-2 rounded-lg bg-white/[0.05] border border-white/12"
+                      className="flex items-center justify-between text-xs font-mono px-3 py-2 rounded-lg bg-slate-100/80 border border-slate-200/85"
                     >
-                      <span className="font-bold text-white">
+                      <span className="font-bold text-slate-900">
                         {p.displayName} ({p.stance})
                       </span>
-                      <span className="text-slate-300">
+                      <span className="text-slate-700">
                         {hp} HP • {p.score} pts • {p.fouls} fouls
                       </span>
                     </div>
@@ -1888,17 +1888,17 @@ export function CodeReviewDuelArena() {
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-950/50 border border-white/15 space-y-3">
-              <div className="text-xs font-mono font-bold uppercase text-white">
+            <div className="p-4 rounded-xl bg-white/80 border border-slate-200/85 space-y-3">
+              <div className="text-xs font-mono font-bold uppercase text-slate-900">
                 Tóm tắt ý chính (Chạm từ tiếng Anh để xem nghĩa)
               </div>
-              <div className="space-y-2 text-xs text-slate-100">
-                <div className="p-2.5 rounded-lg bg-white/[0.05] border border-white/12">
-                  <span className="font-mono font-bold text-sky-300">TÁC GIẢ: </span>
+              <div className="space-y-2 text-xs text-slate-800">
+                <div className="p-2.5 rounded-lg bg-slate-100/80 border border-slate-200/85">
+                  <span className="font-mono font-bold text-sky-700">TÁC GIẢ: </span>
                   <InteractiveEnglishText text={activeTopic.authorStance} />
                 </div>
-                <div className="p-2.5 rounded-lg bg-white/[0.05] border border-white/12">
-                  <span className="font-mono font-bold text-violet-300">REVIEWER: </span>
+                <div className="p-2.5 rounded-lg bg-slate-100/80 border border-slate-200/85">
+                  <span className="font-mono font-bold text-violet-700">REVIEWER: </span>
                   <InteractiveEnglishText text={activeTopic.reviewerStance} />
                 </div>
               </div>
@@ -1906,7 +1906,7 @@ export function CodeReviewDuelArena() {
                 {activeTopic.criticalKeywords.map((kw) => (
                   <span
                     key={kw}
-                    className="px-2 py-0.5 rounded bg-white/[0.08] border border-white/15 text-[11px] font-mono text-cyan-200"
+                    className="px-2 py-0.5 rounded bg-sky-50 border border-sky-200/85 text-[11px] font-mono text-sky-800"
                   >
                     {kw}
                   </span>
@@ -1920,7 +1920,7 @@ export function CodeReviewDuelArena() {
               <button
                 type="button"
                 onClick={handleResetDuel}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-500 hover:to-purple-600 text-white font-bold text-sm border border-violet-300/60 shadow-[0_0_20px_rgba(139,92,246,0.4),inset_0_1px_1px_rgba(255,255,255,0.45)]"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-500 hover:to-purple-600 text-white font-bold text-sm border border-violet-300/60 shadow-[0_8px_20px_rgba(139,92,246,0.34),inset_0_1px_1px_rgba(255,255,255,0.45)]"
               >
                 <RotateCcw className="w-4 h-4" />
                 <span>Đấu lại / Đề tài mới</span>
