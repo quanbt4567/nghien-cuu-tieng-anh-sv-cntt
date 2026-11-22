@@ -45,11 +45,12 @@ type WorkspaceMode = "dictionary" | "flashcard" | "quiz" | "cluster";
 const WORKSPACE_MODES: Array<{
   id: WorkspaceMode;
   label: string;
+  icon: typeof BookOpen;
 }> = [
-  { id: "dictionary", label: "📚 Từ điển & Phát âm" },
-  { id: "flashcard", label: "🃏 Flashcard Lật Thẻ" },
-  { id: "quiz", label: "⚡ Quiz 60 Giây (+2 Coin)" },
-  { id: "cluster", label: "🎙️ Nói Theo Cụm (+3 Coin)" },
+  { id: "dictionary", label: "Từ điển & Phát âm", icon: BookOpen },
+  { id: "flashcard", label: "Flashcard Lật Thẻ", icon: Layers },
+  { id: "quiz", label: "Quiz 60 Giây (+2 Coin)", icon: Zap },
+  { id: "cluster", label: "Nói Theo Cụm (+3 Coin)", icon: Mic },
 ];
 
 function readMasteredIds(): Set<string> {
@@ -312,6 +313,7 @@ export default function VocabularyPage() {
       >
         {WORKSPACE_MODES.map((mode) => {
           const active = workspaceMode === mode.id;
+          const ModeIcon = mode.icon;
           const activeClasses =
             mode.id === "dictionary"
               ? "!bg-sky-100/90 !border-sky-400/80 text-sky-900 shadow-sm"
@@ -327,13 +329,14 @@ export default function VocabularyPage() {
               role="tab"
               aria-selected={active}
               onClick={() => setWorkspaceMode(mode.id)}
-              className={`liquid-glass-pill px-2.5 py-2 text-xs sm:text-sm font-semibold leading-tight whitespace-normal sm:whitespace-nowrap transition-all text-center ${
+              className={`liquid-glass-pill inline-flex items-center justify-center gap-1.5 px-2.5 py-2 text-xs sm:text-sm font-semibold leading-tight whitespace-normal sm:whitespace-nowrap transition-all text-center ${
                 active
                   ? activeClasses
                   : "text-slate-700 hover:text-slate-900 hover:!border-sky-300"
               }`}
             >
-              {mode.label}
+              <ModeIcon className="w-4 h-4 shrink-0" aria-hidden="true" />
+              <span>{mode.label}</span>
             </button>
           );
         })}

@@ -636,8 +636,9 @@ export default function PracticePage() {
                   })()}
                   &rdquo;
                 </div>
-                <p className="text-[11px] text-slate-600">
-                  💡 Mẹo cho người mới: Chạm vào từ tiếng Anh gạch chân để xem nghĩa tiếng Việt ngay.
+                <p className="inline-flex items-center gap-1.5 text-[11px] text-slate-600">
+                  <Lightbulb className="w-3.5 h-3.5 text-amber-500 shrink-0" aria-hidden="true" />
+                  <span>Mẹo cho người mới: Chạm vào từ tiếng Anh gạch chân để xem nghĩa tiếng Việt ngay.</span>
                 </p>
               </div>
 

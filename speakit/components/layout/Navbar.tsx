@@ -524,8 +524,21 @@ export function Navbar() {
                   className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-pill bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-700 border border-emerald-500/45 text-xs font-semibold transition-colors"
                 >
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" aria-hidden="true" />
-                  <span className="hidden sm:inline">Admin</span>
+                  <span className="hidden lg:inline">Admin</span>
                 </Link>
+              )}
+
+              {guestPlayer?.email && (
+                <button
+                  type="button"
+                  onClick={() => void handleLogout()}
+                  aria-label="Đăng xuất"
+                  title="Đăng xuất"
+                  className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-pill bg-rose-500/12 hover:bg-rose-500/22 text-rose-700 border border-rose-300/85 text-xs font-semibold transition-colors"
+                >
+                  <LogOut className="w-3.5 h-3.5 text-rose-600 shrink-0" aria-hidden="true" />
+                  <span className="hidden lg:inline">Đăng xuất</span>
+                </button>
               )}
             </div>
           )}

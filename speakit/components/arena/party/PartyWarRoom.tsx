@@ -1691,8 +1691,9 @@ export function PartyWarRoom() {
                 <Clock className="w-4 h-4" />
                 <span>TIME&apos;S UP • 00:00</span>
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
-                ⏱ HẾT GIỜ! SỰ CỐ CHƯA KHẮC PHỤC KỊP (OUTAGE ESCALATED)
+              <h2 className="inline-flex items-center gap-2 text-xl sm:text-2xl font-bold text-slate-900">
+                <Clock className="w-5 h-5 text-rose-600 shrink-0" aria-hidden="true" />
+                <span>HẾT GIỜ! SỰ CỐ CHƯA KHẮC PHỤC KỊP (OUTAGE ESCALATED)</span>
               </h2>
               <p className="text-xs text-slate-600">
                 {activeScenario.title} — Hết thời gian xử lý ({formatClock(0)}).

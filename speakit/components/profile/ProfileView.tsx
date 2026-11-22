@@ -864,6 +864,11 @@ export function ProfileView() {
                       type="button"
                       onClick={async () => {
                         await logoutAccountAction();
+                        if (typeof window !== "undefined") {
+                          try {
+                            window.localStorage.removeItem("speakit_session_token_v1");
+                          } catch {}
+                        }
                         setGuestPlayer(null);
                         saveCachedGuestProfile(null);
                         requestOpenAuthModal();
