@@ -20,8 +20,6 @@ import {
   ChevronDown,
   LogIn,
   LogOut,
-  Menu,
-  X,
   ShoppingBag,
   type LucideIcon,
 } from "lucide-react";
@@ -140,7 +138,6 @@ export function Navbar() {
   const [gamification, setGamification] = useState<GamificationState>(INITIAL_GAMIFICATION);
   const [guestPlayer, setGuestPlayer] = useState<PublicGuestPlayer | null>(null);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
-  const [mobileOpen, setMobileOpen] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -221,21 +218,18 @@ export function Navbar() {
 
   useEffect(() => {
     setOpenGroup(null);
-    setMobileOpen(false);
   }, [pathname]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setOpenGroup(null);
-        setMobileOpen(false);
       }
     };
 
     const handlePointerDown = (event: PointerEvent) => {
       if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
         setOpenGroup(null);
-        setMobileOpen(false);
       }
     };
 
@@ -257,13 +251,16 @@ export function Navbar() {
   const coinTooltip = `${identity.totalPoints.toLocaleString("en-US")} pts (${nextCoinPoints} pts nữa được +1 Coin)`;
   const homeActive = isItemActive(pathname, "/");
   const shopActive = pathname.startsWith("/shop");
+  const hideBottomTabBar =
+    pathname.startsWith("/practice/") ||
+    pathname.startsWith("/arena/") ||
+    pathname === "/placement";
 
   const handleLogout = async () => {
     await logoutAccountAction();
     setGuestPlayer(null);
     syncGuestProfileFromServer(null);
     setOpenGroup(null);
-    setMobileOpen(false);
     requestOpenAuthModal();
     router.refresh();
   };
@@ -274,7 +271,7 @@ export function Navbar() {
         <CustomCursorTrail effectId={guestPlayer?.equippedCosmetics?.cursor_effect ?? null} />
       )}
       <header ref={headerRef} className="sticky top-0 z-40 bg-paper border-b border-ink/15">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 h-16 flex items-center justify-between gap-2 lg:gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 h-14 md:h-16 flex items-center justify-between gap-2 lg:gap-4">
         <Link
           href="/"
           aria-label="SpeakIT"
@@ -425,7 +422,7 @@ export function Navbar() {
           {!hydrated ? (
             <div
               aria-label="Đang đồng bộ tài khoản"
-              className="shrink-0 h-8 w-36 sm:w-52 rounded-pill bg-paper-muted border border-ink/10 animate-pulse"
+              className="shrink-0 h-8 w-28 md:w-52 rounded-pill bg-paper-muted border border-ink/10 animate-pulse"
             />
           ) : (
             <div className="flex items-center gap-1.5 shrink-0 min-w-0">
@@ -436,7 +433,7 @@ export function Navbar() {
                     ? `${identity.displayName} (${identity.transferCode})`
                     : identity.displayName
                 }
-                className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-white border border-ink/15 hover:border-ink/30 shadow-soft text-xs text-ink transition-colors max-w-[120px] lg:max-w-[165px] xl:max-w-[220px]"
+                className="hidden md:flex shrink-0 items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-white border border-ink/15 hover:border-ink/30 shadow-soft text-xs text-ink transition-colors max-w-[120px] lg:max-w-[165px] xl:max-w-[220px]"
               >
                 <User className="w-3.5 h-3.5 text-accent shrink-0" aria-hidden="true" />
                 <span className="font-semibold truncate hidden sm:inline md:hidden lg:inline">{identity.displayName}</span>
@@ -487,173 +484,46 @@ export function Navbar() {
               <InAppNotificationBell lastPracticeDate={gamification.lastPracticeDate} />
             </div>
           )}
-
-          <button
-            type="button"
-            aria-expanded={mobileOpen}
-            aria-controls="mobile-nav-menu"
-            aria-label={mobileOpen ? "Đóng menu điều hướng" : "Mở menu điều hướng"}
-            onClick={() => setMobileOpen((prev) => !prev)}
-            className="md:hidden p-2 rounded-pill bg-white border border-ink/15 hover:border-ink/30 shadow-soft text-ink transition-colors"
-          >
-            {mobileOpen ? (
-              <X className="w-4 h-4" aria-hidden="true" />
-            ) : (
-              <Menu className="w-4 h-4" aria-hidden="true" />
-            )}
-          </button>
         </div>
       </div>
-
-      {mobileOpen && (
-        <nav
-          id="mobile-nav-menu"
-          aria-label="Điều hướng di động"
-          className="md:hidden border-t border-ink/15 bg-paper px-4 py-3 pb-24 space-y-3 max-h-[calc(100vh-4rem)] overflow-y-auto"
-        >
-          {hydrated && (
-            <div className="px-3 py-2 rounded-xl bg-white border border-ink/15 flex items-center justify-between gap-2 text-xs">
-              <div className="min-w-0">
-                <div className="font-bold text-ink truncate">{identity.displayName}</div>
-                {guestPlayer?.email && (
-                  <div className="text-[11px] text-sky-700 truncate">
-                    {guestPlayer.email}
-                  </div>
-                )}
-                {identity.transferCode && (
-                  <div className="font-mono text-[11px] text-ink-muted">
-                    {identity.transferCode}
-                  </div>
-                )}
-              </div>
-              <div className="flex flex-col items-end gap-1 shrink-0">
-                <div className="font-mono text-[11px] text-ink">
-                  {identity.totalPoints.toLocaleString("en-US")} pts · {identity.itCoins} Coin
-                </div>
-                {guestPlayer?.email ? (
-                  <button
-                    type="button"
-                    onClick={() => void handleLogout()}
-                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-accent hover:underline"
-                  >
-                    <LogOut className="w-3 h-3" aria-hidden="true" />
-                    <span>Đăng xuất</span>
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMobileOpen(false);
-                      requestOpenAuthModal();
-                    }}
-                    className="inline-flex items-center gap-1 text-[11px] font-bold text-accent hover:underline"
-                  >
-                    <LogIn className="w-3 h-3" aria-hidden="true" />
-                    <span>Đăng nhập / Đăng ký</span>
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
-
-          <Link
-            href="/"
-            aria-current={homeActive ? "page" : undefined}
-            onClick={() => setMobileOpen(false)}
-            className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium border transition-colors ${
-              homeActive
-                ? "bg-ink text-white border-ink shadow-soft"
-                : "bg-white text-ink border-ink/15 hover:bg-paper-muted shadow-soft"
-            }`}
-          >
-            <Home className="w-4 h-4 shrink-0" aria-hidden="true" />
-            <span>Trang chủ</span>
-          </Link>
-
-          {NAV_GROUPS.flatMap((group) => {
-            const groupBlock = (
-              <div key={group.id} className="space-y-1">
-                <div className="px-2 text-xs font-mono uppercase tracking-wider text-ink-muted">
-                  {group.label}
-                </div>
-                <div className="bg-white border border-ink/15 rounded-2xl p-1.5 shadow-soft space-y-0.5">
-                  {group.items.map(({ href, label, icon: Icon }) => {
-                    const itemActive = isItemActive(pathname, href);
-                    return (
-                      <Link
-                        key={href}
-                        href={href}
-                        aria-current={itemActive ? "page" : undefined}
-                        onClick={() => setMobileOpen(false)}
-                        className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
-                          itemActive
-                            ? "bg-ink text-white"
-                            : "text-ink hover:bg-paper-muted"
-                        }`}
-                      >
-                        <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
-                        <span>{label}</span>
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-
-            if (group.id === "practice") {
-              return [
-                groupBlock,
-                <Link
-                  key="shop-mobile"
-                  href="/shop"
-                  aria-current={shopActive ? "page" : undefined}
-                  onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium border transition-colors ${
-                    shopActive
-                      ? "bg-ink text-white border-ink shadow-soft"
-                      : "bg-white text-ink border-ink/15 hover:bg-paper-muted shadow-soft"
-                  }`}
-                >
-                  <ShoppingBag className="w-4 h-4 shrink-0" aria-hidden="true" />
-                  <span>Cửa hàng</span>
-                </Link>,
-              ];
-            }
-
-            return [groupBlock];
-          })}
-        </nav>
-      )}
       </header>
 
-      <nav
-        aria-label="Điều hướng nhanh di động"
-        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-ink/15 pb-safe"
-      >
-        <div className="grid grid-cols-5 max-w-lg mx-auto">
-          {MOBILE_TABS.map(({ href, label, icon: Icon }) => {
-            const active = isItemActive(pathname, href);
-            return (
-              <Link
-                key={href}
-                href={href}
-                aria-current={active ? "page" : undefined}
-                className={`flex flex-col items-center justify-center gap-0.5 min-h-[52px] px-1 py-1.5 text-[11px] transition-colors ${
-                  active
-                    ? "text-accent font-semibold"
-                    : "text-ink-muted font-medium hover:text-ink"
-                }`}
-              >
-                <Icon
-                  className={`w-5 h-5 shrink-0 ${active ? "stroke-[2.4]" : ""}`}
-                  aria-hidden="true"
-                />
-                <span className="truncate max-w-full leading-tight">{label}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
+      {!hideBottomTabBar && (
+        <nav
+          aria-label="Điều hướng nhanh di động"
+          className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-ink/10 shadow-[0_-6px_24px_rgba(26,23,20,0.06)] pb-safe"
+        >
+          <div className="grid grid-cols-5 max-w-lg mx-auto">
+            {MOBILE_TABS.map(({ href, label, icon: Icon }) => {
+              const active = isItemActive(pathname, href);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  aria-current={active ? "page" : undefined}
+                  className={`flex flex-col items-center justify-center gap-0.5 min-h-[54px] px-1 py-1.5 text-[11px] active:scale-95 transition-transform ${
+                    active
+                      ? "text-accent font-bold"
+                      : "text-ink-muted font-medium hover:text-ink"
+                  }`}
+                >
+                  <span
+                    className={`flex items-center justify-center px-3 py-0.5 rounded-full transition-colors ${
+                      active ? "bg-accent/10" : ""
+                    }`}
+                  >
+                    <Icon
+                      className={`w-5 h-5 shrink-0 ${active ? "stroke-[2.4]" : ""}`}
+                      aria-hidden="true"
+                    />
+                  </span>
+                  <span className="truncate max-w-full leading-tight">{label}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
+      )}
     </>
   );
 }
