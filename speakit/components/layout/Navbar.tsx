@@ -176,8 +176,30 @@ export function Navbar() {
 
     const hydrateCloudGuest = async () => {
       try {
-        const session = await initOrHydrateGuestSession(readBackupTransferCode());
+        let backupSessionToken = "";
+        if (typeof window !== "undefined") {
+          try {
+            backupSessionToken =
+              window.localStorage.getItem("speakit_session_token_v1")?.trim() || "";
+          } catch {
+          }
+        }
+        const session = await initOrHydrateGuestSession(
+          backupSessionToken || readBackupTransferCode()
+        );
         if (!active) return;
+        if (
+          "sessionToken" in session &&
+          typeof (session as { sessionToken?: unknown }).sessionToken === "string"
+        ) {
+          const nextToken = (session as { sessionToken: string }).sessionToken.trim();
+          if (nextToken && typeof window !== "undefined") {
+            try {
+              window.localStorage.setItem("speakit_session_token_v1", nextToken);
+            } catch {
+            }
+          }
+        }
         if (session.mode === "online" && session.player) {
           const cached = readCachedGuestProfile();
           const isStaleHydration =
@@ -188,7 +210,7 @@ export function Navbar() {
             setGuestPlayer(session.player);
             syncGuestProfileFromServer(session.player);
           }
-        } else if (!readCachedGuestProfile()) {
+        } else if (session.mode === "online" && !readCachedGuestProfile()) {
           setGuestPlayer(null);
         }
       } catch {
@@ -264,6 +286,12 @@ export function Navbar() {
 
   const handleLogout = async () => {
     await logoutAccountAction();
+    if (typeof window !== "undefined") {
+      try {
+        window.localStorage.removeItem("speakit_session_token_v1");
+      } catch {
+      }
+    }
     setGuestPlayer(null);
     syncGuestProfileFromServer(null);
     setOpenGroup(null);

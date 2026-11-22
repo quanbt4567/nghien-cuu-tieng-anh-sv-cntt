@@ -22,15 +22,40 @@ import {
   GUEST_PROFILE_UPDATED_EVENT,
   OPEN_AUTH_MODAL_EVENT,
   readBackupTransferCode,
+  readCachedGuestProfile,
   syncGuestProfileFromServer,
 } from "../../lib/guestClient";
 import type { PublicGuestPlayer } from "../../lib/db";
 
 const NAME_PROMPTED_STORAGE_KEY = "speakit_name_prompted_v1";
 const LOCAL_DISPLAY_NAME_KEY = "speakit_local_display_name_v1";
+const SESSION_TOKEN_STORAGE_KEY = "speakit_session_token_v1";
+
+function readStoredSessionToken(): string | undefined {
+  if (typeof window === "undefined") return undefined;
+  try {
+    return window.localStorage.getItem(SESSION_TOKEN_STORAGE_KEY)?.trim() || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function saveStoredSessionToken(token: string | null | undefined): void {
+  if (typeof window === "undefined") return;
+  try {
+    const cleaned = typeof token === "string" ? token.trim() : "";
+    if (cleaned) {
+      window.localStorage.setItem(SESSION_TOKEN_STORAGE_KEY, cleaned);
+    } else {
+      window.localStorage.removeItem(SESSION_TOKEN_STORAGE_KEY);
+    }
+  } catch {
+  }
+}
 
 export function WelcomeNameModal() {
   const pathname = usePathname() ?? "";
+  const isAdminRoute = pathname.startsWith("/admin");
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [mustAuthenticate, setMustAuthenticate] = useState(true);
@@ -46,11 +71,27 @@ export function WelcomeNameModal() {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const hydrateSession = useCallback(async () => {
+  const hydrateSession = useCallback(async (isActive?: () => boolean) => {
+    const cached = readCachedGuestProfile();
+    if (cached?.email) {
+      setMustAuthenticate(false);
+      setIsOpen(false);
+    }
     const backupCode = readBackupTransferCode();
     try {
-      const session = await initOrHydrateGuestSession(backupCode);
+      const session = await initOrHydrateGuestSession(
+        readStoredSessionToken() || backupCode
+      );
+      if (isActive && !isActive()) return;
+      const nextToken =
+        "sessionToken" in session &&
+        typeof (session as { sessionToken?: unknown }).sessionToken === "string"
+          ? (session as { sessionToken: string }).sessionToken
+          : undefined;
       if (session.mode === "online" && session.player?.email) {
+        if (nextToken) {
+          saveStoredSessionToken(nextToken);
+        }
         syncGuestProfileFromServer(session.player);
         try {
           window.localStorage.setItem(NAME_PROMPTED_STORAGE_KEY, "1");
@@ -66,7 +107,22 @@ export function WelcomeNameModal() {
         return;
       }
 
+      if (session.mode === "offline") {
+        if (cached?.email) {
+          setMustAuthenticate(false);
+          setIsOpen(false);
+          return;
+        }
+      }
+
+      if (session.mode === "online" && !session.player) {
+        saveStoredSessionToken(null);
+      }
+
       if (session.player && !session.player.email) {
+        if (nextToken) {
+          saveStoredSessionToken(nextToken);
+        }
         syncGuestProfileFromServer(session.player);
         setTab("register");
         setDisplayName((prev) => prev || session.player!.displayName);
@@ -78,19 +134,27 @@ export function WelcomeNameModal() {
         setTransferCode((prev) => prev || backupCode);
       }
     } catch {
+      if ((isActive && !isActive()) || cached?.email) {
+        return;
+      }
     }
 
+    if (isActive && !isActive()) return;
     setMustAuthenticate(true);
     setIsOpen(true);
   }, []);
 
   useEffect(() => {
-    if (pathname.startsWith("/admin")) return;
-    void hydrateSession();
-  }, [hydrateSession, pathname]);
+    if (isAdminRoute) return;
+    let active = true;
+    void hydrateSession(() => active);
+    return () => {
+      active = false;
+    };
+  }, [hydrateSession, isAdminRoute]);
 
   useEffect(() => {
-    if (pathname.startsWith("/admin")) return;
+    if (isAdminRoute) return;
 
     const handleOpenRequest = () => {
       setError(null);
@@ -100,12 +164,19 @@ export function WelcomeNameModal() {
     const handleProfileUpdated = (event: Event) => {
       if (!(event instanceof CustomEvent)) return;
       const player = event.detail as PublicGuestPlayer | null;
-      if (!player || !player.email) {
-        setMustAuthenticate(true);
-        setError(null);
-        setPassword("");
-        setIsOpen(true);
+      if (player?.email) {
+        setMustAuthenticate(false);
+        setIsOpen(false);
+        setLegacyNotice(null);
+        return;
       }
+      if (!player) {
+        saveStoredSessionToken(null);
+      }
+      setMustAuthenticate(true);
+      setError(null);
+      setPassword("");
+      setIsOpen(true);
     };
 
     window.addEventListener(OPEN_AUTH_MODAL_EVENT, handleOpenRequest);
@@ -114,13 +185,16 @@ export function WelcomeNameModal() {
       window.removeEventListener(OPEN_AUTH_MODAL_EVENT, handleOpenRequest);
       window.removeEventListener(GUEST_PROFILE_UPDATED_EVENT, handleProfileUpdated);
     };
-  }, [pathname]);
+  }, [isAdminRoute]);
 
-  if (!isOpen || pathname.startsWith("/admin")) {
+  if (!isOpen || isAdminRoute) {
     return null;
   }
 
-  const handleCompleteAuth = (player: PublicGuestPlayer) => {
+  const handleCompleteAuth = (player: PublicGuestPlayer, sessionToken?: string) => {
+    if (sessionToken) {
+      saveStoredSessionToken(sessionToken);
+    }
     syncGuestProfileFromServer(player);
     try {
       window.localStorage.setItem(NAME_PROMPTED_STORAGE_KEY, "1");
@@ -155,7 +229,12 @@ export function WelcomeNameModal() {
           setError(res.error || "Đăng nhập thất bại. Vui lòng thử lại.");
           return;
         }
-        handleCompleteAuth(res.player);
+        const nextToken =
+          "sessionToken" in res &&
+          typeof (res as { sessionToken?: unknown }).sessionToken === "string"
+            ? (res as { sessionToken: string }).sessionToken
+            : undefined;
+        handleCompleteAuth(res.player, nextToken);
       } catch {
         setError("Không thể kết nối máy chủ để đăng nhập.");
       } finally {
@@ -190,7 +269,12 @@ export function WelcomeNameModal() {
         setError(res.error || "Đăng ký thất bại. Vui lòng thử lại.");
         return;
       }
-      handleCompleteAuth(res.player);
+      const nextToken =
+        "sessionToken" in res &&
+        typeof (res as { sessionToken?: unknown }).sessionToken === "string"
+          ? (res as { sessionToken: string }).sessionToken
+          : undefined;
+      handleCompleteAuth(res.player, nextToken);
     } catch {
       setError("Không thể kết nối máy chủ để đăng ký.");
     } finally {
