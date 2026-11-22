@@ -23,16 +23,21 @@ export default async function HomePage() {
 
       <section
         aria-label="Top 3 Arena Leaders"
-        className="bg-white border border-ink/15 rounded-2xl p-4 md:p-5 shadow-soft space-y-3 md:space-y-4"
+        className="bg-white/92 md:bg-white border border-[#3d3d3d]/20 md:border-ink/15 rounded-[6px] md:rounded-2xl p-4 md:p-5 shadow-[1px_1px_6px_-1px_rgba(0,0,0,0.08)] md:shadow-soft space-y-3 md:space-y-4"
       >
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <Trophy className="w-4 h-4 text-accent shrink-0" aria-hidden="true" />
-            <h2 className="text-base font-bold text-ink">Top 3 Bảng Xếp Hạng Arena</h2>
+            <Trophy className="w-4 h-4 text-[#ba2223] md:text-accent shrink-0" aria-hidden="true" />
+            <div className="space-y-0.5">
+              <p className="md:hidden text-[10px] uppercase tracking-[0.06em] text-[#3d3d3d] font-mono">
+                Arena Live Standings
+              </p>
+              <h2 className="text-base font-bold text-ink">Top 3 Bảng Xếp Hạng Arena</h2>
+            </div>
           </div>
           <Link
             href="/leaderboard"
-            className="interactive-btn-accent inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 bg-accent/10 hover:bg-accent text-[#B91C1C] hover:text-white border border-accent/40 text-xs font-semibold"
+            className="interactive-btn-accent inline-flex items-center gap-1.5 rounded-[6px] md:rounded-pill px-3.5 py-1.5 bg-white md:bg-accent/10 hover:bg-[#ba2223] md:hover:bg-accent text-[#142161] md:text-[#B91C1C] hover:text-white border border-[#142161] md:border-accent/40 text-xs font-semibold"
           >
             <span>Xem bảng xếp hạng</span>
             <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -95,7 +100,7 @@ export default async function HomePage() {
             </span>
             <Link
               href="/arena"
-              className="interactive-btn-accent inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 bg-accent hover:bg-accent-hover text-white border border-ink font-mono text-xs font-semibold shadow-soft"
+              className="interactive-btn-accent inline-flex items-center gap-1.5 rounded-[6px] md:rounded-pill px-3.5 py-1.5 bg-[#ba2223] md:bg-accent hover:bg-[#9e1c1d] md:hover:bg-accent-hover text-white border border-[#ba2223] md:border-ink font-mono text-xs font-semibold shadow-soft"
             >
               <span>Mở /arena</span>
               <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />

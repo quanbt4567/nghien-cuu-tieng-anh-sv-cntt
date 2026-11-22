@@ -276,7 +276,7 @@ export function Navbar() {
       {!shopActive && (
         <CustomCursorTrail effectId={guestPlayer?.equippedCosmetics?.cursor_effect ?? null} />
       )}
-      <header ref={headerRef} className="sticky top-0 z-40 bg-white md:bg-paper border-b border-ink/10 md:border-ink/15">
+      <header ref={headerRef} className="sticky top-0 z-40 bg-white/92 border-b border-[#3d3d3d]/18">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 h-14 md:h-16 flex items-center justify-between gap-2 lg:gap-4">
         <Link
           href="/"
@@ -508,7 +508,7 @@ export function Navbar() {
       {!hideBottomTabBar && (
         <nav
           aria-label="Điều hướng nhanh di động"
-          className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-ink/10 shadow-[0_-4px_16px_rgba(26,23,20,0.06)] pb-safe"
+          className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/94 border-t border-[#3d3d3d]/18 shadow-[0_-2px_10px_rgba(0,0,0,0.06)] pb-safe"
         >
           <div className="grid grid-cols-5 max-w-lg mx-auto">
             {MOBILE_TABS.map(({ href, label, icon: Icon }) => {
@@ -522,21 +522,27 @@ export function Navbar() {
                     if (pathname !== href) setPendingHref(href);
                   }}
                   aria-current={active ? "page" : undefined}
-                  className={`flex flex-col items-center justify-center gap-0.5 min-h-[54px] px-1 py-1.5 text-[11px] active:scale-95 transition-transform ${
+                  className={`flex flex-col items-center justify-center gap-0.5 min-h-[54px] px-1 py-1.5 text-[10px] tracking-[0.04em] active:scale-95 transition-transform ${
                     active
-                      ? "text-accent font-bold"
-                      : "text-ink-muted font-medium hover:text-ink"
+                      ? "text-[#000000] font-semibold"
+                      : "text-[#3d3d3d]/75 font-medium hover:text-[#000000]"
                   }`}
                 >
                   <span
-                    className={`flex items-center justify-center px-3 py-0.5 rounded-full transition-colors ${
-                      active ? "bg-accent/10" : ""
+                    className={`relative flex items-center justify-center px-3 py-0.5 rounded-[6px] transition-colors ${
+                      active ? "bg-[#8d8d8d]/15" : ""
                     }`}
                   >
                     <Icon
-                      className={`w-5 h-5 shrink-0 ${active ? "stroke-[2.4]" : ""}`}
+                      className={`w-5 h-5 shrink-0 ${active ? "stroke-[2.2]" : ""}`}
                       aria-hidden="true"
                     />
+                    {active && (
+                      <span
+                        aria-hidden="true"
+                        className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-[#ba2223]"
+                      />
+                    )}
                   </span>
                   <span className="truncate max-w-full leading-tight">{label}</span>
                 </Link>

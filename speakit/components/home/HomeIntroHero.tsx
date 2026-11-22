@@ -104,9 +104,9 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
   return (
     <section aria-label="Giới thiệu SpeakIT" className="space-y-6">
       <div className="md:hidden space-y-4">
-        <div className="rounded-2xl bg-white border border-ink/15 p-5 shadow-card space-y-4">
-          <div className="inline-flex items-center gap-2 rounded-pill px-3 py-1 bg-paper border border-ink/15 text-[11px] font-mono font-semibold text-[#B91C1C]">
-            <Headphones className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+        <div className="rounded-[6px] bg-white/92 border border-[#3d3d3d]/20 p-5 shadow-[1px_1px_6px_-1px_rgba(0,0,0,0.08)] space-y-4">
+          <div className="inline-flex items-center gap-2 rounded-[6px] px-2.5 py-1 bg-[#8d8d8d]/10 border border-[#3d3d3d]/20 text-[10px] font-mono font-semibold uppercase tracking-[0.06em] text-[#3d3d3d]">
+            <Headphones className="w-3.5 h-3.5 text-[#ba2223] shrink-0" aria-hidden="true" />
             <span>SpeakIT · AI IT English Coach</span>
           </div>
 
@@ -122,7 +122,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
           <div className="space-y-2.5">
             <Link
               href="/scenarios"
-              className="interactive-btn-accent w-full flex items-center justify-center gap-2 rounded-2xl px-5 py-3.5 bg-accent hover:bg-accent-hover text-white border border-ink text-sm font-bold shadow-soft active:scale-[0.98] transition-transform"
+              className="w-full flex items-center justify-center gap-2 rounded-[6px] px-5 py-3.5 bg-[#ba2223] hover:bg-[#9e1c1d] text-white border border-[#ba2223] text-sm font-bold shadow-[1px_1px_6px_-1px_rgba(0,0,0,0.12)] active:scale-[0.98] transition-transform"
             >
               <span>Bắt đầu luyện nói ngay</span>
               <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
@@ -130,9 +130,9 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
 
             <Link
               href="/placement"
-              className="w-full inline-flex items-center justify-center gap-1.5 rounded-pill px-4 py-2 bg-paper border border-ink/15 text-xs font-semibold text-ink active:scale-[0.98] transition-transform"
+              className="w-full inline-flex items-center justify-center gap-1.5 rounded-[6px] px-4 py-2.5 bg-white/92 border border-[#142161] text-xs font-semibold text-[#142161] active:scale-[0.98] transition-transform"
             >
-              <Sparkles className="w-3.5 h-3.5 text-accent shrink-0" aria-hidden="true" />
+              <Sparkles className="w-3.5 h-3.5 text-[#ba2223] shrink-0" aria-hidden="true" />
               <span>Kiểm tra trình độ</span>
             </Link>
           </div>
@@ -145,24 +145,26 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className="active:scale-[0.98] transition-transform rounded-2xl bg-white border border-ink/15 p-3.5 shadow-soft flex flex-col gap-2.5"
+                className="active:scale-[0.98] transition-transform rounded-[6px] bg-white/92 border border-[#3d3d3d]/20 p-3.5 shadow-[1px_1px_6px_-1px_rgba(0,0,0,0.08)] flex flex-col gap-2.5"
               >
-                <div className="w-9 h-9 rounded-pill bg-paper border border-ink/15 flex items-center justify-center shrink-0">
-                  <Icon className="w-4 h-4 text-accent" aria-hidden="true" />
+                <div className="w-9 h-9 rounded-[6px] bg-[#8d8d8d]/10 border border-[#3d3d3d]/18 flex items-center justify-center shrink-0">
+                  <Icon className="w-4 h-4 text-[#ba2223]" aria-hidden="true" />
                 </div>
                 <div className="space-y-0.5">
                   <div className="text-sm font-bold text-ink leading-tight">{item.title}</div>
-                  <div className="text-[11px] text-ink-muted">{item.subtitle}</div>
+                  <div className="text-[10px] uppercase tracking-[0.06em] text-[#3d3d3d]">
+                    {item.subtitle}
+                  </div>
                 </div>
               </Link>
             );
           })}
         </div>
 
-        <details className="group rounded-2xl bg-white border border-ink/15 shadow-soft overflow-hidden">
+        <details className="group rounded-[6px] bg-white/92 border border-[#3d3d3d]/20 shadow-[1px_1px_6px_-1px_rgba(0,0,0,0.08)] overflow-hidden">
           <summary className="list-none cursor-pointer flex items-center justify-between gap-2 px-4 py-3 text-xs font-mono font-semibold text-ink select-none">
             <span className="flex items-center gap-2 min-w-0">
-              <BarChart3 className="w-4 h-4 text-accent shrink-0" aria-hidden="true" />
+              <BarChart3 className="w-4 h-4 text-[#ba2223] shrink-0" aria-hidden="true" />
               <span className="truncate">
                 Số liệu EF EPI {EF_EPI_2025.year} · {EF_EPI_2025.country} {EF_EPI_2025.score} điểm
               </span>
@@ -173,7 +175,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
             />
           </summary>
 
-          <div className="px-4 pb-4 pt-3 border-t border-ink/10 space-y-3 text-xs">
+          <div className="px-4 pb-4 pt-3 border-t border-[#3d3d3d]/15 space-y-3 text-xs">
             <div className="flex items-center justify-between gap-2 font-mono">
               <span className="text-ink-muted">
                 Toàn cầu #{EF_EPI_2025.globalRank}/{EF_EPI_2025.totalCountries}
@@ -199,12 +201,12 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
 
               <div className="space-y-1">
                 <div className="flex items-center justify-between font-mono">
-                  <span className="text-[#B91C1C] font-semibold">Nói (Speaking)</span>
-                  <span className="text-[#B91C1C] font-bold">{EF_EPI_2025.skills.speaking} điểm</span>
+                  <span className="text-[#ba2223] font-semibold">Nói (Speaking)</span>
+                  <span className="text-[#ba2223] font-bold">{EF_EPI_2025.skills.speaking} điểm</span>
                 </div>
                 <div className="h-1.5 rounded-pill bg-ink/10 overflow-hidden">
                   <div
-                    className="h-full w-full origin-left bg-accent rounded-pill"
+                    className="h-full w-full origin-left bg-[#ba2223] rounded-pill"
                     style={{ transform: `scaleX(${speakingPercent / 100})` }}
                   />
                 </div>
@@ -217,7 +219,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
 
             <Link
               href="/research"
-              className="inline-flex items-center gap-1.5 rounded-pill px-3 py-1.5 bg-paper border border-ink/15 text-xs font-mono font-semibold text-ink hover:text-[#B91C1C]"
+              className="inline-flex items-center gap-1.5 rounded-[6px] px-3 py-1.5 bg-white border border-[#142161] text-xs font-mono font-semibold text-[#142161] hover:text-[#ba2223]"
             >
               <span>Đọc thêm số liệu &amp; nghiên cứu</span>
               <ArrowRight className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
