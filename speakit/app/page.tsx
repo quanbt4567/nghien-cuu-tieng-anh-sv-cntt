@@ -18,12 +18,12 @@ export default async function HomePage() {
   const scenarioCount = scenarios.length;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-7 sm:py-9 space-y-8">
+    <div className="max-w-5xl mx-auto px-4 py-4 md:py-7 lg:py-9 space-y-4 md:space-y-8">
       <HomeIntroHero scenarioCount={scenarioCount} />
 
       <section
         aria-label="Top 3 Arena Leaders"
-        className="bg-white border border-ink/15 rounded-2xl p-5 shadow-soft space-y-4"
+        className="bg-white border border-ink/15 rounded-2xl p-4 md:p-5 shadow-soft space-y-3 md:space-y-4"
       >
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
@@ -104,7 +104,7 @@ export default async function HomePage() {
         )}
       </section>
 
-      <section aria-label="Công cụ ôn tập nhanh" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <section aria-label="Công cụ ôn tập nhanh" className="hidden md:grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <Link
           href="/scenarios"
           className="group interactive-card bg-white border border-ink/20 rounded-2xl p-5 shadow-soft flex flex-col justify-between gap-4"
