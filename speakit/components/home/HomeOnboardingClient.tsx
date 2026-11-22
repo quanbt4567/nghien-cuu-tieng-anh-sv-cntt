@@ -45,6 +45,25 @@ const ROLE_ICONS: Record<ITRole, typeof Code2> = {
   devops: Terminal,
 };
 
+const ROLE_ACTIVE_STYLES: Record<ITRole, { pill: string; icon: string }> = {
+  frontend: {
+    pill: "bg-cyan-500/25 text-cyan-100 border-cyan-400/55 shadow-[0_0_16px_rgba(6,182,212,0.28)]",
+    icon: "text-cyan-300",
+  },
+  backend: {
+    pill: "bg-violet-500/25 text-violet-100 border-violet-400/55 shadow-[0_0_16px_rgba(139,92,246,0.28)]",
+    icon: "text-violet-300",
+  },
+  qa: {
+    pill: "bg-emerald-500/25 text-emerald-100 border-emerald-400/55 shadow-[0_0_16px_rgba(16,185,129,0.28)]",
+    icon: "text-emerald-300",
+  },
+  devops: {
+    pill: "bg-amber-500/25 text-amber-100 border-amber-400/55 shadow-[0_0_16px_rgba(245,158,11,0.28)]",
+    icon: "text-amber-300",
+  },
+};
+
 const DIFFICULTY_FILTERS: Array<"ALL" | ScenarioDifficulty> = [
   "ALL",
   "Fresher",
@@ -72,12 +91,25 @@ const DIFFICULTY_SECTIONS: Array<{
 
 function getDifficultyBadgeClass(level: ScenarioDifficulty): string {
   if (level === "Fresher") {
-    return "bg-emerald-500/15 text-emerald-700 border-emerald-500/30";
+    return "bg-emerald-500/20 text-emerald-200 border-emerald-400/40";
   }
   if (level === "Junior") {
-    return "bg-sky-500/10 text-sky-700 border-sky-500/30";
+    return "bg-cyan-500/20 text-cyan-200 border-cyan-400/40";
   }
-  return "bg-ink text-white border-ink";
+  return "bg-violet-500/20 text-violet-200 border-violet-400/45";
+}
+
+function getDifficultyFilterActiveClass(level: "ALL" | ScenarioDifficulty): string {
+  if (level === "Fresher") {
+    return "bg-emerald-500/25 text-emerald-100 border-emerald-400/55 shadow-[0_0_16px_rgba(16,185,129,0.28)]";
+  }
+  if (level === "Junior") {
+    return "bg-cyan-500/25 text-cyan-100 border-cyan-400/55 shadow-[0_0_16px_rgba(6,182,212,0.28)]";
+  }
+  if (level === "Senior") {
+    return "bg-violet-500/25 text-violet-100 border-violet-400/55 shadow-[0_0_16px_rgba(139,92,246,0.3)]";
+  }
+  return "bg-cyan-500/25 text-cyan-100 border-cyan-400/55 shadow-[0_0_16px_rgba(6,182,212,0.28)]";
 }
 
 export function HomeOnboardingClient() {
@@ -207,62 +239,62 @@ export function HomeOnboardingClient() {
       <Link
         key={scenario.id}
         href={`/practice/${scenario.id}`}
-        className={`group bg-white border rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4 ${
+        className={`group liquid-glass-card-lite p-5 hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgba(6,182,212,0.22)] transition-all flex flex-col justify-between gap-4 ${
           isPlacementMatch
-            ? "border-sky-500/60 ring-1 ring-sky-500/20"
+            ? "!border-cyan-400/60 ring-1 ring-cyan-400/30"
             : isRecommended
-            ? "border-emerald-500/40"
-            : "border-ink/15"
+            ? "!border-emerald-400/45 hover:!border-emerald-300/65"
+            : "hover:!border-cyan-400/45"
         }`}
       >
         <div className="flex items-start gap-3.5">
           <div
-            className={`w-8 h-8 rounded-pill flex items-center justify-center border shrink-0 font-mono font-bold text-xs transition-colors ${
+            className={`w-8 h-8 rounded-full flex items-center justify-center border shrink-0 font-mono font-bold text-xs transition-colors ${
               isRecommended
-                ? "bg-ink text-white border-ink"
-                : "bg-paper text-ink border-ink/20 group-hover:bg-ink group-hover:text-white group-hover:border-ink"
+                ? "bg-cyan-500/25 text-cyan-100 border-cyan-400/50"
+                : "bg-white/[0.08] text-slate-200 border-white/20 group-hover:bg-cyan-500/25 group-hover:text-cyan-100 group-hover:border-cyan-400/50"
             }`}
           >
             {String(index + 1).padStart(2, "0")}
           </div>
           <div className="min-w-0 space-y-1.5">
-            <h3 className="font-bold text-sm sm:text-base text-ink group-hover:text-sky-700 transition-colors">
+            <h3 className="font-bold text-sm sm:text-base text-white group-hover:text-cyan-200 transition-colors">
               {scenario.titleEN}{" "}
-              <span className="text-xs font-normal text-ink-faint">
+              <span className="text-xs font-normal text-slate-300">
                 ({scenario.titleVI})
               </span>
             </h3>
             <div className="flex flex-wrap items-center gap-1.5">
               <span
-                className={`text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-pill border ${getDifficultyBadgeClass(
+                className={`text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full border ${getDifficultyBadgeClass(
                   level
                 )}`}
               >
                 {level}
               </span>
               {isPlacementMatch && (
-                <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-pill bg-sky-500/10 text-sky-700 border border-sky-500/30">
+                <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-200 border border-cyan-400/40">
                   Đề xuất từ Placement
                 </span>
               )}
               {!isPlacementMatch && isRecommended && (
-                <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-pill bg-emerald-500/15 text-emerald-700 border border-emerald-500/30">
+                <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-200 border border-emerald-400/40">
                   Phù hợp với bạn
                 </span>
               )}
-              <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-pill bg-paper border border-ink/15 text-ink-muted">
+              <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-white/[0.06] border border-white/15 text-slate-300">
                 Vai: {scenario.roleVI}
               </span>
             </div>
-            <p className="text-xs text-ink-muted leading-relaxed">
+            <p className="text-xs text-slate-300 leading-relaxed">
               {scenario.descriptionVI}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-3 border-t border-paper-muted text-xs font-mono text-ink-muted">
+        <div className="flex items-center justify-between pt-3 border-t border-white/10 text-xs font-mono text-slate-300">
           <span>{scenario.turns.length} lượt hội thoại</span>
-          <span className="inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-accent font-sans font-semibold transition-all shadow-soft">
+          <span className="liquid-btn-primary inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-sans text-xs transition-all">
             <span>Thực hành</span>
             <ArrowRight
               className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform"
@@ -277,20 +309,20 @@ export function HomeOnboardingClient() {
   return (
     <div className="space-y-8">
       {showGuideBanner && (
-        <div className="bg-sky-500/10 border border-sky-500/30 rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-ink">
-            <HelpCircle className="w-4 h-4 text-sky-600 shrink-0" aria-hidden="true" />
+        <div className="bg-cyan-500/15 border border-cyan-400/35 backdrop-blur-xl rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-white">
+            <HelpCircle className="w-4 h-4 text-cyan-300 shrink-0" aria-hidden="true" />
             <span className="font-semibold">Lần đầu sử dụng?</span>
             <Link
               href="/guide"
-              className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-white hover:bg-sky-500/10 text-sky-700 border border-sky-500/30 text-xs font-semibold transition-colors"
+              className="liquid-glass-btn inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold transition-all"
             >
               Xem hướng dẫn 1 phút
             </Link>
-            <span className="text-ink-muted">hoặc</span>
+            <span className="text-slate-300">hoặc</span>
             <Link
               href="/placement"
-              className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-white hover:bg-sky-500/10 text-sky-700 border border-sky-500/30 text-xs font-semibold transition-colors"
+              className="liquid-glass-btn inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold transition-all"
             >
               Làm test xếp lớp 2 phút
             </Link>
@@ -299,7 +331,7 @@ export function HomeOnboardingClient() {
             type="button"
             onClick={handleDismissGuideBanner}
             aria-label="Đóng thông báo hướng dẫn"
-            className="p-1 rounded-pill text-ink-muted hover:text-ink hover:bg-white/60 transition-colors"
+            className="p-1 rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -308,31 +340,32 @@ export function HomeOnboardingClient() {
 
       <section
         aria-label="Bắt đầu luyện nói nhanh"
-        className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5"
+        className="liquid-glass-card p-5 sm:p-6 space-y-5"
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <span className="text-xs font-mono font-semibold text-ink-muted">
+          <span className="text-xs font-mono font-semibold text-slate-300">
             Chọn vai trò để gợi ý bài phù hợp:
           </span>
           <div className="flex flex-wrap items-center gap-2">
             {IT_ROLES.map((role) => {
               const Icon = ROLE_ICONS[role.id];
               const isSelected = role.id === activeRole.id;
+              const roleStyle = ROLE_ACTIVE_STYLES[role.id];
               return (
                 <button
                   key={role.id}
                   type="button"
                   onClick={() => handleSelectRole(role.id)}
                   aria-pressed={isSelected}
-                  className={`inline-flex items-center gap-1.5 rounded-pill px-3.5 py-1.5 text-xs font-semibold border transition-all ${
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold border transition-all ${
                     isSelected
-                      ? "bg-ink text-white border-ink shadow-soft"
-                      : "bg-paper text-ink border-ink/15 hover:border-ink/35 hover:bg-paper-muted"
+                      ? roleStyle.pill
+                      : "bg-white/[0.06] text-slate-200 border-white/15 hover:border-white/30 hover:bg-white/[0.12] hover:text-white"
                   }`}
                 >
                   <Icon
                     className={`w-3.5 h-3.5 shrink-0 ${
-                      isSelected ? "text-sky-300" : "text-ink"
+                      isSelected ? roleStyle.icon : "text-slate-300"
                     }`}
                     aria-hidden="true"
                   />
@@ -344,35 +377,35 @@ export function HomeOnboardingClient() {
         </div>
 
         {recommendedScenario ? (
-          <div className="pt-4 border-t border-paper-muted flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="pt-4 border-t border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1.5">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-mono font-semibold text-sky-700 uppercase tracking-wide">
+                <span className="text-xs font-mono font-semibold text-cyan-300 uppercase tracking-wide">
                   {placement
                     ? `Đề xuất theo trình độ ${placement.level} · ~3 phút`
                     : `Đề xuất cho ${activeRole.label} · ~3 phút`}
                 </span>
                 <span
-                  className={`text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-pill border ${getDifficultyBadgeClass(
+                  className={`text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full border ${getDifficultyBadgeClass(
                     getScenarioDifficulty(recommendedScenario)
                   )}`}
                 >
                   {getScenarioDifficulty(recommendedScenario)}
                 </span>
               </div>
-              <h2 className="text-lg font-bold tracking-tight text-ink">
+              <h2 className="text-lg font-bold tracking-tight text-white">
                 {recommendedScenario.titleEN}{" "}
-                <span className="text-sm font-normal text-ink-faint">
+                <span className="text-sm font-normal text-slate-300">
                   ({recommendedScenario.titleVI})
                 </span>
               </h2>
-              <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                 {recommendedScenario.descriptionVI}
               </p>
               <div className="pt-1">
                 <Link
                   href="/placement"
-                  className="inline-flex items-center gap-1.5 rounded-pill px-3 py-1 bg-sky-500/10 hover:bg-sky-500/20 text-sky-700 border border-sky-500/30 text-xs font-semibold transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-200 border border-cyan-400/40 text-xs font-semibold transition-colors"
                 >
                   <Compass className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                   <span>
@@ -386,7 +419,7 @@ export function HomeOnboardingClient() {
 
             <Link
               href={`/practice/${recommendedScenario.id}`}
-              className="w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-pill bg-accent hover:bg-accent-hover text-white font-bold text-sm sm:text-base shadow-card ring-2 ring-accent/25 hover:scale-[1.02] transition-all"
+              className="liquid-btn-primary w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full text-sm sm:text-base hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
               <Play className="w-4 h-4 fill-white shrink-0" aria-hidden="true" />
               <span>Bắt đầu luyện ngay</span>
@@ -394,7 +427,7 @@ export function HomeOnboardingClient() {
             </Link>
           </div>
         ) : (
-          <div className="pt-4 border-t border-paper-muted text-xs text-ink-muted">
+          <div className="pt-4 border-t border-white/10 text-xs text-slate-300">
             Hiện chưa có kịch bản nào đang mở.
           </div>
         )}
@@ -403,14 +436,14 @@ export function HomeOnboardingClient() {
       <section id="scenarios" className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-lg sm:text-xl font-bold tracking-tight text-ink">
+            <h2 className="text-lg sm:text-xl font-bold tracking-tight text-white">
               Tất cả tình huống ({filteredScenarios.length})
             </h2>
-            <p className="text-xs text-ink-muted mt-0.5">
+            <p className="text-xs text-slate-300 mt-0.5">
               Chọn cấp độ Fresher, Junior hoặc Senior để luyện phản xạ nói tiếng Anh
             </p>
           </div>
-          <span className="text-xs font-mono text-ink-muted bg-paper-muted px-3 py-1 rounded-pill border border-ink/15 shrink-0">
+          <span className="text-xs font-mono text-slate-200 bg-white/[0.08] px-3 py-1 rounded-full border border-white/15 shrink-0">
             {totalTurnsCount} Lượt luyện
           </span>
         </div>
@@ -424,10 +457,10 @@ export function HomeOnboardingClient() {
                 type="button"
                 onClick={() => setDifficultyFilter(level)}
                 aria-pressed={isActive}
-                className={`px-3.5 py-1.5 rounded-pill text-xs font-mono font-semibold border transition-all ${
+                className={`px-3.5 py-1.5 rounded-full text-xs font-mono font-semibold border transition-all ${
                   isActive
-                    ? "bg-ink text-white border-ink shadow-soft"
-                    : "bg-white text-ink border-ink/15 hover:bg-paper-muted"
+                    ? getDifficultyFilterActiveClass(level)
+                    : "bg-white/[0.06] text-slate-200 border-white/15 hover:bg-white/[0.12] hover:border-white/30 hover:text-white"
                 }`}
               >
                 {level === "ALL"
@@ -445,11 +478,11 @@ export function HomeOnboardingClient() {
               if (items.length === 0) return null;
               return (
                 <div key={level} className="space-y-3">
-                  <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-ink/10">
-                    <h3 className="text-sm sm:text-base font-bold tracking-tight text-ink">
+                  <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/10">
+                    <h3 className="text-sm sm:text-base font-bold tracking-tight text-white">
                       {level} · {subtitle}
                     </h3>
-                    <span className="text-xs font-mono text-ink-muted">
+                    <span className="text-xs font-mono text-slate-300">
                       {items.length} tình huống
                     </span>
                   </div>

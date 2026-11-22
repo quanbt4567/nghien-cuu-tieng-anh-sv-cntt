@@ -195,85 +195,80 @@ export function ScenarioSummary({
 
   return (
     <div className="space-y-6">
-      {/* 1. Shareable Snapshot Result Card */}
-      <div className="bg-white border border-ink/15 rounded-2xl p-6 sm:p-8 shadow-soft space-y-6">
-        {/* SpeakIT Snapshot Header Stamp */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-ink/10">
+      <div className="liquid-glass-card p-6 sm:p-8 space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-white/10">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-accent" />
-            <span className="font-mono text-xs font-bold tracking-wider uppercase text-ink">
+            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
+            <span className="font-mono text-xs font-bold tracking-wider uppercase text-white">
               SpeakIT
             </span>
-            <span className="text-[11px] font-mono text-ink-muted">
+            <span className="text-[11px] font-mono text-slate-300">
               • Phiếu kết quả luyện nói
             </span>
           </div>
 
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="px-2.5 py-0.5 rounded-pill text-[11px] font-mono font-semibold bg-paper border border-ink/15 text-ink">
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-white/[0.08] border border-white/15 text-slate-200">
               {roleConfig.label}
             </span>
-            <span className="px-2.5 py-0.5 rounded-pill text-[11px] font-mono font-semibold bg-ink text-white border border-ink">
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-violet-500/25 text-violet-100 border border-violet-400/50">
               {devTitle.title}
             </span>
           </div>
         </div>
 
-        {/* Completion Heading */}
         <div className="text-center space-y-2.5">
-          <div className="w-14 h-14 rounded-full bg-accent text-white flex items-center justify-center mx-auto border border-accent/20 shadow-soft">
+          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-cyan-500/35 to-blue-600/35 text-cyan-200 flex items-center justify-center mx-auto border border-cyan-300/50 shadow-[0_0_24px_rgba(6,182,212,0.35)]">
             <Award className="w-7 h-7" />
           </div>
-          <span className="block text-xs font-mono font-bold uppercase tracking-wider text-accent">
+          <span className="block text-xs font-mono font-bold uppercase tracking-wider text-cyan-300">
             Hoàn thành {totalTurns}/{totalTurns} lượt luyện tập
           </span>
-          <h2 className="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
             {scenarioTitle}
           </h2>
-          <p className="text-xs sm:text-sm text-ink-muted max-w-md mx-auto">
+          <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto">
             Phiên đối thoại đã được lưu cục bộ để cập nhật điểm rèn luyện và kế hoạch 7 ngày.
           </p>
         </div>
 
-        {/* Aggregate Stats */}
         <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
-          <div className="p-3.5 bg-paper rounded-xl border border-ink/15 text-center">
-            <div className="text-2xl font-mono font-bold text-ink">
+          <div className="liquid-glass-card-lite p-3.5 text-center">
+            <div className="text-2xl font-mono font-bold text-white">
               {averageScore}
-              <span className="text-xs font-normal text-ink-muted">/100</span>
+              <span className="text-xs font-normal text-slate-300">/100</span>
             </div>
-            <div className="text-[11px] text-ink-muted mt-0.5">
+            <div className="text-[11px] text-slate-300 mt-0.5">
               Điểm trung bình
             </div>
           </div>
-          <div className="p-3.5 bg-paper rounded-xl border border-ink/15 text-center">
-            <div className="text-2xl font-mono font-bold text-ink">
+          <div className="liquid-glass-card-lite p-3.5 text-center">
+            <div className="text-2xl font-mono font-bold text-cyan-200">
               {totalKeywordsUsed}
             </div>
-            <div className="text-[11px] text-ink-muted mt-0.5">
+            <div className="text-[11px] text-slate-300 mt-0.5">
               Từ khóa kỹ thuật đã dùng
             </div>
           </div>
         </div>
 
-        {/* Reward Badge (+XXX điểm -> IT-Coin) */}
-        <div className="max-w-md mx-auto bg-paper border border-ink/15 rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3">
+        <div className="max-w-md mx-auto liquid-glass-card-lite p-3.5 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-accent-light border border-accent/30 text-accent flex items-center justify-center shrink-0">
+            <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 flex items-center justify-center shrink-0">
               <Coins className="w-4 h-4" />
             </div>
             <div className="text-left">
-              <div className="text-xs sm:text-sm font-mono font-bold text-ink">
+              <div className="text-xs sm:text-sm font-mono font-bold text-white">
                 +{earnedPoints} điểm → {coins} IT-Coin
               </div>
-              <div className="text-[11px] text-ink-muted">
+              <div className="text-[11px] text-slate-300">
                 Còn {remainingForCoin} điểm để nhận +1 IT-Coin
               </div>
             </div>
           </div>
 
-          <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill bg-white border border-ink/15 text-[11px] font-mono font-semibold text-ink">
-            <Flame className="w-3.5 h-3.5 text-accent" />
+          <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-500/15 border border-amber-400/35 text-[11px] font-mono font-semibold text-amber-200">
+            <Flame className="w-3.5 h-3.5 text-amber-400" />
             <span>{gamification.streakDays} ngày</span>
           </div>
         </div>
@@ -282,10 +277,8 @@ export function ScenarioSummary({
           <button
             type="button"
             onClick={handleCopyResult}
-            className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-pill font-medium text-xs border transition-all ${
-              copied
-                ? "bg-emerald-600 text-white border-emerald-600 shadow-soft"
-                : "bg-paper text-ink-muted border-ink/15 hover:bg-paper-muted hover:text-ink"
+            className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full text-xs transition-all ${
+              copied ? "liquid-btn-success" : "liquid-glass-btn font-medium"
             }`}
           >
             {copied ? (
@@ -299,15 +292,15 @@ export function ScenarioSummary({
           <button
             type="button"
             onClick={onRetry}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-pill bg-ink text-white font-bold text-xs sm:text-sm border border-ink shadow-card hover:bg-ink-muted active:scale-[0.98] transition-all"
+            className="liquid-glass-btn w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-bold text-xs sm:text-sm transition-all"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
+            <RotateCcw className="w-3.5 h-3.5 text-cyan-300" />
             <span>Luyện lại kịch bản này</span>
           </button>
 
           <Link
             href="/scenarios"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-pill bg-accent text-white font-bold text-xs sm:text-sm border border-accent shadow-card ring-2 ring-accent/20 hover:bg-accent-hover hover:ring-accent/35 active:scale-[0.98] transition-all"
+            className="liquid-btn-primary w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm active:scale-[0.98] transition-all"
           >
             <span>Chọn kịch bản khác</span>
             <ArrowRight className="w-4 h-4" />
@@ -315,22 +308,21 @@ export function ScenarioSummary({
         </div>
 
         {copyError && (
-          <div className="flex items-center justify-center gap-1.5 text-xs text-accent font-medium bg-accent-light px-3 py-2 rounded-xl border border-accent/40">
-            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+          <div className="flex items-center justify-center gap-1.5 text-xs text-rose-200 font-medium bg-rose-500/15 px-3 py-2 rounded-xl border border-rose-400/40">
+            <AlertCircle className="w-3.5 h-3.5 shrink-0 text-rose-400" />
             <span>{copyError}</span>
           </div>
         )}
       </div>
 
-      {/* 2. Auto-suggested 3 Weak Vocabulary Terms */}
-      <div className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
+      <div className="liquid-glass-card p-5 sm:p-6 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="space-y-0.5">
-            <h3 className="text-sm sm:text-base font-bold text-ink flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-accent" />
+            <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+              <BookOpen className="w-4 h-4 text-violet-400" />
               <span>3 Từ vựng trọng tâm cần ôn ngay</span>
             </h3>
-            <p className="text-xs text-ink-muted">
+            <p className="text-xs text-slate-300">
               {effectiveMissedKeywords.length > 0
                 ? "Gợi ý ưu tiên từ các từ khóa bạn chưa dùng trong phiên vừa rồi."
                 : "Các thuật ngữ cốt lõi gắn với kịch bản bạn vừa luyện."}
@@ -345,15 +337,15 @@ export function ScenarioSummary({
               return (
                 <div
                   key={item.id}
-                  className="bg-paper border border-ink/15 rounded-xl p-3.5 flex flex-col justify-between gap-2.5"
+                  className="liquid-glass-card-lite p-3.5 flex flex-col justify-between gap-2.5"
                 >
                   <div className="space-y-1">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <div className="text-sm font-mono font-bold text-ink">
+                        <div className="text-sm font-mono font-bold text-white">
                           {item.term}
                         </div>
-                        <div className="text-xs font-ipa text-accent font-medium">
+                        <div className="text-xs font-ipa text-cyan-300 font-medium">
                           {item.phonetic}
                         </div>
                       </div>
@@ -362,10 +354,10 @@ export function ScenarioSummary({
                         onClick={() => handleSpeakTerm(item)}
                         aria-label={`Phát âm từ ${item.term}`}
                         title={`Nghe phát âm "${item.term}"`}
-                        className={`w-8 h-8 rounded-full border flex items-center justify-center shrink-0 transition-colors ${
+                        className={`w-8 h-8 rounded-full border flex items-center justify-center shrink-0 transition-all ${
                           isSpeaking
-                            ? "bg-accent text-white border-accent"
-                            : "bg-white text-ink border-ink/15 hover:bg-accent hover:text-white"
+                            ? "liquid-btn-danger"
+                            : "bg-cyan-500/20 text-cyan-200 border-cyan-400/50 hover:bg-cyan-500/30"
                         }`}
                       >
                         {isSpeaking ? (
@@ -375,7 +367,7 @@ export function ScenarioSummary({
                         )}
                       </button>
                     </div>
-                    <p className="text-xs text-ink-muted leading-relaxed pt-1">
+                    <p className="text-xs text-slate-300 leading-relaxed pt-1">
                       {item.meaningVI}
                     </p>
                   </div>
@@ -384,30 +376,30 @@ export function ScenarioSummary({
             })}
           </div>
         ) : (
-          <div className="bg-paper border border-ink/15 rounded-xl p-4 text-xs text-ink-muted">
+          <div className="liquid-glass-card-lite p-4 text-xs text-slate-300">
             Chưa có từ vựng gợi ý trong thư viện hiện tại.
           </div>
         )}
 
         {ttsError && (
-          <div className="flex items-center gap-1.5 text-xs text-accent font-medium bg-accent-light px-3 py-2 rounded-xl border border-accent/40">
-            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+          <div className="flex items-center gap-1.5 text-xs text-rose-200 font-medium bg-rose-500/15 px-3 py-2 rounded-xl border border-rose-400/40">
+            <AlertCircle className="w-3.5 h-3.5 shrink-0 text-rose-400" />
             <span>{ttsError}</span>
           </div>
         )}
 
-        <div className="flex flex-wrap items-center justify-center sm:justify-between gap-2.5 pt-3 border-t border-paper-muted">
+        <div className="flex flex-wrap items-center justify-center sm:justify-between gap-2.5 pt-3 border-t border-white/10">
           <Link
             href="/vocabulary"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill bg-paper text-ink-muted text-xs font-medium border border-ink/15 hover:bg-paper-muted hover:text-ink transition-colors"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium transition-all"
           >
-            <BookOpen className="w-3.5 h-3.5 text-ink-muted" />
+            <BookOpen className="w-3.5 h-3.5 text-violet-300" />
             <span>Ôn tập từ vựng</span>
           </Link>
 
           <Link
             href="/arena"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-pill bg-accent text-white text-xs sm:text-sm font-bold border border-accent shadow-card ring-2 ring-accent/20 hover:bg-accent-hover hover:ring-accent/35 active:scale-[0.98] transition-all"
+            className="liquid-btn-primary inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm active:scale-[0.98] transition-all"
           >
             <Swords className="w-4 h-4" />
             <span>Thử thách IT Arena</span>
@@ -415,9 +407,9 @@ export function ScenarioSummary({
 
           <Link
             href="/progress"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill bg-paper text-ink-muted text-xs font-medium border border-ink/15 hover:bg-paper-muted hover:text-ink transition-colors"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium transition-all"
           >
-            <TrendingUp className="w-3.5 h-3.5 text-ink-muted" />
+            <TrendingUp className="w-3.5 h-3.5 text-emerald-300" />
             <span>Tiến độ & 7 ngày</span>
           </Link>
         </div>

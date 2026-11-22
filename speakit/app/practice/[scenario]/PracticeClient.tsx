@@ -209,8 +209,8 @@ export default function PracticePage() {
   if (!scenario && isContentSyncing) {
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center">
-        <div className="bg-white border border-ink/15 rounded-2xl p-8 shadow-soft inline-flex items-center gap-3 text-sm font-semibold text-ink">
-          <Loader2 className="w-5 h-5 animate-spin text-sky-600" />
+        <div className="liquid-glass-card p-8 inline-flex items-center gap-3 text-sm font-semibold text-white">
+          <Loader2 className="w-5 h-5 animate-spin text-cyan-400" />
           <span>Đang tải kịch bản luyện tập...</span>
         </div>
       </div>
@@ -220,18 +220,18 @@ export default function PracticePage() {
   if (!scenario || scenario.turns.length === 0) {
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center space-y-4">
-        <div className="w-12 h-12 rounded-pill bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto border border-rose-500/30 shadow-soft">
+        <div className="w-12 h-12 rounded-full bg-rose-500/20 text-rose-300 flex items-center justify-center mx-auto border border-rose-400/40">
           <AlertCircle className="w-6 h-6" />
         </div>
-        <h1 className="text-xl font-bold text-ink">
+        <h1 className="text-xl font-bold text-white">
           Không tìm thấy tình huống làm việc này
         </h1>
-        <p className="text-sm text-ink-muted">
+        <p className="text-sm text-slate-300">
           Kịch bản bạn đang tìm kiếm không tồn tại hoặc đường dẫn không đúng.
         </p>
         <Link
           href="/"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-ink text-white font-medium text-xs border border-ink shadow-soft hover:bg-ink-muted"
+          className="liquid-btn-primary inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs transition-all"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Quay lại danh sách kịch bản</span>
@@ -412,20 +412,20 @@ export default function PracticePage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 sm:py-8 space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-white border border-ink/15 rounded-2xl px-4 py-3 shadow-soft">
+      <div className="liquid-glass-card flex flex-wrap items-center justify-between gap-3 px-4 py-3">
         <div className="flex items-center gap-3 min-w-0">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper text-ink text-xs font-medium border border-ink/15 hover:bg-paper-muted transition-all shrink-0"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all shrink-0"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
+            <ArrowLeft className="w-3.5 h-3.5 text-cyan-300" />
             <span>Kịch bản</span>
           </Link>
           <div className="min-w-0">
-            <h1 className="text-sm sm:text-base font-bold text-ink leading-tight">
+            <h1 className="text-sm sm:text-base font-bold text-white leading-tight">
               {scenario.titleVI}
             </h1>
-            <p className="text-[11px] font-mono text-ink-muted">
+            <p className="text-[11px] font-mono text-slate-300">
               {scenario.titleEN}
             </p>
           </div>
@@ -439,15 +439,15 @@ export default function PracticePage() {
               return (
                 <span
                   key={turn.turnIndex}
-                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-pill text-xs font-mono font-bold border transition-all ${
+                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono font-bold border transition-all ${
                     isCurrent
-                      ? "bg-ink text-white border-ink shadow-soft"
+                      ? "bg-cyan-500/25 text-cyan-100 border-cyan-400/55 shadow-[0_0_14px_rgba(6,182,212,0.3)]"
                       : isDone
-                      ? "bg-emerald-500/15 text-emerald-700 border-emerald-500/30"
-                      : "bg-paper text-ink-faint border-ink/10"
+                      ? "bg-emerald-500/20 text-emerald-200 border-emerald-400/45"
+                      : "bg-white/[0.06] text-slate-400 border-white/15"
                   }`}
                 >
-                  {isDone && <Check className="w-3 h-3 text-emerald-500 stroke-[3]" />}
+                  {isDone && <Check className="w-3 h-3 text-emerald-300 stroke-[3]" />}
                   <span>
                     Turn {idx + 1}/{scenario.turns.length}
                   </span>
@@ -457,16 +457,16 @@ export default function PracticePage() {
           </div>
 
           <div className="inline-flex items-center gap-1.5">
-            <label className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-pill bg-paper border border-ink/15 text-xs text-ink">
-              <Volume2 className="w-3.5 h-3.5 text-sky-600 shrink-0" />
+            <label className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-950/60 border border-white/20 text-xs text-white">
+              <Volume2 className="w-3.5 h-3.5 text-cyan-300 shrink-0" />
               <select
                 aria-label="AI Voice Persona"
                 value={voicePersona}
                 onChange={(e) => handleVoiceChange(normalizeTtsPersona(e.target.value))}
-                className="bg-transparent text-xs font-medium text-ink focus:outline-none cursor-pointer pr-1"
+                className="bg-transparent text-xs font-medium text-white focus:outline-none cursor-pointer pr-1"
               >
                 {TTS_VOICE_PERSONAS.map((persona) => (
-                  <option key={persona.id} value={persona.id}>
+                  <option key={persona.id} value={persona.id} className="bg-slate-950 text-white">
                     {persona.label}
                   </option>
                 ))}
@@ -492,7 +492,11 @@ export default function PracticePage() {
               }}
               title="Nghe thử giọng"
               aria-label="Nghe thử giọng"
-              className="w-8 h-8 rounded-full bg-paper border border-ink/20 flex items-center justify-center text-ink hover:bg-accent hover:text-white shadow-soft shadow-hard-press transition-colors"
+              className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                isPreviewingVoice
+                  ? "liquid-btn-danger"
+                  : "liquid-glass-btn text-cyan-200"
+              }`}
             >
               {isPreviewingVoice ? (
                 <VolumeX className="w-3.5 h-3.5" />
@@ -526,10 +530,10 @@ export default function PracticePage() {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           <div className="lg:col-span-6 space-y-5">
-            <div className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-paper-muted pb-3.5">
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-sky-700 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-sky-500" />
+            <div className="liquid-glass-card p-5 sm:p-6 space-y-5">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3.5">
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-300 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
                   AI Interviewer • Lượt {safeTurnIndex + 1}/{scenario.turns.length}
                 </span>
                 <div className="flex flex-wrap items-center gap-2">
@@ -537,7 +541,7 @@ export default function PracticePage() {
                     <button
                       onClick={stopPromptAudio}
                       type="button"
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-pill bg-accent text-white border border-accent shadow-soft"
+                      className="liquid-btn-danger flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full transition-all"
                       title="Dừng phát âm"
                     >
                       <VolumeX className="w-3.5 h-3.5" />
@@ -547,7 +551,7 @@ export default function PracticePage() {
                     <button
                       onClick={() => playPromptAudio({ slowMode: false })}
                       type="button"
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-pill bg-paper-card text-ink border border-ink/15 shadow-soft hover:bg-paper-muted"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full bg-cyan-500/20 border border-cyan-400/50 text-cyan-200 hover:bg-cyan-500/30 transition-all"
                       title="Nghe lại câu hỏi"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
@@ -564,10 +568,10 @@ export default function PracticePage() {
                       }
                     }}
                     type="button"
-                    className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-pill border shadow-soft transition-all ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border transition-all ${
                       isPlayingPrompt && isSlowPlaying
-                        ? "bg-amber-500 text-white border-amber-600"
-                        : "bg-amber-50 text-amber-900 border-amber-300 hover:bg-amber-100"
+                        ? "bg-violet-500/40 border-violet-300/70 text-white shadow-[0_0_16px_rgba(139,92,246,0.45)]"
+                        : "bg-violet-500/20 border-violet-400/50 text-violet-200 hover:bg-violet-500/30"
                     }`}
                     title="Nghe chậm từng từ"
                   >
@@ -579,7 +583,7 @@ export default function PracticePage() {
                     <span>Nghe chậm từng từ (Slow)</span>
                   </button>
 
-                  <div className="flex items-center gap-1 bg-paper-card p-0.5 rounded-pill border border-ink/15 shadow-soft">
+                  <div className="flex items-center gap-1 bg-slate-950/60 p-0.5 rounded-full border border-white/15">
                     {([0.8, 1.0, 1.2] as const).map((r) => (
                       <button
                         key={r}
@@ -590,10 +594,10 @@ export default function PracticePage() {
                             playPromptAudio({ rate: r, slowMode: isSlowPlaying });
                           }
                         }}
-                        className={`px-2 py-0.5 text-[11px] font-mono font-semibold rounded-pill transition-all ${
+                        className={`px-2 py-0.5 text-[11px] font-mono font-semibold rounded-full border transition-all ${
                           promptRate === r
-                            ? "bg-ink text-white"
-                            : "text-ink-muted hover:text-ink"
+                            ? "bg-cyan-500/30 text-cyan-100 border-cyan-400/50"
+                            : "text-slate-300 border-transparent hover:text-white"
                         }`}
                       >
                         {r}x
@@ -604,10 +608,10 @@ export default function PracticePage() {
               </div>
 
               <div className="space-y-1.5">
-                <div className="text-xs font-mono text-ink-muted">
+                <div className="text-xs font-mono text-slate-300">
                   Vai của bạn: {scenario.roleVI}
                 </div>
-                <div className="text-lg sm:text-xl font-bold text-ink leading-snug">
+                <div className="text-lg sm:text-xl font-bold text-white leading-snug">
                   &ldquo;
                   {(() => {
                     const promptWords = currentTurn.questionEN
@@ -632,7 +636,7 @@ export default function PracticePage() {
                   })()}
                   &rdquo;
                 </div>
-                <p className="text-[11px] text-ink-muted">
+                <p className="text-[11px] text-slate-300">
                   💡 Mẹo cho người mới: Chạm vào từ tiếng Anh gạch chân để xem nghĩa tiếng Việt ngay.
                 </p>
               </div>
@@ -641,11 +645,11 @@ export default function PracticePage() {
                 <button
                   type="button"
                   onClick={() => setShowHint(!showHint)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-paper border border-ink/15 text-xs font-mono font-medium text-ink hover:bg-paper-muted shadow-soft transition-all"
+                  className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-medium transition-all"
                 >
                   <Lightbulb
                     className={`w-3.5 h-3.5 ${
-                      showHint ? "text-sky-600" : "text-ink-muted"
+                      showHint ? "text-amber-300" : "text-cyan-300"
                     }`}
                   />
                   <span>
@@ -654,10 +658,10 @@ export default function PracticePage() {
                 </button>
 
                 {showHint && (
-                  <div className="mt-3 space-y-3 pt-3 border-t border-paper-muted">
+                  <div className="mt-3 space-y-3 pt-3 border-t border-white/10">
                     <div className="space-y-2">
-                      <div className="flex items-center gap-1.5 text-xs font-semibold text-ink">
-                        <Tag className="w-3.5 h-3.5 text-sky-600" />
+                      <div className="flex items-center gap-1.5 text-xs font-semibold text-white">
+                        <Tag className="w-3.5 h-3.5 text-cyan-300" />
                         <span>Từ khóa gợi ý nên dùng ({currentTurn.keywords.length}):</span>
                       </div>
                       <div className="flex flex-wrap gap-1.5">
@@ -667,11 +671,11 @@ export default function PracticePage() {
                             <span
                               key={kw}
                               title={gloss ?? undefined}
-                              className="px-2.5 py-1 text-xs bg-paper border border-ink/15 rounded-pill text-ink inline-flex items-center gap-1.5"
+                              className="px-2.5 py-1 text-xs bg-white/[0.08] border border-white/15 rounded-full text-white inline-flex items-center gap-1.5"
                             >
                               <span className="font-mono font-semibold">{kw}</span>
                               {gloss && (
-                                <span className="text-[11px] text-ink-muted">
+                                <span className="text-[11px] text-slate-300">
                                   ({gloss})
                                 </span>
                               )}
@@ -681,10 +685,10 @@ export default function PracticePage() {
                       </div>
                     </div>
 
-                    <div className="bg-sky-500/10 border border-sky-500/30 rounded-xl p-3.5 flex items-start gap-2.5 text-xs text-ink leading-relaxed">
-                      <Lightbulb className="w-4 h-4 text-sky-500 shrink-0 mt-0.5" />
+                    <div className="bg-cyan-500/15 border border-cyan-400/35 rounded-xl p-3.5 flex items-start gap-2.5 text-xs text-slate-100 leading-relaxed">
+                      <Lightbulb className="w-4 h-4 text-amber-300 shrink-0 mt-0.5" />
                       <div>
-                        <strong className="font-semibold text-sky-700">
+                        <strong className="font-semibold text-cyan-200">
                           Gợi ý cách trả lời:{" "}
                         </strong>
                         <span>{currentTurn.hintVI}</span>
@@ -695,7 +699,7 @@ export default function PracticePage() {
               </div>
             </div>
 
-            <div className="bg-white border border-ink/15 rounded-2xl p-5 sm:p-6 shadow-soft space-y-5">
+            <div className="liquid-glass-card p-5 sm:p-6 space-y-5">
               <div className="py-2">
                 <MicButton
                   isRecording={isRecording}
@@ -706,17 +710,17 @@ export default function PracticePage() {
                 />
               </div>
 
-              <div className="space-y-3 pt-4 border-t border-paper-muted">
+              <div className="space-y-3 pt-4 border-t border-white/10">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-ink">
-                    <Keyboard className="w-4 h-4 text-ink-muted" />
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-white">
+                    <Keyboard className="w-4 h-4 text-cyan-300" />
                     <span>
                       {isMicDenied
                         ? "Chế độ gõ văn bản (Microphone bị từ chối)"
                         : "Hoặc gõ / chỉnh sửa câu trả lời tiếng Anh:"}
                     </span>
                   </div>
-                  <span className="text-[11px] font-mono text-ink-muted">
+                  <span className="text-[11px] font-mono text-slate-300">
                     {transcript.trim() ? transcript.trim().split(/\s+/).length : 0} từ
                   </span>
                 </div>
@@ -740,7 +744,7 @@ export default function PracticePage() {
                   disabled={isEvaluating || isRecording || Boolean(evalResult)}
                   rows={3}
                   placeholder="Gõ câu trả lời tiếng Anh tại đây (hoặc nhấn Ghi âm câu trả lời ở trên)..."
-                  className="w-full p-3.5 text-sm bg-paper border border-ink/15 rounded-xl text-ink placeholder:text-ink-faint focus:outline-none focus:border-ink resize-none transition-colors disabled:opacity-60"
+                  className="liquid-glass-input w-full p-3.5 text-sm rounded-xl resize-none transition-colors disabled:opacity-60"
                 />
 
                 {!evalResult && (
@@ -749,7 +753,7 @@ export default function PracticePage() {
                       type="button"
                       onClick={() => setTranscript("")}
                       disabled={!transcript || isEvaluating || isRecording}
-                      className="text-xs font-medium text-ink-muted hover:text-ink hover:bg-paper-muted px-2.5 py-1.5 rounded-pill disabled:opacity-40 disabled:pointer-events-none flex items-center gap-1 transition-colors"
+                      className="text-xs font-medium text-slate-300 hover:text-white hover:bg-white/10 px-2.5 py-1.5 rounded-full disabled:opacity-40 disabled:pointer-events-none flex items-center gap-1 transition-colors"
                     >
                       <RotateCcw className="w-3 h-3" />
                       <span>Xóa chữ</span>
@@ -759,10 +763,10 @@ export default function PracticePage() {
                       type="button"
                       onClick={handleSubmitAnswer}
                       disabled={!transcript.trim() || isEvaluating || isRecording}
-                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-pill text-sm border transition-all ${
+                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm transition-all ${
                         transcript.trim() && !isEvaluating && !isRecording
-                          ? "bg-accent text-white font-bold border-accent shadow-card ring-2 ring-accent/20 hover:bg-accent-hover hover:ring-accent/35 active:scale-[0.98]"
-                          : "bg-paper-muted text-ink-faint font-semibold border-ink/15 cursor-not-allowed shadow-none"
+                          ? "liquid-btn-success active:scale-[0.98]"
+                          : "bg-white/[0.06] text-slate-400 font-semibold border border-white/10 cursor-not-allowed shadow-none"
                       }`}
                     >
                       <span>Gửi câu trả lời</span>
@@ -776,20 +780,20 @@ export default function PracticePage() {
 
           <div className="lg:col-span-6 space-y-4">
             {turnScores.length > 0 && (
-              <div className="bg-white border border-ink/15 rounded-2xl px-4 py-3 shadow-soft flex flex-wrap items-center justify-between gap-2">
-                <span className="text-xs font-mono font-bold text-ink-muted uppercase">
+              <div className="liquid-glass-card-lite px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+                <span className="text-xs font-mono font-bold text-slate-300 uppercase">
                   Điểm từng lượt:
                 </span>
                 <div className="flex flex-wrap items-center gap-2">
                   {turnScores.map((score, idx) => (
                     <span
                       key={idx}
-                      className={`px-2.5 py-0.5 rounded-pill text-xs font-mono font-bold border ${
+                      className={`px-2.5 py-0.5 rounded-full text-xs font-mono font-bold border ${
                         score >= 80
-                          ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-700"
+                          ? "bg-emerald-500/20 border-emerald-400/45 text-emerald-200"
                           : score >= 60
-                          ? "bg-sky-500/10 border-sky-500/30 text-sky-700"
-                          : "bg-rose-500/10 border-rose-500/30 text-rose-700"
+                          ? "bg-cyan-500/20 border-cyan-400/45 text-cyan-200"
+                          : "bg-rose-500/20 border-rose-400/45 text-rose-200"
                       }`}
                     >
                       Turn {idx + 1}: {score}
@@ -800,20 +804,20 @@ export default function PracticePage() {
             )}
 
             {isEvaluating && (
-              <div className="bg-white border border-ink/15 rounded-2xl p-8 shadow-soft flex flex-col items-center justify-center gap-3 text-center">
-                <Loader2 className="w-6 h-6 animate-spin text-sky-600" />
-                <div className="text-sm font-semibold text-ink">
+              <div className="liquid-glass-card p-8 flex flex-col items-center justify-center gap-3 text-center">
+                <Loader2 className="w-6 h-6 animate-spin text-cyan-400" />
+                <div className="text-sm font-semibold text-white">
                   Đang phân tích từ khóa và ngữ pháp câu trả lời...
                 </div>
-                <p className="text-xs text-ink-muted">
+                <p className="text-xs text-slate-300">
                   Hệ thống chấm theo tỷ lệ 40% Từ khóa • 30% Đầy đủ • 30% Ngữ pháp
                 </p>
               </div>
             )}
 
             {evaluationError && (
-              <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 text-xs text-rose-700 font-semibold flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
+              <div className="bg-rose-500/15 border border-rose-400/40 rounded-2xl p-4 text-xs text-rose-200 font-semibold flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
                 <span>{evaluationError}</span>
               </div>
             )}
@@ -828,22 +832,22 @@ export default function PracticePage() {
               />
             ) : (
               !isEvaluating && (
-                <div className="bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-4">
-                  <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-sky-700">
-                    <Sparkles className="w-4 h-4 text-sky-500" />
+                <div className="liquid-glass-card p-6 space-y-4">
+                  <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-cyan-300">
+                    <Sparkles className="w-4 h-4 text-cyan-400" />
                     <span>Bảng đánh giá & Gợi ý tự nhiên</span>
                   </div>
-                  <p className="text-sm text-ink-muted leading-relaxed">
-                    Nhấn <strong className="text-ink">Ghi âm câu trả lời</strong> ở cột bên trái (hoặc gõ câu tiếng Anh) rồi gửi để xem điểm chi tiết, từ khóa đạt chuẩn và cách diễn đạt tự nhiên hơn.
+                  <p className="text-sm text-slate-300 leading-relaxed">
+                    Nhấn <strong className="text-white">Ghi âm câu trả lời</strong> ở cột bên trái (hoặc gõ câu tiếng Anh) rồi gửi để xem điểm chi tiết, từ khóa đạt chuẩn và cách diễn đạt tự nhiên hơn.
                   </p>
                   <div className="grid grid-cols-3 gap-1.5 sm:gap-2 pt-1 text-center font-mono">
-                    <div className="whitespace-nowrap flex items-center justify-center leading-tight py-2.5 px-1.5 sm:px-2.5 text-[10px] sm:text-[11px] rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 font-semibold">
+                    <div className="whitespace-nowrap flex items-center justify-center leading-tight py-2.5 px-1.5 sm:px-2.5 text-[10px] sm:text-[11px] rounded-xl bg-emerald-500/20 border border-emerald-400/40 text-emerald-200 font-semibold">
                       40% Từ khóa
                     </div>
-                    <div className="whitespace-nowrap flex items-center justify-center leading-tight py-2.5 px-1.5 sm:px-2.5 text-[10px] sm:text-[11px] rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-700 font-semibold">
+                    <div className="whitespace-nowrap flex items-center justify-center leading-tight py-2.5 px-1.5 sm:px-2.5 text-[10px] sm:text-[11px] rounded-xl bg-cyan-500/20 border border-cyan-400/40 text-cyan-200 font-semibold">
                       30% Đầy đủ
                     </div>
-                    <div className="whitespace-nowrap flex items-center justify-center leading-tight py-2.5 px-1.5 sm:px-2.5 text-[10px] sm:text-[11px] rounded-xl bg-paper border border-ink/15 text-ink font-semibold">
+                    <div className="whitespace-nowrap flex items-center justify-center leading-tight py-2.5 px-1.5 sm:px-2.5 text-[10px] sm:text-[11px] rounded-xl bg-violet-500/20 border border-violet-400/40 text-violet-200 font-semibold">
                       30% Ngữ pháp
                     </div>
                   </div>

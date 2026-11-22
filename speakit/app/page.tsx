@@ -23,36 +23,36 @@ export default async function HomePage() {
 
       <section
         aria-label="Top 3 Arena Leaders"
-        className="bg-white/92 md:bg-white border border-[#3d3d3d]/20 md:border-ink/15 rounded-[6px] md:rounded-2xl p-4 md:p-5 shadow-[1px_1px_6px_-1px_rgba(0,0,0,0.08)] md:shadow-soft space-y-3 md:space-y-4"
+        className="liquid-glass-card p-4 md:p-5 space-y-3 md:space-y-4"
       >
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <Trophy className="w-4 h-4 text-[#ba2223] md:text-accent shrink-0" aria-hidden="true" />
+            <Trophy className="w-4 h-4 text-amber-400 shrink-0" aria-hidden="true" />
             <div className="space-y-0.5">
-              <p className="md:hidden text-[10px] uppercase tracking-[0.06em] text-[#3d3d3d] font-mono">
+              <p className="md:hidden text-[10px] uppercase tracking-[0.06em] text-cyan-300 font-mono">
                 Arena Live Standings
               </p>
-              <h2 className="text-base font-bold text-ink">Top 3 Bảng Xếp Hạng Arena</h2>
+              <h2 className="text-base font-bold text-white">Top 3 Bảng Xếp Hạng Arena</h2>
             </div>
           </div>
           <Link
             href="/leaderboard"
             prefetch
-            className="interactive-btn-accent inline-flex items-center gap-1.5 rounded-[6px] md:rounded-pill px-3.5 py-1.5 bg-white md:bg-accent/10 hover:bg-[#ba2223] md:hover:bg-accent text-[#142161] md:text-[#B91C1C] hover:text-white border border-[#142161] md:border-accent/40 text-xs font-semibold"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all"
           >
             <span>Xem bảng xếp hạng</span>
-            <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+            <ArrowRight className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
           </Link>
         </div>
 
         {topLeaders.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 divide-y divide-ink/10 md:divide-y-0 md:divide-x border-t border-ink/10 pt-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 md:gap-3 border-t border-white/10 pt-3">
             {topLeaders.map((player) => (
               <LeaderboardRowWrapper
                 key={player.id}
                 fxId={player.equippedCosmetics?.leaderboard_fx}
                 nameplateId={player.equippedCosmetics?.nameplate}
-                className="rounded-lg transition-colors hover:bg-paper/70"
+                className="liquid-glass-card-lite rounded-2xl transition-all hover:!border-cyan-400/45"
               >
                 <Link
                   href={`/profile/${player.id}`}
@@ -71,22 +71,22 @@ export default async function HomePage() {
                       />
                     </DiscordAvatarFrame>
                     <div className="min-w-0 space-y-1">
-                      <div className="text-sm font-bold text-ink break-words group-hover:underline">
+                      <div className="text-sm font-bold text-white break-words group-hover:text-cyan-200 transition-colors">
                         {player.displayName}
                       </div>
-                      <span className="inline-block text-[11px] font-mono px-2 py-0.5 rounded-pill bg-paper border border-ink/10 text-ink-muted">
+                      <span className="inline-block text-[11px] font-mono px-2 py-0.5 rounded-full bg-white/[0.08] border border-white/15 text-slate-300">
                         {player.equippedTitle}
                       </span>
                     </div>
                   </div>
 
                   <div className="text-right shrink-0 space-y-1">
-                    <div className="inline-flex items-center gap-1 text-xs font-mono font-bold text-ink">
-                      <Coins className="w-3.5 h-3.5 text-accent shrink-0" aria-hidden="true" />
+                    <div className="inline-flex items-center gap-1 text-xs font-mono font-bold text-white">
+                      <Coins className="w-3.5 h-3.5 text-emerald-400 shrink-0" aria-hidden="true" />
                       <span>{player.itCoins}</span>
                     </div>
-                    <div className="flex items-center justify-end gap-1 text-[11px] font-mono text-ink-muted">
-                      <Flame className="w-3 h-3 text-accent shrink-0" aria-hidden="true" />
+                    <div className="flex items-center justify-end gap-1 text-[11px] font-mono text-slate-300">
+                      <Flame className="w-3 h-3 text-amber-400 shrink-0" aria-hidden="true" />
                       <span>{player.streakDays}d</span>
                     </div>
                   </div>
@@ -95,13 +95,13 @@ export default async function HomePage() {
             ))}
           </div>
         ) : (
-          <div className="border-t border-ink/10 pt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-ink-muted">
+          <div className="border-t border-white/10 pt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-300">
             <span>
               Chưa có dữ liệu bảng xếp hạng trực tuyến. Hoàn thành một vòng Arena để ghi danh #1.
             </span>
             <Link
               href="/arena"
-              className="interactive-btn-accent inline-flex items-center gap-1.5 rounded-[6px] md:rounded-pill px-3.5 py-1.5 bg-[#ba2223] md:bg-accent hover:bg-[#9e1c1d] md:hover:bg-accent-hover text-white border border-[#ba2223] md:border-ink font-mono text-xs font-semibold shadow-soft"
+              className="liquid-btn-primary inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-mono text-xs transition-all"
             >
               <span>Mở /arena</span>
               <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -113,23 +113,23 @@ export default async function HomePage() {
       <section aria-label="Công cụ ôn tập nhanh" className="hidden md:grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <Link
           href="/scenarios"
-          className="group interactive-card bg-white border border-ink/20 rounded-2xl p-5 shadow-soft flex flex-col justify-between gap-4"
+          className="group liquid-glass-card-lite p-5 hover:!border-cyan-400/50 hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-pill bg-paper flex items-center justify-center border border-ink/15 shrink-0">
-              <MessageSquare className="w-4 h-4 text-accent" aria-hidden="true" />
+            <div className="w-9 h-9 rounded-full bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center shrink-0">
+              <MessageSquare className="w-4 h-4 text-cyan-300" aria-hidden="true" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-bold text-sm text-ink group-hover:text-[#B91C1C] transition-colors">
+              <h3 className="font-bold text-sm text-white group-hover:text-cyan-200 transition-colors">
                 Kịch bản luyện nói
               </h3>
-              <p className="text-xs text-ink-muted">
+              <p className="text-xs text-slate-300">
                 {scenarioCount} tình huống công việc CNTT chia theo 3 cấp độ Fresher / Junior / Senior.
               </p>
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-ink text-xs font-semibold transition-colors">
+            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-cyan-500/15 group-hover:bg-cyan-500/30 text-cyan-200 group-hover:text-white border border-cyan-400/40 text-xs font-semibold transition-colors">
               <span>Luyện kịch bản</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -138,23 +138,23 @@ export default async function HomePage() {
 
         <Link
           href="/vocabulary"
-          className="group interactive-card bg-white border border-ink/20 rounded-2xl p-5 shadow-soft flex flex-col justify-between gap-4"
+          className="group liquid-glass-card-lite p-5 hover:!border-violet-400/50 hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-pill bg-paper flex items-center justify-center border border-ink/15 shrink-0">
-              <BookOpen className="w-4 h-4 text-accent" aria-hidden="true" />
+            <div className="w-9 h-9 rounded-full bg-violet-500/20 border border-violet-400/40 flex items-center justify-center shrink-0">
+              <BookOpen className="w-4 h-4 text-violet-300" aria-hidden="true" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-bold text-sm text-ink group-hover:text-[#B91C1C] transition-colors">
+              <h3 className="font-bold text-sm text-white group-hover:text-violet-200 transition-colors">
                 Từ vựng IT
               </h3>
-              <p className="text-xs text-ink-muted">
+              <p className="text-xs text-slate-300">
                 Phát âm IPA và câu ví dụ công việc thực tế.
               </p>
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-ink text-xs font-semibold transition-colors">
+            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-violet-500/15 group-hover:bg-violet-500/30 text-violet-200 group-hover:text-white border border-violet-400/40 text-xs font-semibold transition-colors">
               <span>Ôn từ vựng</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -163,23 +163,23 @@ export default async function HomePage() {
 
         <Link
           href="/progress"
-          className="group interactive-card bg-white border border-ink/20 rounded-2xl p-5 shadow-soft flex flex-col justify-between gap-4"
+          className="group liquid-glass-card-lite p-5 hover:!border-emerald-400/50 hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-pill bg-paper flex items-center justify-center border border-ink/15 shrink-0">
-              <Clock className="w-4 h-4 text-accent" aria-hidden="true" />
+            <div className="w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center shrink-0">
+              <Clock className="w-4 h-4 text-emerald-300" aria-hidden="true" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-bold text-sm text-ink group-hover:text-[#B91C1C] transition-colors">
+              <h3 className="font-bold text-sm text-white group-hover:text-emerald-200 transition-colors">
                 Kế hoạch 7 ngày
               </h3>
-              <p className="text-xs text-ink-muted">
+              <p className="text-xs text-slate-300">
                 Tổng hợp từ khóa và lỗi ngữ pháp cần ôn.
               </p>
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-ink text-xs font-semibold transition-colors">
+            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-emerald-500/15 group-hover:bg-emerald-500/30 text-emerald-200 group-hover:text-white border border-emerald-400/40 text-xs font-semibold transition-colors">
               <span>Xem lộ trình</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -188,23 +188,23 @@ export default async function HomePage() {
 
         <Link
           href="/arena"
-          className="group interactive-card bg-white border border-ink/20 rounded-2xl p-5 shadow-soft flex flex-col justify-between gap-4"
+          className="group liquid-glass-card-lite p-5 hover:!border-amber-400/50 hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-pill bg-paper flex items-center justify-center border border-ink/15 shrink-0">
-              <Gamepad2 className="w-4 h-4 text-accent" aria-hidden="true" />
+            <div className="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-400/40 flex items-center justify-center shrink-0">
+              <Gamepad2 className="w-4 h-4 text-amber-300" aria-hidden="true" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-bold text-sm text-ink group-hover:text-[#B91C1C] transition-colors">
+              <h3 className="font-bold text-sm text-white group-hover:text-amber-200 transition-colors">
                 IT Speaking Arena
               </h3>
-              <p className="text-xs text-ink-muted">
+              <p className="text-xs text-slate-300">
                 Thử thách tốc độ 60s để kiếm IT-Coin.
               </p>
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-paper group-hover:bg-accent text-ink group-hover:text-white border border-ink/20 group-hover:border-ink text-xs font-semibold transition-colors">
+            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-amber-500/15 group-hover:bg-amber-500/30 text-amber-200 group-hover:text-white border border-amber-400/40 text-xs font-semibold transition-colors">
               <span>Vào đấu trường</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -213,23 +213,23 @@ export default async function HomePage() {
 
         <Link
           href="/arena/party"
-          className="group bg-[#FAF6EF] border border-[#1A1714]/15 rounded-2xl p-5 shadow-soft hover:translate-x-[1px] hover:translate-y-[1px] transition-transform flex flex-col justify-between gap-4"
+          className="group liquid-glass-card-lite !border-rose-400/35 hover:!border-rose-400/65 p-5 hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-pill bg-[#E5484D] text-white flex items-center justify-center border border-[#1A1714]/15 shrink-0">
+            <div className="w-9 h-9 rounded-full bg-rose-500/25 text-rose-300 flex items-center justify-center border border-rose-400/50 shrink-0">
               <Siren className="w-4 h-4" aria-hidden="true" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-bold text-sm text-[#1A1714] group-hover:text-[#B91C1C] transition-colors">
+              <h3 className="font-bold text-sm text-white group-hover:text-rose-200 transition-colors">
                 Outage At 3AM (Party Mode)
               </h3>
-              <p className="text-xs text-[#1A1714]/75">
+              <p className="text-xs text-slate-300">
                 Phối hợp nhóm xử lý sự cố production khẩn cấp theo thời gian thực.
               </p>
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-[#E5484D] text-white border border-[#1A1714]/15 text-xs font-semibold transition-colors">
+            <span className="liquid-btn-danger inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs transition-all">
               <span>Mở Party Mode</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -238,23 +238,23 @@ export default async function HomePage() {
 
         <Link
           href="/shop"
-          className="group bg-white border border-[#1A1714]/15 rounded-2xl p-5 shadow-soft hover:bg-[#FAF6EF] transition-colors flex flex-col justify-between gap-4"
+          className="group liquid-glass-card-lite p-5 hover:!border-fuchsia-400/50 hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-pill bg-[#FAF6EF] text-[#E5484D] flex items-center justify-center border border-[#1A1714]/15 shrink-0">
+            <div className="w-9 h-9 rounded-full bg-fuchsia-500/20 text-fuchsia-300 flex items-center justify-center border border-fuchsia-400/40 shrink-0">
               <ShoppingBag className="w-4 h-4" aria-hidden="true" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-bold text-sm text-[#1A1714] group-hover:text-[#B91C1C] transition-colors">
+              <h3 className="font-bold text-sm text-white group-hover:text-fuchsia-200 transition-colors">
                 Cửa hàng Hiệu ứng
               </h3>
-              <p className="text-xs text-[#1A1714]/75">
+              <p className="text-xs text-slate-300">
                 Đổi IT-Coin lấy khung avatar, nameplate và hiệu ứng bảng xếp hạng.
               </p>
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-pill px-3 py-1 bg-[#FAF6EF] group-hover:bg-[#E5484D] text-[#1A1714] group-hover:text-white border border-[#1A1714]/15 text-xs font-semibold transition-colors">
+            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-fuchsia-500/15 group-hover:bg-fuchsia-500/30 text-fuchsia-200 group-hover:text-white border border-fuchsia-400/40 text-xs font-semibold transition-colors">
               <span>Vào cửa hàng</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
