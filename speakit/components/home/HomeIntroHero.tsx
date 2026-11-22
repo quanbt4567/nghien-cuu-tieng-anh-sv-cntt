@@ -6,7 +6,6 @@ import {
   ChevronDown,
   Clock,
   Gamepad2,
-  Headphones,
   MessageSquare,
   Mic,
   Settings,
@@ -126,11 +125,6 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
     <section aria-label="Giới thiệu SpeakIT" className="space-y-6">
       <div className="md:hidden space-y-4">
         <div className="liquid-glass-card p-5 space-y-4">
-          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-sky-50/90 border border-sky-200/90 text-[10px] font-mono font-semibold uppercase tracking-[0.06em] text-sky-700">
-            <Headphones className="w-3.5 h-3.5 text-sky-600 shrink-0" aria-hidden="true" />
-            <span>SpeakIT · AI IT English Coach</span>
-          </div>
-
           <div className="space-y-1.5">
             <h1 className="text-2xl font-bold tracking-tight text-slate-900 leading-snug">
               Luyện phản xạ tiếng Anh CNTT
@@ -254,11 +248,6 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
       <div className="hidden md:block liquid-glass-card p-6 sm:p-8">
         <div className="hidden md:grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           <div className="lg:col-span-7 space-y-5">
-            <div className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 bg-sky-50/90 border border-sky-200/90 text-xs font-mono font-semibold text-sky-700">
-              <Headphones className="w-3.5 h-3.5 text-sky-600 shrink-0" aria-hidden="true" />
-              <span>SpeakIT · AI IT English Coach</span>
-            </div>
-
             <div className="space-y-3">
               <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 leading-[3rem]">
                 Luyện phản xạ nói tiếng Anh CNTT theo tình huống công việc thật
