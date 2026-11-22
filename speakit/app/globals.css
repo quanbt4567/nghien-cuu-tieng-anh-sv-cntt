@@ -8,6 +8,13 @@
   --accent-red: #E5484D;
 }
 
+html,
+body {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  overscroll-behavior-y: contain;
+}
+
 body {
   background-color: var(--bg-paper);
   color: var(--text-ink);
@@ -15,6 +22,10 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* Centered soft shadow & refined borders inspired by xiehanzi.com */

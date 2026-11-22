@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Be_Vietnam_Pro, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "../components/layout/Navbar";
@@ -22,6 +22,14 @@ const jetbrainsMono = JetBrains_Mono({
   fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+};
+
 export const metadata: Metadata = {
   title: "SpeakIT — Luyện nói tiếng Anh tình huống CNTT",
   description:
@@ -42,7 +50,7 @@ export default function RootLayout({
       <body className="bg-paper text-ink min-h-screen antialiased flex flex-col font-sans">
         <Navbar />
         <WelcomeNameModal />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 pb-20 md:pb-0">{children}</main>
         <Footer />
         <FeatureGuideDock />
       </body>

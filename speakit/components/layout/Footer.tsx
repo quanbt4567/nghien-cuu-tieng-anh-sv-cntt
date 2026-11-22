@@ -10,7 +10,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="mt-auto border-t border-ink/10 bg-paper-muted py-6 px-4">
+    <footer className="hidden md:block mt-auto border-t border-ink/10 bg-paper-muted py-6 px-4">
       <div className="max-w-5xl mx-auto flex items-center justify-center sm:justify-start gap-4 text-xs text-ink-muted">
         <div className="flex items-center gap-2.5 text-center sm:text-left">
           <SpeakItLogo showWordmark={false} size="sm" />

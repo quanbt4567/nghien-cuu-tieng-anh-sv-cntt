@@ -46,7 +46,6 @@ import {
 import type { PublicGuestPlayer } from "../../lib/db";
 import { mergeProfileIdentity } from "../../lib/profileStats";
 import type { GamificationState } from "../../lib/types";
-import { registerAndroidPushToken } from "../../lib/mobile-notifications";
 import { CustomCursorTrail } from "../cosmetics/CustomCursorTrail";
 
 type NavItem = {
@@ -113,6 +112,14 @@ function isGroupActive(pathname: string, activePrefixes: readonly string[]): boo
   return activePrefixes.some((prefix) => pathname.startsWith(prefix));
 }
 
+const MOBILE_TABS: readonly NavItem[] = [
+  { href: "/", label: "Trang chủ", icon: Home },
+  { href: "/scenarios", label: "Kịch bản", icon: Mic },
+  { href: "/arena", label: "Arena", icon: Gamepad2 },
+  { href: "/vocabulary", label: "Từ vựng", icon: BookOpen },
+  { href: "/profile", label: "Hồ sơ", icon: User },
+];
+
 const INITIAL_GAMIFICATION: GamificationState = {
   totalPoints: 0,
   streakDays: 0,
@@ -134,11 +141,6 @@ export function Navbar() {
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    if (!hydrated) return;
-    void registerAndroidPushToken(guestPlayer?.transferCode ?? readBackupTransferCode());
-  }, [hydrated, guestPlayer?.transferCode]);
 
   useEffect(() => {
     let active = true;
@@ -448,7 +450,7 @@ export function Navbar() {
                 <button
                   type="button"
                   onClick={() => requestOpenAuthModal()}
-                  className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-accent hover:bg-accent-hover text-white border border-ink text-xs font-bold shadow-soft transition-colors"
+                  className="hidden md:inline-flex shrink-0 items-center gap-1.5 px-3 py-1.5 rounded-pill bg-accent hover:bg-accent-hover text-white border border-ink text-xs font-bold shadow-soft transition-colors"
                 >
                   <LogIn className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                   <span>Đăng nhập</span>
@@ -504,7 +506,7 @@ export function Navbar() {
         <nav
           id="mobile-nav-menu"
           aria-label="Điều hướng di động"
-          className="md:hidden border-t border-ink/15 bg-paper px-4 py-3 space-y-3 max-h-[calc(100vh-4rem)] overflow-y-auto"
+          className="md:hidden border-t border-ink/15 bg-paper px-4 py-3 pb-24 space-y-3 max-h-[calc(100vh-4rem)] overflow-y-auto"
         >
           {hydrated && (
             <div className="px-3 py-2 rounded-xl bg-white border border-ink/15 flex items-center justify-between gap-2 text-xs">
@@ -620,6 +622,35 @@ export function Navbar() {
         </nav>
       )}
       </header>
+
+      <nav
+        aria-label="Điều hướng nhanh di động"
+        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-ink/15 pb-safe"
+      >
+        <div className="grid grid-cols-5 max-w-lg mx-auto">
+          {MOBILE_TABS.map(({ href, label, icon: Icon }) => {
+            const active = isItemActive(pathname, href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                aria-current={active ? "page" : undefined}
+                className={`flex flex-col items-center justify-center gap-0.5 min-h-[52px] px-1 py-1.5 text-[11px] transition-colors ${
+                  active
+                    ? "text-accent font-semibold"
+                    : "text-ink-muted font-medium hover:text-ink"
+                }`}
+              >
+                <Icon
+                  className={`w-5 h-5 shrink-0 ${active ? "stroke-[2.4]" : ""}`}
+                  aria-hidden="true"
+                />
+                <span className="truncate max-w-full leading-tight">{label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
     </>
   );
 }
