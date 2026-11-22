@@ -508,9 +508,9 @@ export function Navbar() {
       {!hideBottomTabBar && (
         <nav
           aria-label="Điều hướng nhanh di động"
-          className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/94 border-t border-[#3d3d3d]/18 shadow-[0_-2px_10px_rgba(0,0,0,0.06)] pb-safe"
+          className="md:hidden fixed bottom-2.5 inset-x-3 z-40 mx-auto max-w-md rounded-full liquid-dock px-1.5 py-1 pb-safe"
         >
-          <div className="grid grid-cols-5 max-w-lg mx-auto">
+          <div className="grid grid-cols-5 items-center">
             {MOBILE_TABS.map(({ href, label, icon: Icon }) => {
               const active = pendingHref ? pendingHref === href : isItemActive(pathname, href);
               return (
@@ -522,25 +522,21 @@ export function Navbar() {
                     if (pathname !== href) setPendingHref(href);
                   }}
                   aria-current={active ? "page" : undefined}
-                  className={`flex flex-col items-center justify-center gap-0.5 min-h-[54px] px-1 py-1.5 text-[10px] tracking-[0.04em] active:scale-95 transition-transform ${
+                  className={`flex flex-col items-center justify-center gap-0.5 min-h-[48px] px-1 py-1 rounded-full text-[10px] tracking-[0.03em] active:scale-95 transition-all ${
                     active
-                      ? "text-[#000000] font-semibold"
-                      : "text-[#3d3d3d]/75 font-medium hover:text-[#000000]"
+                      ? "liquid-lens-active text-[#000000] font-semibold"
+                      : "text-[#3d3d3d]/80 font-medium hover:text-[#000000]"
                   }`}
                 >
-                  <span
-                    className={`relative flex items-center justify-center px-3 py-0.5 rounded-[6px] transition-colors ${
-                      active ? "bg-[#8d8d8d]/15" : ""
-                    }`}
-                  >
+                  <span className="relative flex items-center justify-center">
                     <Icon
-                      className={`w-5 h-5 shrink-0 ${active ? "stroke-[2.2]" : ""}`}
+                      className={`w-[18px] h-[18px] shrink-0 ${active ? "stroke-[2.2]" : ""}`}
                       aria-hidden="true"
                     />
                     {active && (
                       <span
                         aria-hidden="true"
-                        className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-[#ba2223]"
+                        className="absolute -top-0.5 -right-1 w-1.5 h-1.5 rounded-full bg-[#ba2223]"
                       />
                     )}
                   </span>
