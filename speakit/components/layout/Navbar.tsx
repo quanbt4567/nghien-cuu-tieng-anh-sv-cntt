@@ -467,7 +467,7 @@ export function Navbar() {
                     ? `${identity.displayName} (${identity.transferCode})`
                     : identity.displayName
                 }
-                className="hidden 2xl:flex shrink-0 items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-white/[0.12] border border-white/20 hover:border-cyan-300/45 hover:bg-white/[0.14] text-xs text-slate-100 transition-colors max-w-[120px] lg:max-w-[165px] xl:max-w-[220px]"
+                className="hidden shrink-0 items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-white/[0.12] border border-white/20 hover:border-cyan-300/45 hover:bg-white/[0.14] text-xs text-slate-100 transition-colors max-w-[120px] lg:max-w-[165px] xl:max-w-[220px]"
               >
                 <User className="w-3.5 h-3.5 text-cyan-400 shrink-0" aria-hidden="true" />
                 <span className="font-semibold truncate hidden sm:inline md:hidden lg:inline">{identity.displayName}</span>
