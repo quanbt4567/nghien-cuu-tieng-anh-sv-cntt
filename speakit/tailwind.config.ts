@@ -10,24 +10,24 @@ const config: Config = {
     extend: {
       colors: {
         paper: {
-          DEFAULT: "#f0eeed",
-          card: "#ffffff",
-          muted: "#e6e4e2",
-          subtle: "#d8d5d2",
+          DEFAULT: "#050811",
+          card: "rgba(255, 255, 255, 0.06)",
+          muted: "rgba(255, 255, 255, 0.10)",
+          subtle: "rgba(255, 255, 255, 0.16)",
         },
         ink: {
-          DEFAULT: "#000000",
-          muted: "#3d3d3d",
-          faint: "#8d8d8d",
-          border: "#3d3d3d",
+          DEFAULT: "#F8FAFC",
+          muted: "#94A3B8",
+          faint: "#64748B",
+          border: "rgba(255, 255, 255, 0.18)",
         },
         accent: {
-          DEFAULT: "#ba2223",
-          hover: "#9e1c1d",
-          light: "#fbeaea",
+          DEFAULT: "#06B6D4",
+          hover: "#22D3EE",
+          light: "rgba(6, 182, 212, 0.18)",
         },
-        navy: "#142161",
-        smoke: "#8d8d8d",
+        navy: "#1E3A8A",
+        smoke: "#94A3B8",
       },
       fontFamily: {
         sans: ["var(--font-be-vietnam-pro)", "sans-serif"],
@@ -36,14 +36,14 @@ const config: Config = {
         ipa: ["'Lucida Sans Unicode'", "'DejaVu Sans'", "'Arial Unicode MS'", "'Segoe UI'", "sans-serif"],
       },
       borderRadius: {
-        card: "6px",
-        "2xl": "8px",
+        card: "20px",
+        "2xl": "24px",
         pill: "9999px",
       },
       boxShadow: {
-        hard: "1px 1px 6px -1px rgba(0, 0, 0, 0.08)",
-        soft: "1px 1px 6px -1px rgba(0, 0, 0, 0.08)",
-        card: "1px 1px 6px -1px rgba(0, 0, 0, 0.08)",
+        hard: "0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.22)",
+        soft: "0 6px 24px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.18)",
+        card: "0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.24)",
       },
     },
   },
@@ -51,4 +51,3 @@ const config: Config = {
 };
 
 export default config;
-

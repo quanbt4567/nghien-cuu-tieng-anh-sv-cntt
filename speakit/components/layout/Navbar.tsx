@@ -276,8 +276,8 @@ export function Navbar() {
       {!shopActive && (
         <CustomCursorTrail effectId={guestPlayer?.equippedCosmetics?.cursor_effect ?? null} />
       )}
-      <header ref={headerRef} className="sticky top-0 z-40 bg-white border-b border-[#3d3d3d]/15">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 h-14 md:h-16 flex items-center justify-between gap-2 lg:gap-4">
+      <header ref={headerRef} className="sticky top-3 z-40 w-full max-w-7xl mx-auto px-3">
+      <div className="liquid-glass-pill px-3 sm:px-4 h-14 md:h-[60px] flex items-center justify-between gap-2 lg:gap-4">
         <Link
           href="/"
           aria-label="SpeakIT"
@@ -295,8 +295,8 @@ export function Navbar() {
             aria-current={homeActive ? "page" : undefined}
             className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-all shrink-0 whitespace-nowrap ${
               homeActive
-                ? "bg-ink text-white border-ink shadow-soft"
-                : "bg-white text-ink border-ink/15 hover:border-ink/30 hover:bg-paper-muted shadow-soft"
+                ? "bg-cyan-500/25 border-cyan-400/50 text-cyan-200 shadow-[0_0_16px_rgba(6,182,212,0.28)]"
+                : "bg-white/[0.06] text-slate-200 border-white/15 hover:border-white/30 hover:bg-white/[0.14] hover:text-white"
             }`}
           >
             <Home className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
@@ -316,8 +316,8 @@ export function Navbar() {
                   onClick={() => setOpenGroup((prev) => (prev === group.id ? null : group.id))}
                   className={`flex items-center gap-1 lg:gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-all whitespace-nowrap ${
                     active || isOpen
-                      ? "bg-ink text-white border-ink shadow-soft"
-                      : "bg-white text-ink border-ink/15 hover:border-ink/30 hover:bg-paper-muted shadow-soft"
+                      ? "bg-cyan-500/25 border-cyan-400/50 text-cyan-200 shadow-[0_0_16px_rgba(6,182,212,0.28)]"
+                      : "bg-white/[0.06] text-slate-200 border-white/15 hover:border-white/30 hover:bg-white/[0.14] hover:text-white"
                   }`}
                 >
                   <span>{group.label}</span>
@@ -333,19 +333,19 @@ export function Navbar() {
                   <div
                     className={`absolute ${
                       group.id === "account" ? "right-0" : "left-0"
-                    } top-full mt-2 w-60 p-1.5 bg-white border border-ink/15 rounded-2xl shadow-card z-50`}
+                    } top-full mt-2.5 w-60 p-1.5 bg-slate-950/90 backdrop-blur-2xl border border-white/20 text-slate-100 rounded-2xl shadow-[0_16px_44px_rgba(0,0,0,0.68),inset_0_1px_1px_rgba(255,255,255,0.22)] z-50`}
                   >
                     {group.id === "account" && hydrated && (
-                      <div className="px-3 py-2 mb-1 rounded-xl bg-paper border border-ink/10">
-                        <div className="text-xs font-bold text-ink truncate">
+                      <div className="px-3 py-2 mb-1 rounded-xl bg-white/[0.06] border border-white/10">
+                        <div className="text-xs font-bold text-white truncate">
                           {identity.displayName}
                         </div>
                         {guestPlayer?.email && (
-                          <div className="text-[11px] text-sky-700 truncate mt-0.5">
+                          <div className="text-[11px] text-cyan-300 truncate mt-0.5">
                             {guestPlayer.email}
                           </div>
                         )}
-                        <div className="flex items-center justify-between gap-2 mt-0.5 text-[11px] font-mono text-ink-muted">
+                        <div className="flex items-center justify-between gap-2 mt-0.5 text-[11px] font-mono text-slate-400">
                           {identity.transferCode && <span>{identity.transferCode}</span>}
                           <span>{identity.totalPoints.toLocaleString("en-US")} pts</span>
                         </div>
@@ -359,10 +359,10 @@ export function Navbar() {
                           href={href}
                           aria-current={itemActive ? "page" : undefined}
                           onClick={() => setOpenGroup(null)}
-                          className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
+                          className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-colors border ${
                             itemActive
-                              ? "bg-ink text-white"
-                              : "text-ink hover:bg-paper-muted"
+                              ? "bg-cyan-500/25 text-cyan-200 border-cyan-400/45"
+                              : "text-slate-200 border-transparent hover:bg-white/10 hover:text-white"
                           }`}
                         >
                           <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
@@ -371,12 +371,12 @@ export function Navbar() {
                       );
                     })}
                     {group.id === "account" && hydrated && (
-                      <div className="mt-1 pt-1 border-t border-ink/10">
+                      <div className="mt-1 pt-1 border-t border-white/15">
                         {guestPlayer?.email ? (
                           <button
                             type="button"
                             onClick={() => void handleLogout()}
-                            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-accent hover:bg-accent-light transition-colors"
+                            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-rose-300 hover:bg-rose-500/15 hover:text-rose-200 transition-colors"
                           >
                             <LogOut className="w-4 h-4 shrink-0" aria-hidden="true" />
                             <span>Đăng xuất</span>
@@ -388,9 +388,9 @@ export function Navbar() {
                               setOpenGroup(null);
                               requestOpenAuthModal();
                             }}
-                            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold text-ink hover:bg-paper-muted transition-colors"
+                            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold text-cyan-200 hover:bg-cyan-500/15 hover:text-white transition-colors"
                           >
-                            <LogIn className="w-4 h-4 text-accent shrink-0" aria-hidden="true" />
+                            <LogIn className="w-4 h-4 text-cyan-400 shrink-0" aria-hidden="true" />
                             <span>Đăng nhập / Đăng ký</span>
                           </button>
                         )}
@@ -410,8 +410,8 @@ export function Navbar() {
                   aria-current={shopActive ? "page" : undefined}
                   className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-all shrink-0 whitespace-nowrap ${
                     shopActive
-                      ? "bg-ink text-white border-ink shadow-soft"
-                      : "bg-white text-ink border-ink/15 hover:border-ink/30 hover:bg-paper-muted shadow-soft"
+                      ? "bg-cyan-500/25 border-cyan-400/50 text-cyan-200 shadow-[0_0_16px_rgba(6,182,212,0.28)]"
+                      : "bg-white/[0.06] text-slate-200 border-white/15 hover:border-white/30 hover:bg-white/[0.14] hover:text-white"
                   }`}
                 >
                   <ShoppingBag className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
@@ -428,7 +428,7 @@ export function Navbar() {
           {!hydrated ? (
             <div
               aria-label="Đang đồng bộ tài khoản"
-              className="shrink-0 h-8 w-28 md:w-52 rounded-pill bg-paper-muted border border-ink/10 animate-pulse"
+              className="shrink-0 h-8 w-28 md:w-52 rounded-pill bg-white/10 border border-white/15 animate-pulse"
             />
           ) : (
             <div className="flex items-center gap-1.5 shrink-0 min-w-0">
@@ -439,12 +439,12 @@ export function Navbar() {
                     ? `${identity.displayName} (${identity.transferCode})`
                     : identity.displayName
                 }
-                className="hidden md:flex shrink-0 items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-white border border-ink/15 hover:border-ink/30 shadow-soft text-xs text-ink transition-colors max-w-[120px] lg:max-w-[165px] xl:max-w-[220px]"
+                className="hidden md:flex shrink-0 items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-white/[0.08] border border-white/20 hover:border-cyan-300/45 hover:bg-white/[0.14] text-xs text-slate-100 transition-colors max-w-[120px] lg:max-w-[165px] xl:max-w-[220px]"
               >
-                <User className="w-3.5 h-3.5 text-accent shrink-0" aria-hidden="true" />
+                <User className="w-3.5 h-3.5 text-cyan-400 shrink-0" aria-hidden="true" />
                 <span className="font-semibold truncate hidden sm:inline md:hidden lg:inline">{identity.displayName}</span>
                 {identity.transferCode && (
-                  <span className="hidden xl:inline font-mono text-[10px] px-1.5 py-0.5 rounded bg-paper border border-ink/10 text-ink-muted shrink-0">
+                  <span className="hidden xl:inline font-mono text-[10px] px-1.5 py-0.5 rounded bg-slate-950/60 border border-white/15 text-slate-300 shrink-0">
                     {identity.transferCode}
                   </span>
                 )}
@@ -454,7 +454,7 @@ export function Navbar() {
                 <button
                   type="button"
                   onClick={() => requestOpenAuthModal()}
-                  className="hidden md:inline-flex shrink-0 items-center gap-1.5 px-3 py-1.5 rounded-pill bg-accent hover:bg-accent-hover text-white border border-ink text-xs font-bold shadow-soft transition-colors"
+                  className="hidden md:inline-flex shrink-0 items-center gap-1.5 px-3.5 py-1.5 rounded-pill liquid-btn-primary text-xs"
                 >
                   <LogIn className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                   <span>Đăng nhập</span>
@@ -465,24 +465,24 @@ export function Navbar() {
                 href="/arena"
                 title={coinTooltip}
                 aria-label={`Chuỗi ${identity.streakDays} ngày, ${identity.itCoins} IT-Coin, ${identity.totalPoints} điểm. ${coinTooltip}`}
-                className="shrink-0 flex items-center gap-1.5 lg:gap-2 px-2.5 lg:px-3 py-1.5 rounded-pill bg-white border border-ink/15 hover:border-ink/30 shadow-soft text-xs font-mono text-ink transition-colors"
+                className="shrink-0 flex items-center gap-1.5 lg:gap-2 px-2.5 lg:px-3 py-1.5 rounded-pill bg-white/[0.08] border border-white/20 hover:border-cyan-300/45 hover:bg-white/[0.14] text-xs font-mono text-slate-100 transition-colors"
               >
-                <span className="inline-flex items-center gap-1">
-                  <Flame className="w-3.5 h-3.5 text-accent shrink-0" aria-hidden="true" />
+                <span className="inline-flex items-center gap-1 text-amber-300">
+                  <Flame className="w-3.5 h-3.5 text-amber-400 shrink-0 drop-shadow-[0_0_6px_rgba(251,191,36,0.65)]" aria-hidden="true" />
                   <span className="font-semibold">{identity.streakDays}</span>
                 </span>
-                <span className="text-ink/20" aria-hidden="true">
+                <span className="text-white/20" aria-hidden="true">
                   |
                 </span>
                 <span className="inline-flex items-center gap-1">
-                  <Coins className="w-3.5 h-3.5 text-ink shrink-0" aria-hidden="true" />
-                  <span className="font-semibold">{identity.itCoins}</span>{" "}
-                  <span className="hidden lg:inline text-ink-muted">Coin</span>
+                  <Coins className="w-3.5 h-3.5 text-emerald-400 shrink-0 drop-shadow-[0_0_6px_rgba(52,211,153,0.6)]" aria-hidden="true" />
+                  <span className="font-semibold text-emerald-300">{identity.itCoins}</span>{" "}
+                  <span className="hidden lg:inline text-amber-200/85">Coin</span>
                 </span>
-                <span className="hidden xl:inline text-ink/20" aria-hidden="true">
+                <span className="hidden xl:inline text-white/20" aria-hidden="true">
                   |
                 </span>
-                <span className="hidden xl:inline text-ink-muted">
+                <span className="hidden xl:inline text-slate-300">
                   {identity.totalPoints.toLocaleString("en-US")} pts
                 </span>
               </Link>
@@ -493,9 +493,9 @@ export function Navbar() {
                 <Link
                   href="/admin"
                   aria-label="Mở trang quản trị Admin"
-                  className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-pill bg-ink text-white border border-ink shadow-soft text-xs font-semibold hover:bg-ink/90 transition-colors"
+                  className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-pill bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 border border-emerald-400/45 shadow-[0_0_16px_rgba(16,185,129,0.28)] text-xs font-semibold transition-colors"
                 >
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" aria-hidden="true" />
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-300 shrink-0" aria-hidden="true" />
                   <span className="hidden sm:inline">Admin</span>
                 </Link>
               )}
@@ -524,8 +524,8 @@ export function Navbar() {
                   aria-current={active ? "page" : undefined}
                   className={`flex flex-col items-center justify-center gap-0.5 min-h-[48px] px-1 py-1 rounded-full text-[10px] tracking-[0.03em] active:scale-95 transition-all ${
                     active
-                      ? "liquid-lens-active text-[#000000] font-semibold"
-                      : "text-[#3d3d3d]/80 font-medium hover:text-[#000000]"
+                      ? "liquid-lens-active text-cyan-200 font-semibold"
+                      : "text-slate-300/80 font-medium hover:text-white border border-transparent"
                   }`}
                 >
                   <span className="relative flex items-center justify-center">
@@ -536,7 +536,7 @@ export function Navbar() {
                     {active && (
                       <span
                         aria-hidden="true"
-                        className="absolute -top-0.5 -right-1 w-1.5 h-1.5 rounded-full bg-[#ba2223]"
+                        className="absolute -top-0.5 -right-1 w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.85)]"
                       />
                     )}
                   </span>

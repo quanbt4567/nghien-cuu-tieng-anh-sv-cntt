@@ -203,26 +203,26 @@ export function WelcomeNameModal() {
       role="dialog"
       aria-modal="true"
       aria-labelledby="auth-modal-title"
-      className="fixed inset-0 z-50 bg-ink/60 backdrop-blur-[3px] flex items-center justify-center p-4 overflow-y-auto"
+      className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto"
     >
-      <div className="w-full max-w-md bg-white border border-ink/15 rounded-2xl p-6 shadow-soft space-y-5 relative my-auto">
+      <div className="w-full max-w-md bg-slate-950/90 backdrop-blur-2xl border border-white/20 rounded-3xl p-6 shadow-[0_24px_64px_rgba(0,0,0,0.72),inset_0_1px_1px_rgba(255,255,255,0.28)] space-y-5 relative my-auto">
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-pill bg-accent-light border border-accent/30 flex items-center justify-center shrink-0">
-            <ShieldCheck className="w-5 h-5 text-accent" aria-hidden="true" />
+          <div className="w-10 h-10 rounded-pill bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center shrink-0">
+            <ShieldCheck className="w-5 h-5 text-cyan-300" aria-hidden="true" />
           </div>
           <div className="space-y-1">
-            <h2 id="auth-modal-title" className="text-lg font-bold text-ink">
+            <h2 id="auth-modal-title" className="text-lg font-bold text-white">
               {tab === "login"
                 ? "Đăng nhập tài khoản SpeakIT"
                 : "Đăng ký tài khoản SpeakIT"}
             </h2>
-            <p className="text-xs text-ink-muted leading-relaxed">
+            <p className="text-xs text-slate-300 leading-relaxed">
               Đăng nhập hoặc tạo tài khoản để lưu điểm, IT-Coin và thi đấu Arena.
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 p-1 bg-paper rounded-xl border border-ink/15">
+        <div className="grid grid-cols-2 gap-2 p-1 bg-white/[0.06] rounded-xl border border-white/15">
           <button
             type="button"
             disabled={isSubmitting}
@@ -230,10 +230,10 @@ export function WelcomeNameModal() {
               setTab("login");
               setError(null);
             }}
-            className={`inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-semibold transition-all ${
+            className={`inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-semibold transition-all border ${
               tab === "login"
-                ? "bg-ink text-white shadow-soft"
-                : "text-ink-muted hover:text-ink"
+                ? "bg-cyan-500/25 text-cyan-100 border-cyan-400/50 shadow-[0_0_16px_rgba(6,182,212,0.25)]"
+                : "text-slate-300 hover:text-white border-transparent"
             }`}
           >
             <LogIn className="w-3.5 h-3.5" aria-hidden="true" />
@@ -246,10 +246,10 @@ export function WelcomeNameModal() {
               setTab("register");
               setError(null);
             }}
-            className={`inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-semibold transition-all ${
+            className={`inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-semibold transition-all border ${
               tab === "register"
-                ? "bg-ink text-white shadow-soft"
-                : "text-ink-muted hover:text-ink"
+                ? "bg-cyan-500/25 text-cyan-100 border-cyan-400/50 shadow-[0_0_16px_rgba(6,182,212,0.25)]"
+                : "text-slate-300 hover:text-white border-transparent"
             }`}
           >
             <UserPlus className="w-3.5 h-3.5" aria-hidden="true" />
@@ -258,7 +258,7 @@ export function WelcomeNameModal() {
         </div>
 
         {legacyNotice && tab === "register" && (
-          <div className="p-3 rounded-xl bg-amber-50 border border-amber-300 text-xs text-amber-900 leading-relaxed">
+          <div className="p-3 rounded-xl bg-amber-500/15 border border-amber-400/40 text-xs text-amber-200 leading-relaxed">
             {legacyNotice}
           </div>
         )}
@@ -268,7 +268,7 @@ export function WelcomeNameModal() {
             <div className="space-y-1">
               <label
                 htmlFor="auth-display-name"
-                className="block text-xs font-semibold text-ink"
+                className="block text-xs font-semibold text-slate-200"
               >
                 Tên hiển thị (2–24 ký tự)
               </label>
@@ -281,7 +281,7 @@ export function WelcomeNameModal() {
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="VD: Minh Quân, Lan Anh..."
-                className="w-full px-3.5 py-2.5 text-sm bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent disabled:opacity-60"
+                className="w-full px-3.5 py-2.5 text-sm liquid-glass-input rounded-xl disabled:opacity-60"
               />
             </div>
           )}
@@ -289,13 +289,13 @@ export function WelcomeNameModal() {
           <div className="space-y-1">
             <label
               htmlFor="auth-email"
-              className="block text-xs font-semibold text-ink"
+              className="block text-xs font-semibold text-slate-200"
             >
               Email
             </label>
             <div className="relative">
               <Mail
-                className="w-4 h-4 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
                 aria-hidden="true"
               />
               <input
@@ -307,7 +307,7 @@ export function WelcomeNameModal() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="tenban@gmail.com"
-                className="w-full pl-9 pr-3.5 py-2.5 text-sm bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent disabled:opacity-60"
+                className="w-full pl-9 pr-3.5 py-2.5 text-sm liquid-glass-input rounded-xl disabled:opacity-60"
               />
             </div>
           </div>
@@ -315,13 +315,13 @@ export function WelcomeNameModal() {
           <div className="space-y-1">
             <label
               htmlFor="auth-password"
-              className="block text-xs font-semibold text-ink"
+              className="block text-xs font-semibold text-slate-200"
             >
               Mật khẩu {tab === "register" ? "(tối thiểu 6 ký tự)" : ""}
             </label>
             <div className="relative">
               <Lock
-                className="w-4 h-4 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
                 aria-hidden="true"
               />
               <input
@@ -337,13 +337,13 @@ export function WelcomeNameModal() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-9 pr-10 py-2.5 text-sm bg-paper border border-ink/20 rounded-xl text-ink focus:outline-none focus:border-accent disabled:opacity-60"
+                className="w-full pl-9 pr-10 py-2.5 text-sm liquid-glass-input rounded-xl disabled:opacity-60"
               />
               <button
                 type="button"
                 aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-ink-muted hover:text-ink"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-white transition-colors"
               >
                 {showPassword ? (
                   <EyeOff className="w-4 h-4" aria-hidden="true" />
@@ -358,9 +358,9 @@ export function WelcomeNameModal() {
             <div className="space-y-1">
               <label
                 htmlFor="auth-transfer-code"
-                className="flex items-center gap-1.5 text-xs font-semibold text-ink"
+                className="flex items-center gap-1.5 text-xs font-semibold text-slate-200"
               >
-                <KeyRound className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
+                <KeyRound className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
                 <span>Mã hồ sơ cũ DEV-XXXXXX (tuỳ chọn)</span>
               </label>
               <input
@@ -371,7 +371,7 @@ export function WelcomeNameModal() {
                 value={transferCode}
                 onChange={(e) => setTransferCode(e.target.value.toUpperCase())}
                 placeholder="DEV-XXXXXX (nếu muốn giữ Coin & Hiệu ứng cũ)"
-                className="w-full px-3.5 py-2 text-xs font-mono uppercase bg-paper border border-ink/15 rounded-xl text-ink placeholder:normal-case placeholder:font-sans placeholder:text-ink-muted focus:outline-none focus:border-accent disabled:opacity-60"
+                className="w-full px-3.5 py-2 text-xs font-mono uppercase liquid-glass-input rounded-xl placeholder:normal-case placeholder:font-sans disabled:opacity-60"
               />
             </div>
           )}
@@ -379,7 +379,7 @@ export function WelcomeNameModal() {
           {error && (
             <div
               role="alert"
-              className="p-2.5 rounded-xl bg-accent-light border border-accent/30 text-xs text-accent font-medium"
+              className="p-2.5 rounded-xl bg-rose-500/15 border border-rose-400/45 text-xs text-rose-200 font-medium"
             >
               {error}
             </div>
@@ -388,7 +388,7 @@ export function WelcomeNameModal() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-pill bg-accent hover:bg-accent-hover text-white text-sm font-bold border border-ink shadow-soft transition-all disabled:opacity-60"
+            className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-pill liquid-btn-primary text-sm disabled:opacity-60"
           >
             {isSubmitting ? (
               <>
@@ -408,7 +408,7 @@ export function WelcomeNameModal() {
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="w-full py-2 text-xs font-semibold text-ink-muted hover:text-ink"
+              className="w-full py-2 rounded-pill text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
             >
               Đóng
             </button>

@@ -151,20 +151,20 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
         aria-expanded={open}
         aria-haspopup="true"
         onClick={() => setOpen((prev) => !prev)}
-        className="relative inline-flex items-center justify-center w-9 h-9 rounded-pill bg-white border border-ink/15 hover:border-ink/30 shadow-soft text-ink transition-colors"
+        className="relative inline-flex items-center justify-center w-9 h-9 rounded-pill liquid-glass-btn text-slate-100"
       >
         <Bell className="w-4 h-4" aria-hidden="true" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-accent text-white text-[10px] font-mono font-bold flex items-center justify-center border border-white">
+          <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-gradient-to-r from-rose-500 to-red-600 text-white text-[10px] font-mono font-bold flex items-center justify-center border border-white/40 shadow-[0_0_10px_rgba(244,63,94,0.65)]">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
       </button>
 
       {open && (
-        <div className="fixed inset-x-3 top-16 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:w-80 bg-white border border-ink/15 rounded-2xl shadow-card z-50 overflow-hidden">
-          <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-ink/10 bg-paper">
-            <span className="text-xs font-bold text-ink uppercase font-mono">
+        <div className="fixed inset-x-3 top-20 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2.5 sm:w-80 bg-slate-950/95 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-[0_16px_44px_rgba(0,0,0,0.68),inset_0_1px_1px_rgba(255,255,255,0.2)] z-50 overflow-hidden">
+          <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-white/15 bg-white/[0.05]">
+            <span className="text-xs font-bold text-white uppercase font-mono">
               Thông báo
             </span>
             <div className="flex items-center gap-2">
@@ -172,7 +172,7 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
                 <button
                   type="button"
                   onClick={handleMarkAllRead}
-                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-accent hover:underline"
+                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-cyan-300 hover:text-cyan-200 hover:underline"
                 >
                   <CheckCheck className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>Đánh dấu đã đọc</span>
@@ -182,31 +182,31 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
                 type="button"
                 aria-label="Đóng thông báo"
                 onClick={() => setOpen(false)}
-                className="p-1 rounded-lg text-ink-muted hover:text-ink hover:bg-paper-muted"
+                className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
               >
                 <X className="w-3.5 h-3.5" aria-hidden="true" />
               </button>
             </div>
           </div>
 
-          <div className="max-h-80 overflow-y-auto divide-y divide-ink/10">
+          <div className="max-h-80 overflow-y-auto divide-y divide-white/10">
             {showReminder && (
-              <div className="p-3.5 bg-accent-light/50 space-y-2">
+              <div className="p-3.5 bg-cyan-500/15 space-y-2">
                 <div className="flex items-start justify-between gap-2">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-ink">
-                    <Clock className="w-3.5 h-3.5 text-accent shrink-0" aria-hidden="true" />
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-white">
+                    <Clock className="w-3.5 h-3.5 text-cyan-300 shrink-0" aria-hidden="true" />
                     <span>Nhắc nhở học tập hôm nay</span>
                   </div>
-                  <span className="w-2 h-2 rounded-full bg-accent shrink-0 mt-1" />
+                  <span className="w-2 h-2 rounded-full bg-cyan-400 shrink-0 mt-1 shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
                 </div>
-                <p className="text-xs text-ink-muted leading-relaxed">
+                <p className="text-xs text-slate-300 leading-relaxed">
                   Bạn chưa luyện nói hôm nay. Dành 5 phút luyện phản xạ để giữ streak nhé!
                 </p>
                 <div className="flex items-center gap-2 pt-0.5">
                   <Link
                     href="/scenarios"
                     onClick={() => setOpen(false)}
-                    className="inline-flex items-center px-3 py-1 rounded-pill bg-ink text-white text-[11px] font-semibold hover:bg-ink/90"
+                    className="inline-flex items-center px-3 py-1 rounded-pill liquid-btn-primary text-[11px]"
                   >
                     Luyện ngay
                   </Link>
@@ -216,7 +216,7 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
                       markReminderDismissedToday();
                       setShowReminder(false);
                     }}
-                    className="text-[11px] font-medium text-ink-muted hover:text-ink"
+                    className="text-[11px] font-medium text-slate-400 hover:text-white transition-colors"
                   >
                     Ẩn hôm nay
                   </button>
@@ -229,23 +229,23 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
               return (
                 <div
                   key={item.id}
-                  className={`p-3.5 space-y-1 ${isUnread ? "bg-paper/70" : "bg-white"}`}
+                  className={`p-3.5 space-y-1 ${isUnread ? "bg-white/[0.06]" : "bg-transparent"}`}
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-ink">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-white">
                       <Sparkles
-                        className="w-3.5 h-3.5 text-accent shrink-0"
+                        className="w-3.5 h-3.5 text-cyan-400 shrink-0"
                         aria-hidden="true"
                       />
                       <span>{item.title}</span>
                     </div>
                     {isUnread && (
-                      <span className="w-2 h-2 rounded-full bg-accent shrink-0 mt-1" />
+                      <span className="w-2 h-2 rounded-full bg-cyan-400 shrink-0 mt-1 shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
                     )}
                   </div>
-                  <p className="text-xs text-ink-muted leading-relaxed">{item.body}</p>
+                  <p className="text-xs text-slate-300 leading-relaxed">{item.body}</p>
                   {item.created_at && (
-                    <div className="text-[10px] font-mono text-ink-faint">
+                    <div className="text-[10px] font-mono text-slate-400">
                       {formatDateTime(item.created_at)}
                     </div>
                   )}
@@ -254,7 +254,7 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
             })}
 
             {!showReminder && announcements.length === 0 && (
-              <div className="px-4 py-8 text-center text-xs text-ink-muted">
+              <div className="px-4 py-8 text-center text-xs text-slate-400">
                 Chưa có thông báo mới.
               </div>
             )}

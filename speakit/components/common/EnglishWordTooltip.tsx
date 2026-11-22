@@ -36,9 +36,9 @@ export function InteractiveEnglishText({
           idx < spokenUntilIndex;
 
         const baseColorClass = isActive
-          ? "bg-amber-200/90 text-ink px-1 py-0.5 rounded-md transition-colors duration-100"
+          ? "bg-cyan-400/25 text-cyan-100 ring-1 ring-cyan-300/50 px-1 py-0.5 rounded-md transition-colors duration-100"
           : isSpoken
-          ? "text-sky-700 transition-colors duration-100"
+          ? "text-cyan-300 transition-colors duration-100"
           : "transition-colors duration-100";
 
         if (!gloss) {
@@ -61,16 +61,16 @@ export function InteractiveEnglishText({
               }
               title={gloss}
               aria-label={`${word}: ${gloss}`}
-              className={`inline p-0 m-0 border-0 bg-transparent font-inherit text-inherit underline decoration-dotted decoration-accent/70 underline-offset-4 hover:bg-amber-100/80 rounded-sm cursor-help ${baseColorClass}`}
+              className={`inline p-0 m-0 border-0 bg-transparent font-inherit text-inherit underline decoration-dotted decoration-cyan-400/75 underline-offset-4 hover:bg-cyan-400/20 hover:text-white rounded-sm cursor-help ${baseColorClass}`}
             >
               {word}
             </button>
             {isOpen && (
               <span
                 role="tooltip"
-                className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 z-30 whitespace-nowrap max-w-[230px] truncate px-2.5 py-1 rounded-lg bg-ink text-white text-[11px] font-sans font-medium shadow-md pointer-events-none"
+                className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 z-30 whitespace-nowrap max-w-[230px] truncate px-2.5 py-1 rounded-lg bg-slate-950/95 backdrop-blur-xl text-slate-100 border border-white/25 text-[11px] font-sans font-medium shadow-[0_8px_24px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.25)] pointer-events-none"
               >
-                <span className="font-mono text-amber-300">{word.replace(/[^a-zA-Z0-9-]/g, "")}:</span>{" "}
+                <span className="font-mono text-cyan-300">{word.replace(/[^a-zA-Z0-9-]/g, "")}:</span>{" "}
                 {gloss}
               </span>
             )}

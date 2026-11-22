@@ -184,12 +184,12 @@ function PopoverArrowPointer({ arrow }: { arrow: TourPopoverArrow }) {
         className="absolute pointer-events-none"
         style={{ top: -12, left: arrow.offset - 11 }}
       >
-        <path d="M2 13 L11 1 L20 13 Z" fill="#FFFFFF" />
+        <path d="M2 13 L11 1 L20 13 Z" fill="#0B1222" />
         <path
           d="M2 11 L11 1 L20 11"
           fill="none"
-          stroke="#1A1714"
-          strokeWidth="2"
+          stroke="rgba(255, 255, 255, 0.24)"
+          strokeWidth="1.5"
           strokeLinejoin="round"
         />
       </svg>
@@ -206,12 +206,12 @@ function PopoverArrowPointer({ arrow }: { arrow: TourPopoverArrow }) {
         className="absolute pointer-events-none"
         style={{ bottom: -12, left: arrow.offset - 11 }}
       >
-        <path d="M2 0 L11 12 L20 0 Z" fill="#FFFFFF" />
+        <path d="M2 0 L11 12 L20 0 Z" fill="#0B1222" />
         <path
           d="M2 2 L11 12 L20 2"
           fill="none"
-          stroke="#1A1714"
-          strokeWidth="2"
+          stroke="rgba(255, 255, 255, 0.24)"
+          strokeWidth="1.5"
           strokeLinejoin="round"
         />
       </svg>
@@ -228,12 +228,12 @@ function PopoverArrowPointer({ arrow }: { arrow: TourPopoverArrow }) {
         className="absolute pointer-events-none"
         style={{ left: -12, top: arrow.offset - 11 }}
       >
-        <path d="M13 2 L1 11 L13 20 Z" fill="#FFFFFF" />
+        <path d="M13 2 L1 11 L13 20 Z" fill="#0B1222" />
         <path
           d="M11 2 L1 11 L11 20"
           fill="none"
-          stroke="#1A1714"
-          strokeWidth="2"
+          stroke="rgba(255, 255, 255, 0.24)"
+          strokeWidth="1.5"
           strokeLinejoin="round"
         />
       </svg>
@@ -249,12 +249,12 @@ function PopoverArrowPointer({ arrow }: { arrow: TourPopoverArrow }) {
       className="absolute pointer-events-none"
       style={{ right: -12, top: arrow.offset - 11 }}
     >
-      <path d="M0 2 L12 11 L0 20 Z" fill="#FFFFFF" />
+      <path d="M0 2 L12 11 L0 20 Z" fill="#0B1222" />
       <path
         d="M2 2 L12 11 L2 20"
         fill="none"
-        stroke="#1A1714"
-        strokeWidth="2"
+        stroke="rgba(255, 255, 255, 0.24)"
+        strokeWidth="1.5"
         strokeLinejoin="round"
       />
     </svg>
@@ -575,9 +575,9 @@ export function FeatureGuideDock() {
         onClick={handleOpenManual}
         aria-label="Hướng dẫn"
         title={`Mở hướng dẫn: ${guide.title}`}
-        className="fixed bottom-20 right-3 md:bottom-5 md:right-5 z-40 inline-flex items-center justify-center gap-1.5 p-2.5 sm:px-3.5 sm:py-2 rounded-pill bg-white hover:bg-paper-muted text-ink border border-ink/20 text-xs font-semibold shadow-card shadow-hard-press transition-all"
+        className="fixed bottom-20 right-3 md:bottom-5 md:right-5 z-40 inline-flex items-center justify-center gap-1.5 p-2.5 sm:px-3.5 sm:py-2 rounded-pill liquid-glass-pill text-slate-100 hover:text-white hover:border-cyan-400/50 text-xs font-semibold transition-all"
       >
-        <HelpCircle className="w-4 h-4 text-accent shrink-0" aria-hidden="true" />
+        <HelpCircle className="w-4 h-4 text-cyan-400 shrink-0" aria-hidden="true" />
         <span className="hidden sm:inline">Hướng dẫn</span>
       </button>
 
@@ -592,10 +592,10 @@ export function FeatureGuideDock() {
           <style>{`
             @keyframes featureGuideSpotlightPulse {
               0%, 100% {
-                box-shadow: 0 0 0 3px rgba(229, 72, 77, 0.35), 0 0 22px rgba(229, 72, 77, 0.45);
+                box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.4), 0 0 22px rgba(6, 182, 212, 0.5);
               }
               50% {
-                box-shadow: 0 0 0 9px rgba(229, 72, 77, 0.08), 0 0 28px rgba(229, 72, 77, 0.65);
+                box-shadow: 0 0 0 9px rgba(34, 211, 238, 0.1), 0 0 30px rgba(34, 211, 238, 0.72);
               }
             }
           `}</style>
@@ -639,7 +639,7 @@ export function FeatureGuideDock() {
                 y="0"
                 width={viewport.width}
                 height={viewport.height}
-                fill="rgba(26, 23, 20, 0.58)"
+                fill="rgba(2, 6, 23, 0.72)"
                 mask={`url(#${maskId})`}
               />
             </svg>
@@ -648,7 +648,7 @@ export function FeatureGuideDock() {
           {spotlightRect && (
             <div
               aria-hidden="true"
-              className="fixed pointer-events-none rounded-[14px] border-2 border-[#E5484D]"
+              className="fixed pointer-events-none rounded-[14px] border-2 border-cyan-400"
               style={{
                 top: spotlightRect.top,
                 left: spotlightRect.left,
@@ -663,7 +663,7 @@ export function FeatureGuideDock() {
             ref={popoverRef}
             tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
-            className="fixed z-[75] bg-white border border-ink/15 rounded-xl sm:rounded-2xl shadow-soft sm:shadow-soft focus:outline-none"
+            className="fixed z-[75] bg-slate-950/95 backdrop-blur-2xl border border-white/20 rounded-xl sm:rounded-2xl shadow-[0_20px_56px_rgba(0,0,0,0.72),inset_0_1px_1px_rgba(255,255,255,0.26)] focus:outline-none"
             style={{
               top: popoverLayout.top,
               left: popoverLayout.left,
@@ -685,14 +685,14 @@ export function FeatureGuideDock() {
             >
             <div className="flex items-center justify-between gap-2">
               <div className="flex flex-wrap items-center gap-1.5 min-w-0">
-                <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-pill bg-[#FFE5E5] border border-[#E5484D]/40 text-[#E5484D] text-[10px] sm:text-[11px] font-mono font-bold">
+                <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-pill bg-cyan-500/20 border border-cyan-400/45 text-cyan-200 text-[10px] sm:text-[11px] font-mono font-bold">
                   <Compass className="w-3 h-3 shrink-0" aria-hidden="true" />
                   <span>
                     Bước {safeStepIndex + 1} / {totalStops}
                   </span>
                 </span>
                 {guide.rewardBadge && (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-pill bg-amber-100 border border-amber-300 text-amber-900 text-[10px] font-mono font-bold">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-pill bg-amber-500/20 border border-amber-400/40 text-amber-200 text-[10px] font-mono font-bold">
                     <Coins className="w-3 h-3 shrink-0" aria-hidden="true" />
                     <span>{guide.rewardBadge}</span>
                   </span>
@@ -703,7 +703,7 @@ export function FeatureGuideDock() {
                 <button
                   type="button"
                   onClick={handleAcknowledge}
-                  className="text-[11px] font-semibold text-ink-muted hover:text-ink px-2 py-0.5 sm:py-1 rounded-pill hover:bg-paper-muted transition-colors"
+                  className="text-[11px] font-semibold text-slate-300 hover:text-white px-2 py-0.5 sm:py-1 rounded-pill hover:bg-white/10 transition-colors"
                 >
                   Bỏ qua
                 </button>
@@ -711,7 +711,7 @@ export function FeatureGuideDock() {
                   type="button"
                   onClick={handleAcknowledge}
                   aria-label="Đóng hướng dẫn"
-                  className="w-6 h-6 sm:w-7 sm:h-7 rounded-pill bg-paper border border-ink/15 text-ink-muted hover:text-ink hover:bg-paper-muted flex items-center justify-center transition-colors"
+                  className="w-6 h-6 sm:w-7 sm:h-7 rounded-pill bg-white/10 border border-white/15 text-slate-300 hover:text-white hover:bg-white/20 flex items-center justify-center transition-colors"
                 >
                   <X className="w-3.5 h-3.5" aria-hidden="true" />
                 </button>
@@ -719,24 +719,24 @@ export function FeatureGuideDock() {
             </div>
 
             <div className="space-y-1 sm:space-y-1.5">
-              <div className="text-[10px] sm:text-[11px] font-mono font-semibold text-ink-muted uppercase tracking-wider truncate">
+              <div className="text-[10px] sm:text-[11px] font-mono font-semibold text-cyan-300/90 uppercase tracking-wider truncate">
                 {guide.title}
               </div>
               <h2
                 id="feature-guide-title"
-                className="text-[13px] sm:text-base font-bold text-ink leading-snug"
+                className="text-[13px] sm:text-base font-bold text-white leading-snug"
               >
                 {activeStop.title}
               </h2>
-              <p className="text-xs sm:text-[13px] text-ink-muted leading-snug sm:leading-relaxed">
+              <p className="text-xs sm:text-[13px] text-slate-300 leading-snug sm:leading-relaxed">
                 {activeStop.description}
               </p>
             </div>
 
             {isLastStep && guide.tips.length > 0 && (
-              <div className="bg-paper border border-ink/15 rounded-xl px-2.5 py-1.5 sm:px-3 sm:py-2 flex items-start gap-2 text-[11px] text-ink-muted leading-snug sm:leading-relaxed">
+              <div className="bg-white/[0.06] border border-white/15 rounded-xl px-2.5 py-1.5 sm:px-3 sm:py-2 flex items-start gap-2 text-[11px] text-slate-200 leading-snug sm:leading-relaxed">
                 <Lightbulb
-                  className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5"
+                  className="w-3.5 h-3.5 text-amber-300 shrink-0 mt-0.5"
                   aria-hidden="true"
                 />
                 <span>{guide.tips[0]}</span>
@@ -755,8 +755,8 @@ export function FeatureGuideDock() {
                     aria-current={isCurrent ? "step" : undefined}
                     className={`h-2 rounded-pill transition-all ${
                       isCurrent
-                        ? "w-6 bg-[#E5484D]"
-                        : "w-2 bg-ink/20 hover:bg-ink/40"
+                        ? "w-6 bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.75)]"
+                        : "w-2 bg-white/25 hover:bg-white/50"
                     }`}
                   />
                 );
@@ -768,7 +768,7 @@ export function FeatureGuideDock() {
                 type="button"
                 onClick={handlePrevStep}
                 disabled={safeStepIndex === 0}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-pill bg-paper hover:bg-paper-muted text-ink border border-ink/20 text-xs font-semibold disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-pill liquid-glass-btn text-xs font-semibold disabled:opacity-40 disabled:pointer-events-none"
               >
                 <ArrowLeft className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                 <span>Trước</span>
@@ -777,7 +777,7 @@ export function FeatureGuideDock() {
               <button
                 type="button"
                 onClick={handleNextStep}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-pill bg-[#E5484D] hover:bg-[#DC3D43] text-white border border-[#1A1714] text-xs font-bold shadow-sm transition-all"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-pill liquid-btn-primary text-xs"
               >
                 {isLastStep ? (
                   <>
@@ -799,18 +799,18 @@ export function FeatureGuideDock() {
             {reenabledNotice && (
               <div
                 role="status"
-                className="px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-[11px] font-medium text-emerald-700"
+                className="px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-400/40 text-[11px] font-medium text-emerald-200"
               >
                 Đã bật lại hướng dẫn tự động cho các tính năng bạn chưa xem.
               </div>
             )}
 
-            <div className="pt-1 border-t border-ink/10 flex items-center justify-between gap-2">
+            <div className="pt-1 border-t border-white/15 flex items-center justify-between gap-2">
               {autoDisabled ? (
                 <button
                   type="button"
                   onClick={handleEnableAutoGuides}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-pill bg-sky-50 hover:bg-sky-100 text-sky-800 text-[10px] sm:text-[11px] font-semibold border border-sky-200 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-pill bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-200 text-[10px] sm:text-[11px] font-semibold border border-cyan-400/40 transition-colors"
                 >
                   <RotateCcw className="w-3 h-3 shrink-0" aria-hidden="true" />
                   <span>Bật lại hướng dẫn tự động</span>
@@ -819,14 +819,14 @@ export function FeatureGuideDock() {
                 <button
                   type="button"
                   onClick={handleDisableAutoGuides}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-pill bg-paper hover:bg-paper-muted text-ink-muted hover:text-ink text-[10px] sm:text-[11px] font-medium border border-ink/15 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-pill bg-white/[0.07] hover:bg-white/[0.14] text-slate-300 hover:text-white text-[10px] sm:text-[11px] font-medium border border-white/15 transition-colors"
                 >
                   <BellOff className="w-3 h-3 shrink-0" aria-hidden="true" />
                   <span>Tắt hướng dẫn tự động</span>
                 </button>
               )}
 
-              <span className="text-[10px] font-mono text-ink-faint hidden sm:inline">
+              <span className="text-[10px] font-mono text-slate-400 hidden sm:inline">
                 ← / → • Esc
               </span>
             </div>
