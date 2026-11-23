@@ -41,7 +41,7 @@ type AvatarEffectId =
 
 interface AvatarLottieConfig {
   src: string;
-  filter: string;
+  filter?: string;
   micColor: string;
 }
 
