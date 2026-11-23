@@ -744,6 +744,14 @@ function StormBeamsOverlay() {
 }
 
 export function FullPageProfileEffect({
+  themeId: _themeId,
+  item: _item,
+  contained: _contained = false,
+}: FullPageProfileEffectProps) {
+  return null;
+}
+
+function FullPageProfileEffectLegacy({
   themeId,
   item,
   contained = false,
