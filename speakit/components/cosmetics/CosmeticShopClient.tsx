@@ -837,7 +837,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
               <div
                 data-tour="shop-sandbox-preview"
-                className="lg:col-span-5 flex items-center gap-4 border-l-2 border-blue-700 dark:border-blue-500 pl-4 py-2"
+                className="lg:col-span-5 flex items-center gap-4 py-2"
               >
                 <DiscordAvatarFrame
                   equippedId={activeSandbox.avatar_decoration}

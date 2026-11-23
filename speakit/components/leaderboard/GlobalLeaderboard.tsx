@@ -567,10 +567,10 @@ export function GlobalLeaderboard({
                       className={`transition-colors ${
                         hasNameplate || hasFx
                           ? entry.isCurrentUser
-                            ? "border-l-4 border-l-blue-700 dark:border-l-blue-500"
+                            ? "ring-2 ring-blue-700/30 dark:ring-blue-500/40"
                             : ""
                           : entry.isCurrentUser
-                          ? "bg-blue-50/60 dark:bg-blue-950/30 border-l-4 border-l-blue-700 dark:border-l-blue-500"
+                          ? "bg-blue-50/70 dark:bg-blue-950/30 border-blue-300 dark:border-blue-700"
                           : ""
                       }`}
                     >

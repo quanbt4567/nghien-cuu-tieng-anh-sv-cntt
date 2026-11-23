@@ -810,7 +810,7 @@ export function ProfileView() {
           </div>
         </div>
 
-        <p className="text-sm text-slate-600 dark:text-slate-300 border-l-4 border-l-blue-700 dark:border-l-blue-500 bg-white dark:bg-slate-900 border-y border-r border-slate-200 dark:border-slate-800 rounded-r-xl px-4 py-2.5">
+        <p className="text-sm text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5">
           Đổi tên hiển thị, lưu mã khôi phục thiết bị DEV-XXXXXX và dùng IT-Coin mở khóa hiệu ứng Discord-style tại{" "}
           <Link href="/shop" className="font-semibold text-blue-700 dark:text-blue-400 hover:underline">
             IT-Coin Shop
@@ -1078,7 +1078,7 @@ export function ProfileView() {
             </div>
           </div>
 
-          <div className="md:text-right shrink-0 border-l-2 border-blue-700 dark:border-blue-500 pl-4 py-1 font-mono">
+          <div className="md:text-right shrink-0 md:border-l md:border-slate-200 md:dark:border-slate-800 md:pl-5 py-1 font-mono">
             <div className="text-[11px] uppercase text-slate-600 dark:text-slate-400">Tổng điểm tích lũy</div>
             <div className="text-xl font-bold text-blue-700 dark:text-blue-400">
               {identity.totalPoints.toLocaleString("vi-VN")} pts
