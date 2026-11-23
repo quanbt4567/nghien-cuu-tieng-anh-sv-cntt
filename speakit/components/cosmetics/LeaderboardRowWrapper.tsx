@@ -162,7 +162,15 @@ export function LeaderboardRowWrapper({
   const nameplateItem = nameplateId ? findCosmeticById(nameplateId) : undefined;
   const bannerAssetUrl = fxItem?.assetUrl ?? nameplateItem?.assetUrl;
   const [bannerFailed, setBannerFailed] = useState(false);
+  const [isMobileTouch, setIsMobileTouch] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const effectiveLite = lite || isMobileTouch;
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const coarse = window.matchMedia?.("(hover: none) and (pointer: coarse)")?.matches ?? false;
+    setIsMobileTouch(coarse || window.innerWidth < 768);
+  }, []);
 
   useEffect(() => {
     setBannerFailed(false);
@@ -196,11 +204,11 @@ export function LeaderboardRowWrapper({
       ref={containerRef}
       onPointerMove={handlePointerMove}
       style={rootVars}
-      className={`group relative rounded-2xl overflow-hidden bg-white/85 ${lite ? "" : "backdrop-blur-md"} border border-slate-200/85 text-slate-900 shadow-[0_8px_24px_rgba(15,23,42,0.08),inset_0_1px_1px_rgba(255,255,255,0.95)] ${className}`.trim()}
+      className={`group relative rounded-2xl overflow-hidden bg-white/85 ${effectiveLite ? "" : "backdrop-blur-md"} border border-slate-200/85 text-slate-900 shadow-[0_8px_24px_rgba(15,23,42,0.08),inset_0_1px_1px_rgba(255,255,255,0.95)] ${className}`.trim()}
     >
       <span
         aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 rounded-[inherit] bg-white/85 ${lite ? "" : "backdrop-blur-md"} z-0`}
+        className={`pointer-events-none absolute inset-0 rounded-[inherit] bg-white/85 ${effectiveLite ? "" : "backdrop-blur-md"} z-0`}
       />
 
       {bannerAssetUrl && !bannerFailed && (
@@ -263,7 +271,7 @@ export function LeaderboardRowWrapper({
         />
       )}
 
-      {!lite && fxId === "lb-rb-electric-border" && (
+      {!effectiveLite && fxId === "lb-rb-electric-border" && (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[7]">
           <DynamicElectricBorder
             color="#38BDF8"
@@ -277,7 +285,7 @@ export function LeaderboardRowWrapper({
         </div>
       )}
 
-      {!lite && fxId === "lb-rb-star-comet-border" && (
+      {!effectiveLite && fxId === "lb-rb-star-comet-border" && (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[7]">
           <DynamicStarBorder
             as="div"
@@ -293,7 +301,7 @@ export function LeaderboardRowWrapper({
         </div>
       )}
 
-      {!lite && fxId === "lb-rb-pixel-card" && (
+      {!effectiveLite && fxId === "lb-rb-pixel-card" && (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[4] opacity-55">
           <DynamicPixelCard
             variant="pink"
@@ -304,7 +312,7 @@ export function LeaderboardRowWrapper({
         </div>
       )}
 
-      {!lite && fxId === "lb-rb-spotlight-card" && (
+      {!effectiveLite && fxId === "lb-rb-spotlight-card" && (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[4] opacity-65">
           <DynamicSpotlightCard
             spotlightColor="#10B981"
@@ -324,7 +332,7 @@ export function LeaderboardRowWrapper({
         </span>
       )}
 
-      {fxId === "lb-aceternity-canvas-reveal" && (
+      {!effectiveLite && fxId === "lb-aceternity-canvas-reveal" && (
         <span
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 z-[4] opacity-35"
@@ -335,7 +343,7 @@ export function LeaderboardRowWrapper({
         />
       )}
 
-      {!lite && fxId === "lb-rb-tilted-card" ? (
+      {!effectiveLite && fxId === "lb-rb-tilted-card" ? (
         <div className="relative z-10">
           <DynamicTiltedCard
             containerHeight="auto"
