@@ -762,6 +762,13 @@ export function FullPageProfileEffect({
   const [ambientFailed, setAmbientFailed] = useState(false);
   const [introFailed, setIntroFailed] = useState(false);
   const [introDone, setIntroDone] = useState(false);
+  const [isMobileTouch, setIsMobileTouch] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const coarse = window.matchMedia?.("(hover: none) and (pointer: coarse)")?.matches ?? false;
+    setIsMobileTouch(coarse || window.innerWidth < 768);
+  }, []);
 
   useEffect(() => {
     setAmbientFailed(false);
@@ -770,8 +777,10 @@ export function FullPageProfileEffect({
   }, [activeKey, resolvedItem?.assetUrl, resolvedItem?.introAssetUrl]);
 
   const isReactBitsTheme = Boolean(resolvedThemeId && REACT_BITS_THEME_IDS.has(resolvedThemeId));
+  const skipHeavyWebGlOnMobile = !contained && isMobileTouch;
 
   useEffect(() => {
+    if (skipHeavyWebGlOnMobile) return;
     if (isReactBitsTheme) return;
     if (mode === undefined) return;
     if (typeof window === "undefined") return;
@@ -843,7 +852,7 @@ export function FullPageProfileEffect({
       gl.getExtension("WEBGL_lose_context")?.loseContext();
       renderer = null;
     };
-  }, [mode, isReactBitsTheme]);
+  }, [mode, isReactBitsTheme, skipHeavyWebGlOnMobile]);
 
   if (mode === undefined && !isReactBitsTheme) return null;
 
@@ -852,6 +861,19 @@ export function FullPageProfileEffect({
   const containerClass = contained
     ? "pointer-events-none absolute inset-0 z-0 overflow-hidden"
     : "pointer-events-none fixed inset-0 z-0 overflow-hidden";
+
+  if (skipHeavyWebGlOnMobile) {
+    const accent = glowColor ?? "#38BDF8";
+    return (
+      <div
+        aria-hidden="true"
+        className={containerClass}
+        style={{
+          background: `radial-gradient(85% 55% at 85% 15%, ${accent}28 0%, transparent 65%), radial-gradient(75% 50% at 15% 80%, ${accent}1f 0%, transparent 65%)`,
+        }}
+      />
+    );
+  }
 
   if (isReactBitsTheme && resolvedThemeId) {
     return (

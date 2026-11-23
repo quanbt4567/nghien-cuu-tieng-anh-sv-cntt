@@ -821,7 +821,7 @@ export function ProfileView() {
         <LeaderboardRowWrapper
           fxId={equippedCosmetics.leaderboard_fx}
           nameplateId={equippedCosmetics.nameplate}
-          className="liquid-glass-card p-5 sm:p-6"
+          className="liquid-glass-card-lite p-5 sm:p-6"
         >
           <section
             aria-label="Thông tin định danh người học"
@@ -1168,7 +1168,7 @@ export function ProfileView() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <section
           aria-label="Chọn vai trò CNTT"
-          className="liquid-glass-card p-5 flex flex-col justify-between gap-4"
+          className="liquid-glass-card-lite p-5 flex flex-col justify-between gap-4"
         >
           <div className="space-y-3">
             <div className="flex items-center justify-between gap-2">
@@ -1225,7 +1225,7 @@ export function ProfileView() {
 
         <section
           aria-label="Mã chuyển thiết bị và khôi phục hồ sơ"
-          className="liquid-glass-card p-5 space-y-4"
+          className="liquid-glass-card-lite p-5 space-y-4"
         >
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-1.5">
@@ -1333,7 +1333,7 @@ export function ProfileView() {
 
       <section
         aria-label="Kệ Danh hiệu và Viền Avatar"
-        className="liquid-glass-card p-5 space-y-4"
+        className="liquid-glass-card-lite p-5 space-y-4"
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -1342,7 +1342,7 @@ export function ProfileView() {
               <span>IT-Coin Cosmetic Armory</span>
             </h2>
             <p className="text-xs text-slate-600 mt-0.5">
-              Đã sở hữu {identity.ownedItems.length}/{COSMETIC_CATALOG.length} hiệu ứng · Xem nhanh tối đa 4 vật phẩm nổi bật.
+              Đã sở hữu {COSMETIC_CATALOG.filter((item) => identity.ownedItems.includes(item.id)).length}/{COSMETIC_CATALOG.length} hiệu ứng · Xem nhanh tối đa 4 vật phẩm nổi bật.
             </p>
           </div>
 
@@ -1461,7 +1461,7 @@ export function ProfileView() {
 
       <section
         aria-label="Tổng quan hoạt động luyện nói và Arena"
-        className="liquid-glass-card p-5 sm:p-6 space-y-5"
+        className="liquid-glass-card-lite p-5 sm:p-6 space-y-5"
       >
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/85 pb-3">
           <div>
