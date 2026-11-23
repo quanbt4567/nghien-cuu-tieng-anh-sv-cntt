@@ -15,7 +15,7 @@ import {
   Volume2,
   VolumeX,
   Check,
-  Sparkles,
+  CheckCircle2,
 } from "lucide-react";
 import { SCENARIOS, VOCABULARY_LIST } from "../../../data/scenarios";
 import { MicButton } from "../../../components/audio/MicButton";
@@ -209,8 +209,8 @@ export default function PracticePage() {
   if (!scenario && isContentSyncing) {
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center">
-        <div className="liquid-glass-card p-8 inline-flex items-center gap-3 text-sm font-semibold text-slate-900">
-          <Loader2 className="w-5 h-5 animate-spin text-sky-600" />
+        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-8 inline-flex items-center gap-3 text-sm font-semibold text-slate-900 dark:text-slate-50">
+          <Loader2 className="w-5 h-5 animate-spin text-blue-700 dark:text-blue-400" />
           <span>Đang tải kịch bản luyện tập...</span>
         </div>
       </div>
@@ -220,18 +220,18 @@ export default function PracticePage() {
   if (!scenario || scenario.turns.length === 0) {
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center space-y-4">
-        <div className="w-12 h-12 rounded-full bg-rose-100/90 text-rose-600 flex items-center justify-center mx-auto border border-rose-300/80">
+        <div className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 flex items-center justify-center mx-auto border border-red-200 dark:border-red-800">
           <AlertCircle className="w-6 h-6" />
         </div>
-        <h1 className="text-xl font-bold text-slate-900">
+        <h1 className="text-xl font-bold text-slate-900 dark:text-slate-50">
           Không tìm thấy tình huống làm việc này
         </h1>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-600 dark:text-slate-300">
           Kịch bản bạn đang tìm kiếm không tồn tại hoặc đường dẫn không đúng.
         </p>
         <Link
           href="/"
-          className="liquid-btn-primary inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs transition-all"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white text-sm font-semibold transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Quay lại danh sách kịch bản</span>
@@ -412,20 +412,20 @@ export default function PracticePage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 sm:py-8 space-y-6">
-      <div className="liquid-glass-card flex flex-wrap items-center justify-between gap-3 px-4 py-3">
+      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl flex flex-wrap items-center justify-between gap-3 px-4 py-3">
         <div className="flex items-center gap-3 min-w-0">
           <Link
             href="/"
-            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all shrink-0"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700 dark:hover:border-blue-500 text-xs font-semibold transition-colors shrink-0"
           >
-            <ArrowLeft className="w-3.5 h-3.5 text-sky-600" />
+            <ArrowLeft className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
             <span>Kịch bản</span>
           </Link>
           <div className="min-w-0">
-            <h1 className="text-sm sm:text-base font-bold text-slate-900 leading-tight">
+            <h1 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-50 leading-tight">
               {scenario.titleVI}
             </h1>
-            <p className="text-[11px] font-mono text-slate-600">
+            <p className="text-xs font-mono text-slate-600 dark:text-slate-400">
               {scenario.titleEN}
             </p>
           </div>
@@ -439,15 +439,15 @@ export default function PracticePage() {
               return (
                 <span
                   key={turn.turnIndex}
-                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono font-bold border transition-all ${
+                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono font-bold border transition-colors ${
                     isCurrent
-                      ? "bg-sky-600 text-white border-sky-500 shadow-[0_4px_12px_rgba(14,165,233,0.3)]"
+                      ? "bg-blue-700 text-white border-blue-700 dark:bg-blue-600 dark:border-blue-600"
                       : isDone
-                      ? "bg-emerald-100/90 text-emerald-700 border-emerald-300/80"
-                      : "bg-slate-100/85 text-slate-600 border-slate-200/85"
+                      ? "bg-green-50 text-green-800 border-green-200 dark:bg-green-950/50 dark:text-green-300 dark:border-green-800"
+                      : "bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700"
                   }`}
                 >
-                  {isDone && <Check className="w-3 h-3 text-emerald-600 stroke-[3]" />}
+                  {isDone && <Check className="w-3 h-3 text-green-700 dark:text-green-400 stroke-[3]" />}
                   <span>
                     Turn {idx + 1}/{scenario.turns.length}
                   </span>
@@ -457,16 +457,16 @@ export default function PracticePage() {
           </div>
 
           <div className="inline-flex items-center gap-1.5">
-            <label className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/85 border border-slate-200/85 text-xs text-slate-900">
-              <Volume2 className="w-3.5 h-3.5 text-sky-600 shrink-0" />
+            <label className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-slate-100">
+              <Volume2 className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400 shrink-0" />
               <select
                 aria-label="AI Voice Persona"
                 value={voicePersona}
                 onChange={(e) => handleVoiceChange(normalizeTtsPersona(e.target.value))}
-                className="bg-transparent text-xs font-medium text-slate-900 focus:outline-none cursor-pointer pr-1"
+                className="bg-transparent text-xs font-medium text-slate-900 dark:text-slate-100 focus:outline-none cursor-pointer pr-1"
               >
                 {TTS_VOICE_PERSONAS.map((persona) => (
-                  <option key={persona.id} value={persona.id} className="bg-white text-slate-900">
+                  <option key={persona.id} value={persona.id} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">
                     {persona.label}
                   </option>
                 ))}
@@ -492,10 +492,10 @@ export default function PracticePage() {
               }}
               title="Nghe thử giọng"
               aria-label="Nghe thử giọng"
-              className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+              className={`w-8 h-8 rounded-lg flex items-center justify-center border transition-colors ${
                 isPreviewingVoice
-                  ? "liquid-btn-danger"
-                  : "liquid-glass-btn text-sky-600"
+                  ? "bg-red-600 hover:bg-red-700 border-red-600 text-white"
+                  : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-blue-700 dark:text-blue-400 hover:border-blue-700"
               }`}
             >
               {isPreviewingVoice ? (
@@ -530,10 +530,10 @@ export default function PracticePage() {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           <div className="lg:col-span-6 space-y-5">
-            <div className="liquid-glass-card p-5 sm:p-6 space-y-5">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/85 pb-3.5">
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-sky-600 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-sky-500 shadow-[0_0_8px_rgba(14,165,233,0.6)]" />
+            <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-5">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3.5">
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-blue-700 dark:bg-blue-400" />
                   AI Interviewer • Lượt {safeTurnIndex + 1}/{scenario.turns.length}
                 </span>
                 <div className="flex flex-wrap items-center gap-2">
@@ -541,7 +541,7 @@ export default function PracticePage() {
                     <button
                       onClick={stopPromptAudio}
                       type="button"
-                      className="liquid-btn-danger flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full transition-all"
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition-colors"
                       title="Dừng phát âm"
                     >
                       <VolumeX className="w-3.5 h-3.5" />
@@ -551,7 +551,7 @@ export default function PracticePage() {
                     <button
                       onClick={() => playPromptAudio({ slowMode: false })}
                       type="button"
-                      className="liquid-btn-primary flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all"
+                      className="flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors"
                       title="Nghe lại câu hỏi"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
@@ -568,10 +568,10 @@ export default function PracticePage() {
                       }
                     }}
                     type="button"
-                    className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-full border transition-all ${
+                    className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg border transition-colors ${
                       isPlayingPrompt && isSlowPlaying
-                        ? "bg-gradient-to-r from-violet-600 to-purple-700 border-violet-300/80 text-white shadow-[0_6px_18px_rgba(139,92,246,0.4)]"
-                        : "bg-gradient-to-r from-violet-500 to-purple-600 border-violet-300/60 text-white shadow-[0_4px_14px_rgba(139,92,246,0.3)] hover:brightness-105"
+                        ? "bg-red-600 hover:bg-red-700 border-red-600 text-white"
+                        : "bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/50 dark:hover:bg-blue-950/80 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300"
                     }`}
                     title="Nghe chậm từng từ"
                   >
@@ -583,7 +583,7 @@ export default function PracticePage() {
                     <span>Nghe chậm từng từ (Slow)</span>
                   </button>
 
-                  <div className="flex items-center gap-1 bg-slate-100/85 p-0.5 rounded-full border border-slate-200/85">
+                  <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700">
                     {([0.8, 1.0, 1.2] as const).map((r) => (
                       <button
                         key={r}
@@ -594,10 +594,10 @@ export default function PracticePage() {
                             playPromptAudio({ rate: r, slowMode: isSlowPlaying });
                           }
                         }}
-                        className={`px-2 py-0.5 text-[11px] font-mono font-semibold rounded-full border transition-all ${
+                        className={`px-2 py-0.5 text-xs font-mono font-semibold rounded-md border transition-colors ${
                           promptRate === r
-                            ? "bg-sky-600 text-white border-sky-500 shadow-sm"
-                            : "text-slate-600 border-transparent hover:text-slate-900"
+                            ? "bg-blue-700 text-white border-blue-700 dark:bg-blue-600 dark:border-blue-600"
+                            : "text-slate-600 dark:text-slate-300 border-transparent hover:text-slate-900 dark:hover:text-white"
                         }`}
                       >
                         {r}x
@@ -608,10 +608,10 @@ export default function PracticePage() {
               </div>
 
               <div className="space-y-1.5">
-                <div className="text-xs font-mono text-slate-600">
+                <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
                   Vai của bạn: {scenario.roleVI}
                 </div>
-                <div className="text-lg sm:text-xl font-bold text-slate-900 leading-snug">
+                <div className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-50 leading-snug">
                   &ldquo;
                   {(() => {
                     const promptWords = currentTurn.questionEN
@@ -636,8 +636,8 @@ export default function PracticePage() {
                   })()}
                   &rdquo;
                 </div>
-                <p className="inline-flex items-center gap-1.5 text-[11px] text-slate-600">
-                  <Lightbulb className="w-3.5 h-3.5 text-amber-500 shrink-0" aria-hidden="true" />
+                <p className="inline-flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+                  <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" aria-hidden="true" />
                   <span>Mẹo cho người mới: Chạm vào từ tiếng Anh gạch chân để xem nghĩa tiếng Việt ngay.</span>
                 </p>
               </div>
@@ -646,11 +646,11 @@ export default function PracticePage() {
                 <button
                   type="button"
                   onClick={() => setShowHint(!showHint)}
-                  className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-medium transition-all"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs font-mono font-medium transition-colors"
                 >
                   <Lightbulb
                     className={`w-3.5 h-3.5 ${
-                      showHint ? "text-amber-500" : "text-sky-600"
+                      showHint ? "text-amber-600 dark:text-amber-400" : "text-blue-700 dark:text-blue-400"
                     }`}
                   />
                   <span>
@@ -659,10 +659,10 @@ export default function PracticePage() {
                 </button>
 
                 {showHint && (
-                  <div className="mt-3 space-y-3 pt-3 border-t border-slate-200/85">
+                  <div className="mt-3 space-y-3 pt-3 border-t border-slate-200 dark:border-slate-800">
                     <div className="space-y-2">
-                      <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-900">
-                        <Tag className="w-3.5 h-3.5 text-sky-600" />
+                      <div className="flex items-center gap-1.5 text-sm font-semibold text-slate-900 dark:text-slate-100">
+                        <Tag className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
                         <span>Từ khóa gợi ý nên dùng ({currentTurn.keywords.length}):</span>
                       </div>
                       <div className="flex flex-wrap gap-1.5">
@@ -672,11 +672,11 @@ export default function PracticePage() {
                             <span
                               key={kw}
                               title={gloss ?? undefined}
-                              className="px-2.5 py-1 text-xs bg-white/85 border border-slate-200/85 rounded-full text-slate-900 inline-flex items-center gap-1.5"
+                              className="px-2.5 py-1 text-xs bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-slate-900 dark:text-slate-100 inline-flex items-center gap-1.5"
                             >
                               <span className="font-mono font-semibold">{kw}</span>
                               {gloss && (
-                                <span className="text-[11px] text-slate-600">
+                                <span className="text-xs text-slate-600 dark:text-slate-300">
                                   ({gloss})
                                 </span>
                               )}
@@ -686,10 +686,10 @@ export default function PracticePage() {
                       </div>
                     </div>
 
-                    <div className="bg-sky-50/85 border border-sky-200/90 rounded-xl p-3.5 flex items-start gap-2.5 text-xs text-slate-700 leading-relaxed">
-                      <Lightbulb className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                    <div className="border-l-2 border-blue-700 dark:border-blue-500 pl-3.5 py-1 flex items-start gap-2.5 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                      <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                       <div>
-                        <strong className="font-semibold text-sky-700">
+                        <strong className="font-semibold text-blue-800 dark:text-blue-300">
                           Gợi ý cách trả lời:{" "}
                         </strong>
                         <span>{currentTurn.hintVI}</span>
@@ -700,7 +700,7 @@ export default function PracticePage() {
               </div>
             </div>
 
-            <div className="liquid-glass-card p-5 sm:p-6 space-y-5">
+            <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-5">
               <div className="py-2">
                 <MicButton
                   isRecording={isRecording}
@@ -711,17 +711,17 @@ export default function PracticePage() {
                 />
               </div>
 
-              <div className="space-y-3 pt-4 border-t border-slate-200/85">
+              <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
-                    <Keyboard className="w-4 h-4 text-sky-600" />
+                  <div className="flex items-center gap-1.5 text-sm font-bold text-slate-900 dark:text-slate-50">
+                    <Keyboard className="w-4 h-4 text-blue-700 dark:text-blue-400" />
                     <span>
                       {isMicDenied
                         ? "Chế độ gõ văn bản (Microphone bị từ chối)"
                         : "Hoặc gõ / chỉnh sửa câu trả lời tiếng Anh:"}
                     </span>
                   </div>
-                  <span className="text-[11px] font-mono text-slate-600">
+                  <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
                     {transcript.trim() ? transcript.trim().split(/\s+/).length : 0} từ
                   </span>
                 </div>
@@ -745,7 +745,7 @@ export default function PracticePage() {
                   disabled={isEvaluating || isRecording || Boolean(evalResult)}
                   rows={3}
                   placeholder="Gõ câu trả lời tiếng Anh tại đây (hoặc nhấn Ghi âm câu trả lời ở trên)..."
-                  className="liquid-glass-input w-full p-3.5 text-sm rounded-xl resize-none transition-colors disabled:opacity-60"
+                  className="w-full p-3.5 text-sm rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-50 placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:border-blue-700 dark:focus:border-blue-500 resize-none transition-colors disabled:opacity-60"
                 />
 
                 {!evalResult && (
@@ -754,7 +754,7 @@ export default function PracticePage() {
                       type="button"
                       onClick={() => setTranscript("")}
                       disabled={!transcript || isEvaluating || isRecording}
-                      className="text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 px-2.5 py-1.5 rounded-full disabled:opacity-40 disabled:pointer-events-none flex items-center gap-1 transition-colors"
+                      className="text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 px-2.5 py-1.5 rounded-lg disabled:opacity-40 disabled:pointer-events-none flex items-center gap-1 transition-colors"
                     >
                       <RotateCcw className="w-3 h-3" />
                       <span>Xóa chữ</span>
@@ -764,10 +764,10 @@ export default function PracticePage() {
                       type="button"
                       onClick={handleSubmitAnswer}
                       disabled={!transcript.trim() || isEvaluating || isRecording}
-                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm transition-all ${
+                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
                         transcript.trim() && !isEvaluating && !isRecording
-                          ? "liquid-btn-success active:scale-[0.98]"
-                          : "bg-slate-100/85 text-slate-400 font-semibold border border-slate-200/85 cursor-not-allowed shadow-none"
+                          ? "bg-green-700 hover:bg-green-800 text-white active:scale-[0.98]"
+                          : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 cursor-not-allowed"
                       }`}
                     >
                       <span>Gửi câu trả lời</span>
@@ -781,8 +781,8 @@ export default function PracticePage() {
 
           <div className="lg:col-span-6 space-y-4">
             {turnScores.length > 0 && (
-              <div className="liquid-glass-card-lite px-4 py-3 flex flex-wrap items-center justify-between gap-2">
-                <span className="text-xs font-mono font-bold text-slate-700 uppercase">
+              <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+                <span className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 uppercase">
                   Điểm từng lượt:
                 </span>
                 <div className="flex flex-wrap items-center gap-2">
@@ -791,10 +791,10 @@ export default function PracticePage() {
                       key={idx}
                       className={`px-2.5 py-0.5 rounded-full text-xs font-mono font-bold border ${
                         score >= 80
-                          ? "bg-emerald-100/90 border-emerald-300/80 text-emerald-700"
+                          ? "bg-green-50 border-green-200 text-green-800 dark:bg-green-950/50 dark:border-green-800 dark:text-green-300"
                           : score >= 60
-                          ? "bg-sky-100/90 border-sky-300/80 text-sky-700"
-                          : "bg-rose-100/90 border-rose-300/80 text-rose-700"
+                          ? "bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-950/50 dark:border-blue-800 dark:text-blue-300"
+                          : "bg-red-50 border-red-200 text-red-700 dark:bg-red-950/50 dark:border-red-800 dark:text-red-300"
                       }`}
                     >
                       Turn {idx + 1}: {score}
@@ -805,20 +805,20 @@ export default function PracticePage() {
             )}
 
             {isEvaluating && (
-              <div className="liquid-glass-card p-8 flex flex-col items-center justify-center gap-3 text-center">
-                <Loader2 className="w-6 h-6 animate-spin text-sky-600" />
-                <div className="text-sm font-semibold text-slate-900">
+              <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-8 flex flex-col items-center justify-center gap-3 text-center">
+                <Loader2 className="w-6 h-6 animate-spin text-blue-700 dark:text-blue-400" />
+                <div className="text-sm font-semibold text-slate-900 dark:text-slate-50">
                   Đang phân tích từ khóa và ngữ pháp câu trả lời...
                 </div>
-                <p className="text-xs text-slate-600">
+                <p className="text-sm text-slate-600 dark:text-slate-300">
                   Hệ thống chấm theo tỷ lệ 40% Từ khóa • 30% Đầy đủ • 30% Ngữ pháp
                 </p>
               </div>
             )}
 
             {evaluationError && (
-              <div className="bg-rose-50/95 border border-rose-300/80 rounded-2xl p-4 text-xs text-rose-700 font-semibold flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+              <div className="bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 rounded-xl p-4 text-sm text-red-700 dark:text-red-300 font-semibold flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-red-600 dark:text-red-400" />
                 <span>{evaluationError}</span>
               </div>
             )}
@@ -833,22 +833,22 @@ export default function PracticePage() {
               />
             ) : (
               !isEvaluating && (
-                <div className="liquid-glass-card p-6 space-y-4">
-                  <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-sky-600">
-                    <Sparkles className="w-4 h-4 text-sky-600" />
-                    <span>Bảng đánh giá & Gợi ý tự nhiên</span>
+                <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-6 space-y-4">
+                  <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
+                    <CheckCircle2 className="w-4 h-4 text-blue-700 dark:text-blue-400" />
+                    <span>Bảng đánh giá &amp; Gợi ý tự nhiên</span>
                   </div>
-                  <p className="text-sm text-slate-600 leading-relaxed">
-                    Nhấn <strong className="text-slate-900">Ghi âm câu trả lời</strong> ở cột bên trái (hoặc gõ câu tiếng Anh) rồi gửi để xem điểm chi tiết, từ khóa đạt chuẩn và cách diễn đạt tự nhiên hơn.
+                  <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    Nhấn <strong className="text-slate-900 dark:text-slate-50">Ghi âm câu trả lời</strong> ở cột bên trái (hoặc gõ câu tiếng Anh) rồi gửi để xem điểm chi tiết, từ khóa đạt chuẩn và cách diễn đạt tự nhiên hơn.
                   </p>
                   <div className="grid grid-cols-3 gap-1.5 sm:gap-2 pt-1 text-center font-mono">
-                    <div className="whitespace-nowrap flex items-center justify-center leading-tight py-2.5 px-1.5 sm:px-2.5 text-[10px] sm:text-[11px] rounded-xl bg-emerald-100/85 border border-emerald-300/80 text-emerald-700 font-semibold">
+                    <div className="whitespace-nowrap flex items-center justify-center leading-tight py-2.5 px-1.5 sm:px-2.5 text-[10px] sm:text-[11px] rounded-lg bg-green-50 dark:bg-green-950/50 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300 font-semibold">
                       40% Từ khóa
                     </div>
-                    <div className="whitespace-nowrap flex items-center justify-center leading-tight py-2.5 px-1.5 sm:px-2.5 text-[10px] sm:text-[11px] rounded-xl bg-sky-100/85 border border-sky-300/80 text-sky-700 font-semibold">
+                    <div className="whitespace-nowrap flex items-center justify-center leading-tight py-2.5 px-1.5 sm:px-2.5 text-[10px] sm:text-[11px] rounded-lg bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 font-semibold">
                       30% Đầy đủ
                     </div>
-                    <div className="whitespace-nowrap flex items-center justify-center leading-tight py-2.5 px-1.5 sm:px-2.5 text-[10px] sm:text-[11px] rounded-xl bg-violet-100/85 border border-violet-300/80 text-violet-700 font-semibold">
+                    <div className="whitespace-nowrap flex items-center justify-center leading-tight py-2.5 px-1.5 sm:px-2.5 text-[10px] sm:text-[11px] rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold">
                       30% Ngữ pháp
                     </div>
                   </div>

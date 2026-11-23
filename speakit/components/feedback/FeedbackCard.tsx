@@ -3,9 +3,9 @@
 import { useState } from "react";
 import {
   Check,
+  CheckCircle2,
   X,
   MessageSquare,
-  Sparkles,
   ArrowRight,
   Volume2,
 } from "lucide-react";
@@ -33,53 +33,54 @@ export function FeedbackCard({
   const [isPlayingBetter, setIsPlayingBetter] = useState(false);
   const isHigh = result.score >= 80;
   const isMedium = result.score >= 60 && result.score < 80;
+  const scoreRatio = Math.max(0.05, Math.min(1, result.score / 100));
 
   return (
     <div className="space-y-4">
-      <div className="liquid-glass-card p-5 space-y-3.5">
+      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-5 space-y-3.5">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono">
+          <span className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider font-mono">
             Điểm đánh giá câu trả lời
           </span>
           <div className="flex items-baseline gap-1 font-mono">
             <span
               className={`text-3xl font-extrabold ${
                 isHigh
-                  ? "text-emerald-600"
+                  ? "text-green-700 dark:text-green-400"
                   : isMedium
-                  ? "text-sky-600"
-                  : "text-rose-600"
+                  ? "text-blue-700 dark:text-blue-400"
+                  : "text-red-600 dark:text-red-400"
               }`}
             >
               {result.score}
             </span>
-            <span className="text-xs text-slate-600">/100</span>
+            <span className="text-xs text-slate-600 dark:text-slate-400">/100</span>
           </div>
         </div>
 
-        <div className="w-full h-3.5 bg-slate-200/85 rounded-full border border-slate-200/90 overflow-hidden p-0.5">
+        <div className="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
           <div
-            className={`h-full rounded-full transition-all duration-500 ${
+            className={`h-full w-full origin-left rounded-full transition-transform duration-500 ${
               isHigh
-                ? "bg-gradient-to-r from-emerald-500 to-teal-500"
+                ? "bg-green-700 dark:bg-green-500"
                 : isMedium
-                ? "bg-gradient-to-r from-sky-500 to-blue-600"
-                : "bg-gradient-to-r from-rose-500 to-amber-500"
+                ? "bg-blue-700 dark:bg-blue-500"
+                : "bg-red-600 dark:bg-red-500"
             }`}
-            style={{ width: `${Math.max(5, result.score)}%` }}
+            style={{ transform: `scaleX(${scoreRatio})` }}
           />
         </div>
 
-        <div className="flex flex-wrap items-center justify-between text-[11px] font-mono text-slate-600 pt-1 border-t border-slate-200/85">
+        <div className="flex flex-wrap items-center justify-between text-xs font-mono text-slate-600 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800">
           <span>Công thức chấm:</span>
           <span>40% Từ khóa • 30% Đầy đủ • 30% Ngữ pháp</span>
         </div>
       </div>
 
-      <div className="liquid-glass-card p-5 space-y-3.5">
-        <div className="flex items-center justify-between text-xs font-bold text-slate-900">
+      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-5 space-y-3.5">
+        <div className="flex items-center justify-between text-sm font-bold text-slate-900 dark:text-slate-100">
           <span>Từ khóa kỹ thuật CNTT</span>
-          <span className="font-mono text-slate-600">
+          <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
             {result.keywordsUsed.length}/
             {result.keywordsUsed.length + result.keywordsMissed.length} từ đã dùng
           </span>
@@ -89,9 +90,9 @@ export function FeedbackCard({
           {result.keywordsUsed.map((kw) => (
             <span
               key={kw}
-              className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-semibold rounded-full bg-emerald-100/90 border border-emerald-300/80 text-emerald-800"
+              className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-semibold rounded-full bg-green-50 dark:bg-green-950/50 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300"
             >
-              <Check className="w-3.5 h-3.5 text-emerald-600 stroke-[3]" />
+              <Check className="w-3.5 h-3.5 text-green-700 dark:text-green-400 stroke-[3]" />
               <span>{kw}</span>
             </span>
           ))}
@@ -99,30 +100,30 @@ export function FeedbackCard({
           {result.keywordsMissed.map((kw) => (
             <span
               key={kw}
-              className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-medium rounded-full bg-rose-50/95 border border-rose-300/80 text-rose-700 line-through decoration-rose-500 decoration-2"
+              className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-medium rounded-full bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 line-through decoration-red-500 decoration-2"
             >
-              <X className="w-3.5 h-3.5 text-rose-600 stroke-[2.5]" />
+              <X className="w-3.5 h-3.5 text-red-600 dark:text-red-400 stroke-[2.5]" />
               <span>{kw}</span>
             </span>
           ))}
         </div>
       </div>
 
-      <div className="liquid-glass-card p-5 space-y-4">
+      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-5 space-y-4">
         <div className="space-y-1.5">
-          <span className="text-xs font-mono font-bold uppercase text-slate-700 flex items-center gap-1.5">
-            <MessageSquare className="w-3.5 h-3.5 text-sky-600" />
+          <span className="text-xs font-mono font-bold uppercase text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+            <MessageSquare className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
             Văn bản bạn đã nói:
           </span>
-          <div className="p-3 bg-white/75 rounded-xl border border-slate-200/85 text-sm text-slate-900 font-medium leading-relaxed">
-            "{transcript}"
+          <div className="border-l-2 border-slate-300 dark:border-slate-600 pl-3.5 py-1 text-sm text-slate-900 dark:text-slate-100 font-medium leading-relaxed">
+            &ldquo;{transcript}&rdquo;
           </div>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 border-t border-slate-200 dark:border-slate-800 pt-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="text-xs font-mono font-bold uppercase text-sky-700 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-sky-600" />
+            <span className="text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400 flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
               Gợi ý câu nói tự nhiên hơn:
             </span>
             <button
@@ -144,15 +145,15 @@ export function FeedbackCard({
                 });
               }}
               disabled={isPlayingBetter}
-              className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold transition-all disabled:opacity-60"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white text-xs font-mono font-bold transition-colors disabled:opacity-60"
               title="Nghe câu mẫu phát âm chuẩn"
             >
-              <Volume2 className={`w-3.5 h-3.5 ${isPlayingBetter ? "animate-pulse" : ""}`} />
+              <Volume2 className="w-3.5 h-3.5" />
               <span>{isPlayingBetter ? "Đang phát..." : "Nghe mẫu (Shadowing)"}</span>
             </button>
           </div>
-          <div className="p-3.5 bg-sky-50/85 rounded-xl border border-sky-200/90 text-sm text-slate-900 leading-relaxed">
-            <span className="font-semibold text-sky-700 block text-xs font-mono mb-1">
+          <div className="border-l-2 border-blue-700 dark:border-blue-500 pl-3.5 py-1 text-sm text-slate-900 dark:text-slate-100 leading-relaxed">
+            <span className="font-semibold text-blue-800 dark:text-blue-300 block text-xs font-mono mb-1">
               Câu mẫu tự nhiên hơn (chạm từ gạch chân để xem nghĩa):
             </span>
             &ldquo;<InteractiveEnglishText text={result.betterSentence} />&rdquo;
@@ -160,26 +161,26 @@ export function FeedbackCard({
         </div>
 
         {result.grammarCorrections.length > 0 && (
-          <div className="space-y-2">
-            <span className="text-xs font-mono font-bold uppercase text-rose-600">
+          <div className="space-y-2 border-t border-slate-200 dark:border-slate-800 pt-4">
+            <span className="text-xs font-mono font-bold uppercase text-red-600 dark:text-red-400">
               Gợi ý diễn đạt ({result.grammarCorrections.length}):
             </span>
-            <div className="space-y-2">
+            <div className="divide-y divide-slate-200 dark:divide-slate-800">
               {result.grammarCorrections.map((g, idx) => (
                 <div
                   key={idx}
-                  className="p-3 bg-white/80 rounded-xl border border-rose-200/90 space-y-1 text-xs"
+                  className="py-2.5 first:pt-1 last:pb-0 space-y-1 text-sm"
                 >
                   <div className="flex flex-wrap items-baseline gap-2">
-                    <span className="line-through text-rose-600 font-mono">
-                      "{g.original}"
+                    <span className="line-through text-red-600 dark:text-red-400 font-mono">
+                      &ldquo;{g.original}&rdquo;
                     </span>
-                    <span className="font-mono text-slate-500">→</span>
-                    <span className="font-mono font-bold text-emerald-700">
-                      "{g.corrected}"
+                    <span className="font-mono text-slate-500 dark:text-slate-400">-&gt;</span>
+                    <span className="font-mono font-bold text-green-700 dark:text-green-400">
+                      &ldquo;{g.corrected}&rdquo;
                     </span>
                   </div>
-                  <div className="text-slate-700 font-sans pt-0.5">
+                  <div className="text-slate-700 dark:text-slate-300 font-sans">
                     {g.explanationVI}
                   </div>
                 </div>
@@ -189,12 +190,12 @@ export function FeedbackCard({
         )}
 
         {result.pronunciationNote && (
-          <div className="p-3 bg-slate-100/80 rounded-xl border border-slate-200/85 text-xs text-slate-700 space-y-1">
-            <span className="font-semibold text-slate-900 block font-mono">
+          <div className="border-t border-slate-200 dark:border-slate-800 pt-3 text-sm text-slate-700 dark:text-slate-300 space-y-1">
+            <span className="font-semibold text-slate-900 dark:text-slate-100 block text-xs font-mono uppercase">
               Ước lượng phát âm (dựa trên chữ vừa nói):
             </span>
             <p>{result.pronunciationNote}</p>
-            <p className="text-[11px] text-slate-600">
+            <p className="text-sm text-slate-600 dark:text-slate-400">
               Đánh giá dựa trên văn bản bạn vừa nói hoặc gõ vào.
             </p>
           </div>
@@ -206,8 +207,10 @@ export function FeedbackCard({
               type="button"
               onClick={onNextTurn}
               className={`${
-                isLastTurn ? "liquid-btn-success" : "liquid-btn-primary"
-              } w-full py-3.5 px-5 rounded-full text-sm active:scale-[0.99] flex items-center justify-center gap-2 transition-all`}
+                isLastTurn
+                  ? "bg-green-700 hover:bg-green-800"
+                  : "bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700"
+              } w-full py-3.5 px-5 rounded-lg text-white font-semibold text-sm active:scale-[0.99] flex items-center justify-center gap-2 transition-colors`}
             >
               <span>{isLastTurn ? "Xem tổng kết lượt luyện tập" : "Tiếp tục lượt sau"}</span>
               <ArrowRight className="w-4 h-4" />

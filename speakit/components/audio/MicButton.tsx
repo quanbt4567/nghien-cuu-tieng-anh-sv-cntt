@@ -69,12 +69,12 @@ export function MicButton({
         onClick={handleClick}
         disabled={disabled}
         aria-label={isRecording ? "Dừng ghi âm" : "Bắt đầu nói"}
-        className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center transition-all ${
+        className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center border-2 transition-colors transition-transform ${
           disabled
-            ? "bg-slate-100/80 text-slate-400 cursor-not-allowed opacity-60 border border-slate-200/85 shadow-none"
+            ? "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed opacity-60 border-slate-200 dark:border-slate-700"
             : isRecording
-            ? "liquid-btn-danger animate-mic-listening ring-4 ring-rose-500/35 shadow-[0_0_32px_rgba(244,63,94,0.55)] scale-105"
-            : "liquid-btn-primary ring-4 ring-sky-400/30 hover:ring-sky-400/50 hover:scale-105 active:scale-95"
+            ? "bg-red-600 hover:bg-red-700 text-white border-red-700 dark:border-red-500 scale-105"
+            : "bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white border-blue-700 dark:border-blue-500 hover:scale-105 active:scale-95"
         }`}
       >
         {isRecording ? (
@@ -94,7 +94,7 @@ export function MicButton({
           `}</style>
           <div
             aria-hidden="true"
-            className="h-8 flex items-center justify-center gap-1 px-3 py-1 rounded-full bg-white/85 border border-rose-300/80 shadow-sm"
+            className="h-8 flex items-center justify-center gap-1 px-3 py-1 rounded-full bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800"
           >
             {EQUALIZER_BARS.map((baseHeight, idx) => {
               const jitter = ((elapsedSeconds * 5 + idx * 7) % 9) - 4;
@@ -102,7 +102,7 @@ export function MicButton({
               return (
                 <span
                   key={idx}
-                  className="w-1 rounded-full bg-gradient-to-t from-rose-500 to-sky-500 origin-center transition-[height] duration-300"
+                  className="w-1 rounded-full bg-red-600 dark:bg-red-400 origin-center"
                   style={{
                     height: `${barHeight}px`,
                     animation: `speakitWave ${540 + (idx % 3) * 140}ms ease-in-out ${idx * 75}ms infinite`,
@@ -115,11 +115,11 @@ export function MicButton({
           <div
             className={`inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full border text-xs font-mono font-bold ${
               isLowTime
-                ? "bg-rose-600 text-white border-rose-500 shadow-[0_0_16px_rgba(244,63,94,0.35)]"
-                : "bg-rose-50/90 text-rose-700 border-rose-300/80"
+                ? "bg-red-600 text-white border-red-600"
+                : "bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800"
             }`}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-current" />
             <span>{formatDuration(displaySeconds)}</span>
             {hasCountdown && (
               <span className="opacity-75 font-normal">
@@ -135,15 +135,15 @@ export function MicButton({
           type="button"
           onClick={handleClick}
           disabled={disabled}
-          className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none disabled:ring-0 ${
+          className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
             isRecording
-              ? "liquid-btn-danger ring-2 ring-rose-400/35 shadow-[0_0_24px_rgba(244,63,94,0.4)]"
-              : "liquid-btn-primary ring-2 ring-sky-400/30 active:scale-[0.98]"
+              ? "bg-red-600 hover:bg-red-700 text-white"
+              : "bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white active:scale-[0.98]"
           }`}
         >
           {isRecording ? (
             <>
-              <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+              <span className="w-2 h-2 rounded-full bg-white" />
               <span>Dừng ghi âm</span>
             </>
           ) : (
@@ -153,14 +153,14 @@ export function MicButton({
             </>
           )}
         </button>
-        <div className="text-[11px] font-mono text-slate-600">
+        <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
           Nhận diện giọng nói tiếng Anh trên trình duyệt
         </div>
       </div>
 
       {error && (
-        <div className="flex items-center gap-1.5 text-xs text-rose-700 font-medium bg-rose-50/90 px-3 py-1.5 rounded-full border border-rose-300/80">
-          <AlertCircle className="w-3.5 h-3.5 shrink-0 text-rose-600" />
+        <div className="flex items-center gap-1.5 text-sm text-red-700 dark:text-red-300 font-medium bg-red-50 dark:bg-red-950/50 px-3.5 py-2 rounded-lg border border-red-200 dark:border-red-800">
+          <AlertCircle className="w-4 h-4 shrink-0 text-red-600 dark:text-red-400" />
           <span>{error}</span>
         </div>
       )}
