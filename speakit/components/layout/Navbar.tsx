@@ -418,7 +418,17 @@ export function Navbar() {
                       );
                     })}
                     {group.id === "account" && hydrated && (
-                      <div className="mt-1 pt-1 border-t border-slate-200/80">
+                      <div className="mt-1 pt-1 border-t border-slate-200/80 space-y-0.5">
+                        {guestPlayer?.email?.trim().toLowerCase() === "minhquanthcsbt@gmail.com" && (
+                          <Link
+                            href="/admin"
+                            onClick={() => setOpenGroup(null)}
+                            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold text-emerald-700 hover:bg-emerald-500/15 transition-colors"
+                          >
+                            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" aria-hidden="true" />
+                            <span>Quản trị Admin</span>
+                          </Link>
+                        )}
                         {guestPlayer?.email ? (
                           <button
                             type="button"
@@ -512,7 +522,7 @@ export function Navbar() {
                 href="/arena"
                 title={coinTooltip}
                 aria-label={`Chuỗi ${identity.streakDays} ngày, ${identity.itCoins} IT-Coin, ${identity.totalPoints} điểm. ${coinTooltip}`}
-                className="shrink-0 flex items-center gap-1.5 lg:gap-2 px-2.5 lg:px-3 py-1.5 rounded-pill bg-white/85 border border-slate-200/90 hover:border-sky-400/60 hover:bg-white text-xs font-mono text-slate-800 shadow-sm transition-colors"
+                className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-white/85 border border-slate-200/90 hover:border-sky-400/60 hover:bg-white text-xs font-mono text-slate-800 shadow-sm transition-colors"
               >
                 <span className="inline-flex items-center gap-1 text-amber-600">
                   <Flame className="w-3.5 h-3.5 text-amber-500 shrink-0" aria-hidden="true" />
@@ -523,14 +533,7 @@ export function Navbar() {
                 </span>
                 <span className="inline-flex items-center gap-1">
                   <Coins className="w-3.5 h-3.5 text-emerald-600 shrink-0" aria-hidden="true" />
-                  <span className="font-semibold text-emerald-700">{identity.itCoins}</span>{" "}
-                  <span className="hidden lg:inline text-amber-600 font-semibold">Coin</span>
-                </span>
-                <span className="hidden xl:inline text-slate-300" aria-hidden="true">
-                  |
-                </span>
-                <span className="hidden xl:inline text-slate-600">
-                  {identity.totalPoints.toLocaleString("en-US")} pts
+                  <span className="font-semibold text-emerald-700">{identity.itCoins}</span>
                 </span>
               </Link>
 
@@ -541,7 +544,7 @@ export function Navbar() {
                 onClick={toggleTheme}
                 aria-label={theme === "dark" ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối"}
                 title={theme === "dark" ? "Chế độ sáng" : "Chế độ tối"}
-                className="shrink-0 inline-flex items-center justify-center p-1.5 sm:px-2.5 sm:py-1.5 rounded-pill liquid-glass-btn text-xs font-semibold"
+                className="shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full liquid-glass-btn"
               >
                 {theme === "dark" ? (
                   <Sun className="w-3.5 h-3.5 text-amber-400 shrink-0" aria-hidden="true" />
@@ -554,10 +557,10 @@ export function Navbar() {
                 <Link
                   href="/admin"
                   aria-label="Mở trang quản trị Admin"
-                  className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-pill bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-700 border border-emerald-500/45 text-xs font-semibold transition-colors"
+                  title="Admin"
+                  className="md:hidden shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-700 border border-emerald-500/45 transition-colors"
                 >
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" aria-hidden="true" />
-                  <span className="hidden lg:inline">Admin</span>
                 </Link>
               )}
 
@@ -567,10 +570,9 @@ export function Navbar() {
                   onClick={() => void handleLogout()}
                   aria-label="Đăng xuất"
                   title="Đăng xuất"
-                  className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-pill bg-rose-500/12 hover:bg-rose-500/22 text-rose-700 border border-rose-300/85 text-xs font-semibold transition-colors"
+                  className="shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full bg-rose-500/12 hover:bg-rose-500/22 text-rose-700 border border-rose-300/85 transition-colors"
                 >
                   <LogOut className="w-3.5 h-3.5 text-rose-600 shrink-0" aria-hidden="true" />
-                  <span className="hidden lg:inline">Đăng xuất</span>
                 </button>
               )}
             </div>
