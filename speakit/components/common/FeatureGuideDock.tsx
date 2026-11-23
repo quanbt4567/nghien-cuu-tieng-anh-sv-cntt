@@ -184,11 +184,11 @@ function PopoverArrowPointer({ arrow }: { arrow: TourPopoverArrow }) {
         className="absolute pointer-events-none"
         style={{ top: -12, left: arrow.offset - 11 }}
       >
-        <path d="M2 13 L11 1 L20 13 Z" fill="rgba(255, 255, 255, 0.96)" />
+        <path d="M2 13 L11 1 L20 13 Z" className="fill-white dark:fill-[#111827]" />
         <path
           d="M2 11 L11 1 L20 11"
           fill="none"
-          stroke="rgba(203, 213, 225, 0.9)"
+          className="stroke-slate-200 dark:stroke-slate-800"
           strokeWidth="1.5"
           strokeLinejoin="round"
         />
@@ -206,11 +206,11 @@ function PopoverArrowPointer({ arrow }: { arrow: TourPopoverArrow }) {
         className="absolute pointer-events-none"
         style={{ bottom: -12, left: arrow.offset - 11 }}
       >
-        <path d="M2 0 L11 12 L20 0 Z" fill="rgba(255, 255, 255, 0.96)" />
+        <path d="M2 0 L11 12 L20 0 Z" className="fill-white dark:fill-[#111827]" />
         <path
           d="M2 2 L11 12 L20 2"
           fill="none"
-          stroke="rgba(203, 213, 225, 0.9)"
+          className="stroke-slate-200 dark:stroke-slate-800"
           strokeWidth="1.5"
           strokeLinejoin="round"
         />
@@ -228,11 +228,11 @@ function PopoverArrowPointer({ arrow }: { arrow: TourPopoverArrow }) {
         className="absolute pointer-events-none"
         style={{ left: -12, top: arrow.offset - 11 }}
       >
-        <path d="M13 2 L1 11 L13 20 Z" fill="rgba(255, 255, 255, 0.96)" />
+        <path d="M13 2 L1 11 L13 20 Z" className="fill-white dark:fill-[#111827]" />
         <path
           d="M11 2 L1 11 L11 20"
           fill="none"
-          stroke="rgba(203, 213, 225, 0.9)"
+          className="stroke-slate-200 dark:stroke-slate-800"
           strokeWidth="1.5"
           strokeLinejoin="round"
         />
@@ -249,11 +249,11 @@ function PopoverArrowPointer({ arrow }: { arrow: TourPopoverArrow }) {
       className="absolute pointer-events-none"
       style={{ right: -12, top: arrow.offset - 11 }}
     >
-      <path d="M0 2 L12 11 L0 20 Z" fill="rgba(255, 255, 255, 0.96)" />
+      <path d="M0 2 L12 11 L0 20 Z" className="fill-white dark:fill-[#111827]" />
       <path
         d="M2 2 L12 11 L2 20"
         fill="none"
-        stroke="rgba(203, 213, 225, 0.9)"
+        className="stroke-slate-200 dark:stroke-slate-800"
         strokeWidth="1.5"
         strokeLinejoin="round"
       />
@@ -575,9 +575,9 @@ export function FeatureGuideDock() {
         onClick={handleOpenManual}
         aria-label="Hướng dẫn"
         title={`Mở hướng dẫn: ${guide.title}`}
-        className="fixed bottom-20 right-3 md:bottom-5 md:right-5 z-40 inline-flex items-center justify-center gap-1.5 p-2.5 sm:px-3.5 sm:py-2 rounded-pill liquid-glass-pill text-slate-800 hover:text-sky-700 hover:border-sky-400/60 text-xs font-semibold transition-all"
+        className="fixed bottom-20 right-3 md:bottom-5 md:right-5 z-40 inline-flex items-center justify-center gap-1.5 p-2.5 sm:px-3.5 sm:py-2 rounded-pill bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-700 shadow-sm text-slate-800 dark:text-slate-100 hover:text-blue-700 dark:hover:text-blue-400 hover:border-blue-500 text-xs font-semibold transition-colors"
       >
-        <HelpCircle className="w-4 h-4 text-sky-600 shrink-0" aria-hidden="true" />
+        <HelpCircle className="w-4 h-4 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
         <span className="hidden sm:inline">Hướng dẫn</span>
       </button>
 
@@ -589,17 +589,6 @@ export function FeatureGuideDock() {
           aria-labelledby="feature-guide-title"
           className="fixed inset-0 z-[70]"
         >
-          <style>{`
-            @keyframes featureGuideSpotlightPulse {
-              0%, 100% {
-                box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.45), 0 0 22px rgba(14, 165, 233, 0.45);
-              }
-              50% {
-                box-shadow: 0 0 0 9px rgba(14, 165, 233, 0.14), 0 0 30px rgba(14, 165, 233, 0.65);
-              }
-            }
-          `}</style>
-
           <div
             onClick={handleAcknowledge}
             className="fixed inset-0"
@@ -627,8 +616,8 @@ export function FeatureGuideDock() {
                       y={spotlightRect.top}
                       width={spotlightRect.width}
                       height={spotlightRect.height}
-                      rx={14}
-                      ry={14}
+                      rx={12}
+                      ry={12}
                       fill="black"
                     />
                   )}
@@ -639,7 +628,7 @@ export function FeatureGuideDock() {
                 y="0"
                 width={viewport.width}
                 height={viewport.height}
-                fill="rgba(15, 23, 42, 0.42)"
+                fill="rgba(15, 23, 42, 0.52)"
                 mask={`url(#${maskId})`}
               />
             </svg>
@@ -648,13 +637,12 @@ export function FeatureGuideDock() {
           {spotlightRect && (
             <div
               aria-hidden="true"
-              className="fixed pointer-events-none rounded-[14px] border-2 border-sky-500"
+              className="fixed pointer-events-none rounded-xl border-2 border-blue-600 dark:border-blue-400"
               style={{
                 top: spotlightRect.top,
                 left: spotlightRect.left,
                 width: spotlightRect.width,
                 height: spotlightRect.height,
-                animation: "featureGuideSpotlightPulse 1.8s ease-in-out infinite",
               }}
             />
           )}
@@ -663,7 +651,7 @@ export function FeatureGuideDock() {
             ref={popoverRef}
             tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
-            className="fixed z-[75] bg-white/95 backdrop-blur-2xl border border-slate-200/90 rounded-xl sm:rounded-2xl shadow-[0_20px_56px_rgba(15,23,42,0.18),inset_0_1px_1px_rgba(255,255,255,0.96)] focus:outline-none"
+            className="fixed z-[75] bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm focus:outline-none"
             style={{
               top: popoverLayout.top,
               left: popoverLayout.left,
@@ -675,7 +663,7 @@ export function FeatureGuideDock() {
             )}
 
             <div
-              className="p-3 sm:p-5 space-y-2.5 sm:space-y-3.5 overflow-y-auto max-h-[44vh] sm:max-h-none"
+              className="p-3.5 sm:p-5 space-y-3 overflow-y-auto max-h-[44vh] sm:max-h-none"
               style={{
                 maxHeight:
                   viewport.width < 640
@@ -683,153 +671,153 @@ export function FeatureGuideDock() {
                     : popoverLayout.maxHeight,
               }}
             >
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex flex-wrap items-center gap-1.5 min-w-0">
-                <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-pill bg-sky-50/90 border border-sky-300/80 text-sky-700 text-[10px] sm:text-[11px] font-mono font-bold">
-                  <Compass className="w-3 h-3 shrink-0" aria-hidden="true" />
-                  <span>
-                    Bước {safeStepIndex + 1} / {totalStops}
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex flex-wrap items-center gap-1.5 min-w-0">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-mono font-bold">
+                    <Compass className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                    <span>
+                      Bước {safeStepIndex + 1} / {totalStops}
+                    </span>
                   </span>
-                </span>
-                {guide.rewardBadge && (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-pill bg-amber-50/90 border border-amber-300/80 text-amber-700 text-[10px] font-mono font-bold">
-                    <Coins className="w-3 h-3 shrink-0" aria-hidden="true" />
-                    <span>{guide.rewardBadge}</span>
-                  </span>
-                )}
-              </div>
+                  {guide.rewardBadge && (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-pill bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-xs font-mono font-bold">
+                      <Coins className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                      <span>{guide.rewardBadge}</span>
+                    </span>
+                  )}
+                </div>
 
-              <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-                <button
-                  type="button"
-                  onClick={handleAcknowledge}
-                  className="text-[11px] font-semibold text-slate-600 hover:text-slate-900 px-2 py-0.5 sm:py-1 rounded-pill hover:bg-slate-100 transition-colors"
-                >
-                  Bỏ qua
-                </button>
-                <button
-                  type="button"
-                  onClick={handleAcknowledge}
-                  aria-label="Đóng hướng dẫn"
-                  className="w-6 h-6 sm:w-7 sm:h-7 rounded-pill bg-slate-100/90 border border-slate-200/85 text-slate-600 hover:text-slate-900 hover:bg-slate-200/80 flex items-center justify-center transition-colors"
-                >
-                  <X className="w-3.5 h-3.5" aria-hidden="true" />
-                </button>
-              </div>
-            </div>
-
-            <div className="space-y-1 sm:space-y-1.5">
-              <div className="text-[10px] sm:text-[11px] font-mono font-semibold text-sky-700 uppercase tracking-wider truncate">
-                {guide.title}
-              </div>
-              <h2
-                id="feature-guide-title"
-                className="text-[13px] sm:text-base font-bold text-slate-900 leading-snug"
-              >
-                {activeStop.title}
-              </h2>
-              <p className="text-xs sm:text-[13px] text-slate-600 leading-snug sm:leading-relaxed">
-                {activeStop.description}
-              </p>
-            </div>
-
-            {isLastStep && guide.tips.length > 0 && (
-              <div className="bg-sky-50/90 border border-sky-200/80 rounded-xl px-2.5 py-1.5 sm:px-3 sm:py-2 flex items-start gap-2 text-[11px] text-slate-700 leading-snug sm:leading-relaxed">
-                <Lightbulb
-                  className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5"
-                  aria-hidden="true"
-                />
-                <span>{guide.tips[0]}</span>
-              </div>
-            )}
-
-            <div className="flex items-center justify-center gap-1.5 pt-0 sm:pt-0.5">
-              {tourStops.map((stop, idx) => {
-                const isCurrent = idx === safeStepIndex;
-                return (
+                <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
                   <button
-                    key={`${stop.title}-${idx}`}
                     type="button"
-                    onClick={() => setStepIndex(idx)}
-                    aria-label={`Đi tới bước ${idx + 1}: ${stop.title}`}
-                    aria-current={isCurrent ? "step" : undefined}
-                    className={`h-2 rounded-pill transition-all ${
-                      isCurrent
-                        ? "w-6 bg-sky-500 shadow-[0_0_10px_rgba(14,165,233,0.5)]"
-                        : "w-2 bg-slate-300 hover:bg-slate-400"
-                    }`}
-                  />
-                );
-              })}
-            </div>
-
-            <div className="flex items-center justify-between gap-2 pt-0.5 sm:pt-1">
-              <button
-                type="button"
-                onClick={handlePrevStep}
-                disabled={safeStepIndex === 0}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-pill liquid-glass-btn text-xs font-semibold disabled:opacity-40 disabled:pointer-events-none"
-              >
-                <ArrowLeft className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-                <span>Trước</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleNextStep}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-pill liquid-btn-primary text-xs"
-              >
-                {isLastStep ? (
-                  <>
-                    <span>Hoàn tất</span>
-                    <Check className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-                  </>
-                ) : (
-                  <>
-                    <span>Tiếp theo</span>
-                    <ArrowRight
-                      className="w-3.5 h-3.5 shrink-0"
-                      aria-hidden="true"
-                    />
-                  </>
-                )}
-              </button>
-            </div>
-
-            {reenabledNotice && (
-              <div
-                role="status"
-                className="px-3 py-1.5 rounded-xl bg-emerald-50/95 border border-emerald-300/80 text-[11px] font-medium text-emerald-700"
-              >
-                Đã bật lại hướng dẫn tự động cho các tính năng bạn chưa xem.
+                    onClick={handleAcknowledge}
+                    className="text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                  >
+                    Bỏ qua
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleAcknowledge}
+                    aria-label="Đóng hướng dẫn"
+                    className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition-colors"
+                  >
+                    <X className="w-3.5 h-3.5" aria-hidden="true" />
+                  </button>
+                </div>
               </div>
-            )}
 
-            <div className="pt-1 border-t border-slate-200/85 flex items-center justify-between gap-2">
-              {autoDisabled ? (
-                <button
-                  type="button"
-                  onClick={handleEnableAutoGuides}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-pill bg-sky-50/90 hover:bg-sky-100/90 text-sky-700 text-[10px] sm:text-[11px] font-semibold border border-sky-300/80 transition-colors"
+              <div className="space-y-1.5">
+                <div className="text-xs font-mono font-semibold text-blue-700 dark:text-blue-400 uppercase tracking-wider truncate">
+                  {guide.title}
+                </div>
+                <h2
+                  id="feature-guide-title"
+                  className="font-display text-base font-bold text-slate-900 dark:text-white leading-snug"
                 >
-                  <RotateCcw className="w-3 h-3 shrink-0" aria-hidden="true" />
-                  <span>Bật lại hướng dẫn tự động</span>
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleDisableAutoGuides}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-pill bg-slate-100/85 hover:bg-slate-200/80 text-slate-600 hover:text-slate-900 text-[10px] sm:text-[11px] font-medium border border-slate-200/85 transition-colors"
-                >
-                  <BellOff className="w-3 h-3 shrink-0" aria-hidden="true" />
-                  <span>Tắt hướng dẫn tự động</span>
-                </button>
+                  {activeStop.title}
+                </h2>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {activeStop.description}
+                </p>
+              </div>
+
+              {isLastStep && guide.tips.length > 0 && (
+                <div className="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-lg px-3 py-2 flex items-start gap-2 text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
+                  <Lightbulb
+                    className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5"
+                    aria-hidden="true"
+                  />
+                  <span>{guide.tips[0]}</span>
+                </div>
               )}
 
-              <span className="text-[10px] font-mono text-slate-500 hidden sm:inline">
-                ← / → • Esc
-              </span>
-            </div>
+              <div className="flex items-center justify-center gap-1.5 pt-0.5">
+                {tourStops.map((stop, idx) => {
+                  const isCurrent = idx === safeStepIndex;
+                  return (
+                    <button
+                      key={`${stop.title}-${idx}`}
+                      type="button"
+                      onClick={() => setStepIndex(idx)}
+                      aria-label={`Đi tới bước ${idx + 1}: ${stop.title}`}
+                      aria-current={isCurrent ? "step" : undefined}
+                      className={`h-2 rounded-pill transition-colors ${
+                        isCurrent
+                          ? "w-6 bg-blue-700 dark:bg-blue-400"
+                          : "w-2 bg-slate-300 dark:bg-slate-600 hover:bg-slate-400 dark:hover:bg-slate-500"
+                      }`}
+                    />
+                  );
+                })}
+              </div>
+
+              <div className="flex items-center justify-between gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={handlePrevStep}
+                  disabled={safeStepIndex === 0}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg liquid-glass-btn text-xs font-semibold disabled:opacity-40 disabled:pointer-events-none"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                  <span>Trước</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleNextStep}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg liquid-btn-primary text-xs"
+                >
+                  {isLastStep ? (
+                    <>
+                      <span>Hoàn tất</span>
+                      <Check className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                    </>
+                  ) : (
+                    <>
+                      <span>Tiếp theo</span>
+                      <ArrowRight
+                        className="w-3.5 h-3.5 shrink-0"
+                        aria-hidden="true"
+                      />
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {reenabledNotice && (
+                <div
+                  role="status"
+                  className="px-3 py-2 rounded-lg bg-green-50 dark:bg-green-950/40 border border-green-200 dark:border-green-800 text-xs font-medium text-green-700 dark:text-green-300"
+                >
+                  Đã bật lại hướng dẫn tự động cho các tính năng bạn chưa xem.
+                </div>
+              )}
+
+              <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2">
+                {autoDisabled ? (
+                  <button
+                    type="button"
+                    onClick={handleEnableAutoGuides}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-xs font-semibold border border-blue-200 dark:border-blue-800 transition-colors"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                    <span>Bật lại hướng dẫn tự động</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleDisableAutoGuides}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-xs font-medium border border-slate-200 dark:border-slate-700 transition-colors"
+                  >
+                    <BellOff className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                    <span>Tắt hướng dẫn tự động</span>
+                  </button>
+                )}
+
+                <span className="text-xs font-mono text-slate-500 dark:text-slate-400 hidden sm:inline">
+                  ← / → • Esc
+                </span>
+              </div>
             </div>
           </div>
         </div>

@@ -324,261 +324,261 @@ export function Navbar() {
         <CustomCursorTrail effectId={guestPlayer?.equippedCosmetics?.cursor_effect ?? null} />
       )}
       <header ref={headerRef} className="sticky top-3 z-40 w-full max-w-7xl mx-auto px-3">
-      <div className="liquid-glass-pill px-3 sm:px-4 h-14 md:h-[60px] flex md:grid md:grid-cols-[1fr_auto_1fr] items-center justify-between gap-2 lg:gap-4">
-        <Link
-          href="/"
-          aria-label="SpeakIT"
-          className="flex items-center gap-2 focus:outline-none shrink-0 md:justify-self-start"
-        >
-          <SpeakItLogo />
-        </Link>
-
-        <nav
-          aria-label="Điều hướng chính"
-          className="hidden md:flex items-center justify-center gap-1 lg:gap-2 min-w-0 md:justify-self-center"
-        >
+        <div className="liquid-glass-pill px-3 sm:px-4 h-14 md:h-[60px] flex md:grid md:grid-cols-[1fr_auto_1fr] items-center justify-between gap-2 lg:gap-4">
           <Link
             href="/"
-            aria-current={homeActive ? "page" : undefined}
-            className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-colors shrink-0 whitespace-nowrap ${
-              homeActive
-                ? "bg-sky-500/18 border-sky-500/50 text-sky-700 shadow-sm"
-                : "bg-white/75 text-slate-700 border-slate-200/85 hover:border-sky-400/60 hover:bg-white hover:text-slate-900"
-            }`}
+            aria-label="SpeakIT"
+            className="flex items-center gap-2 focus:outline-none shrink-0 md:justify-self-start"
           >
-            <Home className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-            <span>Trang chủ</span>
+            <SpeakItLogo />
           </Link>
 
-          {NAV_GROUPS.flatMap((group) => {
-            const active = isGroupActive(pathname, group.activePrefixes);
-            const isOpen = openGroup === group.id;
+          <nav
+            aria-label="Điều hướng chính"
+            className="hidden md:flex items-center justify-center gap-1 lg:gap-1.5 min-w-0 md:justify-self-center"
+          >
+            <Link
+              href="/"
+              aria-current={homeActive ? "page" : undefined}
+              className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 text-sm font-medium rounded-pill border transition-colors shrink-0 whitespace-nowrap ${
+                homeActive
+                  ? "bg-blue-50 dark:bg-blue-950/70 border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300"
+                  : "bg-transparent text-slate-700 dark:text-slate-200 border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              <Home className="w-4 h-4 shrink-0" aria-hidden="true" />
+              <span>Trang chủ</span>
+            </Link>
 
-            const groupNode = (
-              <div key={group.id} className="relative shrink-0">
+            {NAV_GROUPS.flatMap((group) => {
+              const active = isGroupActive(pathname, group.activePrefixes);
+              const isOpen = openGroup === group.id;
+
+              const groupNode = (
+                <div key={group.id} className="relative shrink-0">
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    aria-haspopup="true"
+                    onClick={() => setOpenGroup((prev) => (prev === group.id ? null : group.id))}
+                    className={`flex items-center gap-1 lg:gap-1.5 px-2.5 lg:px-3 py-1.5 text-sm font-medium rounded-pill border transition-colors whitespace-nowrap ${
+                      active || isOpen
+                        ? "bg-blue-50 dark:bg-blue-950/70 border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300"
+                        : "bg-transparent text-slate-700 dark:text-slate-200 border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white"
+                    }`}
+                  >
+                    <span>{group.label}</span>
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 shrink-0 transition-transform duration-150 ${
+                        isOpen ? "rotate-180" : ""
+                      }`}
+                      aria-hidden="true"
+                    />
+                  </button>
+
+                  {isOpen && (
+                    <div
+                      className={`absolute ${
+                        group.id === "account" ? "right-0" : "left-0"
+                      } top-full mt-2.5 w-64 p-1.5 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-xl shadow-sm z-50`}
+                    >
+                      {group.id === "account" && hydrated && (
+                        <div className="px-3 py-2.5 mb-1 rounded-lg bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                          <div className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                            {identity.displayName}
+                          </div>
+                          {guestPlayer?.email && (
+                            <div className="text-xs text-blue-700 dark:text-blue-400 truncate mt-0.5">
+                              {guestPlayer.email}
+                            </div>
+                          )}
+                          <div className="flex items-center justify-between gap-2 mt-1 text-xs font-mono text-slate-600 dark:text-slate-300">
+                            {identity.transferCode && <span>{identity.transferCode}</span>}
+                            <span>{identity.totalPoints.toLocaleString("en-US")} pts</span>
+                          </div>
+                        </div>
+                      )}
+                      {group.items.map(({ href, label, icon: Icon }) => {
+                        const itemActive = isItemActive(pathname, href);
+                        return (
+                          <Link
+                            key={href}
+                            href={href}
+                            aria-current={itemActive ? "page" : undefined}
+                            onClick={() => setOpenGroup(null)}
+                            className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors border ${
+                              itemActive
+                                ? "bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800"
+                                : "text-slate-700 dark:text-slate-200 border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white"
+                            }`}
+                          >
+                            <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
+                            <span>{label}</span>
+                          </Link>
+                        );
+                      })}
+                      {group.id === "account" && hydrated && (
+                        <div className="mt-1 pt-1 border-t border-slate-200 dark:border-slate-800 space-y-0.5">
+                          {guestPlayer?.email?.trim().toLowerCase() === "minhquanthcsbt@gmail.com" && (
+                            <Link
+                              href="/admin"
+                              onClick={() => setOpenGroup(null)}
+                              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-semibold text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-950/40 transition-colors"
+                            >
+                              <ShieldCheck className="w-4 h-4 shrink-0" aria-hidden="true" />
+                              <span>Quản trị Admin</span>
+                            </Link>
+                          )}
+                          {guestPlayer?.email ? (
+                            <button
+                              type="button"
+                              onClick={() => void handleLogout()}
+                              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
+                            >
+                              <LogOut className="w-4 h-4 shrink-0" aria-hidden="true" />
+                              <span>Đăng xuất</span>
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setOpenGroup(null);
+                                requestOpenAuthModal();
+                              }}
+                              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-semibold text-blue-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-colors"
+                            >
+                              <LogIn className="w-4 h-4 shrink-0" aria-hidden="true" />
+                              <span>Đăng nhập / Đăng ký</span>
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+
+              if (group.id === "practice") {
+                return [
+                  groupNode,
+                  <Link
+                    key="shop"
+                    href="/shop"
+                    aria-current={shopActive ? "page" : undefined}
+                    className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 text-sm font-medium rounded-pill border transition-colors shrink-0 whitespace-nowrap ${
+                      shopActive
+                        ? "bg-blue-50 dark:bg-blue-950/70 border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300"
+                        : "bg-transparent text-slate-700 dark:text-slate-200 border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white"
+                    }`}
+                  >
+                    <ShoppingBag className="w-4 h-4 shrink-0" aria-hidden="true" />
+                    <span>Cửa hàng</span>
+                  </Link>,
+                ];
+              }
+
+              return [groupNode];
+            })}
+          </nav>
+
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 min-w-0 md:justify-self-end">
+            {!hydrated ? (
+              <div
+                aria-label="Đang đồng bộ tài khoản"
+                className="shrink-0 h-8 w-28 md:w-52 rounded-pill bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 animate-pulse"
+              />
+            ) : (
+              <div className="flex items-center gap-1.5 shrink-0 min-w-0">
+                <Link
+                  href="/profile"
+                  title={
+                    identity.transferCode
+                      ? `${identity.displayName} (${identity.transferCode})`
+                      : identity.displayName
+                  }
+                  className="hidden shrink-0 items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-500 text-xs text-slate-800 dark:text-slate-100 transition-colors max-w-[120px] lg:max-w-[165px] xl:max-w-[220px]"
+                >
+                  <User className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
+                  <span className="font-semibold truncate hidden sm:inline md:hidden lg:inline">{identity.displayName}</span>
+                  {identity.transferCode && (
+                    <span className="hidden xl:inline font-mono text-[11px] px-1.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 shrink-0">
+                      {identity.transferCode}
+                    </span>
+                  )}
+                </Link>
+
+                {!guestPlayer?.email && (
+                  <button
+                    type="button"
+                    onClick={() => requestOpenAuthModal()}
+                    className="hidden md:inline-flex shrink-0 items-center gap-1.5 px-3.5 py-1.5 rounded-pill liquid-btn-primary text-xs"
+                  >
+                    <LogIn className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                    <span>Đăng nhập</span>
+                  </button>
+                )}
+
+                <Link
+                  href="/arena"
+                  title={coinTooltip}
+                  aria-label={`Chuỗi ${identity.streakDays} ngày, ${identity.itCoins} IT-Coin, ${identity.totalPoints} điểm. ${coinTooltip}`}
+                  className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-500 text-xs font-mono text-slate-900 dark:text-slate-100 transition-colors"
+                >
+                  <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-400">
+                    <Flame className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" aria-hidden="true" />
+                    <span className="font-semibold">{identity.streakDays}</span>
+                  </span>
+                  <span className="text-slate-300 dark:text-slate-600" aria-hidden="true">
+                    |
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <Coins className="w-3.5 h-3.5 text-green-700 dark:text-green-400 shrink-0" aria-hidden="true" />
+                    <span className="font-semibold text-green-700 dark:text-green-400">{identity.itCoins}</span>
+                  </span>
+                </Link>
+
+                <InAppNotificationBell lastPracticeDate={gamification.lastPracticeDate} />
+
                 <button
                   type="button"
-                  aria-expanded={isOpen}
-                  aria-haspopup="true"
-                  onClick={() => setOpenGroup((prev) => (prev === group.id ? null : group.id))}
-                  className={`flex items-center gap-1 lg:gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-colors whitespace-nowrap ${
-                    active || isOpen
-                      ? "bg-sky-500/18 border-sky-500/50 text-sky-700 shadow-sm"
-                      : "bg-white/75 text-slate-700 border-slate-200/85 hover:border-sky-400/60 hover:bg-white hover:text-slate-900"
-                  }`}
+                  onClick={toggleTheme}
+                  aria-label={theme === "dark" ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối"}
+                  title={theme === "dark" ? "Chế độ sáng" : "Chế độ tối"}
+                  className="shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full liquid-glass-btn"
                 >
-                  <span>{group.label}</span>
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 shrink-0 transition-transform duration-150 ${
-                      isOpen ? "rotate-180" : ""
-                    }`}
-                    aria-hidden="true"
-                  />
+                  {theme === "dark" ? (
+                    <Sun className="w-4 h-4 text-amber-400 shrink-0" aria-hidden="true" />
+                  ) : (
+                    <Moon className="w-4 h-4 text-blue-700 shrink-0" aria-hidden="true" />
+                  )}
                 </button>
 
-                {isOpen && (
-                  <div
-                    className={`absolute ${
-                      group.id === "account" ? "right-0" : "left-0"
-                    } top-full mt-2.5 w-60 p-1.5 bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl border border-slate-200/90 dark:border-white/20 text-slate-800 dark:text-slate-100 rounded-2xl shadow-[0_16px_44px_rgba(15,23,42,0.14)] dark:shadow-[0_16px_44px_rgba(0,0,0,0.65)] z-50`}
+                {guestPlayer?.email?.trim().toLowerCase() === "minhquanthcsbt@gmail.com" && (
+                  <Link
+                    href="/admin"
+                    aria-label="Mở trang quản trị Admin"
+                    title="Admin"
+                    className="md:hidden shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-50 dark:bg-green-950/60 hover:bg-green-100 dark:hover:bg-green-900/60 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800 transition-colors"
                   >
-                    {group.id === "account" && hydrated && (
-                      <div className="px-3 py-2 mb-1 rounded-xl bg-sky-50/90 border border-sky-200/70">
-                        <div className="text-xs font-bold text-slate-900 truncate">
-                          {identity.displayName}
-                        </div>
-                        {guestPlayer?.email && (
-                          <div className="text-[11px] text-sky-700 truncate mt-0.5">
-                            {guestPlayer.email}
-                          </div>
-                        )}
-                        <div className="flex items-center justify-between gap-2 mt-0.5 text-[11px] font-mono text-slate-500">
-                          {identity.transferCode && <span>{identity.transferCode}</span>}
-                          <span>{identity.totalPoints.toLocaleString("en-US")} pts</span>
-                        </div>
-                      </div>
-                    )}
-                    {group.items.map(({ href, label, icon: Icon }) => {
-                      const itemActive = isItemActive(pathname, href);
-                      return (
-                        <Link
-                          key={href}
-                          href={href}
-                          aria-current={itemActive ? "page" : undefined}
-                          onClick={() => setOpenGroup(null)}
-                          className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-colors border ${
-                            itemActive
-                              ? "bg-sky-500/15 dark:bg-cyan-500/25 text-sky-700 dark:text-cyan-200 border-sky-400/45 dark:border-cyan-400/45"
-                              : "text-slate-700 dark:text-slate-200 border-transparent hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white"
-                          }`}
-                        >
-                          <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
-                          <span>{label}</span>
-                        </Link>
-                      );
-                    })}
-                    {group.id === "account" && hydrated && (
-                      <div className="mt-1 pt-1 border-t border-slate-200/80 space-y-0.5">
-                        {guestPlayer?.email?.trim().toLowerCase() === "minhquanthcsbt@gmail.com" && (
-                          <Link
-                            href="/admin"
-                            onClick={() => setOpenGroup(null)}
-                            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold text-emerald-700 hover:bg-emerald-500/15 transition-colors"
-                          >
-                            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" aria-hidden="true" />
-                            <span>Quản trị Admin</span>
-                          </Link>
-                        )}
-                        {guestPlayer?.email ? (
-                          <button
-                            type="button"
-                            onClick={() => void handleLogout()}
-                            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors"
-                          >
-                            <LogOut className="w-4 h-4 shrink-0" aria-hidden="true" />
-                            <span>Đăng xuất</span>
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setOpenGroup(null);
-                              requestOpenAuthModal();
-                            }}
-                            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold text-sky-700 hover:bg-sky-50 hover:text-sky-800 transition-colors"
-                          >
-                            <LogIn className="w-4 h-4 text-sky-600 shrink-0" aria-hidden="true" />
-                            <span>Đăng nhập / Đăng ký</span>
-                          </button>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                    <ShieldCheck className="w-4 h-4 shrink-0" aria-hidden="true" />
+                  </Link>
+                )}
+
+                {guestPlayer?.email && (
+                  <button
+                    type="button"
+                    onClick={() => void handleLogout()}
+                    aria-label="Đăng xuất"
+                    title="Đăng xuất"
+                    className="shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-50 dark:bg-red-950/60 hover:bg-red-100 dark:hover:bg-red-900/60 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4 shrink-0" aria-hidden="true" />
+                  </button>
                 )}
               </div>
-            );
-
-            if (group.id === "practice") {
-              return [
-                groupNode,
-                <Link
-                  key="shop"
-                  href="/shop"
-                  aria-current={shopActive ? "page" : undefined}
-                  className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-colors shrink-0 whitespace-nowrap ${
-                    shopActive
-                      ? "bg-sky-500/18 border-sky-500/50 text-sky-700 shadow-sm"
-                      : "bg-white/75 text-slate-700 border-slate-200/85 hover:border-sky-400/60 hover:bg-white hover:text-slate-900"
-                  }`}
-                >
-                  <ShoppingBag className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-                  <span>Cửa hàng</span>
-                </Link>,
-              ];
-            }
-
-            return [groupNode];
-          })}
-        </nav>
-
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 min-w-0 md:justify-self-end">
-          {!hydrated ? (
-            <div
-              aria-label="Đang đồng bộ tài khoản"
-              className="shrink-0 h-8 w-28 md:w-52 rounded-pill bg-white/10 border border-white/15 animate-pulse"
-            />
-          ) : (
-            <div className="flex items-center gap-1.5 shrink-0 min-w-0">
-              <Link
-                href="/profile"
-                title={
-                  identity.transferCode
-                    ? `${identity.displayName} (${identity.transferCode})`
-                    : identity.displayName
-                }
-                className="hidden shrink-0 items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-white/[0.12] border border-white/20 hover:border-cyan-300/45 hover:bg-white/[0.14] text-xs text-slate-100 transition-colors max-w-[120px] lg:max-w-[165px] xl:max-w-[220px]"
-              >
-                <User className="w-3.5 h-3.5 text-cyan-400 shrink-0" aria-hidden="true" />
-                <span className="font-semibold truncate hidden sm:inline md:hidden lg:inline">{identity.displayName}</span>
-                {identity.transferCode && (
-                  <span className="hidden xl:inline font-mono text-[10px] px-1.5 py-0.5 rounded bg-slate-950/60 border border-white/15 text-slate-300 shrink-0">
-                    {identity.transferCode}
-                  </span>
-                )}
-              </Link>
-
-              {!guestPlayer?.email && (
-                <button
-                  type="button"
-                  onClick={() => requestOpenAuthModal()}
-                  className="hidden md:inline-flex shrink-0 items-center gap-1.5 px-3.5 py-1.5 rounded-pill liquid-btn-primary text-xs"
-                >
-                  <LogIn className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-                  <span>Đăng nhập</span>
-                </button>
-              )}
-
-              <Link
-                href="/arena"
-                title={coinTooltip}
-                aria-label={`Chuỗi ${identity.streakDays} ngày, ${identity.itCoins} IT-Coin, ${identity.totalPoints} điểm. ${coinTooltip}`}
-                className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-white/85 border border-slate-200/90 hover:border-sky-400/60 hover:bg-white text-xs font-mono text-slate-800 shadow-sm transition-colors"
-              >
-                <span className="inline-flex items-center gap-1 text-amber-600">
-                  <Flame className="w-3.5 h-3.5 text-amber-500 shrink-0" aria-hidden="true" />
-                  <span className="font-semibold">{identity.streakDays}</span>
-                </span>
-                <span className="text-slate-300" aria-hidden="true">
-                  |
-                </span>
-                <span className="inline-flex items-center gap-1">
-                  <Coins className="w-3.5 h-3.5 text-emerald-600 shrink-0" aria-hidden="true" />
-                  <span className="font-semibold text-emerald-700">{identity.itCoins}</span>
-                </span>
-              </Link>
-
-              <InAppNotificationBell lastPracticeDate={gamification.lastPracticeDate} />
-
-              <button
-                type="button"
-                onClick={toggleTheme}
-                aria-label={theme === "dark" ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối"}
-                title={theme === "dark" ? "Chế độ sáng" : "Chế độ tối"}
-                className="shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full liquid-glass-btn"
-              >
-                {theme === "dark" ? (
-                  <Sun className="w-3.5 h-3.5 text-amber-400 shrink-0" aria-hidden="true" />
-                ) : (
-                  <Moon className="w-3.5 h-3.5 text-sky-700 shrink-0" aria-hidden="true" />
-                )}
-              </button>
-
-              {guestPlayer?.email?.trim().toLowerCase() === "minhquanthcsbt@gmail.com" && (
-                <Link
-                  href="/admin"
-                  aria-label="Mở trang quản trị Admin"
-                  title="Admin"
-                  className="md:hidden shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-700 border border-emerald-500/45 transition-colors"
-                >
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" aria-hidden="true" />
-                </Link>
-              )}
-
-              {guestPlayer?.email && (
-                <button
-                  type="button"
-                  onClick={() => void handleLogout()}
-                  aria-label="Đăng xuất"
-                  title="Đăng xuất"
-                  className="shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full bg-rose-500/12 hover:bg-rose-500/22 text-rose-700 border border-rose-300/85 transition-colors"
-                >
-                  <LogOut className="w-3.5 h-3.5 text-rose-600 shrink-0" aria-hidden="true" />
-                </button>
-              )}
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
       </header>
 
       {!hideBottomTabBar && (
@@ -598,10 +598,10 @@ export function Navbar() {
                     if (pathname !== href) setPendingHref(href);
                   }}
                   aria-current={active ? "page" : undefined}
-                  className={`flex flex-col items-center justify-center gap-0.5 min-h-[48px] px-1 py-1 rounded-full text-[10px] tracking-[0.03em] active:scale-95 transition-colors ${
+                  className={`flex flex-col items-center justify-center gap-0.5 min-h-[48px] px-1 py-1 rounded-full text-[11px] tracking-[0.02em] active:scale-95 transition-colors ${
                     active
-                      ? "liquid-lens-active text-sky-700 font-semibold"
-                      : "text-slate-600 font-medium hover:text-slate-900 border border-transparent"
+                      ? "liquid-lens-active font-semibold"
+                      : "text-slate-600 dark:text-slate-300 font-medium hover:text-slate-900 dark:hover:text-white border border-transparent"
                   }`}
                 >
                   <span className="relative flex items-center justify-center">
@@ -612,7 +612,7 @@ export function Navbar() {
                     {active && (
                       <span
                         aria-hidden="true"
-                        className="absolute -top-0.5 -right-1 w-1.5 h-1.5 rounded-full bg-sky-500 shadow-[0_0_6px_rgba(14,165,233,0.7)]"
+                        className="absolute -top-0.5 -right-1 w-1.5 h-1.5 rounded-full bg-blue-700 dark:bg-blue-400"
                       />
                     )}
                   </span>

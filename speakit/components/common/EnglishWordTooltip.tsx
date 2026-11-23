@@ -36,9 +36,9 @@ export function InteractiveEnglishText({
           idx < spokenUntilIndex;
 
         const baseColorClass = isActive
-          ? "bg-sky-500/20 text-sky-800 ring-1 ring-sky-400/60 px-1 py-0.5 rounded-md transition-colors duration-100"
+          ? "bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-200 ring-1 ring-blue-400 dark:ring-blue-500 px-1 py-0.5 rounded-md transition-colors duration-100"
           : isSpoken
-          ? "text-sky-700 transition-colors duration-100"
+          ? "text-blue-700 dark:text-blue-400 transition-colors duration-100"
           : "transition-colors duration-100";
 
         if (!gloss) {
@@ -61,16 +61,16 @@ export function InteractiveEnglishText({
               }
               title={gloss}
               aria-label={`${word}: ${gloss}`}
-              className={`inline p-0 m-0 border-0 bg-transparent font-inherit text-inherit underline decoration-dotted decoration-sky-500/80 underline-offset-4 hover:bg-sky-500/15 hover:text-sky-800 rounded-sm cursor-help ${baseColorClass}`}
+              className={`inline p-0 m-0 border-0 bg-transparent font-inherit text-inherit underline decoration-dotted decoration-blue-600/80 dark:decoration-blue-400/80 underline-offset-4 hover:bg-blue-50 dark:hover:bg-blue-900/40 hover:text-blue-800 dark:hover:text-blue-200 rounded-sm cursor-help ${baseColorClass}`}
             >
               {word}
             </button>
             {isOpen && (
               <span
                 role="tooltip"
-                className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 z-30 whitespace-nowrap max-w-[230px] truncate px-2.5 py-1 rounded-lg bg-white/95 backdrop-blur-xl text-slate-800 border border-slate-200/90 text-[11px] font-sans font-medium shadow-[0_8px_24px_rgba(15,23,42,0.14),inset_0_1px_1px_rgba(255,255,255,0.95)] pointer-events-none"
+                className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 z-30 whitespace-nowrap max-w-[230px] truncate px-2.5 py-1 rounded-lg bg-white dark:bg-[#111827] text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700 text-xs font-sans font-medium shadow-sm pointer-events-none"
               >
-                <span className="font-mono font-semibold text-sky-700">{word.replace(/[^a-zA-Z0-9-]/g, "")}:</span>{" "}
+                <span className="font-mono font-semibold text-blue-700 dark:text-blue-400">{word.replace(/[^a-zA-Z0-9-]/g, "")}:</span>{" "}
                 {gloss}
               </span>
             )}

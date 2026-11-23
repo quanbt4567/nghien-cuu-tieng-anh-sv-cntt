@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Bell, CheckCheck, Clock, Sparkles, X } from "lucide-react";
+import { Bell, CheckCheck, Clock, Megaphone, X } from "lucide-react";
 import {
   GAMIFICATION_STORAGE_KEY,
   GAMIFICATION_UPDATED_EVENT,
@@ -151,20 +151,20 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
         aria-expanded={open}
         aria-haspopup="true"
         onClick={() => setOpen((prev) => !prev)}
-        className="relative inline-flex items-center justify-center w-9 h-9 rounded-pill liquid-glass-btn text-slate-700"
+        className="relative inline-flex items-center justify-center w-8 h-8 rounded-full liquid-glass-btn text-slate-700 dark:text-slate-200"
       >
         <Bell className="w-4 h-4" aria-hidden="true" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-gradient-to-r from-rose-500 to-red-600 text-white text-[10px] font-mono font-bold flex items-center justify-center border border-white/80 shadow-[0_2px_10px_rgba(244,63,94,0.45)]">
+          <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-[#DC2626] text-white text-[10px] font-mono font-bold flex items-center justify-center border border-white dark:border-[#111827]">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
       </button>
 
       {open && (
-        <div className="fixed inset-x-3 top-20 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2.5 sm:w-80 bg-white/95 backdrop-blur-2xl border border-slate-200/90 rounded-2xl shadow-[0_16px_44px_rgba(15,23,42,0.14),inset_0_1px_1px_rgba(255,255,255,0.95)] z-50 overflow-hidden">
-          <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-slate-200/85 bg-slate-50/85">
-            <span className="text-xs font-bold text-slate-900 uppercase font-mono">
+        <div className="fixed inset-x-3 top-20 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2.5 sm:w-80 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm z-50 overflow-hidden">
+          <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/80">
+            <span className="text-xs font-bold text-slate-900 dark:text-white uppercase font-mono">
               Thông báo
             </span>
             <div className="flex items-center gap-2">
@@ -172,7 +172,7 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
                 <button
                   type="button"
                   onClick={handleMarkAllRead}
-                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-sky-700 hover:text-sky-800 hover:underline"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-blue-700 dark:text-blue-400 hover:underline"
                 >
                   <CheckCheck className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>Đánh dấu đã đọc</span>
@@ -182,31 +182,31 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
                 type="button"
                 aria-label="Đóng thông báo"
                 onClick={() => setOpen(false)}
-                className="p-1 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-200/70 transition-colors"
+                className="p-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/70 dark:hover:bg-slate-700 transition-colors"
               >
                 <X className="w-3.5 h-3.5" aria-hidden="true" />
               </button>
             </div>
           </div>
 
-          <div className="max-h-80 overflow-y-auto divide-y divide-slate-200/80">
+          <div className="max-h-80 overflow-y-auto divide-y divide-slate-200 dark:divide-slate-800">
             {showReminder && (
-              <div className="p-3.5 bg-sky-50/90 space-y-2">
+              <div className="p-3.5 bg-blue-50 dark:bg-blue-950/40 space-y-2">
                 <div className="flex items-start justify-between gap-2">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
-                    <Clock className="w-3.5 h-3.5 text-sky-600 shrink-0" aria-hidden="true" />
+                  <div className="flex items-center gap-1.5 text-sm font-bold text-slate-900 dark:text-white">
+                    <Clock className="w-4 h-4 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
                     <span>Nhắc nhở học tập hôm nay</span>
                   </div>
-                  <span className="w-2 h-2 rounded-full bg-sky-500 shrink-0 mt-1 shadow-[0_0_8px_rgba(14,165,233,0.6)]" />
+                  <span className="w-2 h-2 rounded-full bg-blue-700 dark:bg-blue-400 shrink-0 mt-1.5" />
                 </div>
-                <p className="text-xs text-slate-600 leading-relaxed">
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                   Bạn chưa luyện nói hôm nay. Dành 5 phút luyện phản xạ để giữ streak nhé!
                 </p>
                 <div className="flex items-center gap-2 pt-0.5">
                   <Link
                     href="/scenarios"
                     onClick={() => setOpen(false)}
-                    className="inline-flex items-center px-3 py-1 rounded-pill liquid-btn-primary text-[11px]"
+                    className="inline-flex items-center px-3 py-1.5 rounded-lg liquid-btn-primary text-xs"
                   >
                     Luyện ngay
                   </Link>
@@ -216,7 +216,7 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
                       markReminderDismissedToday();
                       setShowReminder(false);
                     }}
-                    className="text-[11px] font-medium text-slate-600 hover:text-slate-900 transition-colors"
+                    className="text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
                   >
                     Ẩn hôm nay
                   </button>
@@ -229,23 +229,23 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
               return (
                 <div
                   key={item.id}
-                  className={`p-3.5 space-y-1 ${isUnread ? "bg-sky-50/70" : "bg-transparent"}`}
+                  className={`p-3.5 space-y-1 ${isUnread ? "bg-blue-50/70 dark:bg-blue-950/30" : "bg-transparent"}`}
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
-                      <Sparkles
-                        className="w-3.5 h-3.5 text-sky-600 shrink-0"
+                    <div className="flex items-center gap-1.5 text-sm font-bold text-slate-900 dark:text-white">
+                      <Megaphone
+                        className="w-4 h-4 text-blue-700 dark:text-blue-400 shrink-0"
                         aria-hidden="true"
                       />
                       <span>{item.title}</span>
                     </div>
                     {isUnread && (
-                      <span className="w-2 h-2 rounded-full bg-sky-500 shrink-0 mt-1 shadow-[0_0_8px_rgba(14,165,233,0.6)]" />
+                      <span className="w-2 h-2 rounded-full bg-blue-700 dark:bg-blue-400 shrink-0 mt-1.5" />
                     )}
                   </div>
-                  <p className="text-xs text-slate-600 leading-relaxed">{item.body}</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{item.body}</p>
                   {item.created_at && (
-                    <div className="text-[10px] font-mono text-slate-500">
+                    <div className="text-xs font-mono text-slate-500 dark:text-slate-400">
                       {formatDateTime(item.created_at)}
                     </div>
                   )}
@@ -254,7 +254,7 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
             })}
 
             {!showReminder && announcements.length === 0 && (
-              <div className="px-4 py-8 text-center text-xs text-slate-500">
+              <div className="px-4 py-8 text-center text-sm text-slate-500 dark:text-slate-400">
                 Chưa có thông báo mới.
               </div>
             )}

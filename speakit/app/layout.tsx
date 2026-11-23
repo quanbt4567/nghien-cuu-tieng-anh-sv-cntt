@@ -1,10 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Be_Vietnam_Pro, JetBrains_Mono } from "next/font/google";
+import { Be_Vietnam_Pro, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "../components/layout/Navbar";
 import { Footer } from "../components/layout/Footer";
 import { WelcomeNameModal } from "../components/layout/WelcomeNameModal";
 import { FeatureGuideDock } from "../components/common/FeatureGuideDock";
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  weight: ["500", "600", "700", "800"],
+  subsets: ["latin", "vietnamese"],
+  display: "swap",
+  variable: "--font-plus-jakarta",
+  fallback: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+});
 
 const beVietnamPro = Be_Vietnam_Pro({
   weight: ["400", "500", "600", "700"],
@@ -28,11 +36,11 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: "cover",
-  themeColor: "#050811",
+  themeColor: "#F8FAFC",
 };
 
 export const metadata: Metadata = {
-  title: "SpeakIT — Luyện nói tiếng Anh tình huống CNTT",
+  title: "SpeakIT: Luyện nói tiếng Anh tình huống CNTT",
   description:
     "Ứng dụng nghiên cứu hỗ trợ sinh viên CNTT luyện nói tiếng Anh trong các tình huống làm việc thực tế: Daily Standup, Bug Report, Code Review.",
   icons: {
@@ -47,7 +55,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="vi" suppressHydrationWarning className={`${beVietnamPro.variable} ${jetbrainsMono.variable}`}>
+    <html
+      lang="vi"
+      suppressHydrationWarning
+      className={`${plusJakartaSans.variable} ${beVietnamPro.variable} ${jetbrainsMono.variable}`}
+    >
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -55,10 +67,10 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="bg-[#eef6ff] dark:bg-[#0b1530] text-slate-900 dark:text-slate-100 min-h-screen antialiased flex flex-col font-sans selection:bg-sky-200 selection:text-sky-900 dark:selection:bg-cyan-500/30 dark:selection:text-cyan-100">
+      <body className="bg-[#F8FAFC] dark:bg-[#0B0F17] text-[#0F172A] dark:text-[#F8FAFC] min-h-screen antialiased flex flex-col font-sans selection:bg-blue-100 selection:text-blue-900 dark:selection:bg-blue-900/60 dark:selection:text-blue-100">
         <div
           aria-hidden="true"
-          className="fixed inset-0 -z-10 pointer-events-none overflow-hidden app-ambient-backdrop"
+          className="fixed inset-0 -z-10 pointer-events-none app-ambient-backdrop"
         />
         <Navbar />
         <WelcomeNameModal />
