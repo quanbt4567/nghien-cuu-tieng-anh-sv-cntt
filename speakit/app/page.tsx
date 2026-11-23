@@ -23,7 +23,7 @@ export default async function HomePage() {
 
       <section
         aria-label="Top 3 Arena Leaders"
-        className="liquid-glass-card p-4 md:p-5 space-y-3 md:space-y-4"
+        className="space-y-3 md:space-y-4"
       >
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
@@ -38,7 +38,7 @@ export default async function HomePage() {
           <Link
             href="/leaderboard"
             prefetch
-            className="liquid-glass-btn inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors"
           >
             <span>Xem bảng xếp hạng</span>
             <ArrowRight className="w-3.5 h-3.5 text-sky-600" aria-hidden="true" />
@@ -46,13 +46,13 @@ export default async function HomePage() {
         </div>
 
         {topLeaders.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 md:gap-3 border-t border-slate-200/85 pt-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 md:gap-3">
             {topLeaders.map((player) => (
               <LeaderboardRowWrapper
                 key={player.id}
                 fxId={player.equippedCosmetics?.leaderboard_fx}
                 nameplateId={player.equippedCosmetics?.nameplate}
-                className="liquid-glass-card-lite rounded-2xl transition-all hover:!border-sky-400/70"
+                className="liquid-glass-card-lite rounded-2xl transition-colors hover:!border-sky-400/70"
               >
                 <Link
                   href={`/profile/${player.id}`}
@@ -101,7 +101,7 @@ export default async function HomePage() {
             </span>
             <Link
               href="/arena"
-              className="liquid-btn-primary inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-mono text-xs transition-all"
+              className="liquid-btn-primary inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-mono text-xs transition-colors"
             >
               <span>Mở /arena</span>
               <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -113,7 +113,7 @@ export default async function HomePage() {
       <section aria-label="Công cụ ôn tập nhanh" className="hidden md:grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <Link
           href="/scenarios"
-          className="group liquid-glass-card-lite p-5 hover:!border-cyan-400/70 hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
+          className="group liquid-glass-card-lite p-5 hover:!border-cyan-400/70 transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-full bg-cyan-100/80 border border-cyan-300/70 flex items-center justify-center shrink-0">
@@ -123,13 +123,13 @@ export default async function HomePage() {
               <h3 className="font-bold text-sm text-slate-900 group-hover:text-cyan-700 transition-colors">
                 Kịch bản luyện nói
               </h3>
-              <p className="text-xs text-slate-600">
+              <p className="text-sm text-slate-600">
                 {scenarioCount} tình huống công việc CNTT chia theo 3 cấp độ Fresher / Junior / Senior.
               </p>
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-gradient-to-r from-cyan-400 to-blue-500 text-white border border-cyan-200/60 shadow-[0_0_20px_rgba(34,211,238,0.55),inset_0_1px_1px_rgba(255,255,255,0.5)] group-hover:brightness-110 text-xs font-bold transition-all">
+            <span className="inline-flex items-center gap-1 rounded-full px-3.5 py-1.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white border border-white/40 shadow-sm group-hover:brightness-110 text-xs font-bold transition-colors">
               <span>Luyện kịch bản</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -138,23 +138,23 @@ export default async function HomePage() {
 
         <Link
           href="/vocabulary"
-          className="group liquid-glass-card-lite p-5 hover:!border-violet-400/70 hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
+          className="group liquid-glass-card-lite p-5 hover:!border-teal-400/70 transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-full bg-violet-100/80 border border-violet-300/70 flex items-center justify-center shrink-0">
-              <BookOpen className="w-4 h-4 text-violet-600" aria-hidden="true" />
+            <div className="w-9 h-9 rounded-full bg-emerald-100/80 border border-emerald-300/70 flex items-center justify-center shrink-0">
+              <BookOpen className="w-4 h-4 text-emerald-600" aria-hidden="true" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-bold text-sm text-slate-900 group-hover:text-violet-700 transition-colors">
+              <h3 className="font-bold text-sm text-slate-900 group-hover:text-emerald-700 transition-colors">
                 Từ vựng IT
               </h3>
-              <p className="text-xs text-slate-600">
+              <p className="text-sm text-slate-600">
                 Phát âm IPA và câu ví dụ công việc thực tế.
               </p>
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-gradient-to-r from-violet-400 to-purple-500 text-white border border-violet-200/60 shadow-[0_0_20px_rgba(167,139,250,0.55),inset_0_1px_1px_rgba(255,255,255,0.5)] group-hover:brightness-110 text-xs font-bold transition-all">
+            <span className="inline-flex items-center gap-1 rounded-full px-3.5 py-1.5 bg-gradient-to-r from-teal-500 to-cyan-600 text-white border border-white/40 shadow-sm group-hover:brightness-110 text-xs font-bold transition-colors">
               <span>Ôn từ vựng</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -163,7 +163,7 @@ export default async function HomePage() {
 
         <Link
           href="/progress"
-          className="group liquid-glass-card-lite p-5 hover:!border-emerald-400/70 hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
+          className="group liquid-glass-card-lite p-5 hover:!border-emerald-400/70 transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-full bg-emerald-100/80 border border-emerald-300/70 flex items-center justify-center shrink-0">
@@ -173,13 +173,13 @@ export default async function HomePage() {
               <h3 className="font-bold text-sm text-slate-900 group-hover:text-emerald-700 transition-colors">
                 Kế hoạch 7 ngày
               </h3>
-              <p className="text-xs text-slate-600">
+              <p className="text-sm text-slate-600">
                 Tổng hợp từ khóa và lỗi ngữ pháp cần ôn.
               </p>
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-gradient-to-r from-emerald-400 to-teal-500 text-white border border-emerald-200/60 shadow-[0_0_20px_rgba(52,211,153,0.55),inset_0_1px_1px_rgba(255,255,255,0.5)] group-hover:brightness-110 text-xs font-bold transition-all">
+            <span className="inline-flex items-center gap-1 rounded-full px-3.5 py-1.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white border border-white/40 shadow-sm group-hover:brightness-110 text-xs font-bold transition-colors">
               <span>Xem lộ trình</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -188,7 +188,7 @@ export default async function HomePage() {
 
         <Link
           href="/arena"
-          className="group liquid-glass-card-lite p-5 hover:!border-amber-400/70 hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
+          className="group liquid-glass-card-lite p-5 hover:!border-amber-400/70 transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-full bg-amber-100/80 border border-amber-300/70 flex items-center justify-center shrink-0">
@@ -198,13 +198,13 @@ export default async function HomePage() {
               <h3 className="font-bold text-sm text-slate-900 group-hover:text-amber-700 transition-colors">
                 IT Speaking Arena
               </h3>
-              <p className="text-xs text-slate-600">
+              <p className="text-sm text-slate-600">
                 Thử thách tốc độ 60s để kiếm IT-Coin.
               </p>
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-gradient-to-r from-amber-400 to-orange-500 text-white border border-amber-200/60 shadow-[0_0_20px_rgba(251,191,36,0.55),inset_0_1px_1px_rgba(255,255,255,0.5)] group-hover:brightness-110 text-xs font-bold transition-all">
+            <span className="inline-flex items-center gap-1 rounded-full px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white border border-white/40 shadow-sm group-hover:brightness-110 text-xs font-bold transition-colors">
               <span>Vào đấu trường</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -213,7 +213,7 @@ export default async function HomePage() {
 
         <Link
           href="/arena/party"
-          className="group liquid-glass-card-lite !border-rose-300/60 hover:!border-rose-400/80 p-5 hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
+          className="group liquid-glass-card-lite p-5 hover:!border-rose-400/70 transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-full bg-rose-100/80 text-rose-600 flex items-center justify-center border border-rose-300/70 shrink-0">
@@ -223,13 +223,13 @@ export default async function HomePage() {
               <h3 className="font-bold text-sm text-slate-900 group-hover:text-rose-700 transition-colors">
                 Outage At 3AM (Party Mode)
               </h3>
-              <p className="text-xs text-slate-600">
+              <p className="text-sm text-slate-600">
                 Phối hợp nhóm xử lý sự cố production khẩn cấp theo thời gian thực.
               </p>
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="liquid-btn-danger inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs transition-all">
+            <span className="liquid-btn-danger inline-flex items-center gap-1 rounded-full px-3.5 py-1.5 text-xs transition-colors">
               <span>Mở Party Mode</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>
@@ -238,23 +238,23 @@ export default async function HomePage() {
 
         <Link
           href="/shop"
-          className="group liquid-glass-card-lite p-5 hover:!border-fuchsia-400/70 hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4"
+          className="group liquid-glass-card-lite p-5 hover:!border-sky-400/70 transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-full bg-fuchsia-100/80 text-fuchsia-600 flex items-center justify-center border border-fuchsia-300/70 shrink-0">
+            <div className="w-9 h-9 rounded-full bg-sky-100/80 text-sky-600 flex items-center justify-center border border-sky-300/70 shrink-0">
               <ShoppingBag className="w-4 h-4" aria-hidden="true" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-bold text-sm text-slate-900 group-hover:text-fuchsia-700 transition-colors">
+              <h3 className="font-bold text-sm text-slate-900 group-hover:text-sky-700 transition-colors">
                 Cửa hàng Hiệu ứng
               </h3>
-              <p className="text-xs text-slate-600">
+              <p className="text-sm text-slate-600">
                 Đổi IT-Coin lấy khung avatar, nameplate và hiệu ứng bảng xếp hạng.
               </p>
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 bg-gradient-to-r from-fuchsia-400 to-pink-500 text-white border border-fuchsia-200/60 shadow-[0_0_20px_rgba(232,121,249,0.55),inset_0_1px_1px_rgba(255,255,255,0.5)] group-hover:brightness-110 text-xs font-bold transition-all">
+            <span className="inline-flex items-center gap-1 rounded-full px-3.5 py-1.5 bg-gradient-to-r from-sky-500 to-cyan-600 text-white border border-white/40 shadow-sm group-hover:brightness-110 text-xs font-bold transition-colors">
               <span>Vào cửa hàng</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </span>

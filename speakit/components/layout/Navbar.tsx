@@ -340,9 +340,9 @@ export function Navbar() {
           <Link
             href="/"
             aria-current={homeActive ? "page" : undefined}
-            className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-all shrink-0 whitespace-nowrap ${
+            className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-colors shrink-0 whitespace-nowrap ${
               homeActive
-                ? "bg-sky-500/18 border-sky-500/50 text-sky-700 shadow-[0_2px_12px_rgba(14,165,233,0.22)]"
+                ? "bg-sky-500/18 border-sky-500/50 text-sky-700 shadow-sm"
                 : "bg-white/75 text-slate-700 border-slate-200/85 hover:border-sky-400/60 hover:bg-white hover:text-slate-900"
             }`}
           >
@@ -361,9 +361,9 @@ export function Navbar() {
                   aria-expanded={isOpen}
                   aria-haspopup="true"
                   onClick={() => setOpenGroup((prev) => (prev === group.id ? null : group.id))}
-                  className={`flex items-center gap-1 lg:gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-all whitespace-nowrap ${
+                  className={`flex items-center gap-1 lg:gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-colors whitespace-nowrap ${
                     active || isOpen
-                      ? "bg-sky-500/18 border-sky-500/50 text-sky-700 shadow-[0_2px_12px_rgba(14,165,233,0.22)]"
+                      ? "bg-sky-500/18 border-sky-500/50 text-sky-700 shadow-sm"
                       : "bg-white/75 text-slate-700 border-slate-200/85 hover:border-sky-400/60 hover:bg-white hover:text-slate-900"
                   }`}
                 >
@@ -465,9 +465,9 @@ export function Navbar() {
                   key="shop"
                   href="/shop"
                   aria-current={shopActive ? "page" : undefined}
-                  className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-all shrink-0 whitespace-nowrap ${
+                  className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs lg:text-sm font-medium rounded-pill border transition-colors shrink-0 whitespace-nowrap ${
                     shopActive
-                      ? "bg-sky-500/18 border-sky-500/50 text-sky-700 shadow-[0_2px_12px_rgba(14,165,233,0.22)]"
+                      ? "bg-sky-500/18 border-sky-500/50 text-sky-700 shadow-sm"
                       : "bg-white/75 text-slate-700 border-slate-200/85 hover:border-sky-400/60 hover:bg-white hover:text-slate-900"
                   }`}
                 >
@@ -549,7 +549,7 @@ export function Navbar() {
                 {theme === "dark" ? (
                   <Sun className="w-3.5 h-3.5 text-amber-400 shrink-0" aria-hidden="true" />
                 ) : (
-                  <Moon className="w-3.5 h-3.5 text-indigo-600 shrink-0" aria-hidden="true" />
+                  <Moon className="w-3.5 h-3.5 text-sky-700 shrink-0" aria-hidden="true" />
                 )}
               </button>
 
@@ -598,7 +598,7 @@ export function Navbar() {
                     if (pathname !== href) setPendingHref(href);
                   }}
                   aria-current={active ? "page" : undefined}
-                  className={`flex flex-col items-center justify-center gap-0.5 min-h-[48px] px-1 py-1 rounded-full text-[10px] tracking-[0.03em] active:scale-95 transition-all ${
+                  className={`flex flex-col items-center justify-center gap-0.5 min-h-[48px] px-1 py-1 rounded-full text-[10px] tracking-[0.03em] active:scale-95 transition-colors ${
                     active
                       ? "liquid-lens-active text-sky-700 font-semibold"
                       : "text-slate-600 font-medium hover:text-slate-900 border border-transparent"

@@ -20,13 +20,13 @@ export function SpeakItLogo({ showWordmark = true, size = "md" }: SpeakItLogoPro
         <defs>
           <linearGradient id="sit-neon" x1="4" y1="6" x2="40" y2="38" gradientUnits="userSpaceOnUse">
             <stop offset="0%" stopColor="#22D3EE" />
-            <stop offset="55%" stopColor="#60A5FA" />
-            <stop offset="100%" stopColor="#C084FC" />
+            <stop offset="55%" stopColor="#38BDF8" />
+            <stop offset="100%" stopColor="#14B8A6" />
           </linearGradient>
           <linearGradient id="sit-glass" x1="6" y1="4" x2="38" y2="40" gradientUnits="userSpaceOnUse">
             <stop offset="0%" stopColor="rgba(34, 211, 238, 0.22)" />
             <stop offset="50%" stopColor="rgba(15, 23, 42, 0.85)" />
-            <stop offset="100%" stopColor="rgba(168, 85, 247, 0.25)" />
+            <stop offset="100%" stopColor="rgba(20, 184, 166, 0.25)" />
           </linearGradient>
         </defs>
         <rect
@@ -54,13 +54,13 @@ export function SpeakItLogo({ showWordmark = true, size = "md" }: SpeakItLogoPro
         />
         <path
           d="M34 15.5H37.5M34.5 21H38.5M33.5 26.5H37"
-          stroke="#C084FC"
+          stroke="#14B8A6"
           strokeWidth="1.3"
           strokeLinecap="round"
         />
-        <circle cx="38" cy="15.5" r="1.2" fill="#E879F9" />
-        <circle cx="38.8" cy="21" r="1.2" fill="#A855F7" />
-        <circle cx="37.4" cy="26.5" r="1.2" fill="#818CF8" />
+        <circle cx="38" cy="15.5" r="1.2" fill="#2DD4BF" />
+        <circle cx="38.8" cy="21" r="1.2" fill="#14B8A6" />
+        <circle cx="37.4" cy="26.5" r="1.2" fill="#38BDF8" />
         <path
           d="M9.5 17H6.2M9.5 22.5H5.8"
           stroke="#22D3EE"
@@ -92,10 +92,7 @@ export function SpeakItLogo({ showWordmark = true, size = "md" }: SpeakItLogoPro
       </svg>
       {showWordmark && (
         <span className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white leading-none">
-          Speak
-          <span className="bg-gradient-to-r from-sky-500 to-indigo-600 bg-clip-text text-transparent">
-            IT
-          </span>
+          Speak<span className="text-sky-600 dark:text-sky-400">IT</span>
         </span>
       )}
     </span>

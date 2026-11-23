@@ -74,7 +74,7 @@ select option {
   background: #ffffff;
   border-color: rgba(14, 165, 233, 0.55);
   color: #0369a1;
-  box-shadow: 0 6px 18px rgba(14, 165, 233, 0.14), inset 0 1px 1px #ffffff;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.1), inset 0 1px 1px #ffffff;
 }
 
 .liquid-glass-btn:active {
@@ -86,13 +86,13 @@ select option {
   border: 1px solid rgba(255, 255, 255, 0.55);
   color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 8px 22px rgba(14, 165, 233, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.45);
   transition: transform 150ms ease, filter 150ms ease, box-shadow 150ms ease;
 }
 
 .liquid-btn-primary:hover {
   filter: brightness(1.06);
-  box-shadow: 0 10px 26px rgba(37, 99, 235, 0.42), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.55);
 }
 
 .liquid-btn-primary:active {
@@ -104,13 +104,13 @@ select option {
   border: 1px solid rgba(255, 255, 255, 0.5);
   color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 8px 22px rgba(244, 63, 94, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.45);
   transition: transform 150ms ease, filter 150ms ease, box-shadow 150ms ease;
 }
 
 .liquid-btn-danger:hover {
   filter: brightness(1.06);
-  box-shadow: 0 10px 26px rgba(225, 29, 72, 0.42), inset 0 1px 1px rgba(255, 255, 255, 0.55);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.55);
 }
 
 .liquid-btn-danger:active {
@@ -122,13 +122,13 @@ select option {
   border: 1px solid rgba(255, 255, 255, 0.5);
   color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.34), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.45);
   transition: transform 150ms ease, filter 150ms ease, box-shadow 150ms ease;
 }
 
 .liquid-btn-success:hover {
   filter: brightness(1.06);
-  box-shadow: 0 10px 24px rgba(13, 148, 136, 0.42), inset 0 1px 1px rgba(255, 255, 255, 0.55);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.55);
 }
 
 .liquid-btn-success:active {
@@ -178,7 +178,7 @@ select option {
   color: #0369a1;
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.8),
-    0 4px 12px rgba(14, 165, 233, 0.16);
+    0 2px 8px rgba(15, 23, 42, 0.1);
 }
 
 @media (prefers-reduced-transparency: reduce) {
@@ -318,15 +318,14 @@ nav a {
 
 .app-ambient-backdrop {
   background:
-    radial-gradient(75% 55% at 15% 10%, rgba(56, 189, 248, 0.28) 0%, transparent 65%),
-    radial-gradient(70% 55% at 88% 18%, rgba(167, 139, 250, 0.24) 0%, transparent 65%),
-    radial-gradient(75% 60% at 60% 90%, rgba(52, 211, 153, 0.22) 0%, transparent 65%),
-    linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 35%, #ede9fe 72%, #ecfdf5 100%);
+    radial-gradient(75% 55% at 15% 10%, rgba(56, 189, 248, 0.24) 0%, transparent 65%),
+    radial-gradient(75% 60% at 85% 85%, rgba(52, 211, 153, 0.20) 0%, transparent 65%),
+    linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 52%, #ecfdf5 100%);
 }
 
 html.dark {
   color-scheme: dark;
-  --bg-paper: #0b1530;
+  --bg-paper: #091529;
   --text-ink: #f8fafc;
   --color-ink-black: #f8fafc;
   --color-bone: #0f172a;
@@ -334,16 +333,15 @@ html.dark {
 }
 
 html.dark body {
-  background-color: #0b1530;
+  background-color: #091529;
   color: #f8fafc;
 }
 
 html.dark .app-ambient-backdrop {
   background:
-    radial-gradient(85% 65% at 88% 12%, rgba(14, 165, 233, 0.28) 0%, transparent 62%),
-    radial-gradient(80% 65% at 12% 88%, rgba(139, 92, 246, 0.30) 0%, transparent 64%),
-    radial-gradient(70% 55% at 50% 45%, rgba(30, 64, 175, 0.22) 0%, transparent 70%),
-    linear-gradient(135deg, #0b1530 0%, #111838 48%, #1e1342 100%);
+    radial-gradient(85% 65% at 88% 12%, rgba(14, 165, 233, 0.24) 0%, transparent 62%),
+    radial-gradient(80% 65% at 12% 88%, rgba(20, 184, 166, 0.18) 0%, transparent 64%),
+    linear-gradient(135deg, #091529 0%, #0d1f3a 52%, #0a2533 100%);
 }
 
 html.dark select option {
