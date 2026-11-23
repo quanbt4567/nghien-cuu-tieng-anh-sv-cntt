@@ -251,37 +251,37 @@ export default function ProgressPage() {
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-8 animate-pulse">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-3">
-            <div className="h-7 w-28 rounded-full bg-slate-200/80" />
-            <div className="h-8 w-72 rounded-xl bg-slate-200/80" />
-            <div className="h-4 w-96 max-w-full rounded-lg bg-slate-200/80" />
+            <div className="h-7 w-28 rounded-lg bg-slate-200 dark:bg-slate-800" />
+            <div className="h-8 w-72 rounded-xl bg-slate-200 dark:bg-slate-800" />
+            <div className="h-4 w-96 max-w-full rounded-lg bg-slate-200 dark:bg-slate-800" />
           </div>
-          <div className="h-9 w-36 rounded-full bg-slate-200/80" />
+          <div className="h-9 w-36 rounded-lg bg-slate-200 dark:bg-slate-800" />
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5">
           {[0, 1, 2, 3].map((idx) => (
             <div
               key={idx}
-              className="liquid-glass-card-lite rounded-3xl p-4 sm:p-5 space-y-2"
+              className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-4 sm:p-5 space-y-2"
             >
-              <div className="h-8 w-16 mx-auto rounded-lg bg-slate-200/80" />
-              <div className="h-3 w-24 mx-auto rounded bg-slate-200/80" />
+              <div className="h-8 w-16 mx-auto rounded-lg bg-slate-200 dark:bg-slate-800" />
+              <div className="h-3 w-24 mx-auto rounded bg-slate-200 dark:bg-slate-800" />
             </div>
           ))}
         </div>
 
-        <div className="liquid-glass-card-lite rounded-3xl p-6 space-y-4">
-          <div className="h-5 w-48 rounded-lg bg-slate-200/80" />
+        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-6 space-y-4">
+          <div className="h-5 w-48 rounded-lg bg-slate-200 dark:bg-slate-800" />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[0, 1, 2].map((idx) => (
-              <div key={idx} className="h-24 rounded-xl bg-slate-200/80" />
+              <div key={idx} className="h-24 rounded-lg bg-slate-200 dark:bg-slate-800" />
             ))}
           </div>
         </div>
 
-        <div className="liquid-glass-card-lite rounded-3xl p-6 space-y-4">
-          <div className="h-5 w-56 rounded-lg bg-slate-200/80" />
-          <div className="h-32 rounded-xl bg-slate-200/80" />
+        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-6 space-y-4">
+          <div className="h-5 w-56 rounded-lg bg-slate-200 dark:bg-slate-800" />
+          <div className="h-32 rounded-lg bg-slate-200 dark:bg-slate-800" />
         </div>
       </div>
     );
@@ -293,16 +293,16 @@ export default function ProgressPage() {
         <div>
           <Link
             href="/"
-            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all mb-3"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors mb-3"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
+            <ArrowLeft className="w-4 h-4" />
             <span>Trang chủ</span>
           </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
-            <TrendingUp className="w-6 h-6 text-sky-600" />
-            <span>Tiến độ học & kế hoạch 7 ngày</span>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 flex items-center gap-2">
+            <TrendingUp className="w-6 h-6 text-blue-700 dark:text-blue-400" />
+            <span>Tiến độ học &amp; kế hoạch 7 ngày</span>
           </h1>
-          <p className="text-xs text-slate-600 mt-1.5">
+          <p className="text-sm text-slate-600 dark:text-slate-300 mt-1.5">
             Xem bạn đã luyện nói bao nhiêu lần, điểm cao nhất của từng tình huống và những từ cần ôn thêm.
           </p>
         </div>
@@ -311,47 +311,47 @@ export default function ProgressPage() {
           type="button"
           onClick={handleExportData}
           disabled={attempts.length === 0 && arenaRuns.length === 0}
-          className="liquid-glass-btn inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono font-semibold transition-all self-start sm:self-center disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-700 text-sm font-mono font-semibold transition-colors self-start sm:self-center disabled:opacity-50 disabled:cursor-not-allowed"
           title="Tải về file (.json) chứa toàn bộ lượt luyện tập của bạn"
         >
-          <Download className="w-4 h-4 text-sky-600" />
+          <Download className="w-4 h-4 text-blue-700 dark:text-blue-400" />
           <span>Tải dữ liệu về (.json)</span>
         </button>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5">
-        <div className="liquid-glass-card p-4 sm:p-5 text-center">
-          <div className="text-2xl sm:text-3xl font-mono font-extrabold text-slate-900">
+        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-4 sm:p-5 text-center">
+          <div className="text-2xl sm:text-3xl font-mono font-extrabold text-slate-900 dark:text-slate-50">
             {totalSessions}
           </div>
-          <div className="text-[11px] text-slate-600 mt-1">
+          <div className="text-sm text-slate-600 dark:text-slate-300 mt-1">
             Tổng lượt đã luyện
             {arenaRuns.length > 0 && (
-              <span className="block text-[10px] font-mono text-slate-600">
-                ({totalTurns} hội thoại • {arenaRuns.length} Arena)
+              <span className="block text-xs font-mono text-slate-600 dark:text-slate-400 mt-0.5">
+                ({totalTurns} hội thoại · {arenaRuns.length} Arena)
               </span>
             )}
           </div>
         </div>
 
-        <div className="liquid-glass-card p-4 sm:p-5 text-center">
-          <div className="text-2xl sm:text-3xl font-mono font-extrabold text-sky-700">
+        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-4 sm:p-5 text-center">
+          <div className="text-2xl sm:text-3xl font-mono font-extrabold text-blue-700 dark:text-blue-400">
             {isArenaOnly ? bestArenaScore : bestScoreOverall}
           </div>
-          <div className="text-[11px] text-slate-600 mt-1">
+          <div className="text-sm text-slate-600 dark:text-slate-300 mt-1">
             {isArenaOnly ? "Điểm Arena cao nhất" : "Điểm cao nhất"}
           </div>
         </div>
 
-        <div className="liquid-glass-card p-4 sm:p-5 text-center">
-          <div className="text-2xl sm:text-3xl font-mono font-extrabold text-violet-700">
+        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-4 sm:p-5 text-center">
+          <div className="text-2xl sm:text-3xl font-mono font-extrabold text-slate-900 dark:text-slate-50">
             {isArenaOnly
               ? bugBusterRuns.length > 0
                 ? `${avgBugAccuracy}%`
                 : `${totalStandupKeywords}`
               : averageScore}
           </div>
-          <div className="text-[11px] text-slate-600 mt-1">
+          <div className="text-sm text-slate-600 dark:text-slate-300 mt-1">
             {isArenaOnly
               ? bugBusterRuns.length > 0
                 ? "Bug Buster: đúng trung bình"
@@ -361,29 +361,33 @@ export default function ProgressPage() {
         </div>
 
         <div
-          className={`liquid-glass-card p-4 sm:p-5 text-center ${
+          className={`rounded-xl border p-4 sm:p-5 text-center ${
             currentStreak > 0
-              ? "!bg-emerald-50/90 !border-emerald-300"
-              : "!bg-amber-50/90 !border-amber-300"
+              ? "bg-green-50 dark:bg-green-950/50 border-green-200 dark:border-green-800"
+              : "bg-amber-50 dark:bg-amber-950/50 border-amber-200 dark:border-amber-800"
           }`}
         >
           <div
             className={`text-2xl sm:text-3xl font-mono font-extrabold flex items-center justify-center gap-1 ${
-              currentStreak > 0 ? "text-emerald-800" : "text-amber-800"
+              currentStreak > 0
+                ? "text-green-700 dark:text-green-400"
+                : "text-amber-700 dark:text-amber-400"
             }`}
           >
             <Flame
               className={`w-6 h-6 ${
                 currentStreak > 0
-                  ? "fill-emerald-500 text-emerald-600"
-                  : "fill-amber-500 text-amber-600"
+                  ? "fill-green-600 text-green-700 dark:fill-green-500 dark:text-green-400"
+                  : "fill-amber-500 text-amber-700 dark:text-amber-400"
               }`}
             />
             <span>{currentStreak}</span>
           </div>
           <div
-            className={`text-[11px] font-bold mt-1 ${
-              currentStreak > 0 ? "text-emerald-800" : "text-amber-800"
+            className={`text-sm font-bold mt-1 ${
+              currentStreak > 0
+                ? "text-green-800 dark:text-green-300"
+                : "text-amber-800 dark:text-amber-300"
             }`}
           >
             Ngày luyện tập
@@ -391,79 +395,85 @@ export default function ProgressPage() {
         </div>
       </div>
 
-      <section className="liquid-glass-card p-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-200/85 pb-3">
-          <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-2">
-            <Gamepad2 className="w-4 h-4 text-sky-600" />
+      <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#1F2937] pb-3">
+          <h2 className="text-sm font-bold text-slate-900 dark:text-slate-50 uppercase tracking-wider font-mono flex items-center gap-2">
+            <Gamepad2 className="w-4 h-4 text-blue-700 dark:text-blue-400" />
             <span>Chơi trong IT Speaking Arena (đấu trường luyện nói)</span>
           </h2>
-          <span className="text-[11px] font-mono text-slate-600">
+          <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
             {arenaRuns.length} lượt chơi
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="bg-sky-50/80 border border-slate-200/85 rounded-2xl p-3.5">
-            <div className="text-[11px] font-mono text-slate-600">Bug Buster cao nhất</div>
-            <div className="text-xl font-mono font-extrabold text-slate-900 mt-0.5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-[#1F2937] border-b border-slate-200 dark:border-[#1F2937] pb-4">
+          <div className="py-2 sm:py-0 sm:pr-4">
+            <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
+              Bug Buster cao nhất
+            </div>
+            <div className="text-xl font-mono font-extrabold text-slate-900 dark:text-slate-50 mt-0.5">
               {bugBusterBest.toLocaleString("vi-VN")} điểm
             </div>
-            <div className="text-[11px] text-slate-700 mt-0.5">
+            <div className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">
               {bugBusterRuns.length > 0
-                ? `${bugBusterRuns.length} lượt • ${avgBugAccuracy}% đúng trung bình`
+                ? `${bugBusterRuns.length} lượt · ${avgBugAccuracy}% đúng trung bình`
                 : "Chưa có lượt chơi"}
             </div>
           </div>
-          <div className="bg-sky-50/80 border border-slate-200/85 rounded-2xl p-3.5">
-            <div className="text-[11px] font-mono text-slate-600">Standup Speed Run cao nhất</div>
-            <div className="text-xl font-mono font-extrabold text-slate-900 mt-0.5">
+          <div className="py-3 sm:py-0 sm:px-4">
+            <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
+              Standup Speed Run cao nhất
+            </div>
+            <div className="text-xl font-mono font-extrabold text-slate-900 dark:text-slate-50 mt-0.5">
               {standupBest.toLocaleString("vi-VN")} điểm
             </div>
-            <div className="text-[11px] text-slate-700 mt-0.5">
+            <div className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">
               {standupRuns.length > 0
-                ? `${standupRuns.length} lượt • ${totalStandupKeywords} từ khóa`
+                ? `${standupRuns.length} lượt · ${totalStandupKeywords} từ khóa`
                 : "Chưa có lượt chơi"}
             </div>
           </div>
-          <div className="bg-sky-50/80 border border-slate-200/85 rounded-2xl p-3.5">
-            <div className="text-[11px] font-mono text-slate-600">Tổng điểm đã có</div>
-            <div className="text-xl font-mono font-extrabold text-sky-700 mt-0.5">
+          <div className="pt-3 sm:pt-0 sm:pl-4">
+            <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
+              Tổng điểm đã có
+            </div>
+            <div className="text-xl font-mono font-extrabold text-blue-700 dark:text-blue-400 mt-0.5">
               {identity.totalPoints.toLocaleString("vi-VN")} điểm
             </div>
-            <div className="text-[11px] text-amber-800 font-semibold mt-0.5">
-              {coins} IT-Coin • {devTitle.title}
+            <div className="text-sm text-amber-700 dark:text-amber-400 font-semibold mt-0.5">
+              {coins} IT-Coin · {devTitle.title}
             </div>
           </div>
         </div>
 
         {arenaRuns.length > 0 ? (
           <div className="space-y-2 pt-1">
-            <div className="text-xs font-mono font-bold text-slate-700 flex items-center gap-1.5">
-              <History className="w-3.5 h-3.5 text-sky-600" />
+            <div className="text-xs font-mono font-bold uppercase text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <History className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
               <span>Lịch sử Arena gần đây</span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div className="divide-y divide-slate-200 dark:divide-[#1F2937]">
               {arenaRuns.slice(0, 8).map((run) => (
                 <div
                   key={run.id}
-                  className="bg-white/85 border border-slate-200/85 rounded-xl p-3 flex items-center justify-between gap-3"
+                  className="py-3 flex items-center justify-between gap-3"
                 >
                   <div className="min-w-0">
-                    <div className="text-xs font-bold text-slate-900 truncate">
+                    <div className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate">
                       {getArenaGameLabel(run.gameId)}
                     </div>
-                    <div className="text-[11px] font-mono text-slate-600">
+                    <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
                       {run.gameId === "bug-buster"
                         ? `${run.accuracyOrWords}% đúng`
                         : run.gameId === "standup-speed-run"
-                        ? `${run.accuracyOrWords} từ khóa`
-                        : `${run.accuracyOrWords} điểm mạnh`}
-                      {run.durationSec > 0 ? ` • ${run.durationSec}s` : ""}
-                      {" • "}
+                          ? `${run.accuracyOrWords} từ khóa`
+                          : `${run.accuracyOrWords} điểm mạnh`}
+                      {run.durationSec > 0 ? ` · ${run.durationSec}s` : ""}
+                      {" · "}
                       {new Date(run.createdAt).toLocaleDateString("vi-VN")}
                     </div>
                   </div>
-                  <span className="px-2.5 py-1 rounded-full bg-sky-100/90 border border-sky-300 text-xs font-mono font-bold text-sky-800 shrink-0">
+                  <span className="px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-xs font-mono font-bold text-blue-800 dark:text-blue-300 shrink-0">
                     {run.score.toLocaleString("vi-VN")} điểm
                   </span>
                 </div>
@@ -471,9 +481,12 @@ export default function ProgressPage() {
             </div>
           </div>
         ) : (
-          <p className="text-xs text-slate-600">
+          <p className="text-sm text-slate-600 dark:text-slate-300">
             Bạn chưa có lượt chơi Arena nào. Thử sức tại{" "}
-            <Link href="/arena" className="text-sky-700 font-semibold hover:underline">
+            <Link
+              href="/arena"
+              className="text-blue-700 dark:text-blue-400 font-semibold hover:underline"
+            >
               IT Speaking Arena
             </Link>
             !
@@ -481,97 +494,105 @@ export default function ProgressPage() {
         )}
       </section>
 
-      <section className="liquid-glass-card p-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-200/85 pb-3">
-          <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-2">
-            <History className="w-4 h-4 text-violet-600" />
+      <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#1F2937] pb-3">
+          <h2 className="text-sm font-bold text-slate-900 dark:text-slate-50 uppercase tracking-wider font-mono flex items-center gap-2">
+            <History className="w-4 h-4 text-blue-700 dark:text-blue-400" />
             <span>Lịch sử luyện tập và điểm thưởng</span>
           </h2>
-          <span className="text-[11px] font-mono text-slate-600">
+          <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
             {unifiedHistory.length} hoạt động
           </span>
         </div>
 
         {unifiedHistory.length > 0 ? (
-          <div className="space-y-2">
+          <div className="divide-y divide-slate-200 dark:divide-[#1F2937]">
             {unifiedHistory.slice(0, 15).map((item) => (
               <div
                 key={item.id}
-                className="bg-white/85 border border-slate-200/85 rounded-xl px-3.5 py-2.5 flex items-center justify-between gap-3"
+                className="py-3 flex items-center justify-between gap-3"
               >
                 <div className="min-w-0">
-                  <div className="text-xs font-bold text-slate-900 truncate">
+                  <div className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate">
                     {item.title}
                   </div>
-                  <div className="text-[11px] font-mono text-slate-600 truncate">
-                    {item.detail} • {new Date(item.createdAt).toLocaleDateString("vi-VN")}
+                  <div className="text-xs font-mono text-slate-600 dark:text-slate-400 truncate">
+                    {item.detail} · {new Date(item.createdAt).toLocaleDateString("vi-VN")}
                   </div>
                 </div>
-                <span className="px-2.5 py-0.5 rounded-full bg-violet-100/90 border border-violet-300 text-[11px] font-mono font-bold text-violet-800 shrink-0">
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-xs font-mono font-bold text-blue-800 dark:text-blue-300 shrink-0">
                   {item.badgeText}
                 </span>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-xs text-slate-600">
+          <p className="text-sm text-slate-600 dark:text-slate-300">
             Chưa có hoạt động nào được ghi nhận. Hoàn thành một lượt luyện nói, Đố từ vựng 60 giây, Nói theo cụm từ hoặc trận Arena để xem lịch sử tại đây.
           </p>
         )}
       </section>
 
-      <section className="liquid-glass-card p-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-200/85 pb-3">
-          <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-2">
-            <BarChart3 className="w-4 h-4 text-sky-600" />
+      <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#1F2937] pb-3">
+          <h2 className="text-sm font-bold text-slate-900 dark:text-slate-50 uppercase tracking-wider font-mono flex items-center gap-2">
+            <BarChart3 className="w-4 h-4 text-blue-700 dark:text-blue-400" />
             <span>Điểm cao nhất từng tình huống</span>
           </h2>
-          <span className="text-[11px] font-mono text-slate-600">
+          <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
             Tối đa 100 điểm
           </span>
         </div>
 
         <div className="space-y-3.5">
-          {scenarioStats.map((st) => (
-            <div key={st.id} className="space-y-1.5">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-semibold text-slate-800">{st.titleVI}</span>
-                <span className="font-mono text-slate-600">
-                  {st.bestScore > 0 ? `${st.bestScore} điểm (${st.turnCount} lượt)` : "Chưa luyện"}
-                </span>
+          {scenarioStats.map((st) => {
+            const scaleValue =
+              st.bestScore > 0 ? Math.max(0.05, Math.min(1, st.bestScore / 100)) : 0;
+            return (
+              <div key={st.id} className="space-y-1.5">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-semibold text-slate-800 dark:text-slate-100">
+                    {st.titleVI}
+                  </span>
+                  <span className="font-mono text-xs text-slate-600 dark:text-slate-400">
+                    {st.bestScore > 0
+                      ? `${st.bestScore} điểm (${st.turnCount} lượt)`
+                      : "Chưa luyện"}
+                  </span>
+                </div>
+                <div className="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full w-full rounded-full origin-left transition-transform duration-300 ${
+                      st.bestScore >= 80
+                        ? "bg-green-700 dark:bg-green-500"
+                        : st.bestScore > 0
+                          ? "bg-blue-700 dark:bg-blue-500"
+                          : "bg-transparent"
+                    }`}
+                    style={{ transform: `scaleX(${scaleValue})` }}
+                  />
+                </div>
               </div>
-              <div className="w-full h-3 bg-slate-200/80 rounded-full border border-slate-300/70 overflow-hidden p-0.5">
-                <div
-                  className={`h-full rounded-full transition-all duration-500 ${
-                    st.bestScore >= 80
-                      ? "bg-gradient-to-r from-emerald-500 to-sky-500"
-                      : st.bestScore > 0
-                      ? "bg-gradient-to-r from-sky-500 to-violet-500"
-                      : "bg-transparent"
-                  }`}
-                  style={{ width: `${Math.max(st.bestScore > 0 ? 5 : 0, st.bestScore)}%` }}
-                />
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
       <section
         aria-label="Tóm tắt IT Speaking Arena"
-        className="liquid-glass-card p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+        className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
       >
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-100/90 border border-violet-300 text-violet-900 text-xs font-mono font-semibold">
-              <Award className="w-3.5 h-3.5 text-violet-700" aria-hidden="true" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 text-xs font-mono font-semibold">
+              <Award className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
               <span>{devTitle.title}</span>
             </span>
 
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100/90 border border-amber-300 text-xs font-mono font-bold text-amber-900">
-              <Coins className="w-3.5 h-3.5 text-amber-600" aria-hidden="true" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-xs font-mono font-bold text-amber-800 dark:text-amber-300">
+              <Coins className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400" aria-hidden="true" />
               <span>{coins} IT-Coin</span>
-              <span className="text-[11px] font-normal text-amber-800">
+              <span className="text-xs font-normal text-amber-700 dark:text-amber-400">
                 (1000 điểm = 1 Coin)
               </span>
             </span>
@@ -579,15 +600,15 @@ export default function ProgressPage() {
             <span
               className={`inline-flex items-center gap-1 px-3 py-1 rounded-full border text-xs font-mono font-bold ${
                 gamification.streakDays > 0
-                  ? "bg-emerald-100/90 border-emerald-300 text-emerald-800"
-                  : "bg-sky-100/90 border-sky-300 text-sky-800"
+                  ? "bg-green-50 dark:bg-green-950/50 border-green-200 dark:border-green-800 text-green-800 dark:text-green-300"
+                  : "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300"
               }`}
             >
               <Flame
                 className={`w-3.5 h-3.5 ${
                   gamification.streakDays > 0
-                    ? "fill-emerald-500 text-emerald-600"
-                    : "fill-sky-500 text-sky-600"
+                    ? "fill-green-600 text-green-700 dark:text-green-400"
+                    : "fill-blue-600 text-blue-700 dark:text-blue-400"
                 }`}
                 aria-hidden="true"
               />
@@ -595,7 +616,7 @@ export default function ProgressPage() {
             </span>
           </div>
 
-          <p className="text-xs text-slate-600 font-mono">
+          <p className="text-sm text-slate-600 dark:text-slate-300 font-mono">
             Tổng {identity.totalPoints} điểm tích lũy từ hội thoại và game Arena.
           </p>
         </div>
@@ -603,19 +624,19 @@ export default function ProgressPage() {
         <div className="flex flex-wrap items-center gap-2 shrink-0">
           <Link
             href="/vocabulary"
-            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-semibold transition-colors"
           >
-            <BookOpen className="w-3.5 h-3.5 text-sky-600" aria-hidden="true" />
+            <BookOpen className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
             <span>Từ vựng IT</span>
           </Link>
 
           <Link
             href="/arena"
-            className="liquid-btn-primary text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all"
+            className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
           >
-            <Gamepad2 className="w-3.5 h-3.5" aria-hidden="true" />
+            <Gamepad2 className="w-4 h-4" aria-hidden="true" />
             <span>Vào IT Arena</span>
-            <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+            <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </Link>
         </div>
       </section>
@@ -625,13 +646,13 @@ export default function ProgressPage() {
       </section>
 
       {keywordWeakPoints.length > 0 && (
-        <section className="liquid-glass-card p-6 space-y-3.5">
-          <div className="flex items-center justify-between border-b border-slate-200/85 pb-2">
-            <h3 className="text-xs font-bold font-mono uppercase text-slate-900 flex items-center gap-1.5">
-              <AlertCircle className="w-3.5 h-3.5 text-rose-600" />
+        <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-6 space-y-3.5">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#1F2937] pb-2">
+            <h3 className="text-sm font-bold font-mono uppercase text-slate-900 dark:text-slate-50 flex items-center gap-1.5">
+              <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400" />
               <span>Từ khóa bạn hay quên nhất ({keywordWeakPoints.length})</span>
             </h3>
-            <span className="text-[11px] font-mono text-slate-600">
+            <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
               Xếp theo số lần bỏ sót
             </span>
           </div>
@@ -640,10 +661,12 @@ export default function ProgressPage() {
             {keywordWeakPoints.slice(0, 15).map((wp) => (
               <span
                 key={wp.id}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50/90 border border-rose-300 text-xs font-mono"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 text-xs font-mono"
               >
-                <span className="font-bold text-slate-900">{wp.value}</span>
-                <span className="text-[10px] text-rose-700 font-bold">
+                <span className="font-bold text-slate-900 dark:text-slate-100">
+                  {wp.value}
+                </span>
+                <span className="text-red-700 dark:text-red-400 font-bold">
                   ({wp.miss_count} lần)
                 </span>
               </span>
@@ -654,4 +677,3 @@ export default function ProgressPage() {
     </div>
   );
 }
-

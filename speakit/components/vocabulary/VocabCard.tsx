@@ -123,7 +123,7 @@ export function VocabCard({
           }
         : {
             ok: false,
-            message: `Nghe được "${trimmed}" — thử đọc rõ "${item.term}" hơn.`,
+            message: `Nghe được "${trimmed}", thử đọc rõ "${item.term}" hơn.`,
           }
     );
   };
@@ -182,25 +182,25 @@ export function VocabCard({
 
   return (
     <div
-      className={`liquid-glass-card-lite rounded-3xl p-5 sm:p-6 space-y-4 transition-all ${
+      className={`bg-white dark:bg-[#111827] border rounded-xl p-5 sm:p-6 space-y-4 transition-colors ${
         isMastered
-          ? "!border-emerald-400/80 shadow-[0_8px_24px_rgba(16,185,129,0.12)]"
+          ? "border-green-300 dark:border-green-800"
           : isMarkedForReview
-            ? "!border-amber-400/80 shadow-[0_8px_24px_rgba(245,158,11,0.12)]"
-            : "hover:!border-sky-300"
+            ? "border-amber-300 dark:border-amber-800"
+            : "border-slate-200 dark:border-[#1F2937] hover:border-blue-300 dark:hover:border-blue-700"
       }`}
     >
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-xl font-bold font-mono text-slate-900 tracking-normal leading-snug">
+            <h3 className="text-xl font-bold font-mono text-slate-900 dark:text-slate-50 tracking-normal leading-snug">
               {item.term}
             </h3>
-            <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-violet-100/90 border border-violet-300 text-violet-800 font-semibold tracking-normal">
+            <span className="text-xs font-mono uppercase px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold tracking-normal">
               {item.partOfSpeech}
             </span>
           </div>
-          <div className="text-sm font-ipa text-sky-700 font-medium tracking-wide mt-1">
+          <div className="text-sm font-ipa text-blue-700 dark:text-blue-400 font-medium tracking-wide mt-1">
             {item.phonetic}
           </div>
         </div>
@@ -219,10 +219,10 @@ export function VocabCard({
                 ? "Đang nghe... bấm để dừng"
                 : `Đọc thử từ "${item.term}"`
             }
-            className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
+            className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors border ${
               isListening
-                ? "liquid-btn-danger text-white animate-pulse"
-                : "bg-emerald-100/90 border border-emerald-300 text-emerald-800 hover:bg-emerald-200/80"
+                ? "bg-red-600 hover:bg-red-700 border-red-600 text-white animate-pulse"
+                : "bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700"
             }`}
           >
             {isListening ? (
@@ -240,10 +240,10 @@ export function VocabCard({
                 ? `Dừng phát âm "${item.term}"`
                 : `Phát âm từ "${item.term}"`
             }
-            className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
+            className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors border ${
               playingTarget === "word"
-                ? "liquid-btn-primary text-white"
-                : "bg-sky-100/90 border border-sky-300 text-sky-800 hover:bg-sky-200/80"
+                ? "bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 border-blue-700 dark:border-blue-600 text-white"
+                : "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/60"
             }`}
             title={
               playingTarget === "word"
@@ -262,12 +262,12 @@ export function VocabCard({
 
       {(isListening || micFeedback) && (
         <div
-          className={`text-[11px] font-mono px-3 py-2 rounded-xl border ${
+          className={`text-sm font-mono px-3 py-2 rounded-lg border ${
             isListening
-              ? "bg-sky-100/85 border-sky-300 text-sky-900"
+              ? "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-900 dark:text-blue-200"
               : micFeedback?.ok
-                ? "bg-emerald-100/85 border-emerald-300 text-emerald-900"
-                : "bg-amber-100/85 border-amber-300 text-amber-900"
+                ? "bg-green-50 dark:bg-green-950/50 border-green-200 dark:border-green-800 text-green-800 dark:text-green-300"
+                : "bg-amber-50 dark:bg-amber-950/50 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300"
           }`}
         >
           {isListening
@@ -278,22 +278,22 @@ export function VocabCard({
         </div>
       )}
 
-      <p className="text-xs text-slate-800 font-medium leading-relaxed bg-sky-50/80 border border-slate-200/85 p-3 rounded-xl">
+      <p className="text-sm text-slate-800 dark:text-slate-100 font-medium leading-relaxed border-l-2 border-blue-700 dark:border-blue-500 pl-3 py-0.5">
         {item.meaningVI}
       </p>
 
-      <div className="bg-white/85 p-3.5 rounded-xl border border-slate-200/85 space-y-1.5 text-xs">
+      <div className="pt-3 border-t border-slate-200 dark:border-[#1F2937] space-y-1.5">
         <div className="flex items-center justify-between gap-2">
-          <span className="font-mono text-[10px] uppercase font-bold text-slate-600">
+          <span className="font-mono text-xs uppercase font-bold text-slate-600 dark:text-slate-400">
             Ví dụ trong công việc:
           </span>
           <button
             type="button"
             onClick={() => playSegment("sentence", item.exampleSentenceEN, 0.8)}
-            className={`text-[11px] font-mono px-2.5 py-1 rounded-full border flex items-center gap-1 font-semibold transition-colors ${
+            className={`text-xs font-mono px-2.5 py-1 rounded-lg border flex items-center gap-1 font-semibold transition-colors ${
               playingTarget === "sentence"
-                ? "bg-violet-200/90 border-violet-400 text-violet-900"
-                : "bg-violet-100/85 border-violet-300 text-violet-800 hover:bg-violet-200/80"
+                ? "bg-blue-700 dark:bg-blue-600 border-blue-700 dark:border-blue-600 text-white"
+                : "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/60"
             }`}
           >
             {playingTarget === "sentence" ? (
@@ -304,24 +304,24 @@ export function VocabCard({
             <span>{playingTarget === "sentence" ? "Dừng phát" : "Nghe câu mẫu"}</span>
           </button>
         </div>
-        <div className="font-medium text-slate-900 leading-relaxed">
-          "{item.exampleSentenceEN}"
+        <div className="text-sm font-medium text-slate-900 dark:text-slate-100 leading-relaxed">
+          &quot;{item.exampleSentenceEN}&quot;
         </div>
-        <div className="text-slate-600 text-[11px] pt-0.5">
+        <div className="text-sm text-slate-600 dark:text-slate-300 pt-0.5">
           {item.exampleTranslationVI}
         </div>
       </div>
 
       {(onToggleReview || onToggleMastered) && (
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200/85">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-200 dark:border-[#1F2937]">
           {onToggleReview && (
             <button
               type="button"
               onClick={() => onToggleReview(item)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-colors ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
                 isMarkedForReview
-                  ? "bg-amber-100/90 border-amber-400 text-amber-900"
-                  : "bg-white/85 border-slate-200/85 text-slate-700 hover:text-slate-900 hover:bg-sky-50/80"
+                  ? "bg-amber-50 dark:bg-amber-950/50 border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-300"
+                  : "bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700"
               }`}
             >
               <BookmarkPlus className="w-3.5 h-3.5" />
@@ -333,10 +333,10 @@ export function VocabCard({
             <button
               type="button"
               onClick={() => onToggleMastered(item)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-colors ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
                 isMastered
-                  ? "bg-emerald-100/90 border-emerald-400 text-emerald-900"
-                  : "bg-white/85 border-slate-200/85 text-slate-700 hover:text-slate-900 hover:bg-sky-50/80"
+                  ? "bg-green-50 dark:bg-green-950/50 border-green-300 dark:border-green-700 text-green-800 dark:text-green-300"
+                  : "bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700"
               }`}
             >
               <CheckCircle2 className="w-3.5 h-3.5" />
@@ -347,7 +347,7 @@ export function VocabCard({
       )}
 
       {ttsError && (
-        <p className="text-[11px] font-mono text-rose-700" role="alert">
+        <p className="text-sm font-mono text-red-700 dark:text-red-400" role="alert">
           {ttsError}
         </p>
       )}

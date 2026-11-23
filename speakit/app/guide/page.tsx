@@ -74,36 +74,36 @@ export default async function GuidePage() {
       <div className="space-y-2">
         <Link
           href="/"
-          className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
+          <ArrowLeft className="w-4 h-4" />
           <span>Trang chủ</span>
         </Link>
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 flex items-center gap-2.5 pt-1">
-          <HelpCircle className="w-6 h-6 text-sky-600 shrink-0" />
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50 flex items-center gap-2.5 pt-1">
+          <HelpCircle className="w-6 h-6 text-blue-700 dark:text-blue-400 shrink-0" />
           <span>Hướng Dẫn Sử Dụng SpeakIT (1 Phút)</span>
         </h1>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-600 dark:text-slate-300">
           Tóm tắt nhanh các tính năng chính, cách hệ thống chấm điểm và cách tích lũy IT-Coin trên SpeakIT.
         </p>
       </div>
 
-      <section className="liquid-glass-card p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase text-sky-700">
-            <Compass className="w-4 h-4 text-sky-600" />
+          <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
+            <Compass className="w-4 h-4 text-blue-700 dark:text-blue-400" />
             <span>Chưa biết bắt đầu từ đâu?</span>
           </div>
-          <h2 className="text-base sm:text-lg font-bold text-slate-900">
+          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-50">
             Làm bài kiểm tra xếp lớp nhanh (2 phút)
           </h2>
-          <p className="text-xs text-slate-600">
+          <p className="text-sm text-slate-600 dark:text-slate-300">
             2 câu trắc nghiệm tình huống + 1 câu nói 15 giây để hệ thống gợi ý đúng cấp độ Fresher / Junior / Senior.
           </p>
         </div>
         <Link
           href="/placement"
-          className="liquid-btn-primary text-white shrink-0 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-bold transition-all"
+          className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white shrink-0 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-colors"
         >
           <span>Kiểm tra trình độ ngay</span>
           <ArrowRight className="w-4 h-4" />
@@ -111,7 +111,7 @@ export default async function GuidePage() {
       </section>
 
       <section className="space-y-4">
-        <h2 className="text-lg font-bold text-slate-900">
+        <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50">
           1. Bản đồ 6 khu vực trên thanh điều hướng
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -119,79 +119,90 @@ export default async function GuidePage() {
             <Link
               key={href}
               href={href}
-              className="group liquid-glass-card-lite rounded-3xl p-5 hover:!border-sky-300 transition-all space-y-2"
+              className="group bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-5 hover:border-blue-300 dark:hover:border-blue-700 transition-colors space-y-2"
             >
               <div className="flex items-center justify-between gap-2">
-                <div className="inline-flex items-center gap-2.5 font-bold text-sm text-slate-900 group-hover:text-sky-700 transition-colors">
-                  <span className="w-8 h-8 rounded-full bg-sky-100/90 border border-sky-300 flex items-center justify-center">
-                    <Icon className="w-4 h-4 text-sky-700" />
+                <div className="inline-flex items-center gap-2.5 font-bold text-base text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
+                  <span className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center">
+                    <Icon className="w-4 h-4 text-blue-700 dark:text-blue-400" />
                   </span>
                   <span>{title}</span>
                 </div>
-                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-sky-600 group-hover:translate-x-0.5 transition-all" />
+                <ArrowRight className="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover:text-blue-700 dark:group-hover:text-blue-400 group-hover:translate-x-0.5 transition-transform" />
               </div>
-              <p className="text-xs text-slate-600 leading-relaxed">{description}</p>
+              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                {description}
+              </p>
             </Link>
           ))}
         </div>
       </section>
 
-      <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
+      <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-5 sm:p-6 space-y-4">
         <div className="space-y-1">
-          <h2 className="text-lg font-bold text-slate-900">
-            2. Cách chấm điểm & Ý nghĩa 3 màu phản hồi
+          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50">
+            2. Cách chấm điểm &amp; Ý nghĩa 3 màu phản hồi
           </h2>
-          <p className="text-xs text-slate-600 font-mono">
-            Công thức chấm: 40% Từ khóa kỹ thuật • 30% Mức độ đầy đủ ý • 30% Ngữ pháp tự nhiên
+          <p className="text-sm text-slate-600 dark:text-slate-300 font-mono">
+            Công thức chấm: 40% Từ khóa kỹ thuật · 30% Mức độ đầy đủ ý · 30% Ngữ pháp tự nhiên
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div className="p-4 rounded-2xl bg-emerald-50/90 border border-emerald-300 space-y-1.5">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-900">
-              <Check className="w-4 h-4 text-emerald-600 stroke-[3]" />
-              <span>Xanh lá (Green) — Đạt chuẩn</span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-slate-200 dark:border-[#1F2937] pt-4">
+          <div className="border-l-2 border-green-700 dark:border-green-500 pl-3.5 space-y-1.5">
+            <div className="inline-flex items-center gap-1.5 text-sm font-bold text-green-800 dark:text-green-300">
+              <Check className="w-4 h-4 text-green-700 dark:text-green-400 stroke-[3]" />
+              <span>Xanh lá (Green): Đạt chuẩn</span>
             </div>
-            <p className="text-xs text-slate-700 leading-relaxed">
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
               Từ khóa kỹ thuật bạn đã nói đúng, điểm cao (&ge; 80) và phần câu đã sửa chuẩn ngữ pháp.
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-sky-50/90 border border-sky-300 space-y-1.5">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-900">
-              <Sparkles className="w-4 h-4 text-sky-600" />
-              <span>Xanh dương (Blue) — Nâng cấp tự nhiên</span>
+          <div className="border-l-2 border-blue-700 dark:border-blue-500 pl-3.5 space-y-1.5">
+            <div className="inline-flex items-center gap-1.5 text-sm font-bold text-blue-800 dark:text-blue-300">
+              <Sparkles className="w-4 h-4 text-blue-700 dark:text-blue-400" />
+              <span>Xanh dương (Blue): Nâng cấp tự nhiên</span>
             </div>
-            <p className="text-xs text-slate-700 leading-relaxed">
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
               Câu mẫu diễn đạt tự nhiên hơn (Pro Phrasing) kèm nút Nghe mẫu để bạn tập đọc theo (Shadowing).
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-rose-50/90 border border-rose-300 space-y-1.5">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-900">
-              <X className="w-4 h-4 text-rose-600 stroke-[2.5]" />
-              <span>Đỏ hồng (Red) — Cần bổ sung</span>
+          <div className="border-l-2 border-red-600 dark:border-red-500 pl-3.5 space-y-1.5">
+            <div className="inline-flex items-center gap-1.5 text-sm font-bold text-red-700 dark:text-red-300">
+              <X className="w-4 h-4 text-red-600 dark:text-red-400 stroke-[2.5]" />
+              <span>Đỏ (Red): Cần bổ sung</span>
             </div>
-            <p className="text-xs text-slate-700 leading-relaxed">
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
               Từ khóa quan trọng bạn còn thiếu hoặc lỗi ngữ pháp cần chỉnh lại ở lượt nói tiếp theo.
             </p>
           </div>
         </div>
       </section>
 
-      <section className="liquid-glass-card p-5 sm:p-6 space-y-3">
+      <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-5 sm:p-6 space-y-3">
         <div className="flex items-center gap-2">
-          <Coins className="w-5 h-5 text-amber-600" />
-          <h2 className="text-lg font-bold text-slate-900">
-            3. Cách kiếm & sử dụng IT-Coin
+          <Coins className="w-5 h-5 text-amber-700 dark:text-amber-400" />
+          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50">
+            3. Cách kiếm &amp; sử dụng IT-Coin
           </h2>
         </div>
-        <ul className="text-xs sm:text-sm text-slate-700 space-y-2 list-disc pl-5">
+        <ul className="text-sm text-slate-700 dark:text-slate-300 space-y-2 list-disc pl-5">
           <li>
-            Mỗi lượt luyện nói hoặc chơi minigame trong <strong className="text-slate-900">Arena</strong> đều cộng điểm tích lũy. Cứ mỗi <strong className="text-amber-700 font-mono">1,000 điểm = 1 IT-Coin</strong>.
+            Mỗi lượt luyện nói hoặc chơi minigame trong{" "}
+            <strong className="text-slate-900 dark:text-slate-100">Arena</strong> đều cộng điểm tích lũy. Cứ mỗi{" "}
+            <strong className="text-amber-700 dark:text-amber-400 font-mono">1,000 điểm = 1 IT-Coin</strong>.
           </li>
           <li>
-            Vào trang <Link href="/profile" className="text-sky-700 font-semibold hover:underline">Hồ sơ (/profile)</Link> để dùng IT-Coin mở khóa khung viền (Ring) và danh hiệu Developer nổi bật trên bảng xếp hạng.
+            Vào trang{" "}
+            <Link
+              href="/profile"
+              className="text-blue-700 dark:text-blue-400 font-semibold hover:underline"
+            >
+              Hồ sơ (/profile)
+            </Link>{" "}
+            để dùng IT-Coin mở khóa khung viền (Ring) và danh hiệu Developer nổi bật trên bảng xếp hạng.
           </li>
         </ul>
       </section>

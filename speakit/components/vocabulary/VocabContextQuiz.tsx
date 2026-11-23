@@ -229,7 +229,7 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
           return;
         }
         if (isFinal) {
-          setVoiceError(`Nghe được "${transcript}" — chưa khớp thuật ngữ cần điền.`);
+          setVoiceError(`Nghe được "${transcript}", chưa khớp thuật ngữ cần điền.`);
         }
       },
       onEnd: () => {
@@ -251,23 +251,23 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
     questions.length > 0 ? Math.round((correctCount / questions.length) * 100) : 0;
 
   return (
-    <div className="liquid-glass-card overflow-hidden">
-      <div className="px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white/85">
+    <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl overflow-hidden">
+      <div className="px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-start sm:items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-amber-100/90 border border-amber-300 text-amber-700 flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 rounded-lg bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0">
             <Zap className="w-4 h-4" />
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <h2 className="text-sm font-bold text-slate-900">
+              <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
                 90-Second Context Recall Quiz
               </h2>
-              <span className="inline-flex items-center gap-1 text-[10px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-amber-100/90 text-amber-800 border border-amber-300">
+              <span className="inline-flex items-center gap-1 text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
                 <Coins className="w-3 h-3" />
                 +2 IT-Coins (≥80%)
               </span>
             </div>
-            <p className="text-xs text-slate-600 mt-0.5">
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">
               Điền nhanh thuật ngữ IT vào ngữ cảnh kỹ thuật bằng cách chọn hoặc nói qua micro.
             </p>
           </div>
@@ -278,7 +278,7 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
             <button
               type="button"
               onClick={startQuiz}
-              className="liquid-btn-primary text-white px-4 py-1.5 rounded-full text-xs font-semibold transition-all"
+              className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
             >
               Bắt đầu Quiz
             </button>
@@ -287,7 +287,7 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
             type="button"
             onClick={handleToggleBanner}
             aria-label={isExpanded ? "Thu gọn quiz" : "Mở rộng quiz"}
-            className="liquid-glass-btn w-8 h-8 rounded-full flex items-center justify-center text-slate-700 transition-colors"
+            className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
           >
             {isExpanded ? (
               <ChevronUp className="w-4 h-4" />
@@ -299,16 +299,16 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
       </div>
 
       {isExpanded && phase === "playing" && currentQuestion && (
-        <div className="p-5 border-t border-slate-200/85 space-y-4">
+        <div className="p-5 border-t border-slate-200 dark:border-[#1F2937] space-y-4">
           <div className="flex items-center justify-between text-xs font-mono">
-            <span className="text-slate-600">
+            <span className="text-slate-600 dark:text-slate-300">
               Câu {currentIndex + 1}/{questions.length} · Đúng: {correctCount}
             </span>
             <span
               className={`inline-flex items-center gap-1 font-semibold px-2.5 py-0.5 rounded-full border ${
                 timeLeft <= 10
-                  ? "bg-rose-100/90 text-rose-800 border-rose-300 animate-pulse"
-                  : "bg-sky-100/90 text-sky-800 border-sky-300"
+                  ? "bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800 animate-pulse"
+                  : "bg-blue-50 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800"
               }`}
             >
               <Clock className="w-3.5 h-3.5" />
@@ -316,21 +316,21 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
             </span>
           </div>
 
-          <div className="bg-sky-50/80 rounded-2xl p-4 border border-slate-200/85 space-y-2">
-            <p className="text-sm font-medium text-slate-900 leading-relaxed">
+          <div className="border-l-2 border-blue-700 dark:border-blue-500 pl-4 py-1 space-y-2">
+            <p className="text-sm sm:text-base font-medium text-slate-900 dark:text-slate-100 leading-relaxed">
               {currentQuestion.prompt.split("____").map((part, idx, arr) => (
                 <span key={idx}>
                   {part}
                   {idx < arr.length - 1 && (
-                    <span className="inline-block mx-1 px-2.5 py-0.5 rounded-md bg-sky-100 border border-dashed border-sky-400 text-sky-900 font-mono text-xs font-semibold">
+                    <span className="inline-block mx-1 px-2.5 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/60 border border-dashed border-blue-400 dark:border-blue-600 text-blue-800 dark:text-blue-300 font-mono text-sm font-semibold">
                       {feedback ? currentQuestion.targetTerm : "____"}
                     </span>
                   )}
                 </span>
               ))}
             </p>
-            <p className="text-xs text-slate-600">
-              <span className="font-semibold text-slate-900">Gợi ý:</span>{" "}
+            <p className="text-sm text-slate-600 dark:text-slate-300">
+              <span className="font-semibold text-slate-900 dark:text-slate-100">Gợi ý:</span>{" "}
               {currentQuestion.meaningHint}
             </p>
           </div>
@@ -340,15 +340,17 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
               const isSelected = feedback?.selected === choice;
               const isTarget = choice === currentQuestion.targetTerm;
               let buttonStyle =
-                "bg-white/85 border-slate-200/85 text-slate-800 hover:border-sky-400 hover:bg-sky-50/90 hover:text-slate-900";
+                "bg-slate-50 dark:bg-slate-800/80 border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:border-blue-500 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/40";
               if (feedback) {
                 if (isTarget) {
                   buttonStyle =
-                    "bg-emerald-100/90 border-emerald-400 text-emerald-900";
+                    "bg-green-50 dark:bg-green-950/50 border-green-300 dark:border-green-700 text-green-800 dark:text-green-300";
                 } else if (isSelected && !feedback.isCorrect) {
-                  buttonStyle = "bg-rose-100/90 border-rose-400 text-rose-900";
+                  buttonStyle =
+                    "bg-red-50 dark:bg-red-950/50 border-red-300 dark:border-red-700 text-red-800 dark:text-red-300";
                 } else {
-                  buttonStyle = "bg-white/60 border-slate-200/60 text-slate-500 opacity-60";
+                  buttonStyle =
+                    "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-500 opacity-60";
                 }
               }
 
@@ -360,14 +362,14 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
                   onClick={() =>
                     submitAnswer(choice, choice === currentQuestion.targetTerm)
                   }
-                  className={`px-4 py-2.5 rounded-xl border text-left font-mono text-xs font-semibold transition-all flex items-center justify-between ${buttonStyle}`}
+                  className={`px-4 py-2.5 rounded-lg border text-left font-mono text-sm font-semibold transition-colors flex items-center justify-between ${buttonStyle}`}
                 >
                   <span>{choice}</span>
                   {feedback && isTarget && (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-green-700 dark:text-green-400 shrink-0" />
                   )}
                   {feedback && isSelected && !feedback.isCorrect && (
-                    <XCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                    <XCircle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
                   )}
                 </button>
               );
@@ -380,25 +382,33 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
                 type="button"
                 disabled={Boolean(feedback)}
                 onClick={handleVoiceAnswer}
-                className={`text-white inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition-all ${
-                  isListening ? "liquid-btn-danger animate-pulse" : "liquid-btn-success"
+                className={`text-white inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                  isListening
+                    ? "bg-red-600 hover:bg-red-700 animate-pulse"
+                    : "bg-green-700 hover:bg-green-800"
                 }`}
               >
                 {isListening ? (
                   <>
-                    <MicOff className="w-3.5 h-3.5" />
+                    <MicOff className="w-4 h-4" />
                     <span>Đang nghe... (Nhấn để dừng)</span>
                   </>
                 ) : (
                   <>
-                    <Mic className="w-3.5 h-3.5" />
+                    <Mic className="w-4 h-4" />
                     <span>Nói thuật ngữ (Web Speech)</span>
                   </>
                 )}
               </button>
 
               {(spokenText || voiceError) && (
-                <span className={`text-xs ${voiceError ? "text-amber-700" : "text-slate-600"}`}>
+                <span
+                  className={`text-sm ${
+                    voiceError
+                      ? "text-amber-700 dark:text-amber-400"
+                      : "text-slate-600 dark:text-slate-300"
+                  }`}
+                >
                   {voiceError ? voiceError : `Đã nghe: "${spokenText}"`}
                 </span>
               )}
@@ -408,20 +418,20 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
       )}
 
       {isExpanded && phase === "finished" && (
-        <div className="p-5 border-t border-slate-200/85 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="p-5 border-t border-slate-200 dark:border-[#1F2937] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="text-base font-bold text-slate-900">
+              <span className="text-base font-bold text-slate-900 dark:text-slate-50">
                 Kết quả: {correctCount}/{questions.length} ({accuracy}%)
               </span>
               {rewardGranted && (
-                <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100/90 text-emerald-800 border border-emerald-300">
+                <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-green-50 dark:bg-green-950/50 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800">
                   <Coins className="w-3.5 h-3.5" />
                   +2 IT-Coins đã được cộng!
                 </span>
               )}
             </div>
-            <p className="text-xs text-slate-600">
+            <p className="text-sm text-slate-600 dark:text-slate-300">
               {accuracy >= PASSING_ACCURACY
                 ? "Xuất sắc! Bạn đã nắm vững ngữ cảnh sử dụng các thuật ngữ IT."
                 : "Đạt từ 80% trở lên trong 60 giây để nhận thưởng +2 IT-Coins."}
@@ -432,15 +442,15 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
             <button
               type="button"
               onClick={startQuiz}
-              className="liquid-btn-primary text-white inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all"
+              className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
+              <RotateCcw className="w-4 h-4" />
               <span>Chơi lại</span>
             </button>
             <button
               type="button"
               onClick={collapseQuiz}
-              className="liquid-glass-btn px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors"
+              className="px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors"
             >
               Thu gọn
             </button>

@@ -37,28 +37,40 @@ function renderMarkdownBlocks(markdown: string) {
     const formatted = block.text.replace(/\*\*(.*?)\*\*/g, "$1");
     if (block.type === "h2") {
       return (
-        <h2 key={idx} className="text-lg sm:text-xl font-bold text-slate-900 pt-3">
+        <h2
+          key={idx}
+          className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-50 pt-3"
+        >
           {formatted}
         </h2>
       );
     }
     if (block.type === "h3") {
       return (
-        <h3 key={idx} className="text-base font-bold text-slate-900 pt-2">
+        <h3
+          key={idx}
+          className="text-base font-bold text-slate-900 dark:text-slate-100 pt-2"
+        >
           {formatted}
         </h3>
       );
     }
     if (block.type === "li") {
       return (
-        <div key={idx} className="flex items-start gap-2 text-sm text-slate-700 leading-relaxed pl-1">
-          <span className="w-1.5 h-1.5 rounded-full bg-sky-500 mt-2 shrink-0" />
+        <div
+          key={idx}
+          className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-300 leading-relaxed pl-1"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-blue-700 dark:bg-blue-400 mt-2 shrink-0" />
           <span>{formatted}</span>
         </div>
       );
     }
     return (
-      <p key={idx} className="text-sm sm:text-base text-slate-700 leading-relaxed">
+      <p
+        key={idx}
+        className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed"
+      >
         {formatted}
       </p>
     );
@@ -96,19 +108,19 @@ export default async function ResearchArticlePage({
       <div className="space-y-3">
         <Link
           href="/research"
-          className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
+          <ArrowLeft className="w-4 h-4" />
           <span>Tất cả bài nghiên cứu</span>
         </Link>
 
         <div className="flex flex-wrap items-center gap-2 pt-1">
-          <span className="px-2.5 py-0.5 rounded-full bg-sky-100/90 border border-sky-300 text-sky-800 text-xs font-mono font-semibold">
+          <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 text-xs font-mono font-semibold">
             {article.category}
           </span>
-          <span className="inline-flex items-center gap-1 text-xs font-mono text-slate-600">
+          <span className="inline-flex items-center gap-1 text-xs font-mono text-slate-600 dark:text-slate-400">
             {article.sourceType === "ai_curated" && (
-              <Sparkles className="w-3.5 h-3.5 text-violet-600" />
+              <Sparkles className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
             )}
             <span>
               Xuất bản:{" "}
@@ -119,10 +131,10 @@ export default async function ResearchArticlePage({
           </span>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 leading-snug">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-snug">
           {article.title}
         </h1>
-        <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+        <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
           {article.summary}
         </p>
         <div className="pt-1">
@@ -136,25 +148,25 @@ export default async function ResearchArticlePage({
       </div>
 
       {article.metricsJson.length > 0 && (
-        <section className="liquid-glass-card p-5 space-y-3">
-          <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase text-sky-700">
-            <BarChart3 className="w-4 h-4 text-sky-600" />
+        <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-5 space-y-3">
+          <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
+            <BarChart3 className="w-4 h-4 text-blue-700 dark:text-blue-400" />
             <span>Dữ liệu thống kê chính</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-[#1F2937] border-t border-slate-200 dark:border-[#1F2937] pt-4">
             {article.metricsJson.map((metric, idx) => (
               <div
                 key={idx}
-                className="h-full p-4 rounded-2xl bg-sky-50/80 border border-slate-200/85 flex flex-col justify-center gap-1.5"
+                className="py-3 sm:py-1 sm:px-4 first:sm:pl-0 last:sm:pr-0 flex flex-col justify-center gap-1"
               >
-                <div className="text-[11px] font-mono text-slate-600">
+                <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
                   {metric.label}
                 </div>
-                <div className="text-2xl font-extrabold font-mono text-slate-900">
+                <div className="text-2xl font-extrabold font-mono text-slate-900 dark:text-slate-50">
                   {metric.value}
                 </div>
                 {metric.highlight && (
-                  <div className="text-[11px] font-semibold text-sky-700">
+                  <div className="text-sm font-semibold text-blue-700 dark:text-blue-400">
                     {metric.highlight}
                   </div>
                 )}
@@ -164,13 +176,13 @@ export default async function ResearchArticlePage({
         </section>
       )}
 
-      <article className="liquid-glass-card p-6 sm:p-8 space-y-3">
+      <article className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-6 sm:p-8 space-y-3">
         {renderMarkdownBlocks(article.contentMarkdown)}
       </article>
 
       {article.sourceUrls.length > 0 && (
-        <section className="liquid-glass-card p-5 space-y-3">
-          <h2 className="text-xs font-mono font-bold uppercase text-slate-600">
+        <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-5 space-y-3">
+          <h2 className="text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-400">
             Nguồn tham khảo
           </h2>
           <ul className="space-y-2">
@@ -180,7 +192,7 @@ export default async function ResearchArticlePage({
                   href={src.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-sky-700 hover:text-sky-900 hover:underline"
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 hover:underline"
                 >
                   <span>{src.title}</span>
                   <ExternalLink className="w-3.5 h-3.5 shrink-0" />
@@ -191,35 +203,37 @@ export default async function ResearchArticlePage({
         </section>
       )}
 
-      <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
+      <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-5 sm:p-6 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="inline-flex items-center gap-2 text-sm font-bold text-slate-900">
-            <Mic className="w-4 h-4 text-emerald-600" />
+          <div className="inline-flex items-center gap-2 text-base font-bold text-slate-900 dark:text-slate-50">
+            <Mic className="w-4 h-4 text-green-700 dark:text-green-400" />
             <span>Tình huống luyện nói gợi ý từ bài viết</span>
           </div>
           <Link
             href="/"
-            className="text-xs font-semibold text-sky-700 hover:text-sky-900 hover:underline inline-flex items-center gap-1"
+            className="text-sm font-semibold text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 hover:underline inline-flex items-center gap-1"
           >
             <span>Xem tất cả kịch bản</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="divide-y divide-slate-200 dark:divide-[#1F2937] border-t border-slate-200 dark:border-[#1F2937]">
           {relatedScenarios.map((scenario) => (
             <Link
               key={scenario.id}
               href={`/practice/${scenario.id}`}
-              className="liquid-glass-card-lite p-4 rounded-2xl hover:!border-sky-300 transition-all flex items-center justify-between gap-3"
+              className="py-3.5 flex items-center justify-between gap-3 group"
             >
-              <div className="space-y-1">
-                <div className="font-bold text-sm text-slate-900">
+              <div className="space-y-0.5">
+                <div className="font-bold text-sm text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
                   {scenario.titleEN}
                 </div>
-                <div className="text-xs text-slate-600">{scenario.titleVI}</div>
+                <div className="text-sm text-slate-600 dark:text-slate-300">
+                  {scenario.titleVI}
+                </div>
               </div>
-              <span className="liquid-btn-primary text-white shrink-0 inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full text-xs font-bold">
+              <span className="bg-blue-700 group-hover:bg-blue-800 dark:bg-blue-600 dark:group-hover:bg-blue-700 text-white shrink-0 inline-flex items-center gap-1 px-3.5 py-2 rounded-lg text-sm font-bold transition-colors">
                 <span>Luyện</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </span>
