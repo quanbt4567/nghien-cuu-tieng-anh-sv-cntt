@@ -23,45 +23,45 @@ function buildSectionGuides(scenarioCount: number) {
   return [
     {
       href: "/scenarios",
-      title: "Ká»‹ch báº£n",
+      title: "Kịch bản",
       icon: Mic,
       description:
-        `Luyá»‡n nÃ³i theo ${scenarioCount} tÃ¬nh huá»‘ng cÃ´ng viá»‡c CNTT thá»±c táº¿ (Standup, Bug Report, Code Review, Phá»ng váº¥n, KhÃ¡ch hÃ ng, Demo) chia theo 3 cáº¥p Ä‘á»™ Fresher / Junior / Senior.`,
+        `Luyện nói theo ${scenarioCount} tình huống công việc CNTT thực tế (Standup, Bug Report, Code Review, Phỏng vấn, Khách hàng, Demo) chia theo 3 cấp độ Fresher / Junior / Senior.`,
     },
     {
       href: "/arena",
       title: "Arena",
       icon: Gamepad2,
       description:
-        "ChÆ¡i minigame pháº£n xáº¡ nhanh (Bug Buster, Standup Speed Run) Ä‘á»ƒ tÃ­ch lÅ©y Ä‘iá»ƒm thÆ°á»Ÿng, giá»¯ chuá»—i ngÃ y há»c vÃ  Ä‘ua báº£ng xáº¿p háº¡ng.",
+        "Chơi minigame phản xạ nhanh (Bug Buster, Standup Speed Run) để tích lũy điểm thưởng, giữ chuỗi ngày học và đua bảng xếp hạng.",
     },
     {
       href: "/vocabulary",
-      title: "Tá»« vá»±ng IT",
+      title: "Từ vựng IT",
       icon: BookOpen,
       description:
-        "Tra cá»©u thuáº­t ngá»¯ CNTT cá»‘t lÃµi kÃ¨m phiÃªn Ã¢m IPA, nghÄ©a tiáº¿ng Viá»‡t, cÃ¢u vÃ­ dá»¥ thá»±c táº¿ vÃ  phÃ¡t Ã¢m chuáº©n.",
+        "Tra cứu thuật ngữ CNTT cốt lõi kèm phiên âm IPA, nghĩa tiếng Việt, câu ví dụ thực tế và phát âm chuẩn.",
     },
     {
       href: "/progress",
-      title: "Tiáº¿n Ä‘á»™ & 7 ngÃ y",
+      title: "Tiến độ & 7 ngày",
       icon: TrendingUp,
       description:
-        "Theo dÃµi Ä‘iá»ƒm trung bÃ¬nh, danh sÃ¡ch tá»« khÃ³a cÃ²n yáº¿u vÃ  nháº­n lá»™ trÃ¬nh Ã´n táº­p 7 ngÃ y cÃ¡ nhÃ¢n hÃ³a.",
+        "Theo dõi điểm trung bình, danh sách từ khóa còn yếu và nhận lộ trình ôn tập 7 ngày cá nhân hóa.",
     },
     {
       href: "/profile",
-      title: "Há»“ sÆ¡",
+      title: "Hồ sơ",
       icon: User,
       description:
-        "Äá»•i tÃªn hiá»ƒn thá»‹ trÃªn báº£ng xáº¿p háº¡ng, láº¥y mÃ£ khÃ´i phá»¥c thiáº¿t bá»‹ DEV-XXXXXX vÃ  dÃ¹ng IT-Coin má»Ÿ khÃ³a danh hiá»‡u & khung viá»n.",
+        "Đổi tên hiển thị trên bảng xếp hạng, lấy mã khôi phục thiết bị DEV-XXXXXX và dùng IT-Coin mở khóa danh hiệu & khung viền.",
     },
     {
       href: "/settings",
-      title: "CÃ i Ä‘áº·t",
+      title: "Cài đặt",
       icon: Settings,
       description:
-        "TÃ¹y chá»‰nh tá»‘c Ä‘á»™ Ä‘á»c (0.8x / 1.0x / 1.2x), chá»n giá»ng AI phá»ng váº¥n (US Tech Lead, US Female HR, UK Client) vÃ  quáº£n lÃ½ dá»¯ liá»‡u.",
+        "Tùy chỉnh tốc độ đọc (0.8x / 1.0x / 1.2x), chọn giọng AI phỏng vấn (US Tech Lead, US Female HR, UK Client) và quản lý dữ liệu.",
     },
   ];
 }
@@ -77,14 +77,14 @@ export default async function GuidePage() {
           className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Trang chá»§</span>
+          <span>Trang chủ</span>
         </Link>
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50 flex items-center gap-2.5 pt-1">
           <HelpCircle className="w-6 h-6 text-blue-700 dark:text-blue-400 shrink-0" />
-          <span>HÆ°á»›ng Dáº«n Sá»­ Dá»¥ng SpeakIT (1 PhÃºt)</span>
+          <span>Hướng Dẫn Sử Dụng SpeakIT (1 Phút)</span>
         </h1>
         <p className="text-sm text-slate-600 dark:text-slate-300">
-          TÃ³m táº¯t nhanh cÃ¡c tÃ­nh nÄƒng chÃ­nh, cÃ¡ch há»‡ thá»‘ng cháº¥m Ä‘iá»ƒm vÃ  cÃ¡ch tÃ­ch lÅ©y IT-Coin trÃªn SpeakIT.
+          Tóm tắt nhanh các tính năng chính, cách hệ thống chấm điểm và cách tích lũy IT-Coin trên SpeakIT.
         </p>
       </div>
 
@@ -92,27 +92,27 @@ export default async function GuidePage() {
         <div className="space-y-1">
           <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
             <Compass className="w-4 h-4 text-blue-700 dark:text-blue-400" />
-            <span>ChÆ°a biáº¿t báº¯t Ä‘áº§u tá»« Ä‘Ã¢u?</span>
+            <span>Chưa biết bắt đầu từ đâu?</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-50">
-            LÃ m bÃ i kiá»ƒm tra xáº¿p lá»›p nhanh (2 phÃºt)
+            Làm bài kiểm tra xếp lớp nhanh (2 phút)
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-300">
-            2 cÃ¢u tráº¯c nghiá»‡m tÃ¬nh huá»‘ng + 1 cÃ¢u nÃ³i 15 giÃ¢y Ä‘á»ƒ há»‡ thá»‘ng gá»£i Ã½ Ä‘Ãºng cáº¥p Ä‘á»™ Fresher / Junior / Senior.
+            2 câu trắc nghiệm tình huống + 1 câu nói 15 giây để hệ thống gợi ý đúng cấp độ Fresher / Junior / Senior.
           </p>
         </div>
         <Link
           href="/placement"
           className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white shrink-0 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-colors"
         >
-          <span>Kiá»ƒm tra trÃ¬nh Ä‘á»™ ngay</span>
+          <span>Kiểm tra trình độ ngay</span>
           <ArrowRight className="w-4 h-4" />
         </Link>
       </section>
 
       <section className="space-y-4">
         <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50">
-          1. Báº£n Ä‘á»“ 6 khu vá»±c trÃªn thanh Ä‘iá»u hÆ°á»›ng
+          1. Bản đồ 6 khu vực trên thanh điều hướng
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {sectionGuides.map(({ href, title, icon: Icon, description }) => (
@@ -141,10 +141,10 @@ export default async function GuidePage() {
       <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 sm:p-6 space-y-4">
         <div className="space-y-1">
           <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50">
-            2. CÃ¡ch cháº¥m Ä‘iá»ƒm &amp; Ã nghÄ©a 3 mÃ u pháº£n há»“i
+            2. Cách chấm điểm &amp; Ý nghĩa 3 màu phản hồi
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-300 font-mono">
-            CÃ´ng thá»©c cháº¥m: 40% Tá»« khÃ³a ká»¹ thuáº­t Â· 30% Má»©c Ä‘á»™ Ä‘áº§y Ä‘á»§ Ã½ Â· 30% Ngá»¯ phÃ¡p tá»± nhiÃªn
+            Công thức chấm: 40% Từ khóa kỹ thuật · 30% Mức độ đầy đủ ý · 30% Ngữ pháp tự nhiên
           </p>
         </div>
 
@@ -152,30 +152,30 @@ export default async function GuidePage() {
           <div className="space-y-1.5">
             <div className="inline-flex items-center gap-1.5 text-sm font-bold text-green-800 dark:text-green-300">
               <Check className="w-4 h-4 text-green-700 dark:text-green-400 stroke-[3]" />
-              <span>Xanh lÃ¡ (Green): Äáº¡t chuáº©n</span>
+              <span>Xanh lá (Green): Đạt chuẩn</span>
             </div>
             <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-              Tá»« khÃ³a ká»¹ thuáº­t báº¡n Ä‘Ã£ nÃ³i Ä‘Ãºng, Ä‘iá»ƒm cao (&ge; 80) vÃ  pháº§n cÃ¢u Ä‘Ã£ sá»­a chuáº©n ngá»¯ phÃ¡p.
+              Từ khóa kỹ thuật bạn đã nói đúng, điểm cao (&ge; 80) và phần câu đã sửa chuẩn ngữ pháp.
             </p>
           </div>
 
           <div className="space-y-1.5">
             <div className="inline-flex items-center gap-1.5 text-sm font-bold text-blue-800 dark:text-blue-300">
               <Sparkles className="w-4 h-4 text-blue-700 dark:text-blue-400" />
-              <span>Xanh dÆ°Æ¡ng (Blue): NÃ¢ng cáº¥p tá»± nhiÃªn</span>
+              <span>Xanh dương (Blue): Nâng cấp tự nhiên</span>
             </div>
             <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-              CÃ¢u máº«u diá»…n Ä‘áº¡t tá»± nhiÃªn hÆ¡n (Pro Phrasing) kÃ¨m nÃºt Nghe máº«u Ä‘á»ƒ báº¡n táº­p Ä‘á»c theo (Shadowing).
+              Câu mẫu diễn đạt tự nhiên hơn (Pro Phrasing) kèm nút Nghe mẫu để bạn tập đọc theo (Shadowing).
             </p>
           </div>
 
           <div className="space-y-1.5">
             <div className="inline-flex items-center gap-1.5 text-sm font-bold text-red-700 dark:text-red-300">
               <X className="w-4 h-4 text-red-600 dark:text-red-400 stroke-[2.5]" />
-              <span>Äá» (Red): Cáº§n bá»• sung</span>
+              <span>Đỏ (Red): Cần bổ sung</span>
             </div>
             <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-              Tá»« khÃ³a quan trá»ng báº¡n cÃ²n thiáº¿u hoáº·c lá»—i ngá»¯ phÃ¡p cáº§n chá»‰nh láº¡i á»Ÿ lÆ°á»£t nÃ³i tiáº¿p theo.
+              Từ khóa quan trọng bạn còn thiếu hoặc lỗi ngữ pháp cần chỉnh lại ở lượt nói tiếp theo.
             </p>
           </div>
         </div>
@@ -185,24 +185,24 @@ export default async function GuidePage() {
         <div className="flex items-center gap-2">
           <Coins className="w-5 h-5 text-amber-700 dark:text-amber-400" />
           <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50">
-            3. CÃ¡ch kiáº¿m &amp; sá»­ dá»¥ng IT-Coin
+            3. Cách kiếm &amp; sử dụng IT-Coin
           </h2>
         </div>
         <ul className="text-sm text-slate-700 dark:text-slate-300 space-y-2 list-disc pl-5">
           <li>
-            Má»—i lÆ°á»£t luyá»‡n nÃ³i hoáº·c chÆ¡i minigame trong{" "}
-            <strong className="text-slate-900 dark:text-slate-100">Arena</strong> Ä‘á»u cá»™ng Ä‘iá»ƒm tÃ­ch lÅ©y. Cá»© má»—i{" "}
-            <strong className="text-amber-700 dark:text-amber-400 font-mono">1,000 Ä‘iá»ƒm = 1 IT-Coin</strong>.
+            Mỗi lượt luyện nói hoặc chơi minigame trong{" "}
+            <strong className="text-slate-900 dark:text-slate-100">Arena</strong> đều cộng điểm tích lũy. Cứ mỗi{" "}
+            <strong className="text-amber-700 dark:text-amber-400 font-mono">1,000 điểm = 1 IT-Coin</strong>.
           </li>
           <li>
-            VÃ o trang{" "}
+            Vào trang{" "}
             <Link
               href="/profile"
               className="text-blue-700 dark:text-blue-400 font-semibold hover:underline"
             >
-              Há»“ sÆ¡ (/profile)
+              Hồ sơ (/profile)
             </Link>{" "}
-            Ä‘á»ƒ dÃ¹ng IT-Coin má»Ÿ khÃ³a khung viá»n (Ring) vÃ  danh hiá»‡u Developer ná»•i báº­t trÃªn báº£ng xáº¿p háº¡ng.
+            để dùng IT-Coin mở khóa khung viền (Ring) và danh hiệu Developer nổi bật trên bảng xếp hạng.
           </li>
         </ul>
       </section>

@@ -20,9 +20,9 @@ export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
 const CATEGORY_TABS: Array<{ id: "all" | ResearchCategory; label: string }> = [
-  { id: "all", label: "Táº¥t cáº£" },
+  { id: "all", label: "Tất cả" },
   { id: "benchmark", label: "Benchmark" },
-  { id: "hr_interview", label: "Phá»ng váº¥n HR" },
+  { id: "hr_interview", label: "Phỏng vấn HR" },
   { id: "tech_news", label: "Tin Tech & AI" },
   { id: "case_study", label: "Case Study" },
 ];
@@ -34,7 +34,7 @@ function getCategoryLabel(category: ResearchCategory): string {
 function isInternalDraftMetric(metric: ResearchMetricItem): boolean {
   return (
     metric.highlight === "AI Curated Draft" ||
-    metric.label === "Nguá»“n tin Ä‘Ã£ tá»•ng há»£p"
+    metric.label === "Nguồn tin đã tổng hợp"
   );
 }
 
@@ -70,17 +70,17 @@ export default async function ResearchPortalPage({
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Trang chá»§</span>
+            <span>Trang chủ</span>
           </Link>
           <div className="flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400 pt-1">
             <Newspaper className="w-4 h-4 text-blue-700 dark:text-blue-400" />
             <span>SpeakIT Editorial &amp; Research</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
-            NghiÃªn Cá»©u &amp; Xu HÆ°á»›ng Tiáº¿ng Anh CNTT
+            Nghiên Cứu &amp; Xu Hướng Tiếng Anh CNTT
           </h1>
           <p className="text-sm text-slate-600 dark:text-slate-300 max-w-2xl">
-            Tá»•ng há»£p sá»‘ liá»‡u EF EPI 2025, xu hÆ°á»›ng phá»ng váº¥n ká»¹ thuáº­t tá»« HR vÃ  tin tá»©c cÃ´ng nghá»‡ giÃºp sinh viÃªn CNTT luyá»‡n giao tiáº¿p sÃ¡t thá»±c táº¿.
+            Tổng hợp số liệu EF EPI 2025, xu hướng phỏng vấn kỹ thuật từ HR và tin tức công nghệ giúp sinh viên CNTT luyện giao tiếp sát thực tế.
           </p>
         </div>
 
@@ -88,12 +88,12 @@ export default async function ResearchPortalPage({
           href="/scenarios"
           className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white shrink-0 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-colors"
         >
-          <span>Thá»±c hÃ nh nÃ³i ngay</span>
+          <span>Thực hành nói ngay</span>
           <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2" role="navigation" aria-label="Lá»c chuyÃªn má»¥c nghiÃªn cá»©u">
+      <div className="flex flex-wrap items-center gap-2" role="navigation" aria-label="Lọc chuyên mục nghiên cứu">
         {CATEGORY_TABS.map((tab) => {
           const isActive = activeCategory === tab.id;
           return (
@@ -117,13 +117,13 @@ export default async function ResearchPortalPage({
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
               <BarChart3 className="w-4 h-4 text-blue-700 dark:text-blue-400" />
-              <span>Sá»‘ liá»‡u ná»•i báº­t Â· {featuredArticle.title}</span>
+              <span>Số liệu nổi bật · {featuredArticle.title}</span>
             </div>
             <Link
               href={`/research/${encodeURIComponent(featuredArticle.slug)}`}
               className="relative z-10 shrink-0 text-sm font-semibold text-blue-800 dark:text-blue-300 hover:text-blue-950 dark:hover:text-blue-200 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/60 transition-colors"
             >
-              <span>Äá»c phÃ¢n tÃ­ch Ä‘áº§y Ä‘á»§</span>
+              <span>Đọc phân tích đầy đủ</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -155,10 +155,10 @@ export default async function ResearchPortalPage({
         <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-8 text-center space-y-3">
           <BookOpen className="w-7 h-7 text-slate-500 dark:text-slate-400 mx-auto" />
           <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
-            ChÆ°a cÃ³ bÃ i viáº¿t nÃ o trong chuyÃªn má»¥c nÃ y
+            Chưa có bài viết nào trong chuyên mục này
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-300">
-            HÃ£y chuyá»ƒn sang &ldquo;Táº¥t cáº£&rdquo; hoáº·c quay láº¡i trang chá»§ Ä‘á»ƒ luyá»‡n nÃ³i theo tÃ¬nh huá»‘ng.
+            Hãy chuyển sang &ldquo;Tất cả&rdquo; hoặc quay lại trang chủ để luyện nói theo tình huống.
           </p>
         </div>
       ) : (
@@ -221,7 +221,7 @@ export default async function ResearchPortalPage({
                 <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-200 dark:border-[#262626]">
                   <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
                     {realMetricsCount > 0
-                      ? `${realMetricsCount} tháº» sá»‘ liá»‡u`
+                      ? `${realMetricsCount} thẻ số liệu`
                       : getCategoryLabel(article.category)}
                   </span>
                   <div className="flex flex-wrap items-center gap-2">
@@ -235,7 +235,7 @@ export default async function ResearchPortalPage({
                       href={`/research/${article.slug}`}
                       className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-semibold transition-colors"
                     >
-                      <span>Äá»c chi tiáº¿t</span>
+                      <span>Đọc chi tiết</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>

@@ -40,7 +40,7 @@ export function FeedbackCard({
       <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 space-y-3.5">
         <div className="flex items-center justify-between">
           <span className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider font-mono">
-            Äiá»ƒm Ä‘Ã¡nh giÃ¡ cÃ¢u tráº£ lá»i
+            Điểm đánh giá câu trả lời
           </span>
           <div className="flex items-baseline gap-1 font-mono">
             <span
@@ -72,17 +72,17 @@ export function FeedbackCard({
         </div>
 
         <div className="flex flex-wrap items-center justify-between text-xs font-mono text-slate-600 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800">
-          <span>CÃ´ng thá»©c cháº¥m:</span>
-          <span>40% Tá»« khÃ³a â€¢ 30% Äáº§y Ä‘á»§ â€¢ 30% Ngá»¯ phÃ¡p</span>
+          <span>Công thức chấm:</span>
+          <span>40% Từ khóa • 30% Đầy đủ • 30% Ngữ pháp</span>
         </div>
       </div>
 
       <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 space-y-3.5">
         <div className="flex items-center justify-between text-sm font-bold text-slate-900 dark:text-slate-100">
-          <span>Tá»« khÃ³a ká»¹ thuáº­t CNTT</span>
+          <span>Từ khóa kỹ thuật CNTT</span>
           <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
             {result.keywordsUsed.length}/
-            {result.keywordsUsed.length + result.keywordsMissed.length} tá»« Ä‘Ã£ dÃ¹ng
+            {result.keywordsUsed.length + result.keywordsMissed.length} từ đã dùng
           </span>
         </div>
 
@@ -113,7 +113,7 @@ export function FeedbackCard({
         <div className="space-y-1.5">
           <span className="text-xs font-mono font-bold uppercase text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
             <MessageSquare className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
-            VÄƒn báº£n báº¡n Ä‘Ã£ nÃ³i:
+            Văn bản bạn đã nói:
           </span>
           <div className="bg-slate-50 dark:bg-[#141414] rounded-lg px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 font-medium leading-relaxed">
             &ldquo;{transcript}&rdquo;
@@ -124,7 +124,7 @@ export function FeedbackCard({
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400 flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
-              Gá»£i Ã½ cÃ¢u nÃ³i tá»± nhiÃªn hÆ¡n:
+              Gợi ý câu nói tự nhiên hơn:
             </span>
             <button
               type="button"
@@ -146,15 +146,15 @@ export function FeedbackCard({
               }}
               disabled={isPlayingBetter}
               className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white text-xs font-mono font-bold transition-colors disabled:opacity-60"
-              title="Nghe cÃ¢u máº«u phÃ¡t Ã¢m chuáº©n"
+              title="Nghe câu mẫu phát âm chuẩn"
             >
               <Volume2 className="w-3.5 h-3.5" />
-              <span>{isPlayingBetter ? "Äang phÃ¡t..." : "Nghe máº«u (Shadowing)"}</span>
+              <span>{isPlayingBetter ? "Đang phát..." : "Nghe mẫu (Shadowing)"}</span>
             </button>
           </div>
           <div className="bg-blue-50/70 dark:bg-blue-950/30 rounded-lg px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 leading-relaxed">
             <span className="font-semibold text-blue-800 dark:text-blue-300 block text-xs font-mono mb-1">
-              CÃ¢u máº«u tá»± nhiÃªn hÆ¡n (cháº¡m tá»« gáº¡ch chÃ¢n Ä‘á»ƒ xem nghÄ©a):
+              Câu mẫu tự nhiên hơn (chạm từ gạch chân để xem nghĩa):
             </span>
             &ldquo;<InteractiveEnglishText text={result.betterSentence} />&rdquo;
           </div>
@@ -163,7 +163,7 @@ export function FeedbackCard({
         {result.grammarCorrections.length > 0 && (
           <div className="space-y-2 border-t border-slate-200 dark:border-slate-800 pt-4">
             <span className="text-xs font-mono font-bold uppercase text-red-600 dark:text-red-400">
-              Gá»£i Ã½ diá»…n Ä‘áº¡t ({result.grammarCorrections.length}):
+              Gợi ý diễn đạt ({result.grammarCorrections.length}):
             </span>
             <div className="divide-y divide-slate-200 dark:divide-slate-800">
               {result.grammarCorrections.map((g, idx) => (
@@ -192,11 +192,11 @@ export function FeedbackCard({
         {result.pronunciationNote && (
           <div className="border-t border-slate-200 dark:border-slate-800 pt-3 text-sm text-slate-700 dark:text-slate-300 space-y-1">
             <span className="font-semibold text-slate-900 dark:text-slate-100 block text-xs font-mono uppercase">
-              Æ¯á»›c lÆ°á»£ng phÃ¡t Ã¢m (dá»±a trÃªn chá»¯ vá»«a nÃ³i):
+              Ước lượng phát âm (dựa trên chữ vừa nói):
             </span>
             <p>{result.pronunciationNote}</p>
             <p className="text-sm text-slate-600 dark:text-slate-400">
-              ÄÃ¡nh giÃ¡ dá»±a trÃªn vÄƒn báº£n báº¡n vá»«a nÃ³i hoáº·c gÃµ vÃ o.
+              Đánh giá dựa trên văn bản bạn vừa nói hoặc gõ vào.
             </p>
           </div>
         )}
@@ -212,7 +212,7 @@ export function FeedbackCard({
                   : "bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700"
               } w-full py-3.5 px-5 rounded-lg text-white font-semibold text-sm active:scale-[0.99] flex items-center justify-center gap-2 transition-colors`}
             >
-              <span>{isLastTurn ? "Xem tá»•ng káº¿t lÆ°á»£t luyá»‡n táº­p" : "Tiáº¿p tá»¥c lÆ°á»£t sau"}</span>
+              <span>{isLastTurn ? "Xem tổng kết lượt luyện tập" : "Tiếp tục lượt sau"}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

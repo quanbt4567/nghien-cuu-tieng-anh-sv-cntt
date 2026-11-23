@@ -106,7 +106,7 @@ export function VocabCard({
       onError: (message) => {
         cancelRef.current = null;
         setPlayingTarget((curr) => (curr === target ? null : curr));
-        setTtsError(message || "KhÃ´ng thá»ƒ phÃ¡t Ã¢m thanh lÃºc nÃ y.");
+        setTtsError(message || "Không thể phát âm thanh lúc này.");
       },
     });
   };
@@ -119,11 +119,11 @@ export function VocabCard({
       matched
         ? {
             ok: true,
-            message: `PhÃ¡t Ã¢m chuáº©n! Nháº­n diá»‡n: "${trimmed}"`,
+            message: `Phát âm chuẩn! Nhận diện: "${trimmed}"`,
           }
         : {
             ok: false,
-            message: `Nghe Ä‘Æ°á»£c "${trimmed}", thá»­ Ä‘á»c rÃµ "${item.term}" hÆ¡n.`,
+            message: `Nghe được "${trimmed}", thử đọc rõ "${item.term}" hơn.`,
           }
     );
   };
@@ -140,7 +140,7 @@ export function VocabCard({
     if (!isSpeechRecognitionSupported()) {
       setMicFeedback({
         ok: false,
-        message: "TrÃ¬nh duyá»‡t chÆ°a há»— trá»£ Web Speech API cho micro.",
+        message: "Trình duyệt chưa hỗ trợ Web Speech API cho micro.",
       });
       return;
     }
@@ -211,13 +211,13 @@ export function VocabCard({
             onClick={handleMicToggle}
             aria-label={
               isListening
-                ? `Dá»«ng kiá»ƒm tra phÃ¡t Ã¢m "${item.term}"`
-                : `Kiá»ƒm tra phÃ¡t Ã¢m "${item.term}"`
+                ? `Dừng kiểm tra phát âm "${item.term}"`
+                : `Kiểm tra phát âm "${item.term}"`
             }
             title={
               isListening
-                ? "Äang nghe... báº¥m Ä‘á»ƒ dá»«ng"
-                : `Äá»c thá»­ tá»« "${item.term}"`
+                ? "Đang nghe... bấm để dừng"
+                : `Đọc thử từ "${item.term}"`
             }
             className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors border ${
               isListening
@@ -237,8 +237,8 @@ export function VocabCard({
             onClick={() => playSegment("word", item.term, 1.0)}
             aria-label={
               playingTarget === "word"
-                ? `Dá»«ng phÃ¡t Ã¢m "${item.term}"`
-                : `PhÃ¡t Ã¢m tá»« "${item.term}"`
+                ? `Dừng phát âm "${item.term}"`
+                : `Phát âm từ "${item.term}"`
             }
             className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors border ${
               playingTarget === "word"
@@ -247,8 +247,8 @@ export function VocabCard({
             }`}
             title={
               playingTarget === "word"
-                ? `Dá»«ng phÃ¡t Ã¢m "${item.term}"`
-                : `PhÃ¡t Ã¢m tá»« "${item.term}"`
+                ? `Dừng phát âm "${item.term}"`
+                : `Phát âm từ "${item.term}"`
             }
           >
             {playingTarget === "word" ? (
@@ -272,8 +272,8 @@ export function VocabCard({
         >
           {isListening
             ? micTranscript
-              ? `Äang nghe: "${micTranscript}"`
-              : `HÃ£y Ä‘á»c to tá»« "${item.term}" hoáº·c cÃ¢u vÃ­ dá»¥...`
+              ? `Đang nghe: "${micTranscript}"`
+              : `Hãy đọc to từ "${item.term}" hoặc câu ví dụ...`
             : micFeedback?.message}
         </div>
       )}
@@ -285,7 +285,7 @@ export function VocabCard({
       <div className="pt-3 border-t border-slate-200 dark:border-[#262626] space-y-1.5">
         <div className="flex items-center justify-between gap-2">
           <span className="font-mono text-xs uppercase font-bold text-slate-600 dark:text-slate-400">
-            VÃ­ dá»¥ trong cÃ´ng viá»‡c:
+            Ví dụ trong công việc:
           </span>
           <button
             type="button"
@@ -301,7 +301,7 @@ export function VocabCard({
             ) : (
               <Volume2 className="w-3.5 h-3.5" />
             )}
-            <span>{playingTarget === "sentence" ? "Dá»«ng phÃ¡t" : "Nghe cÃ¢u máº«u"}</span>
+            <span>{playingTarget === "sentence" ? "Dừng phát" : "Nghe câu mẫu"}</span>
           </button>
         </div>
         <div className="text-sm font-medium text-slate-900 dark:text-slate-100 leading-relaxed">
@@ -325,7 +325,7 @@ export function VocabCard({
               }`}
             >
               <BookmarkPlus className="w-3.5 h-3.5" />
-              <span>{isMarkedForReview ? "Äang trong Cáº§n Ã´n láº¡i" : "Cáº§n Ã´n láº¡i"}</span>
+              <span>{isMarkedForReview ? "Đang trong Cần ôn lại" : "Cần ôn lại"}</span>
             </button>
           )}
 
@@ -340,7 +340,7 @@ export function VocabCard({
               }`}
             >
               <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>{isMastered ? "ÄÃ£ thuá»™c" : "ÄÃ¡nh dáº¥u Ä‘Ã£ thuá»™c"}</span>
+              <span>{isMastered ? "Đã thuộc" : "Đánh dấu đã thuộc"}</span>
             </button>
           )}
         </div>

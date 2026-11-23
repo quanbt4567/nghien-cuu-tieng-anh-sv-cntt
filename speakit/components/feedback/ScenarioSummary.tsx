@@ -128,11 +128,11 @@ export function ScenarioSummary({
   const handleCopyResult = async () => {
     setCopyError(null);
     const summaryText = [
-      "SpeakIT: Káº¿t quáº£ luyá»‡n nÃ³i tiáº¿ng Anh CNTT",
-      `Ká»‹ch báº£n: ${scenarioTitle}`,
-      `Vai trÃ²: ${roleConfig.label} | Danh hiá»‡u: ${devTitle.title}`,
-      `Äiá»ƒm trung bÃ¬nh: ${averageScore}/100 | Tá»« khÃ³a Ä‘Ã£ dÃ¹ng: ${totalKeywordsUsed}`,
-      `ThÆ°á»Ÿng phiÃªn nÃ y: +${earnedPoints} Ä‘iá»ƒm -> ${coins} IT-Coin (cÃ²n ${remainingForCoin} Ä‘iá»ƒm -> +1 IT-Coin)`,
+      "SpeakIT: Kết quả luyện nói tiếng Anh CNTT",
+      `Kịch bản: ${scenarioTitle}`,
+      `Vai trò: ${roleConfig.label} | Danh hiệu: ${devTitle.title}`,
+      `Điểm trung bình: ${averageScore}/100 | Từ khóa đã dùng: ${totalKeywordsUsed}`,
+      `Thưởng phiên này: +${earnedPoints} điểm -> ${coins} IT-Coin (còn ${remainingForCoin} điểm -> +1 IT-Coin)`,
     ].join("\n");
 
     try {
@@ -160,7 +160,7 @@ export function ScenarioSummary({
       copyTimerRef.current = window.setTimeout(() => setCopied(false), 2500);
     } catch {
       setCopyError(
-        "KhÃ´ng thá»ƒ tá»± Ä‘á»™ng sao chÃ©p. Vui lÃ²ng chá»¥p mÃ n hÃ¬nh tháº» káº¿t quáº£ bÃªn trÃªn."
+        "Không thể tự động sao chép. Vui lòng chụp màn hình thẻ kết quả bên trên."
       );
     }
   };
@@ -203,7 +203,7 @@ export function ScenarioSummary({
               SpeakIT
             </span>
             <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
-              â€¢ Phiáº¿u káº¿t quáº£ luyá»‡n nÃ³i
+              • Phiếu kết quả luyện nói
             </span>
           </div>
 
@@ -222,13 +222,13 @@ export function ScenarioSummary({
             <Award className="w-7 h-7" />
           </div>
           <span className="block text-xs font-mono font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400">
-            HoÃ n thÃ nh {totalTurns}/{totalTurns} lÆ°á»£t luyá»‡n táº­p
+            Hoàn thành {totalTurns}/{totalTurns} lượt luyện tập
           </span>
           <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
             {scenarioTitle}
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
-            PhiÃªn Ä‘á»‘i thoáº¡i Ä‘Ã£ Ä‘Æ°á»£c lÆ°u cá»¥c bá»™ Ä‘á»ƒ cáº­p nháº­t Ä‘iá»ƒm rÃ¨n luyá»‡n vÃ  káº¿ hoáº¡ch 7 ngÃ y.
+            Phiên đối thoại đã được lưu cục bộ để cập nhật điểm rèn luyện và kế hoạch 7 ngày.
           </p>
         </div>
 
@@ -239,7 +239,7 @@ export function ScenarioSummary({
               <span className="text-xs font-normal text-slate-600 dark:text-slate-400">/100</span>
             </div>
             <div className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">
-              Äiá»ƒm trung bÃ¬nh
+              Điểm trung bình
             </div>
           </div>
           <div className="py-4 px-3 text-center">
@@ -247,7 +247,7 @@ export function ScenarioSummary({
               {totalKeywordsUsed}
             </div>
             <div className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">
-              Tá»« khÃ³a ká»¹ thuáº­t Ä‘Ã£ dÃ¹ng
+              Từ khóa kỹ thuật đã dùng
             </div>
           </div>
         </div>
@@ -259,17 +259,17 @@ export function ScenarioSummary({
             </div>
             <div className="text-left">
               <div className="text-sm font-mono font-bold text-slate-900 dark:text-slate-50">
-                +{earnedPoints} Ä‘iá»ƒm -&gt; {coins} IT-Coin
+                +{earnedPoints} điểm -&gt; {coins} IT-Coin
               </div>
               <div className="text-sm text-slate-600 dark:text-slate-300">
-                CÃ²n {remainingForCoin} Ä‘iá»ƒm Ä‘á»ƒ nháº­n +1 IT-Coin
+                Còn {remainingForCoin} điểm để nhận +1 IT-Coin
               </div>
             </div>
           </div>
 
           <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-xs font-mono font-semibold text-amber-800 dark:text-amber-300">
             <Flame className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-            <span>{gamification.streakDays} ngÃ y</span>
+            <span>{gamification.streakDays} ngày</span>
           </div>
         </div>
 
@@ -288,7 +288,7 @@ export function ScenarioSummary({
             ) : (
               <Copy className="w-3.5 h-3.5" />
             )}
-            <span>{copied ? "ÄÃ£ sao chÃ©p!" : "Sao chÃ©p káº¿t quáº£"}</span>
+            <span>{copied ? "Đã sao chép!" : "Sao chép kết quả"}</span>
           </button>
 
           <button
@@ -297,14 +297,14 @@ export function ScenarioSummary({
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700 font-bold text-sm transition-colors"
           >
             <RotateCcw className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
-            <span>Luyá»‡n láº¡i ká»‹ch báº£n nÃ y</span>
+            <span>Luyện lại kịch bản này</span>
           </button>
 
           <Link
             href="/scenarios"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold text-sm active:scale-[0.98] transition-colors"
           >
-            <span>Chá»n ká»‹ch báº£n khÃ¡c</span>
+            <span>Chọn kịch bản khác</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -322,12 +322,12 @@ export function ScenarioSummary({
           <div className="space-y-0.5">
             <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2">
               <BookOpen className="w-4 h-4 text-blue-700 dark:text-blue-400" />
-              <span>3 Tá»« vá»±ng trá»ng tÃ¢m cáº§n Ã´n ngay</span>
+              <span>3 Từ vựng trọng tâm cần ôn ngay</span>
             </h3>
             <p className="text-sm text-slate-600 dark:text-slate-300">
               {effectiveMissedKeywords.length > 0
-                ? "Gá»£i Ã½ Æ°u tiÃªn tá»« cÃ¡c tá»« khÃ³a báº¡n chÆ°a dÃ¹ng trong phiÃªn vá»«a rá»“i."
-                : "CÃ¡c thuáº­t ngá»¯ cá»‘t lÃµi gáº¯n vá»›i ká»‹ch báº£n báº¡n vá»«a luyá»‡n."}
+                ? "Gợi ý ưu tiên từ các từ khóa bạn chưa dùng trong phiên vừa rồi."
+                : "Các thuật ngữ cốt lõi gắn với kịch bản bạn vừa luyện."}
             </p>
           </div>
         </div>
@@ -354,8 +354,8 @@ export function ScenarioSummary({
                       <button
                         type="button"
                         onClick={() => handleSpeakTerm(item)}
-                        aria-label={`PhÃ¡t Ã¢m tá»« ${item.term}`}
-                        title={`Nghe phÃ¡t Ã¢m "${item.term}"`}
+                        aria-label={`Phát âm từ ${item.term}`}
+                        title={`Nghe phát âm "${item.term}"`}
                         className={`w-8 h-8 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
                           isSpeaking
                             ? "bg-red-600 hover:bg-red-700 border-red-600 text-white"
@@ -379,7 +379,7 @@ export function ScenarioSummary({
           </div>
         ) : (
           <div className="border-t border-slate-200 dark:border-slate-800 pt-4 text-sm text-slate-600 dark:text-slate-300">
-            ChÆ°a cÃ³ tá»« vá»±ng gá»£i Ã½ trong thÆ° viá»‡n hiá»‡n táº¡i.
+            Chưa có từ vựng gợi ý trong thư viện hiện tại.
           </div>
         )}
 
@@ -396,7 +396,7 @@ export function ScenarioSummary({
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700 text-xs font-semibold transition-colors"
           >
             <BookOpen className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
-            <span>Ã”n táº­p tá»« vá»±ng</span>
+            <span>Ôn tập từ vựng</span>
           </Link>
 
           <Link
@@ -404,7 +404,7 @@ export function ScenarioSummary({
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold text-sm active:scale-[0.98] transition-colors"
           >
             <Swords className="w-4 h-4" />
-            <span>Thá»­ thÃ¡ch IT Arena</span>
+            <span>Thử thách IT Arena</span>
           </Link>
 
           <Link
@@ -412,7 +412,7 @@ export function ScenarioSummary({
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700 text-xs font-semibold transition-colors"
           >
             <TrendingUp className="w-3.5 h-3.5 text-green-700 dark:text-green-400" />
-            <span>Tiáº¿n Ä‘á»™ &amp; 7 ngÃ y</span>
+            <span>Tiến độ &amp; 7 ngày</span>
           </Link>
         </div>
       </div>

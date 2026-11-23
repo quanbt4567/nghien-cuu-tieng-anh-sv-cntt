@@ -58,15 +58,15 @@ const DIFFICULTY_SECTIONS: Array<{
 }> = [
   {
     level: "Fresher",
-    subtitle: "LÃ m quen quy trÃ¬nh & giao tiáº¿p cÆ¡ báº£n",
+    subtitle: "Làm quen quy trình & giao tiếp cơ bản",
   },
   {
     level: "Junior",
-    subtitle: "Phá»‘i há»£p nhÃ³m & xá»­ lÃ½ nghiá»‡p vá»¥",
+    subtitle: "Phối hợp nhóm & xử lý nghiệp vụ",
   },
   {
     level: "Senior",
-    subtitle: "Dáº«n dáº¯t ká»¹ thuáº­t, sá»± cá»‘ & khÃ¡ch hÃ ng",
+    subtitle: "Dẫn dắt kỹ thuật, sự cố & khách hàng",
   },
 ];
 
@@ -242,12 +242,12 @@ export function HomeOnboardingClient() {
               </span>
               {isPlacementMatch && (
                 <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200 dark:bg-blue-950/50 dark:text-blue-300 dark:border-blue-800">
-                  Äá» xuáº¥t tá»« Placement
+                  Đề xuất từ Placement
                 </span>
               )}
               {!isPlacementMatch && isRecommended && (
                 <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-green-50 text-green-800 border border-green-200 dark:bg-green-950/50 dark:text-green-300 dark:border-green-800">
-                  PhÃ¹ há»£p vá»›i báº¡n
+                  Phù hợp với bạn
                 </span>
               )}
               <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">
@@ -261,9 +261,9 @@ export function HomeOnboardingClient() {
         </div>
 
         <div className="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-slate-800 text-xs font-mono text-slate-600 dark:text-slate-400">
-          <span>{scenario.turns.length} lÆ°á»£t há»™i thoáº¡i</span>
+          <span>{scenario.turns.length} lượt hội thoại</span>
           <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-blue-700 group-hover:bg-blue-800 dark:bg-blue-600 dark:group-hover:bg-blue-700 text-white font-sans text-xs font-semibold transition-colors">
-            Thá»±c hÃ nh
+            Thực hành
           </span>
         </div>
       </Link>
@@ -276,25 +276,25 @@ export function HomeOnboardingClient() {
         <div className="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2 text-sm text-slate-900 dark:text-slate-50">
             <HelpCircle className="w-4 h-4 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
-            <span className="font-semibold">Láº§n Ä‘áº§u sá»­ dá»¥ng?</span>
+            <span className="font-semibold">Lần đầu sử dụng?</span>
             <Link
               href="/guide"
               className="inline-flex items-center gap-1 rounded-lg px-3 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700 text-xs font-semibold transition-colors"
             >
-              Xem hÆ°á»›ng dáº«n 1 phÃºt
+              Xem hướng dẫn 1 phút
             </Link>
-            <span className="text-slate-600 dark:text-slate-300">hoáº·c</span>
+            <span className="text-slate-600 dark:text-slate-300">hoặc</span>
             <Link
               href="/placement"
               className="inline-flex items-center gap-1 rounded-lg px-3 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700 text-xs font-semibold transition-colors"
             >
-              LÃ m test xáº¿p lá»›p 2 phÃºt
+              Làm test xếp lớp 2 phút
             </Link>
           </div>
           <button
             type="button"
             onClick={handleDismissGuideBanner}
-            aria-label="ÄÃ³ng thÃ´ng bÃ¡o hÆ°á»›ng dáº«n"
+            aria-label="Đóng thông báo hướng dẫn"
             className="p-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 hover:bg-blue-100 dark:hover:bg-slate-800 transition-colors"
           >
             <X className="w-4 h-4" />
@@ -303,12 +303,12 @@ export function HomeOnboardingClient() {
       )}
 
       <section
-        aria-label="Báº¯t Ä‘áº§u luyá»‡n nÃ³i nhanh"
+        aria-label="Bắt đầu luyện nói nhanh"
         className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-5"
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <span className="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
-            Chá»n vai trÃ² Ä‘á»ƒ gá»£i Ã½ bÃ i phÃ¹ há»£p:
+            Chọn vai trò để gợi ý bài phù hợp:
           </span>
           <div className="flex flex-wrap items-center gap-2">
             {IT_ROLES.map((role) => {
@@ -345,8 +345,8 @@ export function HomeOnboardingClient() {
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs font-mono font-bold text-blue-700 dark:text-blue-400 uppercase tracking-wide">
                   {placement
-                    ? `Äá» xuáº¥t theo trÃ¬nh Ä‘á»™ ${placement.level} Â· ~3 phÃºt`
-                    : `Äá» xuáº¥t cho ${activeRole.label} Â· ~3 phÃºt`}
+                    ? `Đề xuất theo trình độ ${placement.level} · ~3 phút`
+                    : `Đề xuất cho ${activeRole.label} · ~3 phút`}
                 </span>
                 <span
                   className={`text-xs font-mono font-bold px-2.5 py-0.5 rounded-full border ${getDifficultyBadgeClass(
@@ -373,8 +373,8 @@ export function HomeOnboardingClient() {
                   <Compass className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                   <span>
                     {placement
-                      ? `TrÃ¬nh Ä‘á»™ hiá»‡n táº¡i: ${placement.level} (LÃ m láº¡i test xáº¿p lá»›p)`
-                      : "ChÆ°a rÃµ trÃ¬nh Ä‘á»™? LÃ m bÃ i test 2 phÃºt"}
+                      ? `Trình độ hiện tại: ${placement.level} (Làm lại test xếp lớp)`
+                      : "Chưa rõ trình độ? Làm bài test 2 phút"}
                   </span>
                 </Link>
               </div>
@@ -385,13 +385,13 @@ export function HomeOnboardingClient() {
               className="w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-lg bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold text-sm sm:text-base active:scale-[0.98] transition-colors"
             >
               <Play className="w-4 h-4 fill-white shrink-0" aria-hidden="true" />
-              <span>Báº¯t Ä‘áº§u luyá»‡n ngay</span>
+              <span>Bắt đầu luyện ngay</span>
               <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
             </Link>
           </div>
         ) : (
           <div className="pt-4 border-t border-slate-200 dark:border-slate-800 text-sm text-slate-600 dark:text-slate-300">
-            Hiá»‡n chÆ°a cÃ³ ká»‹ch báº£n nÃ o Ä‘ang má»Ÿ.
+            Hiện chưa có kịch bản nào đang mở.
           </div>
         )}
       </section>
@@ -400,18 +400,18 @@ export function HomeOnboardingClient() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
-              Táº¥t cáº£ tÃ¬nh huá»‘ng ({filteredScenarios.length})
+              Tất cả tình huống ({filteredScenarios.length})
             </h2>
             <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">
-              Chá»n cáº¥p Ä‘á»™ Fresher, Junior hoáº·c Senior Ä‘á»ƒ luyá»‡n pháº£n xáº¡ nÃ³i tiáº¿ng Anh
+              Chọn cấp độ Fresher, Junior hoặc Senior để luyện phản xạ nói tiếng Anh
             </p>
           </div>
           <span className="text-xs font-mono text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700 shrink-0">
-            {totalTurnsCount} LÆ°á»£t luyá»‡n
+            {totalTurnsCount} Lượt luyện
           </span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Lá»c theo cáº¥p Ä‘á»™">
+        <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Lọc theo cấp độ">
           {DIFFICULTY_FILTERS.map((level) => {
             const isActive = difficultyFilter === level;
             return (
@@ -427,7 +427,7 @@ export function HomeOnboardingClient() {
                 }`}
               >
                 {level === "ALL"
-                  ? `Táº¥t cáº£ (${difficultyCounts.ALL})`
+                  ? `Tất cả (${difficultyCounts.ALL})`
                   : `${level} (${difficultyCounts[level]})`}
               </button>
             );
@@ -443,10 +443,10 @@ export function HomeOnboardingClient() {
                 <div key={level} className="space-y-3">
                   <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-200 dark:border-slate-800">
                     <h3 className="text-sm sm:text-base font-bold tracking-tight text-slate-900 dark:text-slate-50">
-                      {level} Â· {subtitle}
+                      {level} · {subtitle}
                     </h3>
                     <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
-                      {items.length} tÃ¬nh huá»‘ng
+                      {items.length} tình huống
                     </span>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

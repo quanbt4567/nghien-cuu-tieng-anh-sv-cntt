@@ -47,10 +47,10 @@ const WORKSPACE_MODES: Array<{
   label: string;
   icon: typeof BookOpen;
 }> = [
-  { id: "dictionary", label: "Tá»« Ä‘iá»ƒn & PhÃ¡t Ã¢m", icon: BookOpen },
-  { id: "flashcard", label: "Flashcard Láº­t Tháº»", icon: Layers },
-  { id: "quiz", label: "Quiz 60 GiÃ¢y (+2 Coin)", icon: Zap },
-  { id: "cluster", label: "NÃ³i Theo Cá»¥m (+3 Coin)", icon: Mic },
+  { id: "dictionary", label: "Từ điển & Phát âm", icon: BookOpen },
+  { id: "flashcard", label: "Flashcard Lật Thẻ", icon: Layers },
+  { id: "quiz", label: "Quiz 60 Giây (+2 Coin)", icon: Zap },
+  { id: "cluster", label: "Nói Theo Cụm (+3 Coin)", icon: Mic },
 ];
 
 function readMasteredIds(): Set<string> {
@@ -156,7 +156,7 @@ export default function VocabularyPage() {
   useEffect(() => {
     if (workspaceMode !== "quiz") return;
     const expandBtn = quizContainerRef.current?.querySelector<HTMLButtonElement>(
-      'button[aria-label="Má»Ÿ rá»™ng quiz"]'
+      'button[aria-label="Mở rộng quiz"]'
     );
     if (expandBtn) {
       expandBtn.click();
@@ -265,17 +265,17 @@ export default function VocabularyPage() {
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors shrink-0"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Trang chá»§</span>
+            <span>Trang chủ</span>
           </Link>
           <div className="min-w-0">
             <h1 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2 leading-tight">
               <BookOpen className="w-5 h-5 text-blue-700 dark:text-blue-400 shrink-0" />
               <span className="truncate">
-                {vocabList.length} Thuáº­t Ngá»¯ IT Thiáº¿t Yáº¿u
+                {vocabList.length} Thuật Ngữ IT Thiết Yếu
               </span>
             </h1>
             <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5 line-clamp-1">
-              Luyá»‡n phÃ¡t Ã¢m chuáº©n, Ã´n tháº» Active Recall vÃ  pháº£n xáº¡ ngá»¯ cáº£nh ká»¹ thuáº­t.
+              Luyện phát âm chuẩn, ôn thẻ Active Recall và phản xạ ngữ cảnh kỹ thuật.
             </p>
           </div>
         </div>
@@ -283,7 +283,7 @@ export default function VocabularyPage() {
         <div className="w-full lg:w-72 shrink-0 border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-[#262626] pt-3 lg:pt-0 lg:pl-5 space-y-2">
           <div className="flex items-center justify-between gap-2 text-sm">
             <span className="font-semibold text-slate-700 dark:text-slate-200">
-              ÄÃ£ thuá»™c{" "}
+              Đã thuộc{" "}
               <span className="font-mono text-blue-700 dark:text-blue-400 font-bold">
                 {validMasteredCount}/{vocabList.length}
               </span>
@@ -291,7 +291,7 @@ export default function VocabularyPage() {
             <div className="flex items-center gap-1.5 font-mono text-xs">
               {reviewTerms.size > 0 && (
                 <span className="px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 font-semibold">
-                  {reviewTerms.size} cáº§n Ã´n
+                  {reviewTerms.size} cần ôn
                 </span>
               )}
               <span className="font-bold text-slate-900 dark:text-slate-50">
@@ -310,7 +310,7 @@ export default function VocabularyPage() {
 
       <div
         role="tablist"
-        aria-label="Cháº¿ Ä‘á»™ há»c tá»« vá»±ng"
+        aria-label="Chế độ học từ vựng"
         className="grid grid-cols-2 lg:grid-cols-4 gap-2 p-1.5 bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl"
       >
         {WORKSPACE_MODES.map((mode) => {
@@ -377,7 +377,7 @@ export default function VocabularyPage() {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                placeholder="TÃ¬m kiáº¿m thuáº­t ngá»¯..."
+                placeholder="Tìm kiếm thuật ngữ..."
                 className="w-full pl-9 pr-3.5 py-2 text-sm font-mono rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/40"
               />
             </div>
@@ -402,16 +402,16 @@ export default function VocabularyPage() {
 
               <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="text-sm text-slate-600 dark:text-slate-300 font-mono">
-                  Hiá»ƒn thá»‹{" "}
+                  Hiển thị{" "}
                   <span className="font-semibold text-slate-900 dark:text-slate-100">
                     {(safePage - 1) * CARDS_PER_PAGE + 1}-
                     {Math.min(safePage * CARDS_PER_PAGE, filtered.length)}
                   </span>{" "}
-                  trong tá»•ng sá»‘{" "}
+                  trong tổng số{" "}
                   <span className="font-semibold text-slate-900 dark:text-slate-100">
                     {filtered.length}
                   </span>{" "}
-                  thuáº­t ngá»¯
+                  thuật ngữ
                 </div>
 
                 <div className="flex flex-wrap items-center gap-1.5">
@@ -424,7 +424,7 @@ export default function VocabularyPage() {
                     className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium disabled:opacity-40 disabled:pointer-events-none transition-colors"
                   >
                     <ChevronLeft className="w-4 h-4" />
-                    <span>TrÆ°á»›c</span>
+                    <span>Trước</span>
                   </button>
 
                   {Array.from({ length: totalPages }, (_, idx) => idx + 1).map(
@@ -464,8 +464,8 @@ export default function VocabularyPage() {
           ) : (
             <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-8 text-center text-sm text-slate-600 dark:text-slate-300">
               {vocabList.length === 0
-                ? "ChÆ°a cÃ³ thuáº­t ngá»¯ nÃ o trong thÆ° viá»‡n."
-                : `KhÃ´ng tÃ¬m tháº¥y thuáº­t ngá»¯ nÃ o phÃ¹ há»£p vá»›i bá»™ lá»c hiá»‡n táº¡i${
+                ? "Chưa có thuật ngữ nào trong thư viện."
+                : `Không tìm thấy thuật ngữ nào phù hợp với bộ lọc hiện tại${
                     searchQuery.trim() ? ` ("${searchQuery}")` : ""
                   }.`}
             </div>
@@ -478,7 +478,7 @@ export default function VocabularyPage() {
           <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-50">
               <Layers className="w-4 h-4 text-blue-700 dark:text-blue-400" />
-              <span>Cháº¿ Ä‘á»™ Láº­t Tháº» Active Recall ({filtered.length} thuáº­t ngá»¯)</span>
+              <span>Chế độ Lật Thẻ Active Recall ({filtered.length} thuật ngữ)</span>
             </div>
             <div className="flex flex-wrap items-center gap-1.5">
               {VOCAB_CONTEXT_PILLS.map((pill) => {
@@ -535,7 +535,7 @@ export default function VocabularyPage() {
                       +3 Coin
                     </span>
                     <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-700 dark:text-slate-300">
-                      {cluster.items.length} tá»«
+                      {cluster.items.length} từ
                     </span>
                   </div>
                 </div>
@@ -555,7 +555,7 @@ export default function VocabularyPage() {
 
               <div className="pt-3 border-t border-slate-200 dark:border-[#262626] flex flex-wrap items-center justify-between gap-2">
                 <span className="text-sm text-slate-600 dark:text-slate-300">
-                  Tá»‘i Ä‘a 8 thuáº­t ngá»¯ má»—i lÆ°á»£t luyá»‡n nÃ³i AI
+                  Tối đa 8 thuật ngữ mỗi lượt luyện nói AI
                 </span>
                 <button
                   type="button"
@@ -570,7 +570,7 @@ export default function VocabularyPage() {
                   className="bg-green-700 hover:bg-green-800 text-white inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors shrink-0"
                 >
                   <Mic className="w-4 h-4" />
-                  <span>Luyá»‡n nÃ³i vá»›i cá»¥m tá»« nÃ y</span>
+                  <span>Luyện nói với cụm từ này</span>
                 </button>
               </div>
             </div>

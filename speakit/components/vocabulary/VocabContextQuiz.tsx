@@ -229,7 +229,7 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
           return;
         }
         if (isFinal) {
-          setVoiceError(`Nghe Ä‘Æ°á»£c "${transcript}", chÆ°a khá»›p thuáº­t ngá»¯ cáº§n Ä‘iá»n.`);
+          setVoiceError(`Nghe được "${transcript}", chưa khớp thuật ngữ cần điền.`);
         }
       },
       onEnd: () => {
@@ -264,11 +264,11 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
               </h2>
               <span className="inline-flex items-center gap-1 text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
                 <Coins className="w-3 h-3" />
-                +2 IT-Coins (â‰¥80%)
+                +2 IT-Coins (≥80%)
               </span>
             </div>
             <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">
-              Äiá»n nhanh thuáº­t ngá»¯ IT vÃ o ngá»¯ cáº£nh ká»¹ thuáº­t báº±ng cÃ¡ch chá»n hoáº·c nÃ³i qua micro.
+              Điền nhanh thuật ngữ IT vào ngữ cảnh kỹ thuật bằng cách chọn hoặc nói qua micro.
             </p>
           </div>
         </div>
@@ -280,13 +280,13 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
               onClick={startQuiz}
               className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
             >
-              Báº¯t Ä‘áº§u Quiz
+              Bắt đầu Quiz
             </button>
           )}
           <button
             type="button"
             onClick={handleToggleBanner}
-            aria-label={isExpanded ? "Thu gá»n quiz" : "Má»Ÿ rá»™ng quiz"}
+            aria-label={isExpanded ? "Thu gọn quiz" : "Mở rộng quiz"}
             className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
           >
             {isExpanded ? (
@@ -302,7 +302,7 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
         <div className="p-5 border-t border-slate-200 dark:border-[#262626] space-y-4">
           <div className="flex items-center justify-between text-xs font-mono">
             <span className="text-slate-600 dark:text-slate-300">
-              CÃ¢u {currentIndex + 1}/{questions.length} Â· ÄÃºng: {correctCount}
+              Câu {currentIndex + 1}/{questions.length} · Đúng: {correctCount}
             </span>
             <span
               className={`inline-flex items-center gap-1 font-semibold px-2.5 py-0.5 rounded-full border ${
@@ -330,7 +330,7 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
               ))}
             </p>
             <p className="text-sm text-slate-600 dark:text-slate-300">
-              <span className="font-semibold text-slate-900 dark:text-slate-100">Gá»£i Ã½:</span>{" "}
+              <span className="font-semibold text-slate-900 dark:text-slate-100">Gợi ý:</span>{" "}
               {currentQuestion.meaningHint}
             </p>
           </div>
@@ -391,12 +391,12 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
                 {isListening ? (
                   <>
                     <MicOff className="w-4 h-4" />
-                    <span>Äang nghe... (Nháº¥n Ä‘á»ƒ dá»«ng)</span>
+                    <span>Đang nghe... (Nhấn để dừng)</span>
                   </>
                 ) : (
                   <>
                     <Mic className="w-4 h-4" />
-                    <span>NÃ³i thuáº­t ngá»¯ (Web Speech)</span>
+                    <span>Nói thuật ngữ (Web Speech)</span>
                   </>
                 )}
               </button>
@@ -409,7 +409,7 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
                       : "text-slate-600 dark:text-slate-300"
                   }`}
                 >
-                  {voiceError ? voiceError : `ÄÃ£ nghe: "${spokenText}"`}
+                  {voiceError ? voiceError : `Đã nghe: "${spokenText}"`}
                 </span>
               )}
             </div>
@@ -422,19 +422,19 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="text-base font-bold text-slate-900 dark:text-slate-50">
-                Káº¿t quáº£: {correctCount}/{questions.length} ({accuracy}%)
+                Kết quả: {correctCount}/{questions.length} ({accuracy}%)
               </span>
               {rewardGranted && (
                 <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-green-50 dark:bg-green-950/50 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800">
                   <Coins className="w-3.5 h-3.5" />
-                  +2 IT-Coins Ä‘Ã£ Ä‘Æ°á»£c cá»™ng!
+                  +2 IT-Coins đã được cộng!
                 </span>
               )}
             </div>
             <p className="text-sm text-slate-600 dark:text-slate-300">
               {accuracy >= PASSING_ACCURACY
-                ? "Xuáº¥t sáº¯c! Báº¡n Ä‘Ã£ náº¯m vá»¯ng ngá»¯ cáº£nh sá»­ dá»¥ng cÃ¡c thuáº­t ngá»¯ IT."
-                : "Äáº¡t tá»« 80% trá»Ÿ lÃªn trong 60 giÃ¢y Ä‘á»ƒ nháº­n thÆ°á»Ÿng +2 IT-Coins."}
+                ? "Xuất sắc! Bạn đã nắm vững ngữ cảnh sử dụng các thuật ngữ IT."
+                : "Đạt từ 80% trở lên trong 60 giây để nhận thưởng +2 IT-Coins."}
             </p>
           </div>
 
@@ -445,14 +445,14 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
               className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
             >
               <RotateCcw className="w-4 h-4" />
-              <span>ChÆ¡i láº¡i</span>
+              <span>Chơi lại</span>
             </button>
             <button
               type="button"
               onClick={collapseQuiz}
               className="px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors"
             >
-              Thu gá»n
+              Thu gọn
             </button>
           </div>
         </div>

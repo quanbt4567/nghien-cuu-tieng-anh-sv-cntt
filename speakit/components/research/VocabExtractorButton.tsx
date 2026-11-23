@@ -61,7 +61,7 @@ export function VocabExtractorButton({
       });
       const data = (await res.json()) as ExtractResponse;
       if (!res.ok || !data.ok || !Array.isArray(data.items)) {
-        setError(data.error || "KhÃ´ng thá»ƒ trÃ­ch xuáº¥t tá»« vá»±ng lÃºc nÃ y.");
+        setError(data.error || "Không thể trích xuất từ vựng lúc này.");
         return;
       }
       setItems(data.items);
@@ -69,7 +69,7 @@ export function VocabExtractorButton({
       setPersistedCount(data.persistedCount ?? 0);
       setDrawerOpen(true);
     } catch {
-      setError("Lá»—i káº¿t ná»‘i khi trÃ­ch xuáº¥t tá»« vá»±ng.");
+      setError("Lỗi kết nối khi trích xuất từ vựng.");
     } finally {
       setLoading(false);
     }
@@ -94,7 +94,7 @@ export function VocabExtractorButton({
         ) : (
           <Sparkles className="w-3.5 h-3.5" />
         )}
-        <span>{loading ? "Äang trÃ­ch xuáº¥t..." : "AI TrÃ­ch Xuáº¥t Tá»« Vá»±ng"}</span>
+        <span>{loading ? "Đang trích xuất..." : "AI Trích Xuất Từ Vựng"}</span>
       </button>
 
       {error && (
@@ -103,7 +103,7 @@ export function VocabExtractorButton({
           <button
             type="button"
             onClick={() => setError(null)}
-            aria-label="ÄÃ³ng thÃ´ng bÃ¡o"
+            aria-label="Đóng thông báo"
             className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-200"
           >
             <X className="w-4 h-4" />
@@ -116,23 +116,23 @@ export function VocabExtractorButton({
           className="fixed inset-0 z-50 flex justify-end bg-slate-900/50"
           role="dialog"
           aria-modal="true"
-          aria-label="Tá»« vá»±ng CNTT vá»«a trÃ­ch xuáº¥t"
+          aria-label="Từ vựng CNTT vừa trích xuất"
         >
           <div className="w-full max-w-lg h-full bg-white dark:bg-[#0A0A0A] border-l border-slate-200 dark:border-[#262626] shadow-sm flex flex-col">
             <div className="p-4 sm:p-5 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-[#262626] flex items-start justify-between gap-3">
               <div className="space-y-1">
                 <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span>Cá»¥m tá»« vá»±ng: {clusterTitle}</span>
+                  <span>Cụm từ vựng: {clusterTitle}</span>
                 </div>
                 <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-50">
-                  {items.length} thuáº­t ngá»¯ CNTT Ä‘Ã£ trÃ­ch xuáº¥t
+                  {items.length} thuật ngữ CNTT đã trích xuất
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
-                aria-label="ÄÃ³ng báº£ng tá»« vá»±ng"
+                aria-label="Đóng bảng từ vựng"
                 className="p-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
               >
                 <X className="w-4 h-4" />
@@ -145,8 +145,8 @@ export function VocabExtractorButton({
                   <CheckCircle2 className="w-4 h-4 text-green-700 dark:text-green-400 shrink-0" />
                   <span>
                     {persistedCount > 0
-                      ? `ÄÃ£ Ä‘á»“ng bá»™ ${persistedCount} tá»« vÃ o kho tá»« vá»±ng`
-                      : "ÄÃ£ trÃ­ch xuáº¥t tá»« vá»±ng (cháº¿ Ä‘á»™ xem trÆ°á»›c)"}
+                      ? `Đã đồng bộ ${persistedCount} từ vào kho từ vựng`
+                      : "Đã trích xuất từ vựng (chế độ xem trước)"}
                   </span>
                 </div>
                 <span className="font-mono text-xs uppercase px-2 py-0.5 rounded-full bg-white dark:bg-slate-800 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300 font-semibold">
@@ -201,7 +201,7 @@ export function VocabExtractorButton({
                     {item.relatedTerms && item.relatedTerms.length > 0 && (
                       <div className="flex flex-wrap items-center gap-1.5 pt-1">
                         <span className="text-xs font-mono uppercase text-slate-600 dark:text-slate-400">
-                          LiÃªn quan:
+                          Liên quan:
                         </span>
                         {item.relatedTerms.map((rel) => (
                           <span
@@ -224,7 +224,7 @@ export function VocabExtractorButton({
                 onClick={() => setDrawerOpen(false)}
                 className="px-4 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-700 text-sm font-semibold transition-colors"
               >
-                ÄÃ³ng
+                Đóng
               </button>
               <Link
                 href="/vocabulary"
@@ -232,7 +232,7 @@ export function VocabExtractorButton({
                 className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold transition-colors"
               >
                 <BookOpen className="w-4 h-4" />
-                <span>Má»Ÿ kho tá»« vá»±ng</span>
+                <span>Mở kho từ vựng</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>

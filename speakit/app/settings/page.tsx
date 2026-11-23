@@ -75,14 +75,14 @@ export default function SettingsPage() {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-    setExportStatus("ÄÃ£ xuáº¥t dá»¯ liá»‡u JSON thÃ nh cÃ´ng!");
+    setExportStatus("Đã xuất dữ liệu JSON thành công!");
     setTimeout(() => setExportStatus(null), 3500);
   };
 
   const handleResetProgress = async () => {
     await storageAdapter.resetAll();
     setShowResetModal(false);
-    setResetStatus("ÄÃ£ lÃ m má»›i toÃ n bá»™ tiáº¿n Ä‘á»™ vÃ  Ä‘iá»ƒm sá»‘!");
+    setResetStatus("Đã làm mới toàn bộ tiến độ và điểm số!");
     setTimeout(() => setResetStatus(null), 3500);
   };
 
@@ -94,13 +94,13 @@ export default function SettingsPage() {
           className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors mb-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Trang chá»§</span>
+          <span>Trang chủ</span>
         </Link>
         <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
-          CÃ i Äáº·t Luyá»‡n Táº­p
+          Cài Đặt Luyện Tập
         </h1>
         <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
-          Cáº¥u hÃ¬nh giá»ng Ä‘á»c cÃ¢u há»i vÃ  quáº£n lÃ½ bá»™ nhá»› cá»¥c bá»™.
+          Cấu hình giọng đọc câu hỏi và quản lý bộ nhớ cục bộ.
         </p>
       </div>
 
@@ -108,13 +108,13 @@ export default function SettingsPage() {
         <div className="flex items-center gap-2 border-b border-slate-200 dark:border-[#262626] pb-3">
           <Volume2 className="w-5 h-5 text-blue-700 dark:text-blue-400" />
           <h2 className="text-sm font-bold uppercase font-mono text-slate-900 dark:text-slate-50">
-            Cáº¥u hÃ¬nh giá»ng Ä‘á»c cÃ¢u há»i (TTS)
+            Cấu hình giọng đọc câu hỏi (TTS)
           </h2>
         </div>
 
         <div className="space-y-3">
           <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 block">
-            Tá»‘c Ä‘á»™ phÃ¡t Ã¢m máº·c Ä‘á»‹nh:
+            Tốc độ phát âm mặc định:
           </label>
           <div className="flex flex-wrap items-center gap-2">
             {([0.8, 1.0, 1.2] as const).map((r) => (
@@ -131,7 +131,7 @@ export default function SettingsPage() {
                     : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:bg-blue-50/70 dark:hover:bg-slate-700"
                 }`}
               >
-                {r}x {r === 0.8 ? "(Cháº­m)" : r === 1.0 ? "(Chuáº©n)" : "(Nhanh)"}
+                {r}x {r === 0.8 ? "(Chậm)" : r === 1.0 ? "(Chuẩn)" : "(Nhanh)"}
               </button>
             ))}
           </div>
@@ -139,7 +139,7 @@ export default function SettingsPage() {
 
         <div className="space-y-3 pt-3 border-t border-slate-200 dark:border-[#262626]">
           <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 block">
-            Giá»ng AI phá»ng váº¥n máº·c Ä‘á»‹nh:
+            Giọng AI phỏng vấn mặc định:
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {TTS_VOICE_PERSONAS.map((persona) => {
@@ -181,13 +181,13 @@ export default function SettingsPage() {
                     type="button"
                     aria-label={
                       isPreviewing
-                        ? `Dá»«ng nghe thá»­ ${persona.label}`
-                        : `Nghe thá»­ ${persona.label}`
+                        ? `Dừng nghe thử ${persona.label}`
+                        : `Nghe thử ${persona.label}`
                     }
                     title={
                       isPreviewing
-                        ? `Dá»«ng nghe thá»­ ${persona.label}`
-                        : `Nghe thá»­ ${persona.label}`
+                        ? `Dừng nghe thử ${persona.label}`
+                        : `Nghe thử ${persona.label}`
                     }
                     onClick={() => {
                       if (isPreviewing) {
@@ -234,7 +234,7 @@ export default function SettingsPage() {
           <div className="flex items-center gap-2">
             <Bell className="w-5 h-5 text-green-700 dark:text-green-400" />
             <h2 className="text-sm font-bold uppercase font-mono text-slate-900 dark:text-slate-50">
-              Nháº¯c Nhá»Ÿ Há»c Táº­p Trong App
+              Nhắc Nhở Học Tập Trong App
             </h2>
           </div>
           <span className="text-xs font-mono px-2.5 py-0.5 rounded-full border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/50 text-green-800 dark:text-green-300 font-semibold">
@@ -243,7 +243,7 @@ export default function SettingsPage() {
         </div>
 
         <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-          Hiá»ƒn thá»‹ nháº¯c nhá»Ÿ luyá»‡n nÃ³i má»—i ngÃ y ngay trong chuÃ´ng thÃ´ng bÃ¡o khi báº¡n má»Ÿ SpeakIT.
+          Hiển thị nhắc nhở luyện nói mỗi ngày ngay trong chuông thông báo khi bạn mở SpeakIT.
         </p>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -260,14 +260,14 @@ export default function SettingsPage() {
               onChange={(e) => setReminderEnabled(e.target.checked)}
               className="w-4 h-4 accent-blue-700 dark:accent-blue-500"
             />
-            <span>Báº­t nháº¯c nhá»Ÿ má»—i ngÃ y</span>
+            <span>Bật nhắc nhở mỗi ngày</span>
           </label>
 
           <input
             type="time"
             value={reminderTime}
             onChange={(e) => setReminderTime(e.target.value)}
-            aria-label="Giá» nháº¯c nhá»Ÿ háº±ng ngÃ y"
+            aria-label="Giờ nhắc nhở hằng ngày"
             className="px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm font-mono font-semibold focus:outline-none focus:ring-2 focus:ring-blue-600/40"
           />
         </div>
@@ -286,14 +286,14 @@ export default function SettingsPage() {
               const mm = String(minute).padStart(2, "0");
               setReminderStatus(
                 reminderEnabled
-                  ? `ÄÃ£ lÆ°u lá»‹ch nháº¯c nhá»Ÿ trong app lÃºc ${hh}:${mm}.`
-                  : "ÄÃ£ táº¯t nháº¯c nhá»Ÿ há»c táº­p trong app."
+                  ? `Đã lưu lịch nhắc nhở trong app lúc ${hh}:${mm}.`
+                  : "Đã tắt nhắc nhở học tập trong app."
               );
             }}
             className="bg-green-700 hover:bg-green-800 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
           >
             <Bell className="w-4 h-4" />
-            <span>LÆ°u lá»‹ch nháº¯c</span>
+            <span>Lưu lịch nhắc</span>
           </button>
 
           <button
@@ -301,7 +301,7 @@ export default function SettingsPage() {
             onClick={() => setShowPreviewBanner((prev) => !prev)}
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-semibold transition-colors"
           >
-            <span>Xem thá»­ thÃ´ng bÃ¡o trong app</span>
+            <span>Xem thử thông báo trong app</span>
           </button>
         </div>
 
@@ -317,10 +317,10 @@ export default function SettingsPage() {
               />
               <div className="space-y-0.5">
                 <div className="text-sm font-bold text-slate-900 dark:text-slate-50">
-                  SpeakIT: Äáº¿n giá» luyá»‡n nÃ³i 5 phÃºt!
+                  SpeakIT: Đến giờ luyện nói 5 phút!
                 </div>
                 <p className="text-sm text-slate-700 dark:text-slate-300">
-                  DÃ nh 5 phÃºt luyá»‡n pháº£n xáº¡ tiáº¿ng Anh CNTT Ä‘á»ƒ giá»¯ streak hÃ´m nay nhÃ©.
+                  Dành 5 phút luyện phản xạ tiếng Anh CNTT để giữ streak hôm nay nhé.
                 </p>
               </div>
             </div>
@@ -329,7 +329,7 @@ export default function SettingsPage() {
               onClick={() => setShowPreviewBanner(false)}
               className="text-xs font-semibold text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 shrink-0"
             >
-              ÄÃ³ng
+              Đóng
             </button>
           </div>
         )}
@@ -348,12 +348,12 @@ export default function SettingsPage() {
         <div className="flex items-center gap-2 border-b border-slate-200 dark:border-[#262626] pb-3">
           <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
           <h2 className="text-sm font-bold uppercase font-mono text-slate-900 dark:text-slate-50">
-            Quáº£n LÃ½ Dá»¯ Liá»‡u Luyá»‡n Táº­p
+            Quản Lý Dữ Liệu Luyện Tập
           </h2>
         </div>
 
         <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-          XÃ³a toÃ n bá»™ lá»‹ch sá»­ cÃ¡c lÆ°á»£t nÃ³i, Ä‘iá»ƒm sá»‘ vÃ  danh sÃ¡ch tá»« khÃ³a yáº¿u trong bá»™ nhá»› mÃ¡y nÃ y.
+          Xóa toàn bộ lịch sử các lượt nói, điểm số và danh sách từ khóa yếu trong bộ nhớ máy này.
         </p>
 
         <div className="flex flex-wrap items-center gap-2.5">
@@ -363,7 +363,7 @@ export default function SettingsPage() {
             className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
           >
             <Download className="w-4 h-4" />
-            <span>Xuáº¥t dá»¯ liá»‡u JSON</span>
+            <span>Xuất dữ liệu JSON</span>
           </button>
 
           <button
@@ -372,7 +372,7 @@ export default function SettingsPage() {
             className="bg-red-600 hover:bg-red-700 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
           >
             <RotateCcw className="w-4 h-4" />
-            <span>LÃ m má»›i tiáº¿n Ä‘á»™</span>
+            <span>Làm mới tiến độ</span>
           </button>
         </div>
 
@@ -399,10 +399,10 @@ export default function SettingsPage() {
               <AlertCircle className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50">
-              XÃ¡c nháº­n lÃ m má»›i tiáº¿n Ä‘á»™?
+              Xác nhận làm mới tiến độ?
             </h3>
             <p className="text-sm text-slate-600 dark:text-slate-300">
-              HÃ nh Ä‘á»™ng nÃ y sáº½ xÃ³a vÄ©nh viá»…n toÃ n bá»™ lá»‹ch sá»­ cÃ¡c lÆ°á»£t luyá»‡n nÃ³i vÃ  tá»« khÃ³a yáº¿u Ä‘Ã£ lÆ°u.
+              Hành động này sẽ xóa vĩnh viễn toàn bộ lịch sử các lượt luyện nói và từ khóa yếu đã lưu.
             </p>
             <div className="flex items-center justify-center gap-3 pt-2">
               <button
@@ -410,14 +410,14 @@ export default function SettingsPage() {
                 onClick={() => setShowResetModal(false)}
                 className="px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors"
               >
-                Há»§y bá»
+                Hủy bỏ
               </button>
               <button
                 type="button"
                 onClick={handleResetProgress}
                 className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors"
               >
-                Äá»“ng Ã½ xÃ³a
+                Đồng ý xóa
               </button>
             </div>
           </div>

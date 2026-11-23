@@ -16,9 +16,9 @@ export function Footer() {
           <SpeakItLogo showWordmark={false} size="sm" />
           <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
             <span className="font-semibold text-slate-900 dark:text-white">SpeakIT</span>
-            <span className="hidden sm:inline text-slate-400 dark:text-slate-500">â€¢</span>
+            <span className="hidden sm:inline text-slate-400 dark:text-slate-500">•</span>
             <span>
-              NghiÃªn cá»©u á»©ng dá»¥ng luyá»‡n nÃ³i tiáº¿ng Anh tÃ¬nh huá»‘ng CNTT (IUH & BCN Club)
+              Nghiên cứu ứng dụng luyện nói tiếng Anh tình huống CNTT (IUH & BCN Club)
             </span>
           </div>
         </div>
