@@ -148,12 +148,12 @@ export default async function ResearchArticlePage({
       </div>
 
       {article.metricsJson.length > 0 && (
-        <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-5 space-y-3">
+        <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 space-y-3">
           <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
             <BarChart3 className="w-4 h-4 text-blue-700 dark:text-blue-400" />
             <span>Dữ liệu thống kê chính</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-[#1F2937] border-t border-slate-200 dark:border-[#1F2937] pt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-[#262626] border-t border-slate-200 dark:border-[#262626] pt-4">
             {article.metricsJson.map((metric, idx) => (
               <div
                 key={idx}
@@ -176,12 +176,12 @@ export default async function ResearchArticlePage({
         </section>
       )}
 
-      <article className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-6 sm:p-8 space-y-3">
+      <article className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-6 sm:p-8 space-y-3">
         {renderMarkdownBlocks(article.contentMarkdown)}
       </article>
 
       {article.sourceUrls.length > 0 && (
-        <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-5 space-y-3">
+        <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 space-y-3">
           <h2 className="text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-400">
             Nguồn tham khảo
           </h2>
@@ -203,7 +203,7 @@ export default async function ResearchArticlePage({
         </section>
       )}
 
-      <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-5 sm:p-6 space-y-4">
+      <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 sm:p-6 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="inline-flex items-center gap-2 text-base font-bold text-slate-900 dark:text-slate-50">
             <Mic className="w-4 h-4 text-green-700 dark:text-green-400" />
@@ -218,7 +218,7 @@ export default async function ResearchArticlePage({
           </Link>
         </div>
 
-        <div className="divide-y divide-slate-200 dark:divide-[#1F2937] border-t border-slate-200 dark:border-[#1F2937]">
+        <div className="divide-y divide-slate-200 dark:divide-[#262626] border-t border-slate-200 dark:border-[#262626]">
           {relatedScenarios.map((scenario) => (
             <Link
               key={scenario.id}

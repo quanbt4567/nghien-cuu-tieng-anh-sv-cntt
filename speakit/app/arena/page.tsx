@@ -287,8 +287,8 @@ export default function ArenaPage() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-          <span className="text-xs font-mono font-semibold text-slate-600 dark:text-slate-400">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <span className="text-xs font-mono font-semibold text-slate-600 dark:text-slate-400 whitespace-nowrap">
             {mode.href ? "Phòng chơi riêng" : "Chơi trực tiếp bên dưới"}
           </span>
           <span

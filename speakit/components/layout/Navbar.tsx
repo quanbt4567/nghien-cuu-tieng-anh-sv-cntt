@@ -66,32 +66,32 @@ type NavGroup = {
 const NAV_GROUPS: readonly NavGroup[] = [
   {
     id: "resources",
-    label: "Học liệu",
+    label: "Há»c liá»‡u",
     activePrefixes: ["/progress", "/research", "/guide"],
     items: [
-      { href: "/progress", label: "Tiến độ & 7 ngày", icon: TrendingUp },
-      { href: "/research", label: "Nghiên cứu IT", icon: FileText },
-      { href: "/guide", label: "Hướng dẫn", icon: HelpCircle },
+      { href: "/progress", label: "Tiáº¿n Ä‘á»™ & 7 ngÃ y", icon: TrendingUp },
+      { href: "/research", label: "NghiÃªn cá»©u IT", icon: FileText },
+      { href: "/guide", label: "HÆ°á»›ng dáº«n", icon: HelpCircle },
     ],
   },
   {
     id: "practice",
-    label: "Luyện tập",
+    label: "Luyá»‡n táº­p",
     activePrefixes: ["/scenarios", "/practice", "/arena", "/vocabulary", "/placement"],
     items: [
-      { href: "/scenarios", label: "Kịch bản", icon: Mic },
+      { href: "/scenarios", label: "Ká»‹ch báº£n", icon: Mic },
       { href: "/arena", label: "Arena", icon: Gamepad2 },
-      { href: "/vocabulary", label: "Từ vựng IT", icon: BookOpen },
-      { href: "/placement", label: "Kiểm tra trình độ", icon: ClipboardCheck },
+      { href: "/vocabulary", label: "Tá»« vá»±ng IT", icon: BookOpen },
+      { href: "/placement", label: "Kiá»ƒm tra trÃ¬nh Ä‘á»™", icon: ClipboardCheck },
     ],
   },
   {
     id: "account",
-    label: "Tài khoản",
+    label: "TÃ i khoáº£n",
     activePrefixes: ["/profile", "/settings"],
     items: [
-      { href: "/profile", label: "Hồ sơ", icon: User },
-      { href: "/settings", label: "Cài đặt", icon: Settings },
+      { href: "/profile", label: "Há»“ sÆ¡", icon: User },
+      { href: "/settings", label: "CÃ i Ä‘áº·t", icon: Settings },
     ],
   },
 ];
@@ -115,11 +115,11 @@ function isGroupActive(pathname: string, activePrefixes: readonly string[]): boo
 }
 
 const MOBILE_TABS: readonly NavItem[] = [
-  { href: "/", label: "Trang chủ", icon: Home },
-  { href: "/scenarios", label: "Kịch bản", icon: Mic },
+  { href: "/", label: "Trang chá»§", icon: Home },
+  { href: "/scenarios", label: "Ká»‹ch báº£n", icon: Mic },
   { href: "/arena", label: "Arena", icon: Gamepad2 },
-  { href: "/vocabulary", label: "Từ vựng", icon: BookOpen },
-  { href: "/profile", label: "Hồ sơ", icon: User },
+  { href: "/vocabulary", label: "Tá»« vá»±ng", icon: BookOpen },
+  { href: "/profile", label: "Há»“ sÆ¡", icon: User },
 ];
 
 const INITIAL_GAMIFICATION: GamificationState = {
@@ -295,7 +295,7 @@ export function Navbar() {
 
   const identity = mergeProfileIdentity(guestPlayer, gamification);
   const nextCoinPoints = pointsToNextCoin(identity.totalPoints);
-  const coinTooltip = `${identity.totalPoints.toLocaleString("en-US")} pts (${nextCoinPoints} pts nữa được +1 Coin)`;
+  const coinTooltip = `${identity.totalPoints.toLocaleString("en-US")} pts (${nextCoinPoints} pts ná»¯a Ä‘Æ°á»£c +1 Coin)`;
   const homeActive = isItemActive(pathname, "/");
   const shopActive = pathname.startsWith("/shop");
   const hideBottomTabBar =
@@ -334,7 +334,7 @@ export function Navbar() {
           </Link>
 
           <nav
-            aria-label="Điều hướng chính"
+            aria-label="Äiá»u hÆ°á»›ng chÃ­nh"
             className="hidden md:flex items-center justify-center gap-1 lg:gap-1.5 min-w-0 md:justify-self-center"
           >
             <Link
@@ -347,7 +347,7 @@ export function Navbar() {
               }`}
             >
               <Home className="w-4 h-4 shrink-0" aria-hidden="true" />
-              <span>Trang chủ</span>
+              <span>Trang chá»§</span>
             </Link>
 
             {NAV_GROUPS.flatMap((group) => {
@@ -380,7 +380,7 @@ export function Navbar() {
                     <div
                       className={`absolute ${
                         group.id === "account" ? "right-0" : "left-0"
-                      } top-full mt-2.5 w-64 p-1.5 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-xl shadow-sm z-50`}
+                      } top-full mt-2.5 w-64 p-1.5 bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-xl shadow-sm z-50`}
                     >
                       {group.id === "account" && hydrated && (
                         <div className="px-3 py-2.5 mb-1 rounded-lg bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
@@ -426,7 +426,7 @@ export function Navbar() {
                               className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-semibold text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-950/40 transition-colors"
                             >
                               <ShieldCheck className="w-4 h-4 shrink-0" aria-hidden="true" />
-                              <span>Quản trị Admin</span>
+                              <span>Quáº£n trá»‹ Admin</span>
                             </Link>
                           )}
                           {guestPlayer?.email ? (
@@ -436,7 +436,7 @@ export function Navbar() {
                               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
                             >
                               <LogOut className="w-4 h-4 shrink-0" aria-hidden="true" />
-                              <span>Đăng xuất</span>
+                              <span>ÄÄƒng xuáº¥t</span>
                             </button>
                           ) : (
                             <button
@@ -448,7 +448,7 @@ export function Navbar() {
                               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-semibold text-blue-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-colors"
                             >
                               <LogIn className="w-4 h-4 shrink-0" aria-hidden="true" />
-                              <span>Đăng nhập / Đăng ký</span>
+                              <span>ÄÄƒng nháº­p / ÄÄƒng kÃ½</span>
                             </button>
                           )}
                         </div>
@@ -472,7 +472,7 @@ export function Navbar() {
                     }`}
                   >
                     <ShoppingBag className="w-4 h-4 shrink-0" aria-hidden="true" />
-                    <span>Cửa hàng</span>
+                    <span>Cá»­a hÃ ng</span>
                   </Link>,
                 ];
               }
@@ -484,7 +484,7 @@ export function Navbar() {
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 min-w-0 md:justify-self-end">
             {!hydrated ? (
               <div
-                aria-label="Đang đồng bộ tài khoản"
+                aria-label="Äang Ä‘á»“ng bá»™ tÃ i khoáº£n"
                 className="shrink-0 h-8 w-28 md:w-52 rounded-pill bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 animate-pulse"
               />
             ) : (
@@ -514,14 +514,14 @@ export function Navbar() {
                     className="hidden md:inline-flex shrink-0 items-center gap-1.5 px-3.5 py-1.5 rounded-pill liquid-btn-primary text-xs"
                   >
                     <LogIn className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-                    <span>Đăng nhập</span>
+                    <span>ÄÄƒng nháº­p</span>
                   </button>
                 )}
 
                 <Link
                   href="/arena"
                   title={coinTooltip}
-                  aria-label={`Chuỗi ${identity.streakDays} ngày, ${identity.itCoins} IT-Coin, ${identity.totalPoints} điểm. ${coinTooltip}`}
+                  aria-label={`Chuá»—i ${identity.streakDays} ngÃ y, ${identity.itCoins} IT-Coin, ${identity.totalPoints} Ä‘iá»ƒm. ${coinTooltip}`}
                   className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-500 text-xs font-mono text-slate-900 dark:text-slate-100 transition-colors"
                 >
                   <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-400">
@@ -542,8 +542,8 @@ export function Navbar() {
                 <button
                   type="button"
                   onClick={toggleTheme}
-                  aria-label={theme === "dark" ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối"}
-                  title={theme === "dark" ? "Chế độ sáng" : "Chế độ tối"}
+                  aria-label={theme === "dark" ? "Chuyá»ƒn sang giao diá»‡n sÃ¡ng" : "Chuyá»ƒn sang giao diá»‡n tá»‘i"}
+                  title={theme === "dark" ? "Cháº¿ Ä‘á»™ sÃ¡ng" : "Cháº¿ Ä‘á»™ tá»‘i"}
                   className="shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full liquid-glass-btn"
                 >
                   {theme === "dark" ? (
@@ -553,24 +553,13 @@ export function Navbar() {
                   )}
                 </button>
 
-                {guestPlayer?.email?.trim().toLowerCase() === "minhquanthcsbt@gmail.com" && (
-                  <Link
-                    href="/admin"
-                    aria-label="Mở trang quản trị Admin"
-                    title="Admin"
-                    className="md:hidden shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-50 dark:bg-green-950/60 hover:bg-green-100 dark:hover:bg-green-900/60 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800 transition-colors"
-                  >
-                    <ShieldCheck className="w-4 h-4 shrink-0" aria-hidden="true" />
-                  </Link>
-                )}
-
                 {guestPlayer?.email && (
                   <button
                     type="button"
                     onClick={() => void handleLogout()}
-                    aria-label="Đăng xuất"
-                    title="Đăng xuất"
-                    className="shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-50 dark:bg-red-950/60 hover:bg-red-100 dark:hover:bg-red-900/60 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 transition-colors"
+                    aria-label="ÄÄƒng xuáº¥t"
+                    title="ÄÄƒng xuáº¥t"
+                    className="hidden md:inline-flex shrink-0 items-center justify-center w-8 h-8 rounded-full bg-red-50 dark:bg-red-950/60 hover:bg-red-100 dark:hover:bg-red-900/60 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 transition-colors"
                   >
                     <LogOut className="w-4 h-4 shrink-0" aria-hidden="true" />
                   </button>
@@ -583,7 +572,7 @@ export function Navbar() {
 
       {!hideBottomTabBar && (
         <nav
-          aria-label="Điều hướng nhanh di động"
+          aria-label="Äiá»u hÆ°á»›ng nhanh di Ä‘á»™ng"
           className="md:hidden fixed bottom-2.5 inset-x-3 z-40 mx-auto max-w-md rounded-full liquid-dock px-1.5 py-1 pb-safe"
         >
           <div className="grid grid-cols-5 items-center">

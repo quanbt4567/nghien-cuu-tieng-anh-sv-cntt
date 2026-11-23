@@ -324,7 +324,7 @@ export function ArenaLeaveGuardHost() {
               {errorText && (
                 <div
                   role="alert"
-                  className="p-3 border-l-4 border-l-red-600 bg-red-50 dark:bg-red-950/40 text-sm text-red-800 dark:text-red-200 font-medium"
+                  className="p-3 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/40 text-sm text-red-800 dark:text-red-200 font-medium"
                 >
                   {errorText}
                 </div>

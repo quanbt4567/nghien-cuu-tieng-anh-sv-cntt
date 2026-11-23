@@ -16,10 +16,10 @@ export function SevenDayPlan({ days }: SevenDayPlanProps) {
       <div className="flex items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
-            Kế Hoạch Luyện Tập 7 Ngày Thích Ứng
+            Káº¿ Hoáº¡ch Luyá»‡n Táº­p 7 NgÃ y ThÃ­ch á»¨ng
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">
-            Tự động đưa các từ khóa bạn thường quên lên các ngày đầu để lặp lại ngắt quãng
+            Tá»± Ä‘á»™ng Ä‘Æ°a cÃ¡c tá»« khÃ³a báº¡n thÆ°á»ng quÃªn lÃªn cÃ¡c ngÃ y Ä‘áº§u Ä‘á»ƒ láº·p láº¡i ngáº¯t quÃ£ng
           </p>
         </div>
         <span
@@ -29,7 +29,7 @@ export function SevenDayPlan({ days }: SevenDayPlanProps) {
               : "bg-blue-50 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800"
           }`}
         >
-          {completedCount}/7 Ngày đã luyện
+          {completedCount}/7 NgÃ y Ä‘Ã£ luyá»‡n
         </span>
       </div>
 
@@ -40,7 +40,7 @@ export function SevenDayPlan({ days }: SevenDayPlanProps) {
             className={`rounded-xl border p-5 sm:p-6 transition-colors ${
               day.isCompleted
                 ? "bg-green-50/40 dark:bg-green-950/20 border-green-300 dark:border-green-800"
-                : "bg-white dark:bg-[#111827] border-slate-200 dark:border-[#1F2937] hover:border-blue-300 dark:hover:border-blue-700"
+                : "bg-white dark:bg-[#0A0A0A] border-slate-200 dark:border-[#262626] hover:border-blue-300 dark:hover:border-blue-700"
             }`}
           >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -63,7 +63,7 @@ export function SevenDayPlan({ days }: SevenDayPlanProps) {
                     {day.isCompleted && (
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-green-50 dark:bg-green-950/50 border border-green-200 dark:border-green-800 text-xs font-mono text-green-800 dark:text-green-300 font-semibold">
                         <CheckCircle2 className="w-3.5 h-3.5 text-green-700 dark:text-green-400" />
-                        Đã luyện
+                        ÄÃ£ luyá»‡n
                       </span>
                     )}
                     {day.priorityNoteVI && (
@@ -75,7 +75,7 @@ export function SevenDayPlan({ days }: SevenDayPlanProps) {
 
                   <div className="flex flex-wrap items-center gap-1.5 pt-1">
                     <span className="text-sm text-slate-600 dark:text-slate-300">
-                      Trọng tâm:
+                      Trá»ng tÃ¢m:
                     </span>
                     {day.focusKeywords.map((kw) => (
                       <span
@@ -98,7 +98,7 @@ export function SevenDayPlan({ days }: SevenDayPlanProps) {
                       : "bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700"
                   }`}
                 >
-                  <span>{day.isCompleted ? "Luyện lại" : "Bắt đầu"}</span>
+                  <span>{day.isCompleted ? "Luyá»‡n láº¡i" : "Báº¯t Ä‘áº§u"}</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>

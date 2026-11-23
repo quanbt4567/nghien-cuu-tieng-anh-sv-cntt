@@ -209,7 +209,7 @@ export default function PracticePage() {
   if (!scenario && isContentSyncing) {
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center">
-        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-8 inline-flex items-center gap-3 text-sm font-semibold text-slate-900 dark:text-slate-50">
+        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-8 inline-flex items-center gap-3 text-sm font-semibold text-slate-900 dark:text-slate-50">
           <Loader2 className="w-5 h-5 animate-spin text-blue-700 dark:text-blue-400" />
           <span>Đang tải kịch bản luyện tập...</span>
         </div>
@@ -412,7 +412,7 @@ export default function PracticePage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 sm:py-8 space-y-6">
-      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl flex flex-wrap items-center justify-between gap-3 px-4 py-3">
+      <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl flex flex-wrap items-center justify-between gap-3 px-4 py-3">
         <div className="flex items-center gap-3 min-w-0">
           <Link
             href="/"
@@ -530,7 +530,7 @@ export default function PracticePage() {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           <div className="lg:col-span-6 space-y-5">
-            <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-5">
+            <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-5">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3.5">
                 <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400 flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-blue-700 dark:bg-blue-400" />
@@ -700,7 +700,7 @@ export default function PracticePage() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-5">
+            <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-5">
               <div className="py-2">
                 <MicButton
                   isRecording={isRecording}
@@ -781,7 +781,7 @@ export default function PracticePage() {
 
           <div className="lg:col-span-6 space-y-4">
             {turnScores.length > 0 && (
-              <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+              <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-2">
                 <span className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 uppercase">
                   Điểm từng lượt:
                 </span>
@@ -805,7 +805,7 @@ export default function PracticePage() {
             )}
 
             {isEvaluating && (
-              <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-8 flex flex-col items-center justify-center gap-3 text-center">
+              <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-8 flex flex-col items-center justify-center gap-3 text-center">
                 <Loader2 className="w-6 h-6 animate-spin text-blue-700 dark:text-blue-400" />
                 <div className="text-sm font-semibold text-slate-900 dark:text-slate-50">
                   Đang phân tích từ khóa và ngữ pháp câu trả lời...
@@ -833,7 +833,7 @@ export default function PracticePage() {
               />
             ) : (
               !isEvaluating && (
-                <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-6 space-y-4">
+                <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-6 space-y-4">
                   <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
                     <CheckCircle2 className="w-4 h-4 text-blue-700 dark:text-blue-400" />
                     <span>Bảng đánh giá &amp; Gợi ý tự nhiên</span>

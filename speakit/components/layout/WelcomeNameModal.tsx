@@ -128,7 +128,7 @@ export function WelcomeNameModal() {
         setDisplayName((prev) => prev || session.player!.displayName);
         setTransferCode(session.player.transferCode);
         setLegacyNotice(
-          `Hồ sơ hiện tại (${session.player.transferCode}) chưa liên kết Email & Mật khẩu. Hãy tạo mật khẩu để bảo vệ toàn bộ Coin, điểm và hiệu ứng của bạn.`
+          `Há»“ sÆ¡ hiá»‡n táº¡i (${session.player.transferCode}) chÆ°a liÃªn káº¿t Email & Máº­t kháº©u. HÃ£y táº¡o máº­t kháº©u Ä‘á»ƒ báº£o vá»‡ toÃ n bá»™ Coin, Ä‘iá»ƒm vÃ  hiá»‡u á»©ng cá»§a báº¡n.`
         );
       } else if (backupCode) {
         setTransferCode((prev) => prev || backupCode);
@@ -216,7 +216,7 @@ export function WelcomeNameModal() {
 
     if (tab === "login") {
       if (!email.trim() || !password) {
-        setError("Vui lòng nhập đầy đủ Email và Mật khẩu.");
+        setError("Vui lÃ²ng nháº­p Ä‘áº§y Ä‘á»§ Email vÃ  Máº­t kháº©u.");
         return;
       }
       setIsSubmitting(true);
@@ -226,7 +226,7 @@ export function WelcomeNameModal() {
           password,
         });
         if (!res.ok || !res.player) {
-          setError(res.error || "Đăng nhập thất bại. Vui lòng thử lại.");
+          setError(res.error || "ÄÄƒng nháº­p tháº¥t báº¡i. Vui lÃ²ng thá»­ láº¡i.");
           return;
         }
         const nextToken =
@@ -236,7 +236,7 @@ export function WelcomeNameModal() {
             : undefined;
         handleCompleteAuth(res.player, nextToken);
       } catch {
-        setError("Không thể kết nối máy chủ để đăng nhập.");
+        setError("KhÃ´ng thá»ƒ káº¿t ná»‘i mÃ¡y chá»§ Ä‘á»ƒ Ä‘Äƒng nháº­p.");
       } finally {
         setIsSubmitting(false);
       }
@@ -245,15 +245,15 @@ export function WelcomeNameModal() {
 
     const cleanedName = displayName.trim().replace(/\s+/g, " ");
     if (cleanedName.length < 2 || cleanedName.length > 24) {
-      setError("Tên hiển thị cần từ 2 đến 24 ký tự.");
+      setError("TÃªn hiá»ƒn thá»‹ cáº§n tá»« 2 Ä‘áº¿n 24 kÃ½ tá»±.");
       return;
     }
     if (!email.trim()) {
-      setError("Vui lòng nhập địa chỉ Email.");
+      setError("Vui lÃ²ng nháº­p Ä‘á»‹a chá»‰ Email.");
       return;
     }
     if (password.length < 6) {
-      setError("Mật khẩu cần tối thiểu 6 ký tự.");
+      setError("Máº­t kháº©u cáº§n tá»‘i thiá»ƒu 6 kÃ½ tá»±.");
       return;
     }
 
@@ -266,7 +266,7 @@ export function WelcomeNameModal() {
         transferCode: transferCode.trim() || undefined,
       });
       if (!res.ok || !res.player) {
-        setError(res.error || "Đăng ký thất bại. Vui lòng thử lại.");
+        setError(res.error || "ÄÄƒng kÃ½ tháº¥t báº¡i. Vui lÃ²ng thá»­ láº¡i.");
         return;
       }
       const nextToken =
@@ -276,7 +276,7 @@ export function WelcomeNameModal() {
           : undefined;
       handleCompleteAuth(res.player, nextToken);
     } catch {
-      setError("Không thể kết nối máy chủ để đăng ký.");
+      setError("KhÃ´ng thá»ƒ káº¿t ná»‘i mÃ¡y chá»§ Ä‘á»ƒ Ä‘Äƒng kÃ½.");
     } finally {
       setIsSubmitting(false);
     }
@@ -289,7 +289,7 @@ export function WelcomeNameModal() {
       aria-labelledby="auth-modal-title"
       className="fixed inset-0 z-50 bg-slate-950/55 flex items-center justify-center p-4 overflow-y-auto"
     >
-      <div className="w-full max-w-md bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm space-y-5 relative my-auto">
+      <div className="w-full max-w-md bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm space-y-5 relative my-auto">
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center shrink-0">
             <ShieldCheck className="w-5 h-5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
@@ -297,11 +297,11 @@ export function WelcomeNameModal() {
           <div className="space-y-1">
             <h2 id="auth-modal-title" className="font-display text-lg font-bold text-slate-900 dark:text-white">
               {tab === "login"
-                ? "Đăng nhập tài khoản SpeakIT"
-                : "Đăng ký tài khoản SpeakIT"}
+                ? "ÄÄƒng nháº­p tÃ i khoáº£n SpeakIT"
+                : "ÄÄƒng kÃ½ tÃ i khoáº£n SpeakIT"}
             </h2>
             <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-              Đăng nhập hoặc tạo tài khoản để lưu điểm, IT-Coin và thi đấu Arena.
+              ÄÄƒng nháº­p hoáº·c táº¡o tÃ i khoáº£n Ä‘á»ƒ lÆ°u Ä‘iá»ƒm, IT-Coin vÃ  thi Ä‘áº¥u Arena.
             </p>
           </div>
         </div>
@@ -316,12 +316,12 @@ export function WelcomeNameModal() {
             }}
             className={`inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-semibold transition-colors border ${
               tab === "login"
-                ? "bg-white dark:bg-[#111827] text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-700"
+                ? "bg-white dark:bg-[#0A0A0A] text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-700"
                 : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border-transparent"
             }`}
           >
             <LogIn className="w-4 h-4" aria-hidden="true" />
-            <span>Đăng nhập</span>
+            <span>ÄÄƒng nháº­p</span>
           </button>
           <button
             type="button"
@@ -332,12 +332,12 @@ export function WelcomeNameModal() {
             }}
             className={`inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-semibold transition-colors border ${
               tab === "register"
-                ? "bg-white dark:bg-[#111827] text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-700"
+                ? "bg-white dark:bg-[#0A0A0A] text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-700"
                 : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border-transparent"
             }`}
           >
             <UserPlus className="w-4 h-4" aria-hidden="true" />
-            <span>Đăng ký tài khoản</span>
+            <span>ÄÄƒng kÃ½ tÃ i khoáº£n</span>
           </button>
         </div>
 
@@ -354,7 +354,7 @@ export function WelcomeNameModal() {
                 htmlFor="auth-display-name"
                 className="block text-sm font-semibold text-slate-700 dark:text-slate-200"
               >
-                Tên hiển thị (2-24 ký tự)
+                TÃªn hiá»ƒn thá»‹ (2-24 kÃ½ tá»±)
               </label>
               <input
                 id="auth-display-name"
@@ -364,7 +364,7 @@ export function WelcomeNameModal() {
                 disabled={isSubmitting}
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="VD: Minh Quân, Lan Anh..."
+                placeholder="VD: Minh QuÃ¢n, Lan Anh..."
                 className="w-full px-3.5 py-2.5 text-sm liquid-glass-input rounded-lg disabled:opacity-60"
               />
             </div>
@@ -401,7 +401,7 @@ export function WelcomeNameModal() {
               htmlFor="auth-password"
               className="block text-sm font-semibold text-slate-700 dark:text-slate-200"
             >
-              Mật khẩu {tab === "register" ? "(tối thiểu 6 ký tự)" : ""}
+              Máº­t kháº©u {tab === "register" ? "(tá»‘i thiá»ƒu 6 kÃ½ tá»±)" : ""}
             </label>
             <div className="relative">
               <Lock
@@ -420,12 +420,12 @@ export function WelcomeNameModal() {
                 disabled={isSubmitting}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                 className="w-full pl-9 pr-10 py-2.5 text-sm liquid-glass-input rounded-lg disabled:opacity-60"
               />
               <button
                 type="button"
-                aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                aria-label={showPassword ? "áº¨n máº­t kháº©u" : "Hiá»‡n máº­t kháº©u"}
                 onClick={() => setShowPassword((prev) => !prev)}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
               >
@@ -445,7 +445,7 @@ export function WelcomeNameModal() {
                 className="flex items-center gap-1.5 text-sm font-semibold text-slate-700 dark:text-slate-200"
               >
                 <KeyRound className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
-                <span>Mã hồ sơ cũ DEV-XXXXXX (tuỳ chọn)</span>
+                <span>MÃ£ há»“ sÆ¡ cÅ© DEV-XXXXXX (tuá»³ chá»n)</span>
               </label>
               <input
                 id="auth-transfer-code"
@@ -454,7 +454,7 @@ export function WelcomeNameModal() {
                 disabled={isSubmitting}
                 value={transferCode}
                 onChange={(e) => setTransferCode(e.target.value.toUpperCase())}
-                placeholder="DEV-XXXXXX (nếu muốn giữ Coin & Hiệu ứng cũ)"
+                placeholder="DEV-XXXXXX (náº¿u muá»‘n giá»¯ Coin & Hiá»‡u á»©ng cÅ©)"
                 className="w-full px-3.5 py-2 text-sm font-mono uppercase liquid-glass-input rounded-lg placeholder:normal-case placeholder:font-sans disabled:opacity-60"
               />
             </div>
@@ -478,13 +478,13 @@ export function WelcomeNameModal() {
               <>
                 <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
                 <span>
-                  {tab === "login" ? "Đang đăng nhập..." : "Đang tạo tài khoản..."}
+                  {tab === "login" ? "Äang Ä‘Äƒng nháº­p..." : "Äang táº¡o tÃ i khoáº£n..."}
                 </span>
               </>
             ) : tab === "login" ? (
-              <span>Đăng nhập ngay</span>
+              <span>ÄÄƒng nháº­p ngay</span>
             ) : (
-              <span>Tạo tài khoản &amp; Bắt đầu</span>
+              <span>Táº¡o tÃ i khoáº£n &amp; Báº¯t Ä‘áº§u</span>
             )}
           </button>
 
@@ -494,7 +494,7 @@ export function WelcomeNameModal() {
               onClick={() => setIsOpen(false)}
               className="w-full py-2 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             >
-              Đóng
+              ÄÃ³ng
             </button>
           )}
         </form>

@@ -147,7 +147,7 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
     <div ref={containerRef} className="relative shrink-0">
       <button
         type="button"
-        aria-label="Thông báo"
+        aria-label="ThÃ´ng bÃ¡o"
         aria-expanded={open}
         aria-haspopup="true"
         onClick={() => setOpen((prev) => !prev)}
@@ -155,17 +155,17 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
       >
         <Bell className="w-4 h-4" aria-hidden="true" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-[#DC2626] text-white text-[10px] font-mono font-bold flex items-center justify-center border border-white dark:border-[#111827]">
+          <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-[#DC2626] text-white text-[10px] font-mono font-bold flex items-center justify-center border border-white dark:border-[#0A0A0A]">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
       </button>
 
       {open && (
-        <div className="fixed inset-x-3 top-20 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2.5 sm:w-80 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm z-50 overflow-hidden">
+        <div className="fixed inset-x-3 top-20 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2.5 sm:w-80 bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm z-50 overflow-hidden">
           <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/80">
             <span className="text-xs font-bold text-slate-900 dark:text-white uppercase font-mono">
-              Thông báo
+              ThÃ´ng bÃ¡o
             </span>
             <div className="flex items-center gap-2">
               {unreadCount > 0 && (
@@ -175,12 +175,12 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
                   className="inline-flex items-center gap-1 text-xs font-semibold text-blue-700 dark:text-blue-400 hover:underline"
                 >
                   <CheckCheck className="w-3.5 h-3.5" aria-hidden="true" />
-                  <span>Đánh dấu đã đọc</span>
+                  <span>ÄÃ¡nh dáº¥u Ä‘Ã£ Ä‘á»c</span>
                 </button>
               )}
               <button
                 type="button"
-                aria-label="Đóng thông báo"
+                aria-label="ÄÃ³ng thÃ´ng bÃ¡o"
                 onClick={() => setOpen(false)}
                 className="p-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/70 dark:hover:bg-slate-700 transition-colors"
               >
@@ -195,12 +195,12 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-1.5 text-sm font-bold text-slate-900 dark:text-white">
                     <Clock className="w-4 h-4 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
-                    <span>Nhắc nhở học tập hôm nay</span>
+                    <span>Nháº¯c nhá»Ÿ há»c táº­p hÃ´m nay</span>
                   </div>
                   <span className="w-2 h-2 rounded-full bg-blue-700 dark:bg-blue-400 shrink-0 mt-1.5" />
                 </div>
                 <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                  Bạn chưa luyện nói hôm nay. Dành 5 phút luyện phản xạ để giữ streak nhé!
+                  Báº¡n chÆ°a luyá»‡n nÃ³i hÃ´m nay. DÃ nh 5 phÃºt luyá»‡n pháº£n xáº¡ Ä‘á»ƒ giá»¯ streak nhÃ©!
                 </p>
                 <div className="flex items-center gap-2 pt-0.5">
                   <Link
@@ -208,7 +208,7 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
                     onClick={() => setOpen(false)}
                     className="inline-flex items-center px-3 py-1.5 rounded-lg liquid-btn-primary text-xs"
                   >
-                    Luyện ngay
+                    Luyá»‡n ngay
                   </Link>
                   <button
                     type="button"
@@ -218,7 +218,7 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
                     }}
                     className="text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
                   >
-                    Ẩn hôm nay
+                    áº¨n hÃ´m nay
                   </button>
                 </div>
               </div>
@@ -255,7 +255,7 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
 
             {!showReminder && announcements.length === 0 && (
               <div className="px-4 py-8 text-center text-sm text-slate-500 dark:text-slate-400">
-                Chưa có thông báo mới.
+                ChÆ°a cÃ³ thÃ´ng bÃ¡o má»›i.
               </div>
             )}
           </div>

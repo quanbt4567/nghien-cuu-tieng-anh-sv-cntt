@@ -262,7 +262,7 @@ export default function ProgressPage() {
           {[0, 1, 2, 3].map((idx) => (
             <div
               key={idx}
-              className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-4 sm:p-5 space-y-2"
+              className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-4 sm:p-5 space-y-2"
             >
               <div className="h-8 w-16 mx-auto rounded-lg bg-slate-200 dark:bg-slate-800" />
               <div className="h-3 w-24 mx-auto rounded bg-slate-200 dark:bg-slate-800" />
@@ -270,7 +270,7 @@ export default function ProgressPage() {
           ))}
         </div>
 
-        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-6 space-y-4">
+        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-6 space-y-4">
           <div className="h-5 w-48 rounded-lg bg-slate-200 dark:bg-slate-800" />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[0, 1, 2].map((idx) => (
@@ -279,7 +279,7 @@ export default function ProgressPage() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-6 space-y-4">
+        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-6 space-y-4">
           <div className="h-5 w-56 rounded-lg bg-slate-200 dark:bg-slate-800" />
           <div className="h-32 rounded-lg bg-slate-200 dark:bg-slate-800" />
         </div>
@@ -296,14 +296,14 @@ export default function ProgressPage() {
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors mb-3"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Trang chủ</span>
+            <span>Trang chá»§</span>
           </Link>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 flex items-center gap-2">
             <TrendingUp className="w-6 h-6 text-blue-700 dark:text-blue-400" />
-            <span>Tiến độ học &amp; kế hoạch 7 ngày</span>
+            <span>Tiáº¿n Ä‘á»™ há»c &amp; káº¿ hoáº¡ch 7 ngÃ y</span>
           </h1>
           <p className="text-sm text-slate-600 dark:text-slate-300 mt-1.5">
-            Xem bạn đã luyện nói bao nhiêu lần, điểm cao nhất của từng tình huống và những từ cần ôn thêm.
+            Xem báº¡n Ä‘Ã£ luyá»‡n nÃ³i bao nhiÃªu láº§n, Ä‘iá»ƒm cao nháº¥t cá»§a tá»«ng tÃ¬nh huá»‘ng vÃ  nhá»¯ng tá»« cáº§n Ã´n thÃªm.
           </p>
         </div>
 
@@ -312,38 +312,38 @@ export default function ProgressPage() {
           onClick={handleExportData}
           disabled={attempts.length === 0 && arenaRuns.length === 0}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-700 text-sm font-mono font-semibold transition-colors self-start sm:self-center disabled:opacity-50 disabled:cursor-not-allowed"
-          title="Tải về file (.json) chứa toàn bộ lượt luyện tập của bạn"
+          title="Táº£i vá» file (.json) chá»©a toÃ n bá»™ lÆ°á»£t luyá»‡n táº­p cá»§a báº¡n"
         >
           <Download className="w-4 h-4 text-blue-700 dark:text-blue-400" />
-          <span>Tải dữ liệu về (.json)</span>
+          <span>Táº£i dá»¯ liá»‡u vá» (.json)</span>
         </button>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5">
-        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-4 sm:p-5 text-center">
+        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-4 sm:p-5 text-center">
           <div className="text-2xl sm:text-3xl font-mono font-extrabold text-slate-900 dark:text-slate-50">
             {totalSessions}
           </div>
           <div className="text-sm text-slate-600 dark:text-slate-300 mt-1">
-            Tổng lượt đã luyện
+            Tá»•ng lÆ°á»£t Ä‘Ã£ luyá»‡n
             {arenaRuns.length > 0 && (
               <span className="block text-xs font-mono text-slate-600 dark:text-slate-400 mt-0.5">
-                ({totalTurns} hội thoại · {arenaRuns.length} Arena)
+                ({totalTurns} há»™i thoáº¡i Â· {arenaRuns.length} Arena)
               </span>
             )}
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-4 sm:p-5 text-center">
+        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-4 sm:p-5 text-center">
           <div className="text-2xl sm:text-3xl font-mono font-extrabold text-blue-700 dark:text-blue-400">
             {isArenaOnly ? bestArenaScore : bestScoreOverall}
           </div>
           <div className="text-sm text-slate-600 dark:text-slate-300 mt-1">
-            {isArenaOnly ? "Điểm Arena cao nhất" : "Điểm cao nhất"}
+            {isArenaOnly ? "Äiá»ƒm Arena cao nháº¥t" : "Äiá»ƒm cao nháº¥t"}
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-4 sm:p-5 text-center">
+        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-4 sm:p-5 text-center">
           <div className="text-2xl sm:text-3xl font-mono font-extrabold text-slate-900 dark:text-slate-50">
             {isArenaOnly
               ? bugBusterRuns.length > 0
@@ -354,9 +354,9 @@ export default function ProgressPage() {
           <div className="text-sm text-slate-600 dark:text-slate-300 mt-1">
             {isArenaOnly
               ? bugBusterRuns.length > 0
-                ? "Bug Buster: đúng trung bình"
-                : "Từ khóa Standup"
-              : "Điểm trung bình"}
+                ? "Bug Buster: Ä‘Ãºng trung bÃ¬nh"
+                : "Tá»« khÃ³a Standup"
+              : "Äiá»ƒm trung bÃ¬nh"}
           </div>
         </div>
 
@@ -390,58 +390,58 @@ export default function ProgressPage() {
                 : "text-amber-800 dark:text-amber-300"
             }`}
           >
-            Ngày luyện tập
+            NgÃ y luyá»‡n táº­p
           </div>
         </div>
       </div>
 
-      <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#1F2937] pb-3">
+      <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#262626] pb-3">
           <h2 className="text-sm font-bold text-slate-900 dark:text-slate-50 uppercase tracking-wider font-mono flex items-center gap-2">
             <Gamepad2 className="w-4 h-4 text-blue-700 dark:text-blue-400" />
-            <span>Chơi trong IT Speaking Arena (đấu trường luyện nói)</span>
+            <span>ChÆ¡i trong IT Speaking Arena (Ä‘áº¥u trÆ°á»ng luyá»‡n nÃ³i)</span>
           </h2>
           <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
-            {arenaRuns.length} lượt chơi
+            {arenaRuns.length} lÆ°á»£t chÆ¡i
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-[#1F2937] border-b border-slate-200 dark:border-[#1F2937] pb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-[#262626] border-b border-slate-200 dark:border-[#262626] pb-4">
           <div className="py-2 sm:py-0 sm:pr-4">
             <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
-              Bug Buster cao nhất
+              Bug Buster cao nháº¥t
             </div>
             <div className="text-xl font-mono font-extrabold text-slate-900 dark:text-slate-50 mt-0.5">
-              {bugBusterBest.toLocaleString("vi-VN")} điểm
+              {bugBusterBest.toLocaleString("vi-VN")} Ä‘iá»ƒm
             </div>
             <div className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">
               {bugBusterRuns.length > 0
-                ? `${bugBusterRuns.length} lượt · ${avgBugAccuracy}% đúng trung bình`
-                : "Chưa có lượt chơi"}
+                ? `${bugBusterRuns.length} lÆ°á»£t Â· ${avgBugAccuracy}% Ä‘Ãºng trung bÃ¬nh`
+                : "ChÆ°a cÃ³ lÆ°á»£t chÆ¡i"}
             </div>
           </div>
           <div className="py-3 sm:py-0 sm:px-4">
             <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
-              Standup Speed Run cao nhất
+              Standup Speed Run cao nháº¥t
             </div>
             <div className="text-xl font-mono font-extrabold text-slate-900 dark:text-slate-50 mt-0.5">
-              {standupBest.toLocaleString("vi-VN")} điểm
+              {standupBest.toLocaleString("vi-VN")} Ä‘iá»ƒm
             </div>
             <div className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">
               {standupRuns.length > 0
-                ? `${standupRuns.length} lượt · ${totalStandupKeywords} từ khóa`
-                : "Chưa có lượt chơi"}
+                ? `${standupRuns.length} lÆ°á»£t Â· ${totalStandupKeywords} tá»« khÃ³a`
+                : "ChÆ°a cÃ³ lÆ°á»£t chÆ¡i"}
             </div>
           </div>
           <div className="pt-3 sm:pt-0 sm:pl-4">
             <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
-              Tổng điểm đã có
+              Tá»•ng Ä‘iá»ƒm Ä‘Ã£ cÃ³
             </div>
             <div className="text-xl font-mono font-extrabold text-blue-700 dark:text-blue-400 mt-0.5">
-              {identity.totalPoints.toLocaleString("vi-VN")} điểm
+              {identity.totalPoints.toLocaleString("vi-VN")} Ä‘iá»ƒm
             </div>
             <div className="text-sm text-amber-700 dark:text-amber-400 font-semibold mt-0.5">
-              {coins} IT-Coin · {devTitle.title}
+              {coins} IT-Coin Â· {devTitle.title}
             </div>
           </div>
         </div>
@@ -450,9 +450,9 @@ export default function ProgressPage() {
           <div className="space-y-2 pt-1">
             <div className="text-xs font-mono font-bold uppercase text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
               <History className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
-              <span>Lịch sử Arena gần đây</span>
+              <span>Lá»‹ch sá»­ Arena gáº§n Ä‘Ã¢y</span>
             </div>
-            <div className="divide-y divide-slate-200 dark:divide-[#1F2937]">
+            <div className="divide-y divide-slate-200 dark:divide-[#262626]">
               {arenaRuns.slice(0, 8).map((run) => (
                 <div
                   key={run.id}
@@ -464,17 +464,17 @@ export default function ProgressPage() {
                     </div>
                     <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
                       {run.gameId === "bug-buster"
-                        ? `${run.accuracyOrWords}% đúng`
+                        ? `${run.accuracyOrWords}% Ä‘Ãºng`
                         : run.gameId === "standup-speed-run"
-                          ? `${run.accuracyOrWords} từ khóa`
-                          : `${run.accuracyOrWords} điểm mạnh`}
-                      {run.durationSec > 0 ? ` · ${run.durationSec}s` : ""}
-                      {" · "}
+                          ? `${run.accuracyOrWords} tá»« khÃ³a`
+                          : `${run.accuracyOrWords} Ä‘iá»ƒm máº¡nh`}
+                      {run.durationSec > 0 ? ` Â· ${run.durationSec}s` : ""}
+                      {" Â· "}
                       {new Date(run.createdAt).toLocaleDateString("vi-VN")}
                     </div>
                   </div>
                   <span className="px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-xs font-mono font-bold text-blue-800 dark:text-blue-300 shrink-0">
-                    {run.score.toLocaleString("vi-VN")} điểm
+                    {run.score.toLocaleString("vi-VN")} Ä‘iá»ƒm
                   </span>
                 </div>
               ))}
@@ -482,7 +482,7 @@ export default function ProgressPage() {
           </div>
         ) : (
           <p className="text-sm text-slate-600 dark:text-slate-300">
-            Bạn chưa có lượt chơi Arena nào. Thử sức tại{" "}
+            Báº¡n chÆ°a cÃ³ lÆ°á»£t chÆ¡i Arena nÃ o. Thá»­ sá»©c táº¡i{" "}
             <Link
               href="/arena"
               className="text-blue-700 dark:text-blue-400 font-semibold hover:underline"
@@ -494,19 +494,19 @@ export default function ProgressPage() {
         )}
       </section>
 
-      <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#1F2937] pb-3">
+      <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#262626] pb-3">
           <h2 className="text-sm font-bold text-slate-900 dark:text-slate-50 uppercase tracking-wider font-mono flex items-center gap-2">
             <History className="w-4 h-4 text-blue-700 dark:text-blue-400" />
-            <span>Lịch sử luyện tập và điểm thưởng</span>
+            <span>Lá»‹ch sá»­ luyá»‡n táº­p vÃ  Ä‘iá»ƒm thÆ°á»Ÿng</span>
           </h2>
           <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
-            {unifiedHistory.length} hoạt động
+            {unifiedHistory.length} hoáº¡t Ä‘á»™ng
           </span>
         </div>
 
         {unifiedHistory.length > 0 ? (
-          <div className="divide-y divide-slate-200 dark:divide-[#1F2937]">
+          <div className="divide-y divide-slate-200 dark:divide-[#262626]">
             {unifiedHistory.slice(0, 15).map((item) => (
               <div
                 key={item.id}
@@ -517,7 +517,7 @@ export default function ProgressPage() {
                     {item.title}
                   </div>
                   <div className="text-xs font-mono text-slate-600 dark:text-slate-400 truncate">
-                    {item.detail} · {new Date(item.createdAt).toLocaleDateString("vi-VN")}
+                    {item.detail} Â· {new Date(item.createdAt).toLocaleDateString("vi-VN")}
                   </div>
                 </div>
                 <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-xs font-mono font-bold text-blue-800 dark:text-blue-300 shrink-0">
@@ -528,19 +528,19 @@ export default function ProgressPage() {
           </div>
         ) : (
           <p className="text-sm text-slate-600 dark:text-slate-300">
-            Chưa có hoạt động nào được ghi nhận. Hoàn thành một lượt luyện nói, Đố từ vựng 60 giây, Nói theo cụm từ hoặc trận Arena để xem lịch sử tại đây.
+            ChÆ°a cÃ³ hoáº¡t Ä‘á»™ng nÃ o Ä‘Æ°á»£c ghi nháº­n. HoÃ n thÃ nh má»™t lÆ°á»£t luyá»‡n nÃ³i, Äá»‘ tá»« vá»±ng 60 giÃ¢y, NÃ³i theo cá»¥m tá»« hoáº·c tráº­n Arena Ä‘á»ƒ xem lá»‹ch sá»­ táº¡i Ä‘Ã¢y.
           </p>
         )}
       </section>
 
-      <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#1F2937] pb-3">
+      <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#262626] pb-3">
           <h2 className="text-sm font-bold text-slate-900 dark:text-slate-50 uppercase tracking-wider font-mono flex items-center gap-2">
             <BarChart3 className="w-4 h-4 text-blue-700 dark:text-blue-400" />
-            <span>Điểm cao nhất từng tình huống</span>
+            <span>Äiá»ƒm cao nháº¥t tá»«ng tÃ¬nh huá»‘ng</span>
           </h2>
           <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
-            Tối đa 100 điểm
+            Tá»‘i Ä‘a 100 Ä‘iá»ƒm
           </span>
         </div>
 
@@ -556,8 +556,8 @@ export default function ProgressPage() {
                   </span>
                   <span className="font-mono text-xs text-slate-600 dark:text-slate-400">
                     {st.bestScore > 0
-                      ? `${st.bestScore} điểm (${st.turnCount} lượt)`
-                      : "Chưa luyện"}
+                      ? `${st.bestScore} Ä‘iá»ƒm (${st.turnCount} lÆ°á»£t)`
+                      : "ChÆ°a luyá»‡n"}
                   </span>
                 </div>
                 <div className="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
@@ -579,8 +579,8 @@ export default function ProgressPage() {
       </section>
 
       <section
-        aria-label="Tóm tắt IT Speaking Arena"
-        className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+        aria-label="TÃ³m táº¯t IT Speaking Arena"
+        className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
       >
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
@@ -593,7 +593,7 @@ export default function ProgressPage() {
               <Coins className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400" aria-hidden="true" />
               <span>{coins} IT-Coin</span>
               <span className="text-xs font-normal text-amber-700 dark:text-amber-400">
-                (1000 điểm = 1 Coin)
+                (1000 Ä‘iá»ƒm = 1 Coin)
               </span>
             </span>
 
@@ -612,12 +612,12 @@ export default function ProgressPage() {
                 }`}
                 aria-hidden="true"
               />
-              <span>{gamification.streakDays} ngày</span>
+              <span>{gamification.streakDays} ngÃ y</span>
             </span>
           </div>
 
           <p className="text-sm text-slate-600 dark:text-slate-300 font-mono">
-            Tổng {identity.totalPoints} điểm tích lũy từ hội thoại và game Arena.
+            Tá»•ng {identity.totalPoints} Ä‘iá»ƒm tÃ­ch lÅ©y tá»« há»™i thoáº¡i vÃ  game Arena.
           </p>
         </div>
 
@@ -627,7 +627,7 @@ export default function ProgressPage() {
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-semibold transition-colors"
           >
             <BookOpen className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
-            <span>Từ vựng IT</span>
+            <span>Tá»« vá»±ng IT</span>
           </Link>
 
           <Link
@@ -635,7 +635,7 @@ export default function ProgressPage() {
             className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
           >
             <Gamepad2 className="w-4 h-4" aria-hidden="true" />
-            <span>Vào IT Arena</span>
+            <span>VÃ o IT Arena</span>
             <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </Link>
         </div>
@@ -646,14 +646,14 @@ export default function ProgressPage() {
       </section>
 
       {keywordWeakPoints.length > 0 && (
-        <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-6 space-y-3.5">
-          <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#1F2937] pb-2">
+        <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-6 space-y-3.5">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#262626] pb-2">
             <h3 className="text-sm font-bold font-mono uppercase text-slate-900 dark:text-slate-50 flex items-center gap-1.5">
               <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400" />
-              <span>Từ khóa bạn hay quên nhất ({keywordWeakPoints.length})</span>
+              <span>Tá»« khÃ³a báº¡n hay quÃªn nháº¥t ({keywordWeakPoints.length})</span>
             </h3>
             <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
-              Xếp theo số lần bỏ sót
+              Xáº¿p theo sá»‘ láº§n bá» sÃ³t
             </span>
           </div>
 
@@ -667,7 +667,7 @@ export default function ProgressPage() {
                   {wp.value}
                 </span>
                 <span className="text-red-700 dark:text-red-400 font-bold">
-                  ({wp.miss_count} lần)
+                  ({wp.miss_count} láº§n)
                 </span>
               </span>
             ))}

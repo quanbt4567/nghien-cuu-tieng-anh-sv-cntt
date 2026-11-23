@@ -75,14 +75,14 @@ export default function SettingsPage() {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-    setExportStatus("Đã xuất dữ liệu JSON thành công!");
+    setExportStatus("ÄÃ£ xuáº¥t dá»¯ liá»‡u JSON thÃ nh cÃ´ng!");
     setTimeout(() => setExportStatus(null), 3500);
   };
 
   const handleResetProgress = async () => {
     await storageAdapter.resetAll();
     setShowResetModal(false);
-    setResetStatus("Đã làm mới toàn bộ tiến độ và điểm số!");
+    setResetStatus("ÄÃ£ lÃ m má»›i toÃ n bá»™ tiáº¿n Ä‘á»™ vÃ  Ä‘iá»ƒm sá»‘!");
     setTimeout(() => setResetStatus(null), 3500);
   };
 
@@ -94,27 +94,27 @@ export default function SettingsPage() {
           className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors mb-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Trang chủ</span>
+          <span>Trang chá»§</span>
         </Link>
         <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
-          Cài Đặt Luyện Tập
+          CÃ i Äáº·t Luyá»‡n Táº­p
         </h1>
         <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
-          Cấu hình giọng đọc câu hỏi và quản lý bộ nhớ cục bộ.
+          Cáº¥u hÃ¬nh giá»ng Ä‘á»c cÃ¢u há»i vÃ  quáº£n lÃ½ bá»™ nhá»› cá»¥c bá»™.
         </p>
       </div>
 
-      <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-5 sm:p-6 space-y-4">
-        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-[#1F2937] pb-3">
+      <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 sm:p-6 space-y-4">
+        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-[#262626] pb-3">
           <Volume2 className="w-5 h-5 text-blue-700 dark:text-blue-400" />
           <h2 className="text-sm font-bold uppercase font-mono text-slate-900 dark:text-slate-50">
-            Cấu hình giọng đọc câu hỏi (TTS)
+            Cáº¥u hÃ¬nh giá»ng Ä‘á»c cÃ¢u há»i (TTS)
           </h2>
         </div>
 
         <div className="space-y-3">
           <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 block">
-            Tốc độ phát âm mặc định:
+            Tá»‘c Ä‘á»™ phÃ¡t Ã¢m máº·c Ä‘á»‹nh:
           </label>
           <div className="flex flex-wrap items-center gap-2">
             {([0.8, 1.0, 1.2] as const).map((r) => (
@@ -131,15 +131,15 @@ export default function SettingsPage() {
                     : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:bg-blue-50/70 dark:hover:bg-slate-700"
                 }`}
               >
-                {r}x {r === 0.8 ? "(Chậm)" : r === 1.0 ? "(Chuẩn)" : "(Nhanh)"}
+                {r}x {r === 0.8 ? "(Cháº­m)" : r === 1.0 ? "(Chuáº©n)" : "(Nhanh)"}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="space-y-3 pt-3 border-t border-slate-200 dark:border-[#1F2937]">
+        <div className="space-y-3 pt-3 border-t border-slate-200 dark:border-[#262626]">
           <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 block">
-            Giọng AI phỏng vấn mặc định:
+            Giá»ng AI phá»ng váº¥n máº·c Ä‘á»‹nh:
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {TTS_VOICE_PERSONAS.map((persona) => {
@@ -181,13 +181,13 @@ export default function SettingsPage() {
                     type="button"
                     aria-label={
                       isPreviewing
-                        ? `Dừng nghe thử ${persona.label}`
-                        : `Nghe thử ${persona.label}`
+                        ? `Dá»«ng nghe thá»­ ${persona.label}`
+                        : `Nghe thá»­ ${persona.label}`
                     }
                     title={
                       isPreviewing
-                        ? `Dừng nghe thử ${persona.label}`
-                        : `Nghe thử ${persona.label}`
+                        ? `Dá»«ng nghe thá»­ ${persona.label}`
+                        : `Nghe thá»­ ${persona.label}`
                     }
                     onClick={() => {
                       if (isPreviewing) {
@@ -229,12 +229,12 @@ export default function SettingsPage() {
         </div>
       </section>
 
-      <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-5 sm:p-6 space-y-4">
-        <div className="flex items-center justify-between gap-2 border-b border-slate-200 dark:border-[#1F2937] pb-3">
+      <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 sm:p-6 space-y-4">
+        <div className="flex items-center justify-between gap-2 border-b border-slate-200 dark:border-[#262626] pb-3">
           <div className="flex items-center gap-2">
             <Bell className="w-5 h-5 text-green-700 dark:text-green-400" />
             <h2 className="text-sm font-bold uppercase font-mono text-slate-900 dark:text-slate-50">
-              Nhắc Nhở Học Tập Trong App
+              Nháº¯c Nhá»Ÿ Há»c Táº­p Trong App
             </h2>
           </div>
           <span className="text-xs font-mono px-2.5 py-0.5 rounded-full border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/50 text-green-800 dark:text-green-300 font-semibold">
@@ -243,7 +243,7 @@ export default function SettingsPage() {
         </div>
 
         <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-          Hiển thị nhắc nhở luyện nói mỗi ngày ngay trong chuông thông báo khi bạn mở SpeakIT.
+          Hiá»ƒn thá»‹ nháº¯c nhá»Ÿ luyá»‡n nÃ³i má»—i ngÃ y ngay trong chuÃ´ng thÃ´ng bÃ¡o khi báº¡n má»Ÿ SpeakIT.
         </p>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -260,14 +260,14 @@ export default function SettingsPage() {
               onChange={(e) => setReminderEnabled(e.target.checked)}
               className="w-4 h-4 accent-blue-700 dark:accent-blue-500"
             />
-            <span>Bật nhắc nhở mỗi ngày</span>
+            <span>Báº­t nháº¯c nhá»Ÿ má»—i ngÃ y</span>
           </label>
 
           <input
             type="time"
             value={reminderTime}
             onChange={(e) => setReminderTime(e.target.value)}
-            aria-label="Giờ nhắc nhở hằng ngày"
+            aria-label="Giá» nháº¯c nhá»Ÿ háº±ng ngÃ y"
             className="px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm font-mono font-semibold focus:outline-none focus:ring-2 focus:ring-blue-600/40"
           />
         </div>
@@ -286,14 +286,14 @@ export default function SettingsPage() {
               const mm = String(minute).padStart(2, "0");
               setReminderStatus(
                 reminderEnabled
-                  ? `Đã lưu lịch nhắc nhở trong app lúc ${hh}:${mm}.`
-                  : "Đã tắt nhắc nhở học tập trong app."
+                  ? `ÄÃ£ lÆ°u lá»‹ch nháº¯c nhá»Ÿ trong app lÃºc ${hh}:${mm}.`
+                  : "ÄÃ£ táº¯t nháº¯c nhá»Ÿ há»c táº­p trong app."
               );
             }}
             className="bg-green-700 hover:bg-green-800 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
           >
             <Bell className="w-4 h-4" />
-            <span>Lưu lịch nhắc</span>
+            <span>LÆ°u lá»‹ch nháº¯c</span>
           </button>
 
           <button
@@ -301,14 +301,14 @@ export default function SettingsPage() {
             onClick={() => setShowPreviewBanner((prev) => !prev)}
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-semibold transition-colors"
           >
-            <span>Xem thử thông báo trong app</span>
+            <span>Xem thá»­ thÃ´ng bÃ¡o trong app</span>
           </button>
         </div>
 
         {showPreviewBanner && (
           <div
             role="status"
-            className="border-l-2 border-blue-700 dark:border-blue-500 bg-blue-50 dark:bg-blue-950/60 p-3.5 flex items-start justify-between gap-3"
+            className="rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/60 p-3.5 flex items-start justify-between gap-3"
           >
             <div className="flex items-start gap-2.5">
               <Bell
@@ -317,10 +317,10 @@ export default function SettingsPage() {
               />
               <div className="space-y-0.5">
                 <div className="text-sm font-bold text-slate-900 dark:text-slate-50">
-                  SpeakIT: Đến giờ luyện nói 5 phút!
+                  SpeakIT: Äáº¿n giá» luyá»‡n nÃ³i 5 phÃºt!
                 </div>
                 <p className="text-sm text-slate-700 dark:text-slate-300">
-                  Dành 5 phút luyện phản xạ tiếng Anh CNTT để giữ streak hôm nay nhé.
+                  DÃ nh 5 phÃºt luyá»‡n pháº£n xáº¡ tiáº¿ng Anh CNTT Ä‘á»ƒ giá»¯ streak hÃ´m nay nhÃ©.
                 </p>
               </div>
             </div>
@@ -329,7 +329,7 @@ export default function SettingsPage() {
               onClick={() => setShowPreviewBanner(false)}
               className="text-xs font-semibold text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 shrink-0"
             >
-              Đóng
+              ÄÃ³ng
             </button>
           </div>
         )}
@@ -337,23 +337,23 @@ export default function SettingsPage() {
         {reminderStatus && (
           <div
             role="status"
-            className="border-l-2 border-green-700 dark:border-green-500 bg-green-50 dark:bg-green-950/50 p-3 text-sm font-medium text-green-900 dark:text-green-200"
+            className="rounded-xl border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/50 p-3 text-sm font-medium text-green-900 dark:text-green-200"
           >
             {reminderStatus}
           </div>
         )}
       </section>
 
-      <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-5 sm:p-6 space-y-3">
-        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-[#1F2937] pb-3">
+      <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 sm:p-6 space-y-3">
+        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-[#262626] pb-3">
           <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
           <h2 className="text-sm font-bold uppercase font-mono text-slate-900 dark:text-slate-50">
-            Quản Lý Dữ Liệu Luyện Tập
+            Quáº£n LÃ½ Dá»¯ Liá»‡u Luyá»‡n Táº­p
           </h2>
         </div>
 
         <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-          Xóa toàn bộ lịch sử các lượt nói, điểm số và danh sách từ khóa yếu trong bộ nhớ máy này.
+          XÃ³a toÃ n bá»™ lá»‹ch sá»­ cÃ¡c lÆ°á»£t nÃ³i, Ä‘iá»ƒm sá»‘ vÃ  danh sÃ¡ch tá»« khÃ³a yáº¿u trong bá»™ nhá»› mÃ¡y nÃ y.
         </p>
 
         <div className="flex flex-wrap items-center gap-2.5">
@@ -363,7 +363,7 @@ export default function SettingsPage() {
             className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
           >
             <Download className="w-4 h-4" />
-            <span>Xuất dữ liệu JSON</span>
+            <span>Xuáº¥t dá»¯ liá»‡u JSON</span>
           </button>
 
           <button
@@ -372,21 +372,21 @@ export default function SettingsPage() {
             className="bg-red-600 hover:bg-red-700 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
           >
             <RotateCcw className="w-4 h-4" />
-            <span>Làm mới tiến độ</span>
+            <span>LÃ m má»›i tiáº¿n Ä‘á»™</span>
           </button>
         </div>
 
         {exportStatus && (
           <div
             role="status"
-            className="border-l-2 border-green-700 dark:border-green-500 bg-green-50 dark:bg-green-950/50 p-3 text-green-900 dark:text-green-200 text-sm font-medium"
+            className="rounded-xl border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/50 p-3 text-green-900 dark:text-green-200 text-sm font-medium"
           >
             {exportStatus}
           </div>
         )}
 
         {resetStatus && (
-          <div className="border-l-2 border-red-600 dark:border-red-500 bg-red-50 dark:bg-red-950/50 p-3 text-red-900 dark:text-red-200 text-sm font-medium">
+          <div className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/50 p-3 text-red-900 dark:text-red-200 text-sm font-medium">
             {resetStatus}
           </div>
         )}
@@ -394,15 +394,15 @@ export default function SettingsPage() {
 
       {showResetModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-6 max-w-sm w-full shadow-sm space-y-4 text-center">
+          <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-6 max-w-sm w-full shadow-sm space-y-4 text-center">
             <div className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 flex items-center justify-center mx-auto border border-red-200 dark:border-red-800">
               <AlertCircle className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50">
-              Xác nhận làm mới tiến độ?
+              XÃ¡c nháº­n lÃ m má»›i tiáº¿n Ä‘á»™?
             </h3>
             <p className="text-sm text-slate-600 dark:text-slate-300">
-              Hành động này sẽ xóa vĩnh viễn toàn bộ lịch sử các lượt luyện nói và từ khóa yếu đã lưu.
+              HÃ nh Ä‘á»™ng nÃ y sáº½ xÃ³a vÄ©nh viá»…n toÃ n bá»™ lá»‹ch sá»­ cÃ¡c lÆ°á»£t luyá»‡n nÃ³i vÃ  tá»« khÃ³a yáº¿u Ä‘Ã£ lÆ°u.
             </p>
             <div className="flex items-center justify-center gap-3 pt-2">
               <button
@@ -410,14 +410,14 @@ export default function SettingsPage() {
                 onClick={() => setShowResetModal(false)}
                 className="px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors"
               >
-                Hủy bỏ
+                Há»§y bá»
               </button>
               <button
                 type="button"
                 onClick={handleResetProgress}
                 className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors"
               >
-                Đồng ý xóa
+                Äá»“ng Ã½ xÃ³a
               </button>
             </div>
           </div>

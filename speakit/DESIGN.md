@@ -16,11 +16,11 @@
   - Deliberate Action Accent (Signal Coral/Red): `#DC2626` — reserved strictly for Mic active/recording, Outage Party Mode urgent alert, and Destructive actions
   - Semantic Status (functional only, muted): Success `#15803D` (`#F0FDF4`), Warning `#B45309` (`#FFFBEB`), Danger `#B91C1C` (`#FEF2F2`)
 - **Dark Mode (`html.dark`)**:
-  - Canvas Background: `#0B0F17`
-  - Primary Card Surface: `#111827` with `1px solid #1F2937`
-  - Subtle Surface / Input: `#1E293B` with `1px solid #334155`
-  - Primary Text: `#F8FAFC`
-  - Secondary Text: `#CBD5E1`
+  - Canvas Background: `#000000` (pure OLED black)
+  - Primary Card Surface: `#0A0A0A` with `1px solid #262626`
+  - Subtle Surface / Input: `#141414` with `1px solid #2E2E2E`
+  - Primary Text: `#FAFAFA`
+  - Secondary Text: `#D4D4D8` / `#A1A1AA`
   - Core Brand Color: `#2563EB` (text `#60A5FA` on dark surfaces)
 
 ## Forbidden Patterns (Zero Tolerance)

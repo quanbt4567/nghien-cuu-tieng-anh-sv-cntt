@@ -1574,7 +1574,7 @@ export function ProfileView() {
             </div>
 
             {activity.topWeakPoints.length === 0 ? (
-              <div className="border-l-2 border-slate-300 dark:border-slate-700 pl-3 py-1 space-y-2.5">
+              <div className="space-y-2.5">
                 <p className="text-sm text-slate-600 dark:text-slate-300">
                   Chưa ghi nhận từ khóa hay lỗi ngữ pháp nào. Hãy luyện nói ít nhất 1 lượt để SpeakIT tổng hợp điểm cần cải thiện.
                 </p>
@@ -1648,7 +1648,7 @@ export function ProfileView() {
             </div>
 
             {activity.recentAttempts.length === 0 && recentArenaRuns.length === 0 ? (
-              <div className="border-l-2 border-slate-300 dark:border-slate-700 pl-3 py-1 space-y-2.5">
+              <div className="space-y-2.5">
                 <p className="text-sm text-slate-600 dark:text-slate-300">
                   {hasCloudPoints
                     ? `Tài khoản ${identity.transferCode ?? ""} đã tích lũy ${identity.totalPoints.toLocaleString("vi-VN")} điểm. Hãy luyện thêm một tình huống hoặc trận Arena để xem chi tiết tại đây.`

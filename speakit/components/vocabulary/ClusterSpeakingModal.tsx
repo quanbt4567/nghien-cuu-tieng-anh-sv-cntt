@@ -129,7 +129,7 @@ export function ClusterSpeakingModal({
       });
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.error || "Không thể tạo tình huống luyện nói.");
+        throw new Error(data.error || "KhÃ´ng thá»ƒ táº¡o tÃ¬nh huá»‘ng luyá»‡n nÃ³i.");
       }
       setPromptData({
         scenarioType: data.scenarioType,
@@ -141,7 +141,7 @@ export function ClusterSpeakingModal({
       setGenerateError(
         error instanceof Error
           ? error.message
-          : "Không thể tạo tình huống luyện nói."
+          : "KhÃ´ng thá»ƒ táº¡o tÃ¬nh huá»‘ng luyá»‡n nÃ³i."
       );
     } finally {
       setIsGenerating(false);
@@ -211,7 +211,7 @@ export function ClusterSpeakingModal({
 
     if (!isSpeechRecognitionSupported()) {
       setMicError(
-        "Trình duyệt không hỗ trợ ghi âm Web Speech. Vui lòng nhập câu trả lời vào ô văn bản bên dưới."
+        "TrÃ¬nh duyá»‡t khÃ´ng há»— trá»£ ghi Ã¢m Web Speech. Vui lÃ²ng nháº­p cÃ¢u tráº£ lá»i vÃ o Ã´ vÄƒn báº£n bÃªn dÆ°á»›i."
       );
       setShowTypedFallback(true);
       return;
@@ -262,7 +262,7 @@ export function ClusterSpeakingModal({
 
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.error || "Không thể chấm điểm câu trả lời.");
+        throw new Error(data.error || "KhÃ´ng thá»ƒ cháº¥m Ä‘iá»ƒm cÃ¢u tráº£ lá»i.");
       }
 
       const awardedCoins = typeof data.awardedCoins === "number" ? data.awardedCoins : 0;
@@ -298,7 +298,7 @@ export function ClusterSpeakingModal({
       setEvalError(
         error instanceof Error
           ? error.message
-          : "Không thể chấm điểm câu trả lời."
+          : "KhÃ´ng thá»ƒ cháº¥m Ä‘iá»ƒm cÃ¢u tráº£ lá»i."
       );
     } finally {
       setIsEvaluating(false);
@@ -317,9 +317,9 @@ export function ClusterSpeakingModal({
       className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4"
       role="dialog"
       aria-modal="true"
-      aria-label={`Luyện nói cụm từ ${clusterTitle}`}
+      aria-label={`Luyá»‡n nÃ³i cá»¥m tá»« ${clusterTitle}`}
     >
-      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl shadow-sm w-full max-w-2xl max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-5">
+      <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl shadow-sm w-full max-w-2xl max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-5">
         <div className="flex items-start justify-between gap-3">
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 text-xs font-semibold mb-1.5">
@@ -330,7 +330,7 @@ export function ClusterSpeakingModal({
               {clusterTitle}
             </h2>
             <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">
-              Dùng ít nhất 75% từ mục tiêu trong 1 lượt phản hồi tự nhiên để nhận +3 IT-Coins.
+              DÃ¹ng Ã­t nháº¥t 75% tá»« má»¥c tiÃªu trong 1 lÆ°á»£t pháº£n há»“i tá»± nhiÃªn Ä‘á»ƒ nháº­n +3 IT-Coins.
             </p>
           </div>
           <button
@@ -340,7 +340,7 @@ export function ClusterSpeakingModal({
               onClose();
             }}
             className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-            aria-label="Đóng cửa sổ"
+            aria-label="ÄÃ³ng cá»­a sá»•"
           >
             <X className="w-4 h-4" />
           </button>
@@ -349,7 +349,7 @@ export function ClusterSpeakingModal({
         {isGenerating ? (
           <div className="py-10 flex flex-col items-center justify-center gap-2 text-sm text-slate-600 dark:text-slate-300">
             <Loader2 className="w-5 h-5 animate-spin text-blue-700 dark:text-blue-400" />
-            <span>Đang tạo tình huống kỹ thuật phù hợp...</span>
+            <span>Äang táº¡o tÃ¬nh huá»‘ng ká»¹ thuáº­t phÃ¹ há»£p...</span>
           </div>
         ) : generateError ? (
           <div className="p-4 rounded-lg bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 text-sm text-red-800 dark:text-red-300 flex items-center justify-between gap-3">
@@ -359,12 +359,12 @@ export function ClusterSpeakingModal({
               onClick={() => void generatePrompt()}
               className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-semibold text-sm transition-colors"
             >
-              Thử lại
+              Thá»­ láº¡i
             </button>
           </div>
         ) : promptData ? (
           <>
-            <div className="py-4 border-y border-slate-200 dark:border-[#1F2937] space-y-2.5">
+            <div className="py-4 border-y border-slate-200 dark:border-[#262626] space-y-2.5">
               <div className="flex items-center justify-between gap-2">
                 <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 text-xs font-mono font-semibold">
                   {promptData.scenarioType}
@@ -382,12 +382,12 @@ export function ClusterSpeakingModal({
                     {isPlayingPrompt ? (
                       <>
                         <VolumeX className="w-3.5 h-3.5" />
-                        <span>Dừng</span>
+                        <span>Dá»«ng</span>
                       </>
                     ) : (
                       <>
                         <Volume2 className="w-3.5 h-3.5" />
-                        <span>Nghe câu hỏi</span>
+                        <span>Nghe cÃ¢u há»i</span>
                       </>
                     )}
                   </button>
@@ -395,7 +395,7 @@ export function ClusterSpeakingModal({
                     type="button"
                     onClick={() => void generatePrompt()}
                     className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-medium transition-colors"
-                    title="Đổi tình huống khác"
+                    title="Äá»•i tÃ¬nh huá»‘ng khÃ¡c"
                   >
                     <RefreshCw className="w-3.5 h-3.5" />
                   </button>
@@ -412,7 +412,7 @@ export function ClusterSpeakingModal({
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="font-semibold text-slate-900 dark:text-slate-100">
-                  Từ mục tiêu ({liveMatchedSet.size}/{activeTargetTerms.length})
+                  Tá»« má»¥c tiÃªu ({liveMatchedSet.size}/{activeTargetTerms.length})
                 </span>
                 <span
                   className={`font-mono font-semibold ${
@@ -460,12 +460,12 @@ export function ClusterSpeakingModal({
                   {isListening ? (
                     <>
                       <MicOff className="w-4 h-4" />
-                      <span>Dừng ghi âm</span>
+                      <span>Dá»«ng ghi Ã¢m</span>
                     </>
                   ) : (
                     <>
                       <Mic className="w-4 h-4" />
-                      <span>Bấm để nói (English)</span>
+                      <span>Báº¥m Ä‘á»ƒ nÃ³i (English)</span>
                     </>
                   )}
                 </button>
@@ -475,7 +475,7 @@ export function ClusterSpeakingModal({
                   onClick={() => setShowTypedFallback((prev) => !prev)}
                   className="text-sm text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 font-semibold underline"
                 >
-                  {showTypedFallback ? "Ẩn ô gõ chữ" : "Gõ câu trả lời"}
+                  {showTypedFallback ? "áº¨n Ã´ gÃµ chá»¯" : "GÃµ cÃ¢u tráº£ lá»i"}
                 </button>
               </div>
 
@@ -490,7 +490,7 @@ export function ClusterSpeakingModal({
                   value={transcript}
                   onChange={(e) => setTranscript(e.target.value)}
                   rows={3}
-                  placeholder="Nội dung bạn nói sẽ hiện trực tiếp ở đây (hoặc bạn có thể tự gõ/chỉnh sửa câu trả lời bằng tiếng Anh)..."
+                  placeholder="Ná»™i dung báº¡n nÃ³i sáº½ hiá»‡n trá»±c tiáº¿p á»Ÿ Ä‘Ã¢y (hoáº·c báº¡n cÃ³ thá»ƒ tá»± gÃµ/chá»‰nh sá»­a cÃ¢u tráº£ lá»i báº±ng tiáº¿ng Anh)..."
                   className="w-full p-3 text-sm rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/40"
                 />
               )}
@@ -505,12 +505,12 @@ export function ClusterSpeakingModal({
                   {isEvaluating ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Đang chấm điểm...</span>
+                      <span>Äang cháº¥m Ä‘iá»ƒm...</span>
                     </>
                   ) : (
                     <>
                       <Send className="w-4 h-4" />
-                      <span>Chấm điểm &amp; Nhận phản hồi</span>
+                      <span>Cháº¥m Ä‘iá»ƒm &amp; Nháº­n pháº£n há»“i</span>
                     </>
                   )}
                 </button>
@@ -524,12 +524,12 @@ export function ClusterSpeakingModal({
             )}
 
             {evaluation && (
-              <div className="pt-4 border-t border-slate-200 dark:border-[#1F2937] space-y-3">
-                <div className="border-l-2 border-green-700 dark:border-green-500 pl-4 space-y-2.5">
+              <div className="pt-4 border-t border-slate-200 dark:border-[#262626] space-y-3">
+                <div className="space-y-2.5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                        Điểm phản xạ:
+                        Äiá»ƒm pháº£n xáº¡:
                       </span>
                       <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 text-xs font-mono font-bold">
                         {evaluation.score}/100
@@ -545,13 +545,13 @@ export function ClusterSpeakingModal({
 
                   <p className="text-sm text-slate-800 dark:text-slate-100 leading-relaxed">
                     <strong className="font-semibold text-slate-900 dark:text-slate-50">
-                      Độ chính xác ngữ cảnh:
+                      Äá»™ chÃ­nh xÃ¡c ngá»¯ cáº£nh:
                     </strong>{" "}
                     {evaluation.feedbackVI}
                   </p>
                   <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                     <strong className="font-semibold text-slate-900 dark:text-slate-100">
-                      Độ tự nhiên:
+                      Äá»™ tá»± nhiÃªn:
                     </strong>{" "}
                     {evaluation.naturalnessFeedback}
                   </p>

@@ -20,9 +20,9 @@ export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
 const CATEGORY_TABS: Array<{ id: "all" | ResearchCategory; label: string }> = [
-  { id: "all", label: "Tất cả" },
+  { id: "all", label: "Táº¥t cáº£" },
   { id: "benchmark", label: "Benchmark" },
-  { id: "hr_interview", label: "Phỏng vấn HR" },
+  { id: "hr_interview", label: "Phá»ng váº¥n HR" },
   { id: "tech_news", label: "Tin Tech & AI" },
   { id: "case_study", label: "Case Study" },
 ];
@@ -34,7 +34,7 @@ function getCategoryLabel(category: ResearchCategory): string {
 function isInternalDraftMetric(metric: ResearchMetricItem): boolean {
   return (
     metric.highlight === "AI Curated Draft" ||
-    metric.label === "Nguồn tin đã tổng hợp"
+    metric.label === "Nguá»“n tin Ä‘Ã£ tá»•ng há»£p"
   );
 }
 
@@ -70,17 +70,17 @@ export default async function ResearchPortalPage({
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Trang chủ</span>
+            <span>Trang chá»§</span>
           </Link>
           <div className="flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400 pt-1">
             <Newspaper className="w-4 h-4 text-blue-700 dark:text-blue-400" />
             <span>SpeakIT Editorial &amp; Research</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
-            Nghiên Cứu &amp; Xu Hướng Tiếng Anh CNTT
+            NghiÃªn Cá»©u &amp; Xu HÆ°á»›ng Tiáº¿ng Anh CNTT
           </h1>
           <p className="text-sm text-slate-600 dark:text-slate-300 max-w-2xl">
-            Tổng hợp số liệu EF EPI 2025, xu hướng phỏng vấn kỹ thuật từ HR và tin tức công nghệ giúp sinh viên CNTT luyện giao tiếp sát thực tế.
+            Tá»•ng há»£p sá»‘ liá»‡u EF EPI 2025, xu hÆ°á»›ng phá»ng váº¥n ká»¹ thuáº­t tá»« HR vÃ  tin tá»©c cÃ´ng nghá»‡ giÃºp sinh viÃªn CNTT luyá»‡n giao tiáº¿p sÃ¡t thá»±c táº¿.
           </p>
         </div>
 
@@ -88,12 +88,12 @@ export default async function ResearchPortalPage({
           href="/scenarios"
           className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white shrink-0 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-colors"
         >
-          <span>Thực hành nói ngay</span>
+          <span>Thá»±c hÃ nh nÃ³i ngay</span>
           <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2" role="navigation" aria-label="Lọc chuyên mục nghiên cứu">
+      <div className="flex flex-wrap items-center gap-2" role="navigation" aria-label="Lá»c chuyÃªn má»¥c nghiÃªn cá»©u">
         {CATEGORY_TABS.map((tab) => {
           const isActive = activeCategory === tab.id;
           return (
@@ -103,7 +103,7 @@ export default async function ResearchPortalPage({
               className={`px-4 py-1.5 rounded-full border text-xs sm:text-sm font-mono font-semibold transition-colors ${
                 isActive
                   ? "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300"
-                  : "bg-white dark:bg-[#111827] border-slate-200 dark:border-[#1F2937] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:border-blue-300 dark:hover:border-blue-700"
+                  : "bg-white dark:bg-[#0A0A0A] border-slate-200 dark:border-[#262626] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:border-blue-300 dark:hover:border-blue-700"
               }`}
             >
               {tab.label}
@@ -113,22 +113,22 @@ export default async function ResearchPortalPage({
       </div>
 
       {featuredArticle && featuredArticle.metricsJson.length > 0 && (
-        <section className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-5 sm:p-6 space-y-4">
+        <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 sm:p-6 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
               <BarChart3 className="w-4 h-4 text-blue-700 dark:text-blue-400" />
-              <span>Số liệu nổi bật · {featuredArticle.title}</span>
+              <span>Sá»‘ liá»‡u ná»•i báº­t Â· {featuredArticle.title}</span>
             </div>
             <Link
               href={`/research/${encodeURIComponent(featuredArticle.slug)}`}
               className="relative z-10 shrink-0 text-sm font-semibold text-blue-800 dark:text-blue-300 hover:text-blue-950 dark:hover:text-blue-200 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/60 transition-colors"
             >
-              <span>Đọc phân tích đầy đủ</span>
+              <span>Äá»c phÃ¢n tÃ­ch Ä‘áº§y Ä‘á»§</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-[#1F2937] border-t border-slate-200 dark:border-[#1F2937] pt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-[#262626] border-t border-slate-200 dark:border-[#262626] pt-4">
             {featuredArticle.metricsJson.map((metric, idx) => (
               <div
                 key={idx}
@@ -152,13 +152,13 @@ export default async function ResearchPortalPage({
       )}
 
       {articles.length === 0 ? (
-        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-8 text-center space-y-3">
+        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-8 text-center space-y-3">
           <BookOpen className="w-7 h-7 text-slate-500 dark:text-slate-400 mx-auto" />
           <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
-            Chưa có bài viết nào trong chuyên mục này
+            ChÆ°a cÃ³ bÃ i viáº¿t nÃ o trong chuyÃªn má»¥c nÃ y
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-300">
-            Hãy chuyển sang &ldquo;Tất cả&rdquo; hoặc quay lại trang chủ để luyện nói theo tình huống.
+            HÃ£y chuyá»ƒn sang &ldquo;Táº¥t cáº£&rdquo; hoáº·c quay láº¡i trang chá»§ Ä‘á»ƒ luyá»‡n nÃ³i theo tÃ¬nh huá»‘ng.
           </p>
         </div>
       ) : (
@@ -170,7 +170,7 @@ export default async function ResearchPortalPage({
             return (
               <article
                 key={article.id}
-                className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1F2937] rounded-xl p-5 sm:p-6 hover:border-blue-300 dark:hover:border-blue-700 transition-colors flex flex-col justify-between gap-4"
+                className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 sm:p-6 hover:border-blue-300 dark:hover:border-blue-700 transition-colors flex flex-col justify-between gap-4"
               >
                 <div className="space-y-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
@@ -218,10 +218,10 @@ export default async function ResearchPortalPage({
                   )}
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-200 dark:border-[#1F2937]">
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-200 dark:border-[#262626]">
                   <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
                     {realMetricsCount > 0
-                      ? `${realMetricsCount} thẻ số liệu`
+                      ? `${realMetricsCount} tháº» sá»‘ liá»‡u`
                       : getCategoryLabel(article.category)}
                   </span>
                   <div className="flex flex-wrap items-center gap-2">
@@ -235,7 +235,7 @@ export default async function ResearchPortalPage({
                       href={`/research/${article.slug}`}
                       className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-semibold transition-colors"
                     >
-                      <span>Đọc chi tiết</span>
+                      <span>Äá»c chi tiáº¿t</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>

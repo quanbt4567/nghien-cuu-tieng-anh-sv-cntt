@@ -391,10 +391,10 @@ export function GlobalLeaderboard({
 
             {restoreStatus && (
               <div
-                className={`text-sm p-2.5 border-l-4 ${
+                className={`text-sm p-2.5 rounded-xl border ${
                   restoreStatus.ok
-                    ? "border-l-green-700 bg-green-50 dark:bg-green-950/30 text-green-800 dark:text-green-200"
-                    : "border-l-red-600 bg-red-50 dark:bg-red-950/30 text-red-800 dark:text-red-200"
+                    ? "border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/30 text-green-800 dark:text-green-200"
+                    : "border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/30 text-red-800 dark:text-red-200"
                 }`}
               >
                 {restoreStatus.message}
@@ -430,7 +430,7 @@ export function GlobalLeaderboard({
           </div>
 
           {shopNotice && (
-            <div className="p-2.5 border-l-4 border-l-red-600 bg-red-50 dark:bg-red-950/30 text-sm text-red-800 dark:text-red-200">
+            <div className="p-2.5 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/30 text-sm text-red-800 dark:text-red-200">
               {shopNotice}
             </div>
           )}

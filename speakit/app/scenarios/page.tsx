@@ -14,17 +14,17 @@ export default async function ScenariosPage() {
       <div>
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:border-blue-700 dark:hover:border-blue-500 text-xs font-semibold transition-colors mb-3"
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:border-blue-700 dark:hover:border-blue-500 text-xs font-semibold transition-colors mb-3"
         >
           <ArrowLeft className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
-          <span>Trang chủ</span>
+          <span>Trang chá»§</span>
         </Link>
         <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 flex items-center gap-2">
           <MessageSquare className="w-6 h-6 text-blue-700 dark:text-blue-400" aria-hidden="true" />
-          <span>Kịch bản luyện nói IT</span>
+          <span>Ká»‹ch báº£n luyá»‡n nÃ³i IT</span>
         </h1>
         <p className="text-sm text-slate-600 dark:text-slate-300 mt-1.5 leading-relaxed">
-          Chọn vai trò CNTT (Frontend, Backend, DevOps, QA) và mức độ khó phù hợp để luyện tập {scenarioCount} tình huống giao tiếp công việc thực tế.
+          Chá»n vai trÃ² CNTT (Frontend, Backend, DevOps, QA) vÃ  má»©c Ä‘á»™ khÃ³ phÃ¹ há»£p Ä‘á»ƒ luyá»‡n táº­p {scenarioCount} tÃ¬nh huá»‘ng giao tiáº¿p cÃ´ng viá»‡c thá»±c táº¿.
         </p>
       </div>
 

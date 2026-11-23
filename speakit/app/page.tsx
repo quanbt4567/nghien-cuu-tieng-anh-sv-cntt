@@ -33,22 +33,22 @@ export default async function HomePage() {
                 Arena Live Standings
               </p>
               <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
-                Top 3 Bảng Xếp Hạng Arena
+                Top 3 Báº£ng Xáº¿p Háº¡ng Arena
               </h2>
             </div>
           </div>
           <Link
             href="/leaderboard"
             prefetch
-            className="inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:border-blue-700 hover:text-blue-700 dark:hover:border-blue-500 dark:hover:text-blue-400 text-sm font-semibold transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:border-blue-700 hover:text-blue-700 dark:hover:border-blue-500 dark:hover:text-blue-400 text-sm font-semibold transition-colors"
           >
-            <span>Xem bảng xếp hạng</span>
+            <span>Xem báº£ng xáº¿p háº¡ng</span>
             <ArrowRight className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
           </Link>
         </div>
 
         {topLeaders.length > 0 ? (
-          <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800">
+          <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800">
             {topLeaders.map((player) => (
               <LeaderboardRowWrapper
                 key={player.id}
@@ -99,23 +99,23 @@ export default async function HomePage() {
         ) : (
           <div className="border-t border-slate-200 dark:border-slate-800 pt-4 flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600 dark:text-slate-300">
             <span>
-              Chưa có dữ liệu bảng xếp hạng trực tuyến. Hoàn thành một vòng Arena để ghi danh #1.
+              ChÆ°a cÃ³ dá»¯ liá»‡u báº£ng xáº¿p háº¡ng trá»±c tuyáº¿n. HoÃ n thÃ nh má»™t vÃ²ng Arena Ä‘á»ƒ ghi danh #1.
             </span>
             <Link
               href="/arena"
               className="inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-mono text-xs font-semibold transition-colors"
             >
-              <span>Mở /arena</span>
+              <span>Má»Ÿ /arena</span>
               <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
             </Link>
           </div>
         )}
       </section>
 
-      <section aria-label="Công cụ ôn tập nhanh" className="hidden md:grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <section aria-label="CÃ´ng cá»¥ Ã´n táº­p nhanh" className="hidden md:grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <Link
           href="/scenarios"
-          className="group bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:border-blue-700 dark:hover:border-blue-500 transition-colors flex flex-col justify-between gap-4"
+          className="group bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:border-blue-700 dark:hover:border-blue-500 transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 flex items-center justify-center shrink-0">
@@ -123,23 +123,23 @@ export default async function HomePage() {
             </div>
             <div className="space-y-1">
               <h3 className="font-bold text-sm text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
-                Kịch bản luyện nói
+                Ká»‹ch báº£n luyá»‡n nÃ³i
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                {scenarioCount} tình huống công việc CNTT chia theo 3 cấp độ Fresher / Junior / Senior.
+                {scenarioCount} tÃ¬nh huá»‘ng cÃ´ng viá»‡c CNTT chia theo 3 cáº¥p Ä‘á»™ Fresher / Junior / Senior.
               </p>
             </div>
           </div>
           <div className="flex justify-end">
             <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 group-hover:bg-blue-700 group-hover:text-white group-hover:border-blue-700 dark:group-hover:bg-blue-600 dark:group-hover:border-blue-600 text-sm font-semibold transition-colors">
-              Luyện kịch bản
+              Luyá»‡n ká»‹ch báº£n
             </span>
           </div>
         </Link>
 
         <Link
           href="/vocabulary"
-          className="group bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:border-blue-700 dark:hover:border-blue-500 transition-colors flex flex-col justify-between gap-4"
+          className="group bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:border-blue-700 dark:hover:border-blue-500 transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center shrink-0">
@@ -147,23 +147,23 @@ export default async function HomePage() {
             </div>
             <div className="space-y-1">
               <h3 className="font-bold text-sm text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
-                Từ vựng IT
+                Tá»« vá»±ng IT
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Phát âm IPA và câu ví dụ công việc thực tế.
+                PhÃ¡t Ã¢m IPA vÃ  cÃ¢u vÃ­ dá»¥ cÃ´ng viá»‡c thá»±c táº¿.
               </p>
             </div>
           </div>
           <div className="flex justify-end">
             <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 group-hover:bg-blue-700 group-hover:text-white group-hover:border-blue-700 dark:group-hover:bg-blue-600 dark:group-hover:border-blue-600 text-sm font-semibold transition-colors">
-              Ôn từ vựng
+              Ã”n tá»« vá»±ng
             </span>
           </div>
         </Link>
 
         <Link
           href="/progress"
-          className="group bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:border-blue-700 dark:hover:border-blue-500 transition-colors flex flex-col justify-between gap-4"
+          className="group bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:border-blue-700 dark:hover:border-blue-500 transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center shrink-0">
@@ -171,23 +171,23 @@ export default async function HomePage() {
             </div>
             <div className="space-y-1">
               <h3 className="font-bold text-sm text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
-                Kế hoạch 7 ngày
+                Káº¿ hoáº¡ch 7 ngÃ y
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Tổng hợp từ khóa và lỗi ngữ pháp cần ôn.
+                Tá»•ng há»£p tá»« khÃ³a vÃ  lá»—i ngá»¯ phÃ¡p cáº§n Ã´n.
               </p>
             </div>
           </div>
           <div className="flex justify-end">
             <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 group-hover:bg-blue-700 group-hover:text-white group-hover:border-blue-700 dark:group-hover:bg-blue-600 dark:group-hover:border-blue-600 text-sm font-semibold transition-colors">
-              Xem lộ trình
+              Xem lá»™ trÃ¬nh
             </span>
           </div>
         </Link>
 
         <Link
           href="/arena"
-          className="group bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:border-blue-700 dark:hover:border-blue-500 transition-colors flex flex-col justify-between gap-4"
+          className="group bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:border-blue-700 dark:hover:border-blue-500 transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center shrink-0">
@@ -198,20 +198,20 @@ export default async function HomePage() {
                 IT Speaking Arena
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Thử thách tốc độ 60s để kiếm IT-Coin.
+                Thá»­ thÃ¡ch tá»‘c Ä‘á»™ 60s Ä‘á»ƒ kiáº¿m IT-Coin.
               </p>
             </div>
           </div>
           <div className="flex justify-end">
             <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 group-hover:bg-blue-700 group-hover:text-white group-hover:border-blue-700 dark:group-hover:bg-blue-600 dark:group-hover:border-blue-600 text-sm font-semibold transition-colors">
-              Vào đấu trường
+              VÃ o Ä‘áº¥u trÆ°á»ng
             </span>
           </div>
         </Link>
 
         <Link
           href="/arena/party"
-          className="group bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:border-red-600 dark:hover:border-red-500 transition-colors flex flex-col justify-between gap-4"
+          className="group bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:border-red-600 dark:hover:border-red-500 transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-lg bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 flex items-center justify-center border border-red-200 dark:border-red-800 shrink-0">
@@ -222,20 +222,20 @@ export default async function HomePage() {
                 Outage At 3AM (Party Mode)
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Phối hợp nhóm xử lý sự cố production khẩn cấp theo thời gian thực.
+                Phá»‘i há»£p nhÃ³m xá»­ lÃ½ sá»± cá»‘ production kháº©n cáº¥p theo thá»i gian thá»±c.
               </p>
             </div>
           </div>
           <div className="flex justify-end">
             <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-red-600 group-hover:bg-red-700 text-white text-sm font-semibold transition-colors">
-              Mở Party Mode
+              Má»Ÿ Party Mode
             </span>
           </div>
         </Link>
 
         <Link
           href="/shop"
-          className="group bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:border-blue-700 dark:hover:border-blue-500 transition-colors flex flex-col justify-between gap-4"
+          className="group bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 hover:border-blue-700 dark:hover:border-blue-500 transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center shrink-0">
@@ -243,16 +243,16 @@ export default async function HomePage() {
             </div>
             <div className="space-y-1">
               <h3 className="font-bold text-sm text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
-                Cửa hàng Hiệu ứng
+                Cá»­a hÃ ng Hiá»‡u á»©ng
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Đổi IT-Coin lấy khung avatar, nameplate và hiệu ứng bảng xếp hạng.
+                Äá»•i IT-Coin láº¥y khung avatar, nameplate vÃ  hiá»‡u á»©ng báº£ng xáº¿p háº¡ng.
               </p>
             </div>
           </div>
           <div className="flex justify-end">
             <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 group-hover:bg-blue-700 group-hover:text-white group-hover:border-blue-700 dark:group-hover:bg-blue-600 dark:group-hover:border-blue-600 text-sm font-semibold transition-colors">
-              Vào cửa hàng
+              VÃ o cá»­a hÃ ng
             </span>
           </div>
         </Link>

@@ -77,35 +77,35 @@ export default function PlacementPage() {
       <div className="space-y-2">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:border-blue-700 dark:hover:border-blue-500 text-xs font-semibold transition-colors"
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:border-blue-700 dark:hover:border-blue-500 text-xs font-semibold transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
-          <span>Trang chủ</span>
+          <span>Trang chá»§</span>
         </Link>
         <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 flex items-center gap-2 pt-1">
           <Compass className="w-6 h-6 text-blue-700 dark:text-blue-400 shrink-0" />
-          <span>Kiểm Tra Trình Độ Nhanh (2 Phút)</span>
+          <span>Kiá»ƒm Tra TrÃ¬nh Äá»™ Nhanh (2 PhÃºt)</span>
         </h1>
         <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-          Trả lời 2 câu tình huống và nói ngắn 15 giây để SpeakIT gợi ý cấp độ Fresher, Junior hoặc Senior phù hợp nhất.
+          Tráº£ lá»i 2 cÃ¢u tÃ¬nh huá»‘ng vÃ  nÃ³i ngáº¯n 15 giÃ¢y Ä‘á»ƒ SpeakIT gá»£i Ã½ cáº¥p Ä‘á»™ Fresher, Junior hoáº·c Senior phÃ¹ há»£p nháº¥t.
         </p>
       </div>
 
       {result && recommendedScenario ? (
-        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-6 space-y-5">
+        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-6 space-y-5">
           <div className="flex items-center gap-2 text-green-700 dark:text-green-400 font-mono text-xs font-bold uppercase">
             <CheckCircle2 className="w-4 h-4 text-green-700 dark:text-green-400" />
-            <span>Hoàn tất đánh giá đầu vào</span>
+            <span>HoÃ n táº¥t Ä‘Ã¡nh giÃ¡ Ä‘áº§u vÃ o</span>
           </div>
 
-          <div className="border-l-2 border-blue-700 dark:border-blue-500 pl-4 py-1 space-y-2">
+          <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 space-y-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <span className="text-xs font-mono text-blue-700 dark:text-blue-400 font-semibold">
-                Cấp độ đề xuất của bạn:
+                Cáº¥p Ä‘á»™ Ä‘á» xuáº¥t cá»§a báº¡n:
               </span>
               <div className="flex items-center gap-2">
                 <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs font-mono font-bold">
-                  {result.score}/100 điểm
+                  {result.score}/100 Ä‘iá»ƒm
                 </span>
                 <span className="px-3 py-0.5 rounded-full bg-blue-700 dark:bg-blue-600 text-white text-xs font-mono font-bold">
                   {result.level}
@@ -119,7 +119,7 @@ export default function PlacementPage() {
 
           <div className="border-t border-slate-200 dark:border-slate-800 pt-4 space-y-1.5">
             <span className="text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
-              Tình huống khởi đầu phù hợp:
+              TÃ¬nh huá»‘ng khá»Ÿi Ä‘áº§u phÃ¹ há»£p:
             </span>
             <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
               {recommendedScenario.titleEN}{" "}
@@ -137,22 +137,22 @@ export default function PlacementPage() {
               href={`/practice/${recommendedScenario.id}`}
               className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold text-sm active:scale-[0.98] transition-colors"
             >
-              <span>Bắt đầu bài {result.level} ngay</span>
+              <span>Báº¯t Ä‘áº§u bÃ i {result.level} ngay</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="/"
               className="inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700 text-sm font-semibold transition-colors"
             >
-              <span>Về trang chủ</span>
+              <span>Vá» trang chá»§</span>
             </Link>
           </div>
         </div>
       ) : (
-        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-6">
+        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-6">
           <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
             <span className="text-xs font-mono font-bold text-blue-700 dark:text-blue-400 uppercase">
-              Bước {step + 1}/3
+              BÆ°á»›c {step + 1}/3
             </span>
             <div className="flex items-center gap-1.5">
               {[0, 1, 2].map((idx) => (
@@ -182,7 +182,7 @@ export default function PlacementPage() {
                       <InteractiveEnglishText text={q.questionEN} />
                     </h2>
                     <p className="text-sm text-blue-700 dark:text-blue-400 font-medium">
-                      Mẹo cho người mới: Chạm vào từ tiếng Anh có gạch chân để xem nghĩa tiếng Việt.
+                      Máº¹o cho ngÆ°á»i má»›i: Cháº¡m vÃ o tá»« tiáº¿ng Anh cÃ³ gáº¡ch chÃ¢n Ä‘á»ƒ xem nghÄ©a tiáº¿ng Viá»‡t.
                     </p>
                   </div>
 
@@ -213,7 +213,7 @@ export default function PlacementPage() {
                                 : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:border-blue-700"
                             }`}
                           >
-                            {isChosen ? `✓ ${opt.id.toUpperCase()}` : opt.id.toUpperCase()}
+                            {isChosen ? `âœ“ ${opt.id.toUpperCase()}` : opt.id.toUpperCase()}
                           </button>
                           <div className="flex-1 leading-relaxed">
                             <InteractiveEnglishText text={opt.label} />
@@ -230,7 +230,7 @@ export default function PlacementPage() {
                       onClick={() => setStep((s) => Math.max(0, s - 1))}
                       className="px-4 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700 text-sm font-medium disabled:opacity-40 disabled:pointer-events-none transition-colors"
                     >
-                      Quay lại
+                      Quay láº¡i
                     </button>
                     <button
                       type="button"
@@ -238,7 +238,7 @@ export default function PlacementPage() {
                       onClick={() => setStep((s) => s + 1)}
                       className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold text-sm disabled:opacity-40 disabled:pointer-events-none transition-colors"
                     >
-                      <span>Tiếp tục</span>
+                      <span>Tiáº¿p tá»¥c</span>
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
@@ -250,13 +250,13 @@ export default function PlacementPage() {
               <div className="space-y-1.5">
                 <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
                   <Mic className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
-                  <span>Phản xạ nói ngắn (15 giây)</span>
+                  <span>Pháº£n xáº¡ nÃ³i ngáº¯n (15 giÃ¢y)</span>
                 </span>
                 <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-50">
                   &ldquo;<InteractiveEnglishText text="Briefly explain a technical task or bug you worked on recently." />&rdquo;
                 </h2>
                 <p className="text-sm text-slate-600 dark:text-slate-300">
-                  Nói 1-2 câu bằng tiếng Anh (hoặc gõ nhanh nếu không dùng micro).
+                  NÃ³i 1-2 cÃ¢u báº±ng tiáº¿ng Anh (hoáº·c gÃµ nhanh náº¿u khÃ´ng dÃ¹ng micro).
                 </p>
               </div>
 
@@ -271,14 +271,14 @@ export default function PlacementPage() {
               <div className="space-y-2 pt-3 border-t border-slate-200 dark:border-slate-800">
                 <label className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-900 dark:text-slate-100">
                   <Keyboard className="w-4 h-4 text-blue-700 dark:text-blue-400" />
-                  <span>Nội dung câu trả lời tiếng Anh:</span>
+                  <span>Ná»™i dung cÃ¢u tráº£ lá»i tiáº¿ng Anh:</span>
                 </label>
                 <textarea
                   value={speakingTranscript}
                   onChange={(e) => setSpeakingTranscript(e.target.value)}
                   disabled={isRecording}
                   rows={2}
-                  placeholder="Ví dụ: Yesterday I fixed an API timeout bug in our staging database..."
+                  placeholder="VÃ­ dá»¥: Yesterday I fixed an API timeout bug in our staging database..."
                   className="w-full p-3 text-sm rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-50 placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:border-blue-700 dark:focus:border-blue-500 resize-none transition-colors"
                 />
               </div>
@@ -289,14 +289,14 @@ export default function PlacementPage() {
                   onClick={() => setStep(1)}
                   className="px-4 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700 text-sm font-medium transition-colors"
                 >
-                  Quay lại
+                  Quay láº¡i
                 </button>
                 <button
                   type="button"
                   onClick={handleFinishPlacement}
                   className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold text-sm active:scale-[0.98] transition-colors"
                 >
-                  <span>Xem kết quả xếp lớp</span>
+                  <span>Xem káº¿t quáº£ xáº¿p lá»›p</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
