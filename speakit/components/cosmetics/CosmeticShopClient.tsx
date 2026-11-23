@@ -407,7 +407,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
   const [themePreviewEnabled, setThemePreviewEnabled] = useState(true);
   const [micTestActive, setMicTestActive] = useState(false);
   const [finisherActive, setFinisherActive] = useState(false);
-  const [showAllCatalog, setShowAllCatalog] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(8);
   const [busyItemId, setBusyItemId] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<{
     ok: boolean;
@@ -977,7 +977,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     onClick={() =>
                       startTransition(() => {
                         setActiveCategory(cat);
-                        setShowAllCatalog(false);
+                        setVisibleCount(8);
                       })
                     }
                     className={`text-left rounded-xl border p-2.5 transition-all ${
@@ -1038,7 +1038,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                 onClick={() =>
                   startTransition(() => {
                     setActiveCategory(cat);
-                    setShowAllCatalog(false);
+                    setVisibleCount(8);
                   })
                 }
                 className={`liquid-glass-pill inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold transition-all ${
@@ -1058,7 +1058,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {(showAllCatalog ? categoryItems : categoryItems.slice(0, 8)).map((item) => {
+          {categoryItems.slice(0, visibleCount).map((item) => {
             const isOwned = identity.ownedItems.includes(item.id);
             const isEquipped = equipped[item.category] === item.id;
             const isPreviewing = activeSandbox[item.category] === item.id;
@@ -1077,7 +1077,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
               <div
                 key={item.id}
                 onClick={(e) => handleSelectPreview(item, getEventCoords(e))}
-                className={`cursor-pointer liquid-glass-card-lite p-4 flex flex-col justify-between gap-3.5 transition-all ${
+                className={`cursor-pointer [content-visibility:auto] liquid-glass-card-lite p-4 flex flex-col justify-between gap-3.5 transition-all ${
                   isPreviewing
                     ? "!border-sky-400/75 shadow-[0_8px_24px_rgba(14,165,233,0.18)] -translate-y-0.5"
                     : "hover:-translate-y-0.5 hover:border-sky-300/75"
@@ -1187,14 +1187,14 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
           })}
         </div>
 
-        {!showAllCatalog && categoryItems.length > 8 && (
+        {visibleCount < categoryItems.length && (
           <div className="flex justify-center pt-2">
             <button
               type="button"
-              onClick={() => setShowAllCatalog(true)}
+              onClick={() => startTransition(() => setVisibleCount((prev) => prev + 8))}
               className="px-5 py-2.5 rounded-full liquid-glass-btn text-xs font-bold transition-all"
             >
-              Xem thêm {categoryItems.length - 8} mẫu khác ({categoryItems.length} tổng cộng)
+              Xem thêm {Math.min(8, categoryItems.length - visibleCount)}/{categoryItems.length - visibleCount} mẫu khác
             </button>
           </div>
         )}
