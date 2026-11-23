@@ -100,9 +100,9 @@ function LiveAssetLayer({
   if (isLottieAsset(url)) {
     return (
       <div
-        className={`${className} flex items-center justify-center border-2 border-dashed border-sky-400/75 rounded-full`}
+        className={`${className} flex items-center justify-center border-2 border-dashed border-blue-600 rounded-full`}
       >
-        <span className="px-2 py-0.5 rounded-full bg-white/90 border border-sky-300/80 text-sky-800 text-[10px] font-mono">
+        <span className="px-2 py-0.5 rounded-full bg-white dark:bg-slate-900 border border-blue-300 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-[11px] font-mono">
           Lottie JSON
         </span>
       </div>
@@ -490,26 +490,26 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
     <div className="space-y-4">
       <div className="liquid-glass-card p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <Sparkles className="w-5 h-5 text-sky-600 shrink-0" aria-hidden="true" />
+          <Sparkles className="w-5 h-5 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
           <div>
-            <h2 className="text-base font-bold tracking-tight text-slate-900">
+            <h2 className="text-base font-bold tracking-tight text-slate-900 dark:text-slate-100">
               Kho Hiệu Ứng & Discord FX Studio ({catalogItems.length})
             </h2>
-            <p className="text-xs text-slate-700">
+            <p className="text-sm text-slate-700 dark:text-slate-300">
               Quản lý danh mục hiệu ứng /shop, xem thử trực tiếp và import JSON từ Discord / Wick Studio.
             </p>
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <div className="inline-flex rounded-full bg-slate-100/80 p-1 border border-slate-200/85">
+          <div className="inline-flex rounded-full bg-slate-100 dark:bg-slate-800 p-1 border border-slate-200 dark:border-slate-700">
             <button
               type="button"
               onClick={() => setActiveSubTab("catalog")}
               className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
                 activeSubTab === "catalog"
-                  ? "bg-sky-500/15 border border-sky-400/60 text-sky-900"
-                  : "text-slate-700 hover:text-slate-900"
+                  ? "bg-blue-50 dark:bg-blue-950/50 border border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300"
+                  : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
               }`}
             >
               Kho hiệu ứng hiện có ({catalogItems.length})
@@ -519,8 +519,8 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
               onClick={() => setActiveSubTab("import")}
               className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
                 activeSubTab === "import"
-                  ? "bg-sky-500/15 border border-sky-400/60 text-sky-900"
-                  : "text-slate-700 hover:text-slate-900"
+                  ? "bg-blue-50 dark:bg-blue-950/50 border border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300"
+                  : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
               }`}
             >
               <Plus className="w-3.5 h-3.5" aria-hidden="true" />
@@ -531,7 +531,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
           <button
             type="button"
             onClick={() => void loadCustomCosmetics()}
-            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-medium"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-medium"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} aria-hidden="true" />
             <span>Tải lại</span>
@@ -539,7 +539,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
           <Link
             href="/shop"
             target="_blank"
-            className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold"
+            className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold"
           >
             <span>Mở /shop</span>
             <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
@@ -548,14 +548,14 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
       </div>
 
       {statusMessage && (
-        <div className="flex items-center gap-2 p-3 rounded-xl bg-emerald-50/90 border border-emerald-300/80 text-xs font-medium text-emerald-800">
-          <Check className="w-4 h-4 text-emerald-600 shrink-0" aria-hidden="true" />
+        <div className="flex items-center gap-2 p-3 rounded-xl bg-green-50 dark:bg-green-950/40 border border-green-300 dark:border-green-800 text-sm font-medium text-green-700 dark:text-green-300">
+          <Check className="w-4 h-4 text-green-700 dark:text-green-400 shrink-0" aria-hidden="true" />
           <span>{statusMessage}</span>
         </div>
       )}
 
       {errorMessage && (
-        <div className="p-3 rounded-xl bg-rose-50/90 border border-rose-300/80 text-xs font-medium text-rose-800">
+        <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-300 dark:border-red-800 text-sm font-medium text-red-700 dark:text-red-300">
           {errorMessage}
         </div>
       )}
@@ -567,15 +567,15 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
               <div className="flex items-center justify-between gap-2">
                 <label
                   htmlFor="discord-json-input"
-                  className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-wide text-slate-900"
+                  className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-wide text-slate-900 dark:text-slate-100"
                 >
-                  <FileJson className="w-4 h-4 text-sky-600" aria-hidden="true" />
+                  <FileJson className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
                   <span>Discord / Wick Studio JSON Snippet</span>
                 </label>
                 <button
                   type="button"
                   onClick={() => handleJsonChange(SAMPLE_DISCORD_JSON)}
-                  className="text-[11px] font-mono font-semibold text-sky-700 hover:underline"
+                  className="text-xs font-mono font-semibold text-blue-700 dark:text-blue-400 hover:underline"
                 >
                   Chèn JSON mẫu
                 </button>
@@ -587,12 +587,12 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                 value={rawJson}
                 onChange={(e) => handleJsonChange(e.target.value)}
                 placeholder='{ "title": "Cyber Sakura Frame", "assets": { "frame": "/discord-fx/avatar-cyberpunk-overclock-ring.png" } }'
-                className="liquid-glass-input w-full rounded-xl p-3 text-xs font-mono"
+                className="liquid-glass-input w-full rounded-lg p-3 text-xs font-mono"
               />
 
               {parsedPack.length > 0 && (
                 <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-                  <span className="text-xs font-mono text-slate-700">
+                  <span className="text-xs font-mono text-slate-700 dark:text-slate-300">
                     Nhận diện được <strong>{parsedPack.length}</strong> hiệu ứng từ JSON.
                   </span>
                   {parsedPack.length > 1 && (
@@ -600,7 +600,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                       type="button"
                       disabled={isSaving}
                       onClick={() => void handlePublishPack()}
-                      className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold disabled:opacity-50"
+                      className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50"
                     >
                       {isSaving ? (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -619,11 +619,11 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
               className="liquid-glass-card p-4 space-y-3.5"
             >
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-slate-900">Cấu hình chi tiết & Xuất bản</h3>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">Cấu hình chi tiết & Xuất bản</h3>
                 <button
                   type="button"
                   onClick={() => setActiveSubTab("catalog")}
-                  className="text-xs font-mono text-slate-700 hover:text-slate-900"
+                  className="text-xs font-mono text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                 >
                   Quay lại danh sách
                 </button>
@@ -631,7 +631,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-mono font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Tên hiệu ứng
                   </label>
                   <input
@@ -639,12 +639,12 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="liquid-glass-input w-full rounded-xl px-3 py-1.5 text-xs"
+                    className="liquid-glass-input w-full rounded-lg px-3 py-1.5 text-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-mono font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Danh mục (/shop)
                   </label>
                   <select
@@ -654,7 +654,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                       setCategory(nextCat);
                       setPreviewMode(nextCat === "profile_theme" ? "profile" : "avatar");
                     }}
-                    className="liquid-glass-input w-full rounded-xl px-3 py-1.5 text-xs [&>option]:bg-white [&>option]:text-slate-900"
+                    className="liquid-glass-input w-full rounded-lg px-3 py-1.5 text-sm [&>option]:bg-white dark:[&>option]:bg-slate-900 [&>option]:text-slate-900 dark:[&>option]:text-slate-100"
                   >
                     {COSMETIC_CATEGORIES.map((cat) => (
                       <option key={cat} value={cat}>
@@ -665,30 +665,30 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-mono font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Giá IT-Coin
                   </label>
                   <div className="relative">
-                    <Coins className="w-3.5 h-3.5 text-amber-500 absolute left-3 top-2" />
+                    <Coins className="w-3.5 h-3.5 text-amber-500 absolute left-3 top-2.5" />
                     <input
                       type="number"
                       min={0}
                       step={5}
                       value={price}
                       onChange={(e) => setPrice(Number(e.target.value))}
-                      className="liquid-glass-input w-full rounded-xl pl-8 pr-3 py-1.5 text-xs font-mono"
+                      className="liquid-glass-input w-full rounded-lg pl-8 pr-3 py-1.5 text-sm font-mono"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-mono font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Độ hiếm (Rarity)
                   </label>
                   <select
                     value={rarity}
                     onChange={(e) => setRarity(e.target.value as CosmeticRarity)}
-                    className="liquid-glass-input w-full rounded-xl px-3 py-1.5 text-xs [&>option]:bg-white [&>option]:text-slate-900"
+                    className="liquid-glass-input w-full rounded-lg px-3 py-1.5 text-sm [&>option]:bg-white dark:[&>option]:bg-slate-900 [&>option]:text-slate-900 dark:[&>option]:text-slate-100"
                   >
                     {RARITY_OPTIONS.map((r) => (
                       <option key={r} value={r}>
@@ -701,7 +701,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-mono font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Asset URL (`.png` / `.webp` / `.webm` / `.json`)
                   </label>
                   <input
@@ -710,12 +710,12 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                     value={assetUrl}
                     onChange={(e) => setAssetUrl(e.target.value)}
                     placeholder="/discord-fx/..."
-                    className="liquid-glass-input w-full rounded-xl px-3 py-1.5 text-xs font-mono"
+                    className="liquid-glass-input w-full rounded-lg px-3 py-1.5 text-xs font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-mono font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Intro Burst URL (tùy chọn)
                   </label>
                   <input
@@ -723,14 +723,14 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                     value={introAssetUrl}
                     onChange={(e) => setIntroAssetUrl(e.target.value)}
                     placeholder="/discord-fx/intro.png"
-                    className="liquid-glass-input w-full rounded-xl px-3 py-1.5 text-xs font-mono"
+                    className="liquid-glass-input w-full rounded-lg px-3 py-1.5 text-xs font-mono"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-[11px] font-mono font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Scale ({scale})
                   </label>
                   <input
@@ -740,18 +740,18 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                     max={2}
                     value={scale}
                     onChange={(e) => setScale(Number(e.target.value))}
-                    className="liquid-glass-input w-full rounded-xl px-3 py-1.5 text-xs font-mono"
+                    className="liquid-glass-input w-full rounded-lg px-3 py-1.5 text-xs font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-mono font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Blend Mode
                   </label>
                   <select
                     value={blendMode}
                     onChange={(e) => setBlendMode(e.target.value as CosmeticBlendMode)}
-                    className="liquid-glass-input w-full rounded-xl px-3 py-1.5 text-xs font-mono [&>option]:bg-white [&>option]:text-slate-900"
+                    className="liquid-glass-input w-full rounded-lg px-3 py-1.5 text-xs font-mono [&>option]:bg-white dark:[&>option]:bg-slate-900 [&>option]:text-slate-900 dark:[&>option]:text-slate-100"
                   >
                     <option value="normal">normal</option>
                     <option value="screen">screen</option>
@@ -759,34 +759,34 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-mono font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Glow Accent
                   </label>
                   <input
                     type="text"
                     value={accentColor}
                     onChange={(e) => setAccentColor(e.target.value)}
-                    className="liquid-glass-input w-full rounded-xl px-3 py-1.5 text-xs font-mono"
+                    className="liquid-glass-input w-full rounded-lg px-3 py-1.5 text-xs font-mono"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-mono font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Mô tả ngắn
                 </label>
                 <input
                   type="text"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="liquid-glass-input w-full rounded-xl px-3 py-1.5 text-xs"
+                  className="liquid-glass-input w-full rounded-lg px-3 py-1.5 text-sm"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isSaving}
-                className="liquid-btn-primary w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-xs font-semibold disabled:opacity-50"
+                className="liquid-btn-primary w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold disabled:opacity-50"
               >
                 {isSaving ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -801,18 +801,18 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
           <div className="lg:col-span-5">
             <div className="liquid-glass-card p-4 space-y-3 sticky top-6">
               <div className="flex items-center justify-between">
-                <div className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-wide text-slate-900">
-                  <Eye className="w-4 h-4 text-sky-600" aria-hidden="true" />
+                <div className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-wide text-slate-900 dark:text-slate-100">
+                  <Eye className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
                   <span>Live Try-On Preview</span>
                 </div>
-                <div className="inline-flex rounded-full border border-slate-200/85 bg-slate-100/80 p-0.5">
+                <div className="inline-flex rounded-full border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 p-0.5">
                   <button
                     type="button"
                     onClick={() => setPreviewMode("avatar")}
-                    className={`px-2.5 py-1 rounded-full text-[11px] font-mono font-medium transition-colors ${
+                    className={`px-2.5 py-1 rounded-full text-xs font-mono font-medium transition-colors ${
                       previewMode === "avatar"
-                        ? "bg-sky-500/15 border border-sky-400/60 text-sky-900"
-                        : "text-slate-700 hover:text-slate-900"
+                        ? "bg-blue-50 dark:bg-blue-950/50 border border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300"
+                        : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                     }`}
                   >
                     Avatar
@@ -820,10 +820,10 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                   <button
                     type="button"
                     onClick={() => setPreviewMode("profile")}
-                    className={`px-2.5 py-1 rounded-full text-[11px] font-mono font-medium transition-colors ${
+                    className={`px-2.5 py-1 rounded-full text-xs font-mono font-medium transition-colors ${
                       previewMode === "profile"
-                        ? "bg-sky-500/15 border border-sky-400/60 text-sky-900"
-                        : "text-slate-700 hover:text-slate-900"
+                        ? "bg-blue-50 dark:bg-blue-950/50 border border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300"
+                        : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                     }`}
                   >
                     Profile Card
@@ -831,9 +831,9 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                 </div>
               </div>
 
-              <div className="relative overflow-hidden rounded-2xl border border-slate-200/85 bg-gradient-to-br from-sky-50/90 via-white/85 to-indigo-50/90 p-6 min-h-[250px] flex flex-col items-center justify-center text-slate-900">
+              <div className="relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 p-6 min-h-[250px] flex flex-col items-center justify-center text-slate-900 dark:text-slate-100">
                 <div
-                  className="absolute inset-0 opacity-25 pointer-events-none"
+                  className="absolute inset-0 opacity-20 pointer-events-none"
                   style={{
                     background: `radial-gradient(circle at 50% 35%, ${accentColor}, transparent 68%)`,
                   }}
@@ -853,23 +853,20 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                       blendMode={blendMode}
                       className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none z-10"
                     />
-                    <div className="relative z-20 w-full max-w-xs rounded-2xl bg-white/85 backdrop-blur-md border border-slate-200/85 p-4 text-center space-y-2 shadow-sm">
-                      <div className="w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-sky-500 to-blue-600 text-white flex items-center justify-center font-bold text-lg">
+                    <div className="relative z-20 w-full max-w-xs rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 text-center space-y-2 shadow-sm">
+                      <div className="w-14 h-14 mx-auto rounded-full bg-blue-700 text-white flex items-center justify-center font-bold text-lg">
                         IT
                       </div>
-                      <div className="text-sm font-bold text-slate-900">{name || "Sample Developer"}</div>
-                      <div className="text-[11px] font-mono text-slate-600">
-                        {CATEGORY_LABELS[category]} • {price} IT-Coin
+                      <div className="text-sm font-bold text-slate-900 dark:text-slate-100">{name || "Sample Developer"}</div>
+                      <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
+                        {CATEGORY_LABELS[category]} : {price} IT-Coin
                       </div>
                     </div>
                   </>
                 ) : (
                   <div className="relative z-20 flex flex-col items-center gap-4">
                     <div className="relative w-28 h-28 flex items-center justify-center">
-                      <div
-                        className="w-full h-full rounded-full bg-gradient-to-br from-sky-500 to-indigo-600 border border-white/80 flex items-center justify-center text-2xl font-bold text-white shadow-lg"
-                        style={{ boxShadow: `0 0 28px ${accentColor}55` }}
-                      >
+                      <div className="w-full h-full rounded-full bg-blue-700 border border-white dark:border-slate-800 flex items-center justify-center text-2xl font-bold text-white shadow-md">
                         IT
                       </div>
                       <div
@@ -889,9 +886,9 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                       </div>
                     </div>
                     <div className="text-center">
-                      <div className="text-sm font-bold text-slate-900">{name || "Sample Effect"}</div>
-                      <div className="text-[11px] font-mono text-slate-600 mt-0.5">
-                        {rarity} • {price} IT-Coin • scale {scale}
+                      <div className="text-sm font-bold text-slate-900 dark:text-slate-100">{name || "Sample Effect"}</div>
+                      <div className="text-xs font-mono text-slate-600 dark:text-slate-400 mt-0.5">
+                        {rarity} : {price} IT-Coin : scale {scale}
                       </div>
                     </div>
                   </div>
@@ -906,7 +903,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-2.5">
               <div className="relative flex-1 max-w-md">
                 <Search
-                  className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"
+                  className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"
                   aria-hidden="true"
                 />
                 <input
@@ -917,7 +914,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                     setCurrentPage(1);
                   }}
                   placeholder="Tìm hiệu ứng theo tên, ID, mô tả hoặc độ hiếm..."
-                  className="liquid-glass-input w-full pl-9 pr-3 py-1.5 text-xs rounded-full"
+                  className="liquid-glass-input w-full pl-9 pr-3 py-1.5 text-sm rounded-lg"
                 />
               </div>
 
@@ -930,8 +927,8 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                   }}
                   className={`px-2.5 py-1 rounded-full text-xs font-semibold border transition-colors ${
                     sourceFilter === "all"
-                      ? "bg-sky-500/15 border-sky-400/60 text-sky-800"
-                      : "liquid-glass-btn text-slate-700"
+                      ? "bg-blue-50 dark:bg-blue-950/50 border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300"
+                      : "liquid-glass-btn text-slate-700 dark:text-slate-300"
                   }`}
                 >
                   Tất cả ({catalogItems.length})
@@ -944,8 +941,8 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                   }}
                   className={`px-2.5 py-1 rounded-full text-xs font-semibold border transition-colors ${
                     sourceFilter === "custom"
-                      ? "bg-sky-500/15 border-sky-400/60 text-sky-800"
-                      : "liquid-glass-btn text-slate-700"
+                      ? "bg-blue-50 dark:bg-blue-950/50 border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300"
+                      : "liquid-glass-btn text-slate-700 dark:text-slate-300"
                   }`}
                 >
                   Tùy chỉnh ({items.length})
@@ -958,8 +955,8 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                   }}
                   className={`px-2.5 py-1 rounded-full text-xs font-semibold border transition-colors ${
                     sourceFilter === "builtin"
-                      ? "bg-sky-500/15 border-sky-400/60 text-sky-800"
-                      : "liquid-glass-btn text-slate-700"
+                      ? "bg-blue-50 dark:bg-blue-950/50 border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300"
+                      : "liquid-glass-btn text-slate-700 dark:text-slate-300"
                   }`}
                 >
                   Mặc định ({COSMETIC_CATALOG.length})
@@ -974,10 +971,10 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                   setCategoryFilter("all");
                   setCurrentPage(1);
                 }}
-                className={`px-3 py-1 rounded-full text-[11px] font-mono font-semibold border transition-colors ${
+                className={`px-3 py-1 rounded-full text-xs font-mono font-semibold border transition-colors ${
                   categoryFilter === "all"
-                    ? "bg-sky-500/15 border-sky-400/60 text-sky-800"
-                    : "liquid-glass-btn text-slate-700"
+                    ? "bg-blue-50 dark:bg-blue-950/50 border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300"
+                    : "liquid-glass-btn text-slate-700 dark:text-slate-300"
                 }`}
               >
                 Tất cả danh mục
@@ -990,10 +987,10 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                     setCategoryFilter(cat);
                     setCurrentPage(1);
                   }}
-                  className={`px-3 py-1 rounded-full text-[11px] font-mono font-semibold border transition-colors ${
+                  className={`px-3 py-1 rounded-full text-xs font-mono font-semibold border transition-colors ${
                     categoryFilter === cat
-                      ? "bg-sky-500/15 border-sky-400/60 text-sky-800"
-                      : "liquid-glass-btn text-slate-700"
+                      ? "bg-blue-50 dark:bg-blue-950/50 border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300"
+                      : "liquid-glass-btn text-slate-700 dark:text-slate-300"
                   }`}
                 >
                   {CATEGORY_LABELS[cat]}
@@ -1016,7 +1013,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
           />
 
           {paginatedCatalog.length === 0 ? (
-            <div className="liquid-glass-card p-8 text-center text-xs text-slate-700">
+            <div className="liquid-glass-card p-8 text-center text-sm text-slate-700 dark:text-slate-300">
               Không tìm thấy hiệu ứng nào khớp bộ lọc.
             </div>
           ) : (
@@ -1024,13 +1021,13 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
               {paginatedCatalog.map((item) => {
                 const isCustom = customIds.has(item.id);
                 const isSelected = isCustom && selectedIds.has(item.id);
-                const accent = item.fallbackGlowColor ?? item.previewAccent ?? "#38BDF8";
+                const accent = item.fallbackGlowColor ?? item.previewAccent ?? "#1D4ED8";
 
                 return (
                   <div
                     key={item.id}
                     className={`liquid-glass-card-lite p-3.5 flex flex-col justify-between gap-2.5 transition-colors ${
-                      isSelected ? "!border-sky-400/75 ring-1 ring-sky-400/35" : ""
+                      isSelected ? "!border-blue-700 dark:!border-blue-500 ring-1 ring-blue-700/35" : ""
                     }`}
                   >
                     <div className="space-y-1.5 min-w-0">
@@ -1042,51 +1039,51 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                               checked={isSelected}
                               onChange={() => toggleSelectId(item.id)}
                               aria-label={`Chọn hiệu ứng ${item.name}`}
-                              className="w-4 h-4 rounded accent-sky-600 cursor-pointer shrink-0"
+                              className="w-4 h-4 rounded accent-blue-700 cursor-pointer shrink-0"
                             />
                           )}
                           <span
-                            className="w-3 h-3 rounded-full shrink-0 border border-slate-300/80"
+                            className="w-3 h-3 rounded-full shrink-0 border border-slate-300 dark:border-slate-600"
                             style={{ backgroundColor: accent }}
                           />
-                          <span className="text-xs font-bold text-slate-900 truncate">
+                          <span className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate">
                             {item.name}
                           </span>
                         </div>
                         <span
-                          className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold shrink-0 border ${
+                          className={`px-2 py-0.5 rounded-full text-[11px] font-mono font-semibold shrink-0 border ${
                             isCustom
-                              ? "bg-sky-100/90 border-sky-300/80 text-sky-800"
-                              : "bg-slate-100/90 border-slate-200/85 text-slate-700"
+                              ? "bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300"
+                              : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300"
                           }`}
                         >
                           {isCustom ? "Tùy chỉnh" : "Mặc định"}
                         </span>
                       </div>
 
-                      <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-mono text-slate-700">
+                      <div className="flex flex-wrap items-center gap-1.5 text-xs font-mono text-slate-700 dark:text-slate-300">
                         <span>{CATEGORY_LABELS[item.category]}</span>
-                        <span>•</span>
-                        <span className="font-semibold text-amber-700">{item.price} Coin</span>
-                        <span>•</span>
+                        <span>:</span>
+                        <span className="font-semibold text-amber-700 dark:text-amber-400">{item.price} Coin</span>
+                        <span>:</span>
                         <span>{item.rarity}</span>
                       </div>
 
-                      <p className="text-[11px] text-slate-600 line-clamp-1">
+                      <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-1">
                         {item.description}
                       </p>
                     </div>
 
-                    <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-200/85">
+                    <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
                       <button
                         type="button"
                         onClick={() => {
                           handleApplyParsedDraft(item);
                           setActiveSubTab("import");
                         }}
-                        className="liquid-glass-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold"
+                        className="liquid-glass-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold"
                       >
-                        <Eye className="w-3 h-3 text-sky-600" />
+                        <Eye className="w-3 h-3 text-blue-700 dark:text-blue-400" />
                         <span>Thử / Tùy biến</span>
                       </button>
 
@@ -1095,7 +1092,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                           type="button"
                           disabled={deletingId === item.id || deletingId === "__bulk__"}
                           onClick={() => handleDelete(item)}
-                          className="liquid-btn-danger inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold disabled:opacity-50 shrink-0"
+                          className="liquid-btn-danger inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold disabled:opacity-50 shrink-0"
                         >
                           {deletingId === item.id ? (
                             <Loader2 className="w-3 h-3 animate-spin" />
@@ -1105,7 +1102,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                           <span>Xóa</span>
                         </button>
                       ) : (
-                        <span className="text-[10px] font-mono text-slate-600 truncate max-w-[110px]">
+                        <span className="text-xs font-mono text-slate-600 dark:text-slate-400 truncate max-w-[110px]">
                           {item.id}
                         </span>
                       )}
@@ -1117,8 +1114,8 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
           )}
 
           <div className="liquid-glass-card px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
-            <span className="text-slate-700 font-mono">
-              Hiển thị {paginatedCatalog.length} / {filteredCatalog.length} hiệu ứng · Trang{" "}
+            <span className="text-slate-700 dark:text-slate-300 font-mono">
+              Hiển thị {paginatedCatalog.length} / {filteredCatalog.length} hiệu ứng : Trang{" "}
               {safePage} / {totalPages}
             </span>
             <div className="flex items-center gap-1.5">
@@ -1126,7 +1123,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                 type="button"
                 disabled={safePage <= 1}
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1 rounded-full font-semibold disabled:opacity-40"
+                className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1 rounded-lg font-semibold disabled:opacity-40"
               >
                 <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Trước</span>
@@ -1135,7 +1132,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                 type="button"
                 disabled={safePage >= totalPages}
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1 rounded-full font-semibold disabled:opacity-40"
+                className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1 rounded-lg font-semibold disabled:opacity-40"
               >
                 <span>Sau</span>
                 <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />

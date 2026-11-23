@@ -56,94 +56,89 @@ const SIZE_MAP: Record<"xs" | "sm" | "md" | "lg" | "xl", number> = {
 const AVATAR_LOTTIE_MAP: Record<AvatarEffectId, AvatarLottieConfig> = {
   "avatar-cyberpunk-overclock-ring": {
     src: "/lottie/cyber-ring.json",
-    filter: "drop-shadow(0 0 10px rgba(229, 72, 77, 0.55)) drop-shadow(0 0 18px rgba(56, 189, 248, 0.35))",
-    micColor: "border-[#E5484D]",
+    micColor: "border-[#DC2626]",
   },
   "avatar-matrix-code-halo": {
     src: "/lottie/matrix-pulse.json",
-    filter: "drop-shadow(0 0 10px rgba(22, 163, 74, 0.6)) drop-shadow(0 0 18px rgba(74, 222, 128, 0.35))",
-    micColor: "border-[#16A34A]",
+    micColor: "border-[#15803D]",
   },
   "avatar-inferno-hotfix-horns": {
     src: "/lottie/inferno-aura.json",
-    filter: "drop-shadow(0 0 10px rgba(245, 158, 11, 0.6)) drop-shadow(0 0 18px rgba(229, 72, 77, 0.4))",
-    micColor: "border-[#F59E0B]",
+    micColor: "border-[#B45309]",
   },
   "avatar-quantum-holo-visor": {
     src: "/lottie/cyber-ring.json",
-    filter:
-      "hue-rotate(115deg) saturate(1.25) drop-shadow(0 0 10px rgba(56, 189, 248, 0.65)) drop-shadow(0 0 20px rgba(168, 85, 247, 0.5))",
-    micColor: "border-[#0284C7]",
+    filter: "hue-rotate(115deg) saturate(1.25)",
+    micColor: "border-[#1D4ED8]",
   },
   "avatar-rb-electric-border": {
     src: "/lottie/cyber-ring.json",
-    filter: "hue-rotate(150deg) saturate(1.6) drop-shadow(0 0 12px rgba(56, 189, 248, 0.85))",
-    micColor: "border-[#38BDF8]",
+    filter: "hue-rotate(150deg) saturate(1.4)",
+    micColor: "border-[#2563EB]",
   },
   "avatar-rb-star-border": {
     src: "/lottie/inferno-aura.json",
-    filter: "hue-rotate(25deg) saturate(1.5) drop-shadow(0 0 12px rgba(251, 191, 36, 0.8))",
-    micColor: "border-[#FBBF24]",
+    filter: "hue-rotate(25deg) saturate(1.4)",
+    micColor: "border-[#B45309]",
   },
   "avatar-rb-magic-rings": {
     src: "/lottie/cyber-ring.json",
-    filter: "hue-rotate(260deg) saturate(1.7) drop-shadow(0 0 14px rgba(236, 72, 153, 0.8))",
-    micColor: "border-[#EC4899]",
+    filter: "hue-rotate(260deg) saturate(1.4)",
+    micColor: "border-[#DC2626]",
   },
   "avatar-rb-plasma-strands": {
     src: "/lottie/matrix-pulse.json",
-    filter: "hue-rotate(165deg) saturate(1.8) drop-shadow(0 0 14px rgba(168, 85, 247, 0.85))",
-    micColor: "border-[#A855F7]",
+    filter: "hue-rotate(165deg) saturate(1.4)",
+    micColor: "border-[#1D4ED8]",
   },
   "avatar-rb-crystal-ball": {
     src: "/lottie/cyber-ring.json",
-    filter: "hue-rotate(135deg) saturate(1.5) drop-shadow(0 0 12px rgba(6, 182, 212, 0.8))",
-    micColor: "border-[#06B6D4]",
+    filter: "hue-rotate(135deg) saturate(1.4)",
+    micColor: "border-[#2563EB]",
   },
   "avatar-magic-orbiting-circles": {
     src: "/lottie/matrix-pulse.json",
-    filter: "drop-shadow(0 0 12px rgba(16, 185, 129, 0.75))",
-    micColor: "border-[#10B981]",
+    micColor: "border-[#15803D]",
   },
   "avatar-magic-shine-border": {
     src: "/lottie/inferno-aura.json",
-    filter: "saturate(1.4) drop-shadow(0 0 12px rgba(245, 158, 11, 0.75))",
-    micColor: "border-[#F59E0B]",
+    filter: "saturate(1.3)",
+    micColor: "border-[#B45309]",
   },
   "avatar-magic-neon-gradient": {
     src: "/lottie/cyber-ring.json",
-    filter: "hue-rotate(310deg) saturate(1.8) drop-shadow(0 0 14px rgba(244, 63, 94, 0.85))",
-    micColor: "border-[#F43F5E]",
+    filter: "hue-rotate(310deg) saturate(1.4)",
+    micColor: "border-[#DC2626]",
   },
   "avatar-rb-orb-halo": {
     src: "/lottie/cyber-ring.json",
-    filter: "hue-rotate(190deg) saturate(1.7) drop-shadow(0 0 14px rgba(139, 92, 246, 0.85))",
-    micColor: "border-[#8B5CF6]",
+    filter: "hue-rotate(190deg) saturate(1.4)",
+    micColor: "border-[#1D4ED8]",
   },
   "avatar-rb-metaballs-ring": {
     src: "/lottie/matrix-pulse.json",
-    filter: "hue-rotate(45deg) saturate(1.5) drop-shadow(0 0 12px rgba(20, 184, 166, 0.8))",
-    micColor: "border-[#14B8A6]",
+    filter: "hue-rotate(45deg) saturate(1.4)",
+    micColor: "border-[#15803D]",
   },
   "avatar-magic-avatar-circles": {
     src: "/lottie/cyber-ring.json",
-    filter: "hue-rotate(135deg) saturate(1.4) drop-shadow(0 0 10px rgba(59, 130, 246, 0.75))",
-    micColor: "border-[#3B82F6]",
+    filter: "hue-rotate(135deg) saturate(1.3)",
+    micColor: "border-[#2563EB]",
   },
   "avatar-aceternity-moving-border": {
     src: "/lottie/cyber-ring.json",
-    filter: "hue-rotate(145deg) saturate(1.6) drop-shadow(0 0 12px rgba(14, 165, 233, 0.85))",
-    micColor: "border-[#0EA5E9]",
+    filter: "hue-rotate(145deg) saturate(1.4)",
+    micColor: "border-[#1D4ED8]",
   },
   "avatar-tsparticles-sea-anemone": {
     src: "/lottie/inferno-aura.json",
-    filter: "hue-rotate(285deg) saturate(1.8) drop-shadow(0 0 14px rgba(236, 72, 153, 0.85))",
-    micColor: "border-[#EC4899]",
+    filter: "hue-rotate(285deg) saturate(1.4)",
+    micColor: "border-[#DC2626]",
   },
   "avatar-tsparticles-black-hole": {
     src: "/lottie/cyber-ring.json",
-    filter: "hue-rotate(210deg) saturate(1.8) drop-shadow(0 0 16px rgba(99, 102, 241, 0.9))",
-    micColor: "border-[#6366F1]",
+    filter: "hue-rotate(210deg) saturate(1.4)",
+    micColor: "border-[#1D4ED8]",
   },
 };
 
@@ -298,7 +293,7 @@ export function DiscordAvatarFrame({
   const hasEffect = Boolean(resolvedItem || lottieConfig);
   const glowColor =
     resolvedItem?.fallbackGlowColor ?? resolvedItem?.previewAccent ?? undefined;
-  const micColor = lottieConfig?.micColor ?? "border-cyan-400";
+  const micColor = lottieConfig?.micColor ?? "border-blue-600";
   const scale = resolvedItem?.scale ?? 1.22;
   const isDefaultScale = Math.abs(scale - 1.22) < 0.001;
 
@@ -311,9 +306,7 @@ export function DiscordAvatarFrame({
         top: `${-((scale - 1) * 50)}%`,
       };
 
-  const glowFilter =
-    lottieConfig?.filter ??
-    (glowColor ? `drop-shadow(0 0 10px ${glowColor}99)` : undefined);
+  const glowFilter = lottieConfig?.filter;
 
   const isLightSafeEffect = Boolean(
     effectId &&
@@ -392,26 +385,19 @@ export function DiscordAvatarFrame({
               className="w-full h-full rounded-full border-2 opacity-85"
               style={{
                 borderColor: glowColor,
-                boxShadow: `0 0 12px ${glowColor}88`,
               }}
             />
           ) : null}
           {effectId === "avatar-rb-electric-border" &&
             (effectiveLite ? (
-              <span
-                className="absolute inset-0.5 rounded-full border-2 border-dashed border-sky-400"
-                style={{ boxShadow: "0 0 12px rgba(56,189,248,0.85)" }}
-              />
+              <span className="absolute inset-0.5 rounded-full border-2 border-dashed border-blue-600" />
             ) : (
               <>
-                <span
-                  className="absolute inset-0.5 rounded-full border-2 border-dashed border-sky-400/85 cosmetic-svg-spin-slow"
-                  style={{ boxShadow: "0 0 12px rgba(56,189,248,0.8)" }}
-                />
+                <span className="absolute inset-0.5 rounded-full border-2 border-dashed border-blue-600/85 cosmetic-svg-spin-slow" />
                 <div className="absolute inset-0 rounded-full pointer-events-none">
                   <DynamicElectricBorder
-                    color="#38BDF8"
-                    glowColor="#67E8F9"
+                    color="#1D4ED8"
+                    glowColor="#2563EB"
                     borderRadius={999}
                     strands={3}
                     thickness={2}
@@ -424,62 +410,53 @@ export function DiscordAvatarFrame({
             ))}
           {effectId === "avatar-rb-star-border" &&
             (effectiveLite ? (
-              <span className="absolute inset-0 rounded-full border-2 border-amber-400">
-                <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_10px_#FBBF24]" />
+              <span className="absolute inset-0 rounded-full border-2 border-amber-500">
+                <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-amber-500" />
               </span>
             ) : (
               <div className="absolute inset-0 rounded-full pointer-events-none">
                 <DynamicStarBorder
                   as="div"
-                  color="#FBBF24"
+                  color="#B45309"
                   trailColor="#F59E0B"
                   radius={999}
                   stars={2}
                   sparkle
                   thickness={2}
                   backgroundColor="transparent"
-                  borderColor="rgba(251,191,36,0.55)"
+                  borderColor="rgba(180,83,9,0.55)"
                   className="w-full h-full rounded-full"
                 />
               </div>
             ))}
           {effectId === "avatar-rb-magic-rings" && (
             <>
-              <span className="absolute inset-0 rounded-full border-2 border-pink-400/90 cosmetic-svg-spin-slow shadow-[0_0_12px_#EC4899]" />
-              <span className="absolute -inset-1 rounded-full border-2 border-cyan-300/85 cosmetic-svg-spin-reverse shadow-[0_0_12px_#38BDF8]" />
+              <span className="absolute inset-0 rounded-full border-2 border-red-500/90 cosmetic-svg-spin-slow" />
+              <span className="absolute -inset-1 rounded-full border-2 border-blue-600/85 cosmetic-svg-spin-reverse" />
             </>
           )}
           {effectId === "avatar-rb-plasma-strands" && (
-            <span
-              className="absolute -inset-0.5 rounded-full border-2 border-purple-400/90 cosmetic-reticle-pulse"
-              style={{ boxShadow: "0 0 18px rgba(168,85,247,0.9), inset 0 0 12px rgba(236,72,153,0.7)" }}
-            />
+            <span className="absolute -inset-0.5 rounded-full border-2 border-blue-700/90 cosmetic-reticle-pulse" />
           )}
           {effectId === "avatar-rb-crystal-ball" && (
-            <span
-              className="absolute inset-0.5 rounded-full border-2 border-cyan-300/95 cosmetic-reticle-pulse"
-              style={{ boxShadow: "0 0 16px rgba(6,182,212,0.9), inset 0 0 10px rgba(255,255,255,0.6)" }}
-            />
+            <span className="absolute inset-0.5 rounded-full border-2 border-blue-500/95 cosmetic-reticle-pulse" />
           )}
           {effectId === "avatar-rb-orb-halo" && (
-            <span
-              className="absolute -inset-0.5 rounded-full border-2 border-violet-400/90 cosmetic-svg-spin-slow"
-              style={{ boxShadow: "0 0 16px rgba(139,92,246,0.9), 0 0 24px rgba(56,189,248,0.6)" }}
-            />
+            <span className="absolute -inset-0.5 rounded-full border-2 border-blue-700/90 cosmetic-svg-spin-slow" />
           )}
           {effectId === "avatar-rb-metaballs-ring" && (
             <span className="absolute inset-0 rounded-full cosmetic-svg-spin-reverse">
-              <span className="absolute -top-1 left-1/3 w-3 h-3 rounded-full bg-teal-400 shadow-[0_0_10px_#14B8A6]" />
-              <span className="absolute -bottom-1 right-1/3 w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#10B981]" />
+              <span className="absolute -top-1 left-1/3 w-3 h-3 rounded-full bg-green-700" />
+              <span className="absolute -bottom-1 right-1/3 w-2.5 h-2.5 rounded-full bg-green-600" />
             </span>
           )}
           {effectId === "avatar-magic-orbiting-circles" && (
             <>
-              <span className="absolute -inset-0.5 rounded-full border border-dashed border-emerald-400/80 cosmetic-svg-spin-slow">
-                <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#10B981]" />
+              <span className="absolute -inset-0.5 rounded-full border border-dashed border-green-600/80 cosmetic-svg-spin-slow">
+                <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-green-600" />
               </span>
-              <span className="absolute inset-1 rounded-full border border-dashed border-teal-300/75 cosmetic-svg-spin-reverse">
-                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-cyan-300 shadow-[0_0_8px_#06B6D4]" />
+              <span className="absolute inset-1 rounded-full border border-dashed border-blue-600/75 cosmetic-svg-spin-reverse">
+                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-blue-600" />
               </span>
             </>
           )}
@@ -487,43 +464,36 @@ export function DiscordAvatarFrame({
             <span
               className="absolute inset-0.5 rounded-full cosmetic-border-beam"
               style={{
-                "--beam-from": "rgba(251, 191, 36, 0.98)",
+                "--beam-from": "rgba(180, 83, 9, 0.98)",
                 "--beam-to": "rgba(255, 255, 255, 1)",
               } as CSSProperties}
             />
           )}
           {effectId === "avatar-magic-neon-gradient" && (
-            <span
-              className="absolute inset-0 rounded-full border-2 border-rose-400/95 cosmetic-reticle-pulse"
-              style={{ boxShadow: "0 0 18px rgba(244,63,94,0.9), 0 0 26px rgba(56,189,248,0.65)" }}
-            />
+            <span className="absolute inset-0 rounded-full border-2 border-red-600/95 cosmetic-reticle-pulse" />
           )}
           {effectId === "avatar-magic-avatar-circles" && (
             <span className="absolute -bottom-1 -right-1 flex -space-x-1.5">
-              <span className="w-3.5 h-3.5 rounded-full bg-sky-400 border border-white/80 shadow-sm" />
-              <span className="w-3.5 h-3.5 rounded-full bg-amber-400 border border-white/80 shadow-sm" />
-              <span className="w-4 h-3.5 rounded-full bg-white/95 text-sky-800 text-[7px] font-mono font-bold flex items-center justify-center border border-sky-300/85 shadow-sm">
+              <span className="w-3.5 h-3.5 rounded-full bg-blue-600 border border-white" />
+              <span className="w-3.5 h-3.5 rounded-full bg-amber-500 border border-white" />
+              <span className="w-4 h-3.5 rounded-full bg-white text-blue-700 text-[7px] font-mono font-bold flex items-center justify-center border border-blue-300">
                 +9
               </span>
             </span>
           )}
           {effectId === "avatar-aceternity-moving-border" && (
             <span className="absolute inset-0 rounded-full cosmetic-svg-spin-slow">
-              <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-sky-400 shadow-[0_0_14px_#0EA5E9]" />
+              <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-blue-600" />
             </span>
           )}
           {effectId === "avatar-tsparticles-sea-anemone" && (
-            <span
-              className="absolute -inset-1 rounded-full border-2 border-dotted border-pink-400/90 cosmetic-svg-spin-slow"
-              style={{ boxShadow: "0 0 16px rgba(236,72,153,0.85), inset 0 0 10px rgba(244,114,182,0.7)" }}
-            />
+            <span className="absolute -inset-1 rounded-full border-2 border-dotted border-red-600/90 cosmetic-svg-spin-slow" />
           )}
           {effectId === "avatar-tsparticles-black-hole" && (
             <span
-              className="absolute -inset-0.5 rounded-full border-2 border-indigo-400/95 cosmetic-svg-spin-reverse"
+              className="absolute -inset-0.5 rounded-full border-2 border-slate-800 dark:border-slate-200 cosmetic-svg-spin-reverse"
               style={{
-                background: "radial-gradient(circle, transparent 52%, rgba(99,102,241,0.45) 75%, transparent 100%)",
-                boxShadow: "0 0 18px rgba(99,102,241,0.95), inset 0 0 14px rgba(15,23,42,0.9)",
+                background: "radial-gradient(circle, transparent 52%, rgba(29,78,216,0.3) 75%, transparent 100%)",
               }}
             />
           )}

@@ -69,7 +69,7 @@ export function AdminDeleteConfirmModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/35 backdrop-blur-md p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="admin-delete-modal-title"
@@ -78,16 +78,16 @@ export function AdminDeleteConfirmModal({
       }}
     >
       <div
-        className="w-full max-w-md bg-white/95 backdrop-blur-2xl border border-slate-200/85 rounded-3xl shadow-[0_20px_56px_rgba(15,23,42,0.18),inset_0_1px_1px_rgba(255,255,255,0.95)] overflow-hidden text-slate-900"
+        className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl overflow-hidden text-slate-900 dark:text-slate-100"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between gap-3 px-5 py-3.5 bg-slate-100/80 border-b border-slate-200/85">
+        <div className="flex items-center justify-between gap-3 px-5 py-3.5 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-rose-100 border border-rose-300/80 text-rose-700">
+            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400">
               <AlertTriangle className="w-3.5 h-3.5" aria-hidden="true" />
             </span>
-            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-rose-800">
-              Bước {step} / 2 · {step === 1 ? "Xác nhận xóa" : `Nhập "${DELETE_CONFIRM_KEYWORD}"`}
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-red-600 dark:text-red-400">
+              Bước {step} / 2 : {step === 1 ? "Xác nhận xóa" : `Nhập "${DELETE_CONFIRM_KEYWORD}"`}
             </span>
           </div>
           <button
@@ -95,7 +95,7 @@ export function AdminDeleteConfirmModal({
             disabled={isDeleting}
             onClick={onClose}
             aria-label="Đóng hộp thoại xác nhận"
-            className="liquid-glass-btn w-7 h-7 rounded-full flex items-center justify-center disabled:opacity-50"
+            className="liquid-glass-btn w-7 h-7 rounded-lg flex items-center justify-center disabled:opacity-50"
           >
             <X className="w-3.5 h-3.5" aria-hidden="true" />
           </button>
@@ -104,28 +104,28 @@ export function AdminDeleteConfirmModal({
         {step === 1 ? (
           <div className="p-5 space-y-4">
             <div className="space-y-1.5">
-              <h3 id="admin-delete-modal-title" className="text-base font-bold text-slate-900 leading-snug">
+              <h3 id="admin-delete-modal-title" className="text-base font-bold text-slate-900 dark:text-slate-100 leading-snug">
                 {request.title}
               </h3>
-              <p className="text-xs text-slate-700 leading-relaxed">{request.description}</p>
+              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{request.description}</p>
             </div>
 
             {previewLabels.length > 0 && (
-              <div className="p-3 rounded-xl bg-slate-50/90 border border-slate-200/85 space-y-1.5">
-                <p className="text-[11px] font-mono font-semibold text-slate-700 uppercase">
+              <div className="border-t border-slate-200 dark:border-slate-800 pt-3 space-y-1.5">
+                <p className="text-sm font-mono font-semibold text-slate-700 dark:text-slate-300 uppercase">
                   Mục sẽ bị xóa ({request.itemCount}):
                 </p>
                 <div className="flex flex-wrap gap-1.5">
                   {previewLabels.map((label, idx) => (
                     <span
                       key={`${label}-${idx}`}
-                      className="px-2 py-0.5 rounded-full bg-white/90 border border-slate-200/85 text-[11px] font-mono text-slate-800 max-w-[200px] truncate"
+                      className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-800 dark:text-slate-200 max-w-[200px] truncate"
                     >
                       {label}
                     </span>
                   ))}
                   {remainingPreview > 0 && (
-                    <span className="px-2 py-0.5 rounded-full bg-rose-100/90 border border-rose-300/80 text-[11px] font-mono font-semibold text-rose-800">
+                    <span className="px-2 py-0.5 rounded-full bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-xs font-mono font-semibold text-red-600 dark:text-red-300">
                       +{remainingPreview} mục khác
                     </span>
                   )}
@@ -137,7 +137,7 @@ export function AdminDeleteConfirmModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="liquid-glass-btn px-4 py-2 rounded-full text-xs font-semibold"
+                className="liquid-glass-btn px-4 py-2 rounded-lg text-xs font-semibold"
               >
                 Hủy
               </button>
@@ -147,7 +147,7 @@ export function AdminDeleteConfirmModal({
                   setConfirmInput("");
                   setStep(2);
                 }}
-                className="liquid-btn-danger inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold"
+                className="liquid-btn-danger inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold"
               >
                 <span>Chắc chắn, tiếp tục</span>
                 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -157,12 +157,12 @@ export function AdminDeleteConfirmModal({
         ) : (
           <form onSubmit={handleSubmitStep2} className="p-5 space-y-4">
             <div className="space-y-1.5">
-              <h3 id="admin-delete-modal-title" className="text-base font-bold text-slate-900 leading-snug">
-                Nhập chữ <code className="px-1.5 py-0.5 rounded bg-rose-100 border border-rose-300/80 font-mono text-rose-800">{DELETE_CONFIRM_KEYWORD}</code> để xóa
+              <h3 id="admin-delete-modal-title" className="text-base font-bold text-slate-900 dark:text-slate-100 leading-snug">
+                Nhập chữ <code className="px-1.5 py-0.5 rounded bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 font-mono text-red-600 dark:text-red-300">{DELETE_CONFIRM_KEYWORD}</code> để xóa
               </h3>
-              <p className="text-xs text-slate-700 leading-relaxed">
+              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                 Để tránh xóa nhầm ({request.itemCount} mục), vui lòng gõ chính xác chữ{" "}
-                <strong className="font-mono text-rose-700">{DELETE_CONFIRM_KEYWORD}</strong> vào ô bên dưới để mở khóa nút xóa.
+                <strong className="font-mono text-red-600 dark:text-red-400">{DELETE_CONFIRM_KEYWORD}</strong> vào ô bên dưới để mở khóa nút xóa.
               </p>
             </div>
 
@@ -178,10 +178,10 @@ export function AdminDeleteConfirmModal({
                 onChange={(e) => setConfirmInput(e.target.value)}
                 placeholder={`Nhập chữ ${DELETE_CONFIRM_KEYWORD}...`}
                 aria-label={`Nhập chữ ${DELETE_CONFIRM_KEYWORD} để xác nhận xóa`}
-                className="liquid-glass-input w-full px-3.5 py-2.5 text-sm font-mono rounded-xl focus:border-rose-400"
+                className="liquid-glass-input w-full px-3.5 py-2.5 text-sm font-mono rounded-lg focus:border-red-600"
               />
               {confirmInput.length > 0 && !canConfirm && (
-                <p className="text-[11px] font-mono text-rose-700">
+                <p className="text-sm font-mono text-red-600 dark:text-red-400">
                   Cần nhập chính xác chữ &ldquo;{DELETE_CONFIRM_KEYWORD}&rdquo; để tiếp tục.
                 </p>
               )}
@@ -192,7 +192,7 @@ export function AdminDeleteConfirmModal({
                 type="button"
                 disabled={isDeleting}
                 onClick={() => setStep(1)}
-                className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-2 rounded-full text-xs font-medium disabled:opacity-50"
+                className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-medium disabled:opacity-50"
               >
                 <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Quay lại</span>
@@ -203,14 +203,14 @@ export function AdminDeleteConfirmModal({
                   type="button"
                   disabled={isDeleting}
                   onClick={onClose}
-                  className="liquid-glass-btn px-3.5 py-2 rounded-full text-xs font-semibold disabled:opacity-50"
+                  className="liquid-glass-btn px-3.5 py-2 rounded-lg text-xs font-semibold disabled:opacity-50"
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
                   disabled={!canConfirm || isDeleting}
-                  className="liquid-btn-danger inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="liquid-btn-danger inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   {isDeleting ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" aria-hidden="true" />
@@ -266,12 +266,12 @@ export function AdminBulkActionBar({
           type="button"
           disabled={disabled || pageCount === 0}
           onClick={onToggleSelectPage}
-          className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold disabled:opacity-50"
+          className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold disabled:opacity-50"
         >
           {allPageSelected && pageCount > 0 ? (
-            <CheckSquare className="w-3.5 h-3.5 text-sky-600" aria-hidden="true" />
+            <CheckSquare className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
           ) : (
-            <Square className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />
+            <Square className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" aria-hidden="true" />
           )}
           <span>{allPageSelected ? "Bỏ chọn trang này" : `Chọn trang này (${pageCount})`}</span>
         </button>
@@ -281,7 +281,7 @@ export function AdminBulkActionBar({
             type="button"
             disabled={disabled}
             onClick={onSelectAllFiltered}
-            className="liquid-glass-btn px-3 py-1 rounded-full text-xs font-mono font-medium disabled:opacity-50"
+            className="liquid-glass-btn px-3 py-1 rounded-lg text-xs font-mono font-medium disabled:opacity-50"
           >
             Chọn tất cả ({totalFilteredCount})
           </button>
@@ -289,14 +289,14 @@ export function AdminBulkActionBar({
 
         {selectedCount > 0 && (
           <>
-            <span className="px-2.5 py-0.5 rounded-full bg-sky-100/90 border border-sky-300/80 text-xs font-mono font-bold text-sky-800">
+            <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-xs font-mono font-bold text-blue-700 dark:text-blue-300">
               Đã chọn {selectedCount} {itemUnitLabel}
             </span>
             <button
               type="button"
               disabled={disabled}
               onClick={onClearSelection}
-              className="text-xs font-mono text-slate-700 hover:text-slate-900 underline underline-offset-2 disabled:opacity-50"
+              className="text-xs font-mono text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 underline underline-offset-2 disabled:opacity-50"
             >
               Bỏ chọn
             </button>
@@ -309,7 +309,7 @@ export function AdminBulkActionBar({
           type="button"
           disabled={disabled}
           onClick={onBulkDelete}
-          className="liquid-btn-danger inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold disabled:opacity-50"
+          className="liquid-btn-danger inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold disabled:opacity-50"
         >
           <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
           <span>Xóa hàng loạt ({selectedCount})</span>

@@ -411,31 +411,31 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
     <div className="space-y-4">
       <div className="liquid-glass-card p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <FileText className="w-5 h-5 text-sky-600 shrink-0" aria-hidden="true" />
+          <FileText className="w-5 h-5 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
           <div>
-            <h2 className="text-base font-bold text-slate-900">
+            <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
               Trung Tâm Nghiên Cứu & Số Liệu ({articles.length})
             </h2>
-            <p className="text-xs text-slate-700">
+            <p className="text-sm text-slate-700 dark:text-slate-300">
               Quản lý bài nghiên cứu, thống kê chuẩn hóa và bản nháp AI săn tin công nghệ.
             </p>
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <div className="inline-flex rounded-full bg-slate-100/80 p-1 border border-slate-200/85">
+          <div className="inline-flex rounded-full bg-slate-100 dark:bg-slate-800 p-1 border border-slate-200 dark:border-slate-700">
             <button
               type="button"
               onClick={() => setActiveSubTab("list")}
               className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
                 activeSubTab === "list"
-                  ? "bg-sky-500/15 border border-sky-400/60 text-sky-900"
-                  : "text-slate-700 hover:text-slate-900"
+                  ? "bg-blue-50 dark:bg-blue-950/50 border border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300"
+                  : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
               }`}
             >
               <span>Danh sách bài nghiên cứu ({articles.length})</span>
               {pendingCount > 0 && (
-                <span className="px-1.5 py-0.2 rounded-full bg-amber-100 border border-amber-300/80 text-amber-800 text-[10px] font-mono">
+                <span className="px-1.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-[11px] font-mono">
                   {pendingCount} chờ
                 </span>
               )}
@@ -445,8 +445,8 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
               onClick={() => setActiveSubTab("compose")}
               className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors ${
                 activeSubTab === "compose"
-                  ? "bg-sky-500/15 border border-sky-400/60 text-sky-900"
-                  : "text-slate-700 hover:text-slate-900"
+                  ? "bg-blue-50 dark:bg-blue-950/50 border border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300"
+                  : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
               }`}
             >
               <Plus className="w-3.5 h-3.5" aria-hidden="true" />
@@ -458,7 +458,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
             type="button"
             onClick={() => void loadArticles()}
             disabled={isLoading}
-            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold disabled:opacity-50"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
             <span>Làm mới</span>
@@ -467,13 +467,13 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
       </div>
 
       {statusMessage && (
-        <div className="p-3 rounded-xl bg-emerald-50/90 border border-emerald-300/80 text-xs font-semibold text-emerald-800">
+        <div className="p-3 rounded-xl bg-green-50 dark:bg-green-950/40 border border-green-300 dark:border-green-800 text-sm font-semibold text-green-700 dark:text-green-300">
           {statusMessage}
         </div>
       )}
 
       {errorMessage && (
-        <div className="p-3 rounded-xl bg-rose-50/90 border border-rose-300/80 text-xs font-semibold text-rose-800">
+        <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-300 dark:border-red-800 text-sm font-semibold text-red-700 dark:text-red-300">
           {errorMessage}
         </div>
       )}
@@ -482,11 +482,11 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
         <div className="space-y-4">
           <div className="liquid-glass-card p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-0.5">
-              <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase text-sky-700">
-                <Sparkles className="w-4 h-4 text-sky-600" />
+              <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
+                <Sparkles className="w-4 h-4 text-blue-700 dark:text-blue-400" />
                 <span>AI Research Curator (GitHub, StackOverflow, InfoQ, Lobsters, Cloudflare, arXiv &amp; Dev.to)</span>
               </div>
-              <p className="text-xs text-slate-700">
+              <p className="text-sm text-slate-700 dark:text-slate-300">
                 Tự động săn tin công nghệ & tạo bản nháp vào hàng chờ kiểm duyệt (`pending_review`).
               </p>
             </div>
@@ -496,7 +496,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                 aria-label="Chọn chủ đề AI săn tin"
                 value={selectedTopic}
                 onChange={(e) => setSelectedTopic(e.target.value as ResearchCategory)}
-                className="liquid-glass-input px-3 py-1.5 rounded-xl text-xs font-medium [&>option]:bg-white [&>option]:text-slate-900"
+                className="liquid-glass-input px-3 py-1.5 rounded-lg text-xs font-medium [&>option]:bg-white dark:[&>option]:bg-slate-900 [&>option]:text-slate-900 dark:[&>option]:text-slate-100"
               >
                 {CATEGORY_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -509,7 +509,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                 type="button"
                 onClick={() => void handleAiGenerate()}
                 disabled={isGenerating}
-                className="liquid-btn-primary inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold disabled:opacity-50 transition-all"
+                className="liquid-btn-primary inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-bold disabled:opacity-50 transition-colors"
               >
                 {isGenerating ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -522,8 +522,8 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
           </div>
 
           <section className="liquid-glass-card p-5 space-y-4">
-            <div className="flex items-center justify-between gap-2 border-b border-slate-200/85 pb-3">
-              <h3 className="text-sm font-bold uppercase font-mono text-slate-900">
+            <div className="flex items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+              <h3 className="text-sm font-bold uppercase font-mono text-slate-900 dark:text-slate-100">
                 {editingId ? "Chỉnh sửa bài báo / số liệu" : "Tạo bài báo / Số liệu mới"}
               </h3>
               <div className="flex items-center gap-2">
@@ -531,7 +531,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="inline-flex items-center gap-1 text-xs text-slate-700 hover:text-slate-900"
+                    className="inline-flex items-center gap-1 text-xs text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                   >
                     <X className="w-3.5 h-3.5" />
                     <span>Hủy chỉnh sửa</span>
@@ -540,7 +540,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                 <button
                   type="button"
                   onClick={() => setActiveSubTab("list")}
-                  className="text-xs font-mono text-slate-700 hover:text-slate-900"
+                  className="text-xs font-mono text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                 >
                   Quay lại danh sách
                 </button>
@@ -550,22 +550,22 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
             <form onSubmit={(e) => void handleSaveArticle(e, "published")} className="space-y-3.5">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="sm:col-span-2 space-y-1">
-                  <label className="text-xs font-semibold text-slate-700">Tiêu đề bài viết</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Tiêu đề bài viết</label>
                   <input
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="VD: Thống kê kỹ năng giao tiếp phỏng vấn IT 2026"
-                    className="liquid-glass-input w-full px-3 py-2 text-sm rounded-xl"
+                    className="liquid-glass-input w-full px-3 py-2 text-sm rounded-lg"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-700">Chuyên mục</label>
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Chuyên mục</label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value as ResearchCategory)}
-                    className="liquid-glass-input w-full px-3 py-2 text-sm rounded-xl [&>option]:bg-white [&>option]:text-slate-900"
+                    className="liquid-glass-input w-full px-3 py-2 text-sm rounded-lg [&>option]:bg-white dark:[&>option]:bg-slate-900 [&>option]:text-slate-900 dark:[&>option]:text-slate-100"
                   >
                     {CATEGORY_OPTIONS.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -577,30 +577,30 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-700">Tóm tắt ngắn</label>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Tóm tắt ngắn</label>
                 <textarea
                   rows={2}
                   value={summary}
                   onChange={(e) => setSummary(e.target.value)}
                   placeholder="Tóm tắt điểm chính của bài nghiên cứu trong 1-2 câu..."
-                  className="liquid-glass-input w-full px-3 py-2 text-sm rounded-xl resize-none"
+                  className="liquid-glass-input w-full px-3 py-2 text-sm rounded-lg resize-none"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-700">Nội dung Markdown</label>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Nội dung Markdown</label>
                 <textarea
                   rows={5}
                   value={contentMarkdown}
                   onChange={(e) => setContentMarkdown(e.target.value)}
                   placeholder="## Tiêu đề mục&#10;- Ý chính 1&#10;- Ý chính 2"
-                  className="liquid-glass-input w-full px-3 py-2 text-sm font-mono rounded-xl"
+                  className="liquid-glass-input w-full px-3 py-2 text-sm font-mono rounded-lg"
                 />
               </div>
 
-              <div className="space-y-2 pt-2 border-t border-slate-200/85">
+              <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-slate-800">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-slate-900">
+                  <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">
                     Thẻ số liệu thống kê (Metric Cards)
                   </span>
                   <button
@@ -608,7 +608,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                     onClick={() =>
                       setMetricsJson((prev) => [...prev, { label: "", value: "", highlight: "" }])
                     }
-                    className="liquid-glass-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold"
+                    className="liquid-glass-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Thêm số liệu</span>
@@ -659,7 +659,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                         onClick={() =>
                           setMetricsJson((prev) => prev.filter((_, i) => i !== idx))
                         }
-                        className="sm:col-span-1 p-1.5 rounded-lg text-rose-600 hover:bg-rose-100/80 justify-self-end"
+                        className="sm:col-span-1 p-1.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 justify-self-end"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -673,14 +673,14 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                   type="button"
                   disabled={isSaving}
                   onClick={(e) => void handleSaveArticle(e, "pending_review")}
-                  className="liquid-glass-btn px-4 py-2 rounded-full text-xs font-semibold disabled:opacity-50"
+                  className="liquid-glass-btn px-4 py-2 rounded-lg text-xs font-semibold disabled:opacity-50"
                 >
                   Lưu vào hàng chờ
                 </button>
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="liquid-btn-primary inline-flex items-center gap-1.5 px-5 py-2 rounded-full text-xs font-bold disabled:opacity-50"
+                  className="liquid-btn-primary inline-flex items-center gap-1.5 px-5 py-2 rounded-lg text-xs font-bold disabled:opacity-50"
                 >
                   {isSaving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                   <span>{editingId ? "Cập nhật & Xuất bản" : "Tạo & xuất bản ngay"}</span>
@@ -695,7 +695,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-2.5">
               <div className="relative flex-1 max-w-md">
                 <Search
-                  className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"
+                  className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"
                   aria-hidden="true"
                 />
                 <input
@@ -706,7 +706,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                     setCurrentPage(1);
                   }}
                   placeholder="Tìm kiếm tiêu đề, tóm tắt hoặc slug..."
-                  className="liquid-glass-input w-full pl-9 pr-3 py-1.5 text-xs rounded-full"
+                  className="liquid-glass-input w-full pl-9 pr-3 py-1.5 text-sm rounded-lg"
                 />
               </div>
 
@@ -719,8 +719,8 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                   }}
                   className={`px-2.5 py-1 rounded-full text-xs font-semibold border transition-colors ${
                     statusFilter === "all"
-                      ? "bg-sky-500/15 border-sky-400/60 text-sky-800"
-                      : "liquid-glass-btn text-slate-700"
+                      ? "bg-blue-50 dark:bg-blue-950/50 border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300"
+                      : "liquid-glass-btn text-slate-700 dark:text-slate-300"
                   }`}
                 >
                   Tất cả ({articles.length})
@@ -733,8 +733,8 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                   }}
                   className={`px-2.5 py-1 rounded-full text-xs font-semibold border transition-colors ${
                     statusFilter === "pending_review"
-                      ? "bg-amber-100 border-amber-400/70 text-amber-900"
-                      : "liquid-glass-btn text-slate-700"
+                      ? "bg-amber-50 dark:bg-amber-950/40 border-amber-400 dark:border-amber-700 text-amber-800 dark:text-amber-300"
+                      : "liquid-glass-btn text-slate-700 dark:text-slate-300"
                   }`}
                 >
                   Chờ duyệt ({pendingCount})
@@ -747,8 +747,8 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                   }}
                   className={`px-2.5 py-1 rounded-full text-xs font-semibold border transition-colors ${
                     statusFilter === "published"
-                      ? "bg-emerald-100 border-emerald-400/70 text-emerald-900"
-                      : "liquid-glass-btn text-slate-700"
+                      ? "bg-green-50 dark:bg-green-950/40 border-green-500 dark:border-green-700 text-green-700 dark:text-green-300"
+                      : "liquid-glass-btn text-slate-700 dark:text-slate-300"
                   }`}
                 >
                   Đã xuất bản ({publishedCount})
@@ -765,10 +765,10 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                     setCategoryFilter(tab.value);
                     setCurrentPage(1);
                   }}
-                  className={`px-3 py-1 rounded-full text-[11px] font-mono font-semibold border transition-colors ${
+                  className={`px-3 py-1 rounded-full text-xs font-mono font-semibold border transition-colors ${
                     categoryFilter === tab.value
-                      ? "bg-sky-500/15 border-sky-400/60 text-sky-800"
-                      : "liquid-glass-btn text-slate-700"
+                      ? "bg-blue-50 dark:bg-blue-950/50 border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300"
+                      : "liquid-glass-btn text-slate-700 dark:text-slate-300"
                   }`}
                 >
                   {tab.label}
@@ -790,7 +790,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
           />
 
           {paginatedArticles.length === 0 ? (
-            <div className="liquid-glass-card p-8 text-center text-xs text-slate-700">
+            <div className="liquid-glass-card p-8 text-center text-sm text-slate-700 dark:text-slate-300">
               Không có bài nghiên cứu nào khớp bộ lọc. Bấm &ldquo;+ Soạn bài / AI Tổng hợp&rdquo; để tạo bài mới.
             </div>
           ) : (
@@ -804,7 +804,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                   <div
                     key={article.id}
                     className={`liquid-glass-card-lite p-4 flex flex-col justify-between gap-3 transition-colors ${
-                      isSelected ? "!border-sky-400/75 ring-1 ring-sky-400/35" : ""
+                      isSelected ? "!border-blue-700 dark:!border-blue-500 ring-1 ring-blue-700/35" : ""
                     }`}
                   >
                     <div className="space-y-2">
@@ -815,50 +815,50 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                             checked={isSelected}
                             onChange={() => toggleSelectId(article.id)}
                             aria-label={`Chọn bài viết ${article.title}`}
-                            className="w-4 h-4 rounded accent-sky-600 cursor-pointer shrink-0"
+                            className="w-4 h-4 rounded accent-blue-700 cursor-pointer shrink-0"
                           />
                           <span
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold border ${
+                            className={`px-2 py-0.5 rounded-full text-[11px] font-mono font-bold border ${
                               isPending
-                                ? "bg-amber-100/90 border-amber-300/80 text-amber-800"
-                                : "bg-emerald-100/90 border-emerald-300/80 text-emerald-800"
+                                ? "bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-300"
+                                : "bg-green-50 dark:bg-green-950/40 border-green-300 dark:border-green-800 text-green-700 dark:text-green-300"
                             }`}
                           >
                             {isPending ? "Chờ duyệt" : "Đã xuất bản"}
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-sky-100/90 border border-sky-300/80 text-sky-800 text-[10px] font-mono font-semibold">
+                          <span className="px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-[11px] font-mono font-semibold">
                             {article.category}
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-slate-100/90 border border-slate-200/85 text-slate-700 text-[10px] font-mono">
+                          <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-[11px] font-mono">
                             {article.sourceType === "ai_curated" ? "AI Curated" : "Admin"}
                           </span>
                         </div>
-                        <span className="text-[10px] font-mono text-slate-600">
+                        <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
                           {article.metricsJson.length} số liệu
                         </span>
                       </div>
 
-                      <h4 className="font-bold text-sm text-slate-900 line-clamp-1">
+                      <h4 className="font-bold text-sm text-slate-900 dark:text-slate-100 line-clamp-1">
                         {article.title}
                       </h4>
-                      <p className="text-xs text-slate-700 line-clamp-2">
+                      <p className="text-sm text-slate-700 dark:text-slate-300 line-clamp-2">
                         {article.summary}
                       </p>
 
                       {isExpanded && (
-                        <div className="mt-2 p-2.5 rounded-lg bg-white/85 border border-slate-200/85 max-h-36 overflow-y-auto text-[11px] font-mono text-slate-800 whitespace-pre-wrap">
+                        <div className="mt-2 border-t border-slate-200 dark:border-slate-800 pt-2.5 max-h-36 overflow-y-auto text-xs font-mono text-slate-800 dark:text-slate-200 whitespace-pre-wrap">
                           {article.contentMarkdown}
                         </div>
                       )}
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200/85">
+                    <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
                       <button
                         type="button"
                         onClick={() =>
                           setExpandedPreviewId(isExpanded ? null : article.id)
                         }
-                        className="inline-flex items-center gap-1 text-[11px] font-mono font-semibold text-slate-700 hover:text-slate-900"
+                        className="inline-flex items-center gap-1 text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                       >
                         {isExpanded ? (
                           <>
@@ -878,7 +878,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                           <Link
                             href={`/research/${article.slug}`}
                             target="_blank"
-                            className="liquid-glass-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold"
+                            className="liquid-glass-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold"
                           >
                             <span>Xem</span>
                             <ExternalLink className="w-3 h-3" />
@@ -887,7 +887,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                         <button
                           type="button"
                           onClick={() => handleLoadIntoEditor(article)}
-                          className="liquid-glass-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold"
+                          className="liquid-glass-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold"
                         >
                           <Edit3 className="w-3 h-3" />
                           <span>Sửa</span>
@@ -896,7 +896,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                           <button
                             type="button"
                             onClick={() => void handleStatusChange(article.id, "published")}
-                            className="liquid-btn-success inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold"
+                            className="liquid-btn-success inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold"
                           >
                             <Check className="w-3 h-3" />
                             <span>Duyệt</span>
@@ -905,7 +905,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                         <button
                           type="button"
                           onClick={() => handleDelete(article)}
-                          className="liquid-btn-danger inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold"
+                          className="liquid-btn-danger inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold"
                         >
                           <Trash2 className="w-3 h-3" />
                           <span>Xóa</span>
@@ -919,8 +919,8 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
           )}
 
           <div className="liquid-glass-card px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
-            <span className="text-slate-700 font-mono">
-              Hiển thị {paginatedArticles.length} / {filteredArticles.length} bài viết · Trang{" "}
+            <span className="text-slate-700 dark:text-slate-300 font-mono">
+              Hiển thị {paginatedArticles.length} / {filteredArticles.length} bài viết : Trang{" "}
               {safePage} / {totalPages}
             </span>
             <div className="flex items-center gap-1.5">
@@ -928,7 +928,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                 type="button"
                 disabled={safePage <= 1}
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1 rounded-full font-semibold disabled:opacity-40"
+                className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1 rounded-lg font-semibold disabled:opacity-40"
               >
                 <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Trước</span>
@@ -937,7 +937,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                 type="button"
                 disabled={safePage >= totalPages}
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1 rounded-full font-semibold disabled:opacity-40"
+                className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1 rounded-lg font-semibold disabled:opacity-40"
               >
                 <span>Sau</span>
                 <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />

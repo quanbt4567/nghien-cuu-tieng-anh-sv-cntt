@@ -81,9 +81,10 @@ const ARENA_SHOWCASE_MODES: ArenaModeCard[] = [
       "Phối hợp xử lý sự cố production khẩn cấp theo nhóm với phản xạ tiếng Anh CNTT.",
     ctaLabel: "Mở Party Mode",
     icon: Siren,
-    badgeTone: "bg-rose-100 text-rose-700 border-rose-300/80",
+    badgeTone:
+      "bg-red-50 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-800",
     buttonTone: "liquid-btn-danger",
-    cardAccent: "hover:border-rose-400/60",
+    cardAccent: "hover:border-red-300 dark:hover:border-red-700",
     href: "/arena/party",
   },
   {
@@ -95,10 +96,10 @@ const ARENA_SHOWCASE_MODES: ArenaModeCard[] = [
       "Tranh luận bảo vệ PR hoặc review code 1v1 theo lượt, phản biện trực tiếp bằng tiếng Anh.",
     ctaLabel: "Vào Duel",
     icon: Swords,
-    badgeTone: "bg-violet-100 text-violet-700 border-violet-300/80",
-    buttonTone:
-      "bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-500 hover:to-purple-600 text-white border border-violet-300/60 shadow-[0_8px_20px_rgba(139,92,246,0.34),inset_0_1px_1px_rgba(255,255,255,0.45)]",
-    cardAccent: "hover:border-violet-400/60",
+    badgeTone:
+      "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800",
+    buttonTone: "liquid-btn-primary",
+    cardAccent: "hover:border-blue-300 dark:hover:border-blue-700",
     href: "/arena/duel",
   },
   {
@@ -110,10 +111,11 @@ const ARENA_SHOWCASE_MODES: ArenaModeCard[] = [
       "Giải thích khái niệm CNTT thật dễ hiểu mà không chạm từ cấm để AI hoặc đồng đội đoán đúng.",
     ctaLabel: "Chơi Explain It Like I'm 5",
     icon: MessageSquare,
-    badgeTone: "bg-amber-100 text-amber-700 border-amber-300/80",
+    badgeTone:
+      "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800",
     buttonTone:
-      "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-500 hover:to-orange-500 text-white border border-amber-300/60 shadow-[0_8px_20px_rgba(245,158,11,0.34),inset_0_1px_1px_rgba(255,255,255,0.45)]",
-    cardAccent: "hover:border-amber-400/60",
+      "bg-amber-700 hover:bg-amber-800 text-white border border-amber-700 dark:bg-amber-600 dark:hover:bg-amber-500",
+    cardAccent: "hover:border-amber-300 dark:hover:border-amber-700",
     href: "/arena/explain-it-like-im-5",
   },
   {
@@ -125,9 +127,10 @@ const ARENA_SHOWCASE_MODES: ArenaModeCard[] = [
       "Nối nhanh thuật ngữ IT theo chữ cái cuối trước khi bom máy chủ nổ, tích combo rút dây cháy.",
     ctaLabel: "Vào Syntax Bomb",
     icon: Bomb,
-    badgeTone: "bg-sky-100 text-sky-700 border-sky-300/80",
+    badgeTone:
+      "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800",
     buttonTone: "liquid-btn-primary",
-    cardAccent: "hover:border-sky-400/60",
+    cardAccent: "hover:border-blue-300 dark:hover:border-blue-700",
     href: "/arena/syntax-bomb",
   },
   {
@@ -139,9 +142,10 @@ const ARENA_SHOWCASE_MODES: ArenaModeCard[] = [
       "Đọc và nói đúng từ khóa kỹ thuật còn thiếu trong 280 giây để vá nhanh hàng loạt bug.",
     ctaLabel: "Mở Bug Buster",
     icon: Bug,
-    badgeTone: "bg-emerald-100 text-emerald-700 border-emerald-300/80",
+    badgeTone:
+      "bg-green-50 text-green-700 border-green-200 dark:bg-green-950/40 dark:text-green-300 dark:border-green-800",
     buttonTone: "liquid-btn-success",
-    cardAccent: "hover:border-emerald-400/60",
+    cardAccent: "hover:border-green-300 dark:hover:border-green-700",
     tab: "bug-buster",
   },
   {
@@ -153,10 +157,10 @@ const ARENA_SHOWCASE_MODES: ArenaModeCard[] = [
       "Trả lời 3 câu hỏi Daily Standup trong 25 giây mỗi lượt để luyện phản xạ nói gọn gàng.",
     ctaLabel: "Mở Speed Run",
     icon: Timer,
-    badgeTone: "bg-indigo-100 text-indigo-700 border-indigo-300/80",
-    buttonTone:
-      "bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-500 hover:to-blue-600 text-white border border-indigo-300/60 shadow-[0_8px_20px_rgba(99,102,241,0.34),inset_0_1px_1px_rgba(255,255,255,0.45)]",
-    cardAccent: "hover:border-indigo-400/60",
+    badgeTone:
+      "bg-slate-100 text-slate-800 border-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700",
+    buttonTone: "liquid-btn-primary",
+    cardAccent: "hover:border-blue-300 dark:hover:border-blue-700",
     tab: "standup-speed-run",
   },
 ];
@@ -263,37 +267,36 @@ export default function ArenaPage() {
             >
               <Icon className="w-5 h-5" />
             </div>
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill bg-amber-100/90 text-amber-800 border border-amber-300/80 text-[11px] font-mono font-bold shrink-0">
-              <Coins className="w-3 h-3 text-amber-600" />
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800 text-xs font-mono font-bold shrink-0">
+              <Coins className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400" />
               <span>{mode.rewardBadge}</span>
             </span>
           </div>
 
           <div className="space-y-1.5">
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-pill bg-slate-100/90 border border-slate-200/85 text-[10px] font-mono font-bold text-slate-700 uppercase">
-              <Bot className="w-3 h-3 text-sky-600" />
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 uppercase">
+              <Bot className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
               <span>{mode.playersTag}</span>
             </span>
-            <h2 className="text-base font-bold text-slate-900 leading-snug">
+            <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 leading-snug">
               {mode.title}
             </h2>
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
               {mode.description}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center justify-between gap-2 pt-1">
-          <span className="text-[11px] font-mono font-semibold text-slate-600">
+        <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <span className="text-xs font-mono font-semibold text-slate-600 dark:text-slate-400">
             {mode.href ? "Phòng chơi riêng" : "Chơi trực tiếp bên dưới"}
           </span>
           <span
-            className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill text-xs font-bold shrink-0 transition-all ${mode.buttonTone} ${
-              isInlineActive ? "ring-2 ring-sky-400/70" : ""
+            className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold shrink-0 transition-colors ${mode.buttonTone} ${
+              isInlineActive ? "ring-2 ring-blue-600/60" : ""
             }`}
           >
             <span>{isInlineActive ? "Đang mở" : mode.ctaLabel}</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </span>
         </div>
       </>
@@ -305,18 +308,18 @@ export default function ArenaPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Link
           href="/"
-          className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-xs font-medium transition-all"
+          className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
+          <ArrowLeft className="w-4 h-4" />
           <span>Trang chủ</span>
         </Link>
 
         <div className="flex items-center gap-2.5">
           <Link
             href="/shop"
-            className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill text-xs font-bold transition-all"
+            className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-sm font-bold transition-colors"
           >
-            <ShoppingBag className="w-3.5 h-3.5" />
+            <ShoppingBag className="w-4 h-4" />
             <span>Cửa hàng Hiệu ứng</span>
           </Link>
         </div>
@@ -325,38 +328,38 @@ export default function ArenaPage() {
       <section className="liquid-glass-card p-5 sm:p-6 space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1.5">
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
-              <Gamepad2 className="w-6 h-6 text-sky-600 shrink-0" />
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2">
+              <Gamepad2 className="w-6 h-6 text-blue-700 dark:text-blue-400 shrink-0" />
               <span>IT Speaking Arena</span>
             </h1>
-            <p className="text-xs sm:text-sm text-slate-600">
+            <p className="text-sm text-slate-600 dark:text-slate-300">
               Luyện phản xạ nói tiếng Anh CNTT theo thời gian thực để tích lũy
               IT-Coin và nâng hạng Dev Speaker.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="liquid-glass-pill inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-bold text-amber-700">
-              <Flame className="w-4 h-4 fill-amber-500 text-amber-500" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 dark:bg-amber-950/40 dark:border-amber-800 text-xs font-mono font-bold text-amber-700 dark:text-amber-300">
+              <Flame className="w-4 h-4 fill-amber-500 text-amber-600 dark:text-amber-400" />
               <span>{identity.streakDays} ngày</span>
             </span>
 
-            <span className="liquid-glass-pill inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-semibold text-sky-800 border-sky-300/70">
-              <Award className="w-3.5 h-3.5 text-sky-600" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 dark:bg-blue-950/40 dark:border-blue-800 text-xs font-mono font-semibold text-blue-800 dark:text-blue-300">
+              <Award className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
               <span>{devTitle.title}</span>
             </span>
 
-            <label className="liquid-glass-pill inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-semibold text-slate-900">
-              <UserCog className="w-3.5 h-3.5 text-sky-600 shrink-0" />
+            <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-300 dark:bg-slate-800 dark:border-slate-700 text-xs font-mono font-semibold text-slate-900 dark:text-slate-100">
+              <UserCog className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400 shrink-0" />
               <span className="sr-only">Vai trò CNTT</span>
               <select
                 value={state.selectedRole}
                 onChange={(e) => handleRoleChange(e.target.value as ITRole)}
                 aria-label="Chọn vai trò CNTT"
-                className="bg-transparent focus:outline-none cursor-pointer font-mono text-xs text-slate-900"
+                className="bg-transparent focus:outline-none cursor-pointer font-mono text-xs text-slate-900 dark:text-slate-100"
               >
                 {IT_ROLES.map((r) => (
-                  <option key={r.id} value={r.id} className="bg-white text-slate-900">
+                  <option key={r.id} value={r.id} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">
                     {r.label}
                   </option>
                 ))}
@@ -365,37 +368,37 @@ export default function ArenaPage() {
           </div>
         </div>
 
-        <div className="bg-white/80 border border-slate-200/85 rounded-2xl p-4 space-y-2.5">
+        <div className="border-t border-slate-200 dark:border-slate-800 pt-4 space-y-2.5">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-amber-100 border border-amber-300/80 flex items-center justify-center">
-                <Coins className="w-4 h-4 text-amber-600" />
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full bg-amber-50 border border-amber-200 dark:bg-amber-950/40 dark:border-amber-800 flex items-center justify-center">
+                <Coins className="w-4 h-4 text-amber-700 dark:text-amber-400" />
               </div>
               <div>
-                <div className="text-sm font-bold text-slate-900 font-mono">
+                <div className="text-sm font-bold text-slate-900 dark:text-slate-100 font-mono">
                   Số dư IT-Coin: {coins}
                 </div>
-                <div className="text-[11px] text-slate-600">
-                  1.000 điểm = 1 IT-Coin • Vai trò hiện tại:{" "}
-                  <strong className="text-sky-700">{roleLabel}</strong>
+                <div className="text-sm text-slate-600 dark:text-slate-300">
+                  1.000 điểm = 1 IT-Coin, Vai trò hiện tại:{" "}
+                  <strong className="text-blue-700 dark:text-blue-400">{roleLabel}</strong>
                 </div>
               </div>
             </div>
 
             <div className="text-right font-mono text-xs">
-              <div className="font-bold text-slate-900">
+              <div className="font-bold text-slate-900 dark:text-slate-100">
                 {coinRemainder} / {POINTS_PER_COIN} điểm
               </div>
-              <div className="text-[11px] text-slate-600">
+              <div className="text-xs text-slate-600 dark:text-slate-400">
                 Còn {toNextCoin} điểm để nhận +1 IT-Coin
               </div>
             </div>
           </div>
 
-          <div className="w-full h-2.5 bg-slate-200/80 rounded-pill border border-slate-300/70 overflow-hidden">
+          <div className="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full border border-slate-300 dark:border-slate-700 overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-sky-500 to-blue-600 transition-all duration-500"
-              style={{ width: `${Math.max(2, coinProgressPct)}%` }}
+              className="w-full h-full origin-left bg-blue-700 dark:bg-blue-600 transition-transform duration-500"
+              style={{ transform: `scaleX(${Math.max(0.02, coinProgressPct / 100)})` }}
             />
           </div>
         </div>
@@ -404,28 +407,28 @@ export default function ArenaPage() {
       <section className="space-y-3.5">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="space-y-0.5">
-            <h2 className="text-base sm:text-lg font-bold text-slate-900">
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">
               6 Chế độ Đấu trường SpeakIT
             </h2>
-            <p className="text-xs text-slate-600">
+            <p className="text-sm text-slate-600 dark:text-slate-300">
               Chọn phòng Co-op / PvP đấu AI Bot hoặc luyện tập tốc độ trực tiếp ngay bên dưới.
             </p>
           </div>
           <Link
             href="/shop"
-            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-xs font-bold transition-all"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-bold transition-colors"
           >
-            <ShoppingBag className="w-3.5 h-3.5 text-amber-600" />
+            <ShoppingBag className="w-4 h-4 text-amber-700 dark:text-amber-400" />
             <span>Đổi quà tại Shop</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {ARENA_SHOWCASE_MODES.map((mode) => {
             const isInlineActive = Boolean(mode.tab && activeTab === mode.tab);
-            const cardClass = `group liquid-glass-card text-left p-4 sm:p-5 hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4 ${mode.cardAccent} ${
-              isInlineActive ? "ring-2 ring-sky-400/70 border-sky-400/60" : ""
+            const cardClass = `group liquid-glass-card text-left p-4 sm:p-5 hover:-translate-y-0.5 transition-transform flex flex-col justify-between gap-4 ${mode.cardAccent} ${
+              isInlineActive ? "ring-2 ring-blue-600/60 border-blue-600" : ""
             }`;
 
             if (mode.href) {
@@ -461,10 +464,10 @@ export default function ArenaPage() {
           role="tab"
           aria-selected={activeTab === "bug-buster"}
           onClick={() => setActiveTab("bug-buster")}
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-pill text-xs sm:text-sm font-semibold transition-all ${
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
             activeTab === "bug-buster"
               ? "liquid-btn-success"
-              : "liquid-glass-pill text-slate-700 hover:text-slate-900 hover:border-sky-300/70"
+              : "liquid-glass-btn text-slate-700 dark:text-slate-200 hover:border-blue-400"
           }`}
         >
           <Bug className="w-4 h-4" />
@@ -476,10 +479,10 @@ export default function ArenaPage() {
           role="tab"
           aria-selected={activeTab === "standup-speed-run"}
           onClick={() => setActiveTab("standup-speed-run")}
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-pill text-xs sm:text-sm font-semibold transition-all ${
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
             activeTab === "standup-speed-run"
-              ? "bg-gradient-to-r from-indigo-500 to-blue-600 text-white border border-indigo-300/60 shadow-[0_8px_20px_rgba(99,102,241,0.34),inset_0_1px_1px_rgba(255,255,255,0.45)]"
-              : "liquid-glass-pill text-slate-700 hover:text-slate-900 hover:border-sky-300/70"
+              ? "liquid-btn-primary"
+              : "liquid-glass-btn text-slate-700 dark:text-slate-200 hover:border-blue-400"
           }`}
         >
           <Timer className="w-4 h-4" />
@@ -491,10 +494,10 @@ export default function ArenaPage() {
           role="tab"
           aria-selected={activeTab === "leaderboard"}
           onClick={() => setActiveTab("leaderboard")}
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-pill text-xs sm:text-sm font-semibold transition-all ${
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
             activeTab === "leaderboard"
               ? "liquid-btn-primary"
-              : "liquid-glass-pill text-slate-700 hover:text-slate-900 hover:border-sky-300/70"
+              : "liquid-glass-btn text-slate-700 dark:text-slate-200 hover:border-blue-400"
           }`}
         >
           <Trophy className="w-4 h-4" />
@@ -506,10 +509,10 @@ export default function ArenaPage() {
           role="tab"
           aria-selected={activeTab === "global-leaderboard"}
           onClick={() => setActiveTab("global-leaderboard")}
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-pill text-xs sm:text-sm font-semibold transition-all ${
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
             activeTab === "global-leaderboard"
               ? "liquid-btn-primary"
-              : "liquid-glass-pill text-slate-700 hover:text-slate-900 hover:border-sky-300/70"
+              : "liquid-glass-btn text-slate-700 dark:text-slate-200 hover:border-blue-400"
           }`}
         >
           <Globe className="w-4 h-4" />

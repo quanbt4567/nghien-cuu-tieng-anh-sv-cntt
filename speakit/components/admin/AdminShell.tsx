@@ -175,26 +175,26 @@ export function AdminShell() {
   const activeTabMeta = TABS.find((t) => t.id === activeTab) ?? TABS[0];
 
   return (
-    <div className="min-h-screen bg-transparent text-slate-900 flex flex-col lg:flex-row">
-      <header className="lg:hidden sticky top-0 z-30 bg-white/85 backdrop-blur-2xl border-b border-slate-200/85 px-4 py-3 flex items-center justify-between gap-3">
+    <div className="min-h-screen bg-transparent text-slate-900 dark:text-slate-100 flex flex-col lg:flex-row">
+      <header className="lg:hidden sticky top-0 z-30 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5 min-w-0">
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
             aria-label="Mở menu điều hướng"
             aria-expanded={mobileMenuOpen}
-            className="liquid-glass-btn inline-flex items-center justify-center w-9 h-9 rounded-full shrink-0"
+            className="liquid-glass-btn inline-flex items-center justify-center w-9 h-9 rounded-lg shrink-0"
           >
             <Menu className="w-4 h-4" aria-hidden="true" />
           </button>
           <div className="min-w-0">
             <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-sky-600 shrink-0" aria-hidden="true" />
-              <span className="text-xs font-mono font-semibold uppercase tracking-wide text-slate-900">
+              <ShieldCheck className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
+              <span className="text-xs font-mono font-semibold uppercase tracking-wide text-slate-900 dark:text-slate-100">
                 SpeakIT Admin
               </span>
             </div>
-            <p className="text-xs text-slate-700 truncate">{activeTabMeta.label}</p>
+            <p className="text-sm text-slate-700 dark:text-slate-300 truncate">{activeTabMeta.label}</p>
           </div>
         </div>
 
@@ -204,7 +204,7 @@ export function AdminShell() {
             disabled={isRefreshing || isLoading}
             onClick={() => void refreshDashboard(true)}
             aria-label="Làm mới dữ liệu"
-            className="liquid-glass-btn inline-flex items-center justify-center w-9 h-9 rounded-full disabled:opacity-50"
+            className="liquid-glass-btn inline-flex items-center justify-center w-9 h-9 rounded-lg disabled:opacity-50"
           >
             <RefreshCw
               className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin" : ""}`}
@@ -216,35 +216,35 @@ export function AdminShell() {
 
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 z-40 bg-slate-900/25 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-40 bg-slate-900/40 lg:hidden"
           onClick={() => setMobileMenuOpen(false)}
           aria-hidden="true"
         />
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 shrink-0 bg-white/85 backdrop-blur-2xl border-r border-slate-200/85 flex flex-col transition-transform duration-200 ease-out lg:sticky lg:top-0 lg:z-30 lg:h-screen lg:translate-x-0 ${
-          mobileMenuOpen ? "translate-x-0 shadow-[0_16px_48px_rgba(15,23,42,0.14)]" : "-translate-x-full"
+        className={`fixed inset-y-0 left-0 z-50 w-64 shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-transform duration-200 ease-out lg:sticky lg:top-0 lg:z-30 lg:h-screen lg:translate-x-0 ${
+          mobileMenuOpen ? "translate-x-0 shadow-xl" : "-translate-x-full"
         }`}
       >
-        <div className="px-4 py-3 border-b border-slate-200/85 space-y-1.5 shrink-0">
+        <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-800 space-y-1.5 shrink-0">
           <div className="flex items-center justify-between gap-2">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-sky-100/90 border border-sky-300/80 text-sky-800 text-[11px] font-mono font-semibold uppercase tracking-wide">
-              <ShieldCheck className="w-3.5 h-3.5 text-sky-600" aria-hidden="true" />
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-[11px] font-mono font-semibold uppercase tracking-wide">
+              <ShieldCheck className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
               <span>ADMIN PORTAL</span>
             </span>
             <button
               type="button"
               onClick={() => setMobileMenuOpen(false)}
               aria-label="Đóng menu điều hướng"
-              className="lg:hidden liquid-glass-btn inline-flex items-center justify-center w-8 h-8 rounded-full"
+              className="lg:hidden liquid-glass-btn inline-flex items-center justify-center w-8 h-8 rounded-lg"
             >
               <X className="w-4 h-4" aria-hidden="true" />
             </button>
           </div>
 
           <div>
-            <p className="text-sm font-bold tracking-tight text-slate-900">
+            <p className="text-sm font-bold tracking-tight text-slate-900 dark:text-slate-100">
               SpeakIT Control Center
             </p>
           </div>
@@ -265,25 +265,25 @@ export function AdminShell() {
                   setMobileMenuOpen(false);
                 }}
                 aria-current={isActive ? "page" : undefined}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-full text-xs font-medium text-left transition-all border ${
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-left transition-colors border ${
                   isActive
-                    ? "bg-sky-500/15 border-sky-400/60 text-sky-900 font-semibold shadow-[0_4px_14px_rgba(14,165,233,0.15)]"
-                    : "border-transparent text-slate-700 hover:bg-slate-100/80 hover:text-slate-900"
+                    ? "bg-blue-50 dark:bg-blue-950/50 border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300 font-semibold"
+                    : "border-transparent text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100"
                 }`}
               >
-                <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-sky-600" : "text-slate-500"}`} aria-hidden="true" />
+                <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-blue-700 dark:text-blue-400" : "text-slate-500 dark:text-slate-400"}`} aria-hidden="true" />
                 <span className="truncate">{label}</span>
               </button>
             );
           })}
         </nav>
 
-        <div className="p-3 border-t border-slate-200/85 space-y-1.5 shrink-0">
+        <div className="p-3 border-t border-slate-200 dark:border-slate-800 space-y-1.5 shrink-0">
           <button
             type="button"
             disabled={isRefreshing || isLoading}
             onClick={() => void refreshDashboard(true)}
-            className="liquid-glass-btn w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-medium disabled:opacity-50"
+            className="liquid-glass-btn w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-medium disabled:opacity-50"
           >
             <RefreshCw
               className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin" : ""}`}
@@ -296,7 +296,7 @@ export function AdminShell() {
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="liquid-glass-btn inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-medium"
+              className="liquid-glass-btn inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium"
             >
               <span>Trang chủ</span>
               <ArrowUpRight className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
@@ -305,7 +305,7 @@ export function AdminShell() {
             <button
               type="button"
               onClick={() => void lockSession()}
-              className="liquid-btn-danger inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-semibold"
+              className="liquid-btn-danger inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold"
             >
               <Lock className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
               <span>Đăng xuất</span>
@@ -319,9 +319,9 @@ export function AdminShell() {
           {loadWarning && (
           <div
             role="status"
-            className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-amber-50/90 border border-amber-300/80 text-xs text-amber-800"
+            className="flex items-start gap-2.5 p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-sm text-amber-800 dark:text-amber-300"
           >
-            <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" aria-hidden="true" />
+            <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" aria-hidden="true" />
             <span>{loadWarning}</span>
           </div>
         )}

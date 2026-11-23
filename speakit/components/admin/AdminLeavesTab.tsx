@@ -93,11 +93,11 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
     <div className="space-y-6">
       <div className="liquid-glass-card p-4 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 text-sky-600" />
+          <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <ShieldAlert className="w-4 h-4 text-blue-700 dark:text-blue-400" />
             <span>Duyệt lý do thoát game &amp; Tài khoản vi phạm</span>
           </h2>
-          <p className="text-xs text-slate-700 mt-0.5">
+          <p className="text-sm text-slate-700 dark:text-slate-300 mt-0.5">
             Đơn hợp lý có thể bấm Duyệt (không trừ coin). Không hợp lý thì nhập số coin phạt và Từ chối.
           </p>
         </div>
@@ -106,7 +106,7 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
           type="button"
           onClick={() => void loadLeaves()}
           disabled={isLoading}
-          className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold disabled:opacity-50"
+          className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
           <span>Tải lại</span>
@@ -114,52 +114,52 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
       </div>
 
       {notice && (
-        <div role="status" className="p-3 rounded-xl bg-sky-50/90 border border-sky-300/80 text-xs font-medium text-sky-900">
+        <div role="status" className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-sm font-medium text-blue-700 dark:text-blue-300">
           {notice}
         </div>
       )}
 
       <section className="liquid-glass-card p-5 space-y-4">
-        <h3 className="text-sm font-bold text-slate-900">
+        <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
           Đơn xin thoát đang chờ duyệt ({pendingRequests.length})
         </h3>
 
         {isLoading ? (
-          <div className="py-6 flex items-center gap-2 text-xs text-slate-700">
-            <Loader2 className="w-4 h-4 animate-spin text-sky-600" />
+          <div className="py-6 flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+            <Loader2 className="w-4 h-4 animate-spin text-blue-700 dark:text-blue-400" />
             <span>Đang tải...</span>
           </div>
         ) : pendingRequests.length === 0 ? (
-          <p className="text-xs text-slate-600">Hiện chưa có đơn xin thoát nào đang chờ duyệt.</p>
+          <p className="text-sm text-slate-600 dark:text-slate-400">Hiện chưa có đơn xin thoát nào đang chờ duyệt.</p>
         ) : (
-          <div className="space-y-3">
+          <div className="divide-y divide-slate-200 dark:divide-slate-800 border-t border-slate-200 dark:border-slate-800">
             {pendingRequests.map((req) => {
               const penalty = penaltyMap[req.id] ?? 3;
               const note = noteMap[req.id] ?? "";
               return (
                 <div
                   key={req.id}
-                  className="p-4 rounded-xl bg-white/85 border border-slate-200/85 space-y-3"
+                  className="py-4 space-y-3"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                    <div className="font-bold text-slate-900">
-                      {req.playerName} •{" "}
-                      <span className="font-mono text-sky-700">
+                    <div className="font-bold text-slate-900 dark:text-slate-100">
+                      {req.playerName} :{" "}
+                      <span className="font-mono text-blue-700 dark:text-blue-400">
                         {GAME_LABELS[req.gameId] ?? req.gameId}
                       </span>
                       {req.roomCode ? ` (${req.roomCode})` : ""}
                     </div>
-                    <span className="font-mono text-[11px] text-slate-600">
+                    <span className="font-mono text-xs text-slate-600 dark:text-slate-400">
                       {formatDateTimeVI(req.createdAt)}
                     </span>
                   </div>
 
-                  <p className="text-xs text-slate-900 bg-slate-50/90 border border-slate-200/85 rounded-lg p-2.5 leading-relaxed">
+                  <p className="text-sm text-slate-900 dark:text-slate-100 border-l-2 border-blue-700 dark:border-blue-500 pl-3 py-1 leading-relaxed">
                     Lý do: &ldquo;{req.reason || "(trống)"}&rdquo;
                   </p>
 
                   <div className="flex flex-wrap items-center gap-2">
-                    <label className="text-[11px] font-mono text-slate-700 flex items-center gap-1.5">
+                    <label className="text-xs font-mono text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
                       <span>Trừ nếu từ chối (Coin):</span>
                       <input
                         type="number"
@@ -196,7 +196,7 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
                           `Đã duyệt đơn của ${req.playerName} (không trừ Coin).`
                         )
                       }
-                      className="liquid-btn-success inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold disabled:opacity-50"
+                      className="liquid-btn-success inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50"
                     >
                       <Check className="w-3.5 h-3.5" />
                       <span>Duyệt (không trừ)</span>
@@ -212,7 +212,7 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
                           `Đã từ chối đơn của ${req.playerName} và trừ ${penalty} IT-Coin.`
                         )
                       }
-                      className="liquid-btn-danger inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold disabled:opacity-50"
+                      className="liquid-btn-danger inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50"
                     >
                       <X className="w-3.5 h-3.5" />
                       <span>Từ chối &amp; trừ coin</span>
@@ -226,36 +226,36 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
       </section>
 
       <section className="liquid-glass-card p-5 space-y-4">
-        <h3 className="text-sm font-bold text-slate-900">
+        <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
           Người chơi có lịch sử thoát ngang / đang bị khóa ({flaggedPlayers.length})
         </h3>
 
         {flaggedPlayers.length === 0 ? (
-          <p className="text-xs text-slate-600">Chưa có tài khoản nào bị ghi nhận thoát ngang.</p>
+          <p className="text-sm text-slate-600 dark:text-slate-400">Chưa có tài khoản nào bị ghi nhận thoát ngang.</p>
         ) : (
-          <div className="space-y-2.5">
+          <div className="divide-y divide-slate-200 dark:divide-slate-800 border-t border-slate-200 dark:border-slate-800">
             {flaggedPlayers.map((p) => (
               <div
                 key={p.id}
-                className="p-3.5 rounded-xl bg-white/85 border border-slate-200/85 flex flex-wrap items-center justify-between gap-3 text-xs"
+                className="py-3.5 flex flex-wrap items-center justify-between gap-3 text-xs"
               >
                 <div className="space-y-0.5">
-                  <div className="font-bold text-slate-900 flex flex-wrap items-center gap-2">
+                  <div className="font-bold text-slate-900 dark:text-slate-100 flex flex-wrap items-center gap-2">
                     <span>{p.displayName}</span>
-                    <span className="font-mono text-[11px] text-slate-600">
+                    <span className="font-mono text-xs text-slate-600 dark:text-slate-400">
                       ({p.transferCode})
                     </span>
                     {p.frozenNow && (
-                      <span className="px-2 py-0.5 rounded-full bg-rose-100/90 border border-rose-300/80 text-rose-800 text-[10px] font-mono font-bold">
+                      <span className="px-2 py-0.5 rounded-full bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-300 text-[11px] font-mono font-bold">
                         {p.permanent
                           ? "KHÓA VĨNH VIỄN"
                           : `KHÓA ĐẾN ${new Date(p.frozenUntil!).toLocaleString("vi-VN")}`}
                       </span>
                     )}
                   </div>
-                  <div className="font-mono text-[11px] text-slate-700">
-                    Thoát kỳ này: {p.leaveCount} • Tổng vi phạm: {p.forfeitsTotal} • Số lần bị khóa:{" "}
-                    {p.freezeStrikes} • Coin: {p.itCoins}
+                  <div className="font-mono text-xs text-slate-700 dark:text-slate-300">
+                    Thoát kỳ này: {p.leaveCount} : Tổng vi phạm: {p.forfeitsTotal} : Số lần bị khóa:{" "}
+                    {p.freezeStrikes} : Coin: {p.itCoins}
                   </div>
                 </div>
 
@@ -271,7 +271,7 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
                           `Đã mở khóa cho ${p.displayName}.`
                         )
                       }
-                      className="liquid-btn-success inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold disabled:opacity-50"
+                      className="liquid-btn-success inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50"
                     >
                       <Unlock className="w-3.5 h-3.5" />
                       <span>Mở khóa</span>
@@ -287,7 +287,7 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
                           `Đã đóng băng ${p.displayName} trong 30 phút.`
                         )
                       }
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-100/90 hover:bg-amber-200/90 border border-amber-300/80 text-amber-900 text-xs font-semibold transition-colors disabled:opacity-50"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-950/60 border border-amber-300 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-xs font-semibold transition-colors disabled:opacity-50"
                     >
                       <Lock className="w-3.5 h-3.5" />
                       <span>Đóng băng 30 phút</span>
@@ -302,28 +302,28 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
 
       {historyRequests.length > 0 && (
         <section className="liquid-glass-card p-5 space-y-3">
-          <h3 className="text-sm font-bold text-slate-900">Lịch sử xử lý gần đây ({historyRequests.length})</h3>
-          <div className="space-y-2">
+          <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">Lịch sử xử lý gần đây ({historyRequests.length})</h3>
+          <div className="divide-y divide-slate-200 dark:divide-slate-800 border-t border-slate-200 dark:border-slate-800">
             {historyRequests.slice(0, 20).map((item) => (
               <div
                 key={item.id}
-                className="px-3 py-2 rounded-xl bg-white/85 border border-slate-200/85 flex flex-wrap items-center justify-between gap-2 text-xs"
+                className="py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs"
               >
                 <div>
-                  <span className="font-semibold text-slate-900">{item.playerName}</span>{" "}
-                  <span className="text-slate-700">
+                  <span className="font-semibold text-slate-900 dark:text-slate-100">{item.playerName}</span>{" "}
+                  <span className="text-slate-700 dark:text-slate-300">
                     ({GAME_LABELS[item.gameId] ?? item.gameId})
                   </span>
                   {item.reason && (
-                    <span className="text-slate-600"> — &ldquo;{item.reason}&rdquo;</span>
+                    <span className="text-slate-600 dark:text-slate-400"> : &ldquo;{item.reason}&rdquo;</span>
                   )}
                 </div>
-                <div className="flex items-center gap-2 font-mono text-[11px]">
+                <div className="flex items-center gap-2 font-mono text-xs">
                   <span
                     className={`px-2 py-0.5 rounded-full border ${
                       item.status === "approved"
-                        ? "bg-emerald-100/90 border-emerald-300/80 text-emerald-800"
-                        : "bg-rose-100/90 border-rose-300/80 text-rose-800"
+                        ? "bg-green-50 dark:bg-green-950/40 border-green-300 dark:border-green-800 text-green-700 dark:text-green-300"
+                        : "bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-800 text-red-600 dark:text-red-300"
                     }`}
                   >
                     {item.status === "approved"
@@ -332,7 +332,7 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
                       ? `Từ chối (-${item.penaltyCoins} coin)`
                       : `Thoát ngang (-${item.penaltyCoins} coin)`}
                   </span>
-                  <span className="text-slate-600">{formatDateTimeVI(item.createdAt)}</span>
+                  <span className="text-slate-600 dark:text-slate-400">{formatDateTimeVI(item.createdAt)}</span>
                 </div>
               </div>
             ))}

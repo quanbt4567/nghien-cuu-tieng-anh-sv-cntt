@@ -873,35 +873,35 @@ export function PartyWarRoom() {
       return null;
     }
     const headline = lastTurnFeedback
-      ? `✓ Đã ghi nhận báo cáo (+${lastTurnFeedback.score} pts • Tiến độ ${resolutionProgress}%/100%) — Đọc chỉ dẫn tiếp theo của CTO bên dưới và gửi báo cáo lượt tiếp để đạt 100%!`
-      : `✓ Đã ghi nhận ${humanTurnsCount} lượt báo cáo (Tiến độ ${resolutionProgress}%/100%) — Đọc chỉ dẫn tiếp theo của CTO bên dưới và gửi báo cáo lượt tiếp để đạt 100%!`;
+      ? `✓ Đã ghi nhận báo cáo (+${lastTurnFeedback.score} pts, Tiến độ ${resolutionProgress}%/100%): Đọc chỉ dẫn tiếp theo của CTO bên dưới và gửi báo cáo lượt tiếp để đạt 100%!`
+      : `✓ Đã ghi nhận ${humanTurnsCount} lượt báo cáo (Tiến độ ${resolutionProgress}%/100%): Đọc chỉ dẫn tiếp theo của CTO bên dưới và gửi báo cáo lượt tiếp để đạt 100%!`;
 
     return (
       <div
         role="status"
-        className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-300/80 text-emerald-900 text-xs space-y-2"
+        className="p-3.5 border-l-4 border-l-green-700 bg-green-50 dark:bg-green-950/30 text-green-900 dark:text-green-200 text-sm space-y-2"
       >
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="font-bold flex items-start gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+            <CheckCircle2 className="w-4 h-4 text-green-700 dark:text-green-400 shrink-0 mt-0.5" />
             <span>{headline}</span>
           </div>
-          <div className="flex items-center gap-1.5 font-mono text-[11px] font-bold shrink-0">
-            <span className="px-2 py-0.5 rounded bg-white/85 border border-emerald-300/80 text-emerald-800">
+          <div className="flex items-center gap-1.5 font-mono text-xs font-bold shrink-0">
+            <span className="px-2 py-0.5 rounded bg-white dark:bg-slate-900 border border-green-300 dark:border-green-700 text-green-800 dark:text-green-300">
               Đã nộp: {humanTurnsCount} lượt • Tiếp: Lượt {nextTurnNumber}
             </span>
-            <span className="px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300/80">
+            <span className="px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-300">
               Còn {remainingProgress}%
             </span>
           </div>
         </div>
 
         {location === "cto" ? (
-          <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-emerald-800">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-green-800 dark:text-green-300">
             <span>
               {humanTurnsCount === 1
                 ? "Gợi ý Lượt 2: Mô tả bước khắc phục (mitigation) bằng tiếng Anh cùng từ khóa mục tiêu."
-                : "Gợi ý lượt tiếp: Xác nhận hệ thống đang hồi phục và đạt ≥ 55 pts để chạm 100%."}
+                : "Gợi ý lượt tiếp: Xác nhận hệ thống đang hồi phục và đạt >= 55 pts để chạm 100%."}
             </span>
             <button
               type="button"
@@ -911,24 +911,24 @@ export function PartyWarRoom() {
                   block: "center",
                 })
               }
-              className="liquid-btn-success inline-flex items-center gap-1 px-2.5 py-1 rounded-lg font-mono font-bold"
+              className="liquid-btn-success inline-flex items-center gap-1 px-2.5 py-1 rounded-lg font-mono text-xs font-bold transition-colors"
             >
-              <ArrowDown className="w-3 h-3" />
+              <ArrowDown className="w-3.5 h-3.5" />
               <span>Gửi Lượt {nextTurnNumber}</span>
             </button>
           </div>
         ) : (
-          <div className="p-2.5 rounded-lg bg-white/85 border border-emerald-300/70 text-slate-800 space-y-1">
-            <div className="font-mono font-bold text-[11px] text-emerald-800">
+          <div className="border-t border-green-200 dark:border-green-800 pt-2 text-slate-800 dark:text-slate-200 space-y-1">
+            <div className="font-mono font-bold text-xs text-green-800 dark:text-green-300">
               Chỉ dẫn tiếp theo của CTO:
             </div>
-            <p className="text-xs text-slate-700">
+            <p className="text-sm text-slate-700 dark:text-slate-300">
               {lastTurnFeedback?.feedback ??
                 ctoAlertText ??
                 activeScenario.incidentContext}
             </p>
             {lastTurnFeedback && lastTurnFeedback.missingKeywords.length > 0 && (
-              <p className="text-[11px] font-mono text-amber-700 font-semibold">
+              <p className="text-sm font-mono text-amber-700 dark:text-amber-400 font-semibold">
                 Từ khóa nên bổ sung:{" "}
                 {lastTurnFeedback.missingKeywords.slice(0, 3).join(", ")}
               </p>
@@ -945,44 +945,44 @@ export function PartyWarRoom() {
         finisherId={equippedCosmetics.victory_finisher}
         active={showFinisher}
         title="INCIDENT RESOLVED!"
-        subtitle={`${activeScenario.title} — Team Score ${room?.teamScore ?? 0} pts`}
+        subtitle={`${activeScenario.title}, Team Score ${room?.teamScore ?? 0} pts`}
         onComplete={() => setShowFinisher(false)}
       />
 
       <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-rose-100 border border-rose-300/80 text-rose-800 text-[11px] font-mono font-bold">
-              <Radio className="w-3.5 h-3.5 text-rose-600" />
+            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-red-50 border border-red-200 text-red-800 dark:bg-red-950/40 dark:border-red-800 dark:text-red-300 text-xs font-mono font-bold">
+              <Radio className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />
               <span>CO-OP WAR ROOM • 3AM OUTAGE</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
               Outage At 3AM: Incident Command
             </h1>
-            <p className="text-xs sm:text-sm text-slate-600">
+            <p className="text-sm text-slate-600 dark:text-slate-300">
               Coordinate across Frontend, Backend, and DevOps in English. Speaking
-              Vietnamese triggers a <strong className="text-rose-600">-15s</strong> clock
+              Vietnamese triggers a <strong className="text-red-600 dark:text-red-400">-15s</strong> clock
               penalty!
             </p>
           </div>
 
-          <div className="liquid-glass-pill flex items-center gap-3 self-start sm:self-center px-3.5 py-2">
+          <div className="inline-flex items-center gap-3 self-start sm:self-center px-3.5 py-2 rounded-full bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700">
             <DiscordAvatarFrame
               equippedId={equippedCosmetics.avatar_decoration}
               fallbackRing={guestPlayer?.equippedRing}
               size="sm"
               micActive={isRecording}
             >
-              <div className="w-8 h-8 rounded-full bg-rose-600 border border-rose-300/60 text-white flex items-center justify-center text-xs font-mono font-bold">
+              <div className="w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center text-xs font-mono font-bold">
                 {(guestPlayer?.displayName ?? "DV").slice(0, 2).toUpperCase()}
               </div>
             </DiscordAvatarFrame>
             <div className="text-xs">
-              <div className="font-bold text-slate-900">
+              <div className="font-bold text-slate-900 dark:text-slate-100">
                 {guestPlayer?.displayName ?? "Guest Engineer"}
               </div>
-              <div className="font-mono text-amber-700 flex items-center gap-1">
-                <Coins className="w-3.5 h-3.5 text-amber-600" />
+              <div className="font-mono text-amber-700 dark:text-amber-400 flex items-center gap-1">
+                <Coins className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400" />
                 <span>{guestPlayer?.itCoins ?? 0} IT-Coins</span>
               </div>
             </div>
@@ -990,8 +990,8 @@ export function PartyWarRoom() {
         </div>
 
         {errorMsg && (
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-rose-50 border border-rose-300/80 text-rose-800 text-xs font-medium">
-            <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+          <div className="flex items-center gap-2 px-4 py-2.5 border-l-4 border-l-red-600 bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-200 text-sm font-medium">
+            <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
@@ -1000,10 +1000,10 @@ export function PartyWarRoom() {
       {(!room || room.status === "lobby") && (
         <div className="space-y-6">
           <section className="liquid-glass-card p-5 space-y-4">
-            <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900">
+            <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
               1. Choose Your Engineering Role
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 border-t border-b border-slate-200 dark:border-slate-800 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-slate-800">
               {ROLES.map((role) => {
                 const active = selectedRole === role.id;
                 return (
@@ -1011,20 +1011,20 @@ export function PartyWarRoom() {
                     key={role.id}
                     type="button"
                     onClick={() => setSelectedRole(role.id)}
-                    className={`text-left p-4 rounded-xl border transition-all ${
+                    className={`text-left p-4 border-l-4 transition-colors ${
                       active
-                        ? "bg-rose-50/95 border-rose-400/80 shadow-[0_6px_20px_rgba(244,63,94,0.18)]"
-                        : "bg-white/80 border-slate-200/85 hover:border-rose-400/60"
+                        ? "border-l-red-600 bg-red-50/70 dark:bg-red-950/30 dark:border-l-red-500"
+                        : "border-l-transparent hover:bg-slate-50 dark:hover:bg-slate-800/40"
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-rose-100 border border-rose-300/80 text-rose-800">
+                      <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-red-50 border border-red-200 text-red-800 dark:bg-red-950/40 dark:border-red-800 dark:text-red-300">
                         {role.badge}
                       </span>
-                      {active && <CheckCircle2 className="w-4 h-4 text-rose-600" />}
+                      {active && <CheckCircle2 className="w-4 h-4 text-red-600 dark:text-red-400" />}
                     </div>
-                    <div className="mt-2 font-bold text-sm text-slate-900">{role.label}</div>
-                    <div className="mt-1 text-xs text-slate-600">{role.focus}</div>
+                    <div className="mt-2 font-bold text-sm text-slate-900 dark:text-slate-100">{role.label}</div>
+                    <div className="mt-1 text-sm text-slate-600 dark:text-slate-300">{role.focus}</div>
                   </button>
                 );
               })}
@@ -1035,15 +1035,15 @@ export function PartyWarRoom() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <section className="lg:col-span-2 liquid-glass-card p-5 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900">
-                    2. Create Room — Select Outage Scenario
+                  <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
+                    2. Create Room: Select Outage Scenario
                   </h2>
-                  <span className="text-xs font-mono text-slate-600">
+                  <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
                     {PARTY_SCENARIOS.length} scenarios
                   </span>
                 </div>
 
-                <div className="space-y-2.5">
+                <div className="divide-y divide-slate-200 dark:divide-slate-800 border-t border-b border-slate-200 dark:border-slate-800">
                   {PARTY_SCENARIOS.map((scenario) => {
                     const active = selectedScenarioId === scenario.id;
                     return (
@@ -1051,32 +1051,32 @@ export function PartyWarRoom() {
                         key={scenario.id}
                         type="button"
                         onClick={() => setSelectedScenarioId(scenario.id)}
-                        className={`w-full text-left p-3.5 rounded-xl border transition-all ${
+                        className={`w-full text-left p-3.5 border-l-4 transition-colors ${
                           active
-                            ? "bg-rose-50/95 border-rose-400/80 shadow-[0_6px_18px_rgba(244,63,94,0.16)]"
-                            : "bg-white/80 border-slate-200/85 hover:border-rose-300/70"
+                            ? "border-l-red-600 bg-red-50/70 dark:bg-red-950/30 dark:border-l-red-500"
+                            : "border-l-transparent hover:bg-slate-50 dark:hover:bg-slate-800/40"
                         }`}
                       >
                         <div className="flex flex-wrap items-center justify-between gap-2">
-                          <span className="font-bold text-sm text-slate-900">
+                          <span className="font-bold text-sm text-slate-900 dark:text-slate-100">
                             {scenario.title}
                           </span>
                           <div className="flex items-center gap-2">
                             <span
-                              className={`px-2 py-0.5 rounded text-[11px] font-mono font-bold border ${
+                              className={`px-2 py-0.5 rounded-full text-xs font-mono font-bold border ${
                                 scenario.severity === "SEV-1"
-                                  ? "bg-rose-100 border-rose-300/80 text-rose-800"
-                                  : "bg-amber-100 border-amber-300/80 text-amber-800"
+                                  ? "bg-red-50 border-red-200 text-red-800 dark:bg-red-950/40 dark:border-red-800 dark:text-red-300"
+                                  : "bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-300"
                               }`}
                             >
                               {scenario.severity}
                             </span>
-                            <span className="text-[11px] font-mono text-slate-600">
+                            <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
                               ~{scenario.estimatedMinutes}m
                             </span>
                           </div>
                         </div>
-                        <p className="mt-1 text-xs text-slate-600">{scenario.summary}</p>
+                        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{scenario.summary}</p>
                       </button>
                     );
                   })}
@@ -1086,7 +1086,7 @@ export function PartyWarRoom() {
                   type="button"
                   onClick={handleCreateRoom}
                   disabled={loadingAction === "create"}
-                  className="liquid-btn-danger w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all disabled:opacity-50"
+                  className="liquid-btn-danger w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm transition-colors disabled:opacity-50"
                 >
                   <ShieldAlert className="w-4 h-4" />
                   <span>
@@ -1099,10 +1099,10 @@ export function PartyWarRoom() {
 
               <section className="liquid-glass-card p-5 flex flex-col justify-between space-y-4">
                 <div className="space-y-3">
-                  <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900">
+                  <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
                     Or Join by Invite Code
                   </h2>
-                  <p className="text-xs text-slate-600">
+                  <p className="text-sm text-slate-600 dark:text-slate-300">
                     Enter the 6-character room code shared by your squad lead.
                   </p>
                   <input
@@ -1111,7 +1111,7 @@ export function PartyWarRoom() {
                     value={joinCodeInput}
                     onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
                     placeholder="ABC123"
-                    className="liquid-glass-input w-full px-4 py-3 rounded-xl font-mono text-lg font-bold tracking-[0.25em] text-center uppercase focus:outline-none"
+                    className="liquid-glass-input w-full px-4 py-3 rounded-lg font-mono text-lg font-bold tracking-[0.25em] text-center uppercase focus:outline-none"
                   />
                 </div>
 
@@ -1119,7 +1119,7 @@ export function PartyWarRoom() {
                   type="button"
                   onClick={handleJoinRoom}
                   disabled={loadingAction === "join"}
-                  className="liquid-btn-primary w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all disabled:opacity-50"
+                  className="liquid-btn-primary w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-bold text-sm transition-colors disabled:opacity-50"
                 >
                   <Users className="w-4 h-4" />
                   <span>{loadingAction === "join" ? "Joining..." : "Join Room"}</span>
@@ -1128,21 +1128,21 @@ export function PartyWarRoom() {
             </div>
           ) : (
             <section className="liquid-glass-card p-5 sm:p-6 space-y-5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/85">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
                 <div>
-                  <div className="text-xs font-mono text-slate-600">WAR ROOM CODE</div>
+                  <div className="text-xs font-mono text-slate-600 dark:text-slate-400">WAR ROOM CODE</div>
                   <div className="flex items-center gap-3 mt-1">
-                    <span className="text-2xl font-mono font-bold tracking-[0.2em] text-sky-700 bg-sky-50 px-3 py-1 rounded-lg border border-sky-300/80">
+                    <span className="text-2xl font-mono font-bold tracking-[0.2em] text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 px-3 py-1 rounded-lg border border-blue-200 dark:border-blue-800">
                       {room.roomCode}
                     </span>
                     <button
                       type="button"
                       onClick={handleCopyCode}
-                      className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold"
+                      className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold transition-colors"
                     >
                       {copiedCode ? (
                         <>
-                          <Check className="w-3.5 h-3.5 text-emerald-600" />
+                          <Check className="w-3.5 h-3.5 text-green-700 dark:text-green-400" />
                           <span>Copied</span>
                         </>
                       ) : (
@@ -1156,26 +1156,22 @@ export function PartyWarRoom() {
                 </div>
 
                 <div className="text-left sm:text-right">
-                  <span className="px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-rose-100 border border-rose-300/80 text-rose-800">
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-red-50 border border-red-200 text-red-800 dark:bg-red-950/40 dark:border-red-800 dark:text-red-300">
                     {activeScenario.severity}
                   </span>
-                  <div className="mt-1 font-bold text-base text-slate-900">
+                  <div className="mt-1 font-bold text-base text-slate-900 dark:text-slate-100">
                     {activeScenario.title}
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 border-t border-b border-slate-200 dark:border-slate-800 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-slate-800">
                 {ROLES.map((role) => {
                   const slot = room.players.find((p) => p.role === role.id);
                   return (
                     <div
                       key={role.id}
-                      className={`p-4 rounded-xl border ${
-                        slot
-                          ? "bg-white/80 border-slate-200/85"
-                          : "bg-slate-100/70 border-dashed border-slate-300"
-                      }`}
+                      className={`p-4 ${slot ? "" : "opacity-75"}`}
                     >
                       <div className="flex items-center gap-3">
                         <DiscordAvatarFrame
@@ -1186,15 +1182,15 @@ export function PartyWarRoom() {
                           }
                           size="sm"
                         >
-                          <div className="w-9 h-9 rounded-full bg-rose-600 border border-rose-300/60 text-white flex items-center justify-center text-xs font-mono font-bold">
+                          <div className="w-9 h-9 rounded-full bg-red-600 text-white flex items-center justify-center text-xs font-mono font-bold">
                             {role.badge}
                           </div>
                         </DiscordAvatarFrame>
                         <div className="min-w-0">
-                          <div className="text-xs font-mono text-slate-600">
+                          <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
                             {role.label}
                           </div>
-                          <div className="font-bold text-sm text-slate-900 truncate">
+                          <div className="font-bold text-sm text-slate-900 dark:text-slate-100 truncate">
                             {slot ? slot.displayName : "Waiting for engineer..."}
                           </div>
                         </div>
@@ -1212,9 +1208,9 @@ export function PartyWarRoom() {
                     disabled={
                       loadingAction === "fill_ai" || room.players.length >= 3
                     }
-                    className="liquid-glass-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm disabled:opacity-50"
+                    className="liquid-glass-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-bold text-sm disabled:opacity-50 transition-colors"
                   >
-                    <Bot className="w-4 h-4 text-sky-600" />
+                    <Bot className="w-4 h-4 text-blue-700 dark:text-blue-400" />
                     <span>
                       {loadingAction === "fill_ai"
                         ? "Đang gọi AI đồng đội..."
@@ -1225,7 +1221,7 @@ export function PartyWarRoom() {
                   <button
                     type="button"
                     onClick={handleLeaveRoom}
-                    className="liquid-glass-btn px-3.5 py-2.5 rounded-xl text-xs font-mono text-slate-700 hover:text-slate-900"
+                    className="liquid-glass-btn px-3.5 py-2.5 rounded-lg text-sm font-mono text-slate-700 dark:text-slate-200 transition-colors"
                   >
                     Rời phòng
                   </button>
@@ -1238,7 +1234,7 @@ export function PartyWarRoom() {
                     disabled={
                       loadingAction === "start" || room.players.length < 3
                     }
-                    className="liquid-btn-danger inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="liquid-btn-danger inline-flex items-center gap-2 px-6 py-2.5 rounded-lg font-bold text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Play className="w-4 h-4" />
                     <span>
@@ -1248,7 +1244,7 @@ export function PartyWarRoom() {
                     </span>
                   </button>
                   {room.players.length < 3 && (
-                    <span className="text-xs font-mono text-slate-600">
+                    <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
                       Need {3 - room.players.length} more teammate
                       {3 - room.players.length > 1 ? "s" : ""} (invite or click
                       Fill with AI Teammates).
@@ -1267,33 +1263,33 @@ export function PartyWarRoom() {
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-pill bg-rose-100 border border-rose-300/80 text-rose-800 text-xs font-mono font-bold">
+                    <span className="px-2.5 py-0.5 rounded-full bg-red-50 border border-red-200 text-red-800 dark:bg-red-950/40 dark:border-red-800 dark:text-red-300 text-xs font-mono font-bold">
                       {activeScenario.severity}
                     </span>
-                    <span className="liquid-glass-pill px-3 py-0.5 text-xs font-mono text-slate-700">
+                    <span className="px-3 py-0.5 rounded-full bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 text-xs font-mono text-slate-700 dark:text-slate-300">
                       ROOM {room.roomCode}
                     </span>
-                    <span className="liquid-glass-pill px-3 py-0.5 text-[11px] font-mono font-bold text-sky-700">
+                    <span className="px-3 py-0.5 rounded-full bg-blue-50 border border-blue-200 dark:bg-blue-950/40 dark:border-blue-800 text-xs font-mono font-bold text-blue-700 dark:text-blue-300">
                       Lượt {nextTurnNumber} • Tiến độ {resolutionProgress}%/100%
                     </span>
                   </div>
-                  <h2 className="text-xl font-bold text-slate-900">
+                  <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
                     {activeScenario.title}
                   </h2>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
                   {penaltyFlash && (
-                    <span className="px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-mono font-bold animate-pulse border border-rose-300">
+                    <span className="px-3 py-1 rounded-full bg-red-50 text-red-800 text-xs font-mono font-bold border border-red-300 dark:bg-red-950/40 dark:text-red-200 dark:border-red-800">
                       -15s Vietnamese Penalty!
                     </span>
                   )}
 
                   <div
-                    className={`flex items-center gap-2 px-4 py-2 rounded-pill font-mono font-bold text-lg ${
+                    className={`flex items-center gap-2 px-4 py-2 rounded-full font-mono font-bold text-lg ${
                       penaltyFlash || timeLeftSec <= 60
-                        ? "liquid-btn-danger animate-pulse"
-                        : "liquid-glass-pill text-sky-700"
+                        ? "bg-red-600 text-white"
+                        : "bg-blue-50 border border-blue-200 text-blue-700 dark:bg-blue-950/40 dark:border-blue-800 dark:text-blue-300"
                     }`}
                   >
                     <Clock className="w-4 h-4" />
@@ -1310,16 +1306,16 @@ export function PartyWarRoom() {
                               ctoAlertText ?? activeScenario.incidentContext
                             )
                     }
-                    className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-mono font-bold"
+                    className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-mono font-bold transition-colors"
                   >
                     {isTtsPlaying ? (
                       <>
-                        <VolumeX className="w-4 h-4 text-rose-600" />
+                        <VolumeX className="w-4 h-4 text-red-600 dark:text-red-400" />
                         <span>Mute CTO</span>
                       </>
                     ) : (
                       <>
-                        <Volume2 className="w-4 h-4 text-sky-600" />
+                        <Volume2 className="w-4 h-4 text-blue-700 dark:text-blue-400" />
                         <span>CTO Briefing</span>
                       </>
                     )}
@@ -1328,16 +1324,16 @@ export function PartyWarRoom() {
               </div>
 
               <div className="space-y-1.5">
-                <div className="flex items-center justify-between text-xs font-mono font-bold text-slate-700">
+                <div className="flex items-center justify-between text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
                   <span>INCIDENT RESOLUTION PROGRESS</span>
-                  <span className="text-emerald-700">
+                  <span className="text-green-700 dark:text-green-400">
                     {resolutionProgress}% / 100% (Còn {remainingProgress}%)
                   </span>
                 </div>
-                <div className="w-full h-4 rounded-full bg-slate-200/80 border border-slate-300/70 overflow-hidden">
+                <div className="w-full h-4 rounded-full bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-emerald-500 to-sky-500 transition-all duration-500"
-                    style={{ width: `${Math.min(100, Math.max(0, resolutionProgress))}%` }}
+                    className="w-full h-full origin-left bg-green-700 dark:bg-green-600 transition-transform duration-500"
+                    style={{ transform: `scaleX(${Math.min(100, Math.max(0, resolutionProgress)) / 100})` }}
                   />
                 </div>
               </div>
@@ -1346,27 +1342,27 @@ export function PartyWarRoom() {
 
               <div
                 ref={ctoBoxRef}
-                className={`scroll-mt-24 p-3.5 rounded-xl border text-xs flex items-start gap-2.5 transition-all duration-500 ${
+                className={`scroll-mt-24 p-3.5 border-l-4 text-sm flex items-start gap-2.5 transition-colors duration-500 ${
                   ctoHighlight
-                    ? "bg-amber-50 border-amber-400/80 text-amber-950 ring-2 ring-amber-400/40"
-                    : "bg-white/80 border-slate-200/85 text-slate-700"
+                    ? "border-l-amber-500 bg-amber-50 dark:bg-amber-950/30 text-amber-950 dark:text-amber-100"
+                    : "border-l-blue-700 dark:border-l-blue-500 bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-200"
                 }`}
               >
-                <Terminal className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                <Terminal className="w-4 h-4 text-amber-700 dark:text-amber-400 shrink-0 mt-0.5" />
                 <div className="space-y-1 flex-1">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="font-mono font-bold text-slate-900">
+                    <span className="font-mono font-bold text-slate-900 dark:text-slate-100">
                       CTO Incident Commander
                       {ctoHighlight ? " • Chỉ dẫn mới" : ""}:
                     </span>
-                    <span className="text-[11px] font-mono text-slate-600">
+                    <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
                       Lượt {nextTurnNumber} • Tiến độ {resolutionProgress}%/100%
                     </span>
                   </div>
                   <p>{ctoAlertText ?? activeScenario.incidentContext}</p>
                   {lastTurnFeedback &&
                     lastTurnFeedback.missingKeywords.length > 0 && (
-                      <p className="text-[11px] font-mono text-amber-700 font-semibold">
+                      <p className="text-sm font-mono text-amber-700 dark:text-amber-400 font-semibold">
                         Từ khóa nên dùng ở lượt tiếp:{" "}
                         {lastTurnFeedback.missingKeywords.slice(0, 3).join(", ")}
                       </p>
@@ -1378,48 +1374,48 @@ export function PartyWarRoom() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <section className="lg:col-span-2 liquid-glass-card p-5 space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="px-2.5 py-1 rounded-lg bg-rose-100 border border-rose-300/80 text-rose-800 text-xs font-mono font-bold">
+                  <span className="px-2.5 py-1 rounded-full bg-red-50 border border-red-200 text-red-800 dark:bg-red-950/40 dark:border-red-800 dark:text-red-300 text-xs font-mono font-bold">
                     MANH MỐI RIÊNG CỦA BẠN • {myClue.roleLabel}
                   </span>
                   {room.currentTurnRole === selectedRole && (
-                    <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300/80 text-[11px] font-mono font-bold">
+                    <span className="px-2.5 py-1 rounded-full bg-green-50 text-green-800 border border-green-200 dark:bg-green-950/40 dark:border-green-800 dark:text-green-300 text-xs font-mono font-bold">
                       Đến lượt bạn báo cáo
                     </span>
                   )}
                 </div>
 
-                <p className="text-sm font-medium text-slate-900">
+                <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
                   <InteractiveEnglishText text={myClue.summary} />
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="p-3.5 rounded-xl bg-white/80 border border-slate-200/85 space-y-2">
-                    <div className="text-[11px] font-mono font-bold uppercase text-slate-600">
+                <div className="grid grid-cols-1 sm:grid-cols-2 border-t border-b border-slate-200 dark:border-slate-800 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-slate-800">
+                  <div className="py-3.5 sm:pr-4 space-y-2">
+                    <div className="text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-400">
                       Live Telemetry Metrics
                     </div>
-                    <ul className="space-y-1.5 text-xs font-mono text-slate-700">
+                    <ul className="space-y-1.5 text-sm font-mono text-slate-700 dark:text-slate-300">
                       {myClue.metrics.map((metric) => (
                         <li key={metric} className="flex items-start gap-1.5">
-                          <span className="text-rose-600 font-bold">•</span>
+                          <span className="text-red-600 dark:text-red-400 font-bold">•</span>
                           <span>{metric}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-white/80 border border-slate-200/85 space-y-2">
-                    <div className="flex items-center justify-between gap-2 text-[11px] font-mono font-bold uppercase text-slate-600">
+                  <div className="py-3.5 sm:pl-4 space-y-2">
+                    <div className="flex items-center justify-between gap-2 text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-400">
                       <span>Nguyên nhân nghi vấn</span>
-                      <span className="normal-case font-sans text-slate-500">Chạm từ để dịch</span>
+                      <span className="normal-case font-sans text-slate-500 dark:text-slate-400">Chạm từ để dịch</span>
                     </div>
-                    <p className="text-xs text-slate-800 font-medium">
+                    <p className="text-sm text-slate-800 dark:text-slate-200 font-medium">
                       <InteractiveEnglishText text={myClue.suspectedCause} />
                     </p>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-[11px] font-mono font-bold uppercase text-slate-700">
+                  <div className="text-xs font-mono font-bold uppercase text-slate-700 dark:text-slate-300">
                     Từ khóa tiếng Anh cần nói rõ
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -1430,15 +1426,15 @@ export function PartyWarRoom() {
                         <span
                           key={kw}
                           title={gloss ?? undefined}
-                          className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold border ${
+                          className={`px-2.5 py-1 rounded-full text-xs font-mono font-bold border ${
                             hit
-                              ? "bg-emerald-100 border-emerald-300/80 text-emerald-800"
-                              : "bg-white/80 border-slate-200/85 text-slate-800"
+                              ? "bg-green-50 border-green-200 text-green-800 dark:bg-green-950/40 dark:border-green-800 dark:text-green-300"
+                              : "bg-slate-100 border-slate-200 text-slate-800 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"
                           }`}
                         >
                           {hit ? `✓ ${kw}` : kw}
                           {gloss ? (
-                            <span className="font-sans font-normal text-slate-600">
+                            <span className="font-sans font-normal text-slate-600 dark:text-slate-400">
                               {" "}
                               ({gloss})
                             </span>
@@ -1451,10 +1447,10 @@ export function PartyWarRoom() {
               </section>
 
               <section className="liquid-glass-card p-5 space-y-4">
-                <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-900">
+                <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
                   Teammates&apos; Intel (Role Summary)
                 </h3>
-                <div className="space-y-3">
+                <div className="divide-y divide-slate-200 dark:divide-slate-800 border-t border-b border-slate-200 dark:border-slate-800">
                   {teammateRoles.map((role) => {
                     const clue = activeScenario.clues[role.id];
                     const slot = room.players.find((p) => p.role === role.id);
@@ -1462,33 +1458,33 @@ export function PartyWarRoom() {
                     return (
                       <div
                         key={role.id}
-                        className={`p-3.5 rounded-xl border bg-white/80 space-y-2 ${
-                          isTurn ? "border-rose-400/80" : "border-slate-200/85"
+                        className={`py-3.5 border-l-4 pl-3 space-y-2 ${
+                          isTurn ? "border-l-red-600" : "border-l-transparent"
                         }`}
                       >
                         <div className="flex items-center justify-between gap-2">
                           <div className="flex items-center gap-2 min-w-0">
                             <DiscordAvatarFrame size="sm" micActive={isTurn}>
-                              <div className="w-7 h-7 rounded-full bg-slate-700 text-white flex items-center justify-center text-[10px] font-mono font-bold">
+                              <div className="w-7 h-7 rounded-full bg-slate-700 text-white flex items-center justify-center text-xs font-mono font-bold">
                                 {role.badge}
                               </div>
                             </DiscordAvatarFrame>
                             <div className="min-w-0">
-                              <div className="text-xs font-bold text-slate-900 truncate">
+                              <div className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
                                 {slot?.displayName ?? "AI Engineer"}
                               </div>
-                              <div className="text-[10px] font-mono text-slate-600">
+                              <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
                                 {clue.roleLabel}
                               </div>
                             </div>
                           </div>
                           {slot?.score !== undefined && (
-                            <span className="text-xs font-mono font-bold text-emerald-700">
+                            <span className="text-xs font-mono font-bold text-green-700 dark:text-green-400">
                               {slot.score} pts
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-slate-600">{clue.summary}</p>
+                        <p className="text-sm text-slate-600 dark:text-slate-300">{clue.summary}</p>
                       </div>
                     );
                   })}
@@ -1510,20 +1506,20 @@ export function PartyWarRoom() {
                     size="sm"
                     micActive={isRecording}
                   >
-                    <div className="w-8 h-8 rounded-full bg-rose-600 text-white flex items-center justify-center text-xs font-mono font-bold">
+                    <div className="w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center text-xs font-mono font-bold">
                       {(guestPlayer?.displayName ?? "DV").slice(0, 2).toUpperCase()}
                     </div>
                   </DiscordAvatarFrame>
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-sm font-bold text-slate-900">
+                      <span className="text-sm font-bold text-slate-900 dark:text-slate-100">
                         Nói hoặc gõ báo cáo sự cố (bằng tiếng Anh)
                       </span>
-                      <span className="liquid-glass-pill px-2.5 py-0.5 text-[11px] font-mono font-bold text-sky-700">
+                      <span className="px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-200 dark:bg-blue-950/40 dark:border-blue-800 text-xs font-mono font-bold text-blue-700 dark:text-blue-300">
                         Lượt {nextTurnNumber} • Tiến độ {resolutionProgress}%/100%
                       </span>
                     </div>
-                    <div className="text-xs text-slate-600">
+                    <div className="text-sm text-slate-600 dark:text-slate-300">
                       Giải thích nguyên nhân &amp; cách sửa theo vai trò của bạn, dùng các từ khóa ở trên.
                     </div>
                   </div>
@@ -1533,20 +1529,20 @@ export function PartyWarRoom() {
                   type="button"
                   onClick={handleToggleMic}
                   disabled={isRoomTimedOut || timeLeftSec <= 0}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                     isRecording
-                      ? "liquid-btn-danger animate-pulse"
+                      ? "liquid-btn-danger"
                       : "liquid-glass-btn"
                   }`}
                 >
                   {isRecording ? (
                     <>
-                      <Square className="w-3.5 h-3.5" />
+                      <Square className="w-4 h-4" />
                       <span>Dừng Mic</span>
                     </>
                   ) : (
                     <>
-                      <Mic className="w-3.5 h-3.5 text-rose-600" />
+                      <Mic className="w-4 h-4 text-red-600 dark:text-red-400" />
                       <span>Bật Mic nói</span>
                     </>
                   )}
@@ -1554,7 +1550,7 @@ export function PartyWarRoom() {
               </div>
 
               {speechError && (
-                <div className="text-xs text-rose-700 font-medium">{speechError}</div>
+                <div className="text-sm text-red-700 dark:text-red-400 font-medium">{speechError}</div>
               )}
 
               <textarea
@@ -1567,7 +1563,7 @@ export function PartyWarRoom() {
                     ? "Example: We have a lock contention deadlock in the payment transaction. Let's add a rollback and client idempotency key..."
                     : `Lượt ${nextTurnNumber}: Describe your next mitigation or verification step in English...`
                 }
-                className="liquid-glass-input w-full p-3.5 rounded-xl text-sm focus:outline-none disabled:opacity-50"
+                className="liquid-glass-input w-full p-3.5 rounded-lg text-sm focus:outline-none disabled:opacity-50"
               />
 
               <div className="flex flex-wrap items-center justify-between gap-3">
@@ -1575,16 +1571,16 @@ export function PartyWarRoom() {
                   <button
                     type="button"
                     onClick={handleResetRoom}
-                    className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-mono"
+                    className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-mono transition-colors"
                   >
-                    <RotateCcw className="w-3.5 h-3.5" />
+                    <RotateCcw className="w-4 h-4" />
                     <span>Chơi lại phòng mới</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={handleLeaveRoom}
-                    className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-mono"
+                    className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-mono transition-colors"
                   >
                     <span>Rời phòng</span>
                   </button>
@@ -1598,7 +1594,7 @@ export function PartyWarRoom() {
                     isRoomTimedOut ||
                     timeLeftSec <= 0
                   }
-                  className="liquid-btn-danger inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="liquid-btn-danger inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send className="w-4 h-4" />
                   <span>
@@ -1625,11 +1621,11 @@ export function PartyWarRoom() {
                     timestamp: room.updatedAt,
                   }))
               ).length > 0 && (
-                <div className="pt-4 border-t border-slate-200/85 space-y-2.5">
-                  <div className="text-xs font-mono font-bold uppercase text-slate-600">
+                <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
+                  <div className="text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-400">
                     War-Room Live Transcript
                   </div>
-                  <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+                  <div className="divide-y divide-slate-200 dark:divide-slate-800 border-t border-b border-slate-200 dark:border-slate-800 max-h-72 overflow-y-auto">
                     {(room.transcript && room.transcript.length > 0
                       ? room.transcript
                       : room.evaluations.map((ev) => ({
@@ -1646,32 +1642,32 @@ export function PartyWarRoom() {
                     ).map((entry, idx) => (
                       <div
                         key={`${entry.playerId}-${entry.timestamp}-${idx}`}
-                        className="p-3 rounded-xl bg-white/80 border border-slate-200/85 text-xs space-y-1"
+                        className="py-3 text-sm space-y-1"
                       >
-                        <div className="flex items-center justify-between gap-2 font-mono font-bold">
+                        <div className="flex items-center justify-between gap-2 font-mono text-xs font-bold">
                           <div className="flex items-center gap-2 min-w-0">
-                            <span className="text-slate-900 truncate">
+                            <span className="text-slate-900 dark:text-slate-100 truncate">
                               {entry.playerName}
                             </span>
-                            <span className="uppercase px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 text-[10px]">
+                            <span className="uppercase px-1.5 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 dark:bg-blue-950/40 dark:border-blue-800 dark:text-blue-300 text-xs">
                               {entry.role}
                             </span>
                           </div>
                           <div className="flex items-center gap-2 shrink-0">
-                            <span className="text-[10px] text-slate-500 font-normal">
+                            <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">
                               {new Date(entry.timestamp).toLocaleTimeString([], {
                                 hour: "2-digit",
                                 minute: "2-digit",
                                 second: "2-digit",
                               })}
                             </span>
-                            <span className="text-emerald-700">
+                            <span className="text-green-700 dark:text-green-400">
                               {entry.score} pts
                             </span>
                           </div>
                         </div>
-                        <p className="text-slate-800">&ldquo;{entry.transcript}&rdquo;</p>
-                        <p className="text-slate-600 font-medium">
+                        <p className="text-slate-800 dark:text-slate-200">&ldquo;{entry.transcript}&rdquo;</p>
+                        <p className="text-slate-600 dark:text-slate-400 font-medium">
                           CTO: {entry.feedback}
                         </p>
                       </div>
@@ -1685,38 +1681,38 @@ export function PartyWarRoom() {
 
       {room && isRoomTimedOut && (
         <section className="liquid-glass-card p-6 space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/85">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
             <div className="space-y-1.5">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-100 border border-rose-300/80 text-rose-800 text-xs font-mono font-bold">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 border border-red-200 text-red-800 dark:bg-red-950/40 dark:border-red-800 dark:text-red-300 text-xs font-mono font-bold">
                 <Clock className="w-4 h-4" />
                 <span>TIME&apos;S UP • 00:00</span>
               </div>
-              <h2 className="inline-flex items-center gap-2 text-xl sm:text-2xl font-bold text-slate-900">
-                <Clock className="w-5 h-5 text-rose-600 shrink-0" aria-hidden="true" />
+              <h2 className="inline-flex items-center gap-2 text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100">
+                <Clock className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0" aria-hidden="true" />
                 <span>HẾT GIỜ! SỰ CỐ CHƯA KHẮC PHỤC KỊP (OUTAGE ESCALATED)</span>
               </h2>
-              <p className="text-xs text-slate-600">
-                {activeScenario.title} — Hết thời gian xử lý ({formatClock(0)}).
+              <p className="text-sm text-slate-600 dark:text-slate-300">
+                {activeScenario.title}: Hết thời gian xử lý ({formatClock(0)}).
                 {humanTurnsCount > 0
                   ? " Điểm các lượt bạn đã nộp vẫn được bảo lưu."
                   : " Chưa có báo cáo nào được hoàn tất trước khi hết giờ."}
               </p>
             </div>
 
-            <div className="flex items-center gap-3 shrink-0">
-              <div className="bg-white/80 border border-slate-200/85 rounded-xl px-4 py-2.5 text-center">
-                <div className="text-[10px] font-mono font-bold text-slate-600">
+            <div className="flex items-center divide-x divide-slate-200 dark:divide-slate-800 border border-slate-200 dark:border-slate-800 rounded-lg shrink-0">
+              <div className="px-4 py-2.5 text-center">
+                <div className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400">
                   TIẾN ĐỘ ĐẠT ĐƯỢC
                 </div>
-                <div className="text-2xl font-mono font-bold text-rose-600">
+                <div className="text-2xl font-mono font-bold text-red-600 dark:text-red-400">
                   {resolutionProgress}%
                 </div>
               </div>
-              <div className="bg-white/80 border border-slate-200/85 rounded-xl px-4 py-2.5 text-center">
-                <div className="text-[10px] font-mono font-bold text-slate-600">
+              <div className="px-4 py-2.5 text-center">
+                <div className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400">
                   ĐIỂM TÍCH LŨY
                 </div>
-                <div className="text-2xl font-mono font-bold text-slate-900">
+                <div className="text-2xl font-mono font-bold text-slate-900 dark:text-slate-100">
                   {humanTurnPointsTotal > 0 ? humanTurnPointsTotal : room.teamScore} pts
                 </div>
               </div>
@@ -1724,82 +1720,82 @@ export function PartyWarRoom() {
           </div>
 
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-xs font-mono font-bold text-slate-700">
+            <div className="flex items-center justify-between text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
               <span>FINAL INCIDENT PROGRESS</span>
               <span>{resolutionProgress}% / 100%</span>
             </div>
-            <div className="w-full h-4 rounded-full bg-slate-200/80 border border-slate-300/70 overflow-hidden">
+            <div className="w-full h-4 rounded-full bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-rose-500 to-amber-500 transition-all duration-300"
-                style={{ width: `${Math.min(100, Math.max(0, resolutionProgress))}%` }}
+                className="w-full h-full origin-left bg-red-600 transition-transform duration-300"
+                style={{ transform: `scaleX(${Math.min(100, Math.max(0, resolutionProgress)) / 100})` }}
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl bg-white/80 border border-slate-200/85 space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 border-t border-b border-slate-200 dark:border-slate-800 divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800">
+            <div className="py-4 md:pr-5 space-y-3">
               <div className="flex items-center justify-between gap-2">
-                <div className="text-xs font-mono font-bold uppercase text-slate-900">
+                <div className="text-xs font-mono font-bold uppercase text-slate-900 dark:text-slate-100">
                   Accumulated Turn Points
                 </div>
-                <span className="text-[11px] font-mono font-bold text-emerald-700">
+                <span className="text-xs font-mono font-bold text-green-700 dark:text-green-400">
                   Team Avg: {room.teamScore} pts • Best Role: {myBestTurnScore} pts
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-                <div className="p-2.5 rounded-lg bg-slate-100/80 border border-slate-200/85">
-                  <div className="text-[10px] text-slate-600">YOUR TURNS</div>
-                  <div className="font-bold text-slate-900">
+              <div className="grid grid-cols-2 border-t border-b border-slate-200 dark:border-slate-800 divide-x divide-slate-200 dark:divide-slate-800 text-xs font-mono">
+                <div className="py-2.5 pr-3">
+                  <div className="text-xs text-slate-600 dark:text-slate-400">YOUR TURNS</div>
+                  <div className="font-bold text-slate-900 dark:text-slate-100">
                     {humanTurnsCount} lượt ({humanTurnPointsTotal} pts)
                   </div>
                 </div>
-                <div className="p-2.5 rounded-lg bg-slate-100/80 border border-slate-200/85">
-                  <div className="text-[10px] text-slate-600">TEAM SCORE</div>
-                  <div className="font-bold text-slate-900">{room.teamScore} pts</div>
+                <div className="py-2.5 pl-3">
+                  <div className="text-xs text-slate-600 dark:text-slate-400">TEAM SCORE</div>
+                  <div className="font-bold text-slate-900 dark:text-slate-100">{room.teamScore} pts</div>
                 </div>
               </div>
 
-              <div className="space-y-1.5">
+              <div className="divide-y divide-slate-200 dark:divide-slate-800">
                 {room.players.map((p) => (
                   <div
                     key={p.id}
-                    className="flex items-center justify-between text-xs font-mono px-3 py-2 rounded-lg bg-slate-100/80 border border-slate-200/85"
+                    className="flex items-center justify-between text-xs font-mono py-2"
                   >
-                    <span className="font-bold text-slate-900">
+                    <span className="font-bold text-slate-900 dark:text-slate-100">
                       {p.displayName} ({p.role})
                     </span>
-                    <span className="text-slate-700">{p.score ?? 0} pts</span>
+                    <span className="text-slate-700 dark:text-slate-300">{p.score ?? 0} pts</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-white/80 border border-slate-200/85 space-y-3">
-              <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-slate-900">
-                <Terminal className="w-4 h-4 text-rose-600" />
+            <div className="py-4 md:pl-5 space-y-3">
+              <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-slate-900 dark:text-slate-100">
+                <Terminal className="w-4 h-4 text-red-600 dark:text-red-400" />
                 <span>CTO Post-Incident Debrief</span>
               </div>
-              <p className="text-xs text-slate-700 bg-slate-100/80 p-3 rounded-lg border border-slate-200/85">
+              <p className="text-sm text-slate-700 dark:text-slate-300 border-l-2 border-red-600 dark:border-red-500 pl-3 py-1">
                 {ctoAlertText ??
                   (humanTurnsCount === 0
                     ? "CTO Debrief: Chưa ghi nhận báo cáo trạng thái bằng tiếng Anh trước khi hết giờ. Lần sau hãy đọc nhanh Exclusive Clue và gửi lượt 1 sớm hơn."
                     : "CTO Debrief: Đội đã phối hợp được một phần nhưng chưa đạt mốc 100% trước khi hết thời gian SLA.")}
               </p>
               {missingRoleKeywords.length > 0 && (
-                <div className="text-[11px] font-mono text-amber-700 font-semibold">
+                <div className="text-xs font-mono text-amber-700 dark:text-amber-400 font-semibold">
                   Từ khóa vai trò {myClue.roleLabel} chưa nhắc tới:{" "}
                   {missingRoleKeywords.join(", ")}
                 </div>
               )}
               <div className="space-y-1.5">
-                <div className="text-[11px] font-mono font-bold uppercase text-slate-600">
+                <div className="text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-400">
                   Checklist khắc phục mục tiêu
                 </div>
-                <ul className="space-y-1.5 text-xs text-slate-700">
+                <ul className="space-y-1.5 text-sm text-slate-700 dark:text-slate-300">
                   {activeScenario.resolutionChecklist.map((item) => (
                     <li key={item} className="flex items-start gap-2">
-                      <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+                      <AlertTriangle className="w-4 h-4 text-amber-700 dark:text-amber-400 shrink-0 mt-0.5" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -1813,7 +1809,7 @@ export function PartyWarRoom() {
               type="button"
               onClick={handleResetRoom}
               disabled={loadingAction === "reset"}
-              className="liquid-btn-danger inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm disabled:opacity-50"
+              className="liquid-btn-danger inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm disabled:opacity-50 transition-colors"
             >
               <RotateCcw className="w-4 h-4" />
               <span>
@@ -1823,9 +1819,9 @@ export function PartyWarRoom() {
 
             <Link
               href="/arena"
-              className="liquid-glass-btn inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm"
+              className="liquid-glass-btn inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm transition-colors"
             >
-              <ArrowLeft className="w-4 h-4 text-sky-600" />
+              <ArrowLeft className="w-4 h-4 text-blue-700 dark:text-blue-400" />
               <span>Quay lại /arena</span>
             </Link>
           </div>
@@ -1834,35 +1830,35 @@ export function PartyWarRoom() {
 
       {room && room.status === "resolved" && (
         <section className="liquid-glass-card p-6 space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/85">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
             <div className="space-y-1">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 border border-emerald-300/80 text-emerald-800 text-xs font-mono font-bold">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 border border-green-200 text-green-800 dark:bg-green-950/40 dark:border-green-800 dark:text-green-300 text-xs font-mono font-bold">
                 <CheckCircle2 className="w-4 h-4" />
                 <span>SEV RESOLVED • 100% RESTORED</span>
               </div>
-              <h2 className="text-2xl font-bold text-slate-900">
-                {activeScenario.title} — Post-Mortem Victory
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                {activeScenario.title}: Post-Mortem Victory
               </h2>
             </div>
 
-            <div className="bg-white/80 border border-slate-200/85 rounded-xl px-4 py-2.5 text-center">
-              <div className="text-[10px] font-mono font-bold text-slate-600">
+            <div className="border border-slate-200 dark:border-slate-800 rounded-lg px-4 py-2.5 text-center">
+              <div className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400">
                 TEAM SCORE
               </div>
-              <div className="text-2xl font-mono font-bold text-emerald-700">
+              <div className="text-2xl font-mono font-bold text-green-700 dark:text-green-400">
                 {room.teamScore} pts
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl bg-white/80 border border-slate-200/85 space-y-3">
-              <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-slate-900">
-                <Crown className="w-4 h-4 text-amber-500" />
+          <div className="grid grid-cols-1 md:grid-cols-2 border-t border-b border-slate-200 dark:border-slate-800 divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800">
+            <div className="py-4 md:pr-5 space-y-3">
+              <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-slate-900 dark:text-slate-100">
+                <Crown className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                 <span>MVP & IT-Coin Rewards</span>
               </div>
               {computedMvpPlayer && (
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-100/80 border border-slate-200/85">
+                <div className="flex items-center gap-3 py-3 border-b border-slate-200 dark:border-slate-800">
                   <DiscordAvatarFrame
                     equippedId={
                       computedMvpPlayer.role === selectedRole
@@ -1871,44 +1867,44 @@ export function PartyWarRoom() {
                     }
                     size="md"
                   >
-                    <div className="w-10 h-10 rounded-full bg-rose-600 text-white flex items-center justify-center text-xs font-mono font-bold">
+                    <div className="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center text-xs font-mono font-bold">
                       {computedMvpPlayer.role.slice(0, 3).toUpperCase()}
                     </div>
                   </DiscordAvatarFrame>
                   <div>
-                    <div className="font-bold text-sm text-slate-900">
+                    <div className="font-bold text-sm text-slate-900 dark:text-slate-100">
                       {computedMvpPlayer.displayName} (MVP)
                     </div>
-                    <div className="text-xs font-mono text-emerald-700 font-bold">
+                    <div className="text-xs font-mono text-green-700 dark:text-green-400 font-bold">
                       +15 IT-Coins Win • +10 IT-Coins MVP Bonus
                     </div>
                   </div>
                 </div>
               )}
 
-              <div className="space-y-2">
+              <div className="divide-y divide-slate-200 dark:divide-slate-800">
                 {room.players.map((p) => (
                   <div
                     key={p.id}
-                    className="flex items-center justify-between text-xs font-mono px-3 py-2 rounded-lg bg-slate-100/80 border border-slate-200/85"
+                    className="flex items-center justify-between text-xs font-mono py-2"
                   >
-                    <span className="font-bold text-slate-900">
+                    <span className="font-bold text-slate-900 dark:text-slate-100">
                       {p.displayName} ({p.role})
                     </span>
-                    <span className="text-slate-700">{p.score ?? 0} pts</span>
+                    <span className="text-slate-700 dark:text-slate-300">{p.score ?? 0} pts</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-white/80 border border-slate-200/85 space-y-3">
-              <div className="text-xs font-mono font-bold uppercase text-slate-900">
+            <div className="py-4 md:pl-5 space-y-3">
+              <div className="text-xs font-mono font-bold uppercase text-slate-900 dark:text-slate-100">
                 Incident Resolution Checklist
               </div>
-              <ul className="space-y-2 text-xs text-slate-700">
+              <ul className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
                 {activeScenario.resolutionChecklist.map((item) => (
                   <li key={item} className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-4 h-4 text-green-700 dark:text-green-400 shrink-0 mt-0.5" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -1920,7 +1916,7 @@ export function PartyWarRoom() {
             <button
               type="button"
               onClick={handleResetRoom}
-              className="liquid-btn-danger inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm"
+              className="liquid-btn-danger inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm transition-colors"
             >
               <RotateCcw className="w-4 h-4" />
               <span>Play Another Outage</span>
@@ -1928,7 +1924,7 @@ export function PartyWarRoom() {
 
             <Link
               href="/shop"
-              className="liquid-btn-primary inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm"
+              className="liquid-btn-primary inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm transition-colors"
             >
               <ShoppingBag className="w-4 h-4" />
               <span>Spend IT-Coins in Shop</span>

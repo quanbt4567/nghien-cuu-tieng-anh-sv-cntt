@@ -215,8 +215,8 @@ export function NameplateDisplayText({
     return (
       <span
         data-text={name}
-        className={`cosmetic-text-line-shadow text-slate-900 ${className}`.trim()}
-        style={{ "--line-shadow-color": "#0EA5E9" } as CSSProperties}
+        className={`cosmetic-text-line-shadow text-slate-900 dark:text-slate-100 ${className}`.trim()}
+        style={{ "--line-shadow-color": "#1D4ED8" } as CSSProperties}
       >
         {name}
       </span>
@@ -225,7 +225,7 @@ export function NameplateDisplayText({
   if (nameplateId === "nameplate-magic-sparkles") {
     return (
       <span className={`relative inline-block whitespace-nowrap ${className}`.trim()}>
-        <span className="relative z-10 text-amber-800 drop-shadow-[0_1px_4px_rgba(245,158,11,0.35)]">
+        <span className="relative z-10 text-amber-700 dark:text-amber-400">
           {name}
         </span>
         {SPARKLE_POSITIONS.map((pos, idx) => (
@@ -247,7 +247,7 @@ export function NameplateDisplayText({
   }
   if (nameplateId === "nameplate-rb-blur-text") {
     return (
-      <span className={`cosmetic-text-blur-pulse whitespace-nowrap text-sky-800 ${className}`.trim()}>
+      <span className={`cosmetic-text-blur-pulse whitespace-nowrap text-blue-700 dark:text-blue-400 ${className}`.trim()}>
         {name}
       </span>
     );
@@ -257,59 +257,44 @@ export function NameplateDisplayText({
       <span className={`relative inline-block whitespace-nowrap ${className}`.trim()}>
         <span
           aria-hidden="true"
-          className="cosmetic-text-echo-layer pointer-events-none absolute inset-0 text-sky-500/45 select-none"
+          className="cosmetic-text-echo-layer pointer-events-none absolute inset-0 text-blue-600/45 select-none"
         >
           {name}
         </span>
         <span
           aria-hidden="true"
-          className="cosmetic-text-echo-layer pointer-events-none absolute inset-0 text-fuchsia-500/40 select-none"
+          className="cosmetic-text-echo-layer pointer-events-none absolute inset-0 text-red-600/40 select-none"
           style={{ animationDelay: "-1.3s" }}
         >
           {name}
         </span>
-        <span className="relative z-10 text-slate-900">{name}</span>
+        <span className="relative z-10 text-slate-900 dark:text-slate-100">{name}</span>
       </span>
     );
   }
   if (nameplateId === "nameplate-magic-neon-card") {
     return (
-      <span
-        className={`cosmetic-text-aurora inline-block whitespace-nowrap ${className}`.trim()}
-        style={{
-          backgroundImage: "linear-gradient(90deg, #E11D48, #DB2777, #0284C7, #E11D48)",
-        }}
-      >
+      <span className={`inline-block whitespace-nowrap font-bold text-red-600 dark:text-red-400 ${className}`.trim()}>
         {name}
       </span>
     );
   }
   if (nameplateId === "nameplate-aceternity-squiggly") {
     return (
-      <span
-        className={`cosmetic-text-aurora inline-block whitespace-nowrap ${className}`.trim()}
-        style={{
-          backgroundImage: "linear-gradient(90deg, #0284C7, #2563EB, #0891B2, #0284C7)",
-        }}
-      >
+      <span className={`inline-block whitespace-nowrap font-bold text-blue-700 dark:text-blue-400 ${className}`.trim()}>
         {name}
       </span>
     );
   }
   if (nameplateId === "nameplate-aceternity-canvas-ribbon") {
     return (
-      <span
-        className={`cosmetic-text-aurora inline-block whitespace-nowrap ${className}`.trim()}
-        style={{
-          backgroundImage: "linear-gradient(90deg, #9333EA, #DB2777, #D97706, #9333EA)",
-        }}
-      >
+      <span className={`inline-block whitespace-nowrap font-bold text-amber-700 dark:text-amber-400 ${className}`.trim()}>
         {name}
       </span>
     );
   }
   if (!lite && nameplateId === "nameplate-rb-shuffle-text") {
-    return <ShuffleTextInline name={name} className={`text-amber-800 ${className}`.trim()} />;
+    return <ShuffleTextInline name={name} className={`text-amber-700 dark:text-amber-400 ${className}`.trim()} />;
   }
   if (!lite && nameplateId === "nameplate-rb-glitch-text") {
     return (
@@ -331,7 +316,7 @@ export function NameplateDisplayText({
         text={name}
         speed={2}
         color="#0F172A"
-        shineColor="#0284C7"
+        shineColor="#1D4ED8"
         className={className}
       />
     );
@@ -339,7 +324,7 @@ export function NameplateDisplayText({
   if (!lite && nameplateId === "nameplate-rb-gradient-text") {
     return (
       <DynamicGradientText
-        colors={["#DB2777", "#0284C7", "#D97706"]}
+        colors={["#DC2626", "#1D4ED8", "#B45309"]}
         animationSpeed={3}
         className={className}
       >
@@ -352,13 +337,13 @@ export function NameplateDisplayText({
       <DynamicTrueFocus
         sentence={name}
         blurAmount={1.5}
-        borderColor="#10B981"
-        glowColor="rgba(16,185,129,0.45)"
+        borderColor="#15803D"
+        glowColor="rgba(21,128,61,0.3)"
         animationDuration={0.35}
         pauseBetweenAnimations={0.8}
         cornerSize={7}
         borderWidth={2}
-        wordClassName="text-sm font-extrabold text-slate-900"
+        wordClassName="text-sm font-extrabold text-slate-900 dark:text-slate-100"
         containerClassName={`gap-1.5 justify-start flex-nowrap ${className}`.trim()}
       />
     );
@@ -370,7 +355,7 @@ export function NameplateDisplayText({
         animateOn="view"
         loop
         loopDelay={2600}
-        className={`text-emerald-700 ${className}`.trim()}
+        className={`text-green-700 dark:text-green-400 ${className}`.trim()}
       />
     );
   }
@@ -426,7 +411,7 @@ export function NameplateBanner({
       ref={containerRef}
       onPointerMove={handlePointerMove}
       style={rootVars}
-      className={`group relative rounded-xl overflow-hidden bg-white/85 ${lite ? "" : "backdrop-blur-md"} border border-slate-200/85 text-slate-900 shadow-[0_8px_24px_rgba(15,23,42,0.08),inset_0_1px_1px_rgba(255,255,255,0.95)] ${className}`.trim()}
+      className={`group relative rounded-xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 ${className}`.trim()}
     >
       <span
         aria-hidden="true"

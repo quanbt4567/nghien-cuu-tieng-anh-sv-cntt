@@ -204,11 +204,11 @@ export function LeaderboardRowWrapper({
       ref={containerRef}
       onPointerMove={handlePointerMove}
       style={rootVars}
-      className={`group relative rounded-2xl overflow-hidden bg-white/85 ${effectiveLite ? "" : "backdrop-blur-md"} border border-slate-200/85 text-slate-900 shadow-[0_8px_24px_rgba(15,23,42,0.08),inset_0_1px_1px_rgba(255,255,255,0.95)] ${className}`.trim()}
+      className={`group relative rounded-xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 ${className}`.trim()}
     >
       <span
         aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 rounded-[inherit] bg-white/85 ${effectiveLite ? "" : "backdrop-blur-md"} z-0`}
+        className="pointer-events-none absolute inset-0 rounded-[inherit] bg-white dark:bg-slate-900 z-0"
       />
 
       {bannerAssetUrl && !bannerFailed && (
@@ -252,10 +252,10 @@ export function LeaderboardRowWrapper({
         nameplateId === "nameplate-rb-decrypted-matrix") && (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute top-1.5 right-2.5 inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-emerald-100/90 text-[10px] font-mono font-bold text-emerald-800 border border-emerald-300/80 z-[7]"
+          className="pointer-events-none absolute top-1.5 right-2.5 inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-green-50 dark:bg-green-950/40 text-[10px] font-mono font-bold text-green-700 dark:text-green-300 border border-green-300 dark:border-green-800 z-[7]"
         >
           <span>&gt;_</span>
-          <span className="cosmetic-nameplate-terminal-cursor inline-block w-1.5 h-2.5 bg-emerald-600" />
+          <span className="cosmetic-nameplate-terminal-cursor inline-block w-1.5 h-2.5 bg-green-700 dark:bg-green-400" />
         </span>
       )}
 
@@ -265,7 +265,7 @@ export function LeaderboardRowWrapper({
           className="pointer-events-none absolute inset-0 z-[3] opacity-25"
           style={{
             backgroundImage:
-              "linear-gradient(to right, rgba(14,165,233,0.22) 1px, transparent 1px), linear-gradient(to bottom, rgba(14,165,233,0.22) 1px, transparent 1px)",
+              "linear-gradient(to right, rgba(29,78,216,0.2) 1px, transparent 1px), linear-gradient(to bottom, rgba(29,78,216,0.2) 1px, transparent 1px)",
             backgroundSize: "18px 18px",
           }}
         />
@@ -274,8 +274,8 @@ export function LeaderboardRowWrapper({
       {!effectiveLite && fxId === "lb-rb-electric-border" && (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[7]">
           <DynamicElectricBorder
-            color="#38BDF8"
-            glowColor="#0284C7"
+            color="#1D4ED8"
+            glowColor="#2563EB"
             borderRadius={12}
             strands={2}
             thickness={1.5}
@@ -289,13 +289,13 @@ export function LeaderboardRowWrapper({
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[7]">
           <DynamicStarBorder
             as="div"
-            color="#FBBF24"
+            color="#B45309"
             trailColor="#F59E0B"
             radius={12}
             stars={2}
             sparkle
             backgroundColor="transparent"
-            borderColor="rgba(251,191,36,0.3)"
+            borderColor="rgba(180,83,9,0.3)"
             className="w-full h-full"
           />
         </div>
@@ -315,7 +315,7 @@ export function LeaderboardRowWrapper({
       {!effectiveLite && fxId === "lb-rb-spotlight-card" && (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[4] opacity-65">
           <DynamicSpotlightCard
-            spotlightColor="#10B981"
+            spotlightColor="#15803D"
             ambient
             flare
             className="w-full h-full !bg-transparent !border-0"
@@ -326,7 +326,7 @@ export function LeaderboardRowWrapper({
       {fxId === "lb-aceternity-evervault-cipher" && (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-[4] font-mono text-[8px] leading-3 text-emerald-700/30 overflow-hidden select-none break-all p-1"
+          className="pointer-events-none absolute inset-0 z-[4] font-mono text-[8px] leading-3 text-green-700/30 dark:text-green-400/30 overflow-hidden select-none break-all p-1"
         >
           01A9F3C7E2B8D4019A8F7C6B5E4D3C2B1A0F9E8D7C6B5A4F3E2D1C0B9A8F7E6D5C4B3A2F1E0D
         </span>
@@ -337,7 +337,7 @@ export function LeaderboardRowWrapper({
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 z-[4] opacity-35"
           style={{
-            backgroundImage: "radial-gradient(rgba(56,189,248,0.85) 1.2px, transparent 1.2px)",
+            backgroundImage: "radial-gradient(rgba(29,78,216,0.5) 1.2px, transparent 1.2px)",
             backgroundSize: "8px 8px",
           }}
         />

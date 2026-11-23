@@ -16,7 +16,7 @@ const GAME_LABELS: Record<MinigameId, string> = {
 
 const TITLE_TIERS = [
   { name: "Junior Speaker", range: "< 2.000 điểm", min: 0 },
-  { name: "Mid-level Communicator", range: "2.000 – 4.999 điểm", min: 2000 },
+  { name: "Mid-level Communicator", range: "2.000 - 4.999 điểm", min: 2000 },
   { name: "Lead Tech Speaker", range: "5.000+ điểm", min: 5000 },
 ] as const;
 
@@ -36,69 +36,69 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
       <section className="liquid-glass-card p-5 sm:p-6 space-y-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-1">
-            <span className="text-xs font-mono font-bold uppercase text-sky-700 flex items-center gap-1.5">
+            <span className="text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400 flex items-center gap-1.5">
               <Award className="w-4 h-4" />
               <span>Danh hiệu Dev Speaker hiện tại</span>
             </span>
-            <h2 className="text-2xl font-bold text-slate-900">{devTitle.title}</h2>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{devTitle.title}</h2>
           </div>
 
-          <div className="liquid-glass-pill px-4 py-2 font-mono text-sm font-bold text-slate-900">
+          <div className="px-4 py-2 rounded-full bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 font-mono text-sm font-bold text-slate-900 dark:text-slate-100">
             {state.totalPoints.toLocaleString("vi-VN")} điểm tích lũy
           </div>
         </div>
 
         <div className="space-y-2">
-          <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-            <span className="text-slate-600">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
+            <span className="text-slate-600 dark:text-slate-300">
               {devTitle.nextTitle && devTitle.nextThreshold !== null ? (
                 <>
                   Tiến độ lên{" "}
-                  <strong className="text-slate-900">{devTitle.nextTitle}</strong> (
+                  <strong className="text-slate-900 dark:text-slate-100">{devTitle.nextTitle}</strong> (
                   {devTitle.nextThreshold.toLocaleString("vi-VN")} điểm)
                 </>
               ) : (
-                <strong className="text-emerald-700">
+                <strong className="text-green-700 dark:text-green-400">
                   Bạn đã đạt cấp bậc cao nhất tại SpeakIT Arena
                 </strong>
               )}
             </span>
-            <span className="font-mono font-bold text-sky-700">
+            <span className="font-mono font-bold text-blue-700 dark:text-blue-400">
               {devTitle.progressPct}%
             </span>
           </div>
 
-          <div className="w-full h-3 bg-slate-200/80 rounded-pill border border-slate-300/70 overflow-hidden p-0.5">
+          <div className="w-full h-3 bg-slate-200 dark:bg-slate-800 rounded-full border border-slate-300 dark:border-slate-700 overflow-hidden p-0.5">
             <div
-              className="h-full rounded-pill bg-gradient-to-r from-sky-500 to-emerald-500 transition-all duration-500"
-              style={{ width: `${Math.max(4, devTitle.progressPct)}%` }}
+              className="w-full h-full origin-left rounded-full bg-blue-700 dark:bg-blue-600 transition-transform duration-500"
+              style={{ transform: `scaleX(${Math.max(0.04, devTitle.progressPct / 100)})` }}
             />
           </div>
         </div>
 
-        <div className="grid sm:grid-cols-3 gap-3 pt-1">
+        <div className="grid sm:grid-cols-3 border-t border-slate-200 dark:border-slate-800 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-slate-800 pt-2">
           {TITLE_TIERS.map((tier) => {
             const isCurrent = devTitle.title === tier.name;
             const isUnlocked = state.totalPoints >= tier.min;
             return (
               <div
                 key={tier.name}
-                className={`rounded-xl p-3 border text-xs transition-colors ${
+                className={`p-3 text-sm transition-colors ${
                   isCurrent
-                    ? "bg-sky-100/90 text-slate-900 border-sky-400/70 shadow-[0_4px_14px_rgba(14,165,233,0.16)]"
+                    ? "bg-blue-50 text-slate-900 dark:bg-blue-950/40 dark:text-slate-100"
                     : isUnlocked
-                    ? "bg-emerald-50/90 border-emerald-300/80 text-emerald-900"
-                    : "bg-slate-100/80 border-slate-200/85 text-slate-600"
+                    ? "bg-green-50/70 text-green-900 dark:bg-green-950/30 dark:text-green-200"
+                    : "text-slate-600 dark:text-slate-400"
                 }`}
               >
                 <div className="font-bold">{tier.name}</div>
                 <div
-                  className={`font-mono text-[11px] mt-0.5 ${
+                  className={`font-mono text-xs mt-0.5 ${
                     isCurrent
-                      ? "text-sky-800"
+                      ? "text-blue-700 dark:text-blue-300"
                       : isUnlocked
-                      ? "text-emerald-700"
-                      : "text-slate-500"
+                      ? "text-green-700 dark:text-green-400"
+                      : "text-slate-500 dark:text-slate-400"
                   }`}
                 >
                   {tier.range}
@@ -112,39 +112,39 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
       <section className="grid sm:grid-cols-2 gap-4">
         <div className="liquid-glass-card p-5 flex items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-emerald-700">
+            <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-green-700 dark:text-green-400">
               <Bug className="w-4 h-4" />
               <span>Kỷ lục cá nhân</span>
             </div>
-            <h3 className="text-base font-bold text-slate-900">Bug Buster 280s</h3>
-            <p className="text-xs text-slate-600">
+            <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">Bug Buster 280s</h3>
+            <p className="text-sm text-slate-600 dark:text-slate-300">
               Điểm cao nhất trong 1 vòng 280 giây
             </p>
           </div>
           <div className="text-right font-mono">
-            <div className="text-2xl font-bold text-emerald-700">
+            <div className="text-2xl font-bold text-green-700 dark:text-green-400">
               {state.personalBests["bug-buster"].toLocaleString("vi-VN")}
             </div>
-            <div className="text-[11px] text-slate-600">điểm</div>
+            <div className="text-xs text-slate-600 dark:text-slate-400">điểm</div>
           </div>
         </div>
 
         <div className="liquid-glass-card p-5 flex items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-indigo-700">
+            <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-blue-700 dark:text-blue-400">
               <Timer className="w-4 h-4" />
               <span>Kỷ lục cá nhân</span>
             </div>
-            <h3 className="text-base font-bold text-slate-900">Standup Speed Run</h3>
-            <p className="text-xs text-slate-600">
+            <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">Standup Speed Run</h3>
+            <p className="text-sm text-slate-600 dark:text-slate-300">
               Điểm cao nhất trong 3 câu Standup
             </p>
           </div>
           <div className="text-right font-mono">
-            <div className="text-2xl font-bold text-indigo-700">
+            <div className="text-2xl font-bold text-blue-700 dark:text-blue-400">
               {state.personalBests["standup-speed-run"].toLocaleString("vi-VN")}
             </div>
-            <div className="text-[11px] text-slate-600">điểm</div>
+            <div className="text-xs text-slate-600 dark:text-slate-400">điểm</div>
           </div>
         </div>
       </section>
@@ -152,24 +152,24 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
       <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-amber-500" />
-            <h3 className="text-base sm:text-lg font-bold text-slate-900">
+            <Trophy className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+            <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">
               Bảng thành tích cá nhân
             </h3>
           </div>
         </div>
 
         {rankedHistory.length === 0 ? (
-          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-6 text-center text-xs text-slate-600">
+          <div className="border-t border-slate-200 dark:border-slate-800 pt-6 pb-2 text-center text-sm text-slate-600 dark:text-slate-300">
             Chưa có lượt chơi nào được lưu. Hãy hoàn thành một vòng{" "}
-            <strong className="text-slate-900">Bug Buster 280s</strong> hoặc{" "}
-            <strong className="text-slate-900">Standup Speed Run</strong> để ghi danh!
+            <strong className="text-slate-900 dark:text-slate-100">Bug Buster 280s</strong> hoặc{" "}
+            <strong className="text-slate-900 dark:text-slate-100">Standup Speed Run</strong> để ghi danh!
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs">
+            <table className="w-full text-left border-collapse text-sm">
               <thead>
-                <tr className="border-b border-slate-200/85 text-slate-600 font-mono uppercase text-[11px]">
+                <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-mono uppercase text-xs">
                   <th className="py-2.5 pr-3">#</th>
                   <th className="py-2.5 pr-3">Chế độ</th>
                   <th className="py-2.5 pr-3">Vai trò</th>
@@ -178,28 +178,28 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
                   <th className="py-2.5 text-right">Ngày</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200/70">
+              <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
                 {rankedHistory.map((entry, idx) => (
-                  <tr key={entry.id} className="hover:bg-slate-100/60 transition-colors">
-                    <td className="py-2.5 pr-3 font-mono font-bold text-slate-600">
+                  <tr key={entry.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                    <td className="py-2.5 pr-3 font-mono font-bold text-slate-600 dark:text-slate-400">
                       {idx + 1}
                     </td>
-                    <td className="py-2.5 pr-3 font-semibold text-slate-900 whitespace-nowrap">
+                    <td className="py-2.5 pr-3 font-semibold text-slate-900 dark:text-slate-100 whitespace-nowrap">
                       {GAME_LABELS[entry.gameId]}
                     </td>
                     <td className="py-2.5 pr-3 whitespace-nowrap">
-                      <span className="px-2 py-0.5 rounded-pill bg-slate-100/90 border border-slate-200/85 font-mono text-[11px] text-slate-700">
+                      <span className="px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 font-mono text-xs text-slate-700 dark:text-slate-300">
                         {getRoleLabel(entry.role)}
                       </span>
                     </td>
-                    <td className="py-2.5 pr-3 text-right font-mono font-bold text-sky-700 whitespace-nowrap">
+                    <td className="py-2.5 pr-3 text-right font-mono font-bold text-blue-700 dark:text-blue-400 whitespace-nowrap">
                       {entry.score.toLocaleString("vi-VN")}
                     </td>
-                    <td className="py-2.5 pr-3 text-right font-mono text-slate-700 whitespace-nowrap">
+                    <td className="py-2.5 pr-3 text-right font-mono text-slate-700 dark:text-slate-300 whitespace-nowrap">
                       {entry.accuracyOrWords}{" "}
                       {entry.gameId === "bug-buster" ? "bug" : "từ khóa"}
                     </td>
-                    <td className="py-2.5 text-right font-mono text-slate-600 whitespace-nowrap">
+                    <td className="py-2.5 text-right font-mono text-slate-600 dark:text-slate-400 whitespace-nowrap">
                       {new Date(entry.createdAt).toLocaleDateString("vi-VN")}
                     </td>
                   </tr>

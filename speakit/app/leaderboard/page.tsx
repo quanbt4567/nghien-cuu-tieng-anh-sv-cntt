@@ -7,7 +7,7 @@ import { GlobalLeaderboard } from "../../components/leaderboard/GlobalLeaderboar
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Bảng xếp hạng — SpeakIT",
+  title: "Bảng xếp hạng: SpeakIT",
   description:
     "Bảng xếp hạng điểm luyện nói và số dư IT-Coin của học viên CNTT trên SpeakIT.",
 };
@@ -21,13 +21,13 @@ export default async function LeaderboardPage() {
         <div className="space-y-2.5">
           <Link
             href="/"
-            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-xs font-mono text-slate-700 hover:text-slate-900 transition-all"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-mono text-slate-700 dark:text-slate-200 transition-colors"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
+            <ArrowLeft className="w-4 h-4" />
             <span>Trang chủ</span>
           </Link>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 flex items-center gap-2.5">
-            <Trophy className="w-6 h-6 text-amber-500" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2.5">
+            <Trophy className="w-6 h-6 text-amber-600 dark:text-amber-400" />
             <span>Bảng xếp hạng</span>
           </h1>
         </div>

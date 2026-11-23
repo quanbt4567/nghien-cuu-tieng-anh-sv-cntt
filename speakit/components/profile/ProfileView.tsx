@@ -745,18 +745,18 @@ export function ProfileView() {
         aria-live="polite"
       >
         <div className="flex items-center justify-between gap-3">
-          <div className="h-8 w-28 rounded-pill bg-white/80 border border-slate-200/85 animate-pulse" />
-          <div className="h-5 w-44 rounded-pill bg-white/80 border border-slate-200/85 animate-pulse" />
+          <div className="h-8 w-28 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 animate-pulse" />
+          <div className="h-5 w-44 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 animate-pulse" />
         </div>
         <div className="liquid-glass-card p-6 space-y-4">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-slate-200/70 border border-slate-200/85 shrink-0 animate-pulse" />
+            <div className="w-16 h-16 rounded-full bg-slate-200 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shrink-0 animate-pulse" />
             <div className="space-y-2 flex-1">
-              <div className="h-6 w-48 rounded-lg bg-slate-200/70 animate-pulse" />
-              <div className="h-4 w-72 rounded-lg bg-slate-200/70 animate-pulse" />
+              <div className="h-6 w-48 rounded-lg bg-slate-200 dark:bg-slate-800 animate-pulse" />
+              <div className="h-4 w-72 rounded-lg bg-slate-200 dark:bg-slate-800 animate-pulse" />
             </div>
           </div>
-          <p className="text-xs font-mono text-slate-600">
+          <p className="text-sm font-mono text-slate-600 dark:text-slate-400">
             Đang tải hồ sơ SpeakIT và đồng bộ phiên khách...
           </p>
         </div>
@@ -775,13 +775,13 @@ export function ProfileView() {
           <div className="flex items-center gap-2">
             <Link
               href="/"
-              className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-xs font-medium transition-all"
+              className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Trang chủ</span>
             </Link>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2 ml-1">
-              <User className="w-5 h-5 sm:w-6 sm:h-6 text-sky-600 shrink-0" aria-hidden="true" />
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2 ml-1">
+              <User className="w-5 h-5 sm:w-6 sm:h-6 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
               <span>Hồ sơ người dùng</span>
             </h1>
           </div>
@@ -789,20 +789,20 @@ export function ProfileView() {
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href="/shop"
-              className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill text-xs font-semibold transition-all"
+              className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors"
             >
               <ShoppingBag className="w-3.5 h-3.5" aria-hidden="true" />
               <span>IT-Coin Shop</span>
             </Link>
             <Link
               href="/progress"
-              className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-xs font-medium transition-all"
+              className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
             >
               <span>Tiến độ 7 ngày</span>
             </Link>
             <Link
               href="/arena"
-              className="liquid-btn-success inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill text-xs font-semibold transition-all"
+              className="liquid-btn-success inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors"
             >
               <Gamepad2 className="w-3.5 h-3.5" aria-hidden="true" />
               <span>IT Arena</span>
@@ -810,9 +810,9 @@ export function ProfileView() {
           </div>
         </div>
 
-        <p className="text-xs sm:text-sm text-slate-600 liquid-glass-card-lite px-4 py-2.5">
+        <p className="text-sm text-slate-600 dark:text-slate-300 border-l-4 border-l-blue-700 dark:border-l-blue-500 bg-white dark:bg-slate-900 border-y border-r border-slate-200 dark:border-slate-800 rounded-r-xl px-4 py-2.5">
           Đổi tên hiển thị, lưu mã khôi phục thiết bị DEV-XXXXXX và dùng IT-Coin mở khóa hiệu ứng Discord-style tại{" "}
-          <Link href="/shop" className="font-semibold text-sky-700 hover:text-sky-600 hover:underline">
+          <Link href="/shop" className="font-semibold text-blue-700 dark:text-blue-400 hover:underline">
             IT-Coin Shop
           </Link>
           .
@@ -844,18 +844,18 @@ export function ProfileView() {
             <div className="min-w-0 space-y-2 flex-1">
               {!isEditingName ? (
                 <div className="flex flex-wrap items-center gap-2">
-                  <h2 className="text-xl font-bold text-slate-900 truncate">
+                  <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 truncate">
                     {identity.displayName}
                   </h2>
                   {guestPlayer?.email && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill bg-sky-100 border border-sky-300/80 text-xs font-medium text-sky-800">
-                      <Mail className="w-3 h-3 text-sky-600" aria-hidden="true" />
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-xs font-medium text-blue-700 dark:text-blue-300">
+                      <Mail className="w-3 h-3 text-blue-700 dark:text-blue-400" aria-hidden="true" />
                       <span>{guestPlayer.email}</span>
                     </span>
                   )}
                   {identity.transferCode && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill bg-white/80 border border-slate-200/85 text-xs font-mono font-bold text-sky-700">
-                      <KeyRound className="w-3 h-3 text-sky-600" aria-hidden="true" />
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold text-blue-700 dark:text-blue-400">
+                      <KeyRound className="w-3 h-3 text-blue-700 dark:text-blue-400" aria-hidden="true" />
                       <span>{identity.transferCode}</span>
                     </span>
                   )}
@@ -873,7 +873,7 @@ export function ProfileView() {
                         saveCachedGuestProfile(null);
                         requestOpenAuthModal();
                       }}
-                      className="liquid-btn-danger inline-flex items-center gap-1 px-2.5 py-1 rounded-pill text-xs font-semibold transition-all"
+                      className="liquid-btn-danger inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors"
                     >
                       <LogOut className="w-3 h-3" aria-hidden="true" />
                       <span>Đăng xuất</span>
@@ -885,7 +885,7 @@ export function ProfileView() {
                     disabled={identity.mode !== "online"}
                     aria-label="Chỉnh sửa tên hiển thị"
                     title="Chỉnh sửa tên hiển thị"
-                    className="liquid-glass-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-pill text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    className="liquid-glass-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     <Pencil className="w-3 h-3" aria-hidden="true" />
                     <span>Đổi tên</span>
@@ -899,7 +899,7 @@ export function ProfileView() {
                     disabled={identity.mode !== "online"}
                     aria-expanded={isAvatarPanelOpen}
                     title="Đổi Avatar"
-                    className="liquid-glass-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-pill text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    className="liquid-glass-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     <Camera className="w-3 h-3" aria-hidden="true" />
                     <span>Đổi Avatar</span>
@@ -920,14 +920,14 @@ export function ProfileView() {
                     onChange={(e) => setDraftName(e.target.value)}
                     minLength={2}
                     maxLength={24}
-                    placeholder="Nhập tên (2–24 ký tự)"
-                    className="liquid-glass-input px-3 py-1.5 text-sm font-medium rounded-xl focus:outline-none w-52"
+                    placeholder="Nhập tên (2-24 ký tự)"
+                    className="liquid-glass-input px-3 py-1.5 text-sm font-medium rounded-lg focus:outline-none w-52"
                     autoFocus
                   />
                   <button
                     type="submit"
                     disabled={isSavingName}
-                    className="liquid-btn-primary inline-flex items-center gap-1 px-3 py-1.5 rounded-pill text-xs font-semibold disabled:opacity-50"
+                    className="liquid-btn-primary inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50"
                   >
                     <Check className="w-3.5 h-3.5" aria-hidden="true" />
                     <span>{isSavingName ? "Đang lưu..." : "Lưu"}</span>
@@ -940,7 +940,7 @@ export function ProfileView() {
                     }}
                     disabled={isSavingName}
                     aria-label="Hủy chỉnh sửa tên"
-                    className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-pill text-xs font-medium"
+                    className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium"
                   >
                     <X className="w-3.5 h-3.5" aria-hidden="true" />
                     <span>Hủy</span>
@@ -951,8 +951,8 @@ export function ProfileView() {
               {nameFeedback && (
                 <p
                   role="status"
-                  className={`text-xs font-medium ${
-                    nameFeedback.ok ? "text-emerald-700" : "text-rose-700"
+                  className={`text-sm font-medium ${
+                    nameFeedback.ok ? "text-green-700 dark:text-green-400" : "text-red-600 dark:text-red-400"
                   }`}
                 >
                   {nameFeedback.message}
@@ -960,16 +960,16 @@ export function ProfileView() {
               )}
 
               {isAvatarPanelOpen && (
-                <div className="mt-2 p-3 rounded-xl bg-white/85 border border-slate-200/85 space-y-3">
+                <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-800 space-y-3">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-bold text-slate-900">
+                    <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
                       Chọn Avatar Preset hoặc tải ảnh lên
                     </span>
                     <button
                       type="button"
                       onClick={() => setIsAvatarPanelOpen(false)}
                       aria-label="Đóng bảng chọn avatar"
-                      className="p-1 rounded-pill text-slate-500 hover:text-slate-900 hover:bg-slate-200/70"
+                      className="p-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/70 dark:hover:bg-slate-800"
                     >
                       <X className="w-3.5 h-3.5" aria-hidden="true" />
                     </button>
@@ -987,10 +987,10 @@ export function ProfileView() {
                           onClick={() => void handleSaveAvatar(preset.id)}
                           title={preset.label}
                           aria-label={preset.label}
-                          className={`group flex flex-col items-center gap-1 p-1.5 rounded-xl border transition-all disabled:opacity-50 ${
+                          className={`group flex flex-col items-center gap-1 p-1.5 rounded-lg border transition-colors disabled:opacity-50 ${
                             isSelected
-                              ? "border-sky-400 bg-sky-100/90 shadow-[0_2px_10px_rgba(14,165,233,0.2)]"
-                              : "border-slate-200/85 bg-slate-100/80 hover:border-sky-300"
+                              ? "border-blue-700 dark:border-blue-500 bg-blue-50 dark:bg-blue-950/40"
+                              : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 hover:border-blue-600 dark:hover:border-blue-500"
                           }`}
                         >
                           <span
@@ -998,7 +998,7 @@ export function ProfileView() {
                           >
                             <PresetIcon className="w-4 h-4" strokeWidth={2.2} aria-hidden="true" />
                           </span>
-                          <span className="text-[10px] font-mono text-slate-700 truncate w-full text-center">
+                          <span className="text-[11px] font-mono text-slate-700 dark:text-slate-300 truncate w-full text-center">
                             {preset.label.split(" ")[0]}
                           </span>
                         </button>
@@ -1018,7 +1018,7 @@ export function ProfileView() {
                       type="button"
                       disabled={isSavingAvatar}
                       onClick={() => avatarInputRef.current?.click()}
-                      className="liquid-btn-primary inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-xs font-semibold disabled:opacity-50 transition-all"
+                      className="liquid-btn-primary inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50 transition-colors"
                     >
                       <Upload className="w-3.5 h-3.5" aria-hidden="true" />
                       <span>{isSavingAvatar ? "Đang lưu..." : "Tải ảnh lên"}</span>
@@ -1027,7 +1027,7 @@ export function ProfileView() {
                       type="button"
                       disabled={isSavingAvatar || !identity.avatarUrl}
                       onClick={() => void handleSaveAvatar(null)}
-                      className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                      className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
                       <span>Đặt lại</span>
@@ -1037,8 +1037,8 @@ export function ProfileView() {
                   {avatarFeedback && (
                     <p
                       role="status"
-                      className={`text-xs font-medium ${
-                        avatarFeedback.ok ? "text-emerald-700" : "text-rose-700"
+                      className={`text-sm font-medium ${
+                        avatarFeedback.ok ? "text-green-700 dark:text-green-400" : "text-red-600 dark:text-red-400"
                       }`}
                     >
                       {avatarFeedback.message}
@@ -1048,52 +1048,52 @@ export function ProfileView() {
               )}
 
               <div className="flex flex-wrap items-center gap-2 pt-0.5">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-sky-100 border border-sky-300/80 text-sky-800 text-xs font-mono font-semibold">
-                  <Award className="w-3.5 h-3.5 text-sky-600" aria-hidden="true" />
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-mono font-semibold">
+                  <Award className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
                   <span>{identity.equippedTitle}</span>
                 </span>
 
                 {identity.mode === "online" && (
                   <Link
                     href="/arena"
-                    className="liquid-glass-pill inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold text-slate-900 hover:border-sky-400/60 transition-colors"
+                    className="liquid-glass-pill inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold text-slate-900 dark:text-slate-100 hover:border-blue-600 transition-colors"
                   >
-                    <Trophy className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
+                    <Trophy className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" aria-hidden="true" />
                     <span>
                       {globalRank !== null ? `#${globalRank} Toàn cầu` : "Hạng toàn cầu"}
                     </span>
                   </Link>
                 )}
 
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-emerald-100 border border-emerald-300/80 text-xs font-mono font-bold text-emerald-800">
-                  <Flame className="w-3.5 h-3.5 fill-emerald-500 text-emerald-600" aria-hidden="true" />
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 dark:bg-green-950/40 border border-green-300 dark:border-green-800 text-xs font-mono font-bold text-green-700 dark:text-green-300">
+                  <Flame className="w-3.5 h-3.5 fill-green-600 text-green-700 dark:text-green-400" aria-hidden="true" />
                   <span>{identity.streakDays} ngày streak</span>
                 </span>
 
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-amber-100 border border-amber-300/80 text-xs font-mono font-bold text-amber-800">
-                  <Coins className="w-3.5 h-3.5 text-amber-600" aria-hidden="true" />
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-xs font-mono font-bold text-amber-700 dark:text-amber-300">
+                  <Coins className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" aria-hidden="true" />
                   <span>{identity.itCoins} IT-Coin</span>
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="md:text-right shrink-0 bg-white/80 border border-slate-200/85 rounded-xl px-4 py-3 font-mono">
-            <div className="text-[11px] uppercase text-slate-600">Tổng điểm tích lũy</div>
-            <div className="text-xl font-bold text-sky-700">
+          <div className="md:text-right shrink-0 border-l-2 border-blue-700 dark:border-blue-500 pl-4 py-1 font-mono">
+            <div className="text-[11px] uppercase text-slate-600 dark:text-slate-400">Tổng điểm tích lũy</div>
+            <div className="text-xl font-bold text-blue-700 dark:text-blue-400">
               {identity.totalPoints.toLocaleString("vi-VN")} pts
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-4 space-y-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-slate-200 dark:border-slate-800">
+          <div className="space-y-2">
             <div className="flex items-center justify-between gap-2 text-xs">
-              <span className="font-semibold text-slate-900">
+              <span className="font-semibold text-slate-900 dark:text-slate-100">
                 {activity.devTitle.nextTitle && activity.devTitle.nextThreshold !== null ? (
                   <>
                     Lộ trình lên{" "}
-                    <span className="font-mono text-sky-700">
+                    <span className="font-mono text-blue-700 dark:text-blue-400">
                       {activity.devTitle.nextTitle}
                     </span>
                   </>
@@ -1101,7 +1101,7 @@ export function ProfileView() {
                   "Cấp bậc cao nhất: Lead Tech Speaker"
                 )}
               </span>
-              <span className="font-mono font-bold text-emerald-700">
+              <span className="font-mono font-bold text-green-700 dark:text-green-400">
                 {activity.devTitle.progressPct}%
               </span>
             </div>
@@ -1111,19 +1111,19 @@ export function ProfileView() {
               aria-valuenow={activity.devTitle.progressPct}
               aria-valuemin={0}
               aria-valuemax={100}
-              className="w-full h-2.5 bg-slate-200/80 rounded-pill border border-slate-300/70 overflow-hidden"
+              className="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden"
             >
               <div
-                className="h-full bg-gradient-to-r from-emerald-500 to-sky-500 transition-all duration-500"
+                className="w-full h-full bg-blue-700 dark:bg-blue-500 origin-left transition-transform duration-500"
                 style={{
-                  width: `${Math.max(
-                    activity.devTitle.progressPct > 0 ? 4 : 0,
-                    activity.devTitle.progressPct
-                  )}%`,
+                  transform: `scaleX(${Math.max(
+                    activity.devTitle.progressPct > 0 ? 0.04 : 0,
+                    Math.min(1, activity.devTitle.progressPct / 100)
+                  )})`,
                 }}
               />
             </div>
-            <p className="text-[11px] font-mono text-slate-600">
+            <p className="text-sm font-mono text-slate-600 dark:text-slate-400">
               {activity.devTitle.nextTitle && activity.devTitle.nextThreshold !== null
                 ? `Còn ${Math.max(
                     0,
@@ -1133,12 +1133,12 @@ export function ProfileView() {
             </p>
           </div>
 
-          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-4 space-y-2">
+          <div className="space-y-2">
             <div className="flex items-center justify-between gap-2 text-xs">
-              <span className="font-semibold text-slate-900">
+              <span className="font-semibold text-slate-900 dark:text-slate-100">
                 Tiến độ +1 IT-Coin tiếp theo
               </span>
-              <span className="font-mono font-bold text-amber-700">
+              <span className="font-mono font-bold text-amber-700 dark:text-amber-400">
                 {coinEarnedInTier} / {POINTS_PER_COIN} pts
               </span>
             </div>
@@ -1148,16 +1148,19 @@ export function ProfileView() {
               aria-valuenow={coinProgressPct}
               aria-valuemin={0}
               aria-valuemax={100}
-              className="w-full h-2.5 bg-slate-200/80 rounded-pill border border-slate-300/70 overflow-hidden"
+              className="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden"
             >
               <div
-                className="h-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-500"
+                className="w-full h-full bg-amber-600 dark:bg-amber-500 origin-left transition-transform duration-500"
                 style={{
-                  width: `${Math.max(coinEarnedInTier > 0 ? 4 : 0, coinProgressPct)}%`,
+                  transform: `scaleX(${Math.max(
+                    coinEarnedInTier > 0 ? 0.04 : 0,
+                    Math.min(1, coinProgressPct / 100)
+                  )})`,
                 }}
               />
             </div>
-            <p className="text-[11px] font-mono text-slate-600">
+            <p className="text-sm font-mono text-slate-600 dark:text-slate-400">
               Còn {activity.nextCoinPoints.toLocaleString("vi-VN")} điểm để nhận +1 IT-Coin (1.000 điểm = 1 Coin)
             </p>
           </div>
@@ -1172,10 +1175,10 @@ export function ProfileView() {
         >
           <div className="space-y-3">
             <div className="flex items-center justify-between gap-2">
-              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono">
+              <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider font-mono">
                 Vai trò CNTT của bạn
               </h2>
-              <span className="text-[11px] font-mono text-slate-600">
+              <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
                 Đồng bộ toàn app
               </span>
             </div>
@@ -1190,15 +1193,15 @@ export function ProfileView() {
                     type="button"
                     aria-pressed={isSelected}
                     onClick={() => handleSelectRole(role.id)}
-                    className={`flex items-center gap-2 px-3.5 py-2.5 rounded-pill border text-xs font-semibold transition-all text-left ${
+                    className={`flex items-center gap-2 px-3.5 py-2.5 rounded-lg border text-xs font-semibold transition-colors text-left ${
                       isSelected
-                        ? "bg-sky-100/90 text-slate-900 border-sky-400/80 shadow-[0_4px_14px_rgba(14,165,233,0.18)]"
-                        : "bg-white/80 text-slate-700 border-slate-200/85 hover:bg-slate-100/80 hover:text-slate-900"
+                        ? "bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border-blue-700 dark:border-blue-500"
+                        : "bg-slate-50 dark:bg-slate-900/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100"
                     }`}
                   >
                     <Icon
                       className={`w-4 h-4 shrink-0 ${
-                        isSelected ? "text-sky-600" : "text-slate-500"
+                        isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-500 dark:text-slate-400"
                       }`}
                       aria-hidden="true"
                     />
@@ -1208,15 +1211,15 @@ export function ProfileView() {
               })}
             </div>
 
-            <p className="text-xs text-slate-600 leading-relaxed bg-white/80 border border-slate-200/85 rounded-xl p-3">
-              <strong className="text-slate-900">{activeRole.label}:</strong>{" "}
+            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-l-2 border-slate-300 dark:border-slate-700 pl-3 py-1">
+              <strong className="text-slate-900 dark:text-slate-100">{activeRole.label}:</strong>{" "}
               {activeRole.taglineVI}
             </p>
           </div>
 
           <Link
             href={`/practice/${activeRole.recommendedScenarioId}`}
-            className="liquid-btn-primary inline-flex items-center justify-between gap-2 px-4 py-2.5 rounded-pill text-xs font-semibold transition-all"
+            className="liquid-btn-primary inline-flex items-center justify-between gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold transition-colors"
           >
             <span>Luyện tình huống gợi ý: {recommendedScenarioTitle}</span>
             <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
@@ -1228,19 +1231,19 @@ export function ProfileView() {
           className="liquid-glass-card-lite p-5 space-y-4"
         >
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-1.5">
-              <KeyRound className="w-4 h-4 text-sky-600" aria-hidden="true" />
+            <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider font-mono flex items-center gap-1.5">
+              <KeyRound className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
               <span>Mã chuyển thiết bị</span>
             </h2>
           </div>
 
           {identity.transferCode ? (
-            <div className="p-3.5 bg-white/80 border border-slate-200/85 rounded-xl flex items-center justify-between gap-3">
+            <div className="py-3 border-y border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
               <div className="min-w-0">
-                <div className="text-[10px] font-mono uppercase text-slate-600">
+                <div className="text-xs font-mono uppercase text-slate-600 dark:text-slate-400">
                   Mã sao lưu cá nhân (Transfer Code)
                 </div>
-                <div className="text-base font-mono font-bold text-sky-700 tracking-wider mt-0.5">
+                <div className="text-base font-mono font-bold text-blue-700 dark:text-blue-400 tracking-wider mt-0.5">
                   {identity.transferCode}
                 </div>
               </div>
@@ -1249,11 +1252,11 @@ export function ProfileView() {
                 type="button"
                 onClick={handleCopyTransferCode}
                 aria-label="Sao chép mã chuyển thiết bị"
-                className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill text-xs font-mono font-semibold shrink-0"
+                className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-mono font-semibold shrink-0 transition-colors"
               >
                 {copiedCode ? (
                   <>
-                    <Check className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
+                    <Check className="w-3.5 h-3.5 text-green-700 dark:text-green-400" aria-hidden="true" />
                     <span>Đã chép</span>
                   </>
                 ) : (
@@ -1265,22 +1268,22 @@ export function ProfileView() {
               </button>
             </div>
           ) : (
-            <div className="p-3.5 bg-white/80 border border-slate-200/85 rounded-xl text-xs text-slate-600">
-              Mã <code className="font-mono text-sky-700">DEV-XXXXXX</code> sẽ tự động được cấp cho hồ sơ của bạn để đồng bộ tiến độ giữa các thiết bị.
-            </div>
+            <p className="py-3 border-y border-slate-200 dark:border-slate-800 text-sm text-slate-600 dark:text-slate-300">
+              Mã <code className="font-mono text-blue-700 dark:text-blue-400">DEV-XXXXXX</code> sẽ tự động được cấp cho hồ sơ của bạn để đồng bộ tiến độ giữa các thiết bị.
+            </p>
           )}
 
           {copiedCode && (
             <div
               role="status"
-              className="text-xs font-mono text-emerald-800 bg-emerald-50 border border-emerald-300/80 rounded-xl px-3 py-2"
+              className="text-sm font-mono text-green-700 dark:text-green-300 bg-green-50 dark:bg-green-950/40 border border-green-300 dark:border-green-800 rounded-lg px-3 py-2"
             >
               Đã sao chép mã chuyển thiết bị vào clipboard!
             </div>
           )}
 
           {copyNote && (
-            <div className="text-xs text-rose-800 bg-rose-50 border border-rose-300/80 rounded-xl px-3 py-2">
+            <div className="text-sm text-red-600 dark:text-red-300 bg-red-50 dark:bg-red-950/40 border border-red-300 dark:border-red-800 rounded-lg px-3 py-2">
               {copyNote}
             </div>
           )}
@@ -1288,7 +1291,7 @@ export function ProfileView() {
           <form onSubmit={handleRestoreSubmit} className="space-y-2">
             <label
               htmlFor="restore-transfer-code"
-              className="block text-xs font-semibold text-slate-900"
+              className="block text-xs font-semibold text-slate-900 dark:text-slate-100"
             >
               Khôi phục hồ sơ từ thiết bị khác
             </label>
@@ -1300,12 +1303,12 @@ export function ProfileView() {
                 onChange={(e) => setRestoreCode(e.target.value.toUpperCase())}
                 placeholder="DEV-XXXXXX"
                 maxLength={16}
-                className="liquid-glass-input flex-1 px-3 py-2 text-xs font-mono uppercase rounded-xl focus:outline-none"
+                className="liquid-glass-input flex-1 px-3 py-2 text-xs font-mono uppercase rounded-lg focus:outline-none"
               />
               <button
                 type="submit"
                 disabled={isRestoring || !restoreCode.trim()}
-                className="liquid-btn-primary inline-flex items-center gap-1.5 px-4 py-2 rounded-pill text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                className="liquid-btn-primary inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed shrink-0 transition-colors"
               >
                 <RefreshCw
                   className={`w-3.5 h-3.5 ${isRestoring ? "animate-spin" : ""}`}
@@ -1319,10 +1322,10 @@ export function ProfileView() {
           {restoreFeedback && (
             <div
               role="status"
-              className={`text-xs p-2.5 rounded-xl border ${
+              className={`text-sm p-2.5 rounded-lg border ${
                 restoreFeedback.ok
-                  ? "bg-emerald-50 border-emerald-300/80 text-emerald-800"
-                  : "bg-rose-50 border-rose-300/80 text-rose-800"
+                  ? "bg-green-50 dark:bg-green-950/40 border-green-300 dark:border-green-800 text-green-700 dark:text-green-300"
+                  : "bg-red-50 dark:bg-red-950/40 border-red-300 dark:border-red-800 text-red-600 dark:text-red-300"
               }`}
             >
               {restoreFeedback.message}
@@ -1337,22 +1340,22 @@ export function ProfileView() {
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-2">
-              <ShoppingBag className="w-4 h-4 text-amber-600" aria-hidden="true" />
+            <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider font-mono flex items-center gap-2">
+              <ShoppingBag className="w-4 h-4 text-amber-600 dark:text-amber-400" aria-hidden="true" />
               <span>IT-Coin Cosmetic Armory</span>
             </h2>
-            <p className="text-xs text-slate-600 mt-0.5">
-              Đã sở hữu {COSMETIC_CATALOG.filter((item) => identity.ownedItems.includes(item.id)).length}/{COSMETIC_CATALOG.length} hiệu ứng · Xem nhanh tối đa 4 vật phẩm nổi bật.
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">
+              Đã sở hữu {COSMETIC_CATALOG.filter((item) => identity.ownedItems.includes(item.id)).length}/{COSMETIC_CATALOG.length} hiệu ứng : Xem nhanh tối đa 4 vật phẩm nổi bật.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="liquid-glass-pill px-3 py-1.5 text-xs font-mono font-bold text-amber-700">
+            <span className="liquid-glass-pill px-3 py-1.5 text-xs font-mono font-bold text-amber-700 dark:text-amber-300">
               {identity.itCoins} IT-Coin
             </span>
             <Link
               href="/shop"
-              className="liquid-btn-primary inline-flex items-center gap-1.5 px-4 py-1.5 rounded-pill text-xs font-bold transition-all"
+              className="liquid-btn-primary inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-bold transition-colors"
             >
               <span>Vào Cửa Hàng Hiệu Ứng →</span>
             </Link>
@@ -1362,17 +1365,17 @@ export function ProfileView() {
         {shopFeedback && (
           <div
             role="status"
-            className={`p-3 rounded-xl border text-xs ${
+            className={`p-3 rounded-lg border text-sm ${
               shopFeedback.ok
-                ? "bg-emerald-50 border-emerald-300/80 text-emerald-800"
-                : "bg-rose-50 border-rose-300/80 text-rose-800"
+                ? "bg-green-50 dark:bg-green-950/40 border-green-300 dark:border-green-800 text-green-700 dark:text-green-300"
+                : "bg-red-50 dark:bg-red-950/40 border-red-300 dark:border-red-800 text-red-600 dark:text-red-300"
             }`}
           >
             {shopFeedback.message}
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 border-t border-slate-200 dark:border-slate-800 pt-4">
           {armoryPreviewItems.map((item) => {
             const isOnline = identity.mode === "online";
             const isOwned = identity.ownedItems.includes(item.id);
@@ -1384,32 +1387,32 @@ export function ProfileView() {
             return (
               <div
                 key={item.id}
-                className="p-3.5 rounded-xl bg-white/80 border border-slate-200/85 flex flex-col justify-between gap-2.5"
+                className="border-l-2 border-slate-200 dark:border-slate-700 pl-3 py-1 flex flex-col justify-between gap-2.5"
               >
                 <div className="space-y-1">
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
                       <span
                         aria-hidden="true"
-                        className="w-2.5 h-2.5 rounded-full shrink-0 border border-slate-300"
+                        className="w-2.5 h-2.5 rounded-full shrink-0 border border-slate-300 dark:border-slate-600"
                         style={{ backgroundColor: item.previewAccent }}
                       />
-                      <span className="text-xs font-bold text-slate-900 truncate">
+                      <span className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate">
                         {item.name}
                       </span>
                     </div>
-                    <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded-pill bg-amber-100 border border-amber-300/80 text-amber-800 shrink-0">
+                    <span className="text-[11px] font-mono uppercase px-1.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-300 shrink-0">
                       {item.rarity}
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-600 line-clamp-1">
+                  <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-1">
                     {item.description}
                   </p>
                 </div>
 
                 {isEquipped ? (
                   <div className="flex items-center gap-1.5">
-                    <span className="liquid-btn-success flex-1 inline-flex items-center justify-center gap-1 py-1 px-2.5 rounded-pill text-[11px] font-mono font-semibold">
+                    <span className="liquid-btn-success flex-1 inline-flex items-center justify-center gap-1 py-1 px-2.5 rounded-lg text-xs font-mono font-semibold">
                       <Check className="w-3 h-3" aria-hidden="true" />
                       <span>Đang dùng</span>
                     </span>
@@ -1420,7 +1423,7 @@ export function ProfileView() {
                         onClick={() =>
                           handleUnequipCosmetic(item.id, item.category, item.name)
                         }
-                        className="liquid-glass-btn py-1 px-2.5 rounded-pill text-[11px] font-mono font-semibold transition-all disabled:opacity-50"
+                        className="liquid-glass-btn py-1 px-2.5 rounded-lg text-xs font-mono font-semibold transition-colors disabled:opacity-50"
                       >
                         {busyItemId === item.id ? "..." : "Tháo"}
                       </button>
@@ -1431,13 +1434,13 @@ export function ProfileView() {
                     type="button"
                     disabled={busyItemId === item.id}
                     onClick={() => handleCosmeticAction(item.id, item.price, item.name)}
-                    className="liquid-glass-btn w-full py-1 px-3 rounded-pill text-[11px] font-mono font-semibold transition-all disabled:opacity-50"
+                    className="liquid-glass-btn w-full py-1 px-3 rounded-lg text-xs font-mono font-semibold transition-colors disabled:opacity-50"
                   >
                     {busyItemId === item.id ? "Đang cập nhật..." : "Trang bị nhanh"}
                   </button>
                 ) : (
-                  <span className="w-full inline-flex items-center justify-center py-1 px-2.5 rounded-pill text-[11px] font-mono font-semibold border bg-slate-100/90 text-slate-600 border-slate-200/85">
-                    Xem trước · {item.price} Coin
+                  <span className="w-full inline-flex items-center justify-center py-1 px-2.5 rounded-lg text-xs font-mono font-semibold border bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700">
+                    Xem trước : {item.price} Coin
                   </span>
                 )}
               </div>
@@ -1445,13 +1448,13 @@ export function ProfileView() {
           })}
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200/85 text-xs">
-          <span className="text-slate-600">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-200 dark:border-slate-800 text-sm">
+          <span className="text-slate-600 dark:text-slate-300">
             Khám phá toàn bộ {COSMETIC_CATALOG.length} hiệu ứng viền, bảng tên và chủ đề hồ sơ.
           </span>
           <Link
             href="/shop"
-            className="inline-flex items-center gap-1 font-semibold text-sky-700 hover:text-sky-600 hover:underline"
+            className="inline-flex items-center gap-1 font-semibold text-blue-700 dark:text-blue-400 hover:underline"
           >
             <span>Mua thêm tại Cửa hàng</span>
             <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -1463,13 +1466,13 @@ export function ProfileView() {
         aria-label="Tổng quan hoạt động luyện nói và Arena"
         className="liquid-glass-card-lite p-5 sm:p-6 space-y-5"
       >
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/85 pb-3">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
           <div>
-            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono flex items-center gap-2">
-              <History className="w-4 h-4 text-emerald-600" aria-hidden="true" />
+            <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider font-mono flex items-center gap-2">
+              <History className="w-4 h-4 text-green-700 dark:text-green-400" aria-hidden="true" />
               <span>Hoạt động Luyện nói &amp; Arena</span>
             </h2>
-            <p className="text-xs text-slate-600 mt-0.5">
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">
               {activity.scenariosPracticed > 0
                 ? `Đã luyện ${activity.scenariosPracticed} tình huống khác nhau (${localSpeakingCount} lượt nói${localArenaCount > 0 ? `, ${localArenaCount} trận Arena` : ""}).`
                 : localArenaCount > 0
@@ -1481,29 +1484,29 @@ export function ProfileView() {
           </div>
           <Link
             href="/progress"
-            className="inline-flex items-center gap-1 text-xs font-mono font-semibold text-sky-700 hover:text-sky-600 transition-colors"
+            className="inline-flex items-center gap-1 text-xs font-mono font-semibold text-blue-700 dark:text-blue-400 hover:underline transition-colors"
           >
             <span>Xem kế hoạch 7 ngày</span>
             <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-3.5 text-center">
-            <div className="text-2xl font-mono font-extrabold text-slate-900">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-slate-800 border border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50 dark:bg-slate-900/60">
+          <div className="p-3.5 text-center">
+            <div className="text-2xl font-mono font-extrabold text-slate-900 dark:text-slate-100">
               {summaryStats.totalSessions > 0
                 ? summaryStats.totalSessions
                 : hasCloudPoints
                   ? identity.totalPoints.toLocaleString("vi-VN")
                   : 0}
             </div>
-            <div className="text-[11px] text-slate-600 mt-1 flex items-center justify-center gap-1">
+            <div className="text-xs text-slate-600 dark:text-slate-400 mt-1 flex items-center justify-center gap-1">
               {localSpeakingCount === 0 && localArenaCount > 0 ? (
-                <Gamepad2 className="w-3 h-3 text-emerald-600" aria-hidden="true" />
+                <Gamepad2 className="w-3 h-3 text-green-700 dark:text-green-400" aria-hidden="true" />
               ) : (localSpeakingCount > 0 && localArenaCount > 0) || (localSpeakingCount === 0 && hasCloudPoints) ? (
-                <Trophy className="w-3 h-3 text-amber-500" aria-hidden="true" />
+                <Trophy className="w-3 h-3 text-amber-600 dark:text-amber-400" aria-hidden="true" />
               ) : (
-                <Mic className="w-3 h-3 text-sky-600" aria-hidden="true" />
+                <Mic className="w-3 h-3 text-blue-700 dark:text-blue-400" aria-hidden="true" />
               )}
               <span>
                 {localSpeakingCount > 0 && localArenaCount > 0
@@ -1519,51 +1522,51 @@ export function ProfileView() {
             </div>
           </div>
 
-          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-3.5 text-center">
-            <div className="text-2xl font-mono font-extrabold text-sky-700">
+          <div className="p-3.5 text-center">
+            <div className="text-2xl font-mono font-extrabold text-blue-700 dark:text-blue-400">
               {summaryStats.averageScore}
             </div>
-            <div className="text-[11px] text-slate-600 mt-1">Điểm TB</div>
+            <div className="text-xs text-slate-600 dark:text-slate-400 mt-1">Điểm TB</div>
           </div>
 
-          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-3.5 text-center">
-            <div className="text-2xl font-mono font-extrabold text-amber-600">
+          <div className="p-3.5 text-center">
+            <div className="text-2xl font-mono font-extrabold text-amber-700 dark:text-amber-400">
               {summaryStats.bestScore}
             </div>
-            <div className="text-[11px] text-slate-600 mt-1">Điểm cao nhất</div>
+            <div className="text-xs text-slate-600 dark:text-slate-400 mt-1">Điểm cao nhất</div>
           </div>
 
-          <div className="bg-white/80 border border-slate-200/85 rounded-xl p-3.5 text-center">
-            <div className="text-2xl font-mono font-extrabold text-emerald-700">
+          <div className="p-3.5 text-center">
+            <div className="text-2xl font-mono font-extrabold text-green-700 dark:text-green-400">
               {activity.bugBusterBest}
             </div>
-            <div className="text-[11px] text-slate-600 mt-1 flex items-center justify-center gap-1">
-              <Bug className="w-3 h-3 text-emerald-600" aria-hidden="true" />
+            <div className="text-xs text-slate-600 dark:text-slate-400 mt-1 flex items-center justify-center gap-1">
+              <Bug className="w-3 h-3 text-green-700 dark:text-green-400" aria-hidden="true" />
               <span>Bug Buster Best</span>
             </div>
           </div>
 
-          <div className="col-span-2 sm:col-span-1 bg-white/80 border border-slate-200/85 rounded-xl p-3.5 text-center">
-            <div className="text-2xl font-mono font-extrabold text-indigo-700">
+          <div className="col-span-2 sm:col-span-1 p-3.5 text-center">
+            <div className="text-2xl font-mono font-extrabold text-slate-900 dark:text-slate-100">
               {activity.standupBest}
             </div>
-            <div className="text-[11px] text-slate-600 mt-1 flex items-center justify-center gap-1">
-              <Timer className="w-3 h-3 text-indigo-600" aria-hidden="true" />
+            <div className="text-xs text-slate-600 dark:text-slate-400 mt-1 flex items-center justify-center gap-1">
+              <Timer className="w-3 h-3 text-blue-700 dark:text-blue-400" aria-hidden="true" />
               <span>Standup Best</span>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <div className="bg-white/80 border border-slate-200/85 rounded-2xl p-4 space-y-3">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
+          <div className="border-t border-slate-200 dark:border-slate-800 pt-4 space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h3 className="text-xs font-bold font-mono uppercase text-slate-900 flex items-center gap-1.5">
-                <AlertCircle className="w-3.5 h-3.5 text-amber-600" aria-hidden="true" />
+              <h3 className="text-xs font-bold font-mono uppercase text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                <AlertCircle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" aria-hidden="true" />
                 <span>Từ khóa &amp; điểm yếu hay gặp</span>
               </h3>
               <Link
                 href="/vocabulary"
-                className="inline-flex items-center gap-1 text-[11px] font-semibold text-sky-700 hover:text-sky-600 hover:underline"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-blue-700 dark:text-blue-400 hover:underline"
               >
                 <BookOpen className="w-3 h-3" aria-hidden="true" />
                 <span>Ôn từ vựng</span>
@@ -1571,27 +1574,27 @@ export function ProfileView() {
             </div>
 
             {activity.topWeakPoints.length === 0 ? (
-              <div className="bg-slate-100/80 border border-slate-200/85 rounded-xl p-4 space-y-2.5">
-                <p className="text-xs text-slate-600">
+              <div className="border-l-2 border-slate-300 dark:border-slate-700 pl-3 py-1 space-y-2.5">
+                <p className="text-sm text-slate-600 dark:text-slate-300">
                   Chưa ghi nhận từ khóa hay lỗi ngữ pháp nào. Hãy luyện nói ít nhất 1 lượt để SpeakIT tổng hợp điểm cần cải thiện.
                 </p>
                 <div className="flex flex-wrap gap-2">
                   <Link
                     href="/vocabulary"
-                    className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-pill text-xs font-semibold"
+                    className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold"
                   >
                     <span>Mở kho từ vựng</span>
                   </Link>
                   <Link
                     href={`/practice/${activeRole.recommendedScenarioId}`}
-                    className="liquid-btn-primary inline-flex items-center gap-1 px-3 py-1.5 rounded-pill text-xs font-semibold"
+                    className="liquid-btn-primary inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold"
                   >
                     <span>Luyện tình huống gợi ý</span>
                   </Link>
                 </div>
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="divide-y divide-slate-200 dark:divide-slate-800">
                 {activity.topWeakPoints.map((wp) => {
                   const targetScenarioId = findScenarioForWeakPoint(
                     wp.value,
@@ -1601,24 +1604,24 @@ export function ProfileView() {
                   return (
                     <div
                       key={wp.id}
-                      className="flex flex-wrap items-center justify-between gap-2 bg-slate-100/80 border border-slate-200/85 rounded-xl px-3 py-2"
+                      className="flex flex-wrap items-center justify-between gap-2 py-2.5"
                     >
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-pill bg-amber-100 border border-amber-300/80 text-amber-800 shrink-0">
+                        <span className="text-[11px] font-mono uppercase px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-300 shrink-0">
                           {wp.kind === "keyword" ? "Từ khóa" : "Ngữ pháp"}
                         </span>
-                        <span className="text-xs font-mono font-bold text-slate-900 truncate">
+                        <span className="text-sm font-mono font-bold text-slate-900 dark:text-slate-100 truncate">
                           {wp.value}
                         </span>
                       </div>
 
                       <div className="flex items-center gap-2 shrink-0">
-                        <span className="text-[11px] font-mono font-bold text-rose-700">
+                        <span className="text-xs font-mono font-bold text-red-600 dark:text-red-400">
                           {wp.miss_count} lần
                         </span>
                         <Link
                           href={`/practice/${targetScenarioId}`}
-                          className="liquid-glass-btn text-[11px] font-semibold px-2.5 py-1 rounded-pill"
+                          className="liquid-glass-btn text-xs font-semibold px-2.5 py-1 rounded-lg"
                         >
                           Luyện lại
                         </Link>
@@ -1630,23 +1633,23 @@ export function ProfileView() {
             )}
           </div>
 
-          <div className="bg-white/80 border border-slate-200/85 rounded-2xl p-4 space-y-3">
+          <div className="border-t border-slate-200 dark:border-slate-800 pt-4 space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h3 className="text-xs font-bold font-mono uppercase text-slate-900 flex items-center gap-1.5">
-                <Mic className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
+              <h3 className="text-xs font-bold font-mono uppercase text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                <Mic className="w-3.5 h-3.5 text-green-700 dark:text-green-400" aria-hidden="true" />
                 <span>Lượt luyện nói &amp; Arena gần đây</span>
               </h3>
               <Link
                 href="/scenarios"
-                className="text-[11px] font-semibold text-sky-700 hover:text-sky-600 transition-colors"
+                className="text-xs font-semibold text-blue-700 dark:text-blue-400 hover:underline transition-colors"
               >
                 Chọn kịch bản mới →
               </Link>
             </div>
 
             {activity.recentAttempts.length === 0 && recentArenaRuns.length === 0 ? (
-              <div className="bg-slate-100/80 border border-slate-200/85 rounded-xl p-4 space-y-2.5">
-                <p className="text-xs text-slate-600">
+              <div className="border-l-2 border-slate-300 dark:border-slate-700 pl-3 py-1 space-y-2.5">
+                <p className="text-sm text-slate-600 dark:text-slate-300">
                   {hasCloudPoints
                     ? `Tài khoản ${identity.transferCode ?? ""} đã tích lũy ${identity.totalPoints.toLocaleString("vi-VN")} điểm. Hãy luyện thêm một tình huống hoặc trận Arena để xem chi tiết tại đây.`
                     : "Bạn chưa có lượt luyện nói nào được ghi nhận."}
@@ -1654,7 +1657,7 @@ export function ProfileView() {
                 <div className="flex flex-wrap gap-2">
                   <Link
                     href="/scenarios"
-                    className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill text-xs font-semibold transition-all"
+                    className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors"
                   >
                     <span>Bắt đầu luyện nói ngay</span>
                     <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -1662,16 +1665,16 @@ export function ProfileView() {
                   {hasCloudPoints && (
                     <Link
                       href="/arena"
-                      className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill text-xs font-semibold transition-all"
+                      className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors"
                     >
-                      <Gamepad2 className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
+                      <Gamepad2 className="w-3.5 h-3.5 text-green-700 dark:text-green-400" aria-hidden="true" />
                       <span>Vào Arena</span>
                     </Link>
                   )}
                 </div>
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="divide-y divide-slate-200 dark:divide-slate-800">
                 {activity.recentAttempts.map((attempt) => {
                   const titleVI =
                     scenarioTitleMap.get(attempt.scenario) ?? attempt.scenario;
@@ -1679,22 +1682,22 @@ export function ProfileView() {
                     <Link
                       key={attempt.id}
                       href={`/practice/${attempt.scenario}`}
-                      className="block liquid-glass-card-lite hover:border-sky-400/60 p-3 transition-colors space-y-1"
+                      className="block py-2.5 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors space-y-1 px-2 -mx-2 rounded-lg"
                     >
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs font-bold text-slate-900 truncate">
+                        <span className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate">
                           {titleVI}
                         </span>
-                        <span className="px-2 py-0.5 rounded-pill bg-sky-100 border border-sky-300/80 text-[11px] font-mono font-bold text-sky-800 shrink-0">
+                        <span className="px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-xs font-mono font-bold text-blue-700 dark:text-blue-300 shrink-0">
                           {attempt.score}/100
                         </span>
                       </div>
-                      <div className="flex items-center justify-between gap-2 text-[11px] font-mono text-slate-600">
+                      <div className="flex items-center justify-between gap-2 text-xs font-mono text-slate-600 dark:text-slate-400">
                         <span>Lượt {attempt.turn_index + 1}</span>
                         <span>{formatAttemptDate(attempt.created_at)}</span>
                       </div>
                       {attempt.transcript && (
-                        <p className="text-xs text-slate-600 line-clamp-2 pt-0.5">
+                        <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-2 pt-0.5">
                           “{attempt.transcript}”
                         </p>
                       )}
@@ -1705,20 +1708,20 @@ export function ProfileView() {
                   <Link
                     key={run.id}
                     href="/arena"
-                    className="block liquid-glass-card-lite hover:border-emerald-400/60 p-3 transition-colors space-y-1"
+                    className="block py-2.5 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors space-y-1 px-2 -mx-2 rounded-lg"
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-bold text-slate-900 truncate flex items-center gap-1.5">
-                        <Gamepad2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" aria-hidden="true" />
+                      <span className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate flex items-center gap-1.5">
+                        <Gamepad2 className="w-3.5 h-3.5 text-green-700 dark:text-green-400 shrink-0" aria-hidden="true" />
                         <span>
                           {run.gameId === "bug-buster" ? "Bug Buster Arena" : "Standup Speed Run"}
                         </span>
                       </span>
-                      <span className="px-2 py-0.5 rounded-pill bg-emerald-100 border border-emerald-300/80 text-[11px] font-mono font-bold text-emerald-800 shrink-0">
+                      <span className="px-2 py-0.5 rounded-full bg-green-50 dark:bg-green-950/40 border border-green-300 dark:border-green-800 text-xs font-mono font-bold text-green-700 dark:text-green-300 shrink-0">
                         {run.score.toLocaleString("vi-VN")} pts
                       </span>
                     </div>
-                    <div className="flex items-center justify-between gap-2 text-[11px] font-mono text-slate-600">
+                    <div className="flex items-center justify-between gap-2 text-xs font-mono text-slate-600 dark:text-slate-400">
                       <span>
                         {run.gameId === "bug-buster"
                           ? `${run.accuracyOrWords}% chính xác`

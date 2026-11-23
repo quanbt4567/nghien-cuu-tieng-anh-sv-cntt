@@ -5,7 +5,7 @@ import { listCustomCosmetics } from "../../lib/custom-cosmetics";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "IT-Coin Live Try-On Studio — SpeakIT",
+  title: "IT-Coin Live Try-On Studio : SpeakIT",
   description:
     "Mở khóa và dùng thử trực tiếp Avatar Frame, Profile Theme, Cursor Trail, Leaderboard FX, Nameplate và Victory Finisher bằng IT-Coin.",
 };

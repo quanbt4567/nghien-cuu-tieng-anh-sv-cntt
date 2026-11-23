@@ -280,18 +280,18 @@ export function AdminSystemTab({
       {notice && (
         <div
           role={notice.tone === "error" ? "alert" : "status"}
-          className={`flex items-start gap-2.5 p-3.5 rounded-2xl border text-xs ${
+          className={`flex items-start gap-2.5 p-3.5 rounded-xl border text-sm ${
             notice.tone === "error"
-              ? "bg-rose-50/90 border-rose-300/80 text-rose-800"
+              ? "bg-red-50 dark:bg-red-950/40 border-red-300 dark:border-red-800 text-red-700 dark:text-red-300"
               : notice.tone === "warn"
-              ? "bg-amber-50/90 border-amber-300/80 text-amber-800"
-              : "bg-emerald-50/90 border-emerald-300/80 text-emerald-800"
+              ? "bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800 text-amber-800 dark:text-amber-300"
+              : "bg-green-50 dark:bg-green-950/40 border-green-300 dark:border-green-800 text-green-700 dark:text-green-300"
           }`}
         >
           {notice.tone === "ok" ? (
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" aria-hidden="true" />
+            <CheckCircle2 className="w-4 h-4 text-green-700 dark:text-green-400 shrink-0 mt-0.5" aria-hidden="true" />
           ) : (
-            <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" aria-hidden="true" />
+            <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0 mt-0.5" aria-hidden="true" />
           )}
           <span>{notice.text}</span>
         </div>
@@ -300,22 +300,22 @@ export function AdminSystemTab({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div className="liquid-glass-card p-5 space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-mono uppercase font-semibold text-slate-600">
+            <span className="text-xs font-mono uppercase font-semibold text-slate-600 dark:text-slate-400">
               Đồng bộ máy chủ
             </span>
-            <Database className="w-4 h-4 text-sky-600" aria-hidden="true" />
+            <Database className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
           </div>
           <div className="flex items-center gap-2">
             <span
               className={`w-2.5 h-2.5 rounded-full ${
-                health.neonConnected ? "bg-emerald-500" : "bg-amber-500"
+                health.neonConnected ? "bg-green-600" : "bg-amber-500"
               }`}
             />
-            <span className="text-sm font-bold text-slate-900">
+            <span className="text-sm font-bold text-slate-900 dark:text-slate-100">
               {health.neonConnected ? "Đang hoạt động" : "Lưu trên trình duyệt"}
             </span>
           </div>
-          <p className="text-xs text-slate-700 leading-relaxed">
+          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
             {health.neonConnected
               ? "Dữ liệu học liệu và kết quả luyện tập đang được đồng bộ trực tiếp với máy chủ."
               : "Dữ liệu học liệu và lịch sử luyện tập đang được lưu trữ trực tiếp trên trình duyệt."}
@@ -324,24 +324,24 @@ export function AdminSystemTab({
 
         <div className="liquid-glass-card p-5 space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-mono uppercase font-semibold text-slate-600">
+            <span className="text-xs font-mono uppercase font-semibold text-slate-600 dark:text-slate-400">
               Dịch vụ AI
             </span>
-            <Cpu className="w-4 h-4 text-sky-600" aria-hidden="true" />
+            <Cpu className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
           </div>
           <div className="flex items-center gap-2">
             <span
               className={`w-2.5 h-2.5 rounded-full ${
-                activeAiCount > 0 ? "bg-emerald-500" : "bg-slate-400"
+                activeAiCount > 0 ? "bg-green-600" : "bg-slate-400"
               }`}
             />
-            <span className="text-sm font-bold text-slate-900">
+            <span className="text-sm font-bold text-slate-900 dark:text-slate-100">
               {activeAiCount > 0
                 ? `${activeAiCount}/6 provider đang bật`
                 : "Chấm điểm tự động"}
             </span>
           </div>
-          <p className="text-xs text-slate-700 leading-relaxed">
+          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
             {activeAiCount > 0
               ? "Tự động điều phối qua các dịch vụ AI để chấm điểm và phản hồi nhanh."
               : "Sử dụng bộ quy tắc đánh giá từ khóa và ngữ pháp tự động."}
@@ -350,22 +350,22 @@ export function AdminSystemTab({
 
         <div className="liquid-glass-card p-5 space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-mono uppercase font-semibold text-slate-600">
+            <span className="text-xs font-mono uppercase font-semibold text-slate-600 dark:text-slate-400">
               Bảo mật Admin Passcode
             </span>
-            <KeyRound className="w-4 h-4 text-sky-600" aria-hidden="true" />
+            <KeyRound className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
           </div>
           <div className="flex items-center gap-2">
             <span
               className={`w-2.5 h-2.5 rounded-full ${
-                !health.isDefaultPasscode ? "bg-emerald-500" : "bg-amber-500"
+                !health.isDefaultPasscode ? "bg-green-600" : "bg-amber-500"
               }`}
             />
-            <span className="text-sm font-bold text-slate-900">
+            <span className="text-sm font-bold text-slate-900 dark:text-slate-100">
               {!health.isDefaultPasscode ? "Đã tùy chỉnh" : "Đang dùng mặc định"}
             </span>
           </div>
-          <p className="text-xs text-slate-700 leading-relaxed">
+          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
             {!health.isDefaultPasscode
               ? "Passcode quản trị riêng đã được thiết lập cho hệ thống."
               : "Đang sử dụng passcode mặc định. Hãy cập nhật passcode riêng khi triển khai chính thức."}
@@ -376,52 +376,52 @@ export function AdminSystemTab({
       <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-sky-600" aria-hidden="true" />
+            <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+              <Cpu className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
               <span>AI Multi-Provider Matrix</span>
             </h2>
-            <p className="text-xs text-slate-700 mt-0.5">
+            <p className="text-sm text-slate-700 dark:text-slate-300 mt-0.5">
               Thứ tự ưu tiên từ Tier 1 đến Tier 6 (timeout 4000ms mỗi tier) để đảm bảo phản hồi liên tục.
             </p>
           </div>
-          <span className="liquid-glass-pill inline-flex items-center gap-1.5 px-3 py-1 font-mono text-xs font-bold text-sky-800">
+          <span className="liquid-glass-pill inline-flex items-center gap-1.5 px-3 py-1 font-mono text-xs font-bold text-blue-700 dark:text-blue-300">
             {activeAiCount}/6 active
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 border-t border-slate-200 dark:border-slate-800 pt-4">
           {aiProviders.map((item) => (
             <div
               key={item.id}
-              className={`rounded-xl border p-3.5 flex items-center justify-between gap-3 ${
+              className={`border-l-2 pl-3 py-1 flex items-center justify-between gap-3 ${
                 item.configured
-                  ? "bg-white/85 border-sky-300/85"
-                  : "bg-slate-50/80 border-slate-200/85"
+                  ? "border-blue-700 dark:border-blue-500"
+                  : "border-slate-300 dark:border-slate-700"
               }`}
             >
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <span className="font-mono text-[11px] font-bold text-sky-700">
+                  <span className="font-mono text-xs font-bold text-blue-700 dark:text-blue-400">
                     #{item.priority}
                   </span>
-                  <span className="text-xs font-bold text-slate-900 truncate">
+                  <span className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
                     {item.label}
                   </span>
                 </div>
-                <code className="block font-mono text-[11px] text-slate-600 truncate mt-1">
+                <code className="block font-mono text-xs text-slate-600 dark:text-slate-400 truncate mt-1">
                   {item.envVar}
                 </code>
               </div>
               <span
                 className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-mono text-[11px] font-semibold border ${
                   item.configured
-                    ? "bg-emerald-100/90 text-emerald-800 border-emerald-300/80"
-                    : "bg-slate-100/90 text-slate-600 border-slate-200/85"
+                    ? "bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-300 border-green-300 dark:border-green-800"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
                 }`}
               >
                 <span
                   className={`w-1.5 h-1.5 rounded-full ${
-                    item.configured ? "bg-emerald-500" : "bg-slate-400"
+                    item.configured ? "bg-green-600" : "bg-slate-400"
                   }`}
                 />
                 {item.configured ? "Active" : "Missing"}
@@ -433,42 +433,42 @@ export function AdminSystemTab({
 
       <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-            <Layers className="w-4 h-4 text-sky-600" aria-hidden="true" />
+          <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <Layers className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
             <span>Tóm tắt nội dung tùy chỉnh</span>
           </h2>
-          <span className="text-xs font-mono text-slate-700">
+          <span className="text-xs font-mono text-slate-700 dark:text-slate-300">
             Tổng {totalOverridesCount} mục thay đổi
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-          <div className="p-4 rounded-xl bg-white/85 border border-slate-200/85 space-y-1">
-            <div className="font-mono text-slate-600 uppercase text-[11px]">
+        <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-slate-800 border-t border-slate-200 dark:border-slate-800 pt-4 text-sm">
+          <div className="py-2 sm:pr-4 space-y-1">
+            <div className="font-mono text-slate-600 dark:text-slate-400 uppercase text-xs">
               Kịch bản
             </div>
-            <div className="font-semibold text-slate-900">
-              {overrides.customScenarios.length} thêm/sửa •{" "}
+            <div className="font-semibold text-slate-900 dark:text-slate-100">
+              {overrides.customScenarios.length} thêm/sửa :{" "}
               {overrides.hiddenScenarioIds.length} đang ẩn
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-white/85 border border-slate-200/85 space-y-1">
-            <div className="font-mono text-slate-600 uppercase text-[11px]">
+          <div className="py-2 sm:px-4 space-y-1">
+            <div className="font-mono text-slate-600 dark:text-slate-400 uppercase text-xs">
               Từ vựng CNTT
             </div>
-            <div className="font-semibold text-slate-900">
-              {overrides.customVocabulary.length} thêm/sửa •{" "}
+            <div className="font-semibold text-slate-900 dark:text-slate-100">
+              {overrides.customVocabulary.length} thêm/sửa :{" "}
               {overrides.deletedVocabIds.length} mặc định đã ẩn
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-white/85 border border-slate-200/85 space-y-1">
-            <div className="font-mono text-slate-600 uppercase text-[11px]">
+          <div className="py-2 sm:pl-4 space-y-1">
+            <div className="font-mono text-slate-600 dark:text-slate-400 uppercase text-xs">
               Arena Bug Buster
             </div>
-            <div className="font-semibold text-slate-900">
-              {overrides.customBugChallenges.length} thêm/sửa •{" "}
+            <div className="font-semibold text-slate-900 dark:text-slate-100">
+              {overrides.customBugChallenges.length} thêm/sửa :{" "}
               {overrides.deletedChallengeIds.length} mặc định đã ẩn
             </div>
           </div>
@@ -478,12 +478,12 @@ export function AdminSystemTab({
       <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <Bell className="w-5 h-5 text-sky-600" aria-hidden="true" />
-            <h2 className="text-base font-bold text-slate-900">
+            <Bell className="w-5 h-5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
+            <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
               Thông báo trong app (Admin Announcements)
             </h2>
           </div>
-          <span className="liquid-glass-pill px-2.5 py-1 text-xs font-mono text-slate-700">
+          <span className="liquid-glass-pill px-2.5 py-1 text-xs font-mono text-slate-700 dark:text-slate-300">
             {announcements.length} thông báo
           </span>
         </div>
@@ -495,7 +495,7 @@ export function AdminSystemTab({
             onChange={(e) => setAnnouncementTitle(e.target.value)}
             placeholder="Tiêu đề thông báo (VD: SpeakIT cập nhật kịch bản mới!)"
             maxLength={120}
-            className="liquid-glass-input w-full px-3.5 py-2 rounded-xl text-xs"
+            className="liquid-glass-input w-full px-3.5 py-2 rounded-lg text-sm"
           />
           <textarea
             value={announcementBody}
@@ -503,13 +503,13 @@ export function AdminSystemTab({
             placeholder="Nội dung thông báo hiển thị trong chuông thông báo trên app..."
             maxLength={500}
             rows={2}
-            className="liquid-glass-input w-full px-3.5 py-2 rounded-xl text-xs resize-none"
+            className="liquid-glass-input w-full px-3.5 py-2 rounded-lg text-sm resize-none"
           />
           <button
             type="button"
             disabled={announcementSending}
             onClick={() => void handlePublishAnnouncement()}
-            className="liquid-btn-primary inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold self-start disabled:opacity-50"
+            className="liquid-btn-primary inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold self-start disabled:opacity-50"
           >
             <Send className="w-3.5 h-3.5" aria-hidden="true" />
             <span>{announcementSending ? "Đang đăng..." : "Đăng thông báo"}</span>
@@ -517,16 +517,16 @@ export function AdminSystemTab({
         </div>
 
         {announcements.length > 0 && (
-          <div className="pt-2 border-t border-slate-200/85 space-y-2">
+          <div className="pt-2 border-t border-slate-200 dark:border-slate-800 divide-y divide-slate-200 dark:divide-slate-800">
             {announcements.map((item) => (
               <div
                 key={item.id}
-                className="flex items-start justify-between gap-3 p-3 rounded-xl bg-white/85 border border-slate-200/85"
+                className="flex items-start justify-between gap-3 py-3"
               >
                 <div className="min-w-0 space-y-0.5">
-                  <div className="text-xs font-bold text-slate-900">{item.title}</div>
-                  <p className="text-xs text-slate-700 leading-relaxed">{item.body}</p>
-                  <div className="text-[10px] font-mono text-slate-600">
+                  <div className="text-sm font-bold text-slate-900 dark:text-slate-100">{item.title}</div>
+                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{item.body}</p>
+                  <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
                     {new Date(item.created_at).toLocaleString("vi-VN")}
                   </div>
                 </div>
@@ -547,22 +547,22 @@ export function AdminSystemTab({
 
       <section className="liquid-glass-card p-5 sm:p-6 space-y-5">
         <div className="space-y-1">
-          <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 text-rose-600" aria-hidden="true" />
+          <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <ShieldAlert className="w-4 h-4 text-red-600 dark:text-red-400" aria-hidden="true" />
             <span>Bảo trì &amp; Đặt lại hệ thống</span>
           </h2>
-          <p className="text-xs text-slate-700">
+          <p className="text-sm text-slate-700 dark:text-slate-300">
             Các thao tác dưới đây yêu cầu xác nhận hai bước để tránh mất dữ liệu ngoài ý muốn.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div className="p-4 rounded-2xl bg-white/85 border border-slate-200/85 space-y-3 flex flex-col justify-between">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-slate-200 dark:border-slate-800 pt-4">
+          <div className="border-l-2 border-slate-300 dark:border-slate-700 pl-4 space-y-3 flex flex-col justify-between">
             <div className="space-y-1">
-              <h3 className="text-sm font-bold text-slate-900">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
                 Khôi phục toàn bộ nội dung mặc định
               </h3>
-              <p className="text-xs text-slate-700 leading-relaxed">
+              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                 Xóa toàn bộ kịch bản, từ vựng và thử thách Arena tùy chỉnh để quay về bộ học liệu gốc.
               </p>
             </div>
@@ -571,19 +571,19 @@ export function AdminSystemTab({
               type="button"
               disabled={isProcessing}
               onClick={requestResetContent}
-              className="liquid-glass-btn inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold self-start disabled:opacity-50"
+              className="liquid-glass-btn inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold self-start disabled:opacity-50"
             >
               <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Khôi phục toàn bộ nội dung mặc định</span>
             </button>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white/85 border border-slate-200/85 space-y-3 flex flex-col justify-between">
+          <div className="border-l-2 border-red-600 dark:border-red-500 pl-4 space-y-3 flex flex-col justify-between">
             <div className="space-y-1">
-              <h3 className="text-sm font-bold text-slate-900">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
                 Xóa dữ liệu thống kê
               </h3>
-              <p className="text-xs text-slate-700 leading-relaxed">
+              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                 Xóa toàn bộ lượt luyện nói, điểm yếu và lịch sử Arena đã ghi nhận (thường dùng trước khi bắt đầu đợt thu thập dữ liệu nghiên cứu mới).
               </p>
             </div>
@@ -592,7 +592,7 @@ export function AdminSystemTab({
               type="button"
               disabled={isProcessing}
               onClick={requestResetAnalytics}
-              className="liquid-btn-danger inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold self-start disabled:opacity-50"
+              className="liquid-btn-danger inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold self-start disabled:opacity-50"
             >
               <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Xóa dữ liệu thống kê</span>

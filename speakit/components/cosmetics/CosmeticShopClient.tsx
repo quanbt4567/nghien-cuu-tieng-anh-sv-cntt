@@ -102,11 +102,11 @@ const CATEGORY_META: Record<
 };
 
 const RARITY_BADGE_CLASS: Record<CosmeticRarity, string> = {
-  Common: "bg-slate-100/90 text-slate-700 border border-slate-300/80",
-  Rare: "bg-sky-100/90 text-sky-800 border border-sky-300/80",
-  Epic: "bg-violet-100/90 text-violet-800 border border-violet-300/80",
+  Common: "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700",
+  Rare: "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800",
+  Epic: "bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-300 border border-red-200 dark:border-red-800",
   Legendary:
-    "bg-gradient-to-r from-rose-100/95 to-amber-100/95 text-amber-900 border border-amber-400/80 shadow-[0_2px_10px_rgba(245,158,11,0.22)]",
+    "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800",
 };
 
 const RARITY_ORDER: Record<CosmeticRarity, number> = {
@@ -137,9 +137,9 @@ function CosmeticCardThumbnail({
 }) {
   if (item.category === "avatar_decoration") {
     return (
-      <div className="h-28 rounded-xl bg-gradient-to-br from-sky-50/90 via-white/85 to-indigo-50/90 border border-slate-200/85 flex items-center justify-center relative overflow-hidden">
+      <div className="h-28 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center justify-center relative overflow-hidden">
         <DiscordAvatarFrame equippedId={item.id} item={item} size="lg" micActive={micActive} lite>
-          <div className="w-full h-full flex items-center justify-center bg-white/90 border border-slate-200/85 font-mono font-bold text-base text-slate-900">
+          <div className="w-full h-full flex items-center justify-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono font-bold text-base text-slate-900 dark:text-slate-100">
             {initials}
           </div>
         </DiscordAvatarFrame>
@@ -149,7 +149,7 @@ function CosmeticCardThumbnail({
 
   if (item.category === "nameplate") {
     return (
-      <div className="h-28 rounded-xl bg-gradient-to-br from-sky-50/90 via-white/85 to-indigo-50/90 border border-slate-200/85 px-3 flex items-center justify-center relative overflow-hidden">
+      <div className="h-28 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 px-3 flex items-center justify-center relative overflow-hidden">
         <NameplateBanner
           nameplateId={item.id}
           item={item}
@@ -158,20 +158,20 @@ function CosmeticCardThumbnail({
         >
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
-              <span className="w-6 h-6 rounded-full bg-white/90 border border-slate-200/85 text-slate-900 font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+              <span className="w-6 h-6 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 font-mono text-[11px] font-bold flex items-center justify-center shrink-0">
                 {initials}
               </span>
-              <span className="text-xs font-bold text-slate-900 truncate">
+              <span className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
                 <NameplateDisplayText name={displayName} nameplateId={item.id} lite />
               </span>
             </div>
             {item.id === "nameplate-terminal-pulse" ? (
-              <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-emerald-700 shrink-0">
+              <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-green-700 dark:text-green-400 shrink-0">
                 <span>$</span>
-                <span className="cosmetic-nameplate-terminal-cursor inline-block w-1.5 h-3 bg-emerald-600" />
+                <span className="cosmetic-nameplate-terminal-cursor inline-block w-1.5 h-3 bg-green-700 dark:bg-green-400" />
               </span>
             ) : (
-              <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-sky-100/90 border border-sky-300/80 text-sky-800 shrink-0">
+              <span className="text-[11px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 shrink-0">
                 TAG
               </span>
             )}
@@ -183,7 +183,7 @@ function CosmeticCardThumbnail({
 
   if (item.category === "leaderboard_fx") {
     return (
-      <div className="h-28 rounded-xl bg-gradient-to-br from-sky-50/90 via-white/85 to-indigo-50/90 border border-slate-200/85 px-3 flex items-center justify-center relative overflow-hidden">
+      <div className="h-28 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 px-3 flex items-center justify-center relative overflow-hidden">
         <LeaderboardRowWrapper
           fxId={item.id}
           lite
@@ -191,14 +191,14 @@ function CosmeticCardThumbnail({
         >
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
-              <span className="w-6 h-6 rounded-full bg-amber-100/90 border border-amber-300/80 text-amber-800 font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+              <span className="w-6 h-6 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-300 font-mono text-[11px] font-bold flex items-center justify-center shrink-0">
                 #1
               </span>
-              <span className="text-xs font-bold text-slate-900 truncate">
+              <span className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
                 {displayName}
               </span>
             </div>
-            <span className="text-[11px] font-mono font-bold text-sky-700 shrink-0">
+            <span className="text-xs font-mono font-bold text-blue-700 dark:text-blue-400 shrink-0">
               2,450 pts
             </span>
           </div>
@@ -210,16 +210,16 @@ function CosmeticCardThumbnail({
   if (item.category === "profile_theme") {
     return (
       <div
-        className={`h-28 rounded-xl bg-gradient-to-br from-sky-50/90 via-white/85 to-indigo-50/90 border border-slate-200/85 relative overflow-hidden flex items-end p-2.5 ${item.effectClass}`}
+        className={`h-28 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 relative overflow-hidden flex items-end p-2.5 ${item.effectClass}`}
       >
         {item.id === "theme-neon-meteor-shower" && (
           <>
             <span
-              className="cosmetic-meteor-streak absolute w-[2px] h-14 rounded-full bg-gradient-to-b from-rose-500 via-amber-400 to-transparent"
+              className="cosmetic-meteor-streak absolute w-[2px] h-14 rounded-full bg-gradient-to-b from-red-500 via-amber-400 to-transparent"
               style={{ left: "26%", top: "-15%", "--meteor-duration": "2.4s", "--meteor-delay": "0s" } as CSSProperties}
             />
             <span
-              className="cosmetic-meteor-streak absolute w-[2px] h-16 rounded-full bg-gradient-to-b from-rose-500 via-amber-400 to-transparent"
+              className="cosmetic-meteor-streak absolute w-[2px] h-16 rounded-full bg-gradient-to-b from-red-500 via-amber-400 to-transparent"
               style={{ left: "68%", top: "-20%", "--meteor-duration": "2.8s", "--meteor-delay": "0.8s" } as CSSProperties}
             />
           </>
@@ -229,7 +229,7 @@ function CosmeticCardThumbnail({
             {["15%", "45%", "75%"].map((left, idx) => (
               <div
                 key={left}
-                className="cosmetic-matrix-col absolute top-0 text-[10px] font-mono font-bold leading-3 text-emerald-700/80 select-none whitespace-pre text-center"
+                className="cosmetic-matrix-col absolute top-0 text-[10px] font-mono font-bold leading-3 text-green-700/80 dark:text-green-400/80 select-none whitespace-pre text-center"
                 style={{ left, "--col-duration": `${2.6 + idx * 0.5}s`, "--col-delay": `${idx * 0.4}s` } as CSSProperties}
               >
                 {"0\n1\n0\n1\n1\n0"}
@@ -245,7 +245,7 @@ function CosmeticCardThumbnail({
             className="cosmetic-storm-arc absolute inset-0"
             style={{
               background:
-                "radial-gradient(circle at 25% 25%, rgba(234, 179, 8, 0.35), transparent 55%), radial-gradient(circle at 75% 75%, rgba(244, 63, 94, 0.28), transparent 55%)",
+                "radial-gradient(circle at 25% 25%, rgba(234, 179, 8, 0.35), transparent 55%), radial-gradient(circle at 75% 75%, rgba(220, 38, 38, 0.25), transparent 55%)",
             }}
           />
         )}
@@ -258,11 +258,11 @@ function CosmeticCardThumbnail({
           <div
             className="absolute inset-0"
             style={{
-              background: `radial-gradient(circle at 28% 30%, ${item.previewAccent}55, transparent 58%), radial-gradient(circle at 75% 70%, ${item.previewAccent}38, transparent 62%), repeating-linear-gradient(135deg, ${item.previewAccent}18 0px, ${item.previewAccent}18 8px, transparent 8px, transparent 16px)`,
+              background: `radial-gradient(circle at 28% 30%, ${item.previewAccent}40, transparent 58%), radial-gradient(circle at 75% 70%, ${item.previewAccent}28, transparent 62%), repeating-linear-gradient(135deg, ${item.previewAccent}14 0px, ${item.previewAccent}14 8px, transparent 8px, transparent 16px)`,
             }}
           />
         )}
-        <span className="relative z-10 px-2 py-0.5 rounded bg-white/90 border border-slate-200/85 text-[10px] font-mono font-bold text-sky-800 shadow-sm">
+        <span className="relative z-10 px-2 py-0.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-[11px] font-mono font-bold text-blue-700 dark:text-blue-300">
           BACKDROP FX
         </span>
       </div>
@@ -271,33 +271,33 @@ function CosmeticCardThumbnail({
 
   if (item.category === "cursor_effect") {
     return (
-      <div className="h-28 rounded-xl bg-gradient-to-br from-sky-50/90 via-white/85 to-indigo-50/90 border border-slate-200/85 relative overflow-hidden flex items-center justify-center">
+      <div className="h-28 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 relative overflow-hidden flex items-center justify-center">
         {item.id === "cursor-pixel-sparkle-trail" && (
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 bg-amber-400 border border-amber-500/40 animate-pulse" />
-            <span className="w-3 h-3 bg-rose-500 border border-rose-600/40 rotate-45 animate-bounce" />
-            <MousePointer2 className="w-5 h-5 text-slate-900" aria-hidden="true" />
+            <span className="w-2.5 h-2.5 bg-amber-500 border border-amber-600/40 animate-pulse" />
+            <span className="w-3 h-3 bg-red-600 border border-red-700/40 rotate-45 animate-bounce" />
+            <MousePointer2 className="w-5 h-5 text-slate-900 dark:text-slate-100" aria-hidden="true" />
           </div>
         )}
         {item.id === "cursor-binary-01-stream" && (
-          <div className="flex items-center gap-2 font-mono font-bold text-xs text-emerald-700">
+          <div className="flex items-center gap-2 font-mono font-bold text-xs text-green-700 dark:text-green-400">
             <span className="animate-pulse">0</span>
             <span>1</span>
             <span className="animate-bounce">0</span>
             <span>1</span>
-            <MousePointer2 className="w-5 h-5 text-slate-900" aria-hidden="true" />
+            <MousePointer2 className="w-5 h-5 text-slate-900 dark:text-slate-100" aria-hidden="true" />
           </div>
         )}
         {item.id === "cursor-neon-laser-ribbon" && (
           <div className="flex items-center gap-1.5">
-            <span className="w-16 h-1.5 rounded-full bg-rose-500 cosmetic-cursor-laser-ribbon" />
-            <MousePointer2 className="w-5 h-5 text-slate-900" aria-hidden="true" />
+            <span className="w-16 h-1.5 rounded-full bg-red-600 cosmetic-cursor-laser-ribbon" />
+            <MousePointer2 className="w-5 h-5 text-slate-900 dark:text-slate-100" aria-hidden="true" />
           </div>
         )}
         {item.id === "cursor-tactical-cyber-crosshair" && (
           <div className="relative flex items-center justify-center">
-            <span className="w-12 h-12 rounded-full border-2 border-dashed border-sky-500 cosmetic-cursor-cyber-crosshair flex items-center justify-center">
-              <span className="w-2 h-2 rounded-full bg-rose-500" />
+            <span className="w-12 h-12 rounded-full border-2 border-dashed border-blue-600 dark:border-blue-400 cosmetic-cursor-cyber-crosshair flex items-center justify-center">
+              <span className="w-2 h-2 rounded-full bg-red-600" />
             </span>
           </div>
         )}
@@ -309,17 +309,16 @@ function CosmeticCardThumbnail({
         ].includes(item.id) && (
           <div className="flex items-center gap-2">
             <span
-              className="w-3 h-3 rounded-full border border-white/80 animate-ping"
+              className="w-3 h-3 rounded-full border border-white dark:border-slate-900 animate-ping"
               style={{ backgroundColor: item.previewAccent }}
             />
             <span
-              className="w-10 h-2 rounded-full border border-white/80"
+              className="w-10 h-2 rounded-full border border-white/80 dark:border-slate-700"
               style={{
                 backgroundColor: item.previewAccent,
-                boxShadow: `0 0 14px ${item.previewAccent}`,
               }}
             />
-            <MousePointer2 className="w-5 h-5 text-slate-900" aria-hidden="true" />
+            <MousePointer2 className="w-5 h-5 text-slate-900 dark:text-slate-100" aria-hidden="true" />
           </div>
         )}
       </div>
@@ -327,32 +326,32 @@ function CosmeticCardThumbnail({
   }
 
   return (
-    <div className="h-28 rounded-xl bg-gradient-to-br from-sky-50/90 via-white/85 to-indigo-50/90 border border-slate-200/85 relative overflow-hidden flex items-center justify-center px-3">
+    <div className="h-28 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 relative overflow-hidden flex items-center justify-center px-3">
       {item.id === "finisher-lgtm-neon-confetti" && (
         <div className="flex items-center gap-2">
-          <span className="px-2 py-1 rounded bg-emerald-600 text-white border border-emerald-400/50 font-mono text-[10px] font-bold rotate-[-4deg] shadow-sm">
+          <span className="px-2 py-1 rounded bg-green-700 text-white border border-green-500 font-mono text-[11px] font-bold rotate-[-4deg]">
             LGTM!
           </span>
-          <span className="w-2.5 h-2.5 bg-rose-500 border border-white/70 rotate-12" />
-          <span className="w-2.5 h-2.5 bg-amber-400 border border-white/70 -rotate-12" />
+          <span className="w-2.5 h-2.5 bg-red-600 border border-white/70 rotate-12" />
+          <span className="w-2.5 h-2.5 bg-amber-500 border border-white/70 -rotate-12" />
         </div>
       )}
       {item.id === "finisher-system-restored-shockwave" && (
         <div className="relative flex items-center justify-center">
-          <span className="absolute w-14 h-14 rounded-full border-2 border-teal-500 animate-ping opacity-45" />
-          <span className="px-2.5 py-1 rounded-full bg-teal-600 text-white border border-teal-400/50 font-mono text-[10px] font-bold shadow-sm">
+          <span className="absolute w-14 h-14 rounded-full border-2 border-green-600 animate-ping opacity-45" />
+          <span className="px-2.5 py-1 rounded-full bg-green-700 text-white border border-green-500 font-mono text-[11px] font-bold">
             200 OK
           </span>
         </div>
       )}
       {item.id === "finisher-cyber-lightning-strike" && (
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-100/95 border border-amber-400/70 shadow-sm">
-          <Zap className="w-4 h-4 text-amber-600 fill-amber-500" aria-hidden="true" />
-          <span className="font-mono text-[11px] font-bold text-amber-900">STRIKE</span>
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800">
+          <Zap className="w-4 h-4 text-amber-600 dark:text-amber-400 fill-amber-500" aria-hidden="true" />
+          <span className="font-mono text-xs font-bold text-amber-700 dark:text-amber-300">STRIKE</span>
         </div>
       )}
       {item.id === "finisher-matrix-override" && (
-        <div className="px-3 py-1.5 rounded-lg bg-emerald-50/95 border-2 border-emerald-500 text-emerald-800 font-mono text-[11px] font-bold shadow-sm">
+        <div className="px-3 py-1.5 rounded-lg bg-green-50 dark:bg-green-950/40 border-2 border-green-600 text-green-700 dark:text-green-300 font-mono text-xs font-bold">
           OVERRIDE_01
         </div>
       )}
@@ -368,7 +367,7 @@ function CosmeticCardThumbnail({
             style={{ borderColor: item.previewAccent }}
           />
           <span
-            className="px-3 py-1.5 rounded-lg border border-white/50 text-white font-mono text-[10px] font-bold shadow-sm flex items-center gap-1.5"
+            className="px-3 py-1.5 rounded-lg border border-white/50 text-white font-mono text-[11px] font-bold flex items-center gap-1.5"
             style={{ backgroundColor: item.previewAccent }}
           >
             <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
@@ -718,7 +717,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
   const initials = getInitials(identity.displayName);
 
   return (
-    <div className="relative min-h-screen bg-transparent text-slate-900">
+    <div className="relative min-h-screen bg-transparent text-slate-900 dark:text-slate-100">
       <FullPageProfileEffect
         themeId={themePreviewEnabled ? activeSandbox.profile_theme : null}
         item={themePreviewEnabled ? activeThemeItem : null}
@@ -728,7 +727,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
         finisherId={activeSandbox.victory_finisher}
         active={finisherActive}
         title={activeFinisherItem?.name ?? "Victory Finisher Preview"}
-        subtitle={`${isIdentityHydrating ? "—" : identity.displayName} • Live Try-On Studio`}
+        subtitle={`${isIdentityHydrating ? "--" : identity.displayName} : Live Try-On Studio`}
         onComplete={() => setFinisherActive(false)}
       />
 
@@ -737,13 +736,13 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
           <div className="flex items-center gap-3">
             <Link
               href="/profile"
-              className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all"
+              className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Hồ sơ</span>
             </Link>
-            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
-              <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 text-white border border-white/50 shadow-[0_6px_18px_rgba(14,165,233,0.35)]">
+            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2">
+              <span className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-blue-700 dark:bg-blue-600 text-white">
                 <ShoppingBag className="w-5 h-5" aria-hidden="true" />
               </span>
               <span>IT-Coin Live Try-On Studio</span>
@@ -754,13 +753,13 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
             data-tour="shop-coin-balance"
             className="flex flex-wrap items-center gap-2.5"
           >
-            <span className="liquid-glass-pill inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-mono font-bold text-amber-800">
-              <Coins className="w-4 h-4 text-amber-500" aria-hidden="true" />
-              <span>{isIdentityHydrating ? "— IT-Coins" : `${identity.itCoins} IT-Coins`}</span>
+            <span className="liquid-glass-pill inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-mono font-bold text-amber-700 dark:text-amber-300">
+              <Coins className="w-4 h-4 text-amber-600 dark:text-amber-400" aria-hidden="true" />
+              <span>{isIdentityHydrating ? "-- IT-Coins" : `${identity.itCoins} IT-Coins`}</span>
             </span>
             <Link
               href="/arena"
-              className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all"
+              className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold transition-colors"
             >
               <Gamepad2 className="w-4 h-4 text-white" aria-hidden="true" />
               <span>Kiếm thêm Coin</span>
@@ -773,13 +772,13 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
           aria-label="Live Try-On Sandbox"
           className="scroll-mt-20 liquid-glass-card p-5 sm:p-6 space-y-5"
         >
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/85 pb-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
             <div>
-              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-sky-100/90 text-sky-800 border border-sky-300/80 text-[11px] font-mono font-bold uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5 text-sky-600" aria-hidden="true" />
+              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 text-[11px] font-mono font-bold uppercase tracking-wider">
+                <Sparkles className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
                 <span>Live Try-On Sandbox</span>
               </div>
-              <p className="text-xs font-medium text-slate-700 mt-1.5">
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mt-1.5">
                 All 6 cosmetic slots render live below. Click any card in the catalog to mix &amp; match before unlocking.
               </p>
             </div>
@@ -788,9 +787,9 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
               <button
                 type="button"
                 onClick={() => setMicTestActive((v) => !v)}
-                className={`liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all ${
+                className={`liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-colors ${
                   micTestActive
-                    ? "!bg-sky-500/20 !border-sky-400/70 !text-sky-900 shadow-[0_0_16px_rgba(14,165,233,0.22)]"
+                    ? "!bg-blue-50 dark:!bg-blue-950/50 !border-blue-700 dark:!border-blue-500 !text-blue-700 dark:!text-blue-300"
                     : ""
                 }`}
               >
@@ -804,7 +803,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                   setFinisherActive(false);
                   window.setTimeout(() => setFinisherActive(true), 20);
                 }}
-                className="liquid-btn-danger inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all"
+                className="liquid-btn-danger inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-colors"
               >
                 <Flame className="w-3.5 h-3.5 text-white" aria-hidden="true" />
                 <span>Trigger Finisher</span>
@@ -814,7 +813,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                 <button
                   type="button"
                   onClick={handleClearPreview}
-                  className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all"
+                  className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-colors"
                 >
                   <Eraser className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>Clear Preview</span>
@@ -825,7 +824,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                 <button
                   type="button"
                   onClick={handleResetToEquipped}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-100/90 hover:bg-amber-200/90 text-amber-900 text-xs font-mono font-bold border border-amber-300/80 transition-all"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-950/60 text-amber-800 dark:text-amber-300 text-xs font-mono font-bold border border-amber-300 dark:border-amber-800 transition-colors"
                 >
                   <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>Reset to Equipped</span>
@@ -834,11 +833,11 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
             </div>
           </div>
 
-          <div className="rounded-2xl border border-slate-200/85 bg-white/85 p-4 sm:p-5 space-y-4">
+          <div className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
               <div
                 data-tour="shop-sandbox-preview"
-                className="lg:col-span-5 flex items-center gap-4 p-4 rounded-xl bg-white/85 border border-slate-200/85"
+                className="lg:col-span-5 flex items-center gap-4 border-l-2 border-blue-700 dark:border-blue-500 pl-4 py-2"
               >
                 <DiscordAvatarFrame
                   equippedId={activeSandbox.avatar_decoration}
@@ -861,14 +860,14 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     className={
                       activeSandbox.nameplate
                         ? "px-2.5 py-1.5"
-                        : "rounded-lg border border-slate-200/85 px-2.5 py-1.5 bg-white/85"
+                        : "rounded-lg border border-slate-200 dark:border-slate-700 px-2.5 py-1.5 bg-slate-50 dark:bg-slate-900/60"
                     }
                   >
-                    <div className="text-sm font-extrabold truncate text-slate-900">
+                    <div className="text-sm font-extrabold truncate text-slate-900 dark:text-slate-100">
                       {isIdentityHydrating ? (
                         <span
                           aria-label="Đang tải hồ sơ"
-                          className="inline-block h-4 w-28 rounded animate-pulse align-middle bg-slate-200/80"
+                          className="inline-block h-4 w-28 rounded animate-pulse align-middle bg-slate-200 dark:bg-slate-800"
                         />
                       ) : (
                         <NameplateDisplayText
@@ -877,8 +876,8 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                         />
                       )}
                     </div>
-                    <div className="text-[11px] font-mono truncate text-slate-600">
-                      {isIdentityHydrating ? "—" : (identity.transferCode ?? "DEV-SANDBOX")} • {identity.equippedTitle}
+                    <div className="text-xs font-mono truncate text-slate-600 dark:text-slate-400">
+                      {isIdentityHydrating ? "--" : (identity.transferCode ?? "DEV-SANDBOX")} : {identity.equippedTitle}
                     </div>
                   </NameplateBanner>
 
@@ -886,10 +885,10 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     <button
                       type="button"
                       onClick={() => setThemePreviewEnabled((v) => !v)}
-                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border text-[10px] font-mono font-bold transition-colors ${
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border text-[11px] font-mono font-bold transition-colors ${
                         themePreviewEnabled && activeSandbox.profile_theme
-                          ? "bg-sky-100/90 border-sky-300/80 text-sky-800"
-                          : "bg-slate-100/80 border-slate-200/85 text-slate-700 hover:bg-slate-200/75"
+                          ? "bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300"
+                          : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200/75 dark:hover:bg-slate-700"
                       }`}
                     >
                       <Layers className="w-3 h-3" aria-hidden="true" />
@@ -897,8 +896,8 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                         Theme FX: {themePreviewEnabled ? "ON" : "OFF"}
                       </span>
                     </button>
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-slate-100/80 border border-slate-200/85 text-[10px] font-mono font-bold text-slate-700">
-                      <MousePointer2 className="w-3 h-3 text-sky-600" aria-hidden="true" />
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[11px] font-mono font-bold text-slate-700 dark:text-slate-300">
+                      <MousePointer2 className="w-3 h-3 text-blue-700 dark:text-blue-400" aria-hidden="true" />
                       <span>{activeSandbox.cursor_effect ? "Cursor Live" : "Default Cursor"}</span>
                     </span>
                   </div>
@@ -909,11 +908,11 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                 <LeaderboardRowWrapper
                   fxId={activeSandbox.leaderboard_fx}
                   nameplateId={activeSandbox.nameplate}
-                  className="border border-slate-200/85 bg-white/85 p-4"
+                  className="border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 p-4"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
-                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100/90 border border-amber-300/80 text-amber-800 font-mono text-xs font-bold shrink-0">
+                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-300 font-mono text-xs font-bold shrink-0">
                         #1
                       </span>
                       <DiscordAvatarFrame
@@ -929,11 +928,11 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                         />
                       </DiscordAvatarFrame>
                       <div className="min-w-0">
-                        <div className="text-sm font-extrabold text-slate-900 truncate flex items-center gap-1.5">
+                        <div className="text-sm font-extrabold text-slate-900 dark:text-slate-100 truncate flex items-center gap-1.5">
                           {isIdentityHydrating ? (
                             <span
                               aria-label="Đang tải hồ sơ"
-                              className="inline-block h-4 w-28 rounded bg-slate-200/80 animate-pulse"
+                              className="inline-block h-4 w-28 rounded bg-slate-200 dark:bg-slate-800 animate-pulse"
                             />
                           ) : (
                             <NameplateDisplayText
@@ -941,20 +940,20 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                               nameplateId={activeSandbox.nameplate}
                             />
                           )}
-                          <Crown className="w-4 h-4 text-amber-500 shrink-0" aria-hidden="true" />
+                          <Crown className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" aria-hidden="true" />
                         </div>
-                        <div className="text-[11px] font-mono text-slate-600 truncate">
-                          Live Identity Card • Leaderboard &amp; Nameplate FX
+                        <div className="text-xs font-mono text-slate-600 dark:text-slate-400 truncate">
+                          Live Identity Card : Leaderboard &amp; Nameplate FX
                         </div>
                       </div>
                     </div>
 
                     <div className="text-right shrink-0 font-mono">
-                      <div className="text-sm font-extrabold text-slate-900">
-                        {isIdentityHydrating ? "— pts" : `${identity.totalPoints.toLocaleString("vi-VN")} pts`}
+                      <div className="text-sm font-extrabold text-slate-900 dark:text-slate-100">
+                        {isIdentityHydrating ? "-- pts" : `${identity.totalPoints.toLocaleString("vi-VN")} pts`}
                       </div>
-                      <div className="text-[11px] text-amber-700 font-bold">
-                        {isIdentityHydrating ? "— IT-Coins" : `${identity.itCoins} IT-Coins`}
+                      <div className="text-xs text-amber-700 dark:text-amber-400 font-bold">
+                        {isIdentityHydrating ? "-- IT-Coins" : `${identity.itCoins} IT-Coins`}
                       </div>
                     </div>
                   </div>
@@ -962,7 +961,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 pt-3 border-t border-slate-200 dark:border-slate-800">
               {COSMETIC_CATEGORIES.map((cat) => {
                 const meta = CATEGORY_META[cat];
                 const Icon = meta.icon;
@@ -980,24 +979,24 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                         setVisibleCount(8);
                       })
                     }
-                    className={`text-left rounded-xl border p-2.5 transition-all ${
+                    className={`text-left rounded-lg border p-2.5 transition-colors ${
                       activeCategory === cat
-                        ? "bg-sky-100/90 border-sky-400/70 shadow-[0_4px_14px_rgba(14,165,233,0.16)]"
-                        : "bg-white/85 border-slate-200/85 hover:bg-white"
+                        ? "bg-blue-50 dark:bg-blue-950/50 border-blue-700 dark:border-blue-500"
+                        : "bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-1">
-                      <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold uppercase text-slate-600">
-                        <Icon className="w-3 h-3 text-sky-600" aria-hidden="true" />
+                      <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400">
+                        <Icon className="w-3 h-3 text-blue-700 dark:text-blue-400" aria-hidden="true" />
                         <span>{meta.shortLabel}</span>
                       </span>
                       {isOverridden && (
-                        <span className="px-1.5 py-0.5 rounded bg-sky-100 border border-sky-300/80 text-sky-800 text-[9px] font-mono font-bold uppercase">
+                        <span className="px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-[10px] font-mono font-bold uppercase">
                           Try
                         </span>
                       )}
                     </div>
-                    <div className="text-xs font-bold text-slate-900 truncate mt-1">
+                    <div className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate mt-1">
                       {activeItem?.name ?? "None"}
                     </div>
                   </button>
@@ -1010,10 +1009,10 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
         {feedback && (
           <div
             role="status"
-            className={`px-4 py-3 rounded-xl border text-xs font-bold ${
+            className={`px-4 py-3 rounded-xl border text-sm font-bold ${
               feedback.ok
-                ? "bg-emerald-50/90 border-emerald-300/80 text-emerald-800"
-                : "bg-rose-50/90 border-rose-300/80 text-rose-800"
+                ? "bg-green-50 dark:bg-green-950/40 border-green-300 dark:border-green-800 text-green-700 dark:text-green-300"
+                : "bg-red-50 dark:bg-red-950/40 border-red-300 dark:border-red-800 text-red-600 dark:text-red-300"
             }`}
           >
             {feedback.message}
@@ -1041,14 +1040,14 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     setVisibleCount(8);
                   })
                 }
-                className={`liquid-glass-pill inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold transition-all ${
+                className={`liquid-glass-pill inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold transition-colors ${
                   selected
-                    ? "!bg-sky-500/15 !border-sky-400/70 text-sky-900 shadow-[0_4px_16px_rgba(14,165,233,0.18)]"
-                    : "text-slate-700 hover:bg-white hover:text-slate-900"
+                    ? "!bg-blue-50 dark:!bg-blue-950/50 !border-blue-700 dark:!border-blue-500 text-blue-700 dark:text-blue-300"
+                    : "text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100"
                 }`}
               >
                 <Icon
-                  className={`w-3.5 h-3.5 ${selected ? "text-sky-600" : "text-slate-500"}`}
+                  className={`w-3.5 h-3.5 ${selected ? "text-blue-700 dark:text-blue-400" : "text-slate-500 dark:text-slate-400"}`}
                   aria-hidden="true"
                 />
                 <span>{meta.label}</span>
@@ -1077,16 +1076,16 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
               <div
                 key={item.id}
                 onClick={(e) => handleSelectPreview(item, getEventCoords(e))}
-                className={`cursor-pointer [content-visibility:auto] liquid-glass-card-lite p-4 flex flex-col justify-between gap-3.5 transition-all ${
+                className={`cursor-pointer [content-visibility:auto] liquid-glass-card-lite p-4 flex flex-col justify-between gap-3.5 transition-colors ${
                   isPreviewing
-                    ? "!border-sky-400/75 shadow-[0_8px_24px_rgba(14,165,233,0.18)] -translate-y-0.5"
-                    : "hover:-translate-y-0.5 hover:border-sky-300/75"
+                    ? "!border-blue-700 dark:!border-blue-500"
+                    : "hover:border-blue-600 dark:hover:border-blue-500"
                 }`}
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between gap-2">
                     <span
-                      className={`text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-lg ${
+                      className={`text-[11px] font-mono font-bold uppercase px-2 py-0.5 rounded-full ${
                         RARITY_BADGE_CLASS[item.rarity]
                       }`}
                     >
@@ -1096,12 +1095,12 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     <div className="flex items-center gap-1.5">
                       {statusLabel && (
                         <span
-                          className={`inline-flex items-center gap-1 text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-lg border ${
+                          className={`inline-flex items-center gap-1 text-[11px] font-mono font-bold uppercase px-2 py-0.5 rounded-full border ${
                             isPreviewing
-                              ? "bg-sky-100/90 border-sky-300/80 text-sky-800"
+                              ? "bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300"
                               : isEquipped
-                                ? "bg-emerald-100/90 border-emerald-300/80 text-emerald-800"
-                                : "bg-slate-100/90 border-slate-200/85 text-slate-700"
+                                ? "bg-green-50 dark:bg-green-950/40 border-green-300 dark:border-green-800 text-green-700 dark:text-green-300"
+                                : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300"
                           }`}
                         >
                           {isPreviewing && <Eye className="w-2.5 h-2.5" aria-hidden="true" />}
@@ -1113,33 +1112,33 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
 
                   <CosmeticCardThumbnail
                     item={item}
-                    displayName={isIdentityHydrating ? "—" : identity.displayName}
+                    displayName={isIdentityHydrating ? "--" : identity.displayName}
                     initials={isIdentityHydrating ? "--" : initials}
                     micActive={micTestActive}
                   />
 
                   <div>
                     <div className="flex items-baseline justify-between gap-2">
-                      <h3 className="text-sm font-extrabold text-slate-900">
+                      <h3 className="text-sm font-extrabold text-slate-900 dark:text-slate-100">
                         {item.name}
                       </h3>
-                      <span className="text-xs font-mono font-bold text-amber-700 shrink-0">
+                      <span className="text-xs font-mono font-bold text-amber-700 dark:text-amber-400 shrink-0">
                         {item.price} IT-Coins
                       </span>
                     </div>
-                    <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                    <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
                       {item.description}
                     </p>
                   </div>
                 </div>
 
                 <div
-                  className="space-y-2 pt-2.5 border-t border-slate-200/85"
+                  className="space-y-2 pt-2.5 border-t border-slate-200 dark:border-slate-800"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {isEquipped ? (
                     <div className="flex items-center gap-2">
-                      <span className="flex-1 inline-flex items-center justify-center gap-1 py-2 px-3 rounded-xl liquid-btn-success text-xs font-mono font-bold">
+                      <span className="flex-1 inline-flex items-center justify-center gap-1 py-2 px-3 rounded-lg liquid-btn-success text-xs font-mono font-bold">
                         <Check className="w-3.5 h-3.5 text-white" aria-hidden="true" />
                         <span>Equipped</span>
                       </span>
@@ -1147,7 +1146,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                         type="button"
                         disabled={busyItemId === item.id || !isOnline}
                         onClick={() => handleUnequip(item.category, item.id)}
-                        className="px-3 py-2 rounded-xl liquid-glass-btn text-xs font-mono font-bold disabled:opacity-50"
+                        className="px-3 py-2 rounded-lg liquid-glass-btn text-xs font-mono font-bold disabled:opacity-50"
                       >
                         Unequip
                       </button>
@@ -1157,16 +1156,16 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                       type="button"
                       disabled={busyItemId === item.id || !isOnline}
                       onClick={() => handleEquipOwned(item)}
-                      className="w-full py-2 px-3 rounded-xl liquid-btn-success text-xs font-mono font-bold disabled:opacity-50"
+                      className="w-full py-2 px-3 rounded-lg liquid-btn-success text-xs font-mono font-bold disabled:opacity-50"
                     >
-                      {busyItemId === item.id ? "Equipping..." : "Owned • Equip"}
+                      {busyItemId === item.id ? "Equipping..." : "Owned : Equip"}
                     </button>
                   ) : isOnline && canAfford ? (
                     <button
                       type="button"
                       disabled={busyItemId === item.id}
                       onClick={() => handleBuyAndEquip(item)}
-                      className="w-full py-2 px-3 rounded-xl liquid-btn-primary text-xs font-mono font-bold disabled:opacity-50"
+                      className="w-full py-2 px-3 rounded-lg liquid-btn-primary text-xs font-mono font-bold disabled:opacity-50"
                     >
                       {busyItemId === item.id
                         ? "Unlocking..."
@@ -1176,7 +1175,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     <button
                       type="button"
                       onClick={(e) => handleSelectPreview(item, getEventCoords(e))}
-                      className="w-full py-2 px-3 rounded-xl liquid-btn-primary opacity-85 hover:opacity-100 text-xs font-mono font-bold"
+                      className="w-full py-2 px-3 rounded-lg liquid-btn-primary opacity-85 hover:opacity-100 text-xs font-mono font-bold"
                     >
                       {`Unlock for ${item.price} IT-Coins`}
                     </button>
@@ -1192,7 +1191,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
             <button
               type="button"
               onClick={() => startTransition(() => setVisibleCount((prev) => prev + 8))}
-              className="px-5 py-2.5 rounded-full liquid-glass-btn text-xs font-bold transition-all"
+              className="px-5 py-2.5 rounded-lg liquid-glass-btn text-xs font-bold transition-colors"
             >
               Xem thêm {Math.min(8, categoryItems.length - visibleCount)}/{categoryItems.length - visibleCount} mẫu khác
             </button>
@@ -1206,14 +1205,14 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
           aria-label="Thanh xem thử hiệu ứng"
           className="fixed bottom-20 left-3 right-14 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:bottom-20 md:bottom-5 z-30 sm:w-max sm:max-w-[calc(100vw-11rem)]"
         >
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 px-3.5 py-2.5 rounded-2xl bg-white/95 backdrop-blur-2xl text-slate-900 border border-sky-300/80 shadow-[0_12px_36px_rgba(15,23,42,0.14),inset_0_1px_1px_rgba(255,255,255,0.95)]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-blue-200 dark:border-blue-800 shadow-lg">
             <div className="flex items-start sm:items-center gap-2 min-w-0">
-              <span className="w-6 h-6 rounded-lg bg-sky-100/90 border border-sky-300/80 text-sky-700 flex items-center justify-center shrink-0">
+              <span className="w-6 h-6 rounded-lg bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400 flex items-center justify-center shrink-0">
                 <Eye className="w-3.5 h-3.5" aria-hidden="true" />
               </span>
-              <span className="text-xs font-semibold leading-snug text-slate-900">
+              <span className="text-sm font-semibold leading-snug text-slate-900 dark:text-slate-100">
                 {activePreviewItem.category === "cursor_effect"
-                  ? `Đang xem thử: ${activePreviewItem.name} • Chạm/vuốt màn hình để xem hiệu ứng`
+                  ? `Đang xem thử: ${activePreviewItem.name} : Chạm/vuốt màn hình để xem hiệu ứng`
                   : `Đang xem thử: ${activePreviewItem.name}`}
               </span>
             </div>
@@ -1222,14 +1221,14 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
               <button
                 type="button"
                 onClick={handleScrollToSandbox}
-                className="px-2.5 py-1.5 rounded-xl liquid-btn-primary text-[11px] font-mono font-bold whitespace-nowrap"
+                className="px-2.5 py-1.5 rounded-lg liquid-btn-primary text-xs font-mono font-bold whitespace-nowrap"
               >
                 Xem Sandbox ↑
               </button>
               <button
                 type="button"
                 onClick={handleResetToEquipped}
-                className="px-2.5 py-1.5 rounded-xl liquid-glass-btn text-[11px] font-mono font-bold whitespace-nowrap"
+                className="px-2.5 py-1.5 rounded-lg liquid-glass-btn text-xs font-mono font-bold whitespace-nowrap"
               >
                 Đặt lại
               </button>

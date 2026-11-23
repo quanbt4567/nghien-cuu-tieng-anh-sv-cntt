@@ -704,36 +704,32 @@ export function SyntaxBombArena() {
     if (room?.status === "finished" && room.explodedPlayerId) {
       return {
         label: "SEGFAULT",
-        ringColor: "#F43F5E",
-        borderClass: "border-rose-500",
-        textClass: "text-rose-600",
-        glowStyle: "0 0 36px rgba(244, 63, 94, 0.35)",
+        ringColor: "#DC2626",
+        borderClass: "border-red-600",
+        textClass: "text-red-600 dark:text-red-400",
       };
     }
     if (urgency >= 0.75) {
       return {
         label: "CRITICAL",
-        ringColor: "#F43F5E",
-        borderClass: "border-rose-500",
-        textClass: "text-rose-600",
-        glowStyle: "0 0 32px rgba(244, 63, 94, 0.3)",
+        ringColor: "#DC2626",
+        borderClass: "border-red-600",
+        textClass: "text-red-600 dark:text-red-400",
       };
     }
     if (urgency >= 0.45) {
       return {
         label: "OVERHEATING",
-        ringColor: "#F59E0B",
-        borderClass: "border-amber-500",
-        textClass: "text-amber-600",
-        glowStyle: "0 0 28px rgba(245, 158, 11, 0.25)",
+        ringColor: "#B45309",
+        borderClass: "border-amber-600",
+        textClass: "text-amber-700 dark:text-amber-400",
       };
     }
     return {
       label: "ARMED",
-      ringColor: "#0EA5E9",
-      borderClass: "border-sky-500",
-      textClass: "text-sky-600",
-      glowStyle: "0 0 24px rgba(14, 165, 233, 0.22)",
+      ringColor: "#1D4ED8",
+      borderClass: "border-blue-700",
+      textClass: "text-blue-700 dark:text-blue-400",
     };
   }, [room?.explodedPlayerId, room?.status, urgency]);
 
@@ -786,7 +782,7 @@ export function SyntaxBombArena() {
       {foulFlash && (
         <div
           aria-hidden="true"
-          className="fixed inset-0 z-40 pointer-events-none bg-rose-600/30 animate-pulse"
+          className="fixed inset-0 z-40 pointer-events-none bg-red-600/30 animate-pulse"
         />
       )}
 
@@ -801,21 +797,21 @@ export function SyntaxBombArena() {
       <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-sky-100 border border-sky-300/80 text-sky-800 text-[11px] font-mono font-bold">
-              <Bomb className="w-3.5 h-3.5 text-sky-600" />
+            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-200 text-blue-800 dark:bg-blue-950/40 dark:border-blue-800 dark:text-blue-300 text-xs font-mono font-bold">
+              <Bomb className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
               <span>SYNTAX BOMB • TECH WORD CHAIN</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
               Syntax Bomb: Tech Word Chain
             </h1>
-            <p className="text-xs sm:text-sm text-slate-600">
+            <p className="text-sm text-slate-600 dark:text-slate-300">
               Chain English words starting with the previous word&apos;s final
               letter before the fuse hits{" "}
-              <strong className="text-rose-600">0.0s SEGFAULT!</strong> Chain 2
+              <strong className="text-red-600 dark:text-red-400">0.0s SEGFAULT!</strong> Chain 2
               IT terms for an{" "}
-              <strong className="text-amber-700">x2 Combo</strong> that cuts
+              <strong className="text-amber-700 dark:text-amber-400">x2 Combo</strong> that cuts
               the opponent&apos;s fuse to{" "}
-              <strong className="text-sky-700">5s</strong>!
+              <strong className="text-blue-700 dark:text-blue-400">5s</strong>!
             </p>
           </div>
 
@@ -824,40 +820,40 @@ export function SyntaxBombArena() {
               type="button"
               onClick={toggleMuteSfx}
               aria-label={sfxMuted ? "Unmute SFX" : "Mute SFX"}
-              className={`liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
-                sfxMuted ? "text-slate-500" : "text-slate-900"
+              className={`liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-mono font-bold transition-colors ${
+                sfxMuted ? "text-slate-500 dark:text-slate-400" : "text-slate-900 dark:text-slate-100"
               }`}
             >
               {sfxMuted ? (
                 <>
-                  <VolumeX className="w-4 h-4 text-rose-600" />
+                  <VolumeX className="w-4 h-4 text-red-600 dark:text-red-400" />
                   <span>SFX Muted</span>
                 </>
               ) : (
                 <>
-                  <Volume2 className="w-4 h-4 text-emerald-600" />
+                  <Volume2 className="w-4 h-4 text-green-700 dark:text-green-400" />
                   <span>SFX On</span>
                 </>
               )}
             </button>
 
-            <div className="liquid-glass-pill flex items-center gap-3 px-3.5 py-2">
+            <div className="inline-flex items-center gap-3 px-3.5 py-2 rounded-full bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700">
               <DiscordAvatarFrame
                 equippedId={equippedCosmetics.avatar_decoration}
                 fallbackRing={guestPlayer?.equippedRing}
                 size="sm"
                 micActive={isRecording}
               >
-                <div className="w-8 h-8 rounded-full bg-sky-600 border border-sky-300/60 text-white flex items-center justify-center text-xs font-mono font-bold">
+                <div className="w-8 h-8 rounded-full bg-blue-700 text-white flex items-center justify-center text-xs font-mono font-bold">
                   {(guestPlayer?.displayName ?? "DV").slice(0, 2).toUpperCase()}
                 </div>
               </DiscordAvatarFrame>
               <div className="text-xs">
-                <div className="font-bold text-slate-900">
+                <div className="font-bold text-slate-900 dark:text-slate-100">
                   {guestPlayer?.displayName ?? "Guest Engineer"}
                 </div>
-                <div className="font-mono text-amber-700 flex items-center gap-1">
-                  <Coins className="w-3.5 h-3.5 text-amber-600" />
+                <div className="font-mono text-amber-700 dark:text-amber-400 flex items-center gap-1">
+                  <Coins className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400" />
                   <span>{guestPlayer?.itCoins ?? 0} IT-Coins</span>
                 </div>
               </div>
@@ -866,8 +862,8 @@ export function SyntaxBombArena() {
         </div>
 
         {errorMsg && (
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-rose-50 border border-rose-300/80 text-rose-800 text-xs font-medium">
-            <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+          <div className="flex items-center gap-2 px-4 py-2.5 border-l-4 border-l-red-600 bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-200 text-sm font-medium">
+            <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
@@ -877,16 +873,16 @@ export function SyntaxBombArena() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <section className="lg:col-span-2 liquid-glass-card p-5 sm:p-6 space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900">
+              <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
                 1. Battle Syntax Bot or Host a Bomb Room
               </h2>
-              <span className="text-xs font-mono text-slate-600">
+              <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
                 960+ A-Z IT Terms
               </span>
             </div>
 
             <div className="space-y-2">
-              <div className="text-xs font-mono font-bold uppercase text-slate-700">
+              <div className="text-xs font-mono font-bold uppercase text-slate-700 dark:text-slate-300">
                 Bot Overload Threshold (Turns)
               </div>
               <div className="flex flex-wrap gap-2.5">
@@ -897,10 +893,10 @@ export function SyntaxBombArena() {
                       key={turns}
                       type="button"
                       onClick={() => setTargetTurns(turns)}
-                      className={`px-4 py-2 rounded-xl border font-mono text-xs font-bold transition-all ${
+                      className={`px-4 py-2 rounded-lg border font-mono text-xs font-bold transition-colors ${
                         active
-                          ? "bg-sky-100 border-sky-400/80 shadow-[0_4px_14px_rgba(14,165,233,0.2)] text-sky-900"
-                          : "bg-white/80 border-slate-200/85 text-slate-700 hover:border-sky-400/60"
+                          ? "bg-blue-700 border-blue-700 text-white dark:bg-blue-600 dark:border-blue-600"
+                          : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-blue-500"
                       }`}
                     >
                       {turns} Turns
@@ -910,27 +906,27 @@ export function SyntaxBombArena() {
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-white/80 border border-slate-200/85 space-y-2 text-xs text-slate-700">
-              <div className="font-mono font-bold uppercase text-slate-900">
+            <div className="border-t border-b border-slate-200 dark:border-slate-800 py-4 space-y-2 text-sm text-slate-700 dark:text-slate-300">
+              <div className="font-mono text-xs font-bold uppercase text-slate-900 dark:text-slate-100">
                 Fuse &amp; Combo Mechanics
               </div>
               <ul className="space-y-1">
                 <li>
                   • Base fuse starts at{" "}
-                  <strong className="text-sky-700">12.0s</strong> and accelerates
-                  with urgent ticking from Cyan -&gt; Amber -&gt; Crimson.
+                  <strong className="text-blue-700 dark:text-blue-400">12.0s</strong> and accelerates
+                  with urgent ticking from Cobalt -&gt; Amber -&gt; Signal Red.
                 </li>
                 <li>
-                  • Play any IT term (e.g. <code className="text-sky-700">docker</code>,{" "}
-                  <code className="text-sky-700">redis</code>, <code className="text-sky-700">kernel</code>) for{" "}
-                  <strong className="text-amber-700">x2 Points</strong>. Chain{" "}
-                  <strong className="text-slate-900">2 IT terms in a row</strong> to trigger the{" "}
-                  <strong className="text-sky-700">5s Fuse Attack</strong>!
+                  • Play any IT term (e.g. <code className="text-blue-700 dark:text-blue-400">docker</code>,{" "}
+                  <code className="text-blue-700 dark:text-blue-400">redis</code>, <code className="text-blue-700 dark:text-blue-400">kernel</code>) for{" "}
+                  <strong className="text-amber-700 dark:text-amber-400">x2 Points</strong>. Chain{" "}
+                  <strong className="text-slate-900 dark:text-slate-100">2 IT terms in a row</strong> to trigger the{" "}
+                  <strong className="text-blue-700 dark:text-blue-400">5s Fuse Attack</strong>!
                 </li>
                 <li>
                   • Repeating words, non-English words, or running down to{" "}
-                  <code className="text-rose-700">0.0s</code> triggers a{" "}
-                  <strong className="text-rose-600">SEGFAULT!</strong> explosion.
+                  <code className="text-red-700 dark:text-red-400">0.0s</code> triggers a{" "}
+                  <strong className="text-red-600 dark:text-red-400">SEGFAULT!</strong> explosion.
                 </li>
               </ul>
             </div>
@@ -940,7 +936,7 @@ export function SyntaxBombArena() {
                 type="button"
                 onClick={handleQuickPlayBot}
                 disabled={loadingAction !== null}
-                className="liquid-btn-primary inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all disabled:opacity-50"
+                className="liquid-btn-primary inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg font-bold text-sm transition-colors disabled:opacity-50"
               >
                 <Bot className="w-4 h-4" />
                 <span>
@@ -954,9 +950,9 @@ export function SyntaxBombArena() {
                 type="button"
                 onClick={handleCreateRoom}
                 disabled={loadingAction !== null}
-                className="liquid-glass-btn inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm disabled:opacity-50"
+                className="liquid-glass-btn inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg font-bold text-sm disabled:opacity-50 transition-colors"
               >
-                <Users className="w-4 h-4 text-sky-600" />
+                <Users className="w-4 h-4 text-blue-700 dark:text-blue-400" />
                 <span>
                   {loadingAction === "create"
                     ? "Creating Room..."
@@ -968,10 +964,10 @@ export function SyntaxBombArena() {
 
           <section className="liquid-glass-card p-5 sm:p-6 flex flex-col justify-between space-y-4">
             <div className="space-y-3">
-              <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900">
+              <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
                 2. Join Bomb Room
               </h2>
-              <p className="text-xs text-slate-600">
+              <p className="text-sm text-slate-600 dark:text-slate-300">
                 Enter a 6-character invite code to duel a teammate in Syntax
                 Bomb.
               </p>
@@ -981,7 +977,7 @@ export function SyntaxBombArena() {
                 value={joinCodeInput}
                 onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
                 placeholder="BOMB99"
-                className="liquid-glass-input w-full px-4 py-3 rounded-xl font-mono text-lg font-bold tracking-[0.25em] text-center uppercase focus:outline-none"
+                className="liquid-glass-input w-full px-4 py-3 rounded-lg font-mono text-lg font-bold tracking-[0.25em] text-center uppercase focus:outline-none"
               />
             </div>
 
@@ -989,7 +985,7 @@ export function SyntaxBombArena() {
               type="button"
               onClick={handleJoinRoom}
               disabled={loadingAction !== null}
-              className="liquid-btn-primary w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm transition-all disabled:opacity-50"
+              className="liquid-btn-primary w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-bold text-sm transition-colors disabled:opacity-50"
             >
               <Users className="w-4 h-4" />
               <span>{loadingAction === "join" ? "Joining..." : "Join Room"}</span>
@@ -1000,21 +996,21 @@ export function SyntaxBombArena() {
 
       {room && room.status === "lobby" && (
         <section className="liquid-glass-card p-5 sm:p-6 space-y-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/85">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
             <div>
-              <div className="text-xs font-mono text-slate-600">BOMB ROOM CODE</div>
+              <div className="text-xs font-mono text-slate-600 dark:text-slate-400">BOMB ROOM CODE</div>
               <div className="flex items-center gap-3 mt-1">
-                <span className="text-2xl font-mono font-bold tracking-[0.2em] text-sky-700 bg-sky-50 px-3 py-1 rounded-lg border border-sky-300/80">
+                <span className="text-2xl font-mono font-bold tracking-[0.2em] text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 px-3 py-1 rounded-lg border border-blue-200 dark:border-blue-800">
                   {room.roomCode}
                 </span>
                 <button
                   type="button"
                   onClick={handleCopyCode}
-                  className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold"
+                  className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold transition-colors"
                 >
                   {copiedCode ? (
                     <>
-                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                      <Check className="w-3.5 h-3.5 text-green-700 dark:text-green-400" />
                       <span>Copied</span>
                     </>
                   ) : (
@@ -1028,20 +1024,20 @@ export function SyntaxBombArena() {
             </div>
 
             <div className="text-left sm:text-right">
-              <span className="px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-sky-100 border border-sky-300/80 text-sky-800">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-blue-50 border border-blue-200 text-blue-800 dark:bg-blue-950/40 dark:border-blue-800 dark:text-blue-300">
                 {DYNAMIC_FUSE_RULES.baseFuseSeconds}s BASE FUSE • {DYNAMIC_FUSE_RULES.comboFuseSeconds}s COMBO
               </span>
-              <div className="mt-1 font-bold text-sm text-slate-900">
+              <div className="mt-1 font-bold text-sm text-slate-900 dark:text-slate-100">
                 Seed Word: {room.currentWord.toUpperCase()}
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 border-t border-b border-slate-200 dark:border-slate-800 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-slate-800">
             {room.players.map((p) => (
               <div
                 key={p.id}
-                className="p-4 rounded-xl border border-slate-200/85 bg-white/80 flex items-center gap-3"
+                className="p-4 flex items-center gap-3"
               >
                 <DiscordAvatarFrame
                   equippedId={
@@ -1052,15 +1048,15 @@ export function SyntaxBombArena() {
                   fallbackRing={p.equippedRing}
                   size="sm"
                 >
-                  <div className="w-9 h-9 rounded-full bg-sky-600 border border-sky-300/60 text-white flex items-center justify-center text-xs font-mono font-bold">
+                  <div className="w-9 h-9 rounded-full bg-blue-700 text-white flex items-center justify-center text-xs font-mono font-bold">
                     {p.isBot ? "AI" : p.displayName.slice(0, 2).toUpperCase()}
                   </div>
                 </DiscordAvatarFrame>
                 <div className="min-w-0">
-                  <div className="text-[11px] font-mono text-slate-600">
+                  <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
                     {p.isBot ? "AI OPPONENT" : p.isHost ? "HOST" : "CHALLENGER"}
                   </div>
-                  <div className="font-bold text-sm text-slate-900 truncate">
+                  <div className="font-bold text-sm text-slate-900 dark:text-slate-100 truncate">
                     {p.displayName}
                   </div>
                 </div>
@@ -1068,8 +1064,8 @@ export function SyntaxBombArena() {
             ))}
 
             {room.players.length < 2 && (
-              <div className="p-4 rounded-xl border border-dashed border-slate-300 bg-slate-100/70 flex items-center">
-                <div className="text-xs font-mono text-slate-600">
+              <div className="p-4 flex items-center">
+                <div className="text-sm font-mono text-slate-600 dark:text-slate-400">
                   Waiting for challenger or Syntax Bot...
                 </div>
               </div>
@@ -1084,9 +1080,9 @@ export function SyntaxBombArena() {
                 disabled={
                   loadingAction !== null || room.players.some((p) => p.isBot)
                 }
-                className="liquid-glass-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm disabled:opacity-50"
+                className="liquid-glass-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-bold text-sm disabled:opacity-50 transition-colors"
               >
-                <Bot className="w-4 h-4 text-sky-600" />
+                <Bot className="w-4 h-4 text-blue-700 dark:text-blue-400" />
                 <span>
                   {loadingAction === "fill_bot"
                     ? "Adding Syntax Bot..."
@@ -1097,7 +1093,7 @@ export function SyntaxBombArena() {
               <button
                 type="button"
                 onClick={handleLeaveRoom}
-                className="liquid-glass-btn px-3.5 py-2.5 rounded-xl text-xs font-mono text-slate-700 hover:text-slate-900"
+                className="liquid-glass-btn px-3.5 py-2.5 rounded-lg text-sm font-mono text-slate-700 dark:text-slate-200 transition-colors"
               >
                 Rời phòng
               </button>
@@ -1107,7 +1103,7 @@ export function SyntaxBombArena() {
               type="button"
               onClick={handleStartMatch}
               disabled={loadingAction !== null || room.players.length < 2}
-              className="liquid-btn-primary inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="liquid-btn-primary inline-flex items-center gap-2 px-6 py-2.5 rounded-lg font-bold text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Play className="w-4 h-4" />
               <span>
@@ -1123,27 +1119,27 @@ export function SyntaxBombArena() {
           <section className="liquid-glass-card p-4 sm:p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-wrap items-center gap-2.5">
-                <span className="liquid-glass-pill px-3 py-1 text-xs font-mono font-bold text-slate-900">
+                <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 text-xs font-mono font-bold text-slate-900 dark:text-slate-100">
                   ROOM {room.roomCode}
                 </span>
-                <span className="liquid-glass-pill px-3 py-1 text-xs font-mono font-bold text-sky-700">
+                <span className="px-3 py-1 rounded-full bg-blue-50 border border-blue-200 dark:bg-blue-950/40 dark:border-blue-800 text-xs font-mono font-bold text-blue-700 dark:text-blue-300">
                   TURN {room.turnCount}/{room.targetTurns}
                 </span>
-                <span className="px-3 py-1 rounded-pill bg-emerald-100 border border-emerald-300/80 text-emerald-800 text-xs font-mono font-bold">
+                <span className="px-3 py-1 rounded-full bg-green-50 border border-green-200 dark:bg-green-950/40 dark:border-green-800 text-green-800 dark:text-green-300 text-xs font-mono font-bold">
                   {myPlayer?.score ?? 0} PTS
                 </span>
 
                 {(myPlayer?.streak ?? room.itComboStreak) >= 2 ? (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-rose-600 text-white text-xs font-mono font-extrabold border border-amber-300/60 animate-pulse shadow-[0_8px_20px_rgba(245,158,11,0.38)]">
-                    <Flame className="w-4 h-4 fill-yellow-200" />
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-600 text-white text-xs font-mono font-extrabold">
+                    <Flame className="w-4 h-4 fill-amber-200" />
                     <span>
                       IT-TERM x2 COMBO ({myPlayer?.streak ?? room.itComboStreak}
                       x) • 5s FUSE ATTACK!
                     </span>
                   </span>
                 ) : (
-                  <span className="liquid-glass-pill inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-bold text-slate-700">
-                    <Zap className="w-3.5 h-3.5 text-amber-500" />
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
+                    <Zap className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                     <span>
                       IT Streak {myPlayer?.streak ?? 0}/2 for 5s Fuse
                     </span>
@@ -1155,10 +1151,10 @@ export function SyntaxBombArena() {
                 {room.players.map((p) => (
                   <div
                     key={p.id}
-                    className={`px-3 py-1 rounded-pill border text-xs font-mono font-bold ${
+                    className={`px-3 py-1 rounded-full border text-xs font-mono font-bold ${
                       room.currentTurnPlayerId === p.id
-                        ? "border-sky-400/80 bg-sky-100 text-sky-900"
-                        : "liquid-glass-pill text-slate-700"
+                        ? "border-blue-600 bg-blue-50 text-blue-900 dark:bg-blue-950/40 dark:border-blue-600 dark:text-blue-200"
+                        : "border-slate-200 bg-slate-100 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
                     }`}
                   >
                     {p.isBot ? "Bot" : p.displayName.split(" ")[0]}: {p.score}
@@ -1172,10 +1168,9 @@ export function SyntaxBombArena() {
             <div className="flex flex-col md:flex-row items-center justify-around gap-8">
               <div className="flex flex-col items-center space-y-3">
                 <div
-                  className={`relative w-44 h-44 flex items-center justify-center rounded-full border-4 ${bombStage.borderClass} bg-white/95 transition-transform duration-150`}
+                  className={`relative w-44 h-44 flex items-center justify-center rounded-full border-4 ${bombStage.borderClass} bg-white dark:bg-slate-900 transition-transform duration-150`}
                   style={{
                     transform: `scale(${1 + urgency * 0.22})`,
-                    boxShadow: bombStage.glowStyle,
                   }}
                 >
                   <svg
@@ -1215,13 +1210,13 @@ export function SyntaxBombArena() {
                     >
                       {fuseRemainingSec.toFixed(1)}s
                     </div>
-                    <div className="text-[10px] font-mono uppercase tracking-[0.25em] text-slate-600">
+                    <div className="text-xs font-mono uppercase tracking-[0.2em] text-slate-600 dark:text-slate-400">
                       {bombStage.label}
                     </div>
                   </div>
                 </div>
 
-                <div className="text-xs font-mono text-slate-600">
+                <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
                   Fuse Limit: {fuseTotalSec}s{" "}
                   {room.lastAttackFuseSeconds === 5 ? "• 5s COMBO HIT!" : ""}
                 </div>
@@ -1229,37 +1224,36 @@ export function SyntaxBombArena() {
 
               <div className="flex flex-col items-center md:items-start space-y-4 text-center md:text-left">
                 <div className="space-y-1">
-                  <div className="text-[11px] font-mono uppercase tracking-[0.2em] text-slate-600">
+                  <div className="text-xs font-mono uppercase tracking-[0.2em] text-slate-600 dark:text-slate-400">
                     TỪ VỪA NỐI TRONG CHUỖI
                   </div>
-                  <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/85 border border-slate-200/85 font-mono text-2xl sm:text-3xl font-extrabold tracking-wider text-slate-900">
+                  <div className="inline-flex items-center gap-3 px-4 py-2 border-b-2 border-slate-300 dark:border-slate-700 font-mono text-2xl sm:text-3xl font-extrabold tracking-wider text-slate-900 dark:text-slate-100">
                     <span>
                       {room.currentWord.slice(0, -1).toUpperCase()}
                       <span className={bombStage.textClass}>
                         {room.currentWord.slice(-1).toUpperCase()}
                       </span>
                     </span>
-                    <ArrowRight className="w-5 h-5 text-slate-500" />
+                    <ArrowRight className="w-5 h-5 text-slate-500 dark:text-slate-400" />
                   </div>
                   {getVietnameseGloss(room.currentWord) && (
-                    <div className="text-xs text-sky-700 font-sans">
+                    <div className="text-sm text-blue-700 dark:text-blue-400 font-sans">
                       Nghĩa từ này: {getVietnameseGloss(room.currentWord)}
                     </div>
                   )}
                 </div>
 
                 <div className="space-y-1.5">
-                  <div className="text-[11px] font-mono uppercase tracking-[0.2em] text-slate-600">
+                  <div className="text-xs font-mono uppercase tracking-[0.2em] text-slate-600 dark:text-slate-400">
                     CHỮ CÁI BẮT BUỘC TIẾP THEO
                   </div>
                   <div className="inline-flex items-center gap-4">
                     <div
-                      className={`w-20 h-20 rounded-2xl border-2 ${bombStage.borderClass} bg-white/95 flex items-center justify-center text-5xl font-mono font-extrabold ${bombStage.textClass}`}
-                      style={{ boxShadow: bombStage.glowStyle }}
+                      className={`w-20 h-20 rounded-xl border-2 ${bombStage.borderClass} bg-white dark:bg-slate-900 flex items-center justify-center text-5xl font-mono font-extrabold ${bombStage.textClass}`}
                     >
                       {room.requiredChar}
                     </div>
-                    <div className="text-xs text-slate-600 max-w-[210px]">
+                    <div className="text-sm text-slate-600 dark:text-slate-300 max-w-[230px]">
                       {isMyTurn
                         ? `Đến lượt bạn! Nói hoặc gõ 1 từ tiếng Anh mới bắt đầu bằng chữ "${room.requiredChar}".`
                         : "Đang chờ đối thủ nối từ để gỡ bom..."}
@@ -1271,14 +1265,14 @@ export function SyntaxBombArena() {
 
             {turnBanner && (
               <div
-                className={`px-4 py-3 rounded-xl border text-xs font-mono font-bold flex items-center gap-2 ${
+                className={`px-4 py-3 border-l-4 text-sm font-mono font-bold flex items-center gap-2 ${
                   turnBanner.tone === "combo"
-                    ? "bg-amber-50 border-amber-300/80 text-amber-800"
+                    ? "border-l-amber-600 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300"
                     : turnBanner.tone === "it"
-                      ? "bg-sky-50 border-sky-300/80 text-sky-800"
+                      ? "border-l-blue-700 bg-blue-50 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300"
                       : turnBanner.tone === "foul" || turnBanner.tone === "error"
-                        ? "bg-rose-50 border-rose-300/80 text-rose-800"
-                        : "bg-slate-100/80 border-slate-200/85 text-slate-700"
+                        ? "border-l-red-600 bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-300"
+                        : "border-l-slate-400 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200"
                 }`}
               >
                 <Terminal className="w-4 h-4 shrink-0" />
@@ -1290,16 +1284,16 @@ export function SyntaxBombArena() {
           <section className="liquid-glass-card p-5 space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <div className="text-sm font-bold text-slate-900">
-                  Gỡ bom — Nói hoặc gõ 1 từ tiếng Anh
+                <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                  Gỡ bom: Nói hoặc gõ 1 từ tiếng Anh
                 </div>
-                <div className="text-xs text-slate-600">
+                <div className="text-sm text-slate-600 dark:text-slate-300">
                   Phải bắt đầu bằng chữ{" "}
-                  <strong className="text-sky-700 font-mono">
+                  <strong className="text-blue-700 dark:text-blue-400 font-mono">
                     {room.requiredChar}
                   </strong>{" "}
                   và chưa lặp lại. Dùng từ vựng CNTT được thưởng{" "}
-                  <strong className="text-amber-700">x2 điểm</strong>!
+                  <strong className="text-amber-700 dark:text-amber-400">x2 điểm</strong>!
                 </div>
               </div>
 
@@ -1307,20 +1301,20 @@ export function SyntaxBombArena() {
                 type="button"
                 onClick={handleToggleMic}
                 disabled={!isMyTurn}
-                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs transition-all disabled:opacity-50 ${
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition-colors disabled:opacity-50 ${
                   isRecording
-                    ? "liquid-btn-danger animate-mic-listening"
+                    ? "liquid-btn-danger"
                     : "liquid-glass-btn"
                 }`}
               >
                 {isRecording ? (
                   <>
-                    <Square className="w-3.5 h-3.5" />
+                    <Square className="w-4 h-4" />
                     <span>Dừng Mic</span>
                   </>
                 ) : (
                   <>
-                    <Mic className="w-3.5 h-3.5 text-sky-600" />
+                    <Mic className="w-4 h-4 text-blue-700 dark:text-blue-400" />
                     <span>Nói từ (Mic)</span>
                   </>
                 )}
@@ -1328,7 +1322,7 @@ export function SyntaxBombArena() {
             </div>
 
             {speechError && (
-              <div className="text-xs text-rose-700 font-medium">
+              <div className="text-sm text-red-700 dark:text-red-400 font-medium">
                 {speechError}
               </div>
             )}
@@ -1351,13 +1345,13 @@ export function SyntaxBombArena() {
                     ? `Gõ từ tiếng Anh bắt đầu bằng chữ ${room.requiredChar}...`
                     : "Đang chờ đối thủ..."
                 }
-                className="liquid-glass-input flex-1 px-4 py-3 rounded-xl font-mono text-base font-bold focus:outline-none disabled:opacity-50"
+                className="liquid-glass-input flex-1 px-4 py-3 rounded-lg font-mono text-base font-bold focus:outline-none disabled:opacity-50"
               />
               <button
                 type="button"
                 onClick={handleSubmitWord}
                 disabled={!isMyTurn || loadingAction !== null}
-                className="liquid-btn-primary inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all disabled:opacity-50"
+                className="liquid-btn-primary inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-bold text-sm transition-colors disabled:opacity-50"
               >
                 <Send className="w-4 h-4" />
                 <span>
@@ -1366,13 +1360,13 @@ export function SyntaxBombArena() {
               </button>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-200/85">
-              <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-mono text-slate-600">
-                <span className="font-bold text-slate-900">Đã dùng:</span>
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-200 dark:border-slate-800">
+              <div className="flex flex-wrap items-center gap-1.5 text-xs font-mono text-slate-600 dark:text-slate-400">
+                <span className="font-bold text-slate-900 dark:text-slate-100">Đã dùng:</span>
                 {room.usedWords.slice(-8).map((w) => (
                   <span
                     key={w}
-                    className="px-2 py-0.5 rounded bg-sky-50 border border-sky-200/85 text-sky-800"
+                    className="px-2 py-0.5 rounded-full bg-blue-50 border border-blue-200 dark:bg-blue-950/40 dark:border-blue-800 text-blue-800 dark:text-blue-300"
                   >
                     {w}
                   </span>
@@ -1382,7 +1376,7 @@ export function SyntaxBombArena() {
               <button
                 type="button"
                 onClick={handleLeaveRoom}
-                className="liquid-glass-btn px-3.5 py-1.5 rounded-xl text-xs font-mono text-slate-700 hover:text-slate-900"
+                className="liquid-glass-btn px-3.5 py-1.5 rounded-lg text-sm font-mono text-slate-700 dark:text-slate-200 transition-colors"
               >
                 Rời phòng
               </button>
@@ -1391,40 +1385,40 @@ export function SyntaxBombArena() {
 
           {orderedMoves.length > 0 && (
             <section className="liquid-glass-card p-5 space-y-3">
-              <div className="text-xs font-mono font-bold uppercase text-slate-600">
+              <div className="text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-400">
                 Live Chain Reactor Feed ({orderedMoves.length} moves)
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-60 overflow-y-auto pr-1">
+              <div className="divide-y divide-slate-200 dark:divide-slate-800 border-t border-b border-slate-200 dark:border-slate-800 max-h-60 overflow-y-auto">
                 {orderedMoves.map((move) => (
                   <div
                     key={move.id}
-                    className={`px-3.5 py-2.5 rounded-xl border text-xs flex items-center justify-between gap-2 ${
+                    className={`px-3.5 py-2.5 border-l-4 text-sm flex items-center justify-between gap-2 ${
                       move.comboTriggered
-                        ? "bg-amber-50 border-amber-300/80"
+                        ? "border-l-amber-500 bg-amber-50/60 dark:bg-amber-950/30"
                         : move.isItTerm
-                          ? "bg-sky-50 border-sky-300/80"
-                          : "bg-white/80 border-slate-200/85"
+                          ? "border-l-blue-700 bg-blue-50/60 dark:bg-blue-950/30"
+                          : "border-l-slate-300 dark:border-l-slate-700"
                     }`}
                   >
                     <div className="min-w-0">
-                      <div className="font-mono font-bold text-slate-900 truncate">
+                      <div className="font-mono font-bold text-slate-900 dark:text-slate-100 truncate">
                         {move.word.toUpperCase()}{" "}
                         {move.isItTerm && (
-                          <span className="ml-1 px-1.5 py-0.5 rounded bg-sky-100 border border-sky-300/80 text-sky-800 text-[10px]">
+                          <span className="ml-1 px-1.5 py-0.5 rounded bg-blue-50 border border-blue-200 dark:bg-blue-950/40 dark:border-blue-800 text-blue-800 dark:text-blue-300 text-xs">
                             x2 IT
                           </span>
                         )}
                         {move.comboTriggered && (
-                          <span className="ml-1 px-1.5 py-0.5 rounded bg-rose-100 border border-rose-300/80 text-rose-800 text-[10px]">
+                          <span className="ml-1 px-1.5 py-0.5 rounded bg-red-50 border border-red-200 dark:bg-red-950/40 dark:border-red-800 text-red-800 dark:text-red-300 text-xs">
                             5s FUSE
                           </span>
                         )}
                       </div>
-                      <div className="text-[11px] text-slate-600 truncate">
+                      <div className="text-xs text-slate-600 dark:text-slate-400 truncate">
                         {move.displayName}
                       </div>
                     </div>
-                    <span className="font-mono font-bold text-emerald-700 shrink-0">
+                    <span className="font-mono font-bold text-green-700 dark:text-green-400 shrink-0">
                       +{move.pointsEarned}
                     </span>
                   </div>
@@ -1438,34 +1432,34 @@ export function SyntaxBombArena() {
       {room && room.status === "finished" && (
         <section className="liquid-glass-card p-6 space-y-6">
           {room.explodedPlayerId && (
-            <div className="p-5 rounded-2xl bg-rose-50/95 border-2 border-rose-400 text-slate-900 shadow-[0_10px_28px_rgba(244,63,94,0.18)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="p-5 border-l-4 border-l-red-600 bg-red-50 dark:bg-red-950/40 text-slate-900 dark:text-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-xl bg-rose-600 flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 rounded-xl bg-red-600 flex items-center justify-center shrink-0">
                   <Skull className="w-7 h-7 text-white" />
                 </div>
                 <div>
-                  <div className="text-xs font-mono font-bold uppercase tracking-widest text-rose-600">
+                  <div className="text-xs font-mono font-bold uppercase tracking-widest text-red-600 dark:text-red-400">
                     SEGFAULT! CORE DUMPED AT 0.0s
                   </div>
-                  <div className="text-lg sm:text-xl font-extrabold text-slate-900">
+                  <div className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-slate-100">
                     {explodedPlayer?.displayName ?? "Node"} overloaded and
                     exploded!
                   </div>
                 </div>
               </div>
-              <span className="px-3 py-1.5 rounded-lg bg-rose-100 border border-rose-300 font-mono text-xs font-bold text-rose-800 self-start sm:self-center">
+              <span className="px-3 py-1.5 rounded-lg bg-red-100 dark:bg-red-900/50 border border-red-300 dark:border-red-700 font-mono text-xs font-bold text-red-800 dark:text-red-200 self-start sm:self-center">
                 EXIT CODE 139 (SIGSEGV)
               </span>
             </div>
           )}
 
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/85">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
             <div className="space-y-1">
               <div
                 className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-mono font-bold ${
                   didIWin
-                    ? "bg-emerald-100 border-emerald-300/80 text-emerald-800"
-                    : "bg-rose-100 border-rose-300/80 text-rose-800"
+                    ? "bg-green-50 border-green-200 text-green-800 dark:bg-green-950/40 dark:border-green-800 dark:text-green-300"
+                    : "bg-red-50 border-red-200 text-red-800 dark:bg-red-950/40 dark:border-red-800 dark:text-red-300"
                 }`}
               >
                 <CheckCircle2 className="w-4 h-4" />
@@ -1473,69 +1467,69 @@ export function SyntaxBombArena() {
                   {didIWin ? "SURVIVOR • VICTORY!" : "DETONATED • ROUND OVER"}
                 </span>
               </div>
-              <h2 className="text-2xl font-bold text-slate-900">
-                Syntax Bomb — Post-Explosion Report
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                Syntax Bomb: Post-Explosion Report
               </h2>
             </div>
 
-            <div className="flex items-center gap-3">
-              <div className="bg-white/80 border border-slate-200/85 rounded-xl px-4 py-2.5 text-center">
-                <div className="text-[10px] font-mono font-bold text-slate-600">
+            <div className="flex items-center divide-x divide-slate-200 dark:divide-slate-800 border border-slate-200 dark:border-slate-800 rounded-lg">
+              <div className="px-4 py-2.5 text-center">
+                <div className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400">
                   YOUR SCORE
                 </div>
-                <div className="text-2xl font-mono font-bold text-slate-900">
+                <div className="text-2xl font-mono font-bold text-slate-900 dark:text-slate-100">
                   {myPlayer?.score ?? 0} pts
                 </div>
               </div>
-              <div className="bg-amber-50 border border-amber-300/80 rounded-xl px-4 py-2.5 text-center">
-                <div className="text-[10px] font-mono font-bold text-amber-700">
+              <div className="px-4 py-2.5 text-center bg-amber-50/70 dark:bg-amber-950/30">
+                <div className="text-xs font-mono font-bold text-amber-700 dark:text-amber-400">
                   IT-COINS EARNED
                 </div>
-                <div className="text-2xl font-mono font-bold text-amber-800">
+                <div className="text-2xl font-mono font-bold text-amber-800 dark:text-amber-300">
                   +{estimatedCoins}
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="p-4 rounded-xl bg-white/80 border border-slate-200/85 text-center">
-              <div className="text-[11px] font-mono text-slate-600">TURNS</div>
-              <div className="text-xl font-mono font-bold text-slate-900">
+          <div className="grid grid-cols-2 sm:grid-cols-4 border-t border-b border-slate-200 dark:border-slate-800 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-slate-800">
+            <div className="p-4 text-center">
+              <div className="text-xs font-mono text-slate-600 dark:text-slate-400">TURNS</div>
+              <div className="text-xl font-mono font-bold text-slate-900 dark:text-slate-100">
                 {room.turnCount}
               </div>
             </div>
-            <div className="p-4 rounded-xl bg-white/80 border border-slate-200/85 text-center">
-              <div className="text-[11px] font-mono text-slate-600">IT TERMS</div>
-              <div className="text-xl font-mono font-bold text-sky-700">
+            <div className="p-4 text-center">
+              <div className="text-xs font-mono text-slate-600 dark:text-slate-400">IT TERMS</div>
+              <div className="text-xl font-mono font-bold text-blue-700 dark:text-blue-400">
                 {myPlayer?.itTermsCount ?? 0}
               </div>
             </div>
-            <div className="p-4 rounded-xl bg-white/80 border border-slate-200/85 text-center">
-              <div className="text-[11px] font-mono text-slate-600">MAX COMBO</div>
-              <div className="text-xl font-mono font-bold text-amber-700">
+            <div className="p-4 text-center">
+              <div className="text-xs font-mono text-slate-600 dark:text-slate-400">MAX COMBO</div>
+              <div className="text-xl font-mono font-bold text-amber-700 dark:text-amber-400">
                 {room.maxItStreak}x
               </div>
             </div>
-            <div className="p-4 rounded-xl bg-white/80 border border-slate-200/85 text-center">
-              <div className="text-[11px] font-mono text-slate-600">CHAIN LEN</div>
-              <div className="text-xl font-mono font-bold text-slate-900">
+            <div className="p-4 text-center">
+              <div className="text-xs font-mono text-slate-600 dark:text-slate-400">CHAIN LEN</div>
+              <div className="text-xl font-mono font-bold text-slate-900 dark:text-slate-100">
                 {room.usedWords.length} words
               </div>
             </div>
           </div>
 
           {orderedMoves.length > 0 && (
-            <div className="p-4 rounded-xl bg-white/80 border border-slate-200/85 space-y-2.5">
-              <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-slate-900">
-                <Trophy className="w-4 h-4 text-amber-500" />
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-slate-900 dark:text-slate-100">
+                <Trophy className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                 <span>Word Chain History</span>
               </div>
               <div className="flex flex-wrap gap-2">
                 {room.usedWords.map((w, idx) => (
                   <span
                     key={`${w}-${idx}`}
-                    className="px-2.5 py-1 rounded-lg bg-sky-50 border border-sky-200/85 text-xs font-mono font-bold text-sky-800"
+                    className="px-2.5 py-1 rounded-full bg-blue-50 border border-blue-200 dark:bg-blue-950/40 dark:border-blue-800 text-xs font-mono font-bold text-blue-800 dark:text-blue-300"
                   >
                     {idx + 1}. {w.toUpperCase()}
                   </span>
@@ -1549,7 +1543,7 @@ export function SyntaxBombArena() {
               <button
                 type="button"
                 onClick={handleResetRoom}
-                className="liquid-btn-primary inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm"
+                className="liquid-btn-primary inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm transition-colors"
               >
                 <RotateCcw className="w-4 h-4" />
                 <span>Play Again</span>
@@ -1557,7 +1551,7 @@ export function SyntaxBombArena() {
               <button
                 type="button"
                 onClick={handleLeaveRoom}
-                className="liquid-glass-btn px-4 py-2.5 rounded-xl font-mono font-bold text-xs"
+                className="liquid-glass-btn px-4 py-2.5 rounded-lg font-mono font-bold text-sm transition-colors"
               >
                 Back to Lobby
               </button>
@@ -1565,7 +1559,7 @@ export function SyntaxBombArena() {
 
             <Link
               href="/shop"
-              className="liquid-btn-success inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm"
+              className="liquid-btn-success inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm transition-colors"
             >
               <ShoppingBag className="w-4 h-4" />
               <span>Spend IT-Coins in Shop</span>
