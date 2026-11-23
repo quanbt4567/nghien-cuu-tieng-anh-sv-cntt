@@ -47,15 +47,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="vi" className={`${beVietnamPro.variable} ${jetbrainsMono.variable}`}>
-      <body className="bg-[#eef6ff] text-slate-900 min-h-screen antialiased flex flex-col font-sans selection:bg-sky-200 selection:text-sky-900">
+    <html lang="vi" suppressHydrationWarning className={`${beVietnamPro.variable} ${jetbrainsMono.variable}`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if(localStorage.getItem('speakit_theme_v1')==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();`,
+          }}
+        />
+      </head>
+      <body className="bg-[#eef6ff] dark:bg-[#0b1530] text-slate-900 dark:text-slate-100 min-h-screen antialiased flex flex-col font-sans selection:bg-sky-200 selection:text-sky-900 dark:selection:bg-cyan-500/30 dark:selection:text-cyan-100">
         <div
           aria-hidden="true"
-          className="fixed inset-0 -z-10 pointer-events-none overflow-hidden"
-          style={{
-            background:
-              "radial-gradient(75% 55% at 15% 10%, rgba(56, 189, 248, 0.28) 0%, transparent 65%), radial-gradient(70% 55% at 88% 18%, rgba(167, 139, 250, 0.24) 0%, transparent 65%), radial-gradient(75% 60% at 60% 90%, rgba(52, 211, 153, 0.22) 0%, transparent 65%), linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 35%, #ede9fe 72%, #ecfdf5 100%)",
-          }}
+          className="fixed inset-0 -z-10 pointer-events-none overflow-hidden app-ambient-backdrop"
         />
         <Navbar />
         <WelcomeNameModal />

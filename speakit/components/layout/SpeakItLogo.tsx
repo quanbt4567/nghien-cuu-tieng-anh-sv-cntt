@@ -91,7 +91,7 @@ export function SpeakItLogo({ showWordmark = true, size = "md" }: SpeakItLogoPro
         </text>
       </svg>
       {showWordmark && (
-        <span className="text-lg font-extrabold tracking-tight text-slate-900 leading-none">
+        <span className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white leading-none">
           Speak
           <span className="bg-gradient-to-r from-sky-500 to-indigo-600 bg-clip-text text-transparent">
             IT

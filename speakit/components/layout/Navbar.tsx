@@ -22,6 +22,8 @@ import {
   LogOut,
   ShoppingBag,
   ShieldCheck,
+  Sun,
+  Moon,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -140,7 +142,24 @@ export function Navbar() {
   const [guestPlayer, setGuestPlayer] = useState<PublicGuestPlayer | null>(null);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   const [pendingHref, setPendingHref] = useState<string | null>(null);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
   const headerRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    setTheme(document.documentElement.classList.contains("dark") ? "dark" : "light");
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    if (typeof document !== "undefined") {
+      document.documentElement.classList.toggle("dark", next === "dark");
+    }
+    try {
+      window.localStorage.setItem("speakit_theme_v1", next);
+    } catch {}
+  };
 
   useEffect(() => {
     setPendingHref(null);
@@ -516,6 +535,20 @@ export function Navbar() {
               </Link>
 
               <InAppNotificationBell lastPracticeDate={gamification.lastPracticeDate} />
+
+              <button
+                type="button"
+                onClick={toggleTheme}
+                aria-label={theme === "dark" ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối"}
+                title={theme === "dark" ? "Chế độ sáng" : "Chế độ tối"}
+                className="shrink-0 inline-flex items-center justify-center p-1.5 sm:px-2.5 sm:py-1.5 rounded-pill liquid-glass-btn text-xs font-semibold"
+              >
+                {theme === "dark" ? (
+                  <Sun className="w-3.5 h-3.5 text-amber-400 shrink-0" aria-hidden="true" />
+                ) : (
+                  <Moon className="w-3.5 h-3.5 text-indigo-600 shrink-0" aria-hidden="true" />
+                )}
+              </button>
 
               {guestPlayer?.email?.trim().toLowerCase() === "minhquanthcsbt@gmail.com" && (
                 <Link
