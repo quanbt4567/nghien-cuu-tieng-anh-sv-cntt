@@ -34,7 +34,9 @@ import {
   getGamificationState,
 } from "../../lib/gamification";
 import {
+  readBackupSessionToken,
   readBackupTransferCode,
+  saveBackupSessionToken,
   saveBackupTransferCode,
   syncGuestProfileFromServer,
 } from "../../lib/guestClient";
@@ -85,10 +87,13 @@ export function GlobalLeaderboard({
       setLoading(true);
     }
     try {
-      const backup = readBackupTransferCode();
+      const backup = readBackupSessionToken() || readBackupTransferCode();
       const session = await initOrHydrateGuestSession(backup);
       if (session.mode === "online" && session.player) {
         saveBackupTransferCode(session.player.transferCode);
+      }
+      if ("sessionToken" in session && typeof session.sessionToken === "string") {
+        saveBackupSessionToken(session.sessionToken);
       }
 
       const board = await getTopPlayers(50);
@@ -140,6 +145,10 @@ export function GlobalLeaderboard({
   }, []);
 
   useEffect(() => {
+    if (initialBoard?.mode === "online" && initialBoard.currentPlayer) {
+      syncGuestProfileFromServer(initialBoard.currentPlayer);
+      return;
+    }
     loadLeaderboard(Boolean(initialBoard));
   }, [initialBoard, loadLeaderboard]);
 

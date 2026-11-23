@@ -324,18 +324,18 @@ export function Navbar() {
         <CustomCursorTrail effectId={guestPlayer?.equippedCosmetics?.cursor_effect ?? null} />
       )}
       <header ref={headerRef} className="sticky top-3 z-40 w-full max-w-7xl mx-auto px-3">
-      <div className="liquid-glass-pill px-3 sm:px-4 h-14 md:h-[60px] flex items-center justify-between gap-2 lg:gap-4">
+      <div className="liquid-glass-pill px-3 sm:px-4 h-14 md:h-[60px] flex md:grid md:grid-cols-[1fr_auto_1fr] items-center justify-between gap-2 lg:gap-4">
         <Link
           href="/"
           aria-label="SpeakIT"
-          className="flex items-center gap-2 focus:outline-none shrink-0"
+          className="flex items-center gap-2 focus:outline-none shrink-0 md:justify-self-start"
         >
           <SpeakItLogo />
         </Link>
 
         <nav
           aria-label="Điều hướng chính"
-          className="hidden md:flex items-center gap-1 lg:gap-2 min-w-0"
+          className="hidden md:flex items-center justify-center gap-1 lg:gap-2 min-w-0 md:justify-self-center"
         >
           <Link
             href="/"
@@ -481,7 +481,7 @@ export function Navbar() {
           })}
         </nav>
 
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 min-w-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 min-w-0 md:justify-self-end">
           {!hydrated ? (
             <div
               aria-label="Đang đồng bộ tài khoản"

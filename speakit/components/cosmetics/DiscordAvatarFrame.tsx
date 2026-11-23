@@ -247,13 +247,21 @@ export function DiscordAvatarFrame({
   const assetKind = getAssetKind(assetUrl);
 
   const [mediaFailed, setMediaFailed] = useState(false);
+  const [isMobileTouch, setIsMobileTouch] = useState(false);
+  const effectiveLite = lite || isMobileTouch;
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const coarse = window.matchMedia?.("(hover: none) and (pointer: coarse)")?.matches ?? false;
+    setIsMobileTouch(coarse || window.innerWidth < 768);
+  }, []);
 
   useEffect(() => {
     setMediaFailed(false);
   }, [assetUrl]);
 
   const shouldUseLottieFallback =
-    !lite && (!assetUrl || mediaFailed || assetKind === "lottie");
+    !effectiveLite && (!assetUrl || mediaFailed || assetKind === "lottie");
   const lottieUrl =
     assetKind === "lottie" && assetUrl && !mediaFailed
       ? assetUrl
@@ -355,7 +363,7 @@ export function DiscordAvatarFrame({
           }`}
           style={overlayStyle}
         >
-          {!lite && !mediaFailed && assetUrl && assetKind === "video" ? (
+          {!effectiveLite && !mediaFailed && assetUrl && assetKind === "video" ? (
             <video
               src={assetUrl}
               autoPlay
@@ -365,14 +373,14 @@ export function DiscordAvatarFrame({
               onError={() => setMediaFailed(true)}
               className="w-full h-full object-contain pointer-events-none select-none"
             />
-          ) : !lite && !mediaFailed && assetUrl && assetKind === "image" ? (
+          ) : !effectiveLite && !mediaFailed && assetUrl && assetKind === "image" ? (
             <img
               src={assetUrl}
               alt=""
               onError={() => setMediaFailed(true)}
               className="w-full h-full object-contain pointer-events-none select-none"
             />
-          ) : !lite && animationData ? (
+          ) : !effectiveLite && animationData ? (
             <Lottie
               src={animationData}
               loop
@@ -389,7 +397,7 @@ export function DiscordAvatarFrame({
             />
           ) : null}
           {effectId === "avatar-rb-electric-border" &&
-            (lite ? (
+            (effectiveLite ? (
               <span
                 className="absolute inset-0.5 rounded-full border-2 border-dashed border-sky-400"
                 style={{ boxShadow: "0 0 12px rgba(56,189,248,0.85)" }}
@@ -415,7 +423,7 @@ export function DiscordAvatarFrame({
               </>
             ))}
           {effectId === "avatar-rb-star-border" &&
-            (lite ? (
+            (effectiveLite ? (
               <span className="absolute inset-0 rounded-full border-2 border-amber-400">
                 <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_10px_#FBBF24]" />
               </span>
