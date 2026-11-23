@@ -1,0 +1,17 @@
+{
+  "appId": "com.speakit.app",
+  "appName": "SpeakIT",
+  "webDir": "www",
+  "server": {
+    "url": "https://speakit-bcn.vercel.app",
+    "cleartext": false
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "iconColor": "#E5484D"
+    },
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    }
+  }
+}

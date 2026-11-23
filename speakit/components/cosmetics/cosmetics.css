@@ -1,0 +1,763 @@
+@property --cosmetic-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes cosmeticAngleSpin {
+  0% {
+    --cosmetic-angle: 0deg;
+  }
+  100% {
+    --cosmetic-angle: 360deg;
+  }
+}
+
+@keyframes cosmeticSpinSlow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes cosmeticSpinReverse {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes cosmeticHaloFloat {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0px);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-2.5px);
+  }
+}
+
+@keyframes cosmeticHornFlicker {
+  0%, 100% {
+    transform: translateX(-50%) scaleY(1);
+  }
+  50% {
+    transform: translateX(-50%) scaleY(1.06);
+  }
+}
+
+@keyframes cosmeticEmberRise {
+  0% {
+    opacity: 0;
+    transform: translateY(4px) scale(0.6) rotate(0deg);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.25) rotate(45deg);
+  }
+}
+
+@keyframes cosmeticReticlePulse {
+  0%, 100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes cosmeticHoloScanY {
+  0% {
+    transform: translateY(-120%);
+  }
+  100% {
+    transform: translateY(420%);
+  }
+}
+
+@keyframes cosmeticPulseGlow {
+  0%, 100% {
+    opacity: 0.72;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes cosmeticMicWave {
+  0% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.44);
+  }
+}
+
+@keyframes cosmeticVisorSweep {
+  0% {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  100% {
+    transform: translateX(240%) skewX(-18deg);
+  }
+}
+
+@keyframes cosmeticMeteorFall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -18vh, 0) rotate(32deg);
+  }
+  12% {
+    opacity: 0.9;
+  }
+  80% {
+    opacity: 0.65;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-42vw, 110vh, 0) rotate(32deg);
+  }
+}
+
+@keyframes cosmeticMatrixColumn {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+@keyframes cosmeticAuroraDrift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-3%, 2%, 0) scale(1.05);
+  }
+}
+
+@keyframes cosmeticGridScroll {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+  100% {
+    background-position: 0 48px, 48px 0;
+  }
+}
+
+@keyframes cosmeticStormFlash {
+  0%, 86%, 100% {
+    opacity: 0.12;
+  }
+  88% {
+    opacity: 0.55;
+  }
+  90% {
+    opacity: 0.18;
+  }
+  92% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes cosmeticCursorSparkle {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -85%) scale(0.25) rotate(90deg);
+  }
+}
+
+@keyframes cosmeticCursorBinary {
+  0% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateY(-28px);
+  }
+}
+
+@keyframes cosmeticCrosshairLock {
+  0%, 100% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(45deg) scale(1.08);
+  }
+}
+
+@keyframes cosmeticBorderBeam {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes cosmeticGoldShimmer {
+  0% {
+    transform: translateX(-140%) skewX(-22deg);
+  }
+  65%, 100% {
+    transform: translateX(260%) skewX(-22deg);
+  }
+}
+
+@keyframes cosmeticHologramSlice {
+  0%, 84%, 100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  86% {
+    transform: translateX(-2px);
+    opacity: 0.92;
+  }
+  88% {
+    transform: translateX(3px);
+    opacity: 0.95;
+  }
+  90% {
+    transform: translateX(-1px);
+    opacity: 1;
+  }
+}
+
+@keyframes cosmeticScanlineMove {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(400%);
+  }
+}
+
+@keyframes cosmeticInfernoBorder {
+  0%, 100% {
+    box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.85);
+  }
+}
+
+@keyframes cosmeticNebulaShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes cosmeticTerminalBlink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+@keyframes cosmeticConfettiDrop {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, -10vh, 0) rotate(0deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--tx, 40px), 85vh, 0) rotate(520deg) scale(0.7);
+  }
+}
+
+@keyframes cosmeticShockwaveExpand {
+  0% {
+    opacity: 0.95;
+    transform: scale(0.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+@keyframes cosmeticLightningFlash {
+  0%, 100% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.95;
+  }
+  20% {
+    opacity: 0.15;
+  }
+  30% {
+    opacity: 0.85;
+  }
+  55% {
+    opacity: 0;
+  }
+}
+
+@keyframes cosmeticFinisherBanner {
+  0% {
+    opacity: 0;
+    transform: scale(0.86) translateY(14px);
+  }
+  15%, 82% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.96) translateY(-10px);
+  }
+}
+
+.cosmetic-avatar-overclock {
+  background: conic-gradient(from var(--cosmetic-angle), #e5484d 0deg 105deg, #f59e0b 105deg 165deg, #1a1714 165deg 275deg, #e5484d 275deg 360deg);
+  animation: cosmeticAngleSpin 2.8s linear infinite;
+  will-change: --cosmetic-angle;
+}
+
+.cosmetic-avatar-matrix-halo {
+  background: conic-gradient(from var(--cosmetic-angle), #16a34a 0deg 120deg, #4ade80 120deg 175deg, #1a1714 175deg 295deg, #16a34a 295deg 360deg);
+  animation: cosmeticAngleSpin 3.6s linear infinite reverse;
+  will-change: --cosmetic-angle;
+}
+
+.cosmetic-avatar-inferno-horns {
+  background: conic-gradient(from var(--cosmetic-angle), #e5484d 0deg 95deg, #f59e0b 95deg 205deg, #1a1714 205deg 285deg, #e5484d 285deg 360deg);
+  animation: cosmeticAngleSpin 2.4s linear infinite;
+  will-change: --cosmetic-angle;
+}
+
+.cosmetic-avatar-quantum-visor {
+  background: conic-gradient(from var(--cosmetic-angle), #0284c7 0deg 115deg, #38bdf8 115deg 180deg, #1a1714 180deg 295deg, #0284c7 295deg 360deg);
+  animation: cosmeticAngleSpin 3s linear infinite;
+  will-change: --cosmetic-angle;
+}
+
+.cosmetic-svg-spin-slow {
+  animation: cosmeticSpinSlow 7s linear infinite;
+  will-change: transform;
+}
+
+.cosmetic-svg-spin-reverse {
+  animation: cosmeticSpinReverse 5.5s linear infinite;
+  will-change: transform;
+}
+
+.cosmetic-halo-float {
+  animation: cosmeticHaloFloat 2.6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.cosmetic-horn-flicker {
+  transform-origin: bottom center;
+  animation: cosmeticHornFlicker 1.8s ease-in-out infinite;
+  will-change: transform;
+}
+
+.cosmetic-ember-rise {
+  animation: cosmeticEmberRise 1.7s ease-out infinite;
+  will-change: transform, opacity;
+}
+
+.cosmetic-reticle-pulse {
+  animation: cosmeticReticlePulse 2.2s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.cosmetic-holo-scan-y {
+  animation: cosmeticHoloScanY 2.2s linear infinite;
+  will-change: transform;
+}
+
+.cosmetic-avatar-visor-beam {
+  animation: cosmeticVisorSweep 2.4s ease-in-out infinite;
+  will-change: transform;
+}
+
+.cosmetic-avatar-mic-ring {
+  animation: cosmeticMicWave 1.1s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  will-change: transform, opacity;
+}
+
+.cosmetic-theme-meteor-shower .cosmetic-meteor-streak {
+  animation: cosmeticMeteorFall var(--meteor-duration, 4.2s) linear infinite;
+  animation-delay: var(--meteor-delay, 0s);
+  will-change: transform, opacity;
+}
+
+.cosmetic-theme-matrix-rain .cosmetic-matrix-col {
+  animation: cosmeticMatrixColumn var(--col-duration, 7s) linear infinite;
+  animation-delay: var(--col-delay, 0s);
+  will-change: transform;
+}
+
+.cosmetic-theme-aurora-grid .cosmetic-aurora-layer {
+  animation: cosmeticAuroraDrift 11s ease-in-out infinite;
+  will-change: transform;
+}
+
+.cosmetic-theme-aurora-grid .cosmetic-grid-plane {
+  background-image:
+    linear-gradient(to right, rgba(2, 132, 199, 0.14) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(245, 158, 11, 0.12) 1px, transparent 1px);
+  background-size: 48px 48px;
+  animation: cosmeticGridScroll 5s linear infinite;
+  will-change: background-position;
+}
+
+.cosmetic-theme-electric-storm .cosmetic-storm-arc {
+  animation: cosmeticStormFlash 4.4s ease-in-out infinite;
+  will-change: opacity;
+}
+
+.cosmetic-dark-glass {
+  color: #fafafa;
+}
+
+.cosmetic-dark-glass .text-ink {
+  color: #fafafa;
+}
+
+.cosmetic-dark-glass .text-ink-muted {
+  color: #d4d4d8;
+}
+
+.cosmetic-dark-glass .text-\[\#1A1714\] {
+  color: #fafafa;
+}
+
+.cosmetic-dark-glass .bg-white.text-ink,
+.cosmetic-dark-glass .bg-paper.text-ink,
+.cosmetic-dark-glass .bg-white .text-ink,
+.cosmetic-dark-glass .bg-paper .text-ink {
+  color: #1a1714;
+}
+
+.cosmetic-dark-glass .bg-white.text-ink-muted,
+.cosmetic-dark-glass .bg-paper.text-ink-muted,
+.cosmetic-dark-glass .bg-white .text-ink-muted,
+.cosmetic-dark-glass .bg-paper .text-ink-muted {
+  color: #59534c;
+}
+
+.cosmetic-border-beam {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--cosmetic-angle),
+    transparent 0deg 280deg,
+    var(--beam-from, rgba(229, 72, 77, 0.85)) 320deg,
+    var(--beam-to, rgba(245, 158, 11, 0.9)) 346deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: cosmeticAngleSpin 3.6s linear infinite;
+  will-change: --cosmetic-angle;
+}
+
+.cosmetic-spotlight {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 220ms ease;
+  background: radial-gradient(
+    240px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    var(--spot-color, rgba(255, 255, 255, 0.12)),
+    transparent 75%
+  );
+}
+
+.group:hover .cosmetic-spotlight {
+  opacity: 1;
+}
+
+@keyframes cosmeticShinySweep {
+  0% {
+    background-position: 180% 0;
+  }
+  100% {
+    background-position: -80% 0;
+  }
+}
+
+.cosmetic-shiny-sweep {
+  pointer-events: none;
+  background-image: linear-gradient(
+    120deg,
+    transparent 32%,
+    var(--shiny-color, rgba(255, 255, 255, 0.22)) 48%,
+    rgba(255, 255, 255, 0.34) 50%,
+    var(--shiny-color, rgba(255, 255, 255, 0.22)) 52%,
+    transparent 68%
+  );
+  background-size: 240% 100%;
+  animation: cosmeticShinySweep 4.6s ease-in-out infinite;
+  will-change: background-position;
+}
+
+.cosmetic-cursor-pixel-sparkle {
+  animation: cosmeticCursorSparkle 0.55s ease-out forwards;
+}
+
+.cosmetic-cursor-binary-stream {
+  animation: cosmeticCursorBinary 0.7s ease-out forwards;
+}
+
+.cosmetic-cursor-laser-ribbon {
+  box-shadow: none;
+}
+
+.cosmetic-cursor-cyber-crosshair {
+  animation: cosmeticCrosshairLock 2.6s ease-in-out infinite;
+}
+
+.cosmetic-lb-border-beam {
+  position: relative;
+  overflow: hidden;
+}
+
+.cosmetic-lb-border-beam-rotator {
+  animation: cosmeticBorderBeam 3.2s linear infinite;
+  will-change: transform;
+}
+
+.cosmetic-lb-gold-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.cosmetic-lb-gold-shimmer-sweep {
+  animation: cosmeticGoldShimmer 3s ease-in-out infinite;
+  will-change: transform;
+}
+
+.cosmetic-lb-hologram-glitch {
+  position: relative;
+  overflow: hidden;
+  animation: cosmeticHologramSlice 4s steps(2, end) infinite;
+}
+
+.cosmetic-lb-hologram-scan {
+  animation: cosmeticScanlineMove 2.8s linear infinite;
+  will-change: transform;
+}
+
+.cosmetic-lb-inferno-aura {
+  animation: cosmeticInfernoBorder 2s ease-in-out infinite;
+}
+
+.cosmetic-nameplate-mesh-nebula {
+  background: linear-gradient(120deg, rgba(229, 72, 77, 0.16), rgba(24, 24, 27, 0.75), rgba(245, 158, 11, 0.14));
+  background-size: 200% 200%;
+  animation: cosmeticNebulaShift 6s ease infinite;
+}
+
+.cosmetic-nameplate-terminal-pulse {
+  background: linear-gradient(120deg, rgba(22, 163, 74, 0.16), rgba(9, 9, 11, 0.78), rgba(22, 163, 74, 0.12));
+  background-size: 200% 200%;
+  animation: cosmeticNebulaShift 5s ease infinite;
+}
+
+.cosmetic-nameplate-terminal-cursor {
+  animation: cosmeticTerminalBlink 1s steps(2, end) infinite;
+}
+
+.cosmetic-nameplate-supernova-gold {
+  background: linear-gradient(120deg, rgba(245, 158, 11, 0.2), rgba(24, 24, 27, 0.75), rgba(245, 158, 11, 0.16));
+  background-size: 200% 200%;
+  animation: cosmeticNebulaShift 4.5s ease infinite;
+}
+
+.cosmetic-nameplate-cyber-glitch {
+  background: linear-gradient(120deg, rgba(2, 132, 199, 0.18), rgba(9, 9, 11, 0.78), rgba(229, 72, 77, 0.14));
+  background-size: 200% 200%;
+  animation: cosmeticNebulaShift 3.6s ease infinite, cosmeticHologramSlice 3.8s steps(2, end) infinite;
+}
+
+.cosmetic-finisher-lgtm-confetti .cosmetic-confetti-piece {
+  animation: cosmeticConfettiDrop var(--drop-duration, 2.2s) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--drop-delay, 0s);
+  will-change: transform, opacity;
+}
+
+.cosmetic-finisher-shockwave .cosmetic-shockwave-ring {
+  animation: cosmeticShockwaveExpand 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.cosmetic-finisher-lightning .cosmetic-lightning-bolt {
+  animation: cosmeticLightningFlash 1.5s ease-out forwards;
+  will-change: opacity;
+}
+
+.cosmetic-finisher-matrix-override .cosmetic-matrix-override-col {
+  animation: cosmeticMatrixColumn 1.8s linear infinite;
+  will-change: transform;
+}
+
+.cosmetic-finisher-banner {
+  animation: cosmeticFinisherBanner 2.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes cosmeticTextAurora {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes cosmeticTextLineShadow {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100% -100%;
+  }
+}
+
+@keyframes cosmeticTextBlurPulse {
+  0%, 15%, 85%, 100% {
+    filter: blur(0px);
+    opacity: 1;
+    transform: translateY(0);
+  }
+  45%, 55% {
+    filter: blur(2.6px);
+    opacity: 0.72;
+    transform: translateY(-1px);
+  }
+}
+
+@keyframes cosmeticTextEchoDrift {
+  0%, 100% {
+    transform: translate3d(-2px, 1px, 0);
+  }
+  50% {
+    transform: translate3d(2px, -1px, 0);
+  }
+}
+
+@keyframes cosmeticTextSparkleTwinkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.3) rotate(45deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(135deg);
+  }
+}
+
+.cosmetic-text-aurora {
+  color: #1D4ED8;
+}
+
+.cosmetic-text-line-shadow {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.cosmetic-text-line-shadow::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0.06em;
+  top: 0.06em;
+  z-index: -1;
+  color: var(--line-shadow-color, #1D4ED8);
+  opacity: 0.25;
+}
+
+.cosmetic-text-blur-pulse {
+  display: inline-block;
+  animation: cosmeticTextBlurPulse 3.6s ease-in-out infinite;
+}
+
+.cosmetic-text-echo-layer {
+  animation: cosmeticTextEchoDrift 2.6s ease-in-out infinite;
+}
+
+.cosmetic-text-sparkle-star {
+  animation: cosmeticTextSparkleTwinkle 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cosmetic-avatar-overclock,
+  .cosmetic-avatar-matrix-halo,
+  .cosmetic-avatar-inferno-horns,
+  .cosmetic-avatar-quantum-visor,
+  .cosmetic-svg-spin-slow,
+  .cosmetic-svg-spin-reverse,
+  .cosmetic-halo-float,
+  .cosmetic-horn-flicker,
+  .cosmetic-ember-rise,
+  .cosmetic-reticle-pulse,
+  .cosmetic-holo-scan-y,
+  .cosmetic-avatar-visor-beam,
+  .cosmetic-avatar-mic-ring,
+  .cosmetic-theme-meteor-shower .cosmetic-meteor-streak,
+  .cosmetic-theme-matrix-rain .cosmetic-matrix-col,
+  .cosmetic-theme-aurora-grid .cosmetic-aurora-layer,
+  .cosmetic-theme-aurora-grid .cosmetic-grid-plane,
+  .cosmetic-theme-electric-storm .cosmetic-storm-arc,
+  .cosmetic-cursor-cyber-crosshair,
+  .cosmetic-lb-border-beam-rotator,
+  .cosmetic-lb-gold-shimmer-sweep,
+  .cosmetic-lb-hologram-glitch,
+  .cosmetic-lb-hologram-scan,
+  .cosmetic-lb-inferno-aura,
+  .cosmetic-nameplate-mesh-nebula,
+  .cosmetic-nameplate-terminal-pulse,
+  .cosmetic-nameplate-terminal-cursor,
+  .cosmetic-nameplate-supernova-gold,
+  .cosmetic-nameplate-cyber-glitch,
+  .cosmetic-finisher-lgtm-confetti .cosmetic-confetti-piece,
+  .cosmetic-finisher-shockwave .cosmetic-shockwave-ring,
+  .cosmetic-finisher-lightning .cosmetic-lightning-bolt,
+  .cosmetic-finisher-matrix-override .cosmetic-matrix-override-col,
+  .cosmetic-finisher-banner,
+  .cosmetic-border-beam,
+  .cosmetic-shiny-sweep,
+  .cosmetic-text-aurora,
+  .cosmetic-text-line-shadow::after,
+  .cosmetic-text-blur-pulse,
+  .cosmetic-text-echo-layer,
+  .cosmetic-text-sparkle-star {
+    animation: none !important;
+  }
+}

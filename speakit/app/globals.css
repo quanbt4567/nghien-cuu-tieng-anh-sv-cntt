@@ -1,0 +1,456 @@
+@tailwind base;
+@tailwind components;
+
+:root {
+  color-scheme: light;
+  --bg-paper: #f8fafc;
+  --text-ink: #0f172a;
+  --color-ink-black: #0f172a;
+  --color-bone: #f8fafc;
+  --color-smoke: #475569;
+  --color-liberty-navy: #1d4ed8;
+  --accent-red: #dc2626;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
+html,
+body {
+  background-color: #f8fafc;
+  color: #0f172a;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  overscroll-behavior-y: contain;
+}
+
+body {
+  font-family: var(--font-be-vietnam-pro), var(--font-plus-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-plus-jakarta), var(--font-be-vietnam-pro), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+select option {
+  background-color: #ffffff;
+  color: #0f172a;
+}
+
+.liquid-glass-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: none;
+  border-radius: 0.75rem;
+  color: #0f172a;
+}
+
+.liquid-glass-card-lite {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: none;
+  border-radius: 0.75rem;
+  color: #0f172a;
+}
+
+.liquid-glass-pill {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  border-radius: 9999px;
+  color: #0f172a;
+}
+
+.liquid-glass-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  box-shadow: none;
+  transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.liquid-glass-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.liquid-glass-btn:active {
+  transform: scale(0.98);
+}
+
+.liquid-btn-primary {
+  background: #1d4ed8;
+  border: 1px solid #1e40af;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: none;
+  transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease;
+}
+
+.liquid-btn-primary:hover {
+  background: #1e40af;
+}
+
+.liquid-btn-primary:active {
+  transform: scale(0.98);
+}
+
+.liquid-btn-danger {
+  background: #dc2626;
+  border: 1px solid #b91c1c;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: none;
+  transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease;
+}
+
+.liquid-btn-danger:hover {
+  background: #b91c1c;
+}
+
+.liquid-btn-danger:active {
+  transform: scale(0.98);
+}
+
+.liquid-btn-success {
+  background: #15803d;
+  border: 1px solid #166534;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: none;
+  transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease;
+}
+
+.liquid-btn-success:hover {
+  background: #166534;
+}
+
+.liquid-btn-success:active {
+  transform: scale(0.98);
+}
+
+.liquid-glass-input {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.liquid-glass-input::placeholder {
+  color: #64748b;
+}
+
+.liquid-glass-input:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.2);
+}
+
+.vitrine-panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  box-shadow: none;
+  color: #0f172a;
+}
+
+.liquid-dock {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.08);
+}
+
+.liquid-lens-active {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e40af;
+  box-shadow: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .liquid-dock,
+  .liquid-glass-pill {
+    background: #ffffff;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+button,
+[role="tab"],
+nav a {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.font-ipa {
+  font-family: "Lucida Sans Unicode", "DejaVu Sans", "Arial Unicode MS", "Segoe UI", system-ui, sans-serif;
+}
+
+@keyframes micPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(220, 38, 38, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
+}
+
+.animate-mic-listening {
+  animation: micPulse 1.6s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+@tailwind utilities;
+
+.app-ambient-backdrop {
+  background: #f8fafc;
+}
+
+html.dark {
+  color-scheme: dark;
+  --bg-paper: #000000;
+  --text-ink: #fafafa;
+  --color-ink-black: #fafafa;
+  --color-bone: #0a0a0a;
+  --color-smoke: #a1a1aa;
+}
+
+html.dark body {
+  background-color: #000000;
+  color: #fafafa;
+}
+
+html.dark .app-ambient-backdrop {
+  background: #000000;
+}
+
+html.dark select option {
+  background-color: #0a0a0a;
+  color: #fafafa;
+}
+
+html.dark .liquid-glass-card,
+html.dark .liquid-glass-card-lite,
+html.dark .vitrine-panel {
+  background: #0a0a0a;
+  border-color: #262626;
+  box-shadow: none;
+  color: #fafafa;
+}
+
+html.dark .liquid-glass-pill {
+  background: rgba(10, 10, 10, 0.88);
+  border-color: #262626;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.65);
+  color: #fafafa;
+}
+
+html.dark .liquid-glass-btn {
+  background: #141414;
+  border-color: #2e2e2e;
+  color: #fafafa;
+  box-shadow: none;
+}
+
+html.dark .liquid-glass-btn:hover {
+  background: #1f1f1f;
+  border-color: #404040;
+  color: #ffffff;
+}
+
+html.dark .liquid-btn-primary {
+  background: #2563eb;
+  border-color: #1d4ed8;
+}
+
+html.dark .liquid-btn-primary:hover {
+  background: #1d4ed8;
+}
+
+html.dark .liquid-glass-input {
+  background: #121212;
+  border-color: #2e2e2e;
+  color: #fafafa;
+}
+
+html.dark .liquid-glass-input::placeholder {
+  color: #71717a;
+}
+
+html.dark .liquid-glass-input:focus {
+  background: #050505;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+html.dark .liquid-dock {
+  background: rgba(10, 10, 10, 0.9);
+  border-color: #262626;
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.7);
+}
+
+html.dark .liquid-lens-active {
+  background: rgba(37, 99, 235, 0.18);
+  border-color: #2563eb;
+  color: #93c5fd;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  html.dark .liquid-dock,
+  html.dark .liquid-glass-pill {
+    background: #0a0a0a;
+  }
+}
+
+html.dark .text-slate-900 { color: #fafafa; }
+html.dark .text-slate-800 { color: #f4f4f5; }
+html.dark .text-slate-700 { color: #e4e4e7; }
+html.dark .text-slate-600 { color: #d4d4d8; }
+html.dark .text-slate-500 { color: #a1a1aa; }
+html.dark .text-blue-600,
+html.dark .text-blue-700 { color: #60a5fa; }
+html.dark .text-blue-800,
+html.dark .text-blue-900 { color: #93c5fd; }
+html.dark .text-green-600,
+html.dark .text-green-700,
+html.dark .text-emerald-600 { color: #4ade80; }
+html.dark .text-green-800,
+html.dark .text-green-900,
+html.dark .text-emerald-700,
+html.dark .text-emerald-800,
+html.dark .text-emerald-900 { color: #86efac; }
+html.dark .text-amber-600 { color: #fbbf24; }
+html.dark .text-amber-700,
+html.dark .text-amber-800,
+html.dark .text-amber-900 { color: #fcd34d; }
+html.dark .text-red-600,
+html.dark .text-rose-600 { color: #f87171; }
+html.dark .text-red-700,
+html.dark .text-red-800,
+html.dark .text-red-900,
+html.dark .text-rose-700,
+html.dark .text-rose-800,
+html.dark .text-rose-900 { color: #fca5a5; }
+
+html.dark .bg-white,
+html.dark .bg-white\/70,
+html.dark .bg-white\/75,
+html.dark .bg-white\/80,
+html.dark .bg-white\/85,
+html.dark .bg-white\/90,
+html.dark .bg-white\/95,
+html.dark .dark\:bg-slate-900 {
+  background-color: #0a0a0a;
+}
+
+html.dark .dark\:bg-slate-950 {
+  background-color: #000000;
+}
+
+html.dark .bg-slate-50,
+html.dark .bg-slate-50\/80,
+html.dark .bg-slate-50\/85,
+html.dark .bg-slate-50\/90,
+html.dark .bg-slate-100,
+html.dark .bg-slate-100\/70,
+html.dark .bg-slate-100\/80,
+html.dark .bg-slate-100\/85,
+html.dark .bg-slate-100\/90,
+html.dark .hover\:bg-slate-100:hover,
+html.dark .hover\:bg-slate-100\/60:hover,
+html.dark .hover\:bg-slate-100\/80:hover,
+html.dark .dark\:bg-slate-800,
+html.dark .dark\:bg-slate-800\/80,
+html.dark .dark\:hover\:bg-slate-800:hover {
+  background-color: #141414;
+}
+
+html.dark .bg-blue-50,
+html.dark .bg-blue-50\/70,
+html.dark .bg-blue-50\/80,
+html.dark .bg-blue-50\/90,
+html.dark .bg-blue-100,
+html.dark .hover\:bg-blue-50:hover,
+html.dark .hover\:bg-blue-100:hover {
+  background-color: rgba(37, 99, 235, 0.14);
+}
+
+html.dark .bg-green-50,
+html.dark .bg-green-100,
+html.dark .bg-emerald-50,
+html.dark .bg-emerald-50\/90,
+html.dark .bg-emerald-50\/95,
+html.dark .bg-emerald-100,
+html.dark .bg-emerald-100\/80,
+html.dark .bg-emerald-100\/85,
+html.dark .bg-emerald-100\/90,
+html.dark .hover\:bg-green-50:hover,
+html.dark .hover\:bg-emerald-50:hover {
+  background-color: rgba(21, 128, 61, 0.16);
+}
+
+html.dark .bg-amber-50,
+html.dark .bg-amber-50\/90,
+html.dark .bg-amber-50\/95,
+html.dark .bg-amber-100,
+html.dark .bg-amber-100\/80,
+html.dark .bg-amber-100\/85,
+html.dark .bg-amber-100\/90,
+html.dark .bg-amber-100\/95,
+html.dark .bg-orange-100,
+html.dark .hover\:bg-amber-100:hover {
+  background-color: rgba(180, 83, 9, 0.18);
+}
+
+html.dark .bg-red-50,
+html.dark .bg-red-100,
+html.dark .bg-rose-50,
+html.dark .bg-rose-50\/85,
+html.dark .bg-rose-50\/90,
+html.dark .bg-rose-50\/95,
+html.dark .bg-rose-100,
+html.dark .bg-rose-100\/80,
+html.dark .bg-rose-100\/90,
+html.dark .hover\:bg-red-50:hover,
+html.dark .hover\:bg-rose-50:hover,
+html.dark .hover\:bg-rose-100\/80:hover {
+  background-color: rgba(220, 38, 38, 0.16);
+}
+
+html.dark .border-slate-200,
+html.dark .border-slate-200\/85,
+html.dark .border-slate-200\/90,
+html.dark .border-slate-300,
+html.dark .border-slate-300\/80,
+html.dark .border-blue-200,
+html.dark .dark\:border-slate-800,
+html.dark .dark\:border-slate-700,
+html.dark .dark\:divide-slate-800 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #262626;
+}

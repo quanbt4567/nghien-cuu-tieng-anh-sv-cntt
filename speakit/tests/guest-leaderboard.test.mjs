@@ -1,0 +1,395 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { createRequire } from "node:module";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const require = createRequire(import.meta.url);
+const jiti = require("jiti")(__filename);
+
+const {
+  GUEST_SESSION_COOKIE_NAME,
+  GUEST_TRANSFER_STORAGE_KEY,
+  GUEST_COOKIE_MAX_AGE_SECONDS,
+  generateTransferCode,
+  normalizeTransferCode,
+  hashDeviceToken,
+  parseOwnedItems,
+  serializePublicGuestPlayer,
+  restoreByTransferCode: restoreSessionFromAuth,
+} = jiti(resolve(__dirname, "../lib/neon-auth.ts"));
+
+const {
+  COSMETIC_CATALOG,
+  findCosmeticById,
+  getRingBadgeClass,
+} = jiti(resolve(__dirname, "../lib/cosmetics.ts"));
+
+const {
+  generateFriendlyDisplayName,
+  isLegacyCodeDisplayName,
+} = jiti(resolve(__dirname, "../lib/gamification.ts"));
+
+const {
+  VOICE_PERSONAS,
+  resolveVoiceForPersona,
+} = jiti(resolve(__dirname, "../lib/speech.ts"));
+
+const {
+  evaluatePlacementLevel,
+  getScenarioDifficulty,
+} = jiti(resolve(__dirname, "../lib/placement.ts"));
+
+const { SCENARIOS } = jiti(resolve(__dirname, "../data/scenarios.ts"));
+
+const {
+  initOrHydrateGuestSession,
+  getTopPlayers,
+  getPlayerArenaRuns,
+  rewardPracticePoints,
+  purchaseAndEquipCosmetic,
+  updateGuestDisplayName,
+  restoreByTransferCode,
+} = jiti(resolve(__dirname, "../app/actions/leaderboard.ts"));
+
+const { LocalStorageAdapter } = jiti(
+  resolve(__dirname, "../lib/storage/localStorageAdapter.ts")
+);
+
+function installWindowMock() {
+  const prevWindow = globalThis.window;
+  const store = new Map();
+  globalThis.window = {
+    localStorage: {
+      getItem: (key) => (store.has(key) ? store.get(key) : null),
+      setItem: (key, value) => {
+        store.set(key, String(value));
+      },
+      removeItem: (key) => {
+        store.delete(key);
+      },
+    },
+  };
+  return {
+    store,
+    restore: () => {
+      globalThis.window = prevWindow;
+    },
+  };
+}
+
+function withClearedDatabaseUrl(fn) {
+  const prevDbUrl = process.env.DATABASE_URL;
+  const prevUnpooled = process.env.DATABASE_URL_UNPOOLED;
+  delete process.env.DATABASE_URL;
+  delete process.env.DATABASE_URL_UNPOOLED;
+  return Promise.resolve()
+    .then(fn)
+    .finally(() => {
+      if (prevDbUrl === undefined) {
+        delete process.env.DATABASE_URL;
+      } else {
+        process.env.DATABASE_URL = prevDbUrl;
+      }
+      if (prevUnpooled === undefined) {
+        delete process.env.DATABASE_URL_UNPOOLED;
+      } else {
+        process.env.DATABASE_URL_UNPOOLED = prevUnpooled;
+      }
+    });
+}
+
+test("transfer code generation and normalization follow DEV-XXXXXX contract", () => {
+  assert.equal(GUEST_SESSION_COOKIE_NAME, "speakit_session_token");
+  assert.equal(GUEST_TRANSFER_STORAGE_KEY, "speakit_transfer_code_v1");
+  assert.equal(GUEST_COOKIE_MAX_AGE_SECONDS, 400 * 24 * 60 * 60);
+
+  for (let i = 0; i < 15; i += 1) {
+    const code = generateTransferCode();
+    assert.match(code, /^DEV-[A-Z0-9]{6}$/);
+    assert.equal(normalizeTransferCode(code), code);
+  }
+
+  assert.equal(normalizeTransferCode("  dev-ab12cd  "), "DEV-AB12CD");
+  assert.equal(normalizeTransferCode("DEV-123"), null);
+  assert.equal(normalizeTransferCode("USER-123456"), null);
+  assert.equal(normalizeTransferCode("DEV-AB_12!"), null);
+});
+
+test("hashDeviceToken produces deterministic sha256 digest and differs across inputs", () => {
+  const a1 = hashDeviceToken("token-alpha");
+  const a2 = hashDeviceToken("token-alpha");
+  const b1 = hashDeviceToken("token-beta");
+
+  assert.equal(a1, a2);
+  assert.notEqual(a1, b1);
+  assert.match(a1, /^[a-f0-9]{64}$/);
+});
+
+test("parseOwnedItems and serializePublicGuestPlayer strip sensitive token hashes", () => {
+  assert.deepEqual(parseOwnedItems(["title-bug-whisperer", 123]), [
+    "title-bug-whisperer",
+  ]);
+  assert.deepEqual(parseOwnedItems('["ring-crimson"]'), ["ring-crimson"]);
+  assert.deepEqual(parseOwnedItems("not-json"), []);
+
+  const sanitized = serializePublicGuestPlayer({
+    id: "guest-1",
+    device_token_hash: "super-secret-sha256-hash",
+    transfer_code: "DEV-7788AA",
+    display_name: "Frontend Ninja",
+    it_coins: 12,
+    total_points: 12450,
+    streak_days: 5,
+    last_practice_date: "2026-11-12",
+    equipped_title: "Bug Whisperer",
+    equipped_ring: "ring-crimson",
+    owned_items: ["title-bug-whisperer", "ring-crimson"],
+    created_at: "2026-11-01T00:00:00Z",
+    updated_at: "2026-11-12T00:00:00Z",
+  });
+
+  assert.equal("device_token_hash" in sanitized, false);
+  assert.equal(sanitized.transferCode, "DEV-7788AA");
+  assert.equal(sanitized.itCoins, 12);
+  assert.equal(sanitized.totalPoints, 12450);
+  assert.deepEqual(sanitized.ownedItems, [
+    "title-bug-whisperer",
+    "ring-crimson",
+  ]);
+});
+
+test("cosmetic catalog prices, lookups, and ring styles remain valid", () => {
+  assert.ok(COSMETIC_CATALOG.length >= 6);
+  for (const item of COSMETIC_CATALOG) {
+    assert.ok(item.price > 0);
+    assert.equal(findCosmeticById(item.id)?.id, item.id);
+    if (item.kind === "ring") {
+      assert.notEqual(getRingBadgeClass(item.value), "border-ink/20");
+    }
+  }
+  assert.equal(findCosmeticById("missing-item"), undefined);
+  assert.equal(getRingBadgeClass("default"), "border-ink/20");
+});
+
+test("server actions clamp scores and fall back gracefully without DATABASE_URL", async () => {
+  await withClearedDatabaseUrl(async () => {
+    const hydrated = await initOrHydrateGuestSession("DEV-9988AA");
+    assert.deepEqual(hydrated, { mode: "offline", player: null });
+
+    const top = await getTopPlayers(50);
+    assert.deepEqual(top, {
+      mode: "offline",
+      players: [],
+      currentPlayer: null,
+      currentUserRank: null,
+    });
+
+    const clampedHigh = await rewardPracticePoints("daily-standup", 99999);
+    assert.equal(clampedHigh.ok, true);
+    assert.equal(clampedHigh.mode, "offline");
+    assert.equal(clampedHigh.awardedPoints, 10000);
+    assert.equal(clampedHigh.player, null);
+
+    const arenaScore = await rewardPracticePoints("bug-buster", 1070);
+    assert.equal(arenaScore.ok, true);
+    assert.equal(arenaScore.mode, "offline");
+    assert.equal(arenaScore.awardedPoints, 1070);
+
+    const negativeScore = await rewardPracticePoints("daily-standup", -50);
+    assert.equal(negativeScore.ok, false);
+    assert.equal(negativeScore.awardedPoints, 0);
+
+    const missingItem = await purchaseAndEquipCosmetic("non-existent", 1);
+    assert.equal(missingItem.ok, false);
+
+    const negativePrice = await purchaseAndEquipCosmetic("ring-crimson", -5);
+    assert.equal(negativePrice.ok, false);
+
+    const offlineShop = await purchaseAndEquipCosmetic("ring-crimson", 1);
+    assert.equal(offlineShop.ok, false);
+    assert.equal(offlineShop.mode, "offline");
+
+    const invalidName = await updateGuestDisplayName("A");
+    assert.equal(invalidName.ok, false);
+
+    const offlineName = await updateGuestDisplayName("SeniorDev");
+    assert.equal(offlineName.ok, false);
+    assert.equal(offlineName.mode, "offline");
+
+    const badRestore = await restoreSessionFromAuth("invalid-code");
+    assert.equal(badRestore.ok, false);
+
+    const offlineRestore = await restoreByTransferCode("DEV-AB12CD");
+    assert.equal(offlineRestore.ok, false);
+    assert.equal(offlineRestore.mode, "offline");
+  });
+});
+
+test("user settings exclude client-side geminiApiKey while keeping speech preferences", () => {
+  const win = installWindowMock();
+  try {
+    const adapter = new LocalStorageAdapter();
+    const initial = adapter.getSettings();
+    assert.equal("geminiApiKey" in initial, false);
+    assert.equal(initial.speechRate, 1.0);
+    assert.equal(initial.autoPlayAudio, true);
+
+    adapter.saveSettings({ speechRate: 1.2, autoPlayAudio: false });
+    const updated = adapter.getSettings();
+    assert.equal(updated.speechRate, 1.2);
+    assert.equal(updated.autoPlayAudio, false);
+    assert.equal(win.store.has("speakit_gemini_key"), false);
+  } finally {
+    win.restore();
+  }
+});
+
+test("generateFriendlyDisplayName produces valid non-code names and isLegacyCodeDisplayName detects Dev-XXXX", () => {
+  for (let i = 0; i < 20; i++) {
+    const name = generateFriendlyDisplayName();
+    assert.ok(name.length >= 2 && name.length <= 24, `Unexpected length: ${name}`);
+    assert.equal(/^dev-/i.test(name), false, `Must not expose Dev- prefix: ${name}`);
+  }
+  assert.equal(isLegacyCodeDisplayName("Dev-7F2A"), true);
+  assert.equal(isLegacyCodeDisplayName("Swift Fox 42"), false);
+});
+
+test("resolveVoiceForPersona matches distinct English voices and falls back safely", () => {
+  assert.equal(VOICE_PERSONAS.length >= 4, true);
+  const mockVoices = [
+    { name: "Microsoft David - English (United States)", lang: "en-US" },
+    { name: "Microsoft Zira - English (United States)", lang: "en-US" },
+    { name: "Google UK English Female", lang: "en-GB" },
+    { name: "Microsoft An - Vietnamese", lang: "vi-VN" },
+  ];
+
+  const techLead = resolveVoiceForPersona("us-tech-lead", mockVoices);
+  assert.equal(techLead.voice?.name, "Microsoft David - English (United States)");
+  assert.equal(techLead.lang, "en-US");
+
+  const autoVoice = resolveVoiceForPersona("auto", mockVoices);
+  assert.notEqual(autoVoice.voice?.name, techLead.voice?.name);
+  assert.notEqual(autoVoice.pitch, techLead.pitch);
+
+  const hrFemale = resolveVoiceForPersona("us-hr-female", mockVoices);
+  assert.equal(hrFemale.voice?.name, "Microsoft Zira - English (United States)");
+
+  const ukClient = resolveVoiceForPersona("uk-client", mockVoices);
+  assert.equal(ukClient.voice?.name, "Google UK English Female");
+  assert.equal(ukClient.lang, "en-GB");
+
+  const emptyFallback = resolveVoiceForPersona("uk-client", []);
+  assert.equal(emptyFallback.voice, null);
+  assert.equal(emptyFallback.lang, "en-GB");
+});
+
+test("scenarios have 3 difficulty tiers and evaluatePlacementLevel classifies Fresher, Junior, and Senior", () => {
+  const byId = Object.fromEntries(SCENARIOS.map((s) => [s.id, getScenarioDifficulty(s)]));
+  assert.equal(byId["daily-standup"], "Fresher");
+  assert.equal(byId["fresher-interview"], "Fresher");
+  assert.equal(byId["bug-report"], "Junior");
+  assert.equal(byId["code-review"], "Junior");
+  assert.equal(byId["tech-demo"], "Senior");
+  assert.equal(byId["client-meeting"], "Senior");
+
+  const fresher = evaluatePlacementLevel({}, "");
+  assert.equal(fresher.level, "Fresher");
+  assert.equal(fresher.recommendedScenarioId, "daily-standup");
+
+  const junior = evaluatePlacementLevel(
+    { "mcq-standup": "b", "mcq-review": "b" },
+    "Yesterday I fixed a small bug in the API endpoint."
+  );
+  assert.equal(junior.level, "Junior");
+
+  const senior = evaluatePlacementLevel(
+    { "mcq-standup": "b", "mcq-review": "a" },
+    "Yesterday I fixed a critical database latency issue and deployed the tested API cache fix to production."
+  );
+  assert.equal(senior.level, "Senior");
+  assert.equal(senior.recommendedScenarioId, "client-meeting");
+});
+
+test("getTopPlayers SQL orders leaderboard by total_points DESC, effective_coins DESC and excludes 0-point rows", async () => {
+  const { readFileSync } = await import("node:fs");
+  const source = readFileSync(
+    resolve(__dirname, "../app/actions/leaderboard.ts"),
+    "utf8"
+  );
+
+  assert.match(source, /WHERE total_points > 0/);
+  assert.match(
+    source,
+    /DENSE_RANK\(\) OVER \(ORDER BY total_points DESC, effective_coins DESC\)/
+  );
+  assert.match(
+    source,
+    /ORDER BY total_points DESC, effective_coins DESC, created_at ASC/
+  );
+});
+
+test("getPlayerArenaRuns falls back gracefully in offline mode", async () => {
+  await withClearedDatabaseUrl(async () => {
+    const res = await getPlayerArenaRuns("DEV-AB12CD");
+    assert.deepEqual(res, { mode: "offline", runs: [] });
+  });
+});
+
+test("guestClient caches and clears backup session token alongside profile and transfer code", () => {
+  const {
+    GUEST_SESSION_TOKEN_KEY,
+    GUEST_TRANSFER_CODE_KEY,
+    GUEST_PROFILE_CACHE_KEY,
+    readBackupSessionToken,
+    saveBackupSessionToken,
+    readCachedGuestProfile,
+    saveCachedGuestProfile,
+  } = jiti(resolve(__dirname, "../lib/guestClient.ts"));
+
+  const win = installWindowMock();
+  try {
+    assert.equal(readBackupSessionToken(), undefined);
+    saveBackupSessionToken("  tok_123456789012345678901234567890  ");
+    assert.equal(
+      readBackupSessionToken(),
+      "tok_123456789012345678901234567890"
+    );
+
+    saveCachedGuestProfile({
+      id: "acc-99",
+      transferCode: "DEV-9988AA",
+      displayName: "Minh Quân",
+      avatarUrl: "preset:cyber-fox",
+      email: "MinhQuan@Gmail.com",
+      itCoins: 25,
+      totalPoints: 25000,
+      streakDays: 7,
+      lastPracticeDate: "2026-11-22",
+      equippedTitle: "Lead Tech Speaker",
+      equippedRing: "default",
+      ownedItems: ["title-bug-whisperer"],
+    });
+
+    const cached = readCachedGuestProfile();
+    assert.equal(cached?.email, "minhquan@gmail.com");
+    assert.equal(cached?.avatarUrl, "preset:cyber-fox");
+    assert.equal(win.store.get(GUEST_TRANSFER_CODE_KEY), "DEV-9988AA");
+
+    saveCachedGuestProfile(null);
+    assert.equal(readCachedGuestProfile(), null);
+    assert.equal(readBackupSessionToken(), undefined);
+    assert.equal(win.store.has(GUEST_SESSION_TOKEN_KEY), false);
+    assert.equal(win.store.has(GUEST_TRANSFER_CODE_KEY), false);
+    assert.equal(win.store.has(GUEST_PROFILE_CACHE_KEY), false);
+  } finally {
+    win.restore();
+  }
+});
+
+
+
+
+
