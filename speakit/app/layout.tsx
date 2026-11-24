@@ -65,14 +65,14 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="bg-[#F8FAFC] dark:bg-[#0B1220] text-[#0F172A] dark:text-[#F8FAFC] min-h-screen antialiased flex flex-col font-sans selection:bg-blue-100 selection:text-blue-900 dark:selection:bg-blue-900/60 dark:selection:text-blue-100">
+      <body className="bg-transparent text-[#0F172A] dark:text-[#F8FAFC] min-h-screen antialiased flex flex-col font-sans selection:bg-blue-100 selection:text-blue-900 dark:selection:bg-blue-900/60 dark:selection:text-blue-100">
         <div
           aria-hidden="true"
-          className="fixed inset-0 -z-10 pointer-events-none app-ambient-backdrop"
+          className="fixed inset-0 z-0 pointer-events-none app-ambient-backdrop"
         />
         <Navbar />
         <WelcomeNameModal />
-        <main className="flex-1 pb-20 md:pb-0">{children}</main>
+        <main className="relative flex-1 pb-20 md:pb-0">{children}</main>
         <Footer />
         <FeatureGuideDock />
       </body>

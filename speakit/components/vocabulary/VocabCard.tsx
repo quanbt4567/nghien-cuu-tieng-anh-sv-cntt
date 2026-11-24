@@ -196,12 +196,12 @@ export function VocabCard({
 
   return (
     <div
-      className={`bg-white dark:bg-[#1E293B] border rounded-xl p-5 sm:p-6 space-y-4 shadow-sm dark:shadow-[0_10px_26px_-10px_rgba(2,6,23,0.55)] transition-colors ${
+      className={`liquid-glass-card p-5 sm:p-6 space-y-4 transition-colors ${
         isMastered
-          ? "border-green-300 dark:border-green-500/45"
+          ? "!border-green-400/80 dark:!border-green-500/50"
           : isMarkedForReview
-            ? "border-amber-300 dark:border-amber-500/45"
-            : "border-slate-200 dark:border-white/15 hover:border-blue-400 dark:hover:border-blue-400/60"
+            ? "!border-amber-400/80 dark:!border-amber-500/50"
+            : "hover:!border-blue-400 dark:hover:!border-blue-400/60"
       }`}
     >
       <div className="flex items-start justify-between gap-3">

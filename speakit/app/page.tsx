@@ -40,7 +40,7 @@ export default async function HomePage() {
           <Link
             href="/leaderboard"
             prefetch
-            className="inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:border-blue-700 hover:text-blue-700 dark:hover:border-blue-500 dark:hover:text-blue-400 text-sm font-semibold transition-colors"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 hover:!border-blue-700 hover:text-blue-700 dark:hover:!border-blue-500 dark:hover:text-blue-400 text-sm font-semibold transition-colors"
           >
             <span>Xem bảng xếp hạng</span>
             <ArrowRight className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
@@ -48,13 +48,13 @@ export default async function HomePage() {
         </div>
 
         {topLeaders.length > 0 ? (
-          <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800">
+          <div className="liquid-glass-card overflow-hidden grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200/80 dark:divide-white/10">
             {topLeaders.map((player) => (
               <LeaderboardRowWrapper
                 key={player.id}
                 fxId={player.equippedCosmetics?.leaderboard_fx}
                 nameplateId={player.equippedCosmetics?.nameplate}
-                className="!rounded-none !border-0 !shadow-none !bg-transparent transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/60"
+                className="!rounded-none !border-0 !shadow-none !bg-transparent transition-colors hover:bg-slate-100/60 dark:hover:bg-white/5"
               >
                 <Link
                   href={`/profile/${player.id}`}
@@ -115,7 +115,7 @@ export default async function HomePage() {
       <section aria-label="Công cụ ôn tập nhanh" className="hidden md:grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <Link
           href="/scenarios"
-          className="group bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/15 rounded-xl p-5 shadow-sm dark:shadow-[0_10px_26px_-10px_rgba(2,6,23,0.55)] hover:border-blue-700 dark:hover:border-blue-400 transition-colors flex flex-col justify-between gap-4"
+          className="group liquid-glass-card p-5 hover:!border-blue-700 dark:hover:!border-blue-400 transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-500/20 border border-blue-200 dark:border-blue-400/35 flex items-center justify-center shrink-0">
@@ -131,7 +131,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 group-hover:bg-blue-700 group-hover:text-white group-hover:border-blue-700 dark:group-hover:bg-blue-600 dark:group-hover:border-blue-600 text-sm font-semibold transition-colors">
+            <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-slate-100/80 dark:bg-slate-800/80 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 group-hover:bg-blue-700 group-hover:text-white group-hover:border-blue-700 dark:group-hover:bg-blue-600 dark:group-hover:border-blue-600 text-sm font-semibold transition-colors">
               Luyện kịch bản
             </span>
           </div>
@@ -139,7 +139,7 @@ export default async function HomePage() {
 
         <Link
           href="/vocabulary"
-          className="group bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/15 rounded-xl p-5 shadow-sm dark:shadow-[0_10px_26px_-10px_rgba(2,6,23,0.55)] hover:border-emerald-600 dark:hover:border-emerald-400 transition-colors flex flex-col justify-between gap-4"
+          className="group liquid-glass-card p-5 hover:!border-emerald-600 dark:hover:!border-emerald-400 transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-lg bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-400/35 flex items-center justify-center shrink-0">
@@ -155,7 +155,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 group-hover:bg-blue-700 group-hover:text-white group-hover:border-blue-700 dark:group-hover:bg-blue-600 dark:group-hover:border-blue-600 text-sm font-semibold transition-colors">
+            <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-slate-100/80 dark:bg-slate-800/80 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 group-hover:bg-blue-700 group-hover:text-white group-hover:border-blue-700 dark:group-hover:bg-blue-600 dark:group-hover:border-blue-600 text-sm font-semibold transition-colors">
               Ôn từ vựng
             </span>
           </div>
@@ -163,7 +163,7 @@ export default async function HomePage() {
 
         <Link
           href="/progress"
-          className="group bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/15 rounded-xl p-5 shadow-sm dark:shadow-[0_10px_26px_-10px_rgba(2,6,23,0.55)] hover:border-sky-600 dark:hover:border-sky-400 transition-colors flex flex-col justify-between gap-4"
+          className="group liquid-glass-card p-5 hover:!border-sky-600 dark:hover:!border-sky-400 transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-lg bg-sky-50 dark:bg-sky-500/20 border border-sky-200 dark:border-sky-400/35 flex items-center justify-center shrink-0">
@@ -179,7 +179,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 group-hover:bg-blue-700 group-hover:text-white group-hover:border-blue-700 dark:group-hover:bg-blue-600 dark:group-hover:border-blue-600 text-sm font-semibold transition-colors">
+            <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-slate-100/80 dark:bg-slate-800/80 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 group-hover:bg-blue-700 group-hover:text-white group-hover:border-blue-700 dark:group-hover:bg-blue-600 dark:group-hover:border-blue-600 text-sm font-semibold transition-colors">
               Xem lộ trình
             </span>
           </div>
@@ -187,7 +187,7 @@ export default async function HomePage() {
 
         <Link
           href="/arena"
-          className="group bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/15 rounded-xl p-5 shadow-sm dark:shadow-[0_10px_26px_-10px_rgba(2,6,23,0.55)] hover:border-amber-600 dark:hover:border-amber-400 transition-colors flex flex-col justify-between gap-4"
+          className="group liquid-glass-card p-5 hover:!border-amber-600 dark:hover:!border-amber-400 transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-lg bg-amber-50 dark:bg-amber-500/20 border border-amber-200 dark:border-amber-400/35 flex items-center justify-center shrink-0">
@@ -203,7 +203,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex justify-end">
-            <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 group-hover:bg-blue-700 group-hover:text-white group-hover:border-blue-700 dark:group-hover:bg-blue-600 dark:group-hover:border-blue-600 text-sm font-semibold transition-colors">
+            <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-slate-100/80 dark:bg-slate-800/80 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 group-hover:bg-blue-700 group-hover:text-white group-hover:border-blue-700 dark:group-hover:bg-blue-600 dark:group-hover:border-blue-600 text-sm font-semibold transition-colors">
               Vào đấu trường
             </span>
           </div>
@@ -211,7 +211,7 @@ export default async function HomePage() {
 
         <Link
           href="/arena/party"
-          className="group bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/15 rounded-xl p-5 shadow-sm dark:shadow-[0_10px_26px_-10px_rgba(2,6,23,0.55)] hover:border-red-600 dark:hover:border-red-400 transition-colors flex flex-col justify-between gap-4"
+          className="group liquid-glass-card p-5 hover:!border-red-600 dark:hover:!border-red-400 transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-lg bg-red-50 dark:bg-red-500/20 text-red-600 dark:text-red-300 flex items-center justify-center border border-red-200 dark:border-red-400/35 shrink-0">
@@ -235,7 +235,7 @@ export default async function HomePage() {
 
         <Link
           href="/shop"
-          className="group bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/15 rounded-xl p-5 shadow-sm dark:shadow-[0_10px_26px_-10px_rgba(2,6,23,0.55)] hover:border-violet-600 dark:hover:border-violet-400 transition-colors flex flex-col justify-between gap-4"
+          className="group liquid-glass-card p-5 hover:!border-violet-600 dark:hover:!border-violet-400 transition-colors flex flex-col justify-between gap-4"
         >
           <div className="flex items-start gap-3.5">
             <div className="w-9 h-9 rounded-lg bg-violet-50 dark:bg-violet-500/20 border border-violet-200 dark:border-violet-400/35 text-violet-700 dark:text-violet-300 flex items-center justify-center shrink-0">
