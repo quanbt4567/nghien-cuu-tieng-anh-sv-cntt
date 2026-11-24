@@ -86,6 +86,7 @@ export interface GuestPlayerRow {
   email?: string | null;
   password_hash?: string | null;
   it_coins: number;
+  penalty_coins?: number;
   total_points: number;
   streak_days: number;
   last_practice_date: string | null;
@@ -103,6 +104,7 @@ export interface LeaderboardEntry {
   displayName: string;
   avatarUrl?: string | null;
   itCoins: number;
+  penaltyCoins?: number;
   totalPoints: number;
   streakDays: number;
   equippedTitle: string;
@@ -119,6 +121,7 @@ export interface PublicGuestPlayer {
   avatarUrl?: string | null;
   email?: string | null;
   itCoins: number;
+  penaltyCoins?: number;
   totalPoints: number;
   streakDays: number;
   lastPracticeDate: string | null;
@@ -151,6 +154,7 @@ export async function initializeGuestPlayersSchema(
             display_name TEXT NOT NULL,
             avatar_url TEXT,
             it_coins INT NOT NULL DEFAULT 0,
+            penalty_coins INT NOT NULL DEFAULT 0,
             total_points INT NOT NULL DEFAULT 0,
             streak_days INT NOT NULL DEFAULT 0,
             last_practice_date TEXT,
@@ -182,6 +186,10 @@ export async function initializeGuestPlayersSchema(
         sql`
           ALTER TABLE guest_players
           ADD COLUMN IF NOT EXISTS password_hash TEXT
+        `,
+        sql`
+          ALTER TABLE guest_players
+          ADD COLUMN IF NOT EXISTS penalty_coins INT NOT NULL DEFAULT 0
         `,
         sql`
           CREATE UNIQUE INDEX IF NOT EXISTS idx_guest_players_email_lower

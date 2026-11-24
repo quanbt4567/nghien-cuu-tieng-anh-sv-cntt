@@ -102,11 +102,22 @@ const CATEGORY_META: Record<
 };
 
 const RARITY_BADGE_CLASS: Record<CosmeticRarity, string> = {
-  Common: "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700",
-  Rare: "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800",
-  Epic: "bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-300 border border-red-200 dark:border-red-800",
+  Common: "bg-sky-50 dark:bg-sky-500/15 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-400/35",
+  Rare: "bg-blue-50 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-400/45",
+  Epic: "bg-violet-50 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-400/45",
   Legendary:
-    "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800",
+    "bg-amber-50 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-400/50",
+};
+
+const RARITY_PREVIEW_BG_CLASS: Record<CosmeticRarity, string> = {
+  Common:
+    "bg-gradient-to-br from-slate-100 via-sky-50/70 to-slate-200/80 dark:from-[#243247] dark:via-sky-950/55 dark:to-[#182235] border-slate-200 dark:border-sky-400/20",
+  Rare:
+    "bg-gradient-to-br from-blue-50 via-sky-100/70 to-indigo-50 dark:from-blue-950/80 dark:via-[#1E2E4A] dark:to-indigo-950/75 border-blue-200 dark:border-blue-400/30",
+  Epic:
+    "bg-gradient-to-br from-violet-50 via-fuchsia-50/70 to-indigo-100/70 dark:from-violet-950/80 dark:via-[#262044] dark:to-fuchsia-950/65 border-violet-200 dark:border-violet-400/35",
+  Legendary:
+    "bg-gradient-to-br from-amber-50 via-orange-50/80 to-yellow-100/70 dark:from-amber-950/75 dark:via-[#2E251A] dark:to-orange-950/70 border-amber-300 dark:border-amber-400/40",
 };
 
 const RARITY_ORDER: Record<CosmeticRarity, number> = {
@@ -137,9 +148,9 @@ function CosmeticCardThumbnail({
 }) {
   if (item.category === "avatar_decoration") {
     return (
-      <div className="h-28 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center justify-center relative overflow-hidden">
+      <div className={`h-28 rounded-xl border flex items-center justify-center relative overflow-hidden ${RARITY_PREVIEW_BG_CLASS[item.rarity]}`}>
         <DiscordAvatarFrame equippedId={item.id} item={item} size="lg" micActive={micActive} lite>
-          <div className="w-full h-full flex items-center justify-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono font-bold text-base text-slate-900 dark:text-slate-100">
+          <div className="w-full h-full flex items-center justify-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/15 font-mono font-bold text-base text-slate-900 dark:text-slate-100">
             {initials}
           </div>
         </DiscordAvatarFrame>
@@ -149,7 +160,7 @@ function CosmeticCardThumbnail({
 
   if (item.category === "nameplate") {
     return (
-      <div className="h-28 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 px-3 flex items-center justify-center relative overflow-hidden">
+      <div className={`h-28 rounded-xl border px-3 flex items-center justify-center relative overflow-hidden ${RARITY_PREVIEW_BG_CLASS[item.rarity]}`}>
         <NameplateBanner
           nameplateId={item.id}
           item={item}
@@ -183,7 +194,7 @@ function CosmeticCardThumbnail({
 
   if (item.category === "leaderboard_fx") {
     return (
-      <div className="h-28 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 px-3 flex items-center justify-center relative overflow-hidden">
+      <div className={`h-28 rounded-xl border px-3 flex items-center justify-center relative overflow-hidden ${RARITY_PREVIEW_BG_CLASS[item.rarity]}`}>
         <LeaderboardRowWrapper
           fxId={item.id}
           lite
@@ -210,7 +221,7 @@ function CosmeticCardThumbnail({
   if (item.category === "profile_theme") {
     return (
       <div
-        className={`h-28 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 relative overflow-hidden flex items-end p-2.5 ${item.effectClass}`}
+        className={`h-28 rounded-xl border relative overflow-hidden flex items-end p-2.5 ${RARITY_PREVIEW_BG_CLASS[item.rarity]} ${item.effectClass}`}
       >
         {item.id === "theme-neon-meteor-shower" && (
           <>
@@ -271,7 +282,7 @@ function CosmeticCardThumbnail({
 
   if (item.category === "cursor_effect") {
     return (
-      <div className="h-28 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 relative overflow-hidden flex items-center justify-center">
+      <div className={`h-28 rounded-xl border relative overflow-hidden flex items-center justify-center ${RARITY_PREVIEW_BG_CLASS[item.rarity]}`}>
         {item.id === "cursor-pixel-sparkle-trail" && (
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 bg-amber-500 border border-amber-600/40 animate-pulse" />
@@ -326,7 +337,7 @@ function CosmeticCardThumbnail({
   }
 
   return (
-    <div className="h-28 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 relative overflow-hidden flex items-center justify-center px-3">
+    <div className={`h-28 rounded-xl border relative overflow-hidden flex items-center justify-center px-3 ${RARITY_PREVIEW_BG_CLASS[item.rarity]}`}>
       {item.id === "finisher-lgtm-neon-confetti" && (
         <div className="flex items-center gap-2">
           <span className="px-2 py-1 rounded bg-green-700 text-white border border-green-500 font-mono text-[11px] font-bold rotate-[-4deg]">
@@ -1175,9 +1186,11 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     <button
                       type="button"
                       onClick={(e) => handleSelectPreview(item, getEventCoords(e))}
-                      className="w-full py-2 px-3 rounded-lg liquid-btn-primary opacity-85 hover:opacity-100 text-xs font-mono font-bold"
+                      className="w-full py-2 px-3 rounded-lg border border-amber-300 dark:border-amber-400/35 bg-amber-50 dark:bg-amber-500/15 hover:bg-amber-100 dark:hover:bg-amber-500/25 text-amber-800 dark:text-amber-300 text-xs font-mono font-bold transition-colors"
                     >
-                      {`Unlock for ${item.price} IT-Coins`}
+                      {!isOnline
+                        ? `Cần ${item.price} Coin · Xem thử`
+                        : `Thiếu Coin (${item.price}) · Xem thử`}
                     </button>
                   )}
                 </div>

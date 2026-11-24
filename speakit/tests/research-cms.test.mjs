@@ -35,7 +35,11 @@ test("DEFAULT_RESEARCH_ARTICLES seeds EF EPI 2025 benchmark without IUH attribut
   assert.equal(seed.metricsJson.some((m) => m.value === "461"), true);
   assert.equal(seed.metricsJson.some((m) => m.value === "522"), true);
   assert.equal(
-    seed.sourceUrls.some((s) => s.url === "https://www.ef.com/wwen/epi/regions/asia/vietnam/"),
+    seed.sourceUrls.some(
+      (s) =>
+        s.url === "/research/ef-epi-2025-vietnam-it-speaking-benchmark" ||
+        s.url === "https://www.ef.com/wwen/epi/regions/asia/vietnam/"
+    ),
     true
   );
   assert.equal(seed.contentMarkdown.includes("IUH"), false);

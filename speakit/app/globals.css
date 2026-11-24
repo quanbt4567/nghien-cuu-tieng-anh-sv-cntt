@@ -13,6 +13,10 @@
   --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
 }
 
+html {
+  background-color: #f8fafc;
+}
+
 html,
 body {
   background-color: #f8fafc;
@@ -229,64 +233,75 @@ nav a {
 @tailwind utilities;
 
 .app-ambient-backdrop {
-  background: #f8fafc;
+  background-color: #f8fafc;
+  background-image:
+    radial-gradient(60% 42% at 12% 0%, rgba(37, 99, 235, 0.11), transparent 70%),
+    radial-gradient(48% 38% at 88% 4%, rgba(14, 165, 233, 0.10), transparent 72%),
+    radial-gradient(45% 35% at 52% 28%, rgba(249, 115, 22, 0.05), transparent 75%);
 }
 
 html.dark {
   color-scheme: dark;
-  --bg-paper: #000000;
-  --text-ink: #fafafa;
-  --color-ink-black: #fafafa;
-  --color-bone: #0a0a0a;
-  --color-smoke: #a1a1aa;
+  background-color: #0b1220;
+  --bg-paper: #0b1220;
+  --text-ink: #f8fafc;
+  --color-ink-black: #f8fafc;
+  --color-bone: #1e293b;
+  --color-smoke: #cbd5e1;
 }
 
+html.dark,
 html.dark body {
-  background-color: #000000;
-  color: #fafafa;
+  background-color: #0b1220;
+  color: #f8fafc;
 }
 
 html.dark .app-ambient-backdrop {
-  background: #000000;
+  background-color: #0b1220;
+  background-image:
+    radial-gradient(58% 42% at 14% 0%, rgba(37, 99, 235, 0.25), transparent 72%),
+    radial-gradient(48% 36% at 86% 6%, rgba(139, 92, 246, 0.17), transparent 72%),
+    radial-gradient(44% 34% at 50% 24%, rgba(249, 115, 22, 0.10), transparent 74%),
+    radial-gradient(40% 30% at 92% 65%, rgba(14, 165, 233, 0.09), transparent 72%);
 }
 
 html.dark select option {
-  background-color: #0a0a0a;
-  color: #fafafa;
+  background-color: #1e293b;
+  color: #f8fafc;
 }
 
 html.dark .liquid-glass-card,
 html.dark .liquid-glass-card-lite,
 html.dark .vitrine-panel {
-  background: #0a0a0a;
-  border-color: #262626;
-  box-shadow: none;
-  color: #fafafa;
+  background: #1e293b;
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 28px -10px rgba(2, 6, 23, 0.55);
+  color: #f8fafc;
 }
 
 html.dark .liquid-glass-pill {
-  background: rgba(10, 10, 10, 0.88);
-  border-color: #262626;
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.65);
-  color: #fafafa;
+  background: rgba(15, 23, 42, 0.72);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 10px 30px -10px rgba(2, 6, 23, 0.65);
+  color: #f8fafc;
 }
 
 html.dark .liquid-glass-btn {
-  background: #141414;
-  border-color: #2e2e2e;
-  color: #fafafa;
+  background: #263349;
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #f1f5f9;
   box-shadow: none;
 }
 
 html.dark .liquid-glass-btn:hover {
-  background: #1f1f1f;
-  border-color: #404040;
+  background: #334155;
+  border-color: rgba(255, 255, 255, 0.26);
   color: #ffffff;
 }
 
 html.dark .liquid-btn-primary {
   background: #2563eb;
-  border-color: #1d4ed8;
+  border-color: #3b82f6;
 }
 
 html.dark .liquid-btn-primary:hover {
@@ -294,45 +309,47 @@ html.dark .liquid-btn-primary:hover {
 }
 
 html.dark .liquid-glass-input {
-  background: #121212;
-  border-color: #2e2e2e;
-  color: #fafafa;
+  background: #263349;
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #f8fafc;
 }
 
 html.dark .liquid-glass-input::placeholder {
-  color: #71717a;
+  color: #a8b3c2;
 }
 
 html.dark .liquid-glass-input:focus {
-  background: #050505;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+  background: #0f172a;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.28);
 }
 
 html.dark .liquid-dock {
-  background: rgba(10, 10, 10, 0.9);
-  border-color: #262626;
-  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.7);
+  background: rgba(15, 23, 42, 0.76);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 10px 30px -10px rgba(2, 6, 23, 0.7);
 }
 
 html.dark .liquid-lens-active {
-  background: rgba(37, 99, 235, 0.18);
-  border-color: #2563eb;
+  background: rgba(37, 99, 235, 0.24);
+  border-color: rgba(96, 165, 250, 0.55);
   color: #93c5fd;
 }
 
 @media (prefers-reduced-transparency: reduce) {
   html.dark .liquid-dock,
   html.dark .liquid-glass-pill {
-    background: #0a0a0a;
+    background: #1e293b;
   }
 }
 
-html.dark .text-slate-900 { color: #fafafa; }
-html.dark .text-slate-800 { color: #f4f4f5; }
-html.dark .text-slate-700 { color: #e4e4e7; }
-html.dark .text-slate-600 { color: #d4d4d8; }
-html.dark .text-slate-500 { color: #a1a1aa; }
+html.dark .text-slate-900 { color: #f8fafc; }
+html.dark .text-slate-800 { color: #f1f5f9; }
+html.dark .text-slate-700 { color: #e2e8f0; }
+html.dark .text-slate-600,
+html.dark .dark\:text-slate-300 { color: #cbd5e1; }
+html.dark .text-slate-500,
+html.dark .dark\:text-slate-400 { color: #a8b3c2; }
 html.dark .text-blue-600,
 html.dark .text-blue-700 { color: #60a5fa; }
 html.dark .text-blue-800,
@@ -365,12 +382,17 @@ html.dark .bg-white\/80,
 html.dark .bg-white\/85,
 html.dark .bg-white\/90,
 html.dark .bg-white\/95,
-html.dark .dark\:bg-slate-900 {
-  background-color: #0a0a0a;
+html.dark .dark\:bg-slate-900,
+html.dark .dark\:bg-slate-900\/60,
+html.dark .dark\:bg-slate-900\/80,
+html.dark .dark\:bg-slate-900\/85,
+html.dark .dark\:bg-slate-900\/95 {
+  background-color: #1e293b;
 }
 
-html.dark .dark\:bg-slate-950 {
-  background-color: #000000;
+html.dark .dark\:bg-slate-950,
+html.dark .dark\:bg-slate-950\/60 {
+  background-color: #0f172a;
 }
 
 html.dark .bg-slate-50,
@@ -388,7 +410,7 @@ html.dark .hover\:bg-slate-100\/80:hover,
 html.dark .dark\:bg-slate-800,
 html.dark .dark\:bg-slate-800\/80,
 html.dark .dark\:hover\:bg-slate-800:hover {
-  background-color: #141414;
+  background-color: #263349;
 }
 
 html.dark .bg-blue-50,
@@ -398,7 +420,7 @@ html.dark .bg-blue-50\/90,
 html.dark .bg-blue-100,
 html.dark .hover\:bg-blue-50:hover,
 html.dark .hover\:bg-blue-100:hover {
-  background-color: rgba(37, 99, 235, 0.14);
+  background-color: rgba(37, 99, 235, 0.2);
 }
 
 html.dark .bg-green-50,
@@ -412,7 +434,7 @@ html.dark .bg-emerald-100\/85,
 html.dark .bg-emerald-100\/90,
 html.dark .hover\:bg-green-50:hover,
 html.dark .hover\:bg-emerald-50:hover {
-  background-color: rgba(21, 128, 61, 0.16);
+  background-color: rgba(22, 163, 74, 0.2);
 }
 
 html.dark .bg-amber-50,
@@ -425,7 +447,7 @@ html.dark .bg-amber-100\/90,
 html.dark .bg-amber-100\/95,
 html.dark .bg-orange-100,
 html.dark .hover\:bg-amber-100:hover {
-  background-color: rgba(180, 83, 9, 0.18);
+  background-color: rgba(245, 158, 11, 0.2);
 }
 
 html.dark .bg-red-50,
@@ -440,7 +462,7 @@ html.dark .bg-rose-100\/90,
 html.dark .hover\:bg-red-50:hover,
 html.dark .hover\:bg-rose-50:hover,
 html.dark .hover\:bg-rose-100\/80:hover {
-  background-color: rgba(220, 38, 38, 0.16);
+  background-color: rgba(239, 68, 68, 0.2);
 }
 
 html.dark .border-slate-200,
@@ -452,5 +474,5 @@ html.dark .border-blue-200,
 html.dark .dark\:border-slate-800,
 html.dark .dark\:border-slate-700,
 html.dark .dark\:divide-slate-800 > :not([hidden]) ~ :not([hidden]) {
-  border-color: #262626;
+  border-color: rgba(255, 255, 255, 0.12);
 }

@@ -1211,7 +1211,7 @@ export function ProfileView() {
               })}
             </div>
 
-            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-l-2 border-slate-300 dark:border-slate-700 pl-3 py-1">
+            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
               <strong className="text-slate-900 dark:text-slate-100">{activeRole.label}:</strong>{" "}
               {activeRole.taglineVI}
             </p>
@@ -1387,7 +1387,7 @@ export function ProfileView() {
             return (
               <div
                 key={item.id}
-                className="border-l-2 border-slate-200 dark:border-slate-700 pl-3 py-1 flex flex-col justify-between gap-2.5"
+                className="bg-slate-50 dark:bg-[#263349] rounded-xl p-3 flex flex-col justify-between gap-2.5"
               >
                 <div className="space-y-1">
                   <div className="flex items-center justify-between gap-2">

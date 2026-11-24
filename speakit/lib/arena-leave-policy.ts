@@ -485,6 +485,7 @@ export async function recordForfeit(
     UPDATE guest_players
     SET
       it_coins = GREATEST(0, it_coins - ${penaltyCoins}),
+      penalty_coins = COALESCE(penalty_coins, 0) + ${penaltyCoins},
       total_points = GREATEST(0, total_points - ${pointPenalty}),
       leave_count = ${evalOut.leaveCount},
       freeze_strikes = ${evalOut.freezeStrikes},
@@ -672,6 +673,7 @@ export async function resolveLeaveRequest(input: {
       UPDATE guest_players
       SET
         it_coins = GREATEST(0, it_coins - ${penalty}),
+        penalty_coins = COALESCE(penalty_coins, 0) + ${penalty},
         total_points = GREATEST(0, total_points - ${pointPenalty}),
         leave_count = ${evalOut.leaveCount},
         freeze_strikes = ${evalOut.freezeStrikes},

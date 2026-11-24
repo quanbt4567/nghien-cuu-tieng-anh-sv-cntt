@@ -305,6 +305,8 @@ test("resolveConsistentItCoins and mergeProfileIdentity reconcile spent cosmetic
     resolveConsistentItCoins(1, 2000, ["title-cloud-architect"]),
     1
   );
+  assert.equal(resolveConsistentItCoins(2, 5000, [], 3), 2);
+  assert.equal(resolveConsistentItCoins(0, 3000, [], 3), 0);
 
   const reconciled = mergeProfileIdentity(
     {

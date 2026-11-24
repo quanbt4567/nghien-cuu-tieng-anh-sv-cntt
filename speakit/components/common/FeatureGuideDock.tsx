@@ -184,7 +184,7 @@ function PopoverArrowPointer({ arrow }: { arrow: TourPopoverArrow }) {
         className="absolute pointer-events-none"
         style={{ top: -12, left: arrow.offset - 11 }}
       >
-        <path d="M2 13 L11 1 L20 13 Z" className="fill-white dark:fill-[#0A0A0A]" />
+        <path d="M2 13 L11 1 L20 13 Z" className="fill-white dark:fill-[#1E293B]" />
         <path
           d="M2 11 L11 1 L20 11"
           fill="none"
@@ -206,7 +206,7 @@ function PopoverArrowPointer({ arrow }: { arrow: TourPopoverArrow }) {
         className="absolute pointer-events-none"
         style={{ bottom: -12, left: arrow.offset - 11 }}
       >
-        <path d="M2 0 L11 12 L20 0 Z" className="fill-white dark:fill-[#0A0A0A]" />
+        <path d="M2 0 L11 12 L20 0 Z" className="fill-white dark:fill-[#1E293B]" />
         <path
           d="M2 2 L11 12 L20 2"
           fill="none"
@@ -228,7 +228,7 @@ function PopoverArrowPointer({ arrow }: { arrow: TourPopoverArrow }) {
         className="absolute pointer-events-none"
         style={{ left: -12, top: arrow.offset - 11 }}
       >
-        <path d="M13 2 L1 11 L13 20 Z" className="fill-white dark:fill-[#0A0A0A]" />
+        <path d="M13 2 L1 11 L13 20 Z" className="fill-white dark:fill-[#1E293B]" />
         <path
           d="M11 2 L1 11 L11 20"
           fill="none"
@@ -249,7 +249,7 @@ function PopoverArrowPointer({ arrow }: { arrow: TourPopoverArrow }) {
       className="absolute pointer-events-none"
       style={{ right: -12, top: arrow.offset - 11 }}
     >
-      <path d="M0 2 L12 11 L0 20 Z" className="fill-white dark:fill-[#0A0A0A]" />
+      <path d="M0 2 L12 11 L0 20 Z" className="fill-white dark:fill-[#1E293B]" />
       <path
         d="M2 2 L12 11 L2 20"
         fill="none"
@@ -575,7 +575,7 @@ export function FeatureGuideDock() {
         onClick={handleOpenManual}
         aria-label="Hướng dẫn"
         title={`Mở hướng dẫn: ${guide.title}`}
-        className="fixed bottom-20 right-3 md:bottom-5 md:right-5 z-40 inline-flex items-center justify-center gap-1.5 p-2.5 sm:px-3.5 sm:py-2 rounded-pill bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-700 shadow-sm text-slate-800 dark:text-slate-100 hover:text-blue-700 dark:hover:text-blue-400 hover:border-blue-500 text-xs font-semibold transition-colors"
+        className="fixed bottom-20 right-3 md:bottom-5 md:right-5 z-40 inline-flex items-center justify-center gap-1.5 p-2.5 sm:px-3.5 sm:py-2 rounded-pill bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-700 shadow-sm text-slate-800 dark:text-slate-100 hover:text-blue-700 dark:hover:text-blue-400 hover:border-blue-500 text-xs font-semibold transition-colors"
       >
         <HelpCircle className="w-4 h-4 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
         <span className="hidden sm:inline">Hướng dẫn</span>
@@ -651,7 +651,7 @@ export function FeatureGuideDock() {
             ref={popoverRef}
             tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
-            className="fixed z-[75] bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm focus:outline-none"
+            className="fixed z-[75] bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm focus:outline-none"
             style={{
               top: popoverLayout.top,
               left: popoverLayout.left,

@@ -289,7 +289,7 @@ export function WelcomeNameModal() {
       aria-labelledby="auth-modal-title"
       className="fixed inset-0 z-50 bg-slate-950/55 flex items-center justify-center p-4 overflow-y-auto"
     >
-      <div className="w-full max-w-md bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm space-y-5 relative my-auto">
+      <div className="w-full max-w-md bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm space-y-5 relative my-auto">
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center shrink-0">
             <ShieldCheck className="w-5 h-5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
@@ -316,7 +316,7 @@ export function WelcomeNameModal() {
             }}
             className={`inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-semibold transition-colors border ${
               tab === "login"
-                ? "bg-white dark:bg-[#0A0A0A] text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-700"
+                ? "bg-white dark:bg-[#1E293B] text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-700"
                 : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border-transparent"
             }`}
           >
@@ -332,7 +332,7 @@ export function WelcomeNameModal() {
             }}
             className={`inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-semibold transition-colors border ${
               tab === "register"
-                ? "bg-white dark:bg-[#0A0A0A] text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-700"
+                ? "bg-white dark:bg-[#1E293B] text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-700"
                 : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border-transparent"
             }`}
           >

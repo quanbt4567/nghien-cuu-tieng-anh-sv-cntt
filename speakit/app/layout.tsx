@@ -33,8 +33,6 @@ const jetbrainsMono = JetBrains_Mono({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   viewportFit: "cover",
   themeColor: "#F8FAFC",
 };
@@ -63,11 +61,11 @@ export default function RootLayout({
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(localStorage.getItem('speakit_theme_v1')==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();`,
+            __html: `(function(){try{if(localStorage.getItem('speakit_theme_v1')==='dark'){var d=document.documentElement;d.classList.add('dark');d.style.backgroundColor='#0b1220';d.style.colorScheme='dark';}}catch(e){}})();`,
           }}
         />
       </head>
-      <body className="bg-[#F8FAFC] dark:bg-[#000000] text-[#0F172A] dark:text-[#FAFAFA] min-h-screen antialiased flex flex-col font-sans selection:bg-blue-100 selection:text-blue-900 dark:selection:bg-blue-900/60 dark:selection:text-blue-100">
+      <body className="bg-[#F8FAFC] dark:bg-[#0B1220] text-[#0F172A] dark:text-[#F8FAFC] min-h-screen antialiased flex flex-col font-sans selection:bg-blue-100 selection:text-blue-900 dark:selection:bg-blue-900/60 dark:selection:text-blue-100">
         <div
           aria-hidden="true"
           className="fixed inset-0 -z-10 pointer-events-none app-ambient-backdrop"

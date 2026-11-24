@@ -40,7 +40,7 @@ export function SevenDayPlan({ days }: SevenDayPlanProps) {
             className={`rounded-xl border p-5 sm:p-6 transition-colors ${
               day.isCompleted
                 ? "bg-green-50/40 dark:bg-green-950/20 border-green-300 dark:border-green-800"
-                : "bg-white dark:bg-[#0A0A0A] border-slate-200 dark:border-[#262626] hover:border-blue-300 dark:hover:border-blue-700"
+                : "bg-white dark:bg-[#1E293B] border-slate-200 dark:border-[#334155] hover:border-blue-300 dark:hover:border-blue-700"
             }`}
           >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

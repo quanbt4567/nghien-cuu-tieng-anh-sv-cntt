@@ -98,7 +98,7 @@ export function VocabExtractorButton({
       </button>
 
       {error && (
-        <div className="fixed bottom-4 right-4 z-50 max-w-sm rounded-xl bg-white dark:bg-[#0A0A0A] border border-red-300 dark:border-red-800 shadow-sm px-4 py-3 flex items-start gap-2.5 text-sm text-red-800 dark:text-red-300">
+        <div className="fixed bottom-4 right-4 z-50 max-w-sm rounded-xl bg-white dark:bg-[#1E293B] border border-red-300 dark:border-red-800 shadow-sm px-4 py-3 flex items-start gap-2.5 text-sm text-red-800 dark:text-red-300">
           <span className="flex-1">{error}</span>
           <button
             type="button"
@@ -118,8 +118,8 @@ export function VocabExtractorButton({
           aria-modal="true"
           aria-label="Từ vựng CNTT vừa trích xuất"
         >
-          <div className="w-full max-w-lg h-full bg-white dark:bg-[#0A0A0A] border-l border-slate-200 dark:border-[#262626] shadow-sm flex flex-col">
-            <div className="p-4 sm:p-5 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-[#262626] flex items-start justify-between gap-3">
+          <div className="w-full max-w-lg h-full bg-white dark:bg-[#1E293B] border-l border-slate-200 dark:border-[#334155] shadow-sm flex flex-col">
+            <div className="p-4 sm:p-5 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-[#334155] flex items-start justify-between gap-3">
               <div className="space-y-1">
                 <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
                   <Sparkles className="w-3.5 h-3.5" />
@@ -155,7 +155,7 @@ export function VocabExtractorButton({
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-4 sm:px-5 divide-y divide-slate-200 dark:divide-[#262626]">
+            <div className="flex-1 overflow-y-auto px-4 sm:px-5 divide-y divide-slate-200 dark:divide-[#334155]">
               {items.map((item) => {
                 const level = item.careerLevel ?? "Junior";
                 return (
@@ -186,7 +186,7 @@ export function VocabExtractorButton({
                     </p>
 
                     {item.exampleSentenceEN && (
-                      <div className="bg-slate-50 dark:bg-[#141414] rounded-lg px-3 py-2 space-y-1">
+                      <div className="bg-slate-50 dark:bg-[#263349] rounded-lg px-3 py-2 space-y-1">
                         <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
                           {item.exampleSentenceEN}
                         </p>
@@ -218,7 +218,7 @@ export function VocabExtractorButton({
               })}
             </div>
 
-            <div className="p-4 bg-slate-50 dark:bg-slate-800/60 border-t border-slate-200 dark:border-[#262626] flex items-center justify-between gap-3">
+            <div className="p-4 bg-slate-50 dark:bg-slate-800/60 border-t border-slate-200 dark:border-[#334155] flex items-center justify-between gap-3">
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}

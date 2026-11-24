@@ -104,7 +104,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
   return (
     <section aria-label="Giới thiệu SpeakIT" className="space-y-6">
       <div className="md:hidden space-y-4">
-        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 space-y-4">
+        <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/15 rounded-xl p-5 space-y-4 shadow-sm dark:shadow-[0_10px_26px_-10px_rgba(2,6,23,0.55)]">
           <div className="space-y-1.5">
             <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-snug">
               Luyện phản xạ tiếng Anh CNTT
@@ -140,7 +140,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl active:scale-[0.98] hover:border-blue-700 dark:hover:border-blue-500 transition-colors p-3.5 flex flex-col gap-2.5"
+                className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl active:scale-[0.98] hover:border-blue-700 dark:hover:border-blue-500 transition-colors p-3.5 flex flex-col gap-2.5"
               >
                 <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 flex items-center justify-center shrink-0">
                   <Icon className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
@@ -158,7 +158,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
           })}
         </div>
 
-        <details className="group bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+        <details className="group bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
           <summary className="list-none cursor-pointer flex items-center justify-between gap-2 px-4 py-3 text-sm font-mono font-semibold text-slate-900 dark:text-slate-50 select-none">
             <span className="flex items-center gap-2 min-w-0">
               <BarChart3 className="w-4 h-4 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
@@ -233,7 +233,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
         </details>
       </div>
 
-      <div className="hidden md:block bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-6 sm:p-8">
+      <div className="hidden md:block bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/15 rounded-xl p-6 sm:p-8 shadow-sm dark:shadow-[0_12px_32px_-12px_rgba(2,6,23,0.6)]">
         <div className="hidden md:grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           <div className="lg:col-span-7 space-y-5">
             <div className="space-y-3">
@@ -383,16 +383,34 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
       <div className="hidden md:grid md:grid-cols-3 gap-4">
         {howItWorksSteps.map((item) => {
           const Icon = item.icon;
+          const stepTone =
+            item.step === "01"
+              ? {
+                  box: "bg-sky-50 dark:bg-sky-500/20 border-sky-200 dark:border-sky-400/35",
+                  icon: "text-sky-700 dark:text-sky-300",
+                  label: "text-sky-700 dark:text-sky-300",
+                }
+              : item.step === "02"
+                ? {
+                    box: "bg-violet-50 dark:bg-violet-500/20 border-violet-200 dark:border-violet-400/35",
+                    icon: "text-violet-700 dark:text-violet-300",
+                    label: "text-violet-700 dark:text-violet-300",
+                  }
+                : {
+                    box: "bg-emerald-50 dark:bg-emerald-500/20 border-emerald-200 dark:border-emerald-400/35",
+                    icon: "text-emerald-700 dark:text-emerald-300",
+                    label: "text-emerald-700 dark:text-emerald-300",
+                  };
           return (
             <div
               key={item.step}
-              className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 flex items-start gap-3.5"
+              className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/15 rounded-xl p-5 flex items-start gap-3.5 shadow-sm dark:shadow-[0_10px_26px_-10px_rgba(2,6,23,0.55)]"
             >
-              <div className="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 flex items-center justify-center shrink-0">
-                <Icon className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
+              <div className={`w-10 h-10 rounded-lg border flex items-center justify-center shrink-0 ${stepTone.box}`}>
+                <Icon className={`w-4 h-4 ${stepTone.icon}`} aria-hidden="true" />
               </div>
               <div className="space-y-1">
-                <div className="text-xs font-mono font-bold text-blue-700 dark:text-blue-400">
+                <div className={`text-xs font-mono font-bold ${stepTone.label}`}>
                   BƯỚC {item.step}
                 </div>
                 <h3 className="text-sm font-bold text-slate-900 dark:text-slate-50">{item.title}</h3>

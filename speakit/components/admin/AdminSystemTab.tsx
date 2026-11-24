@@ -393,10 +393,10 @@ export function AdminSystemTab({
           {aiProviders.map((item) => (
             <div
               key={item.id}
-              className={`border-l-2 pl-3 py-1 flex items-center justify-between gap-3 ${
+              className={`rounded-lg border px-3 py-2 flex items-center justify-between gap-3 ${
                 item.configured
-                  ? "border-blue-700 dark:border-blue-500"
-                  : "border-slate-300 dark:border-slate-700"
+                  ? "border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-950/20"
+                  : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#263349]"
               }`}
             >
               <div className="min-w-0">
@@ -557,7 +557,7 @@ export function AdminSystemTab({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-slate-200 dark:border-slate-800 pt-4">
-          <div className="border-l-2 border-slate-300 dark:border-slate-700 pl-4 space-y-3 flex flex-col justify-between">
+          <div className="bg-slate-50 dark:bg-[#263349] rounded-xl p-4 space-y-3 flex flex-col justify-between">
             <div className="space-y-1">
               <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
                 Khôi phục toàn bộ nội dung mặc định
@@ -578,7 +578,7 @@ export function AdminSystemTab({
             </button>
           </div>
 
-          <div className="border-l-2 border-red-600 dark:border-red-500 pl-4 space-y-3 flex flex-col justify-between">
+          <div className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50/40 dark:bg-red-950/20 p-4 space-y-3 flex flex-col justify-between">
             <div className="space-y-1">
               <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
                 Xóa dữ liệu thống kê

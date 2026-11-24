@@ -207,7 +207,7 @@ export function HomeOnboardingClient() {
       <Link
         key={scenario.id}
         href={`/practice/${scenario.id}`}
-        className={`group bg-white dark:bg-[#0A0A0A] border rounded-xl p-5 hover:border-blue-700 dark:hover:border-blue-500 transition-colors flex flex-col justify-between gap-4 ${
+        className={`group bg-white dark:bg-[#1E293B] border rounded-xl p-5 hover:border-blue-700 dark:hover:border-blue-500 transition-colors flex flex-col justify-between gap-4 ${
           isPlacementMatch
             ? "border-blue-700 dark:border-blue-500 ring-1 ring-blue-700/20 dark:ring-blue-500/25"
             : isRecommended
@@ -304,7 +304,7 @@ export function HomeOnboardingClient() {
 
       <section
         aria-label="Bắt đầu luyện nói nhanh"
-        className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-5"
+        className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-5"
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <span className="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
@@ -423,7 +423,7 @@ export function HomeOnboardingClient() {
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-semibold border transition-colors ${
                   isActive
                     ? "bg-blue-700 text-white border-blue-700 dark:bg-blue-600 dark:border-blue-600"
-                    : "bg-white dark:bg-[#0A0A0A] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-blue-700 dark:hover:border-blue-500 hover:text-slate-900 dark:hover:text-white"
+                    : "bg-white dark:bg-[#1E293B] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-blue-700 dark:hover:border-blue-500 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
                 {level === "ALL"

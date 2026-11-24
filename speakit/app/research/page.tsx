@@ -103,7 +103,7 @@ export default async function ResearchPortalPage({
               className={`px-4 py-1.5 rounded-full border text-xs sm:text-sm font-mono font-semibold transition-colors ${
                 isActive
                   ? "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300"
-                  : "bg-white dark:bg-[#0A0A0A] border-slate-200 dark:border-[#262626] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:border-blue-300 dark:hover:border-blue-700"
+                  : "bg-white dark:bg-[#1E293B] border-slate-200 dark:border-[#334155] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:border-blue-300 dark:hover:border-blue-700"
               }`}
             >
               {tab.label}
@@ -113,7 +113,7 @@ export default async function ResearchPortalPage({
       </div>
 
       {featuredArticle && featuredArticle.metricsJson.length > 0 && (
-        <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 sm:p-6 space-y-4">
+        <section className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 sm:p-6 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
               <BarChart3 className="w-4 h-4 text-blue-700 dark:text-blue-400" />
@@ -128,7 +128,7 @@ export default async function ResearchPortalPage({
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-[#262626] border-t border-slate-200 dark:border-[#262626] pt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-[#334155] border-t border-slate-200 dark:border-[#334155] pt-4">
             {featuredArticle.metricsJson.map((metric, idx) => (
               <div
                 key={idx}
@@ -152,7 +152,7 @@ export default async function ResearchPortalPage({
       )}
 
       {articles.length === 0 ? (
-        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-8 text-center space-y-3">
+        <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-8 text-center space-y-3">
           <BookOpen className="w-7 h-7 text-slate-500 dark:text-slate-400 mx-auto" />
           <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
             Chưa có bài viết nào trong chuyên mục này
@@ -170,7 +170,7 @@ export default async function ResearchPortalPage({
             return (
               <article
                 key={article.id}
-                className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 sm:p-6 hover:border-blue-300 dark:hover:border-blue-700 transition-colors flex flex-col justify-between gap-4"
+                className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 sm:p-6 hover:border-blue-300 dark:hover:border-blue-700 transition-colors flex flex-col justify-between gap-4"
               >
                 <div className="space-y-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
@@ -218,7 +218,7 @@ export default async function ResearchPortalPage({
                   )}
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-200 dark:border-[#262626]">
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-200 dark:border-[#334155]">
                   <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
                     {realMetricsCount > 0
                       ? `${realMetricsCount} thẻ số liệu`

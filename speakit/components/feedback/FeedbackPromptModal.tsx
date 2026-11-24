@@ -103,7 +103,7 @@ export function FeedbackPromptModal({
     <div
       role="dialog"
       aria-label="Phản hồi trải nghiệm"
-      className="fixed bottom-4 right-4 z-50 max-w-sm w-[calc(100%-2rem)] bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm p-4"
+      className="fixed bottom-4 right-4 z-50 max-w-sm w-[calc(100%-2rem)] bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm p-4"
     >
       {isSubmitted ? (
         <div className="flex items-center gap-2.5 py-2 text-slate-900 dark:text-slate-50">

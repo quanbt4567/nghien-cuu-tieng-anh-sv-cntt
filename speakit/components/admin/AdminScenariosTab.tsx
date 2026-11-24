@@ -1103,7 +1103,7 @@ export function AdminScenariosTab({
                         {scenario.turns.map((turn, idx) => (
                           <div
                             key={idx}
-                            className="border-l-2 border-blue-700 dark:border-blue-500 pl-3 py-1 space-y-1.5 text-xs"
+                            className="bg-slate-50 dark:bg-[#263349] rounded-lg px-3 py-2 space-y-1.5 text-xs"
                           >
                             <div className="font-mono font-bold text-blue-700 dark:text-blue-400 text-xs">
                               Lượt {idx + 1}

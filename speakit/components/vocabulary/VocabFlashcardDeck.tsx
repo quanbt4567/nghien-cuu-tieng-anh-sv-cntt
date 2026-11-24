@@ -62,7 +62,7 @@ export function VocabFlashcardDeck({
 
   if (deck.length === 0) {
     return (
-      <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-8 text-center text-sm text-slate-600 dark:text-slate-300">
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-8 text-center text-sm text-slate-600 dark:text-slate-300">
         Không có thuật ngữ nào trong bộ lọc hiện tại để luyện Flashcard.
       </div>
     );
@@ -139,7 +139,7 @@ export function VocabFlashcardDeck({
 
   if (isCompleted) {
     return (
-      <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-6 sm:p-8 text-center space-y-5">
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-6 sm:p-8 text-center space-y-5">
         <div className="w-12 h-12 rounded-full bg-green-50 dark:bg-green-950/50 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 flex items-center justify-center mx-auto">
           <CheckCircle2 className="w-6 h-6" />
         </div>
@@ -152,7 +152,7 @@ export function VocabFlashcardDeck({
           </p>
         </div>
 
-        <div className="grid grid-cols-3 divide-x divide-slate-200 dark:divide-[#262626] border-y border-slate-200 dark:border-[#262626] max-w-md mx-auto py-3">
+        <div className="grid grid-cols-3 divide-x divide-slate-200 dark:divide-[#334155] border-y border-slate-200 dark:border-[#334155] max-w-md mx-auto py-3">
           <div className="px-3">
             <div className="font-mono font-bold text-lg text-red-600 dark:text-red-400">
               {sessionStats.again}
@@ -207,7 +207,7 @@ export function VocabFlashcardDeck({
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
         <div className="flex items-center gap-2 font-mono text-slate-600 dark:text-slate-300">
-          <span className="px-3 py-1 rounded-full bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] text-slate-900 dark:text-slate-100 font-semibold text-xs">
+          <span className="px-3 py-1 rounded-full bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] text-slate-900 dark:text-slate-100 font-semibold text-xs">
             Thẻ {currentIndex + 1} / {deck.length}
           </span>
           {isCurrentMastered && (
@@ -226,7 +226,7 @@ export function VocabFlashcardDeck({
               setIsFlipped(false);
             }}
             disabled={currentIndex === 0}
-            className="p-2 rounded-lg bg-white dark:bg-[#0A0A0A] border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 transition-colors"
+            className="p-2 rounded-lg bg-white dark:bg-[#1E293B] border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 transition-colors"
             aria-label="Thẻ trước"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -239,7 +239,7 @@ export function VocabFlashcardDeck({
               setIsFlipped(false);
             }}
             disabled={currentIndex >= deck.length - 1}
-            className="p-2 rounded-lg bg-white dark:bg-[#0A0A0A] border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 transition-colors"
+            className="p-2 rounded-lg bg-white dark:bg-[#1E293B] border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 transition-colors"
             aria-label="Thẻ tiếp theo"
           >
             <ChevronRight className="w-4 h-4" />
@@ -265,7 +265,7 @@ export function VocabFlashcardDeck({
             setIsFlipped((prev) => !prev);
           }
         }}
-        className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl w-full min-h-[280px] p-6 sm:p-8 cursor-pointer flex flex-col justify-between transition-colors hover:border-blue-400 dark:hover:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+        className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl w-full min-h-[280px] p-6 sm:p-8 cursor-pointer flex flex-col justify-between transition-colors hover:border-blue-400 dark:hover:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
       >
         <div className="flex items-center justify-between gap-3">
           <span className="text-xs font-mono uppercase px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 font-semibold">
@@ -316,12 +316,12 @@ export function VocabFlashcardDeck({
               </div>
             </div>
 
-            <div className="bg-slate-50 dark:bg-[#141414] rounded-lg px-3.5 py-2.5 text-sm text-slate-800 dark:text-slate-100 font-medium">
+            <div className="bg-slate-50 dark:bg-[#263349] rounded-lg px-3.5 py-2.5 text-sm text-slate-800 dark:text-slate-100 font-medium">
               {currentItem.meaningVI}
             </div>
 
             <div
-              className="pt-3 border-t border-slate-200 dark:border-[#262626] space-y-1.5"
+              className="pt-3 border-t border-slate-200 dark:border-[#334155] space-y-1.5"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between gap-2">

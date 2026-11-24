@@ -88,7 +88,7 @@ export default async function GuidePage() {
         </p>
       </div>
 
-      <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <section className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
             <Compass className="w-4 h-4 text-blue-700 dark:text-blue-400" />
@@ -119,7 +119,7 @@ export default async function GuidePage() {
             <Link
               key={href}
               href={href}
-              className="group bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 hover:border-blue-300 dark:hover:border-blue-700 transition-colors space-y-2"
+              className="group bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 hover:border-blue-300 dark:hover:border-blue-700 transition-colors space-y-2"
             >
               <div className="flex items-center justify-between gap-2">
                 <div className="inline-flex items-center gap-2.5 font-bold text-base text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
@@ -138,7 +138,7 @@ export default async function GuidePage() {
         </div>
       </section>
 
-      <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 sm:p-6 space-y-4">
+      <section className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 sm:p-6 space-y-4">
         <div className="space-y-1">
           <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50">
             2. Cách chấm điểm &amp; Ý nghĩa 3 màu phản hồi
@@ -148,7 +148,7 @@ export default async function GuidePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-slate-200 dark:border-[#262626] pt-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-slate-200 dark:border-[#334155] pt-4">
           <div className="space-y-1.5">
             <div className="inline-flex items-center gap-1.5 text-sm font-bold text-green-800 dark:text-green-300">
               <Check className="w-4 h-4 text-green-700 dark:text-green-400 stroke-[3]" />
@@ -181,7 +181,7 @@ export default async function GuidePage() {
         </div>
       </section>
 
-      <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 sm:p-6 space-y-3">
+      <section className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 sm:p-6 space-y-3">
         <div className="flex items-center gap-2">
           <Coins className="w-5 h-5 text-amber-700 dark:text-amber-400" />
           <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50">

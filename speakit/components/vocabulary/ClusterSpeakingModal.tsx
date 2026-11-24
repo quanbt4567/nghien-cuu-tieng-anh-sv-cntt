@@ -319,7 +319,7 @@ export function ClusterSpeakingModal({
       aria-modal="true"
       aria-label={`Luyện nói cụm từ ${clusterTitle}`}
     >
-      <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl shadow-sm w-full max-w-2xl max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-5">
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl shadow-sm w-full max-w-2xl max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-5">
         <div className="flex items-start justify-between gap-3">
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 text-xs font-semibold mb-1.5">
@@ -364,7 +364,7 @@ export function ClusterSpeakingModal({
           </div>
         ) : promptData ? (
           <>
-            <div className="py-4 border-y border-slate-200 dark:border-[#262626] space-y-2.5">
+            <div className="py-4 border-y border-slate-200 dark:border-[#334155] space-y-2.5">
               <div className="flex items-center justify-between gap-2">
                 <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 text-xs font-mono font-semibold">
                   {promptData.scenarioType}
@@ -524,7 +524,7 @@ export function ClusterSpeakingModal({
             )}
 
             {evaluation && (
-              <div className="pt-4 border-t border-slate-200 dark:border-[#262626] space-y-3">
+              <div className="pt-4 border-t border-slate-200 dark:border-[#334155] space-y-3">
                 <div className="space-y-2.5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">

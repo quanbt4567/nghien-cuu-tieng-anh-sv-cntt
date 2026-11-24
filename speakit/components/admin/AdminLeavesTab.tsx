@@ -154,7 +154,7 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
                     </span>
                   </div>
 
-                  <p className="text-sm text-slate-900 dark:text-slate-100 border-l-2 border-blue-700 dark:border-blue-500 pl-3 py-1 leading-relaxed">
+                  <p className="text-sm text-slate-900 dark:text-slate-100 bg-slate-50 dark:bg-[#263349] rounded-lg px-3 py-2 leading-relaxed">
                     Lý do: &ldquo;{req.reason || "(trống)"}&rdquo;
                   </p>
 

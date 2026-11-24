@@ -380,7 +380,7 @@ export function Navbar() {
                     <div
                       className={`absolute ${
                         group.id === "account" ? "right-0" : "left-0"
-                      } top-full mt-2.5 w-64 p-1.5 bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-xl shadow-sm z-50`}
+                      } top-full mt-2.5 w-64 p-1.5 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-xl shadow-sm z-50`}
                     >
                       {group.id === "account" && hydrated && (
                         <div className="px-3 py-2.5 mb-1 rounded-lg bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">

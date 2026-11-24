@@ -258,7 +258,7 @@ export default function VocabularyPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-5 space-y-4">
-      <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-4 sm:px-5 sm:py-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-4 sm:px-5 sm:py-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div className="flex items-start sm:items-center gap-3">
           <Link
             href="/"
@@ -280,7 +280,7 @@ export default function VocabularyPage() {
           </div>
         </div>
 
-        <div className="w-full lg:w-72 shrink-0 border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-[#262626] pt-3 lg:pt-0 lg:pl-5 space-y-2">
+        <div className="w-full lg:w-72 shrink-0 border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-[#334155] pt-3 lg:pt-0 lg:pl-5 space-y-2">
           <div className="flex items-center justify-between gap-2 text-sm">
             <span className="font-semibold text-slate-700 dark:text-slate-200">
               Đã thuộc{" "}
@@ -311,7 +311,7 @@ export default function VocabularyPage() {
       <div
         role="tablist"
         aria-label="Chế độ học từ vựng"
-        className="grid grid-cols-2 lg:grid-cols-4 gap-2 p-1.5 bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl"
+        className="grid grid-cols-2 lg:grid-cols-4 gap-2 p-1.5 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl"
       >
         {WORKSPACE_MODES.map((mode) => {
           const active = workspaceMode === mode.id;
@@ -344,7 +344,7 @@ export default function VocabularyPage() {
 
       {workspaceMode === "dictionary" && (
         <div className="space-y-4">
-          <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-1.5">
               {VOCAB_CONTEXT_PILLS.map((pill) => {
                 const active = selectedContext === pill.id;
@@ -400,7 +400,7 @@ export default function VocabularyPage() {
                 ))}
               </div>
 
-              <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="text-sm text-slate-600 dark:text-slate-300 font-mono">
                   Hiển thị{" "}
                   <span className="font-semibold text-slate-900 dark:text-slate-100">
@@ -462,7 +462,7 @@ export default function VocabularyPage() {
               </div>
             </>
           ) : (
-            <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-8 text-center text-sm text-slate-600 dark:text-slate-300">
+            <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-8 text-center text-sm text-slate-600 dark:text-slate-300">
               {vocabList.length === 0
                 ? "Chưa có thuật ngữ nào trong thư viện."
                 : `Không tìm thấy thuật ngữ nào phù hợp với bộ lọc hiện tại${
@@ -475,7 +475,7 @@ export default function VocabularyPage() {
 
       {workspaceMode === "flashcard" && (
         <div className="space-y-3">
-          <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+          <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-50">
               <Layers className="w-4 h-4 text-blue-700 dark:text-blue-400" />
               <span>Chế độ Lật Thẻ Active Recall ({filtered.length} thuật ngữ)</span>
@@ -520,7 +520,7 @@ export default function VocabularyPage() {
           {clusteredGroups.map((cluster) => (
             <div
               key={cluster.clusterTitle}
-              className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 flex flex-col justify-between gap-4 hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
+              className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 flex flex-col justify-between gap-4 hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-2">
@@ -553,7 +553,7 @@ export default function VocabularyPage() {
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-slate-200 dark:border-[#262626] flex flex-wrap items-center justify-between gap-2">
+              <div className="pt-3 border-t border-slate-200 dark:border-[#334155] flex flex-wrap items-center justify-between gap-2">
                 <span className="text-sm text-slate-600 dark:text-slate-300">
                   Tối đa 8 thuật ngữ mỗi lượt luyện nói AI
                 </span>

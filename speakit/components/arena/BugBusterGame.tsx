@@ -660,7 +660,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
           {` ${promptParts.slice(1).join("____").trimStart()}`}
         </p>
 
-        <div className="bg-slate-50 dark:bg-[#141414] rounded-lg px-3.5 py-2.5 text-sm text-slate-600 dark:text-slate-300 space-y-1">
+        <div className="bg-slate-50 dark:bg-[#263349] rounded-lg px-3.5 py-2.5 text-sm text-slate-600 dark:text-slate-300 space-y-1">
           <div>
             <strong className="text-slate-900 dark:text-slate-100">Ngữ cảnh:</strong>{" "}
             {currentChallenge.contextVI}

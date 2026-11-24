@@ -378,8 +378,13 @@ async function awardVictoryCoins(
 }
 
 export async function POST(req: NextRequest) {
+  let body: EvaluateRequestBody;
   try {
-    const body = (await req.json()) as EvaluateRequestBody;
+    body = (await req.json()) as EvaluateRequestBody;
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+  }
+  try {
     const code = normalizeRoomCode(body.roomCode ?? body.code);
     if (!code) {
       return NextResponse.json(

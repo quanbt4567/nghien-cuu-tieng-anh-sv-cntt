@@ -258,7 +258,7 @@ export function AdminModerationTab({
                   )}
                 </div>
 
-                <div className="border-l-4 border-l-red-600 dark:border-l-red-500 pl-3 py-1 space-y-1">
+                <div className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50/60 dark:bg-red-950/30 px-3 py-2 space-y-1">
                   <div className="text-xs font-mono uppercase text-red-600 dark:text-red-400 font-bold">
                     Nội dung người chơi gửi:
                   </div>

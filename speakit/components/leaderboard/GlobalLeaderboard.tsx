@@ -659,7 +659,7 @@ export function GlobalLeaderboard({
       </section>
 
       {activeEntry && (
-        <div className="sticky bottom-3 z-20 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-blue-200 dark:border-blue-800 rounded-xl p-3.5 sm:px-5 shadow-sm flex flex-wrap items-center justify-between gap-3">
+        <div className="sticky bottom-20 md:bottom-4 z-20 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-blue-200 dark:border-blue-800 rounded-xl p-3.5 sm:px-5 shadow-sm flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <DiscordAvatarFrame
               equippedId={activeEntry.equippedCosmetics?.avatar_decoration}

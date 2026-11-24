@@ -37,7 +37,7 @@ export function FeedbackCard({
 
   return (
     <div className="space-y-4">
-      <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 space-y-3.5">
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl p-5 space-y-3.5">
         <div className="flex items-center justify-between">
           <span className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider font-mono">
             Điểm đánh giá câu trả lời
@@ -77,7 +77,7 @@ export function FeedbackCard({
         </div>
       </div>
 
-      <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 space-y-3.5">
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl p-5 space-y-3.5">
         <div className="flex items-center justify-between text-sm font-bold text-slate-900 dark:text-slate-100">
           <span>Từ khóa kỹ thuật CNTT</span>
           <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
@@ -109,13 +109,13 @@ export function FeedbackCard({
         </div>
       </div>
 
-      <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 space-y-4">
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl p-5 space-y-4">
         <div className="space-y-1.5">
           <span className="text-xs font-mono font-bold uppercase text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
             <MessageSquare className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
             Văn bản bạn đã nói:
           </span>
-          <div className="bg-slate-50 dark:bg-[#141414] rounded-lg px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 font-medium leading-relaxed">
+          <div className="bg-slate-50 dark:bg-[#263349] rounded-lg px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 font-medium leading-relaxed">
             &ldquo;{transcript}&rdquo;
           </div>
         </div>

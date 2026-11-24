@@ -47,6 +47,20 @@ function checkPronunciationMatch(spoken: string, targetTerm: string): boolean {
   return targetWords.every((word) => spokenWords.has(word));
 }
 
+function getPartOfSpeechBadgeClass(pos: string): string {
+  const norm = pos.trim().toLowerCase();
+  if (norm.includes("verb")) {
+    return "bg-emerald-50 dark:bg-emerald-500/15 border-emerald-200 dark:border-emerald-400/35 text-emerald-700 dark:text-emerald-300";
+  }
+  if (norm.includes("adj")) {
+    return "bg-amber-50 dark:bg-amber-500/15 border-amber-200 dark:border-amber-400/35 text-amber-800 dark:text-amber-300";
+  }
+  if (norm.includes("phrase") || norm.includes("idiom") || norm.includes("collocation")) {
+    return "bg-violet-50 dark:bg-violet-500/15 border-violet-200 dark:border-violet-400/35 text-violet-700 dark:text-violet-300";
+  }
+  return "bg-sky-50 dark:bg-sky-500/15 border-sky-200 dark:border-sky-400/35 text-sky-700 dark:text-sky-300";
+}
+
 export function VocabCard({
   item,
   isMastered = false,
@@ -182,12 +196,12 @@ export function VocabCard({
 
   return (
     <div
-      className={`bg-white dark:bg-[#0A0A0A] border rounded-xl p-5 sm:p-6 space-y-4 transition-colors ${
+      className={`bg-white dark:bg-[#1E293B] border rounded-xl p-5 sm:p-6 space-y-4 shadow-sm dark:shadow-[0_10px_26px_-10px_rgba(2,6,23,0.55)] transition-colors ${
         isMastered
-          ? "border-green-300 dark:border-green-800"
+          ? "border-green-300 dark:border-green-500/45"
           : isMarkedForReview
-            ? "border-amber-300 dark:border-amber-800"
-            : "border-slate-200 dark:border-[#262626] hover:border-blue-300 dark:hover:border-blue-700"
+            ? "border-amber-300 dark:border-amber-500/45"
+            : "border-slate-200 dark:border-white/15 hover:border-blue-400 dark:hover:border-blue-400/60"
       }`}
     >
       <div className="flex items-start justify-between gap-3">
@@ -196,7 +210,11 @@ export function VocabCard({
             <h3 className="text-xl font-bold font-mono text-slate-900 dark:text-slate-50 tracking-normal leading-snug">
               {item.term}
             </h3>
-            <span className="text-xs font-mono uppercase px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold tracking-normal">
+            <span
+              className={`text-xs font-mono uppercase px-2 py-0.5 rounded-full border font-semibold tracking-normal ${getPartOfSpeechBadgeClass(
+                item.partOfSpeech
+              )}`}
+            >
               {item.partOfSpeech}
             </span>
           </div>
@@ -222,7 +240,7 @@ export function VocabCard({
             className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors border ${
               isListening
                 ? "bg-red-600 hover:bg-red-700 border-red-600 text-white animate-pulse"
-                : "bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700"
+                : "bg-slate-100 dark:bg-[#263349] border-slate-300 dark:border-white/20 text-slate-700 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-[#334155]"
             }`}
           >
             {isListening ? (
@@ -282,7 +300,7 @@ export function VocabCard({
         {item.meaningVI}
       </p>
 
-      <div className="pt-3 border-t border-slate-200 dark:border-[#262626] space-y-1.5">
+      <div className="pt-3 border-t border-slate-200 dark:border-[#334155] space-y-1.5">
         <div className="flex items-center justify-between gap-2">
           <span className="font-mono text-xs uppercase font-bold text-slate-600 dark:text-slate-400">
             Ví dụ trong công việc:
@@ -313,15 +331,15 @@ export function VocabCard({
       </div>
 
       {(onToggleReview || onToggleMastered) && (
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-200 dark:border-[#262626]">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-200 dark:border-[#334155]">
           {onToggleReview && (
             <button
               type="button"
               onClick={() => onToggleReview(item)}
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
                 isMarkedForReview
-                  ? "bg-amber-50 dark:bg-amber-950/50 border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-300"
-                  : "bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700"
+                  ? "bg-amber-50 dark:bg-amber-500/20 border-amber-300 dark:border-amber-400/50 text-amber-800 dark:text-amber-300"
+                  : "bg-slate-100 dark:bg-[#263349] border-slate-300 dark:border-white/20 text-slate-700 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-[#334155]"
               }`}
             >
               <BookmarkPlus className="w-3.5 h-3.5" />
@@ -335,8 +353,8 @@ export function VocabCard({
               onClick={() => onToggleMastered(item)}
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
                 isMastered
-                  ? "bg-green-50 dark:bg-green-950/50 border-green-300 dark:border-green-700 text-green-800 dark:text-green-300"
-                  : "bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700"
+                  ? "bg-green-50 dark:bg-green-500/20 border-green-300 dark:border-green-400/50 text-green-800 dark:text-green-300"
+                  : "bg-slate-100 dark:bg-[#263349] border-slate-300 dark:border-white/20 text-slate-700 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-[#334155]"
               }`}
             >
               <CheckCircle2 className="w-3.5 h-3.5" />

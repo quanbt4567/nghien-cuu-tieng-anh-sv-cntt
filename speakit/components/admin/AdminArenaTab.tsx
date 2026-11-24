@@ -632,7 +632,7 @@ export function AdminArenaTab({
             />
           </div>
 
-          <div className="border-l-2 border-blue-700 dark:border-blue-500 pl-3 py-1 space-y-1">
+          <div className="bg-slate-50 dark:bg-[#263349] rounded-lg px-3 py-2 space-y-1">
             <div className="flex items-center justify-between text-xs font-mono text-slate-600 dark:text-slate-400">
               <span>Xem trước hiển thị chỗ trống:</span>
               {phonetic && <span className="font-ipa text-blue-700 dark:text-blue-400">{phonetic}</span>}
@@ -814,7 +814,7 @@ export function AdminArenaTab({
                         </div>
                       </div>
 
-                      <div className="text-sm text-slate-900 dark:text-slate-100 leading-relaxed border-l-2 border-slate-300 dark:border-slate-700 pl-2.5 py-1">
+                      <div className="text-sm text-slate-900 dark:text-slate-100 leading-relaxed bg-slate-50 dark:bg-[#263349] rounded-lg px-3 py-2">
                         <PromptBlankPreview
                           promptWithBlank={challenge.promptEN}
                           targetWord={challenge.targetWord}

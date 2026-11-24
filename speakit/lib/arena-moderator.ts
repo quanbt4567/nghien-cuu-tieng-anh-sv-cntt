@@ -2808,6 +2808,9 @@ function computeFinishOrLeaveRewardPoints(
   playerId: string,
   reason: "finish" | "leave"
 ): number {
+  if (reason === "leave" && room.status !== "finished") {
+    return 0;
+  }
   if (room.gameType === "duel") {
     return calculateDuelRewardPoints(room, playerId, reason);
   }

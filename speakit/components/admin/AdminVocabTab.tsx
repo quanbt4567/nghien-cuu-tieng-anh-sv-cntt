@@ -1082,7 +1082,7 @@ export function AdminVocabTab({
                       </div>
                     </div>
 
-                    <p className="text-sm text-slate-900 dark:text-slate-100 border-l-2 border-slate-300 dark:border-slate-700 pl-2.5 py-1 leading-snug">
+                    <p className="text-sm text-slate-900 dark:text-slate-100 bg-slate-50 dark:bg-[#263349] rounded-lg px-3 py-2 leading-snug">
                       {item.meaningVI}
                     </p>
 

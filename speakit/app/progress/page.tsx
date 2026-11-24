@@ -262,7 +262,7 @@ export default function ProgressPage() {
           {[0, 1, 2, 3].map((idx) => (
             <div
               key={idx}
-              className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-4 sm:p-5 space-y-2"
+              className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-4 sm:p-5 space-y-2"
             >
               <div className="h-8 w-16 mx-auto rounded-lg bg-slate-200 dark:bg-slate-800" />
               <div className="h-3 w-24 mx-auto rounded bg-slate-200 dark:bg-slate-800" />
@@ -270,7 +270,7 @@ export default function ProgressPage() {
           ))}
         </div>
 
-        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-6 space-y-4">
+        <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-6 space-y-4">
           <div className="h-5 w-48 rounded-lg bg-slate-200 dark:bg-slate-800" />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[0, 1, 2].map((idx) => (
@@ -279,7 +279,7 @@ export default function ProgressPage() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-6 space-y-4">
+        <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-6 space-y-4">
           <div className="h-5 w-56 rounded-lg bg-slate-200 dark:bg-slate-800" />
           <div className="h-32 rounded-lg bg-slate-200 dark:bg-slate-800" />
         </div>
@@ -320,7 +320,7 @@ export default function ProgressPage() {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5">
-        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-4 sm:p-5 text-center">
+        <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-4 sm:p-5 text-center">
           <div className="text-2xl sm:text-3xl font-mono font-extrabold text-slate-900 dark:text-slate-50">
             {totalSessions}
           </div>
@@ -334,7 +334,7 @@ export default function ProgressPage() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-4 sm:p-5 text-center">
+        <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-4 sm:p-5 text-center">
           <div className="text-2xl sm:text-3xl font-mono font-extrabold text-blue-700 dark:text-blue-400">
             {isArenaOnly ? bestArenaScore : bestScoreOverall}
           </div>
@@ -343,7 +343,7 @@ export default function ProgressPage() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-4 sm:p-5 text-center">
+        <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-4 sm:p-5 text-center">
           <div className="text-2xl sm:text-3xl font-mono font-extrabold text-slate-900 dark:text-slate-50">
             {isArenaOnly
               ? bugBusterRuns.length > 0
@@ -395,8 +395,8 @@ export default function ProgressPage() {
         </div>
       </div>
 
-      <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#262626] pb-3">
+      <section className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#334155] pb-3">
           <h2 className="text-sm font-bold text-slate-900 dark:text-slate-50 uppercase tracking-wider font-mono flex items-center gap-2">
             <Gamepad2 className="w-4 h-4 text-blue-700 dark:text-blue-400" />
             <span>Chơi trong IT Speaking Arena (đấu trường luyện nói)</span>
@@ -406,7 +406,7 @@ export default function ProgressPage() {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-[#262626] border-b border-slate-200 dark:border-[#262626] pb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-[#334155] border-b border-slate-200 dark:border-[#334155] pb-4">
           <div className="py-2 sm:py-0 sm:pr-4">
             <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
               Bug Buster cao nhất
@@ -452,7 +452,7 @@ export default function ProgressPage() {
               <History className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
               <span>Lịch sử Arena gần đây</span>
             </div>
-            <div className="divide-y divide-slate-200 dark:divide-[#262626]">
+            <div className="divide-y divide-slate-200 dark:divide-[#334155]">
               {arenaRuns.slice(0, 8).map((run) => (
                 <div
                   key={run.id}
@@ -494,8 +494,8 @@ export default function ProgressPage() {
         )}
       </section>
 
-      <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#262626] pb-3">
+      <section className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#334155] pb-3">
           <h2 className="text-sm font-bold text-slate-900 dark:text-slate-50 uppercase tracking-wider font-mono flex items-center gap-2">
             <History className="w-4 h-4 text-blue-700 dark:text-blue-400" />
             <span>Lịch sử luyện tập và điểm thưởng</span>
@@ -506,7 +506,7 @@ export default function ProgressPage() {
         </div>
 
         {unifiedHistory.length > 0 ? (
-          <div className="divide-y divide-slate-200 dark:divide-[#262626]">
+          <div className="divide-y divide-slate-200 dark:divide-[#334155]">
             {unifiedHistory.slice(0, 15).map((item) => (
               <div
                 key={item.id}
@@ -533,8 +533,8 @@ export default function ProgressPage() {
         )}
       </section>
 
-      <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#262626] pb-3">
+      <section className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#334155] pb-3">
           <h2 className="text-sm font-bold text-slate-900 dark:text-slate-50 uppercase tracking-wider font-mono flex items-center gap-2">
             <BarChart3 className="w-4 h-4 text-blue-700 dark:text-blue-400" />
             <span>Điểm cao nhất từng tình huống</span>
@@ -580,7 +580,7 @@ export default function ProgressPage() {
 
       <section
         aria-label="Tóm tắt IT Speaking Arena"
-        className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+        className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
       >
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
@@ -646,8 +646,8 @@ export default function ProgressPage() {
       </section>
 
       {keywordWeakPoints.length > 0 && (
-        <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-6 space-y-3.5">
-          <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#262626] pb-2">
+        <section className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-6 space-y-3.5">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#334155] pb-2">
             <h3 className="text-sm font-bold font-mono uppercase text-slate-900 dark:text-slate-50 flex items-center gap-1.5">
               <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400" />
               <span>Từ khóa bạn hay quên nhất ({keywordWeakPoints.length})</span>

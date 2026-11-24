@@ -77,7 +77,7 @@ export default function PlacementPage() {
       <div className="space-y-2">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:border-blue-700 dark:hover:border-blue-500 text-xs font-semibold transition-colors"
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:border-blue-700 dark:hover:border-blue-500 text-xs font-semibold transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
           <span>Trang chủ</span>
@@ -92,13 +92,13 @@ export default function PlacementPage() {
       </div>
 
       {result && recommendedScenario ? (
-        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-6 space-y-5">
+        <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl p-6 space-y-5">
           <div className="flex items-center gap-2 text-green-700 dark:text-green-400 font-mono text-xs font-bold uppercase">
             <CheckCircle2 className="w-4 h-4 text-green-700 dark:text-green-400" />
             <span>Hoàn tất đánh giá đầu vào</span>
           </div>
 
-          <div className="bg-slate-50 dark:bg-[#141414] rounded-xl p-4 space-y-2">
+          <div className="bg-slate-50 dark:bg-[#263349] rounded-xl p-4 space-y-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <span className="text-xs font-mono text-blue-700 dark:text-blue-400 font-semibold">
                 Cấp độ đề xuất của bạn:
@@ -149,7 +149,7 @@ export default function PlacementPage() {
           </div>
         </div>
       ) : (
-        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-6">
+        <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-6">
           <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
             <span className="text-xs font-mono font-bold text-blue-700 dark:text-blue-400 uppercase">
               Bước {step + 1}/3

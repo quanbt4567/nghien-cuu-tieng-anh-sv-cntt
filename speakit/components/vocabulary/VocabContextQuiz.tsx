@@ -251,7 +251,7 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
     questions.length > 0 ? Math.round((correctCount / questions.length) * 100) : 0;
 
   return (
-    <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl overflow-hidden">
+    <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl overflow-hidden">
       <div className="px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-start sm:items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0">
@@ -299,7 +299,7 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
       </div>
 
       {isExpanded && phase === "playing" && currentQuestion && (
-        <div className="p-5 border-t border-slate-200 dark:border-[#262626] space-y-4">
+        <div className="p-5 border-t border-slate-200 dark:border-[#334155] space-y-4">
           <div className="flex items-center justify-between text-xs font-mono">
             <span className="text-slate-600 dark:text-slate-300">
               Câu {currentIndex + 1}/{questions.length} · Đúng: {correctCount}
@@ -316,7 +316,7 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
             </span>
           </div>
 
-          <div className="bg-slate-50 dark:bg-[#141414] rounded-xl p-4 space-y-2">
+          <div className="bg-slate-50 dark:bg-[#263349] rounded-xl p-4 space-y-2">
             <p className="text-sm sm:text-base font-medium text-slate-900 dark:text-slate-100 leading-relaxed">
               {currentQuestion.prompt.split("____").map((part, idx, arr) => (
                 <span key={idx}>
@@ -418,7 +418,7 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
       )}
 
       {isExpanded && phase === "finished" && (
-        <div className="p-5 border-t border-slate-200 dark:border-[#262626] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="p-5 border-t border-slate-200 dark:border-[#334155] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="text-base font-bold text-slate-900 dark:text-slate-50">
