@@ -48,7 +48,12 @@ import {
   type EquippedCosmetics,
 } from "../../lib/cosmetics";
 import type { PublicGuestPlayer } from "../../lib/db";
-import { getGamificationState } from "../../lib/gamification";
+import {
+  GAMIFICATION_STORAGE_KEY,
+  GAMIFICATION_UPDATED_EVENT,
+  getGamificationState,
+} from "../../lib/gamification";
+import type { GamificationState } from "../../lib/types";
 import {
   GUEST_PROFILE_UPDATED_EVENT,
   readBackupTransferCode,
@@ -405,8 +410,21 @@ export interface CosmeticShopClientProps {
   extraItems?: CosmeticItem[];
 }
 
+const INITIAL_GAMIFICATION: GamificationState = {
+  totalPoints: 0,
+  streakDays: 0,
+  lastPracticeDate: null,
+  selectedRole: "frontend",
+  personalBests: {
+    "bug-buster": 0,
+    "standup-speed-run": 0,
+  },
+  history: [],
+};
+
 export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps) {
   const [loading, setLoading] = useState(true);
+  const [gamification, setGamification] = useState<GamificationState>(INITIAL_GAMIFICATION);
   const [guestPlayer, setGuestPlayer] = useState<PublicGuestPlayer | null>(null);
   const [activeCategory, setActiveCategory] =
     useState<CosmeticCategory>("avatar_decoration");
@@ -451,6 +469,10 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
   }, []);
 
   useEffect(() => {
+    const syncGamification = () => {
+      setGamification(getGamificationState());
+    };
+    syncGamification();
     void syncFromServer();
 
     const handleProfileEvent = (event: Event) => {
@@ -460,13 +482,22 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
       }
     };
 
+    const handleStorage = (event: StorageEvent) => {
+      if (!event.key || event.key === GAMIFICATION_STORAGE_KEY) {
+        syncGamification();
+      }
+    };
+
+    window.addEventListener(GAMIFICATION_UPDATED_EVENT, syncGamification);
     window.addEventListener(GUEST_PROFILE_UPDATED_EVENT, handleProfileEvent);
+    window.addEventListener("storage", handleStorage);
     return () => {
+      window.removeEventListener(GAMIFICATION_UPDATED_EVENT, syncGamification);
       window.removeEventListener(GUEST_PROFILE_UPDATED_EVENT, handleProfileEvent);
+      window.removeEventListener("storage", handleStorage);
     };
   }, [syncFromServer]);
 
-  const gamification = useMemo(() => getGamificationState(), []);
   const identity = useMemo(
     () => mergeProfileIdentity(guestPlayer, gamification),
     [guestPlayer, gamification]

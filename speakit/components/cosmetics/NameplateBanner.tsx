@@ -450,7 +450,7 @@ export function NameplateBanner({
 
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-white/35 z-[2]"
+        className="pointer-events-none absolute inset-0 bg-white/35 dark:bg-slate-900/35 z-[2]"
       />
 
       <span

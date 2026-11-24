@@ -201,3 +201,36 @@ test("mobile cursor trails support touch events, burst event, and shop live prev
     );
   }
 });
+
+test("CosmeticShopClient defers gamification read to useEffect and Navbar syncs speakit_theme_v1", () => {
+  const shopClientSrc = readFileSync(
+    resolve(__dirname, "../components/cosmetics/CosmeticShopClient.tsx"),
+    "utf8"
+  );
+  const navbarSrc = readFileSync(
+    resolve(__dirname, "../components/layout/Navbar.tsx"),
+    "utf8"
+  );
+
+  assert.equal(
+    /useMemo\(\s*\(\)\s*=>\s*getGamificationState\(\)/.test(shopClientSrc),
+    false,
+    "CosmeticShopClient.tsx must not read getGamificationState() synchronously during render"
+  );
+  assert.ok(
+    shopClientSrc.includes("setGamification(getGamificationState())"),
+    "CosmeticShopClient.tsx should hydrate gamification state inside useEffect"
+  );
+
+  for (const token of [
+    "speakit_theme_v1",
+    "applyDocumentTheme",
+    "colorScheme",
+    "backgroundColor",
+  ]) {
+    assert.ok(
+      navbarSrc.includes(token),
+      `Navbar.tsx missing ${token} for persistent dark mode sync`
+    );
+  }
+});
