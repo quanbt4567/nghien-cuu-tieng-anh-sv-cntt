@@ -122,6 +122,17 @@ const MOBILE_TABS: readonly NavItem[] = [
   { href: "/profile", label: "Hồ sơ", icon: User },
 ];
 
+const THEME_STORAGE_KEY = "speakit_theme_v1";
+
+function applyDocumentTheme(next: "light" | "dark"): void {
+  if (typeof document === "undefined") return;
+  const d = document.documentElement;
+  const isDark = next === "dark";
+  d.classList.toggle("dark", isDark);
+  d.style.backgroundColor = isDark ? "#0b1220" : "";
+  d.style.colorScheme = isDark ? "dark" : "";
+}
+
 const INITIAL_GAMIFICATION: GamificationState = {
   totalPoints: 0,
   streakDays: 0,
@@ -147,17 +158,25 @@ export function Navbar() {
 
   useEffect(() => {
     if (typeof document === "undefined") return;
-    setTheme(document.documentElement.classList.contains("dark") ? "dark" : "light");
+    let resolved: "light" | "dark" = document.documentElement.classList.contains("dark")
+      ? "dark"
+      : "light";
+    try {
+      const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+      if (stored === "dark" || stored === "light") {
+        resolved = stored;
+      }
+    } catch {}
+    applyDocumentTheme(resolved);
+    setTheme(resolved);
   }, []);
 
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
-    if (typeof document !== "undefined") {
-      document.documentElement.classList.toggle("dark", next === "dark");
-    }
+    applyDocumentTheme(next);
     try {
-      window.localStorage.setItem("speakit_theme_v1", next);
+      window.localStorage.setItem(THEME_STORAGE_KEY, next);
     } catch {}
   };
 
@@ -251,6 +270,11 @@ export function Navbar() {
       }
       if (!event.key || event.key === GUEST_PROFILE_CACHE_KEY) {
         syncCachedGuest();
+      }
+      if (event.key === THEME_STORAGE_KEY) {
+        const next = event.newValue === "dark" ? "dark" : "light";
+        applyDocumentTheme(next);
+        setTheme(next);
       }
     };
     window.addEventListener("storage", handleStorage);
