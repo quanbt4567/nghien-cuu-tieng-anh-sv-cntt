@@ -34,7 +34,10 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#F8FAFC",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#F4F8FC" },
+    { media: "(prefers-color-scheme: dark)", color: "#0A111F" },
+  ],
 };
 
 export const metadata: Metadata = {
@@ -61,7 +64,7 @@ export default function RootLayout({
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(localStorage.getItem('speakit_theme_v1')==='dark'){var d=document.documentElement;d.classList.add('dark');d.style.backgroundColor='#0b1220';d.style.colorScheme='dark';}}catch(e){}})();`,
+            __html: `(function(){try{if(localStorage.getItem('speakit_theme_v1')==='dark'){var d=document.documentElement;d.classList.add('dark');d.style.backgroundColor='#0a111f';d.style.colorScheme='dark';}}catch(e){}})();`,
           }}
         />
       </head>
