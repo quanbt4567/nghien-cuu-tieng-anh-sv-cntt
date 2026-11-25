@@ -108,6 +108,62 @@ export default function VocabularyPage() {
     terms: string[];
   } | null>(null);
   const quizContainerRef = useRef<HTMLDivElement | null>(null);
+  const tabRefs = useRef<Record<WorkspaceMode, HTMLButtonElement | null>>({
+    dictionary: null,
+    flashcard: null,
+    quiz: null,
+    cluster: null,
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const modeParam = params.get("mode");
+    if (
+      modeParam === "dictionary" ||
+      modeParam === "flashcard" ||
+      modeParam === "quiz" ||
+      modeParam === "cluster"
+    ) {
+      setWorkspaceMode(modeParam);
+    }
+    const ctxParam = params.get("context");
+    if (
+      ctxParam &&
+      VOCAB_CONTEXT_PILLS.some((pill) => pill.id === ctxParam)
+    ) {
+      setSelectedContext(ctxParam as VocabWorkContext);
+    }
+    const pageParam = Number(params.get("page"));
+    if (Number.isInteger(pageParam) && pageParam >= 1) {
+      setCurrentPage(pageParam);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (workspaceMode === "dictionary") {
+      params.delete("mode");
+    } else {
+      params.set("mode", workspaceMode);
+    }
+    if (selectedContext === "all") {
+      params.delete("context");
+    } else {
+      params.set("context", selectedContext);
+    }
+    if (currentPage <= 1) {
+      params.delete("page");
+    } else {
+      params.set("page", String(currentPage));
+    }
+    const query = params.toString();
+    const nextUrl = query
+      ? `${window.location.pathname}?${query}`
+      : window.location.pathname;
+    window.history.replaceState(null, "", nextUrl);
+  }, [workspaceMode, selectedContext, currentPage]);
 
   useEffect(() => {
     const syncContent = () => {
@@ -258,19 +314,19 @@ export default function VocabularyPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-5 space-y-4">
-      <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-4 sm:px-5 sm:py-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-4 sm:px-5 sm:py-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div className="flex items-start sm:items-center gap-3">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors shrink-0"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-sm font-medium transition-colors shrink-0"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4" aria-hidden="true" />
             <span>Trang chủ</span>
           </Link>
           <div className="min-w-0">
-            <h1 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2 leading-tight">
-              <BookOpen className="w-5 h-5 text-blue-700 dark:text-blue-400 shrink-0" />
-              <span className="truncate">
+            <h1 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2 leading-tight text-balance">
+              <BookOpen className="w-5 h-5 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
+              <span className="truncate tabular-nums">
                 {vocabList.length} Thuật Ngữ IT Thiết Yếu
               </span>
             </h1>
@@ -280,7 +336,7 @@ export default function VocabularyPage() {
           </div>
         </div>
 
-        <div className="w-full lg:w-72 shrink-0 border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-[#262626] pt-3 lg:pt-0 lg:pl-5 space-y-2">
+        <div className="w-full lg:w-72 shrink-0 border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-[#334155] pt-3 lg:pt-0 lg:pl-5 space-y-2 tabular-nums">
           <div className="flex items-center justify-between gap-2 text-sm">
             <span className="font-semibold text-slate-700 dark:text-slate-200">
               Đã thuộc{" "}
@@ -301,7 +357,7 @@ export default function VocabularyPage() {
           </div>
           <div className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
             <div
-              className="h-full w-full bg-blue-700 dark:bg-blue-500 origin-left transition-transform duration-300"
+              className="h-full w-full bg-blue-700 dark:bg-blue-500 origin-left transition-transform duration-300 motion-reduce:transition-none"
               style={{ transform: `scaleX(${masteryPercent / 100})` }}
             />
           </div>
@@ -311,9 +367,9 @@ export default function VocabularyPage() {
       <div
         role="tablist"
         aria-label="Chế độ học từ vựng"
-        className="grid grid-cols-2 lg:grid-cols-4 gap-2 p-1.5 bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl"
+        className="grid grid-cols-2 lg:grid-cols-4 gap-2 p-1.5 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl"
       >
-        {WORKSPACE_MODES.map((mode) => {
+        {WORKSPACE_MODES.map((mode, idx) => {
           const active = workspaceMode === mode.id;
           const ModeIcon = mode.icon;
           const activeClasses =
@@ -325,11 +381,35 @@ export default function VocabularyPage() {
           return (
             <button
               key={mode.id}
+              ref={(el) => {
+                tabRefs.current[mode.id] = el;
+              }}
+              id={`vocab-tab-${mode.id}`}
               type="button"
               role="tab"
               aria-selected={active}
+              aria-controls={`vocab-panel-${mode.id}`}
+              tabIndex={active ? 0 : -1}
               onClick={() => setWorkspaceMode(mode.id)}
-              className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border text-sm font-semibold leading-tight whitespace-normal sm:whitespace-nowrap transition-colors text-center ${
+              onKeyDown={(e) => {
+                let nextIdx: number | null = null;
+                if (e.key === "ArrowRight") {
+                  nextIdx = (idx + 1) % WORKSPACE_MODES.length;
+                } else if (e.key === "ArrowLeft") {
+                  nextIdx = (idx - 1 + WORKSPACE_MODES.length) % WORKSPACE_MODES.length;
+                } else if (e.key === "Home") {
+                  nextIdx = 0;
+                } else if (e.key === "End") {
+                  nextIdx = WORKSPACE_MODES.length - 1;
+                }
+                if (nextIdx !== null) {
+                  e.preventDefault();
+                  const nextMode = WORKSPACE_MODES[nextIdx].id;
+                  setWorkspaceMode(nextMode);
+                  tabRefs.current[nextMode]?.focus();
+                }
+              }}
+              className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border text-sm font-semibold leading-tight whitespace-normal sm:whitespace-nowrap focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors text-center ${
                 active
                   ? activeClasses
                   : "border-transparent text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800"
@@ -343,8 +423,13 @@ export default function VocabularyPage() {
       </div>
 
       {workspaceMode === "dictionary" && (
-        <div className="space-y-4">
-          <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div
+          id="vocab-panel-dictionary"
+          role="tabpanel"
+          aria-labelledby="vocab-tab-dictionary"
+          className="space-y-4"
+        >
+          <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-1.5">
               {VOCAB_CONTEXT_PILLS.map((pill) => {
                 const active = selectedContext === pill.id;
@@ -352,11 +437,12 @@ export default function VocabularyPage() {
                   <button
                     key={pill.id}
                     type="button"
+                    aria-pressed={active}
                     onClick={() => {
                       setSelectedContext(pill.id);
                       setCurrentPage(1);
                     }}
-                    className={`px-3.5 py-1.5 rounded-full border text-xs sm:text-sm font-semibold transition-colors ${
+                    className={`px-3.5 py-1.5 rounded-full border text-xs sm:text-sm font-semibold focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
                       active
                         ? "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300"
                         : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:border-blue-300 dark:hover:border-blue-700"
@@ -369,16 +455,20 @@ export default function VocabularyPage() {
             </div>
 
             <div className="relative w-full md:w-64 shrink-0">
-              <Search className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Search className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
               <input
-                type="text"
+                type="search"
+                name="vocabSearch"
+                aria-label="Tìm kiếm thuật ngữ IT"
+                autoComplete="off"
+                spellCheck={false}
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                placeholder="Tìm kiếm thuật ngữ..."
-                className="w-full pl-9 pr-3.5 py-2 text-sm font-mono rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/40"
+                placeholder="Tìm kiếm thuật ngữ…"
+                className="w-full pl-9 pr-3.5 py-2 text-sm font-mono rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-blue-600"
               />
             </div>
           </div>
@@ -400,8 +490,8 @@ export default function VocabularyPage() {
                 ))}
               </div>
 
-              <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="text-sm text-slate-600 dark:text-slate-300 font-mono">
+              <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="text-sm text-slate-600 dark:text-slate-300 font-mono tabular-nums">
                   Hiển thị{" "}
                   <span className="font-semibold text-slate-900 dark:text-slate-100">
                     {(safePage - 1) * CARDS_PER_PAGE + 1}-
@@ -414,16 +504,16 @@ export default function VocabularyPage() {
                   thuật ngữ
                 </div>
 
-                <div className="flex flex-wrap items-center gap-1.5">
+                <nav aria-label="Phân trang từ vựng" className="flex flex-wrap items-center gap-1.5">
                   <button
                     type="button"
                     disabled={safePage <= 1}
                     onClick={() =>
                       setCurrentPage((prev) => Math.max(1, prev - 1))
                     }
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-sm font-medium disabled:opacity-40 disabled:pointer-events-none transition-colors"
                   >
-                    <ChevronLeft className="w-4 h-4" />
+                    <ChevronLeft className="w-4 h-4" aria-hidden="true" />
                     <span>Trước</span>
                   </button>
 
@@ -434,8 +524,10 @@ export default function VocabularyPage() {
                         <button
                           key={pageNum}
                           type="button"
+                          aria-label={`Trang ${pageNum}`}
+                          aria-current={active ? "page" : undefined}
                           onClick={() => setCurrentPage(pageNum)}
-                          className={`w-8 h-8 rounded-lg text-xs font-mono font-semibold border transition-colors ${
+                          className={`w-8 h-8 rounded-lg text-xs font-mono font-semibold tabular-nums border focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
                             active
                               ? "bg-blue-700 dark:bg-blue-600 border-blue-700 dark:border-blue-600 text-white"
                               : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700"
@@ -453,16 +545,16 @@ export default function VocabularyPage() {
                     onClick={() =>
                       setCurrentPage((prev) => Math.min(totalPages, prev + 1))
                     }
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-sm font-medium disabled:opacity-40 disabled:pointer-events-none transition-colors"
                   >
                     <span>Sau</span>
-                    <ChevronRight className="w-4 h-4" />
+                    <ChevronRight className="w-4 h-4" aria-hidden="true" />
                   </button>
-                </div>
+                </nav>
               </div>
             </>
           ) : (
-            <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-8 text-center text-sm text-slate-600 dark:text-slate-300">
+            <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-8 text-center text-sm text-slate-600 dark:text-slate-300">
               {vocabList.length === 0
                 ? "Chưa có thuật ngữ nào trong thư viện."
                 : `Không tìm thấy thuật ngữ nào phù hợp với bộ lọc hiện tại${
@@ -474,10 +566,15 @@ export default function VocabularyPage() {
       )}
 
       {workspaceMode === "flashcard" && (
-        <div className="space-y-3">
-          <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-50">
-              <Layers className="w-4 h-4 text-blue-700 dark:text-blue-400" />
+        <div
+          id="vocab-panel-flashcard"
+          role="tabpanel"
+          aria-labelledby="vocab-tab-flashcard"
+          className="space-y-3"
+        >
+          <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-50 tabular-nums">
+              <Layers className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
               <span>Chế độ Lật Thẻ Active Recall ({filtered.length} thuật ngữ)</span>
             </div>
             <div className="flex flex-wrap items-center gap-1.5">
@@ -487,8 +584,9 @@ export default function VocabularyPage() {
                   <button
                     key={pill.id}
                     type="button"
+                    aria-pressed={active}
                     onClick={() => setSelectedContext(pill.id)}
-                    className={`px-3 py-1 rounded-full border text-xs font-semibold transition-colors ${
+                    className={`px-3 py-1 rounded-full border text-xs font-semibold focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
                       active
                         ? "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300"
                         : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:border-blue-300 dark:hover:border-blue-700"
@@ -510,27 +608,37 @@ export default function VocabularyPage() {
       )}
 
       {workspaceMode === "quiz" && (
-        <div ref={quizContainerRef}>
+        <div
+          id="vocab-panel-quiz"
+          role="tabpanel"
+          aria-labelledby="vocab-tab-quiz"
+          ref={quizContainerRef}
+        >
           <VocabContextQuiz items={vocabList} />
         </div>
       )}
 
       {workspaceMode === "cluster" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div
+          id="vocab-panel-cluster"
+          role="tabpanel"
+          aria-labelledby="vocab-tab-cluster"
+          className="bg-slate-200 dark:bg-[#334155] border border-slate-200 dark:border-[#334155] rounded-xl overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-px"
+        >
           {clusteredGroups.map((cluster) => (
             <div
               key={cluster.clusterTitle}
-              className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 flex flex-col justify-between gap-4 hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
+              className="bg-white dark:bg-[#1E293B] p-5 flex flex-col justify-between gap-4 hover:bg-slate-50/70 dark:hover:bg-slate-800/60 transition-colors"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <LayoutGrid className="w-4 h-4 text-blue-700 dark:text-blue-400 shrink-0" />
-                    <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <LayoutGrid className="w-4 h-4 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
+                    <h2 className="text-base font-bold text-slate-900 dark:text-slate-50 truncate text-balance">
                       {cluster.clusterTitle}
                     </h2>
                   </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
+                  <div className="flex items-center gap-1.5 shrink-0 tabular-nums">
                     <span className="px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-xs font-mono font-semibold text-amber-800 dark:text-amber-300">
                       +3 Coin
                     </span>
@@ -546,14 +654,14 @@ export default function VocabularyPage() {
                       key={item.id}
                       className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-800 dark:text-slate-200"
                     >
-                      <Zap className="w-3 h-3 text-blue-700 dark:text-blue-400 shrink-0" />
+                      <Zap className="w-3 h-3 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
                       <span>{item.term}</span>
                     </span>
                   ))}
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-slate-200 dark:border-[#262626] flex flex-wrap items-center justify-between gap-2">
+              <div className="pt-3 border-t border-slate-200 dark:border-[#334155] flex flex-wrap items-center justify-between gap-2">
                 <span className="text-sm text-slate-600 dark:text-slate-300">
                   Tối đa 8 thuật ngữ mỗi lượt luyện nói AI
                 </span>
@@ -567,9 +675,9 @@ export default function VocabularyPage() {
                         .map((item) => item.term),
                     })
                   }
-                  className="bg-green-700 hover:bg-green-800 text-white inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors shrink-0"
+                  className="bg-green-700 hover:bg-green-800 focus-visible:ring-2 focus-visible:ring-green-600 text-white inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors shrink-0"
                 >
-                  <Mic className="w-4 h-4" />
+                  <Mic className="w-4 h-4" aria-hidden="true" />
                   <span>Luyện nói với cụm từ này</span>
                 </button>
               </div>

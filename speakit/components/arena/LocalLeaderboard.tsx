@@ -36,14 +36,14 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
       <section className="liquid-glass-card p-5 sm:p-6 space-y-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-1">
-            <span className="text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400 flex items-center gap-1.5">
-              <Award className="w-4 h-4" />
+            <span className="text-xs font-mono font-bold text-blue-700 dark:text-blue-400 flex items-center gap-1.5">
+              <Award className="w-4 h-4" aria-hidden="true" />
               <span>Danh hiệu Dev Speaker hiện tại</span>
             </span>
             <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{devTitle.title}</h2>
           </div>
 
-          <div className="px-4 py-2 rounded-full bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 font-mono text-sm font-bold text-slate-900 dark:text-slate-100">
+          <div className="px-4 py-2 rounded-full bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 font-mono tabular-nums text-sm font-bold text-slate-900 dark:text-slate-100">
             {state.totalPoints.toLocaleString("vi-VN")} điểm tích lũy
           </div>
         </div>
@@ -63,14 +63,14 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
                 </strong>
               )}
             </span>
-            <span className="font-mono font-bold text-blue-700 dark:text-blue-400">
+            <span className="font-mono tabular-nums font-bold text-blue-700 dark:text-blue-400">
               {devTitle.progressPct}%
             </span>
           </div>
 
           <div className="w-full h-3 bg-slate-200 dark:bg-slate-800 rounded-full border border-slate-300 dark:border-slate-700 overflow-hidden p-0.5">
             <div
-              className="w-full h-full origin-left rounded-full bg-blue-700 dark:bg-blue-600 transition-transform duration-500"
+              className="w-full h-full origin-left rounded-full bg-blue-700 dark:bg-blue-600 transition-transform duration-500 motion-reduce:transition-none"
               style={{ transform: `scaleX(${Math.max(0.04, devTitle.progressPct / 100)})` }}
             />
           </div>
@@ -113,7 +113,7 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
         <div className="liquid-glass-card p-5 flex items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-green-700 dark:text-green-400">
-              <Bug className="w-4 h-4" />
+              <Bug className="w-4 h-4" aria-hidden="true" />
               <span>Kỷ lục cá nhân</span>
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">Bug Buster 280s</h3>
@@ -121,7 +121,7 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
               Điểm cao nhất trong 1 vòng 280 giây
             </p>
           </div>
-          <div className="text-right font-mono">
+          <div className="text-right font-mono tabular-nums">
             <div className="text-2xl font-bold text-green-700 dark:text-green-400">
               {state.personalBests["bug-buster"].toLocaleString("vi-VN")}
             </div>
@@ -132,7 +132,7 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
         <div className="liquid-glass-card p-5 flex items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-blue-700 dark:text-blue-400">
-              <Timer className="w-4 h-4" />
+              <Timer className="w-4 h-4" aria-hidden="true" />
               <span>Kỷ lục cá nhân</span>
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">Standup Speed Run</h3>
@@ -140,7 +140,7 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
               Điểm cao nhất trong 3 câu Standup
             </p>
           </div>
-          <div className="text-right font-mono">
+          <div className="text-right font-mono tabular-nums">
             <div className="text-2xl font-bold text-blue-700 dark:text-blue-400">
               {state.personalBests["standup-speed-run"].toLocaleString("vi-VN")}
             </div>
@@ -152,7 +152,7 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
       <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+            <Trophy className="w-5 h-5 text-amber-600 dark:text-amber-400" aria-hidden="true" />
             <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">
               Bảng thành tích cá nhân
             </h3>
@@ -169,7 +169,7 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-sm">
               <thead>
-                <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-mono uppercase text-xs">
+                <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-mono text-xs">
                   <th className="py-2.5 pr-3">#</th>
                   <th className="py-2.5 pr-3">Chế độ</th>
                   <th className="py-2.5 pr-3">Vai trò</th>
@@ -181,7 +181,7 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
               <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
                 {rankedHistory.map((entry, idx) => (
                   <tr key={entry.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                    <td className="py-2.5 pr-3 font-mono font-bold text-slate-600 dark:text-slate-400">
+                    <td className="py-2.5 pr-3 font-mono tabular-nums font-bold text-slate-600 dark:text-slate-400">
                       {idx + 1}
                     </td>
                     <td className="py-2.5 pr-3 font-semibold text-slate-900 dark:text-slate-100 whitespace-nowrap">
@@ -192,15 +192,15 @@ export function LocalLeaderboard({ state }: LocalLeaderboardProps) {
                         {getRoleLabel(entry.role)}
                       </span>
                     </td>
-                    <td className="py-2.5 pr-3 text-right font-mono font-bold text-blue-700 dark:text-blue-400 whitespace-nowrap">
+                    <td className="py-2.5 pr-3 text-right font-mono tabular-nums font-bold text-blue-700 dark:text-blue-400 whitespace-nowrap">
                       {entry.score.toLocaleString("vi-VN")}
                     </td>
-                    <td className="py-2.5 pr-3 text-right font-mono text-slate-700 dark:text-slate-300 whitespace-nowrap">
+                    <td className="py-2.5 pr-3 text-right font-mono tabular-nums text-slate-700 dark:text-slate-300 whitespace-nowrap">
                       {entry.accuracyOrWords}{" "}
                       {entry.gameId === "bug-buster" ? "bug" : "từ khóa"}
                     </td>
-                    <td className="py-2.5 text-right font-mono text-slate-600 dark:text-slate-400 whitespace-nowrap">
-                      {new Date(entry.createdAt).toLocaleDateString("vi-VN")}
+                    <td className="py-2.5 text-right font-mono tabular-nums text-slate-600 dark:text-slate-400 whitespace-nowrap">
+                      {new Intl.DateTimeFormat("vi-VN").format(new Date(entry.createdAt))}
                     </td>
                   </tr>
                 ))}

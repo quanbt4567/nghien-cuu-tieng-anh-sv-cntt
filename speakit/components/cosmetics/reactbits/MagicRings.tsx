@@ -378,10 +378,10 @@ const parseColor = (value: string): number[] => {
   if (typeof document !== 'undefined') {
     const context = document.createElement('canvas').getContext('2d');
     if (context) {
-      context.fillStyle = '#000000';
+      context.fillStyle = '#0B1220';
       context.fillStyle = text;
       const normal = String(context.fillStyle);
-      if (normal !== '#000000' || /^(#0{3}|#0{6}|black)$/i.test(text)) return parseColor(normal);
+      if (normal !== '#0B1220' || /^(#0{3}|#0{6}|black)$/i.test(text)) return parseColor(normal);
     }
   }
   return [0.66, 0.33, 0.97];

@@ -688,7 +688,7 @@ export function AdminVocabTab({
                 className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium disabled:opacity-50"
               >
                 <Download className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>{isExporting === "json" ? "Exporting..." : "Export JSON"}</span>
+                <span>{isExporting === "json" ? "Đang xuất…" : "Xuất JSON"}</span>
               </button>
               <button
                 type="button"
@@ -697,7 +697,7 @@ export function AdminVocabTab({
                 className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium disabled:opacity-50"
               >
                 <Download className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>{isExporting === "csv" ? "Exporting..." : "Export CSV"}</span>
+                <span>{isExporting === "csv" ? "Đang xuất…" : "Xuất CSV"}</span>
               </button>
             </div>
           </div>
@@ -705,15 +705,17 @@ export function AdminVocabTab({
           <form onSubmit={handleImportSubmit} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
-                  Format
+                <label htmlFor="vocab-import-format" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+                  Định dạng
                 </label>
                 <select
+                  id="vocab-import-format"
+                  name="importFormat"
                   value={importFormat}
                   onChange={(e) =>
                     setImportFormat(e.target.value === "csv" ? "csv" : "json")
                   }
-                  className="liquid-glass-input w-full px-3.5 py-2 text-sm font-mono rounded-lg [&>option]:bg-white dark:[&>option]:bg-slate-900 [&>option]:text-slate-900 dark:[&>option]:text-slate-100"
+                  className="liquid-glass-input w-full px-3.5 py-2 text-sm font-mono rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 [&>option]:bg-white dark:[&>option]:bg-slate-900 [&>option]:text-slate-900 dark:[&>option]:text-slate-100"
                 >
                   <option value="json">JSON</option>
                   <option value="csv">CSV (RFC-4180)</option>
@@ -721,10 +723,12 @@ export function AdminVocabTab({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
-                  Upload File (.json or .csv)
+                <label htmlFor="vocab-import-file" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+                  Tải tệp (.json hoặc .csv)
                 </label>
                 <input
+                  id="vocab-import-file"
+                  name="importFile"
                   ref={fileInputRef}
                   type="file"
                   accept=".json,.csv,application/json,text/csv"
@@ -735,11 +739,14 @@ export function AdminVocabTab({
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
-                Or Paste {importFormat.toUpperCase()} Content
+              <label htmlFor="vocab-import-data" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+                Hoặc dán nội dung {importFormat.toUpperCase()}
               </label>
               <textarea
+                id="vocab-import-data"
+                name="importData"
                 rows={5}
+                autoComplete="off"
                 value={importData}
                 onChange={(e) => setImportData(e.target.value)}
                 placeholder={
@@ -763,7 +770,7 @@ export function AdminVocabTab({
                 }}
                 className="liquid-glass-btn px-4 py-2 rounded-lg text-xs font-medium"
               >
-                Cancel
+                Hủy
               </button>
               <button
                 type="submit"
@@ -773,8 +780,8 @@ export function AdminVocabTab({
                 <Upload className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>
                   {isImporting
-                    ? "AI đang kiểm tra & chuẩn hóa cấu trúc..."
-                    : "Import & Sync"}
+                    ? "AI đang kiểm tra & chuẩn hóa cấu trúc…"
+                    : "Nhập & đồng bộ"}
                 </span>
               </button>
             </div>
@@ -803,21 +810,23 @@ export function AdminVocabTab({
           <AdminAiGeneratorBox
             key={editingId ?? "create"}
             kind="vocabulary"
-            placeholder="VD: idempotency, circuit breaker, race condition..."
+            placeholder="VD: idempotency, circuit breaker, race condition…"
             quickTopics={VOCAB_QUICK_TOPICS}
             onGenerated={handleAiGenerated}
             onUnauthorized={onUnauthorized}
-            autoFocus={aiFocusKey > 0}
             focusKey={aiFocusKey}
           />
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+              <label htmlFor="vocab-term" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
                 Thuật ngữ tiếng Anh (term) *
               </label>
               <input
+                id="vocab-term"
+                name="term"
                 type="text"
+                autoComplete="off"
                 value={term}
                 onChange={(e) => setTerm(e.target.value)}
                 placeholder="VD: idempotency"
@@ -826,11 +835,15 @@ export function AdminVocabTab({
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+              <label htmlFor="vocab-phonetic" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
                 Phiên âm IPA (phonetic)
               </label>
               <input
+                id="vocab-phonetic"
+                name="phonetic"
                 type="text"
+                autoComplete="off"
+                spellCheck={false}
                 value={phonetic}
                 onChange={(e) => setPhonetic(e.target.value)}
                 placeholder="VD: /ˌaɪ.demˈpoʊ.tən.si/"
@@ -839,13 +852,15 @@ export function AdminVocabTab({
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+              <label htmlFor="vocab-pos" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
                 Từ loại (partOfSpeech)
               </label>
               <select
+                id="vocab-pos"
+                name="partOfSpeech"
                 value={partOfSpeech}
                 onChange={(e) => setPartOfSpeech(e.target.value)}
-                className="liquid-glass-input w-full px-3.5 py-2 text-sm font-mono rounded-lg [&>option]:bg-white dark:[&>option]:bg-slate-900 [&>option]:text-slate-900 dark:[&>option]:text-slate-100"
+                className="liquid-glass-input w-full px-3.5 py-2 text-sm font-mono rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 [&>option]:bg-white dark:[&>option]:bg-slate-900 [&>option]:text-slate-900 dark:[&>option]:text-slate-100"
               >
                 {POS_OPTIONS.map((opt) => (
                   <option key={opt} value={opt}>
@@ -857,25 +872,31 @@ export function AdminVocabTab({
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+            <label htmlFor="vocab-meaning-vi" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
               Nghĩa tiếng Việt (meaningVI) *
             </label>
             <input
+              id="vocab-meaning-vi"
+              name="meaningVI"
               type="text"
+              autoComplete="off"
               value={meaningVI}
               onChange={(e) => setMeaningVI(e.target.value)}
-              placeholder="Tính bất biến khi thực thi lặp lại cùng một yêu cầu API..."
+              placeholder="Tính bất biến khi thực thi lặp lại cùng một yêu cầu API…"
               className="liquid-glass-input w-full px-3.5 py-2 text-sm rounded-lg"
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+              <label htmlFor="vocab-example-en" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
                 Câu ví dụ tiếng Anh (exampleSentenceEN)
               </label>
               <textarea
+                id="vocab-example-en"
+                name="exampleSentenceEN"
                 rows={2}
+                autoComplete="off"
                 value={exampleSentenceEN}
                 onChange={(e) => setExampleSentenceEN(e.target.value)}
                 placeholder="We added an idempotency key to prevent duplicate charges."
@@ -884,11 +905,14 @@ export function AdminVocabTab({
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+              <label htmlFor="vocab-example-vi" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
                 Dịch nghĩa ví dụ (exampleTranslationVI)
               </label>
               <textarea
+                id="vocab-example-vi"
+                name="exampleTranslationVI"
                 rows={2}
+                autoComplete="off"
                 value={exampleTranslationVI}
                 onChange={(e) => setExampleTranslationVI(e.target.value)}
                 placeholder="Chúng tôi thêm khóa idempotency để tránh trừ tiền trùng lặp."
@@ -910,7 +934,7 @@ export function AdminVocabTab({
               disabled={isSaving}
               className="liquid-btn-primary px-5 py-2 rounded-lg text-xs font-semibold disabled:opacity-60"
             >
-              {isSaving ? "Đang lưu..." : editingId ? "Lưu thuật ngữ" : "Thêm & đồng bộ"}
+              {isSaving ? "Đang lưu…" : editingId ? "Lưu thuật ngữ" : "Thêm & đồng bộ"}
             </button>
           </div>
         </form>
@@ -925,13 +949,16 @@ export function AdminVocabTab({
                 aria-hidden="true"
               />
               <input
+                name="vocabSearch"
                 type="search"
+                autoComplete="off"
+                aria-label="Tìm kiếm từ vựng"
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                placeholder="Tìm theo thuật ngữ, nghĩa tiếng Việt, từ loại..."
+                placeholder="Tìm theo thuật ngữ, nghĩa tiếng Việt, từ loại…"
                 className="liquid-glass-input w-full pl-9 pr-3.5 py-1.5 text-sm rounded-lg"
               />
             </div>
@@ -1082,7 +1109,7 @@ export function AdminVocabTab({
                       </div>
                     </div>
 
-                    <p className="text-sm text-slate-900 dark:text-slate-100 border-l-2 border-slate-300 dark:border-slate-700 pl-2.5 py-1 leading-snug">
+                    <p className="text-sm text-slate-900 dark:text-slate-100 bg-slate-50 dark:bg-[#263349] rounded-lg px-3 py-2 leading-snug">
                       {item.meaningVI}
                     </p>
 

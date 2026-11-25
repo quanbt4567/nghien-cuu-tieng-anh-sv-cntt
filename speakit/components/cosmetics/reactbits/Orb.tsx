@@ -249,7 +249,7 @@ const link = (gl: WebGL2RenderingContext): Program | null => {
 const Orb = ({
   colors = ['#9c43fe', '#4cc2e9', '#101499'],
   hue = 0,
-  backgroundColor = '#000000',
+  backgroundColor = '#0B1220',
   size = 1,
   glow = 1,
   bleed = 1,
@@ -334,7 +334,7 @@ const Orb = ({
       let rgb: number[] = [0, 0, 0];
       if (probe) {
         probe.clearRect(0, 0, 1, 1);
-        probe.fillStyle = '#000000';
+        probe.fillStyle = '#0B1220';
         probe.fillStyle = value;
         probe.fillRect(0, 0, 1, 1);
         const [r, g, b, a] = probe.getImageData(0, 0, 1, 1).data;

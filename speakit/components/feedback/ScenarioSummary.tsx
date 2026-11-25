@@ -195,15 +195,15 @@ export function ScenarioSummary({
 
   return (
     <div className="space-y-6">
-      <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-6 sm:p-8 space-y-6">
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl p-6 sm:p-8 space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-blue-700 dark:bg-blue-400" />
-            <span className="font-mono text-xs font-bold tracking-wider uppercase text-slate-900 dark:text-slate-50">
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-700 dark:bg-blue-400" aria-hidden="true" />
+            <span className="font-mono text-xs font-bold text-slate-900 dark:text-slate-50">
               SpeakIT
             </span>
             <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
-              • Phiếu kết quả luyện nói
+              — Phiếu kết quả luyện nói
             </span>
           </div>
 
@@ -219,12 +219,12 @@ export function ScenarioSummary({
 
         <div className="text-center space-y-2.5">
           <div className="w-14 h-14 rounded-full bg-blue-700 dark:bg-blue-600 text-white flex items-center justify-center mx-auto">
-            <Award className="w-7 h-7" />
+            <Award className="w-7 h-7" aria-hidden="true" />
           </div>
-          <span className="block text-xs font-mono font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400">
+          <span className="block text-xs font-mono font-semibold tabular-nums text-blue-700 dark:text-blue-400">
             Hoàn thành {totalTurns}/{totalTurns} lượt luyện tập
           </span>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-50 tracking-tight text-balance">
             {scenarioTitle}
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
@@ -232,7 +232,7 @@ export function ScenarioSummary({
           </p>
         </div>
 
-        <div className="grid grid-cols-2 max-w-md mx-auto border-y border-slate-200 dark:border-slate-800 divide-x divide-slate-200 dark:divide-slate-800">
+        <div className="grid grid-cols-2 max-w-md mx-auto border-y border-slate-200 dark:border-slate-800 divide-x divide-slate-200 dark:divide-slate-800 tabular-nums">
           <div className="py-4 px-3 text-center">
             <div className="text-2xl font-mono font-bold text-slate-900 dark:text-slate-50">
               {averageScore}
@@ -255,9 +255,9 @@ export function ScenarioSummary({
         <div className="max-w-md mx-auto pb-4 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-green-50 dark:bg-green-950/50 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 flex items-center justify-center shrink-0">
-              <Coins className="w-4 h-4" />
+              <Coins className="w-4 h-4" aria-hidden="true" />
             </div>
-            <div className="text-left">
+            <div className="text-left tabular-nums">
               <div className="text-sm font-mono font-bold text-slate-900 dark:text-slate-50">
                 +{earnedPoints} điểm -&gt; {coins} IT-Coin
               </div>
@@ -267,8 +267,8 @@ export function ScenarioSummary({
             </div>
           </div>
 
-          <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-xs font-mono font-semibold text-amber-800 dark:text-amber-300">
-            <Flame className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+          <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-xs font-mono font-semibold tabular-nums text-amber-800 dark:text-amber-300">
+            <Flame className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" aria-hidden="true" />
             <span>{gamification.streakDays} ngày</span>
           </div>
         </div>
@@ -277,16 +277,16 @@ export function ScenarioSummary({
           <button
             type="button"
             onClick={handleCopyResult}
-            className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
+            className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
               copied
                 ? "bg-green-700 hover:bg-green-800 text-white"
                 : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700"
             }`}
           >
             {copied ? (
-              <Check className="w-3.5 h-3.5" />
+              <Check className="w-3.5 h-3.5" aria-hidden="true" />
             ) : (
-              <Copy className="w-3.5 h-3.5" />
+              <Copy className="w-3.5 h-3.5" aria-hidden="true" />
             )}
             <span>{copied ? "Đã sao chép!" : "Sao chép kết quả"}</span>
           </button>
@@ -294,18 +294,17 @@ export function ScenarioSummary({
           <button
             type="button"
             onClick={onRetry}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700 font-bold text-sm transition-colors"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700 focus-visible:ring-2 focus-visible:ring-blue-600 font-bold text-sm transition-colors"
           >
-            <RotateCcw className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
+            <RotateCcw className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
             <span>Luyện lại kịch bản này</span>
           </button>
 
           <Link
             href="/scenarios"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold text-sm active:scale-[0.98] transition-colors"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-white font-semibold text-sm active:scale-[0.98] motion-reduce:transform-none transition-colors"
           >
             <span>Chọn kịch bản khác</span>
-            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
@@ -317,7 +316,7 @@ export function ScenarioSummary({
         )}
       </div>
 
-      <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-4">
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="space-y-0.5">
             <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2">

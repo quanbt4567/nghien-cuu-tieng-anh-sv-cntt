@@ -11,18 +11,22 @@ export interface PublicAnnouncement {
 }
 
 export async function GET() {
-  const ready = await ensureSchema();
-  const sql = getNeonSql();
-  if (!ready || !sql) {
+  try {
+    const ready = await ensureSchema();
+    const sql = getNeonSql();
+    if (!ready || !sql) {
+      return NextResponse.json({ announcements: [] });
+    }
+
+    const rows = (await sql`
+      SELECT id, title, body, created_at
+      FROM speakit_announcements
+      ORDER BY created_at DESC
+      LIMIT 10
+    `) as PublicAnnouncement[];
+
+    return NextResponse.json({ announcements: rows });
+  } catch {
     return NextResponse.json({ announcements: [] });
   }
-
-  const rows = (await sql`
-    SELECT id, title, body, created_at
-    FROM speakit_announcements
-    ORDER BY created_at DESC
-    LIMIT 10
-  `) as PublicAnnouncement[];
-
-  return NextResponse.json({ announcements: rows });
 }

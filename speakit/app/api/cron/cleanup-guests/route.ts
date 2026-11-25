@@ -17,6 +17,13 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const deletedCount = await cleanupExpiredZeroCoinGuests({ force: true });
-  return NextResponse.json({ ok: true, deletedCount });
+  try {
+    const deletedCount = await cleanupExpiredZeroCoinGuests({ force: true });
+    return NextResponse.json({ ok: true, deletedCount });
+  } catch {
+    return NextResponse.json(
+      { ok: false, deletedCount: 0, error: "Cleanup failed" },
+      { status: 500 }
+    );
+  }
 }

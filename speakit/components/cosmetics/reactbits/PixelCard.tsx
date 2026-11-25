@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type FocusEvent, type ReactNode } from 'react';
 
 const CARD =
-  'group relative grid place-items-center w-[300px] h-[400px] overflow-hidden rounded-[var(--pixel-card-radius,24px)] isolate outline-none select-none [-webkit-tap-highlight-color:transparent] [&>:not(canvas):not([data-rim])]:relative [&>:not(canvas):not([data-rim])]:z-[1]';
+  'group relative grid place-items-center w-[300px] h-[400px] overflow-hidden rounded-[var(--pixel-card-radius,24px)] isolate focus-visible:outline-none select-none [-webkit-tap-highlight-color:transparent] [&>:not(canvas):not([data-rim])]:relative [&>:not(canvas):not([data-rim])]:z-[1]';
 
 const SURFACE: Record<Tone, string> = {
   dark: 'bg-[linear-gradient(180deg,#17151c_0%,#0f0e13_100%)] shadow-[0_24px_48px_-24px_rgba(0,0,0,0.85),0_8px_18px_-10px_rgba(0,0,0,0.6)] focus-visible:shadow-[0_24px_48px_-24px_rgba(0,0,0,0.85),0_8px_18px_-10px_rgba(0,0,0,0.6),0_0_0_3px_rgba(127,127,140,0.45)]',

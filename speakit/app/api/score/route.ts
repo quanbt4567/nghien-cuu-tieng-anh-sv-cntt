@@ -15,8 +15,13 @@ import { readExistingGuestPlayer } from "../../../lib/neon-auth";
 import { ScoreRequestPayload } from "../../../lib/types";
 
 export async function POST(req: NextRequest) {
+  let body: ScoreRequestPayload;
   try {
-    const body: ScoreRequestPayload = await req.json();
+    body = (await req.json()) as ScoreRequestPayload;
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+  }
+  try {
     const { transcript, scenario, turnIndex, expectedKeywords, history } = body;
 
     if (!transcript || transcript.trim().length === 0) {

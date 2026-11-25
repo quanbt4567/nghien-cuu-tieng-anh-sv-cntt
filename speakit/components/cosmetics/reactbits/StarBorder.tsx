@@ -104,7 +104,7 @@ let colorContext: CanvasRenderingContext2D | null = null;
 const toRgb = (color: string): Rgb => {
   colorContext = colorContext ?? document.createElement('canvas').getContext('2d');
   if (!colorContext) return WHITE;
-  colorContext.fillStyle = '#000000';
+  colorContext.fillStyle = '#0B1220';
   colorContext.fillStyle = color;
   const value = String(colorContext.fillStyle);
   if (value.startsWith('#')) {

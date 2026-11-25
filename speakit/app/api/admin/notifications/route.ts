@@ -17,20 +17,24 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Chưa đăng nhập phiên quản trị." }, { status: 401 });
   }
 
-  const ready = await ensureSchema();
-  const sql = getNeonSql();
-  if (!ready || !sql) {
+  try {
+    const ready = await ensureSchema();
+    const sql = getNeonSql();
+    if (!ready || !sql) {
+      return NextResponse.json({ announcements: [] });
+    }
+
+    const rows = (await sql`
+      SELECT id, title, body, created_at
+      FROM speakit_announcements
+      ORDER BY created_at DESC
+      LIMIT 50
+    `) as AnnouncementRow[];
+
+    return NextResponse.json({ announcements: rows });
+  } catch {
     return NextResponse.json({ announcements: [] });
   }
-
-  const rows = (await sql`
-    SELECT id, title, body, created_at
-    FROM speakit_announcements
-    ORDER BY created_at DESC
-    LIMIT 50
-  `) as AnnouncementRow[];
-
-  return NextResponse.json({ announcements: rows });
 }
 
 export async function POST(req: NextRequest) {
@@ -55,20 +59,24 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const ready = await ensureSchema();
-  const sql = getNeonSql();
-  if (!ready || !sql) {
-    return NextResponse.json({ error: "Chưa kết nối Neon DB." }, { status: 503 });
+  try {
+    const ready = await ensureSchema();
+    const sql = getNeonSql();
+    if (!ready || !sql) {
+      return NextResponse.json({ error: "Chưa kết nối Neon DB." }, { status: 503 });
+    }
+
+    const id = randomUUID();
+    const rows = (await sql`
+      INSERT INTO speakit_announcements (id, title, body)
+      VALUES (${id}, ${title}, ${messageBody})
+      RETURNING id, title, body, created_at
+    `) as AnnouncementRow[];
+
+    return NextResponse.json({ ok: true, announcement: rows[0] });
+  } catch {
+    return NextResponse.json({ error: "Không thể lưu thông báo lúc này." }, { status: 500 });
   }
-
-  const id = randomUUID();
-  const rows = (await sql`
-    INSERT INTO speakit_announcements (id, title, body)
-    VALUES (${id}, ${title}, ${messageBody})
-    RETURNING id, title, body, created_at
-  `) as AnnouncementRow[];
-
-  return NextResponse.json({ ok: true, announcement: rows[0] });
 }
 
 export async function DELETE(req: NextRequest) {
@@ -81,12 +89,16 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "Thiếu mã thông báo cần xóa." }, { status: 400 });
   }
 
-  const ready = await ensureSchema();
-  const sql = getNeonSql();
-  if (!ready || !sql) {
-    return NextResponse.json({ error: "Chưa kết nối Neon DB." }, { status: 503 });
-  }
+  try {
+    const ready = await ensureSchema();
+    const sql = getNeonSql();
+    if (!ready || !sql) {
+      return NextResponse.json({ error: "Chưa kết nối Neon DB." }, { status: 503 });
+    }
 
-  await sql`DELETE FROM speakit_announcements WHERE id = ${id}`;
-  return NextResponse.json({ ok: true });
+    await sql`DELETE FROM speakit_announcements WHERE id = ${id}`;
+    return NextResponse.json({ ok: true });
+  } catch {
+    return NextResponse.json({ error: "Không thể xóa thông báo lúc này." }, { status: 500 });
+  }
 }

@@ -68,7 +68,7 @@ export function InteractiveEnglishText({
             {isOpen && (
               <span
                 role="tooltip"
-                className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 z-30 whitespace-nowrap max-w-[230px] truncate px-2.5 py-1 rounded-lg bg-white dark:bg-[#0A0A0A] text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700 text-xs font-sans font-medium shadow-sm pointer-events-none"
+                className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 z-30 whitespace-nowrap max-w-[230px] truncate px-2.5 py-1 rounded-lg bg-white dark:bg-[#1E293B] text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700 text-xs font-sans font-medium shadow-sm pointer-events-none"
               >
                 <span className="font-mono font-semibold text-blue-700 dark:text-blue-400">{word.replace(/[^a-zA-Z0-9-]/g, "")}:</span>{" "}
                 {gloss}

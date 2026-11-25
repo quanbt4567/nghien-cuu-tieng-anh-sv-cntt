@@ -209,9 +209,13 @@ export default function PracticePage() {
   if (!scenario && isContentSyncing) {
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center">
-        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-8 inline-flex items-center gap-3 text-sm font-semibold text-slate-900 dark:text-slate-50">
-          <Loader2 className="w-5 h-5 animate-spin text-blue-700 dark:text-blue-400" />
-          <span>Đang tải kịch bản luyện tập...</span>
+        <div
+          role="status"
+          aria-live="polite"
+          className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl p-8 inline-flex items-center gap-3 text-sm font-semibold text-slate-900 dark:text-slate-50"
+        >
+          <Loader2 className="w-5 h-5 animate-spin motion-reduce:animate-none text-blue-700 dark:text-blue-400" aria-hidden="true" />
+          <span>Đang tải kịch bản luyện tập…</span>
         </div>
       </div>
     );
@@ -221,9 +225,9 @@ export default function PracticePage() {
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center space-y-4">
         <div className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 flex items-center justify-center mx-auto border border-red-200 dark:border-red-800">
-          <AlertCircle className="w-6 h-6" />
+          <AlertCircle className="w-6 h-6" aria-hidden="true" />
         </div>
-        <h1 className="text-xl font-bold text-slate-900 dark:text-slate-50">
+        <h1 className="text-xl font-bold text-slate-900 dark:text-slate-50 text-balance">
           Không tìm thấy tình huống làm việc này
         </h1>
         <p className="text-sm text-slate-600 dark:text-slate-300">
@@ -231,9 +235,9 @@ export default function PracticePage() {
         </p>
         <Link
           href="/"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white text-sm font-semibold transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-white text-sm font-semibold transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4" aria-hidden="true" />
           <span>Quay lại danh sách kịch bản</span>
         </Link>
       </div>
@@ -412,17 +416,17 @@ export default function PracticePage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 sm:py-8 space-y-6">
-      <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl flex flex-wrap items-center justify-between gap-3 px-4 py-3">
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl flex flex-wrap items-center justify-between gap-3 px-4 py-3">
         <div className="flex items-center gap-3 min-w-0">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700 dark:hover:border-blue-500 text-xs font-semibold transition-colors shrink-0"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700 dark:hover:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-600 text-xs font-semibold transition-colors shrink-0"
           >
-            <ArrowLeft className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
+            <ArrowLeft className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
             <span>Kịch bản</span>
           </Link>
           <div className="min-w-0">
-            <h1 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-50 leading-tight">
+            <h1 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-50 leading-tight text-balance">
               {scenario.titleVI}
             </h1>
             <p className="text-xs font-mono text-slate-600 dark:text-slate-400">
@@ -432,7 +436,7 @@ export default function PracticePage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 tabular-nums">
             {scenario.turns.map((turn, idx) => {
               const isDone = idx < safeTurnIndex || isCompleted;
               const isCurrent = idx === safeTurnIndex && !isCompleted;
@@ -447,7 +451,7 @@ export default function PracticePage() {
                       : "bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700"
                   }`}
                 >
-                  {isDone && <Check className="w-3 h-3 text-green-700 dark:text-green-400 stroke-[3]" />}
+                  {isDone && <Check className="w-3 h-3 text-green-700 dark:text-green-400 stroke-[3]" aria-hidden="true" />}
                   <span>
                     Turn {idx + 1}/{scenario.turns.length}
                   </span>
@@ -457,13 +461,18 @@ export default function PracticePage() {
           </div>
 
           <div className="inline-flex items-center gap-1.5">
-            <label className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-slate-100">
-              <Volume2 className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400 shrink-0" />
+            <label
+              htmlFor="practice-voice-persona"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-slate-100"
+            >
+              <Volume2 className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
               <select
+                id="practice-voice-persona"
+                name="voicePersona"
                 aria-label="AI Voice Persona"
                 value={voicePersona}
                 onChange={(e) => handleVoiceChange(normalizeTtsPersona(e.target.value))}
-                className="bg-transparent text-xs font-medium text-slate-900 dark:text-slate-100 focus:outline-none cursor-pointer pr-1"
+                className="bg-slate-50 dark:bg-slate-800 text-xs font-medium text-slate-900 dark:text-slate-100 rounded focus-visible:ring-2 focus-visible:ring-blue-600 cursor-pointer pr-1"
               >
                 {TTS_VOICE_PERSONAS.map((persona) => (
                   <option key={persona.id} value={persona.id} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">
@@ -474,6 +483,7 @@ export default function PracticePage() {
             </label>
             <button
               type="button"
+              aria-pressed={isPreviewingVoice}
               onClick={() => {
                 if (isPreviewingVoice) {
                   stopActiveTts();
@@ -492,16 +502,16 @@ export default function PracticePage() {
               }}
               title="Nghe thử giọng"
               aria-label="Nghe thử giọng"
-              className={`w-8 h-8 rounded-lg flex items-center justify-center border transition-colors ${
+              className={`w-8 h-8 rounded-lg flex items-center justify-center border focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
                 isPreviewingVoice
                   ? "bg-red-600 hover:bg-red-700 border-red-600 text-white"
                   : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-blue-700 dark:text-blue-400 hover:border-blue-700"
               }`}
             >
               {isPreviewingVoice ? (
-                <VolumeX className="w-3.5 h-3.5" />
+                <VolumeX className="w-3.5 h-3.5" aria-hidden="true" />
               ) : (
-                <Volume2 className="w-3.5 h-3.5" />
+                <Volume2 className="w-3.5 h-3.5" aria-hidden="true" />
               )}
             </button>
           </div>
@@ -530,31 +540,31 @@ export default function PracticePage() {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           <div className="lg:col-span-6 space-y-5">
-            <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-5">
+            <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-5">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3.5">
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-blue-700 dark:bg-blue-400" />
-                  AI Interviewer • Lượt {safeTurnIndex + 1}/{scenario.turns.length}
+                <span className="text-xs font-mono font-semibold text-blue-700 dark:text-blue-400 flex items-center gap-1.5 tabular-nums">
+                  <span className="w-2 h-2 rounded-full bg-blue-700 dark:bg-blue-400" aria-hidden="true" />
+                  AI Interviewer — Lượt {safeTurnIndex + 1}/{scenario.turns.length}
                 </span>
                 <div className="flex flex-wrap items-center gap-2">
                   {isPlayingPrompt && !isSlowPlaying ? (
                     <button
                       onClick={stopPromptAudio}
                       type="button"
-                      className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 focus-visible:ring-2 focus-visible:ring-red-600 text-white text-xs font-semibold rounded-lg transition-colors"
                       title="Dừng phát âm"
                     >
-                      <VolumeX className="w-3.5 h-3.5" />
+                      <VolumeX className="w-3.5 h-3.5" aria-hidden="true" />
                       <span>Dừng nghe</span>
                     </button>
                   ) : (
                     <button
                       onClick={() => playPromptAudio({ slowMode: false })}
                       type="button"
-                      className="flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors"
+                      className="flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-white text-xs font-semibold rounded-lg transition-colors"
                       title="Nghe lại câu hỏi"
                     >
-                      <RotateCcw className="w-3.5 h-3.5" />
+                      <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
                       <span>Nghe lại</span>
                     </button>
                   )}
@@ -568,7 +578,7 @@ export default function PracticePage() {
                       }
                     }}
                     type="button"
-                    className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg border transition-colors ${
+                    className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg border focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
                       isPlayingPrompt && isSlowPlaying
                         ? "bg-red-600 hover:bg-red-700 border-red-600 text-white"
                         : "bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/50 dark:hover:bg-blue-950/80 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300"
@@ -576,9 +586,9 @@ export default function PracticePage() {
                     title="Nghe chậm từng từ"
                   >
                     {isPlayingPrompt && isSlowPlaying ? (
-                      <VolumeX className="w-3.5 h-3.5" />
+                      <VolumeX className="w-3.5 h-3.5" aria-hidden="true" />
                     ) : (
-                      <Volume2 className="w-3.5 h-3.5" />
+                      <Volume2 className="w-3.5 h-3.5" aria-hidden="true" />
                     )}
                     <span>Nghe chậm từng từ (Slow)</span>
                   </button>
@@ -594,7 +604,7 @@ export default function PracticePage() {
                             playPromptAudio({ rate: r, slowMode: isSlowPlaying });
                           }
                         }}
-                        className={`px-2 py-0.5 text-xs font-mono font-semibold rounded-md border transition-colors ${
+                        className={`px-2 py-0.5 text-xs font-mono font-semibold tabular-nums rounded-md border focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
                           promptRate === r
                             ? "bg-blue-700 text-white border-blue-700 dark:bg-blue-600 dark:border-blue-600"
                             : "text-slate-600 dark:text-slate-300 border-transparent hover:text-slate-900 dark:hover:text-white"
@@ -646,9 +656,10 @@ export default function PracticePage() {
                 <button
                   type="button"
                   onClick={() => setShowHint(!showHint)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs font-mono font-medium transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-slate-900 dark:text-slate-100 text-xs font-mono font-medium transition-colors"
                 >
                   <Lightbulb
+                    aria-hidden="true"
                     className={`w-3.5 h-3.5 ${
                       showHint ? "text-amber-600 dark:text-amber-400" : "text-blue-700 dark:text-blue-400"
                     }`}
@@ -662,7 +673,7 @@ export default function PracticePage() {
                   <div className="mt-3 space-y-3 pt-3 border-t border-slate-200 dark:border-slate-800">
                     <div className="space-y-2">
                       <div className="flex items-center gap-1.5 text-sm font-semibold text-slate-900 dark:text-slate-100">
-                        <Tag className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
+                        <Tag className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
                         <span>Từ khóa gợi ý nên dùng ({currentTurn.keywords.length}):</span>
                       </div>
                       <div className="flex flex-wrap gap-1.5">
@@ -687,7 +698,7 @@ export default function PracticePage() {
                     </div>
 
                     <div className="border-l-2 border-blue-700 dark:border-blue-500 pl-3.5 py-1 flex items-start gap-2.5 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                      <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                      <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" aria-hidden="true" />
                       <div>
                         <strong className="font-semibold text-blue-800 dark:text-blue-300">
                           Gợi ý cách trả lời:{" "}
@@ -700,7 +711,7 @@ export default function PracticePage() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-5">
+            <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 space-y-5">
               <div className="py-2">
                 <MicButton
                   isRecording={isRecording}
@@ -712,21 +723,27 @@ export default function PracticePage() {
               </div>
 
               <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-sm font-bold text-slate-900 dark:text-slate-50">
-                    <Keyboard className="w-4 h-4 text-blue-700 dark:text-blue-400" />
+                <div className="flex items-center justify-between gap-2">
+                  <label
+                    htmlFor="practice-transcript-input"
+                    className="flex items-center gap-1.5 text-sm font-bold text-slate-900 dark:text-slate-50"
+                  >
+                    <Keyboard className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
                     <span>
                       {isMicDenied
                         ? "Chế độ gõ văn bản (Microphone bị từ chối)"
                         : "Hoặc gõ / chỉnh sửa câu trả lời tiếng Anh:"}
                     </span>
-                  </div>
-                  <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
+                  </label>
+                  <span className="text-xs font-mono tabular-nums text-slate-600 dark:text-slate-400 shrink-0">
                     {transcript.trim() ? transcript.trim().split(/\s+/).length : 0} từ
                   </span>
                 </div>
 
                 <textarea
+                  id="practice-transcript-input"
+                  name="transcript"
+                  autoComplete="off"
                   value={transcript}
                   onChange={(e) => setTranscript(e.target.value)}
                   onKeyDown={(e) => {
@@ -744,8 +761,8 @@ export default function PracticePage() {
                   }}
                   disabled={isEvaluating || isRecording || Boolean(evalResult)}
                   rows={3}
-                  placeholder="Gõ câu trả lời tiếng Anh tại đây (hoặc nhấn Ghi âm câu trả lời ở trên)..."
-                  className="w-full p-3.5 text-sm rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-50 placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:border-blue-700 dark:focus:border-blue-500 resize-none transition-colors disabled:opacity-60"
+                  placeholder="Gõ câu trả lời tiếng Anh tại đây (hoặc nhấn Ghi âm câu trả lời ở trên)…"
+                  className="w-full p-3.5 text-sm rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-50 placeholder:text-slate-500 dark:placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:border-blue-700 dark:focus-visible:border-blue-500 resize-none transition-colors disabled:opacity-60"
                 />
 
                 {!evalResult && (
@@ -754,9 +771,9 @@ export default function PracticePage() {
                       type="button"
                       onClick={() => setTranscript("")}
                       disabled={!transcript || isEvaluating || isRecording}
-                      className="text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 px-2.5 py-1.5 rounded-lg disabled:opacity-40 disabled:pointer-events-none flex items-center gap-1 transition-colors"
+                      className="text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:ring-2 focus-visible:ring-blue-600 px-2.5 py-1.5 rounded-lg disabled:opacity-40 disabled:pointer-events-none flex items-center gap-1 transition-colors"
                     >
-                      <RotateCcw className="w-3 h-3" />
+                      <RotateCcw className="w-3 h-3" aria-hidden="true" />
                       <span>Xóa chữ</span>
                     </button>
 
@@ -764,14 +781,14 @@ export default function PracticePage() {
                       type="button"
                       onClick={handleSubmitAnswer}
                       disabled={!transcript.trim() || isEvaluating || isRecording}
-                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
+                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
                         transcript.trim() && !isEvaluating && !isRecording
-                          ? "bg-green-700 hover:bg-green-800 text-white active:scale-[0.98]"
+                          ? "bg-green-700 hover:bg-green-800 text-white active:scale-[0.98] motion-reduce:transform-none"
                           : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 cursor-not-allowed"
                       }`}
                     >
                       <span>Gửi câu trả lời</span>
-                      <Send className="w-4 h-4" />
+                      <Send className="w-4 h-4" aria-hidden="true" />
                     </button>
                   </div>
                 )}
@@ -781,11 +798,11 @@ export default function PracticePage() {
 
           <div className="lg:col-span-6 space-y-4">
             {turnScores.length > 0 && (
-              <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-2">
-                <span className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 uppercase">
+              <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+                <span className="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
                   Điểm từng lượt:
                 </span>
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2 tabular-nums">
                   {turnScores.map((score, idx) => (
                     <span
                       key={idx}
@@ -805,20 +822,28 @@ export default function PracticePage() {
             )}
 
             {isEvaluating && (
-              <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-8 flex flex-col items-center justify-center gap-3 text-center">
-                <Loader2 className="w-6 h-6 animate-spin text-blue-700 dark:text-blue-400" />
+              <div
+                role="status"
+                aria-live="polite"
+                className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl p-8 flex flex-col items-center justify-center gap-3 text-center"
+              >
+                <Loader2 className="w-6 h-6 animate-spin motion-reduce:animate-none text-blue-700 dark:text-blue-400" aria-hidden="true" />
                 <div className="text-sm font-semibold text-slate-900 dark:text-slate-50">
-                  Đang phân tích từ khóa và ngữ pháp câu trả lời...
+                  Đang phân tích từ khóa và ngữ pháp câu trả lời…
                 </div>
-                <p className="text-sm text-slate-600 dark:text-slate-300">
-                  Hệ thống chấm theo tỷ lệ 40% Từ khóa • 30% Đầy đủ • 30% Ngữ pháp
+                <p className="text-sm text-slate-600 dark:text-slate-300 tabular-nums">
+                  Hệ thống chấm theo tỷ lệ 40% Từ khóa, 30% Đầy đủ, 30% Ngữ pháp
                 </p>
               </div>
             )}
 
             {evaluationError && (
-              <div className="bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 rounded-xl p-4 text-sm text-red-700 dark:text-red-300 font-semibold flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0 text-red-600 dark:text-red-400" />
+              <div
+                role="alert"
+                aria-live="polite"
+                className="bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 rounded-xl p-4 text-sm text-red-700 dark:text-red-300 font-semibold flex items-center gap-2"
+              >
+                <AlertCircle className="w-4 h-4 shrink-0 text-red-600 dark:text-red-400" aria-hidden="true" />
                 <span>{evaluationError}</span>
               </div>
             )}
@@ -833,15 +858,15 @@ export default function PracticePage() {
               />
             ) : (
               !isEvaluating && (
-                <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-6 space-y-4">
-                  <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
-                    <CheckCircle2 className="w-4 h-4 text-blue-700 dark:text-blue-400" />
+                <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl p-6 space-y-4">
+                  <div className="flex items-center gap-2 text-xs font-mono font-semibold text-blue-700 dark:text-blue-400">
+                    <CheckCircle2 className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
                     <span>Bảng đánh giá &amp; Gợi ý tự nhiên</span>
                   </div>
                   <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                     Nhấn <strong className="text-slate-900 dark:text-slate-50">Ghi âm câu trả lời</strong> ở cột bên trái (hoặc gõ câu tiếng Anh) rồi gửi để xem điểm chi tiết, từ khóa đạt chuẩn và cách diễn đạt tự nhiên hơn.
                   </p>
-                  <div className="grid grid-cols-3 gap-1.5 sm:gap-2 pt-1 text-center font-mono">
+                  <div className="grid grid-cols-3 gap-1.5 sm:gap-2 pt-1 text-center font-mono tabular-nums">
                     <div className="whitespace-nowrap flex items-center justify-center leading-tight py-2.5 px-1.5 sm:px-2.5 text-[10px] sm:text-[11px] rounded-lg bg-green-50 dark:bg-green-950/50 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300 font-semibold">
                       40% Từ khóa
                     </div>

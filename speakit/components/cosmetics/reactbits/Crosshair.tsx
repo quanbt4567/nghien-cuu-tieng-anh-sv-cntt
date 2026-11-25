@@ -170,7 +170,7 @@ const Crosshair = ({
       ctx.beginPath();
       ctx.roundRect(left, top, width, height, 3);
       ctx.fill();
-      ctx.fillStyle = light ? '#0a0a0a' : '#ffffff';
+      ctx.fillStyle = light ? '#1E293B' : '#ffffff';
       ctx.textBaseline = 'middle';
       ctx.textAlign = 'center';
       ctx.fillText(text, left + width / 2, top + height / 2 + 0.5);

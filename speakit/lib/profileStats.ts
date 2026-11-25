@@ -119,7 +119,8 @@ export function calculateSpentCosmeticCoins(
 export function resolveConsistentItCoins(
   rawCoins: number,
   totalPoints: number,
-  ownedItems: readonly string[]
+  ownedItems: readonly string[],
+  penaltyCoins = 0
 ): number {
   const safeCoins = Number.isFinite(rawCoins)
     ? Math.max(0, Math.floor(rawCoins))
@@ -127,9 +128,12 @@ export function resolveConsistentItCoins(
   const safePoints = Number.isFinite(totalPoints)
     ? Math.max(0, Math.floor(totalPoints))
     : 0;
+  const safePenalty = Number.isFinite(penaltyCoins)
+    ? Math.max(0, Math.floor(penaltyCoins))
+    : 0;
   const earnedCoins = calculateCoins(safePoints);
   const spentCoins = calculateSpentCosmeticCoins(ownedItems);
-  const reconciledCoins = Math.max(0, earnedCoins - spentCoins);
+  const reconciledCoins = Math.max(0, earnedCoins - spentCoins - safePenalty);
   return Math.max(safeCoins, reconciledCoins);
 }
 
@@ -142,7 +146,8 @@ export function mergeProfileIdentity(
     const itCoins = resolveConsistentItCoins(
       guestPlayer.itCoins,
       guestPlayer.totalPoints,
-      ownedItems
+      ownedItems,
+      guestPlayer.penaltyCoins ?? 0
     );
     return {
       displayName: guestPlayer.displayName,

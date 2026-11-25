@@ -515,6 +515,9 @@ function OverlayLayer({
     <img
       src={url}
       alt=""
+      aria-hidden="true"
+      width={1920}
+      height={1080}
       onError={onError}
       className={`pointer-events-none select-none absolute inset-0 w-full h-full object-cover ${zClass}`}
       style={layerStyle}

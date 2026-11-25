@@ -128,6 +128,8 @@ function LiveAssetLayer({
     <img
       src={url}
       alt={alt}
+      width={64}
+      height={64}
       onError={() => setFailed(true)}
       style={{ mixBlendMode: blendMode }}
       className={className}

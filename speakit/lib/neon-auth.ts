@@ -221,13 +221,15 @@ export function serializePublicGuestPlayer(
     typeof row.email === "string" && row.email.trim()
       ? row.email.trim().toLowerCase()
       : null;
+  const penaltyCoins = Math.max(0, Number(row.penalty_coins) || 0);
   return {
     id: row.id,
     transferCode: row.transfer_code,
     displayName: row.display_name,
     avatarUrl: typeof row.avatar_url === "string" && row.avatar_url.length > 0 ? row.avatar_url : null,
     email,
-    itCoins: resolveConsistentItCoins(Number(row.it_coins) || 0, totalPoints, ownedItems),
+    itCoins: resolveConsistentItCoins(Number(row.it_coins) || 0, totalPoints, ownedItems, penaltyCoins),
+    penaltyCoins,
     totalPoints,
     streakDays: Number(row.streak_days) || 0,
     lastPracticeDate: row.last_practice_date ?? null,
@@ -378,6 +380,7 @@ async function findPlayerByRawToken(
       gp.avatar_url,
       gp.email,
       gp.it_coins,
+      gp.penalty_coins,
       gp.total_points,
       gp.streak_days,
       gp.last_practice_date,
@@ -593,6 +596,7 @@ export async function restoreByTransferCode(code: string): Promise<{
         avatar_url,
         email,
         it_coins,
+        penalty_coins,
         total_points,
         streak_days,
         last_practice_date,
@@ -773,6 +777,7 @@ export async function registerWithEmailPassword(input: {
           avatar_url,
           email,
           it_coins,
+          penalty_coins,
           total_points,
           streak_days,
           last_practice_date,
@@ -848,6 +853,7 @@ export async function registerWithEmailPassword(input: {
             avatar_url,
             email,
             it_coins,
+            penalty_coins,
             total_points,
             streak_days,
             last_practice_date,
@@ -972,6 +978,7 @@ export async function loginWithEmailPassword(input: {
         avatar_url,
         email,
         it_coins,
+        penalty_coins,
         total_points,
         streak_days,
         last_practice_date,

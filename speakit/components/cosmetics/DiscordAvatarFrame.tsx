@@ -370,6 +370,9 @@ export function DiscordAvatarFrame({
             <img
               src={assetUrl}
               alt=""
+              aria-hidden="true"
+              width={128}
+              height={128}
               onError={() => setMediaFailed(true)}
               className="w-full h-full object-contain pointer-events-none select-none"
             />

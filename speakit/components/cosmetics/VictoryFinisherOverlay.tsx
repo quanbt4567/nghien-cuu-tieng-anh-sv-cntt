@@ -271,7 +271,7 @@ export function VictoryFinisherOverlay({
         }`}
       >
         <div
-          className={`inline-flex items-center justify-center gap-2 text-xs font-mono font-bold uppercase tracking-wider ${
+          className={`inline-flex items-center justify-center gap-2 text-xs font-mono font-bold ${
             isMatrix
               ? "text-green-700 dark:text-green-400"
               : isShockwave
@@ -295,7 +295,7 @@ export function VictoryFinisherOverlay({
 
         {isShockwave && (
           <div className="inline-flex items-center gap-1.5 rounded-full border border-green-300 dark:border-green-800 bg-green-50 dark:bg-green-950/40 px-3 py-0.5 text-[11px] font-mono font-bold text-green-700 dark:text-green-300">
-            <span className="w-2 h-2 rounded-full bg-green-600 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-green-600 animate-pulse motion-reduce:animate-none" />
             <span>ALL SERVICES HEALTHY : 200 OK</span>
           </div>
         )}

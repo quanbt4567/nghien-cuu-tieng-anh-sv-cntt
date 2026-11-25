@@ -251,19 +251,19 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
     questions.length > 0 ? Math.round((correctCount / questions.length) * 100) : 0;
 
   return (
-    <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl overflow-hidden">
+    <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl overflow-hidden">
       <div className="px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-start sm:items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0">
-            <Zap className="w-4 h-4" />
+            <Zap className="w-4 h-4" aria-hidden="true" />
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
+              <h2 className="text-base font-bold text-slate-900 dark:text-slate-50 text-balance">
                 90-Second Context Recall Quiz
               </h2>
-              <span className="inline-flex items-center gap-1 text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
-                <Coins className="w-3 h-3" />
+              <span className="inline-flex items-center gap-1 text-xs font-mono font-semibold tabular-nums px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+                <Coins className="w-3 h-3" aria-hidden="true" />
                 +2 IT-Coins (≥80%)
               </span>
             </div>
@@ -278,7 +278,7 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
             <button
               type="button"
               onClick={startQuiz}
-              className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+              className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
             >
               Bắt đầu Quiz
             </button>
@@ -287,36 +287,36 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
             type="button"
             onClick={handleToggleBanner}
             aria-label={isExpanded ? "Thu gọn quiz" : "Mở rộng quiz"}
-            className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+            className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors"
           >
             {isExpanded ? (
-              <ChevronUp className="w-4 h-4" />
+              <ChevronUp className="w-4 h-4" aria-hidden="true" />
             ) : (
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown className="w-4 h-4" aria-hidden="true" />
             )}
           </button>
         </div>
       </div>
 
       {isExpanded && phase === "playing" && currentQuestion && (
-        <div className="p-5 border-t border-slate-200 dark:border-[#262626] space-y-4">
-          <div className="flex items-center justify-between text-xs font-mono">
+        <div className="p-5 border-t border-slate-200 dark:border-[#334155] space-y-4">
+          <div className="flex items-center justify-between text-xs font-mono tabular-nums">
             <span className="text-slate-600 dark:text-slate-300">
-              Câu {currentIndex + 1}/{questions.length} · Đúng: {correctCount}
+              Câu {currentIndex + 1}/{questions.length} (Đúng: {correctCount})
             </span>
             <span
               className={`inline-flex items-center gap-1 font-semibold px-2.5 py-0.5 rounded-full border ${
                 timeLeft <= 10
-                  ? "bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800 animate-pulse"
+                  ? "bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800 animate-pulse motion-reduce:animate-none"
                   : "bg-blue-50 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800"
               }`}
             >
-              <Clock className="w-3.5 h-3.5" />
+              <Clock className="w-3.5 h-3.5" aria-hidden="true" />
               {timeLeft}s
             </span>
           </div>
 
-          <div className="bg-slate-50 dark:bg-[#141414] rounded-xl p-4 space-y-2">
+          <div className="bg-slate-50 dark:bg-[#263349] rounded-xl p-4 space-y-2">
             <p className="text-sm sm:text-base font-medium text-slate-900 dark:text-slate-100 leading-relaxed">
               {currentQuestion.prompt.split("____").map((part, idx, arr) => (
                 <span key={idx}>
@@ -362,14 +362,14 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
                   onClick={() =>
                     submitAnswer(choice, choice === currentQuestion.targetTerm)
                   }
-                  className={`px-4 py-2.5 rounded-lg border text-left font-mono text-sm font-semibold transition-colors flex items-center justify-between ${buttonStyle}`}
+                  className={`px-4 py-2.5 rounded-lg border text-left font-mono text-sm font-semibold focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors flex items-center justify-between ${buttonStyle}`}
                 >
                   <span>{choice}</span>
                   {feedback && isTarget && (
-                    <CheckCircle2 className="w-4 h-4 text-green-700 dark:text-green-400 shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-green-700 dark:text-green-400 shrink-0" aria-hidden="true" />
                   )}
                   {feedback && isSelected && !feedback.isCorrect && (
-                    <XCircle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
+                    <XCircle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" aria-hidden="true" />
                   )}
                 </button>
               );
@@ -382,20 +382,20 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
                 type="button"
                 disabled={Boolean(feedback)}
                 onClick={handleVoiceAnswer}
-                className={`text-white inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                className={`text-white inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
                   isListening
-                    ? "bg-red-600 hover:bg-red-700 animate-pulse"
+                    ? "bg-red-600 hover:bg-red-700 animate-pulse motion-reduce:animate-none"
                     : "bg-green-700 hover:bg-green-800"
                 }`}
               >
                 {isListening ? (
                   <>
-                    <MicOff className="w-4 h-4" />
-                    <span>Đang nghe... (Nhấn để dừng)</span>
+                    <MicOff className="w-4 h-4" aria-hidden="true" />
+                    <span>Đang nghe… (Nhấn để dừng)</span>
                   </>
                 ) : (
                   <>
-                    <Mic className="w-4 h-4" />
+                    <Mic className="w-4 h-4" aria-hidden="true" />
                     <span>Nói thuật ngữ (Web Speech)</span>
                   </>
                 )}
@@ -418,7 +418,7 @@ export function VocabContextQuiz({ items }: VocabContextQuizProps) {
       )}
 
       {isExpanded && phase === "finished" && (
-        <div className="p-5 border-t border-slate-200 dark:border-[#262626] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="p-5 border-t border-slate-200 dark:border-[#334155] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="text-base font-bold text-slate-900 dark:text-slate-50">

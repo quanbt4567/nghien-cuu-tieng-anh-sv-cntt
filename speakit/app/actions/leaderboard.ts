@@ -146,7 +146,7 @@ export async function getTopPlayers(
                 ) AS distinct_owned
                 JOIN jsonb_array_elements(${COSMETIC_PRICES_JSON}::jsonb) AS c
                   ON c->>'id' = distinct_owned.item_id
-              ), 0)::int
+              ), 0)::int - COALESCE(penalty_coins, 0)
             )
           ) AS effective_coins,
           total_points,
@@ -208,7 +208,7 @@ export async function getTopPlayers(
                   ) AS distinct_owned
                   JOIN jsonb_array_elements(${COSMETIC_PRICES_JSON}::jsonb) AS c
                     ON c->>'id' = distinct_owned.item_id
-                ), 0)::int
+                ), 0)::int - COALESCE(penalty_coins, 0)
               )
             ) AS effective_coins,
             total_points,
@@ -267,7 +267,7 @@ export async function getTopPlayers(
                     ) AS distinct_owned
                     JOIN jsonb_array_elements(${COSMETIC_PRICES_JSON}::jsonb) AS c
                       ON c->>'id' = distinct_owned.item_id
-                  ), 0)::int
+                  ), 0)::int - COALESCE(penalty_coins, 0)
                 )
               ) AS effective_coins,
               total_points
@@ -390,7 +390,7 @@ export async function rewardPracticePoints(
               ) AS distinct_owned
               JOIN jsonb_array_elements(${COSMETIC_PRICES_JSON}::jsonb) AS c
                 ON c->>'id' = distinct_owned.item_id
-            ), 0)::int
+            ), 0)::int - COALESCE(penalty_coins, 0)
           )
         ),
         total_points = total_points + ${clampedPoints},
@@ -415,6 +415,7 @@ export async function rewardPracticePoints(
         avatar_url,
         email,
         it_coins,
+        penalty_coins,
         total_points,
         streak_days,
         last_practice_date,
@@ -532,6 +533,7 @@ export async function purchaseAndEquipCosmetic(
           avatar_url,
           email,
           it_coins,
+          penalty_coins,
           total_points,
           streak_days,
           last_practice_date,
@@ -592,6 +594,7 @@ export async function purchaseAndEquipCosmetic(
         guest_players.avatar_url,
         guest_players.email,
         guest_players.it_coins,
+        guest_players.penalty_coins,
         guest_players.total_points,
         guest_players.streak_days,
         guest_players.last_practice_date,
@@ -689,6 +692,7 @@ export async function updateGuestDisplayName(
         avatar_url,
         email,
         it_coins,
+        penalty_coins,
         total_points,
         streak_days,
         last_practice_date,
@@ -789,6 +793,7 @@ export async function updateGuestAvatar(
         avatar_url,
         email,
         it_coins,
+        penalty_coins,
         total_points,
         streak_days,
         last_practice_date,
@@ -893,6 +898,7 @@ export async function equipOwnedCosmetic(
         avatar_url,
         email,
         it_coins,
+        penalty_coins,
         total_points,
         streak_days,
         last_practice_date,
@@ -977,6 +983,7 @@ export async function unequipCosmeticSlot(
         avatar_url,
         email,
         it_coins,
+        penalty_coins,
         total_points,
         streak_days,
         last_practice_date,

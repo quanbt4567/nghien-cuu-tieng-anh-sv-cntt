@@ -287,9 +287,9 @@ export function WelcomeNameModal() {
       role="dialog"
       aria-modal="true"
       aria-labelledby="auth-modal-title"
-      className="fixed inset-0 z-50 bg-slate-950/55 flex items-center justify-center p-4 overflow-y-auto"
+      className="fixed inset-0 z-50 bg-slate-950/55 flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
     >
-      <div className="w-full max-w-md bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm space-y-5 relative my-auto">
+      <div className="w-full max-w-md bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm space-y-5 relative my-auto">
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center shrink-0">
             <ShieldCheck className="w-5 h-5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
@@ -316,7 +316,7 @@ export function WelcomeNameModal() {
             }}
             className={`inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-semibold transition-colors border ${
               tab === "login"
-                ? "bg-white dark:bg-[#0A0A0A] text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-700"
+                ? "bg-white dark:bg-[#1E293B] text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-700"
                 : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border-transparent"
             }`}
           >
@@ -332,7 +332,7 @@ export function WelcomeNameModal() {
             }}
             className={`inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-semibold transition-colors border ${
               tab === "register"
-                ? "bg-white dark:bg-[#0A0A0A] text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-700"
+                ? "bg-white dark:bg-[#1E293B] text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-700"
                 : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border-transparent"
             }`}
           >
@@ -358,13 +358,16 @@ export function WelcomeNameModal() {
               </label>
               <input
                 id="auth-display-name"
+                name="displayName"
                 type="text"
+                autoComplete="name"
+                spellCheck={false}
                 maxLength={24}
                 required
                 disabled={isSubmitting}
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="VD: Minh Quân, Lan Anh..."
+                placeholder="VD: Minh Quân, Lan Anh…"
                 className="w-full px-3.5 py-2.5 text-sm liquid-glass-input rounded-lg disabled:opacity-60"
               />
             </div>
@@ -384,8 +387,10 @@ export function WelcomeNameModal() {
               />
               <input
                 id="auth-email"
+                name="email"
                 type="email"
                 autoComplete="email"
+                spellCheck={false}
                 required
                 disabled={isSubmitting}
                 value={email}
@@ -449,7 +454,10 @@ export function WelcomeNameModal() {
               </label>
               <input
                 id="auth-transfer-code"
+                name="transferCode"
                 type="text"
+                autoComplete="off"
+                spellCheck={false}
                 maxLength={16}
                 disabled={isSubmitting}
                 value={transferCode}
@@ -463,6 +471,7 @@ export function WelcomeNameModal() {
           {error && (
             <div
               role="alert"
+              aria-live="polite"
               className="p-2.5 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-sm text-red-700 dark:text-red-300 font-medium"
             >
               {error}
@@ -476,9 +485,9 @@ export function WelcomeNameModal() {
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                <Loader2 className="w-4 h-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />
                 <span>
-                  {tab === "login" ? "Đang đăng nhập..." : "Đang tạo tài khoản..."}
+                  {tab === "login" ? "Đang đăng nhập…" : "Đang tạo tài khoản…"}
                 </span>
               </>
             ) : tab === "login" ? (

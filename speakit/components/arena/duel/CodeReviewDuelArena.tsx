@@ -830,6 +830,13 @@ export function CodeReviewDuelArena() {
         .duel-crit-banner {
           animation: duelCritPop 1.25s ease-out forwards;
         }
+        @media (prefers-reduced-motion: reduce) {
+          .duel-shake-active,
+          .duel-spark-particle,
+          .duel-crit-banner {
+            animation: none !important;
+          }
+        }
       `}</style>
 
       <VictoryFinisherOverlay
@@ -1037,11 +1044,11 @@ export function CodeReviewDuelArena() {
                     disabled={Boolean(loadingAction)}
                     className="liquid-glass-btn inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm disabled:opacity-50 transition-colors"
                   >
-                    <Users className="w-4 h-4 text-blue-700 dark:text-blue-400" />
+                    <Users className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
                     <span>
                       {loadingAction === "create"
-                        ? "Creating Room..."
-                        : "Create 6-Char Duel Room"}
+                        ? "Đang tạo phòng…"
+                        : "Tạo phòng Duel 6 ký tự"}
                     </span>
                   </button>
 
@@ -1051,10 +1058,10 @@ export function CodeReviewDuelArena() {
                     disabled={Boolean(loadingAction)}
                     className="liquid-btn-primary inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm transition-colors disabled:opacity-50"
                   >
-                    <Bot className="w-4 h-4" />
+                    <Bot className="w-4 h-4" aria-hidden="true" />
                     <span>
                       {loadingAction === "quick_bot"
-                        ? "Starting AI Bot..."
+                        ? "Đang khởi tạo AI Bot…"
                         : "Đấu với AI Bot"}
                     </span>
                   </button>
@@ -1063,20 +1070,23 @@ export function CodeReviewDuelArena() {
 
               <section className="liquid-glass-card p-5 flex flex-col justify-between space-y-4">
                 <div className="space-y-3">
-                  <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
-                    Or Join by 6-Char Code
+                  <h2 className="text-sm font-mono font-bold text-slate-900 dark:text-slate-100">
+                    Hoặc vào phòng bằng mã 6 ký tự
                   </h2>
                   <p className="text-sm text-slate-600 dark:text-slate-300">
-                    Enter the 6-character duel room code shared by your opponent to
-                    claim the open stance.
+                    Nhập mã phòng 6 ký tự do đối thủ chia sẻ để chọn vai còn lại.
                   </p>
                   <input
+                    name="duelRoomCode"
                     type="text"
+                    autoComplete="off"
+                    spellCheck={false}
+                    aria-label="Mã phòng Duel 6 ký tự"
                     maxLength={6}
                     value={joinCodeInput}
                     onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
                     placeholder="ABC123"
-                    className="liquid-glass-input w-full px-4 py-3 rounded-lg font-mono text-lg font-bold tracking-[0.25em] text-center uppercase focus:outline-none"
+                    className="liquid-glass-input w-full px-4 py-3 rounded-lg font-mono text-lg font-bold tracking-[0.25em] text-center uppercase focus-visible:ring-2 focus-visible:ring-blue-600/50"
                   />
                 </div>
 
@@ -1086,8 +1096,8 @@ export function CodeReviewDuelArena() {
                   disabled={Boolean(loadingAction)}
                   className="liquid-btn-primary w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-bold text-sm transition-colors disabled:opacity-50"
                 >
-                  <Swords className="w-4 h-4" />
-                  <span>{loadingAction === "join" ? "Joining..." : "Join Duel Room"}</span>
+                  <Swords className="w-4 h-4" aria-hidden="true" />
+                  <span>{loadingAction === "join" ? "Đang vào phòng…" : "Vào phòng Duel"}</span>
                 </button>
               </section>
             </div>
@@ -1236,7 +1246,7 @@ export function CodeReviewDuelArena() {
           }`}
         >
           {foulFx && (
-            <div className="fixed inset-0 pointer-events-none z-40 bg-red-600/20 border-8 border-red-600 animate-pulse" />
+            <div className="fixed inset-0 pointer-events-none z-40 bg-red-600/20 border-8 border-red-600 animate-pulse motion-reduce:animate-none" aria-hidden="true" />
           )}
 
           {critFx && (
@@ -1661,10 +1671,13 @@ export function CodeReviewDuelArena() {
             </div>
 
             {speechError && (
-              <div className="text-sm text-red-700 dark:text-red-400 font-medium">{speechError}</div>
+              <div role="alert" aria-live="polite" className="text-sm text-red-700 dark:text-red-400 font-medium">{speechError}</div>
             )}
 
             <textarea
+              name="duelArgument"
+              autoComplete="off"
+              aria-label="Nhập lập luận phản biện tiếng Anh"
               rows={3}
               value={transcriptInput}
               onChange={(e) => setTranscriptInput(e.target.value)}
@@ -1677,10 +1690,10 @@ export function CodeReviewDuelArena() {
               disabled={!isMyTurn || loadingAction === "turn"}
               placeholder={
                 isMyTurn
-                  ? "Gợi ý dễ nói: \"I think we should merge safely after adding unit tests...\" (Hoặc bấm Mic để nói)"
-                  : "Đang chờ đối thủ trả lời lượt này..."
+                  ? "Gợi ý dễ nói: “I think we should merge safely after adding unit tests…” (Hoặc bấm Mic để nói)"
+                  : "Đang chờ đối thủ trả lời lượt này…"
               }
-              className="liquid-glass-input w-full p-3.5 rounded-lg text-sm focus:outline-none disabled:opacity-60"
+              className="liquid-glass-input w-full p-3.5 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-blue-600/50 disabled:opacity-60"
             />
 
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -1711,7 +1724,7 @@ export function CodeReviewDuelArena() {
               >
                 <Send className="w-4 h-4" />
                 <span>
-                  {loadingAction === "turn" ? "Đang chấm..." : "Gửi phản biện"}
+                  {loadingAction === "turn" ? "Đang chấm…" : "Gửi phản biện"}
                 </span>
               </button>
             </div>

@@ -216,6 +216,8 @@ export function LeaderboardRowWrapper({
           src={bannerAssetUrl}
           alt=""
           aria-hidden="true"
+          width={800}
+          height={120}
           onError={() => setBannerFailed(true)}
           className="pointer-events-none select-none absolute inset-0 w-full h-full object-cover opacity-20 z-[1]"
         />

@@ -234,7 +234,7 @@ const parseColor = (value: string, fallback: RGB | null): RGB | null => {
   if (typeof document === 'undefined') return fallback;
   if (!probe) probe = document.createElement('canvas').getContext('2d');
   if (!probe) return fallback;
-  probe.fillStyle = '#000000';
+  probe.fillStyle = '#0B1220';
   probe.fillStyle = value;
   const text = probe.fillStyle;
   if (text.startsWith('#')) {

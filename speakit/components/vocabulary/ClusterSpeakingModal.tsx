@@ -314,19 +314,19 @@ export function ClusterSpeakingModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 overscroll-contain"
       role="dialog"
       aria-modal="true"
       aria-label={`Luyện nói cụm từ ${clusterTitle}`}
     >
-      <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl shadow-sm w-full max-w-2xl max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-5">
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl shadow-sm w-full max-w-2xl max-h-[90vh] overflow-y-auto overscroll-contain p-5 sm:p-6 space-y-5">
         <div className="flex items-start justify-between gap-3">
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 text-xs font-semibold mb-1.5">
-              <Sparkles className="w-3.5 h-3.5" />
+              <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Cluster Speaking Drill</span>
             </div>
-            <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-50 leading-snug">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-50 leading-snug text-balance">
               {clusterTitle}
             </h2>
             <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">
@@ -339,32 +339,40 @@ export function ClusterSpeakingModal({
               stopAudioAndMic();
               onClose();
             }}
-            className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+            className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors"
             aria-label="Đóng cửa sổ"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
 
         {isGenerating ? (
-          <div className="py-10 flex flex-col items-center justify-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-            <Loader2 className="w-5 h-5 animate-spin text-blue-700 dark:text-blue-400" />
-            <span>Đang tạo tình huống kỹ thuật phù hợp...</span>
+          <div
+            role="status"
+            aria-live="polite"
+            className="py-10 flex flex-col items-center justify-center gap-2 text-sm text-slate-600 dark:text-slate-300"
+          >
+            <Loader2 className="w-5 h-5 animate-spin motion-reduce:animate-none text-blue-700 dark:text-blue-400" aria-hidden="true" />
+            <span>Đang tạo tình huống kỹ thuật phù hợp…</span>
           </div>
         ) : generateError ? (
-          <div className="p-4 rounded-lg bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 text-sm text-red-800 dark:text-red-300 flex items-center justify-between gap-3">
+          <div
+            role="alert"
+            aria-live="polite"
+            className="p-4 rounded-lg bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 text-sm text-red-800 dark:text-red-300 flex items-center justify-between gap-3"
+          >
             <span>{generateError}</span>
             <button
               type="button"
               onClick={() => void generatePrompt()}
-              className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-semibold text-sm transition-colors"
+              className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 focus-visible:ring-2 focus-visible:ring-blue-600 font-semibold text-sm transition-colors"
             >
               Thử lại
             </button>
           </div>
         ) : promptData ? (
           <>
-            <div className="py-4 border-y border-slate-200 dark:border-[#262626] space-y-2.5">
+            <div className="py-4 border-y border-slate-200 dark:border-[#334155] space-y-2.5">
               <div className="flex items-center justify-between gap-2">
                 <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 text-xs font-mono font-semibold">
                   {promptData.scenarioType}
@@ -373,7 +381,7 @@ export function ClusterSpeakingModal({
                   <button
                     type="button"
                     onClick={handlePlayPrompt}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
                       isPlayingPrompt
                         ? "bg-blue-700 dark:bg-blue-600 border-blue-700 dark:border-blue-600 text-white"
                         : "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/60"
@@ -381,12 +389,12 @@ export function ClusterSpeakingModal({
                   >
                     {isPlayingPrompt ? (
                       <>
-                        <VolumeX className="w-3.5 h-3.5" />
+                        <VolumeX className="w-3.5 h-3.5" aria-hidden="true" />
                         <span>Dừng</span>
                       </>
                     ) : (
                       <>
-                        <Volume2 className="w-3.5 h-3.5" />
+                        <Volume2 className="w-3.5 h-3.5" aria-hidden="true" />
                         <span>Nghe câu hỏi</span>
                       </>
                     )}
@@ -394,10 +402,11 @@ export function ClusterSpeakingModal({
                   <button
                     type="button"
                     onClick={() => void generatePrompt()}
-                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-medium transition-colors"
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-xs font-medium transition-colors"
                     title="Đổi tình huống khác"
+                    aria-label="Đổi tình huống khác"
                   >
-                    <RefreshCw className="w-3.5 h-3.5" />
+                    <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                 </div>
               </div>
@@ -410,7 +419,7 @@ export function ClusterSpeakingModal({
             </div>
 
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center justify-between text-sm tabular-nums">
                 <span className="font-semibold text-slate-900 dark:text-slate-100">
                   Từ mục tiêu ({liveMatchedSet.size}/{activeTargetTerms.length})
                 </span>
@@ -437,7 +446,7 @@ export function ClusterSpeakingModal({
                       }`}
                     >
                       {matched && (
-                        <CheckCircle2 className="w-3.5 h-3.5 text-green-700 dark:text-green-400" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-green-700 dark:text-green-400" aria-hidden="true" />
                       )}
                       <span>{term}</span>
                     </span>
@@ -451,20 +460,20 @@ export function ClusterSpeakingModal({
                 <button
                   type="button"
                   onClick={handleToggleMic}
-                  className={`text-white inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                  className={`text-white inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
                     isListening
-                      ? "bg-red-600 hover:bg-red-700 animate-pulse"
+                      ? "bg-red-600 hover:bg-red-700 animate-pulse motion-reduce:animate-none"
                       : "bg-green-700 hover:bg-green-800"
                   }`}
                 >
                   {isListening ? (
                     <>
-                      <MicOff className="w-4 h-4" />
+                      <MicOff className="w-4 h-4" aria-hidden="true" />
                       <span>Dừng ghi âm</span>
                     </>
                   ) : (
                     <>
-                      <Mic className="w-4 h-4" />
+                      <Mic className="w-4 h-4" aria-hidden="true" />
                       <span>Bấm để nói (English)</span>
                     </>
                   )}
@@ -473,25 +482,33 @@ export function ClusterSpeakingModal({
                 <button
                   type="button"
                   onClick={() => setShowTypedFallback((prev) => !prev)}
-                  className="text-sm text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 font-semibold underline"
+                  className="text-sm text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 focus-visible:ring-2 focus-visible:ring-blue-600 rounded font-semibold underline"
                 >
                   {showTypedFallback ? "Ẩn ô gõ chữ" : "Gõ câu trả lời"}
                 </button>
               </div>
 
               {micError && (
-                <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-sm text-amber-800 dark:text-amber-300">
+                <div
+                  role="alert"
+                  aria-live="polite"
+                  className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-sm text-amber-800 dark:text-amber-300"
+                >
                   {micError}
                 </div>
               )}
 
               {showTypedFallback && (
                 <textarea
+                  id="cluster-transcript-input"
+                  name="clusterTranscript"
+                  aria-label="Nội dung câu trả lời tiếng Anh"
+                  autoComplete="off"
                   value={transcript}
                   onChange={(e) => setTranscript(e.target.value)}
                   rows={3}
-                  placeholder="Nội dung bạn nói sẽ hiện trực tiếp ở đây (hoặc bạn có thể tự gõ/chỉnh sửa câu trả lời bằng tiếng Anh)..."
-                  className="w-full p-3 text-sm rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/40"
+                  placeholder="Nội dung bạn nói sẽ hiện trực tiếp ở đây (hoặc bạn có thể tự gõ/chỉnh sửa câu trả lời bằng tiếng Anh)…"
+                  className="w-full p-3 text-sm rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-blue-600"
                 />
               )}
 
@@ -500,16 +517,16 @@ export function ClusterSpeakingModal({
                   type="button"
                   disabled={isEvaluating || !transcript.trim()}
                   onClick={() => void handleEvaluate()}
-                  className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-40 transition-colors"
+                  className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-white inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-40 transition-colors"
                 >
                   {isEvaluating ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Đang chấm điểm...</span>
+                      <Loader2 className="w-4 h-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />
+                      <span>Đang chấm điểm…</span>
                     </>
                   ) : (
                     <>
-                      <Send className="w-4 h-4" />
+                      <Send className="w-4 h-4" aria-hidden="true" />
                       <span>Chấm điểm &amp; Nhận phản hồi</span>
                     </>
                   )}
@@ -524,7 +541,7 @@ export function ClusterSpeakingModal({
             )}
 
             {evaluation && (
-              <div className="pt-4 border-t border-slate-200 dark:border-[#262626] space-y-3">
+              <div className="pt-4 border-t border-slate-200 dark:border-[#334155] space-y-3">
                 <div className="space-y-2.5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">

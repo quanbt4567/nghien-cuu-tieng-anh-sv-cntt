@@ -578,7 +578,7 @@ const TiltedCard = ({
   return (
     <figure
       ref={figureRef}
-      className={`tilted-card group relative m-0 flex select-none items-center justify-center outline-none [-webkit-tap-highlight-color:transparent] [touch-action:pan-y_pinch-zoom] data-[active]:z-[2] data-[interactive]:cursor-pointer ${className}`.trim()}
+      className={`tilted-card group relative m-0 flex select-none items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 [-webkit-tap-highlight-color:transparent] [touch-action:pan-y_pinch-zoom] data-[active]:z-[2] data-[interactive]:cursor-pointer ${className}`.trim()}
       style={{
         width: toLength(containerWidth),
         height: toLength(containerHeight),
@@ -618,6 +618,8 @@ const TiltedCard = ({
               className="pointer-events-none absolute block max-w-none object-cover"
               src={imageSrc}
               alt={altText}
+              width={typeof imageWidth === 'number' ? imageWidth : 300}
+              height={typeof imageHeight === 'number' ? imageHeight : 300}
               draggable={false}
               style={
                 {
@@ -681,7 +683,7 @@ const TiltedCard = ({
       {showTooltip && captionText && (
         <figcaption
           ref={captionRef}
-          className="pointer-events-none absolute left-0 top-0 z-[3] ml-3.5 mt-4 whitespace-nowrap rounded-[7px] bg-white px-[9px] py-[5px] text-[12px] font-medium leading-4 text-[#18181b] opacity-0 shadow-[0_0_0_1px_rgba(24,24,27,0.08),0_8px_18px_-8px_rgba(0,0,0,0.45)] [transform-origin:0_0] will-change-[transform,opacity]"
+          className="pointer-events-none absolute left-0 top-0 z-[3] ml-3.5 mt-4 whitespace-nowrap rounded-[7px] bg-white dark:bg-slate-900 px-[9px] py-[5px] text-[12px] font-medium leading-4 text-[#18181b] dark:text-slate-100 opacity-0 shadow-[0_0_0_1px_rgba(24,24,27,0.08),0_8px_18px_-8px_rgba(0,0,0,0.45)] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_8px_18px_-8px_rgba(0,0,0,0.75)] [transform-origin:0_0] will-change-[transform,opacity]"
         >
           {captionText}
         </figcaption>

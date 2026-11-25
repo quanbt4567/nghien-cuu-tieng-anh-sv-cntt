@@ -1088,30 +1088,34 @@ export function PartyWarRoom() {
                   disabled={loadingAction === "create"}
                   className="liquid-btn-danger w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm transition-colors disabled:opacity-50"
                 >
-                  <ShieldAlert className="w-4 h-4" />
+                  <ShieldAlert className="w-4 h-4" aria-hidden="true" />
                   <span>
                     {loadingAction === "create"
-                      ? "Creating War Room..."
-                      : "Create War Room"}
+                      ? "Đang tạo phòng…"
+                      : "Tạo phòng War Room"}
                   </span>
                 </button>
               </section>
 
               <section className="liquid-glass-card p-5 flex flex-col justify-between space-y-4">
                 <div className="space-y-3">
-                  <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
-                    Or Join by Invite Code
+                  <h2 className="text-sm font-mono font-bold text-slate-900 dark:text-slate-100">
+                    Hoặc vào bằng mã mời
                   </h2>
                   <p className="text-sm text-slate-600 dark:text-slate-300">
-                    Enter the 6-character room code shared by your squad lead.
+                    Nhập mã phòng 6 ký tự do trưởng nhóm chia sẻ.
                   </p>
                   <input
+                    name="partyRoomCode"
                     type="text"
+                    autoComplete="off"
+                    spellCheck={false}
+                    aria-label="Mã phòng War Room 6 ký tự"
                     maxLength={6}
                     value={joinCodeInput}
                     onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
                     placeholder="ABC123"
-                    className="liquid-glass-input w-full px-4 py-3 rounded-lg font-mono text-lg font-bold tracking-[0.25em] text-center uppercase focus:outline-none"
+                    className="liquid-glass-input w-full px-4 py-3 rounded-lg font-mono text-lg font-bold tracking-[0.25em] text-center uppercase focus-visible:ring-2 focus-visible:ring-blue-600/50"
                   />
                 </div>
 
@@ -1121,8 +1125,8 @@ export function PartyWarRoom() {
                   disabled={loadingAction === "join"}
                   className="liquid-btn-primary w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-bold text-sm transition-colors disabled:opacity-50"
                 >
-                  <Users className="w-4 h-4" />
-                  <span>{loadingAction === "join" ? "Joining..." : "Join Room"}</span>
+                  <Users className="w-4 h-4" aria-hidden="true" />
+                  <span>{loadingAction === "join" ? "Đang vào phòng…" : "Vào phòng"}</span>
                 </button>
               </section>
             </div>
@@ -1550,20 +1554,23 @@ export function PartyWarRoom() {
               </div>
 
               {speechError && (
-                <div className="text-sm text-red-700 dark:text-red-400 font-medium">{speechError}</div>
+                <div role="alert" aria-live="polite" className="text-sm text-red-700 dark:text-red-400 font-medium">{speechError}</div>
               )}
 
               <textarea
+                name="partyIncidentReport"
+                autoComplete="off"
+                aria-label="Nhập báo cáo xử lý sự cố bằng tiếng Anh"
                 rows={3}
                 value={transcriptInput}
                 onChange={(e) => setTranscriptInput(e.target.value)}
                 disabled={isRoomTimedOut || timeLeftSec <= 0}
                 placeholder={
                   humanTurnsCount === 0
-                    ? "Example: We have a lock contention deadlock in the payment transaction. Let's add a rollback and client idempotency key..."
-                    : `Lượt ${nextTurnNumber}: Describe your next mitigation or verification step in English...`
+                    ? "Ví dụ: We have a lock contention deadlock in the payment transaction. Let's add a rollback and client idempotency key…"
+                    : `Lượt ${nextTurnNumber}: Mô tả bước khắc phục hoặc kiểm tra tiếp theo bằng tiếng Anh…`
                 }
-                className="liquid-glass-input w-full p-3.5 rounded-lg text-sm focus:outline-none disabled:opacity-50"
+                className="liquid-glass-input w-full p-3.5 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-blue-600/50 disabled:opacity-50"
               />
 
               <div className="flex flex-wrap items-center justify-between gap-3">
@@ -1599,7 +1606,7 @@ export function PartyWarRoom() {
                   <Send className="w-4 h-4" />
                   <span>
                     {loadingAction === "evaluate"
-                      ? "CTO đang chấm..."
+                      ? "CTO đang chấm…"
                       : humanTurnsCount > 0
                         ? `Gửi báo cáo lượt ${nextTurnNumber}`
                         : "Gửi báo cáo sự cố"}

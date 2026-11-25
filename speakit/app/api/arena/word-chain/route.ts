@@ -30,8 +30,13 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  let body: ArenaActionPayload;
   try {
-    const body = (await req.json()) as ArenaActionPayload;
+    body = (await req.json()) as ArenaActionPayload;
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+  }
+  try {
     const sessionPlayer =
       (await readExistingGuestPlayer()) ??
       (await resolveOrCreateGuestSession(body.backupTransferCode));

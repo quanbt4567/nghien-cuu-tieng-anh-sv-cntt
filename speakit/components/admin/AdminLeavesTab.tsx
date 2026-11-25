@@ -94,7 +94,7 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
       <div className="liquid-glass-card p-4 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 text-blue-700 dark:text-blue-400" />
+            <ShieldAlert className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
             <span>Duyệt lý do thoát game &amp; Tài khoản vi phạm</span>
           </h2>
           <p className="text-sm text-slate-700 dark:text-slate-300 mt-0.5">
@@ -106,15 +106,15 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
           type="button"
           onClick={() => void loadLeaves()}
           disabled={isLoading}
-          className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50"
+          className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
+          <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin motion-reduce:animate-none" : ""}`} aria-hidden="true" />
           <span>Tải lại</span>
         </button>
       </div>
 
       {notice && (
-        <div role="status" className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-sm font-medium text-blue-700 dark:text-blue-300">
+        <div role="status" aria-live="polite" className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-sm font-medium text-blue-700 dark:text-blue-300">
           {notice}
         </div>
       )}
@@ -125,9 +125,9 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
         </h3>
 
         {isLoading ? (
-          <div className="py-6 flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
-            <Loader2 className="w-4 h-4 animate-spin text-blue-700 dark:text-blue-400" />
-            <span>Đang tải...</span>
+          <div className="py-6 flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300" role="status" aria-live="polite">
+            <Loader2 className="w-4 h-4 animate-spin motion-reduce:animate-none text-blue-700 dark:text-blue-400" aria-hidden="true" />
+            <span>Đang tải…</span>
           </div>
         ) : pendingRequests.length === 0 ? (
           <p className="text-sm text-slate-600 dark:text-slate-400">Hiện chưa có đơn xin thoát nào đang chờ duyệt.</p>
@@ -154,7 +154,7 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
                     </span>
                   </div>
 
-                  <p className="text-sm text-slate-900 dark:text-slate-100 border-l-2 border-blue-700 dark:border-blue-500 pl-3 py-1 leading-relaxed">
+                  <p className="text-sm text-slate-900 dark:text-slate-100 bg-slate-50 dark:bg-[#263349] rounded-lg px-3 py-2 leading-relaxed">
                     Lý do: &ldquo;{req.reason || "(trống)"}&rdquo;
                   </p>
 
@@ -162,6 +162,7 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
                     <label className="text-xs font-mono text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
                       <span>Trừ nếu từ chối (Coin):</span>
                       <input
+                        name={`penalty-${req.id}`}
                         type="number"
                         min={0}
                         max={50}
@@ -172,18 +173,21 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
                             [req.id]: Math.max(0, Math.min(50, Number(e.target.value) || 0)),
                           }))
                         }
-                        className="liquid-glass-input w-16 px-2 py-1 rounded-lg text-xs font-mono"
+                        className="liquid-glass-input w-16 px-2 py-1 rounded-lg text-xs font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
                       />
                     </label>
 
                     <input
+                      name={`note-${req.id}`}
                       type="text"
+                      autoComplete="off"
+                      aria-label={`Ghi chú Admin cho đơn của ${req.playerName}`}
                       value={note}
                       onChange={(e) =>
                         setNoteMap((prev) => ({ ...prev, [req.id]: e.target.value }))
                       }
-                      placeholder="Ghi chú của Admin (tuỳ chọn)..."
-                      className="liquid-glass-input flex-1 min-w-[180px] px-2.5 py-1 rounded-lg text-xs"
+                      placeholder="Ghi chú của Admin (tuỳ chọn)…"
+                      className="liquid-glass-input flex-1 min-w-[180px] px-2.5 py-1 rounded-lg text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
                     />
 
                     <button
@@ -196,9 +200,9 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
                           `Đã duyệt đơn của ${req.playerName} (không trừ Coin).`
                         )
                       }
-                      className="liquid-btn-success inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50"
+                      className="liquid-btn-success inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 dark:focus-visible:ring-green-400"
                     >
-                      <Check className="w-3.5 h-3.5" />
+                      <Check className="w-3.5 h-3.5" aria-hidden="true" />
                       <span>Duyệt (không trừ)</span>
                     </button>
 
@@ -212,9 +216,9 @@ export function AdminLeavesTab({ onUnauthorized }: AdminLeavesTabProps) {
                           `Đã từ chối đơn của ${req.playerName} và trừ ${penalty} IT-Coin.`
                         )
                       }
-                      className="liquid-btn-danger inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50"
+                      className="liquid-btn-danger inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 dark:focus-visible:ring-red-400"
                     >
-                      <X className="w-3.5 h-3.5" />
+                      <X className="w-3.5 h-3.5" aria-hidden="true" />
                       <span>Từ chối &amp; trừ coin</span>
                     </button>
                   </div>

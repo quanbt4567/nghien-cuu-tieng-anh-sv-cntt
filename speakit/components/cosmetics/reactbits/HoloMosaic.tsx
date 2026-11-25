@@ -570,7 +570,7 @@ const HoloMosaic = ({
       if (!probeContext || !value) return fallback;
       const css = /^[0-9a-f]{3,8}$/i.test(value) ? `#${value}` : value;
       probeContext.clearRect(0, 0, 1, 1);
-      probeContext.fillStyle = '#000000';
+      probeContext.fillStyle = '#0B1220';
       probeContext.fillStyle = css;
       probeContext.fillRect(0, 0, 1, 1);
       const [r, g, b] = probeContext.getImageData(0, 0, 1, 1).data;

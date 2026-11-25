@@ -1,7 +1,6 @@
 import Link from "next/link";
 import {
   ArrowLeft,
-  ArrowRight,
   BookOpen,
   Check,
   Coins,
@@ -74,13 +73,13 @@ export default async function GuidePage() {
       <div className="space-y-2">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-sm font-medium transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4" aria-hidden="true" />
           <span>Trang chủ</span>
         </Link>
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50 flex items-center gap-2.5 pt-1">
-          <HelpCircle className="w-6 h-6 text-blue-700 dark:text-blue-400 shrink-0" />
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50 flex items-center gap-2.5 pt-1 text-balance">
+          <HelpCircle className="w-6 h-6 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
           <span>Hướng Dẫn Sử Dụng SpeakIT (1 Phút)</span>
         </h1>
         <p className="text-sm text-slate-600 dark:text-slate-300">
@@ -88,13 +87,13 @@ export default async function GuidePage() {
         </p>
       </div>
 
-      <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <section className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
-            <Compass className="w-4 h-4 text-blue-700 dark:text-blue-400" />
+          <div className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-blue-700 dark:text-blue-400">
+            <Compass className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
             <span>Chưa biết bắt đầu từ đâu?</span>
           </div>
-          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-50">
+          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-50 text-balance">
             Làm bài kiểm tra xếp lớp nhanh (2 phút)
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-300">
@@ -103,32 +102,30 @@ export default async function GuidePage() {
         </div>
         <Link
           href="/placement"
-          className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white shrink-0 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-colors"
+          className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-white shrink-0 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-colors"
         >
           <span>Kiểm tra trình độ ngay</span>
-          <ArrowRight className="w-4 h-4" />
         </Link>
       </section>
 
       <section className="space-y-4">
-        <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50">
+        <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50 text-balance">
           1. Bản đồ 6 khu vực trên thanh điều hướng
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="bg-slate-200 dark:bg-[#334155] border border-slate-200 dark:border-[#334155] rounded-xl overflow-hidden grid grid-cols-1 sm:grid-cols-2 gap-px">
           {sectionGuides.map(({ href, title, icon: Icon, description }) => (
             <Link
               key={href}
               href={href}
-              className="group bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 hover:border-blue-300 dark:hover:border-blue-700 transition-colors space-y-2"
+              className="group bg-white dark:bg-[#1E293B] p-5 hover:bg-slate-50 dark:hover:bg-slate-800/80 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-600 transition-colors space-y-2"
             >
               <div className="flex items-center justify-between gap-2">
                 <div className="inline-flex items-center gap-2.5 font-bold text-base text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
-                  <span className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center">
-                    <Icon className="w-4 h-4 text-blue-700 dark:text-blue-400" />
+                  <span className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center shrink-0">
+                    <Icon className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
                   </span>
                   <span>{title}</span>
                 </div>
-                <ArrowRight className="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover:text-blue-700 dark:group-hover:text-blue-400 group-hover:translate-x-0.5 transition-transform" />
               </div>
               <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 {description}
@@ -138,20 +135,20 @@ export default async function GuidePage() {
         </div>
       </section>
 
-      <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 sm:p-6 space-y-4">
+      <section className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 sm:p-6 space-y-4">
         <div className="space-y-1">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50 text-balance">
             2. Cách chấm điểm &amp; Ý nghĩa 3 màu phản hồi
           </h2>
-          <p className="text-sm text-slate-600 dark:text-slate-300 font-mono">
-            Công thức chấm: 40% Từ khóa kỹ thuật · 30% Mức độ đầy đủ ý · 30% Ngữ pháp tự nhiên
+          <p className="text-sm text-slate-600 dark:text-slate-300 font-mono tabular-nums">
+            Công thức chấm: 40% Từ khóa kỹ thuật, 30% Mức độ đầy đủ ý, 30% Ngữ pháp tự nhiên
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-slate-200 dark:border-[#262626] pt-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-slate-200 dark:border-[#334155] pt-4">
           <div className="space-y-1.5">
             <div className="inline-flex items-center gap-1.5 text-sm font-bold text-green-800 dark:text-green-300">
-              <Check className="w-4 h-4 text-green-700 dark:text-green-400 stroke-[3]" />
+              <Check className="w-4 h-4 text-green-700 dark:text-green-400 stroke-[3]" aria-hidden="true" />
               <span>Xanh lá (Green): Đạt chuẩn</span>
             </div>
             <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
@@ -161,7 +158,7 @@ export default async function GuidePage() {
 
           <div className="space-y-1.5">
             <div className="inline-flex items-center gap-1.5 text-sm font-bold text-blue-800 dark:text-blue-300">
-              <Sparkles className="w-4 h-4 text-blue-700 dark:text-blue-400" />
+              <Sparkles className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
               <span>Xanh dương (Blue): Nâng cấp tự nhiên</span>
             </div>
             <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
@@ -171,7 +168,7 @@ export default async function GuidePage() {
 
           <div className="space-y-1.5">
             <div className="inline-flex items-center gap-1.5 text-sm font-bold text-red-700 dark:text-red-300">
-              <X className="w-4 h-4 text-red-600 dark:text-red-400 stroke-[2.5]" />
+              <X className="w-4 h-4 text-red-600 dark:text-red-400 stroke-[2.5]" aria-hidden="true" />
               <span>Đỏ (Red): Cần bổ sung</span>
             </div>
             <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
@@ -181,10 +178,10 @@ export default async function GuidePage() {
         </div>
       </section>
 
-      <section className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] rounded-xl p-5 sm:p-6 space-y-3">
+      <section className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 sm:p-6 space-y-3">
         <div className="flex items-center gap-2">
-          <Coins className="w-5 h-5 text-amber-700 dark:text-amber-400" />
-          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50">
+          <Coins className="w-5 h-5 text-amber-700 dark:text-amber-400" aria-hidden="true" />
+          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50 text-balance">
             3. Cách kiếm &amp; sử dụng IT-Coin
           </h2>
         </div>
@@ -192,15 +189,15 @@ export default async function GuidePage() {
           <li>
             Mỗi lượt luyện nói hoặc chơi minigame trong{" "}
             <strong className="text-slate-900 dark:text-slate-100">Arena</strong> đều cộng điểm tích lũy. Cứ mỗi{" "}
-            <strong className="text-amber-700 dark:text-amber-400 font-mono">1,000 điểm = 1 IT-Coin</strong>.
+            <strong className="text-amber-700 dark:text-amber-400 font-mono tabular-nums">1,000 điểm = 1 IT-Coin</strong>.
           </li>
           <li>
             Vào trang{" "}
             <Link
               href="/profile"
-              className="text-blue-700 dark:text-blue-400 font-semibold hover:underline"
+              className="text-blue-700 dark:text-blue-400 font-semibold hover:underline focus-visible:ring-2 focus-visible:ring-blue-600 rounded"
             >
-              Hồ sơ (/profile)
+              Hồ sơ
             </Link>{" "}
             để dùng IT-Coin mở khóa khung viền (Ring) và danh hiệu Developer nổi bật trên bảng xếp hạng.
           </li>

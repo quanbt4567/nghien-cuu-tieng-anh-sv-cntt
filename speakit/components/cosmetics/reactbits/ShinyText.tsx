@@ -64,7 +64,7 @@ const parseColor = (value: string): number[] | null => {
   if (typeof document === 'undefined') return null;
   if (!paint) paint = document.createElement('canvas').getContext('2d');
   if (!paint) return null;
-  paint.fillStyle = '#000000';
+  paint.fillStyle = '#0B1220';
   paint.fillStyle = value;
   const resolved = String(paint.fillStyle);
   if (resolved.startsWith('#')) {

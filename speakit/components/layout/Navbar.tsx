@@ -122,6 +122,17 @@ const MOBILE_TABS: readonly NavItem[] = [
   { href: "/profile", label: "Hồ sơ", icon: User },
 ];
 
+const THEME_STORAGE_KEY = "speakit_theme_v1";
+
+function applyDocumentTheme(next: "light" | "dark"): void {
+  if (typeof document === "undefined") return;
+  const d = document.documentElement;
+  const isDark = next === "dark";
+  d.classList.toggle("dark", isDark);
+  d.style.backgroundColor = isDark ? "#0b1220" : "";
+  d.style.colorScheme = isDark ? "dark" : "";
+}
+
 const INITIAL_GAMIFICATION: GamificationState = {
   totalPoints: 0,
   streakDays: 0,
@@ -147,17 +158,25 @@ export function Navbar() {
 
   useEffect(() => {
     if (typeof document === "undefined") return;
-    setTheme(document.documentElement.classList.contains("dark") ? "dark" : "light");
+    let resolved: "light" | "dark" = document.documentElement.classList.contains("dark")
+      ? "dark"
+      : "light";
+    try {
+      const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+      if (stored === "dark" || stored === "light") {
+        resolved = stored;
+      }
+    } catch {}
+    applyDocumentTheme(resolved);
+    setTheme(resolved);
   }, []);
 
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
-    if (typeof document !== "undefined") {
-      document.documentElement.classList.toggle("dark", next === "dark");
-    }
+    applyDocumentTheme(next);
     try {
-      window.localStorage.setItem("speakit_theme_v1", next);
+      window.localStorage.setItem(THEME_STORAGE_KEY, next);
     } catch {}
   };
 
@@ -252,6 +271,11 @@ export function Navbar() {
       if (!event.key || event.key === GUEST_PROFILE_CACHE_KEY) {
         syncCachedGuest();
       }
+      if (event.key === THEME_STORAGE_KEY) {
+        const next = event.newValue === "dark" ? "dark" : "light";
+        applyDocumentTheme(next);
+        setTheme(next);
+      }
     };
     window.addEventListener("storage", handleStorage);
 
@@ -328,7 +352,7 @@ export function Navbar() {
           <Link
             href="/"
             aria-label="SpeakIT"
-            className="flex items-center gap-2 focus:outline-none shrink-0 md:justify-self-start"
+            className="flex items-center gap-2 rounded-lg focus-visible:ring-2 focus-visible:ring-blue-600/50 shrink-0 md:justify-self-start"
           >
             <SpeakItLogo />
           </Link>
@@ -380,7 +404,7 @@ export function Navbar() {
                     <div
                       className={`absolute ${
                         group.id === "account" ? "right-0" : "left-0"
-                      } top-full mt-2.5 w-64 p-1.5 bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-xl shadow-sm z-50`}
+                      } top-full mt-2.5 w-64 p-1.5 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-xl shadow-sm z-50`}
                     >
                       {group.id === "account" && hydrated && (
                         <div className="px-3 py-2.5 mb-1 rounded-lg bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
@@ -485,7 +509,7 @@ export function Navbar() {
             {!hydrated ? (
               <div
                 aria-label="Đang đồng bộ tài khoản"
-                className="shrink-0 h-8 w-28 md:w-52 rounded-pill bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 animate-pulse"
+                className="shrink-0 h-8 w-28 md:w-52 rounded-pill bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 animate-pulse motion-reduce:animate-none"
               />
             ) : (
               <div className="flex items-center gap-1.5 shrink-0 min-w-0">
@@ -526,14 +550,14 @@ export function Navbar() {
                 >
                   <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-400">
                     <Flame className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" aria-hidden="true" />
-                    <span className="font-semibold">{identity.streakDays}</span>
+                    <span className="font-semibold tabular-nums">{identity.streakDays}</span>
                   </span>
                   <span className="text-slate-300 dark:text-slate-600" aria-hidden="true">
                     |
                   </span>
                   <span className="inline-flex items-center gap-1">
                     <Coins className="w-3.5 h-3.5 text-green-700 dark:text-green-400 shrink-0" aria-hidden="true" />
-                    <span className="font-semibold text-green-700 dark:text-green-400">{identity.itCoins}</span>
+                    <span className="font-semibold tabular-nums text-green-700 dark:text-green-400">{identity.itCoins}</span>
                   </span>
                 </Link>
 

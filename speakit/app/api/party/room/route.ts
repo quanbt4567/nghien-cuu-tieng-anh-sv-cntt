@@ -140,8 +140,13 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  let body: RoomRequestBody;
   try {
-    const body = (await req.json()) as RoomRequestBody;
+    body = (await req.json()) as RoomRequestBody;
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+  }
+  try {
     const action = body.action;
     if (!action) {
       return NextResponse.json(
@@ -258,23 +263,27 @@ export async function POST(req: NextRequest) {
       }
       updatedRoom = resetPartyRoom(existingRoom);
     } else if (action === "leave") {
-      const flushed = await flushUnresolvedRoomRewards({
-        room: existingRoom,
-        playerId,
-        displayName,
-        role: requestedRole,
-        backupTransferCode: body.backupTransferCode,
-      });
-      if (flushed.player) {
-        activePlayer = flushed.player;
+      if (existingRoom.status === "timed_out") {
+        const flushed = await flushUnresolvedRoomRewards({
+          room: existingRoom,
+          playerId,
+          displayName,
+          role: requestedRole,
+          backupTransferCode: body.backupTransferCode,
+        });
+        if (flushed.player) {
+          activePlayer = flushed.player;
+        }
+        updatedRoom = flushed.flushed
+          ? {
+              ...existingRoom,
+              rewardsAwarded: true,
+              updatedAt: new Date().toISOString(),
+            }
+          : existingRoom;
+      } else {
+        updatedRoom = existingRoom;
       }
-      updatedRoom = flushed.flushed
-        ? {
-            ...existingRoom,
-            rewardsAwarded: true,
-            updatedAt: new Date().toISOString(),
-          }
-        : existingRoom;
     } else if (action === "timeout") {
       if (existingRoom.status === "resolved" || existingRoom.status === "lobby") {
         updatedRoom = existingRoom;
