@@ -21,13 +21,13 @@ export default async function LeaderboardPage() {
         <div className="space-y-2.5">
           <Link
             href="/"
-            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-mono text-slate-700 dark:text-slate-200 transition-colors"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-mono text-slate-700 dark:text-slate-200 transition-colors focus-visible:ring-2 focus-visible:ring-blue-600/50"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4" aria-hidden="true" />
             <span>Trang chủ</span>
           </Link>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2.5">
-            <Trophy className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2.5 text-balance">
+            <Trophy className="w-6 h-6 text-amber-600 dark:text-amber-400" aria-hidden="true" />
             <span>Bảng xếp hạng</span>
           </h1>
         </div>

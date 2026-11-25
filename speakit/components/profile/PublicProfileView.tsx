@@ -199,11 +199,11 @@ export function PublicProfileView({ profile }: { profile: PublicProfileData }) {
           className="liquid-glass-card p-5 space-y-3"
         >
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider font-mono flex items-center gap-2">
+            <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100 font-mono flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
               <span>Trang bị hiệu ứng đang dùng</span>
             </h2>
-            <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
+            <span className="text-xs font-mono tabular-nums text-slate-600 dark:text-slate-400">
               {equippedBadges.length} đang bật
             </span>
           </div>
@@ -237,11 +237,11 @@ export function PublicProfileView({ profile }: { profile: PublicProfileData }) {
           className="liquid-glass-card p-5 space-y-3"
         >
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider font-mono flex items-center gap-2">
+            <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100 font-mono flex items-center gap-2">
               <Gamepad2 className="w-4 h-4 text-green-700 dark:text-green-400" aria-hidden="true" />
               <span>Trận Arena gần đây</span>
             </h2>
-            <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
+            <span className="text-xs font-mono tabular-nums text-slate-600 dark:text-slate-400">
               {profile.recentArenaRuns.length} trận
             </span>
           </div>
@@ -258,9 +258,9 @@ export function PublicProfileView({ profile }: { profile: PublicProfileData }) {
                   className="py-3 space-y-1"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate flex items-center gap-1.5">
+                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5 min-w-0">
                       <Gamepad2 className="w-4 h-4 text-green-700 dark:text-green-400 shrink-0" aria-hidden="true" />
-                      <span>
+                      <span className="truncate">
                         {run.gameId === "bug-buster"
                           ? "Bug Buster Arena"
                           : run.gameId === "standup-speed-run"

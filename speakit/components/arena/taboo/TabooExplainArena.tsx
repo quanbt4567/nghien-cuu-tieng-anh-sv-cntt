@@ -657,12 +657,17 @@ export function TabooExplainArena() {
         .taboo-foul-shake {
           animation: tabooShake 0.42s ease-in-out;
         }
+        @media (prefers-reduced-motion: reduce) {
+          .taboo-foul-shake {
+            animation: none !important;
+          }
+        }
       `}</style>
 
       {foulFlash && (
         <div
           aria-hidden="true"
-          className="fixed inset-0 z-40 pointer-events-none bg-red-600/30 animate-pulse"
+          className="fixed inset-0 z-40 pointer-events-none bg-red-600/30 animate-pulse motion-reduce:animate-none"
         />
       )}
 
@@ -811,10 +816,10 @@ export function TabooExplainArena() {
                 disabled={loadingAction !== null}
                 className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-amber-700 hover:bg-amber-800 text-white font-bold text-sm transition-colors disabled:opacity-50"
               >
-                <Bot className="w-4 h-4" />
+                <Bot className="w-4 h-4" aria-hidden="true" />
                 <span>
                   {loadingAction === "quick_bot"
-                    ? "Summoning AI Guesser..."
+                    ? "Đang gọi AI Guesser…"
                     : "Chơi với AI Guesser Bot"}
                 </span>
               </button>
@@ -825,11 +830,11 @@ export function TabooExplainArena() {
                 disabled={loadingAction !== null}
                 className="liquid-glass-btn inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg font-bold text-sm disabled:opacity-50 transition-colors"
               >
-                <Users className="w-4 h-4 text-amber-700 dark:text-amber-400" />
+                <Users className="w-4 h-4 text-amber-700 dark:text-amber-400" aria-hidden="true" />
                 <span>
                   {loadingAction === "create"
-                    ? "Creating Room..."
-                    : "Create 6-Char Room"}
+                    ? "Đang tạo phòng…"
+                    : "Tạo phòng 6 ký tự"}
                 </span>
               </button>
             </div>
@@ -837,20 +842,23 @@ export function TabooExplainArena() {
 
           <section className="liquid-glass-card p-5 sm:p-6 flex flex-col justify-between space-y-4">
             <div className="space-y-3">
-              <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
-                2. Join Room by Code
+              <h2 className="text-sm font-mono font-bold text-slate-900 dark:text-slate-100">
+                2. Vào phòng bằng mã
               </h2>
               <p className="text-sm text-slate-600 dark:text-slate-300">
-                Enter a 6-character invite code from a friend to team up in
-                Explain It Like I&apos;m 5.
+                Nhập mã mời 6 ký tự từ bạn bè để cùng chơi Explain It Like I&apos;m 5.
               </p>
               <input
+                name="tabooRoomCode"
                 type="text"
+                autoComplete="off"
+                spellCheck={false}
+                aria-label="Mã phòng Taboo 6 ký tự"
                 maxLength={6}
                 value={joinCodeInput}
                 onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
                 placeholder="TAB123"
-                className="liquid-glass-input w-full px-4 py-3 rounded-lg font-mono text-lg font-bold tracking-[0.25em] text-center uppercase focus:outline-none"
+                className="liquid-glass-input w-full px-4 py-3 rounded-lg font-mono text-lg font-bold tracking-[0.25em] text-center uppercase focus-visible:ring-2 focus-visible:ring-blue-600/50"
               />
             </div>
 
@@ -860,8 +868,8 @@ export function TabooExplainArena() {
               disabled={loadingAction !== null}
               className="liquid-btn-primary w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-bold text-sm transition-colors disabled:opacity-50"
             >
-              <Users className="w-4 h-4" />
-              <span>{loadingAction === "join" ? "Joining..." : "Join Room"}</span>
+              <Users className="w-4 h-4" aria-hidden="true" />
+              <span>{loadingAction === "join" ? "Đang vào phòng…" : "Vào phòng"}</span>
             </button>
           </section>
         </div>
@@ -1244,13 +1252,16 @@ export function TabooExplainArena() {
                 </div>
 
                 {speechError && (
-                  <div className="text-sm text-red-700 dark:text-red-400 font-medium">
+                  <div role="alert" aria-live="polite" className="text-sm text-red-700 dark:text-red-400 font-medium">
                     {speechError}
                   </div>
                 )}
 
                 {isExplainer ? (
                   <textarea
+                    name="tabooClue"
+                    autoComplete="off"
+                    aria-label="Nhập gợi ý giải thích bằng tiếng Anh"
                     rows={2}
                     value={clueInput}
                     onChange={(e) => setClueInput(e.target.value)}
@@ -1260,12 +1271,16 @@ export function TabooExplainArena() {
                         void handleSubmitClue();
                       }
                     }}
-                    placeholder="Ví dụ dễ nói: Think of a super fast drawer next to your desk so you never walk to the slow archive..."
-                    className="liquid-glass-input w-full p-3.5 rounded-lg text-sm focus:outline-none"
+                    placeholder="Ví dụ dễ nói: Think of a super fast drawer next to your desk so you never walk to the slow archive…"
+                    className="liquid-glass-input w-full p-3.5 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-blue-600/50"
                   />
                 ) : (
                   <input
+                    name="tabooGuess"
                     type="text"
+                    autoComplete="off"
+                    spellCheck={false}
+                    aria-label="Nhập tên thuật ngữ CNTT đang đoán"
                     value={guessInput}
                     onChange={(e) => setGuessInput(e.target.value)}
                     onKeyDown={(e) => {
@@ -1274,8 +1289,8 @@ export function TabooExplainArena() {
                         void handleSubmitGuess();
                       }
                     }}
-                    placeholder="Gõ tên thuật ngữ CNTT..."
-                    className="liquid-glass-input w-full p-3.5 rounded-lg text-sm focus:outline-none"
+                    placeholder="Gõ tên thuật ngữ CNTT…"
+                    className="liquid-glass-input w-full p-3.5 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-blue-600/50"
                   />
                 )}
 
@@ -1356,7 +1371,7 @@ export function TabooExplainArena() {
                             : "border-l-slate-300 dark:border-l-slate-700"
                       }`}
                     >
-                      <div className="flex items-center justify-between gap-2 font-mono text-xs font-bold">
+                      <div className="flex items-center justify-between gap-2 min-w-0 font-mono text-xs font-bold">
                         <span className="text-slate-900 dark:text-slate-100 truncate">
                           {entry.displayName} • {entry.cardTerm}
                         </span>

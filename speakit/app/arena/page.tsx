@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
-  ArrowRight,
   Award,
   Bomb,
   Bot,
@@ -177,11 +176,60 @@ const INITIAL_SSR_STATE: GamificationState = {
   history: [],
 };
 
+const ARENA_TABS: readonly ArenaTab[] = [
+  "bug-buster",
+  "standup-speed-run",
+  "leaderboard",
+  "global-leaderboard",
+];
+
+function isArenaTab(value: string | null): value is ArenaTab {
+  return value !== null && (ARENA_TABS as readonly string[]).includes(value);
+}
+
 export default function ArenaPage() {
   const [activeTab, setActiveTab] = useState<ArenaTab>("bug-buster");
   const [state, setState] = useState<GamificationState>(INITIAL_SSR_STATE);
   const [guestPlayer, setGuestPlayer] = useState<PublicGuestPlayer | null>(null);
   const tabSectionRef = useRef<HTMLDivElement | null>(null);
+  const tabRefs = useRef<Record<ArenaTab, HTMLButtonElement | null>>({
+    "bug-buster": null,
+    "standup-speed-run": null,
+    leaderboard: null,
+    "global-leaderboard": null,
+  });
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get("tab");
+    if (isArenaTab(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, []);
+
+  const selectTab = (tab: ArenaTab) => {
+    setActiveTab(tab);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("tab", tab);
+      window.history.replaceState(null, "", url.toString());
+    }
+  };
+
+  const handleTabKeyDown = (event: KeyboardEvent<HTMLButtonElement>, current: ArenaTab) => {
+    const idx = ARENA_TABS.indexOf(current);
+    let nextIdx = -1;
+    if (event.key === "ArrowRight") nextIdx = (idx + 1) % ARENA_TABS.length;
+    else if (event.key === "ArrowLeft") nextIdx = (idx - 1 + ARENA_TABS.length) % ARENA_TABS.length;
+    else if (event.key === "Home") nextIdx = 0;
+    else if (event.key === "End") nextIdx = ARENA_TABS.length - 1;
+    if (nextIdx >= 0) {
+      event.preventDefault();
+      const nextTab = ARENA_TABS[nextIdx];
+      selectTab(nextTab);
+      tabRefs.current[nextTab]?.focus();
+    }
+  };
 
   useEffect(() => {
     let active = true;
@@ -252,7 +300,7 @@ export default function ArenaPage() {
   };
 
   const handleSelectInlineMode = (tab: InlineGameTab) => {
-    setActiveTab(tab);
+    selectTab(tab);
     tabSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
@@ -265,17 +313,17 @@ export default function ArenaPage() {
             <div
               className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 ${mode.badgeTone}`}
             >
-              <Icon className="w-5 h-5" />
+              <Icon className="w-5 h-5" aria-hidden="true" />
             </div>
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800 text-xs font-mono font-bold shrink-0">
-              <Coins className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400" />
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800 text-xs font-mono tabular-nums font-bold shrink-0">
+              <Coins className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400" aria-hidden="true" />
               <span>{mode.rewardBadge}</span>
             </span>
           </div>
 
           <div className="space-y-1.5">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 uppercase">
-              <Bot className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+              <Bot className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
               <span>{mode.playersTag}</span>
             </span>
             <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 leading-snug">
@@ -308,18 +356,18 @@ export default function ArenaPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Link
           href="/"
-          className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+          className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-blue-600/50"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4" aria-hidden="true" />
           <span>Trang chủ</span>
         </Link>
 
         <div className="flex items-center gap-2.5">
           <Link
             href="/shop"
-            className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-sm font-bold transition-colors"
+            className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:ring-blue-600/50"
           >
-            <ShoppingBag className="w-4 h-4" />
+            <ShoppingBag className="w-4 h-4" aria-hidden="true" />
             <span>Cửa hàng Hiệu ứng</span>
           </Link>
         </div>
@@ -328,35 +376,36 @@ export default function ArenaPage() {
       <section className="liquid-glass-card p-5 sm:p-6 space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1.5">
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2">
-              <Gamepad2 className="w-6 h-6 text-blue-700 dark:text-blue-400 shrink-0" />
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2 text-balance">
+              <Gamepad2 className="w-6 h-6 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
               <span>IT Speaking Arena</span>
             </h1>
-            <p className="text-sm text-slate-600 dark:text-slate-300">
+            <p className="text-sm text-slate-600 dark:text-slate-300 measure-prose">
               Luyện phản xạ nói tiếng Anh CNTT theo thời gian thực để tích lũy
               IT-Coin và nâng hạng Dev Speaker.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 dark:bg-amber-950/40 dark:border-amber-800 text-xs font-mono font-bold text-amber-700 dark:text-amber-300">
-              <Flame className="w-4 h-4 fill-amber-500 text-amber-600 dark:text-amber-400" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 dark:bg-amber-950/40 dark:border-amber-800 text-xs font-mono tabular-nums font-bold text-amber-700 dark:text-amber-300">
+              <Flame className="w-4 h-4 fill-amber-500 text-amber-600 dark:text-amber-400" aria-hidden="true" />
               <span>{identity.streakDays} ngày</span>
             </span>
 
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 dark:bg-blue-950/40 dark:border-blue-800 text-xs font-mono font-semibold text-blue-800 dark:text-blue-300">
-              <Award className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
+              <Award className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
               <span>{devTitle.title}</span>
             </span>
 
             <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-300 dark:bg-slate-800 dark:border-slate-700 text-xs font-mono font-semibold text-slate-900 dark:text-slate-100">
-              <UserCog className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400 shrink-0" />
+              <UserCog className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
               <span className="sr-only">Vai trò CNTT</span>
               <select
+                name="itRole"
                 value={state.selectedRole}
                 onChange={(e) => handleRoleChange(e.target.value as ITRole)}
                 aria-label="Chọn vai trò CNTT"
-                className="bg-transparent focus:outline-none cursor-pointer font-mono text-xs text-slate-900 dark:text-slate-100"
+                className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 rounded px-1 py-0.5 cursor-pointer font-mono text-xs focus-visible:ring-2 focus-visible:ring-blue-600/50"
               >
                 {IT_ROLES.map((r) => (
                   <option key={r.id} value={r.id} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">
@@ -372,10 +421,10 @@ export default function ArenaPage() {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-full bg-amber-50 border border-amber-200 dark:bg-amber-950/40 dark:border-amber-800 flex items-center justify-center">
-                <Coins className="w-4 h-4 text-amber-700 dark:text-amber-400" />
+                <Coins className="w-4 h-4 text-amber-700 dark:text-amber-400" aria-hidden="true" />
               </div>
               <div>
-                <div className="text-sm font-bold text-slate-900 dark:text-slate-100 font-mono">
+                <div className="text-sm font-bold text-slate-900 dark:text-slate-100 font-mono tabular-nums">
                   Số dư IT-Coin: {coins}
                 </div>
                 <div className="text-sm text-slate-600 dark:text-slate-300">
@@ -385,7 +434,7 @@ export default function ArenaPage() {
               </div>
             </div>
 
-            <div className="text-right font-mono text-xs">
+            <div className="text-right font-mono tabular-nums text-xs">
               <div className="font-bold text-slate-900 dark:text-slate-100">
                 {coinRemainder} / {POINTS_PER_COIN} điểm
               </div>
@@ -397,7 +446,7 @@ export default function ArenaPage() {
 
           <div className="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full border border-slate-300 dark:border-slate-700 overflow-hidden">
             <div
-              className="w-full h-full origin-left bg-blue-700 dark:bg-blue-600 transition-transform duration-500"
+              className="w-full h-full origin-left bg-blue-700 dark:bg-blue-600 transition-transform duration-500 motion-reduce:transition-none"
               style={{ transform: `scaleX(${Math.max(0.02, coinProgressPct / 100)})` }}
             />
           </div>
@@ -408,7 +457,7 @@ export default function ArenaPage() {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="space-y-0.5">
             <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">
-              6 Chế độ Đấu trường SpeakIT
+              6 chế độ Đấu trường SpeakIT
             </h2>
             <p className="text-sm text-slate-600 dark:text-slate-300">
               Chọn phòng Co-op / PvP đấu AI Bot hoặc luyện tập tốc độ trực tiếp ngay bên dưới.
@@ -416,18 +465,20 @@ export default function ArenaPage() {
           </div>
           <Link
             href="/shop"
-            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-bold transition-colors"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:ring-blue-600/50"
           >
-            <ShoppingBag className="w-4 h-4 text-amber-700 dark:text-amber-400" />
+            <ShoppingBag className="w-4 h-4 text-amber-700 dark:text-amber-400" aria-hidden="true" />
             <span>Đổi quà tại Shop</span>
-            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {ARENA_SHOWCASE_MODES.map((mode) => {
             const isInlineActive = Boolean(mode.tab && activeTab === mode.tab);
-            const cardClass = `group liquid-glass-card text-left p-4 sm:p-5 hover:-translate-y-0.5 transition-transform flex flex-col justify-between gap-4 ${mode.cardAccent} ${
+            const isRoom = Boolean(mode.href);
+            const cardClass = `group text-left p-4 sm:p-5 hover:-translate-y-0.5 transition-transform motion-reduce:transition-none motion-reduce:transform-none flex flex-col justify-between gap-4 focus-visible:ring-2 focus-visible:ring-blue-600/50 ${
+              isRoom ? "liquid-glass-card" : "liquid-glass-card-lite border-dashed"
+            } ${mode.cardAccent} ${
               isInlineActive ? "ring-2 ring-blue-600/60 border-blue-600" : ""
             }`;
 
@@ -460,72 +511,114 @@ export default function ArenaPage() {
         className="inline-flex w-fit max-w-full flex-wrap gap-2 scroll-mt-4"
       >
         <button
+          ref={(el) => {
+            tabRefs.current["bug-buster"] = el;
+          }}
+          id="arena-tab-bug-buster"
           type="button"
           role="tab"
           aria-selected={activeTab === "bug-buster"}
-          onClick={() => setActiveTab("bug-buster")}
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+          aria-controls="arena-panel-bug-buster"
+          tabIndex={activeTab === "bug-buster" ? 0 : -1}
+          onClick={() => selectTab("bug-buster")}
+          onKeyDown={(e) => handleTabKeyDown(e, "bug-buster")}
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-blue-600/50 ${
             activeTab === "bug-buster"
               ? "liquid-btn-success"
               : "liquid-glass-btn text-slate-700 dark:text-slate-200 hover:border-blue-400"
           }`}
         >
-          <Bug className="w-4 h-4" />
+          <Bug className="w-4 h-4" aria-hidden="true" />
           <span>Bug Buster 280s</span>
         </button>
 
         <button
+          ref={(el) => {
+            tabRefs.current["standup-speed-run"] = el;
+          }}
+          id="arena-tab-standup-speed-run"
           type="button"
           role="tab"
           aria-selected={activeTab === "standup-speed-run"}
-          onClick={() => setActiveTab("standup-speed-run")}
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+          aria-controls="arena-panel-standup-speed-run"
+          tabIndex={activeTab === "standup-speed-run" ? 0 : -1}
+          onClick={() => selectTab("standup-speed-run")}
+          onKeyDown={(e) => handleTabKeyDown(e, "standup-speed-run")}
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-blue-600/50 ${
             activeTab === "standup-speed-run"
               ? "liquid-btn-primary"
               : "liquid-glass-btn text-slate-700 dark:text-slate-200 hover:border-blue-400"
           }`}
         >
-          <Timer className="w-4 h-4" />
+          <Timer className="w-4 h-4" aria-hidden="true" />
           <span>Standup Speed Run</span>
         </button>
 
         <button
+          ref={(el) => {
+            tabRefs.current["leaderboard"] = el;
+          }}
+          id="arena-tab-leaderboard"
           type="button"
           role="tab"
           aria-selected={activeTab === "leaderboard"}
-          onClick={() => setActiveTab("leaderboard")}
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+          aria-controls="arena-panel-leaderboard"
+          tabIndex={activeTab === "leaderboard" ? 0 : -1}
+          onClick={() => selectTab("leaderboard")}
+          onKeyDown={(e) => handleTabKeyDown(e, "leaderboard")}
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-blue-600/50 ${
             activeTab === "leaderboard"
               ? "liquid-btn-primary"
               : "liquid-glass-btn text-slate-700 dark:text-slate-200 hover:border-blue-400"
           }`}
         >
-          <Trophy className="w-4 h-4" />
+          <Trophy className="w-4 h-4" aria-hidden="true" />
           <span>Xếp hạng & Danh hiệu</span>
         </button>
 
         <button
+          ref={(el) => {
+            tabRefs.current["global-leaderboard"] = el;
+          }}
+          id="arena-tab-global-leaderboard"
           type="button"
           role="tab"
           aria-selected={activeTab === "global-leaderboard"}
-          onClick={() => setActiveTab("global-leaderboard")}
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+          aria-controls="arena-panel-global-leaderboard"
+          tabIndex={activeTab === "global-leaderboard" ? 0 : -1}
+          onClick={() => selectTab("global-leaderboard")}
+          onKeyDown={(e) => handleTabKeyDown(e, "global-leaderboard")}
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-blue-600/50 ${
             activeTab === "global-leaderboard"
               ? "liquid-btn-primary"
               : "liquid-glass-btn text-slate-700 dark:text-slate-200 hover:border-blue-400"
           }`}
         >
-          <Globe className="w-4 h-4" />
+          <Globe className="w-4 h-4" aria-hidden="true" />
           <span>Bảng xếp hạng</span>
         </button>
       </div>
 
-      {activeTab === "bug-buster" && <BugBusterGame role={state.selectedRole} />}
-      {activeTab === "standup-speed-run" && (
-        <StandupSpeedRun role={state.selectedRole} />
+      {activeTab === "bug-buster" && (
+        <div id="arena-panel-bug-buster" role="tabpanel" aria-labelledby="arena-tab-bug-buster">
+          <BugBusterGame role={state.selectedRole} />
+        </div>
       )}
-      {activeTab === "leaderboard" && <LocalLeaderboard state={state} />}
-      {activeTab === "global-leaderboard" && <GlobalLeaderboard />}
+      {activeTab === "standup-speed-run" && (
+        <div id="arena-panel-standup-speed-run" role="tabpanel" aria-labelledby="arena-tab-standup-speed-run">
+          <StandupSpeedRun role={state.selectedRole} />
+        </div>
+      )}
+      {activeTab === "leaderboard" && (
+        <div id="arena-panel-leaderboard" role="tabpanel" aria-labelledby="arena-tab-leaderboard">
+          <LocalLeaderboard state={state} />
+        </div>
+      )}
+      {activeTab === "global-leaderboard" && (
+        <div id="arena-panel-global-leaderboard" role="tabpanel" aria-labelledby="arena-tab-global-leaderboard">
+          <GlobalLeaderboard />
+        </div>
+      )}
     </div>
   );
 }

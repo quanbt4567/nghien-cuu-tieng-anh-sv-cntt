@@ -8,22 +8,22 @@ export default function ArenaDuelPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Link
           href="/arena"
-          className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-slate-800 dark:text-slate-100 hover:text-blue-700 dark:hover:text-blue-400 hover:border-blue-400 text-sm font-medium transition-colors"
+          className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-slate-800 dark:text-slate-100 hover:text-blue-700 dark:hover:text-blue-400 hover:border-blue-400 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-blue-600/50"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4" aria-hidden="true" />
           <span>Về sảnh Arena</span>
         </Link>
 
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 dark:bg-blue-950/40 dark:border-blue-800 text-xs font-mono text-slate-800 dark:text-slate-200">
-            <Swords className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
+            <Swords className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
             <span>Tranh luận Code 1v1, Đấu với AI</span>
           </span>
           <Link
             href="/shop"
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 hover:bg-amber-100 dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-300 dark:hover:bg-amber-900/50 text-xs font-mono font-semibold transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 hover:bg-amber-100 dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-300 dark:hover:bg-amber-900/50 text-xs font-mono font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-blue-600/50"
           >
-            <ShoppingBag className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400" />
+            <ShoppingBag className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400" aria-hidden="true" />
             <span>Cửa hàng IT-Coin</span>
           </Link>
         </div>

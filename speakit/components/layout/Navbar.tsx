@@ -352,7 +352,7 @@ export function Navbar() {
           <Link
             href="/"
             aria-label="SpeakIT"
-            className="flex items-center gap-2 focus:outline-none shrink-0 md:justify-self-start"
+            className="flex items-center gap-2 rounded-lg focus-visible:ring-2 focus-visible:ring-blue-600/50 shrink-0 md:justify-self-start"
           >
             <SpeakItLogo />
           </Link>
@@ -509,7 +509,7 @@ export function Navbar() {
             {!hydrated ? (
               <div
                 aria-label="Đang đồng bộ tài khoản"
-                className="shrink-0 h-8 w-28 md:w-52 rounded-pill bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 animate-pulse"
+                className="shrink-0 h-8 w-28 md:w-52 rounded-pill bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 animate-pulse motion-reduce:animate-none"
               />
             ) : (
               <div className="flex items-center gap-1.5 shrink-0 min-w-0">
@@ -550,14 +550,14 @@ export function Navbar() {
                 >
                   <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-400">
                     <Flame className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" aria-hidden="true" />
-                    <span className="font-semibold">{identity.streakDays}</span>
+                    <span className="font-semibold tabular-nums">{identity.streakDays}</span>
                   </span>
                   <span className="text-slate-300 dark:text-slate-600" aria-hidden="true">
                     |
                   </span>
                   <span className="inline-flex items-center gap-1">
                     <Coins className="w-3.5 h-3.5 text-green-700 dark:text-green-400 shrink-0" aria-hidden="true" />
-                    <span className="font-semibold text-green-700 dark:text-green-400">{identity.itCoins}</span>
+                    <span className="font-semibold tabular-nums text-green-700 dark:text-green-400">{identity.itCoins}</span>
                   </span>
                 </Link>
 
