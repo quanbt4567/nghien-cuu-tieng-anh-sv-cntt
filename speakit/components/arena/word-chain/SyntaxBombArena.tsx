@@ -777,12 +777,17 @@ export function SyntaxBombArena() {
         .bomb-segfault-shake {
           animation: bombSegfaultShake 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97);
         }
+        @media (prefers-reduced-motion: reduce) {
+          .bomb-segfault-shake {
+            animation: none !important;
+          }
+        }
       `}</style>
 
       {foulFlash && (
         <div
           aria-hidden="true"
-          className="fixed inset-0 z-40 pointer-events-none bg-red-600/30 animate-pulse"
+          className="fixed inset-0 z-40 pointer-events-none bg-red-600/30 animate-pulse motion-reduce:animate-none"
         />
       )}
 
@@ -938,10 +943,10 @@ export function SyntaxBombArena() {
                 disabled={loadingAction !== null}
                 className="liquid-btn-primary inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg font-bold text-sm transition-colors disabled:opacity-50"
               >
-                <Bot className="w-4 h-4" />
+                <Bot className="w-4 h-4" aria-hidden="true" />
                 <span>
                   {loadingAction === "quick_bot"
-                    ? "Arming Syntax Bomb..."
+                    ? "Đang kích hoạt Syntax Bomb…"
                     : "Đấu với Syntax Bot"}
                 </span>
               </button>
@@ -952,11 +957,11 @@ export function SyntaxBombArena() {
                 disabled={loadingAction !== null}
                 className="liquid-glass-btn inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg font-bold text-sm disabled:opacity-50 transition-colors"
               >
-                <Users className="w-4 h-4 text-blue-700 dark:text-blue-400" />
+                <Users className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
                 <span>
                   {loadingAction === "create"
-                    ? "Creating Room..."
-                    : "Create 6-Char Room"}
+                    ? "Đang tạo phòng…"
+                    : "Tạo phòng 6 ký tự"}
                 </span>
               </button>
             </div>
@@ -964,20 +969,23 @@ export function SyntaxBombArena() {
 
           <section className="liquid-glass-card p-5 sm:p-6 flex flex-col justify-between space-y-4">
             <div className="space-y-3">
-              <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
-                2. Join Bomb Room
+              <h2 className="text-sm font-mono font-bold text-slate-900 dark:text-slate-100">
+                2. Vào phòng Bomb
               </h2>
               <p className="text-sm text-slate-600 dark:text-slate-300">
-                Enter a 6-character invite code to duel a teammate in Syntax
-                Bomb.
+                Nhập mã mời 6 ký tự để đấu nối từ Syntax Bomb cùng đồng đội.
               </p>
               <input
+                name="bombRoomCode"
                 type="text"
+                autoComplete="off"
+                spellCheck={false}
+                aria-label="Mã phòng Syntax Bomb 6 ký tự"
                 maxLength={6}
                 value={joinCodeInput}
                 onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
                 placeholder="BOMB99"
-                className="liquid-glass-input w-full px-4 py-3 rounded-lg font-mono text-lg font-bold tracking-[0.25em] text-center uppercase focus:outline-none"
+                className="liquid-glass-input w-full px-4 py-3 rounded-lg font-mono text-lg font-bold tracking-[0.25em] text-center uppercase focus-visible:ring-2 focus-visible:ring-blue-600/50"
               />
             </div>
 
@@ -987,8 +995,8 @@ export function SyntaxBombArena() {
               disabled={loadingAction !== null}
               className="liquid-btn-primary w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-bold text-sm transition-colors disabled:opacity-50"
             >
-              <Users className="w-4 h-4" />
-              <span>{loadingAction === "join" ? "Joining..." : "Join Room"}</span>
+              <Users className="w-4 h-4" aria-hidden="true" />
+              <span>{loadingAction === "join" ? "Đang vào phòng…" : "Vào phòng"}</span>
             </button>
           </section>
         </div>
@@ -1322,14 +1330,18 @@ export function SyntaxBombArena() {
             </div>
 
             {speechError && (
-              <div className="text-sm text-red-700 dark:text-red-400 font-medium">
+              <div role="alert" aria-live="polite" className="text-sm text-red-700 dark:text-red-400 font-medium">
                 {speechError}
               </div>
             )}
 
             <div className="flex flex-col sm:flex-row gap-3">
               <input
+                name="bombWord"
                 type="text"
+                autoComplete="off"
+                spellCheck={false}
+                aria-label="Nhập thuật ngữ tiếng Anh nối từ"
                 autoFocus
                 disabled={!isMyTurn || loadingAction === "turn"}
                 value={wordInput}
@@ -1342,10 +1354,10 @@ export function SyntaxBombArena() {
                 }}
                 placeholder={
                   isMyTurn
-                    ? `Gõ từ tiếng Anh bắt đầu bằng chữ ${room.requiredChar}...`
-                    : "Đang chờ đối thủ..."
+                    ? `Gõ từ tiếng Anh bắt đầu bằng chữ ${room.requiredChar}…`
+                    : "Đang chờ đối thủ…"
                 }
-                className="liquid-glass-input flex-1 px-4 py-3 rounded-lg font-mono text-base font-bold focus:outline-none disabled:opacity-50"
+                className="liquid-glass-input flex-1 px-4 py-3 rounded-lg font-mono text-base font-bold focus-visible:ring-2 focus-visible:ring-blue-600/50 disabled:opacity-50"
               />
               <button
                 type="button"
@@ -1353,9 +1365,9 @@ export function SyntaxBombArena() {
                 disabled={!isMyTurn || loadingAction !== null}
                 className="liquid-btn-primary inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-bold text-sm transition-colors disabled:opacity-50"
               >
-                <Send className="w-4 h-4" />
+                <Send className="w-4 h-4" aria-hidden="true" />
                 <span>
-                  {loadingAction === "turn" ? "Đang kiểm tra..." : "Gửi từ"}
+                  {loadingAction === "turn" ? "Đang kiểm tra…" : "Gửi từ"}
                 </span>
               </button>
             </div>

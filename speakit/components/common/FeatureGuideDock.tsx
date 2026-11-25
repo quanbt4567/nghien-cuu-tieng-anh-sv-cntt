@@ -404,6 +404,9 @@ export function FeatureGuideDock() {
       if (scrolledStepKeyRef.current !== stepKey) {
         scrolledStepKeyRef.current = stepKey;
         const rectBeforeScroll = el.getBoundingClientRect();
+        const prefersReducedMotion =
+          typeof window !== "undefined" &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         if (nextVw < 640 && typeof window.scrollTo === "function") {
           if (
             rectBeforeScroll.top < 70 ||
@@ -413,11 +416,14 @@ export function FeatureGuideDock() {
               0,
               window.scrollY + rectBeforeScroll.top - 74
             );
-            window.scrollTo({ top: targetScrollY, behavior: "smooth" });
+            window.scrollTo({
+              top: targetScrollY,
+              behavior: prefersReducedMotion ? "auto" : "smooth",
+            });
           }
         } else if (typeof el.scrollIntoView === "function") {
           el.scrollIntoView({
-            behavior: "smooth",
+            behavior: prefersReducedMotion ? "auto" : "smooth",
             block: "center",
             inline: "nearest",
           });
@@ -427,26 +433,28 @@ export function FeatureGuideDock() {
           window.cancelAnimationFrame(smoothTrackRafRef.current);
           smoothTrackRafRef.current = null;
         }
-        const startedAt = performance.now();
-        const followScroll = () => {
-          const rect = el.getBoundingClientRect();
-          if (el.isConnected && rect.width > 0 && rect.height > 0) {
-            const box: TourRectBox = {
-              top: rect.top,
-              left: rect.left,
-              width: rect.width,
-              height: rect.height,
-            };
-            setTargetRect((prev) => (rectsClose(prev, box) ? prev : box));
-          }
-          if (performance.now() - startedAt < 720) {
-            smoothTrackRafRef.current =
-              window.requestAnimationFrame(followScroll);
-          } else {
-            smoothTrackRafRef.current = null;
-          }
-        };
-        smoothTrackRafRef.current = window.requestAnimationFrame(followScroll);
+        if (!prefersReducedMotion) {
+          const startedAt = performance.now();
+          const followScroll = () => {
+            const rect = el.getBoundingClientRect();
+            if (el.isConnected && rect.width > 0 && rect.height > 0) {
+              const box: TourRectBox = {
+                top: rect.top,
+                left: rect.left,
+                width: rect.width,
+                height: rect.height,
+              };
+              setTargetRect((prev) => (rectsClose(prev, box) ? prev : box));
+            }
+            if (performance.now() - startedAt < 720) {
+              smoothTrackRafRef.current =
+                window.requestAnimationFrame(followScroll);
+            } else {
+              smoothTrackRafRef.current = null;
+            }
+          };
+          smoothTrackRafRef.current = window.requestAnimationFrame(followScroll);
+        }
       }
 
       const rect = el.getBoundingClientRect();
@@ -587,12 +595,13 @@ export function FeatureGuideDock() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="feature-guide-title"
-          className="fixed inset-0 z-[70]"
+          className="fixed inset-0 z-[70] overscroll-contain"
         >
-          <div
+          <button
+            type="button"
+            aria-label="Đóng hướng dẫn"
             onClick={handleAcknowledge}
-            className="fixed inset-0"
-            aria-hidden="true"
+            className="fixed inset-0 cursor-default"
           >
             <svg
               className="fixed inset-0 w-full h-full pointer-events-none"
@@ -632,7 +641,7 @@ export function FeatureGuideDock() {
                 mask={`url(#${maskId})`}
               />
             </svg>
-          </div>
+          </button>
 
           {spotlightRect && (
             <div
@@ -651,7 +660,7 @@ export function FeatureGuideDock() {
             ref={popoverRef}
             tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
-            className="fixed z-[75] bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm focus:outline-none"
+            className="fixed z-[75] bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm focus-visible:ring-2 focus-visible:ring-blue-600/50"
             style={{
               top: popoverLayout.top,
               left: popoverLayout.left,
@@ -707,7 +716,7 @@ export function FeatureGuideDock() {
               </div>
 
               <div className="space-y-1.5">
-                <div className="text-xs font-mono font-semibold text-blue-700 dark:text-blue-400 uppercase tracking-wider truncate">
+                <div className="text-xs font-mono font-semibold text-blue-700 dark:text-blue-400 truncate">
                   {guide.title}
                 </div>
                 <h2

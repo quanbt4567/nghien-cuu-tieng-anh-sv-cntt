@@ -399,8 +399,8 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-2 max-w-xl">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-800 border border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800 text-xs font-mono font-bold">
-              <Timer className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
-              <span>3 câu hỏi Daily Standup • 25 giây / câu</span>
+              <Timer className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
+              <span>3 câu hỏi Daily Standup, 25 giây / câu</span>
             </span>
             <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100">
               Standup Speed Run
@@ -415,7 +415,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
             </p>
           </div>
           <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-200 dark:bg-blue-950/40 dark:border-blue-800 flex items-center justify-center shrink-0">
-            <Timer className="w-6 h-6 text-blue-700 dark:text-blue-400" />
+            <Timer className="w-6 h-6 text-blue-700 dark:text-blue-400" aria-hidden="true" />
           </div>
         </div>
 
@@ -425,11 +425,11 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
               key={q.id}
               className="py-3.5 sm:px-4 first:sm:pl-0 last:sm:pr-0 space-y-1"
             >
-              <div className="font-mono text-xs font-bold text-blue-700 dark:text-blue-400">
-                Câu 0{idx + 1} • {q.timeLimitSec}s
+              <div className="font-mono tabular-nums text-xs font-bold text-blue-700 dark:text-blue-400">
+                Câu 0{idx + 1} ({q.timeLimitSec}s)
               </div>
               <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{q.labelVI}</div>
-              <p className="text-sm text-slate-600 dark:text-slate-300">"{q.questionEN}"</p>
+              <p className="text-sm text-slate-600 dark:text-slate-300">“{q.questionEN}”</p>
             </div>
           ))}
         </div>
@@ -439,7 +439,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
           onClick={startRun}
           className="liquid-btn-primary inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-colors"
         >
-          <Play className="w-4 h-4 fill-white" />
+          <Play className="w-4 h-4 fill-white" aria-hidden="true" />
           <span>Bắt đầu Standup Speed Run</span>
         </button>
       </section>
@@ -477,26 +477,26 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
 
         <div className="grid grid-cols-2 sm:grid-cols-4 border-t border-b border-slate-200 dark:border-slate-800 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-slate-800">
           <div className="p-3.5 text-center">
-            <div className="text-2xl font-mono font-bold text-slate-900 dark:text-slate-100">
+            <div className="text-2xl font-mono tabular-nums font-bold text-slate-900 dark:text-slate-100">
               {summary.totalScore}
             </div>
             <div className="text-sm text-slate-600 dark:text-slate-300 mt-1">Tổng điểm Run</div>
           </div>
           <div className="p-3.5 text-center">
-            <div className="text-2xl font-mono font-bold text-green-700 dark:text-green-400">
+            <div className="text-2xl font-mono tabular-nums font-bold text-green-700 dark:text-green-400">
               {summary.totalKeywordsUsed}
             </div>
             <div className="text-sm text-slate-600 dark:text-slate-300 mt-1">Từ khóa đạt</div>
           </div>
           <div className="p-3.5 text-center">
-            <div className="text-2xl font-mono font-bold text-blue-700 dark:text-blue-400">
+            <div className="text-2xl font-mono tabular-nums font-bold text-blue-700 dark:text-blue-400">
               {summary.durationSec}s
             </div>
             <div className="text-sm text-slate-600 dark:text-slate-300 mt-1">Tổng thời gian</div>
           </div>
           <div className="p-3.5 text-center bg-amber-50/70 dark:bg-amber-950/30">
-            <div className="text-2xl font-mono font-bold text-amber-800 dark:text-amber-300 flex items-center justify-center gap-1">
-              <Coins className="w-5 h-5 text-amber-700 dark:text-amber-400" />
+            <div className="text-2xl font-mono tabular-nums font-bold text-amber-800 dark:text-amber-300 flex items-center justify-center gap-1">
+              <Coins className="w-5 h-5 text-amber-700 dark:text-amber-400" aria-hidden="true" />
               <span>{summary.totalCoins}</span>
             </div>
             <div className="text-sm text-amber-800 dark:text-amber-300 font-medium mt-1">
@@ -626,20 +626,20 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
         </div>
 
         <span
-          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-mono text-xs font-bold ${
+          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-mono tabular-nums text-xs font-bold ${
             timeLeft <= 5
               ? "bg-red-600 text-white"
               : "bg-blue-50 border border-blue-200 text-blue-700 dark:bg-blue-950/40 dark:border-blue-800 dark:text-blue-300"
           }`}
         >
-          <Clock className="w-3.5 h-3.5" />
+          <Clock className="w-3.5 h-3.5" aria-hidden="true" />
           <span>{timeLeft}s</span>
         </span>
       </div>
 
       <div className="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full border border-slate-300 dark:border-slate-700 overflow-hidden">
         <div
-          className={`w-full h-full origin-left transition-transform duration-500 ${
+          className={`w-full h-full origin-left transition-transform duration-500 motion-reduce:transition-none ${
             timeLeft <= 5 ? "bg-red-600" : "bg-blue-700 dark:bg-blue-600"
           }`}
           style={{ transform: `scaleX(${progressRatio})` }}
@@ -648,20 +648,22 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
 
       <div className="border-t border-b border-slate-200 dark:border-slate-800 py-5 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
+          <span className="text-xs font-mono font-bold text-blue-700 dark:text-blue-400">
             {currentQuestion.labelVI}
           </span>
           <button
             type="button"
+            aria-pressed={isPlayingTts}
             onClick={handleSpeakQuestion}
             className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-semibold transition-colors"
           >
             <Volume2
+              aria-hidden="true"
               className={`w-3.5 h-3.5 ${
-                isPlayingTts ? "text-blue-700 dark:text-blue-400 animate-pulse" : "text-blue-700 dark:text-blue-400"
+                isPlayingTts ? "text-blue-700 dark:text-blue-400 animate-pulse motion-reduce:animate-none" : "text-blue-700 dark:text-blue-400"
               }`}
             />
-            <span>{isPlayingTts ? "Đang đọc..." : "Nghe câu hỏi"}</span>
+            <span>{isPlayingTts ? "Đang đọc…" : "Nghe câu hỏi"}</span>
           </button>
         </div>
 
@@ -697,43 +699,45 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
           >
             {isRecording ? (
               <>
-                <Square className="w-4 h-4 fill-white" />
+                <Square className="w-4 h-4 fill-white" aria-hidden="true" />
                 <span>Dừng ghi âm</span>
               </>
             ) : (
               <>
-                <Mic className="w-4 h-4" />
+                <Mic className="w-4 h-4" aria-hidden="true" />
                 <span>Trả lời bằng Micro</span>
               </>
             )}
           </button>
 
           <span className="inline-flex items-center gap-1.5 text-sm font-mono text-slate-600 dark:text-slate-400">
-            <Keyboard className="w-4 h-4" />
+            <Keyboard className="w-4 h-4" aria-hidden="true" />
             <span>Hoặc gõ trực tiếp bên dưới</span>
           </span>
         </div>
 
         <textarea
           ref={textareaRef}
+          name="standupAnswer"
+          autoComplete="off"
           rows={3}
           value={answerText}
           onChange={(e) => updateAnswer(e.target.value)}
           disabled={isEvaluating || turnFeedback !== null}
-          placeholder="Ví dụ: Yesterday I fixed the login API timeout and merged my pull request..."
+          placeholder="Ví dụ: Yesterday I fixed the login API timeout and merged my pull request…"
           aria-label="Câu trả lời Daily Standup bằng tiếng Anh"
-          className="liquid-glass-input w-full p-3.5 rounded-lg text-sm focus:outline-none resize-none disabled:opacity-60"
+          className="liquid-glass-input w-full p-3.5 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-blue-600/50 resize-none disabled:opacity-60"
         />
 
         {speechError && (
-          <p className="text-sm text-red-800 dark:text-red-200 bg-red-50 dark:bg-red-950/40 border border-red-300 dark:border-red-800 rounded-lg px-3.5 py-2">
+          <p role="alert" aria-live="polite" className="text-sm text-red-800 dark:text-red-200 bg-red-50 dark:bg-red-950/40 border border-red-300 dark:border-red-800 rounded-lg px-3.5 py-2">
             {speechError}
           </p>
         )}
       </div>
 
       {turnFeedback && (
-        <div className="border-t border-b border-slate-200 dark:border-slate-800 py-4 space-y-2.5">
+        <div role="status" aria-live="polite" className="border-t border-b border-slate-200 dark:border-slate-800 py-4 space-y-2.5">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
               {turnFeedback.skipped ? "Đã bỏ qua lượt" : "Kết quả lượt vừa rồi"}
@@ -816,7 +820,7 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
             disabled={isEvaluating}
             className="liquid-glass-btn inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50 transition-colors"
           >
-            <SkipForward className="w-4 h-4" />
+            <SkipForward className="w-4 h-4" aria-hidden="true" />
             <span>Bỏ qua câu này</span>
           </button>
 
@@ -828,13 +832,13 @@ export function StandupSpeedRun({ role }: StandupSpeedRunProps) {
           >
             {isEvaluating ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Đang chấm điểm...</span>
+                <Loader2 className="w-4 h-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />
+                <span>Đang chấm điểm…</span>
               </>
             ) : (
               <>
                 <span>Nộp câu trả lời</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </>
             )}
           </button>

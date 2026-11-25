@@ -53,6 +53,17 @@ export default function SettingsPage() {
     );
   }, []);
 
+  useEffect(() => {
+    if (!showResetModal) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setShowResetModal(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [showResetModal]);
+
   const handleExportJson = async () => {
     const [attempts, weakPoints] = await Promise.all([
       storageAdapter.getAttempts(),
@@ -91,41 +102,42 @@ export default function SettingsPage() {
       <div>
         <Link
           href="/"
-          className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-colors mb-2"
+          className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-colors mb-2 focus-visible:ring-2 focus-visible:ring-blue-600/50"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4" aria-hidden="true" />
           <span>Trang chủ</span>
         </Link>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
-          Cài Đặt Luyện Tập
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 text-balance">
+          Cài đặt luyện tập
         </h1>
-        <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
+        <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 measure-prose">
           Cấu hình giọng đọc câu hỏi và quản lý bộ nhớ cục bộ.
         </p>
       </div>
 
       <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
         <div className="flex items-center gap-2 border-b border-slate-200 dark:border-[#334155] pb-3">
-          <Volume2 className="w-5 h-5 text-blue-700 dark:text-blue-400" />
-          <h2 className="text-sm font-bold uppercase font-mono text-slate-900 dark:text-slate-50">
+          <Volume2 className="w-5 h-5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
+          <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
             Cấu hình giọng đọc câu hỏi (TTS)
           </h2>
         </div>
 
-        <div className="space-y-3">
-          <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 block">
+        <div className="space-y-3" role="group" aria-labelledby="speech-rate-heading">
+          <p id="speech-rate-heading" className="text-sm font-semibold text-slate-700 dark:text-slate-200">
             Tốc độ phát âm mặc định:
-          </label>
+          </p>
           <div className="flex flex-wrap items-center gap-2">
             {([0.8, 1.0, 1.2] as const).map((r) => (
               <button
                 key={r}
                 type="button"
+                aria-pressed={speechRate === r}
                 onClick={() => {
                   setSpeechRate(r);
                   storageAdapter.saveSettings({ speechRate: r });
                 }}
-                className={`px-4 py-2 rounded-lg text-sm font-mono font-bold border transition-colors ${
+                className={`px-4 py-2 rounded-lg text-sm font-mono tabular-nums font-bold border transition-colors focus-visible:ring-2 focus-visible:ring-blue-600/50 ${
                   speechRate === r
                     ? "bg-blue-50 dark:bg-blue-500/20 border-blue-300 dark:border-blue-400/60 text-blue-800 dark:text-blue-200"
                     : "bg-slate-100 dark:bg-[#263349] text-slate-700 dark:text-slate-100 border-slate-300 dark:border-white/20 hover:bg-blue-50/70 dark:hover:bg-[#334155]"
@@ -137,10 +149,10 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        <div className="space-y-3 pt-3 border-t border-slate-200 dark:border-[#334155]">
-          <label className="text-sm font-semibold text-slate-700 dark:text-slate-200 block">
+        <div className="space-y-3 pt-3 border-t border-slate-200 dark:border-[#334155]" role="group" aria-labelledby="voice-persona-heading">
+          <p id="voice-persona-heading" className="text-sm font-semibold text-slate-700 dark:text-slate-200">
             Giọng AI phỏng vấn mặc định:
-          </label>
+          </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {TTS_VOICE_PERSONAS.map((persona) => {
               const isSelected = voicePersona === persona.id;
@@ -156,13 +168,14 @@ export default function SettingsPage() {
                 >
                   <button
                     type="button"
+                    aria-pressed={isSelected}
                     onClick={() => {
                       setVoicePersona(persona.id);
                       storageAdapter.saveSettings({
                         voicePersona: persona.id as VoicePersonaId,
                       });
                     }}
-                    className="flex-1 text-left min-w-0"
+                    className="flex-1 text-left min-w-0 rounded focus-visible:ring-2 focus-visible:ring-blue-600/50"
                   >
                     <div className="font-semibold text-sm truncate">
                       {persona.label}
@@ -179,6 +192,7 @@ export default function SettingsPage() {
                   </button>
                   <button
                     type="button"
+                    aria-pressed={isPreviewing}
                     aria-label={
                       isPreviewing
                         ? `Dừng nghe thử ${persona.label}`
@@ -210,16 +224,16 @@ export default function SettingsPage() {
                           ),
                       });
                     }}
-                    className={`w-9 h-9 shrink-0 rounded-lg border flex items-center justify-center transition-colors ${
+                    className={`w-9 h-9 shrink-0 rounded-lg border flex items-center justify-center transition-colors focus-visible:ring-2 focus-visible:ring-blue-600/50 ${
                       isPreviewing
                         ? "bg-blue-700 dark:bg-blue-600 border-blue-700 dark:border-blue-600 text-white"
                         : "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/60"
                     }`}
                   >
                     {isPreviewing ? (
-                      <VolumeX className="w-4 h-4" />
+                      <VolumeX className="w-4 h-4" aria-hidden="true" />
                     ) : (
-                      <Volume2 className="w-4 h-4" />
+                      <Volume2 className="w-4 h-4" aria-hidden="true" />
                     )}
                   </button>
                 </div>
@@ -232,9 +246,9 @@ export default function SettingsPage() {
       <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
         <div className="flex items-center justify-between gap-2 border-b border-slate-200/80 dark:border-white/10 pb-3">
           <div className="flex items-center gap-2">
-            <Bell className="w-5 h-5 text-green-700 dark:text-green-400" />
-            <h2 className="text-sm font-bold uppercase font-mono text-slate-900 dark:text-slate-50">
-              Nhắc Nhở Học Tập Trong App
+            <Bell className="w-5 h-5 text-green-700 dark:text-green-400" aria-hidden="true" />
+            <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
+              Nhắc nhở học tập trong app
             </h2>
           </div>
           <span className="text-xs font-mono px-2.5 py-0.5 rounded-full border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/50 text-green-800 dark:text-green-300 font-semibold">
@@ -242,12 +256,13 @@ export default function SettingsPage() {
           </span>
         </div>
 
-        <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+        <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed measure-prose">
           Hiển thị nhắc nhở luyện nói mỗi ngày ngay trong chuông thông báo khi bạn mở SpeakIT.
         </p>
 
         <div className="flex flex-wrap items-center gap-3">
           <label
+            htmlFor="settings-reminder-enabled"
             className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-semibold cursor-pointer transition-colors ${
               reminderEnabled
                 ? "bg-green-50 dark:bg-green-950/50 border-green-300 dark:border-green-700 text-green-800 dark:text-green-300"
@@ -255,20 +270,25 @@ export default function SettingsPage() {
             }`}
           >
             <input
+              id="settings-reminder-enabled"
+              name="reminderEnabled"
               type="checkbox"
               checked={reminderEnabled}
               onChange={(e) => setReminderEnabled(e.target.checked)}
-              className="w-4 h-4 accent-blue-700 dark:accent-blue-500"
+              className="w-4 h-4 accent-blue-700 dark:accent-blue-500 focus-visible:ring-2 focus-visible:ring-blue-600/50"
             />
             <span>Bật nhắc nhở mỗi ngày</span>
           </label>
 
           <input
+            id="settings-reminder-time"
+            name="reminderTime"
             type="time"
+            autoComplete="off"
             value={reminderTime}
             onChange={(e) => setReminderTime(e.target.value)}
             aria-label="Giờ nhắc nhở hằng ngày"
-            className="px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm font-mono font-semibold focus:outline-none focus:ring-2 focus:ring-blue-600/40"
+            className="px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm font-mono tabular-nums font-semibold focus-visible:ring-2 focus-visible:ring-blue-600/50"
           />
         </div>
 
@@ -290,16 +310,17 @@ export default function SettingsPage() {
                   : "Đã tắt nhắc nhở học tập trong app."
               );
             }}
-            className="bg-green-700 hover:bg-green-800 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+            className="bg-green-700 hover:bg-green-800 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-blue-600/50"
           >
-            <Bell className="w-4 h-4" />
+            <Bell className="w-4 h-4" aria-hidden="true" />
             <span>Lưu lịch nhắc</span>
           </button>
 
           <button
             type="button"
+            aria-pressed={showPreviewBanner}
             onClick={() => setShowPreviewBanner((prev) => !prev)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-semibold transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-blue-600/50"
           >
             <span>Xem thử thông báo trong app</span>
           </button>
@@ -308,6 +329,7 @@ export default function SettingsPage() {
         {showPreviewBanner && (
           <div
             role="status"
+            aria-live="polite"
             className="rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/60 p-3.5 flex items-start justify-between gap-3"
           >
             <div className="flex items-start gap-2.5">
@@ -327,7 +349,7 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={() => setShowPreviewBanner(false)}
-              className="text-xs font-semibold text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 shrink-0"
+              className="text-xs font-semibold text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 shrink-0 rounded focus-visible:ring-2 focus-visible:ring-blue-600/50"
             >
               Đóng
             </button>
@@ -337,6 +359,7 @@ export default function SettingsPage() {
         {reminderStatus && (
           <div
             role="status"
+            aria-live="polite"
             className="rounded-xl border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/50 p-3 text-sm font-medium text-green-900 dark:text-green-200"
           >
             {reminderStatus}
@@ -346,13 +369,13 @@ export default function SettingsPage() {
 
       <section className="liquid-glass-card p-5 sm:p-6 space-y-3">
         <div className="flex items-center gap-2 border-b border-slate-200/80 dark:border-white/10 pb-3">
-          <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
-          <h2 className="text-sm font-bold uppercase font-mono text-slate-900 dark:text-slate-50">
-            Quản Lý Dữ Liệu Luyện Tập
+          <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" aria-hidden="true" />
+          <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
+            Quản lý dữ liệu luyện tập
           </h2>
         </div>
 
-        <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+        <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed measure-prose">
           Xóa toàn bộ lịch sử các lượt nói, điểm số và danh sách từ khóa yếu trong bộ nhớ máy này.
         </p>
 
@@ -360,18 +383,18 @@ export default function SettingsPage() {
           <button
             type="button"
             onClick={handleExportJson}
-            className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+            className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-blue-600/50"
           >
-            <Download className="w-4 h-4" />
+            <Download className="w-4 h-4" aria-hidden="true" />
             <span>Xuất dữ liệu JSON</span>
           </button>
 
           <button
             type="button"
             onClick={() => setShowResetModal(true)}
-            className="bg-red-600 hover:bg-red-700 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+            className="bg-red-600 hover:bg-red-700 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-blue-600/50"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="w-4 h-4" aria-hidden="true" />
             <span>Làm mới tiến độ</span>
           </button>
         </div>
@@ -379,6 +402,7 @@ export default function SettingsPage() {
         {exportStatus && (
           <div
             role="status"
+            aria-live="polite"
             className="rounded-xl border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/50 p-3 text-green-900 dark:text-green-200 text-sm font-medium"
           >
             {exportStatus}
@@ -386,19 +410,34 @@ export default function SettingsPage() {
         )}
 
         {resetStatus && (
-          <div className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/50 p-3 text-red-900 dark:text-red-200 text-sm font-medium">
+          <div
+            role="status"
+            aria-live="polite"
+            className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/50 p-3 text-red-900 dark:text-red-200 text-sm font-medium"
+          >
             {resetStatus}
           </div>
         )}
       </section>
 
       {showResetModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="liquid-glass-card p-6 max-w-sm w-full space-y-4 text-center">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="reset-modal-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 overscroll-contain"
+        >
+          <button
+            type="button"
+            aria-label="Đóng hộp thoại xác nhận"
+            onClick={() => setShowResetModal(false)}
+            className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm"
+          />
+          <div className="relative z-10 liquid-glass-card p-6 max-w-sm w-full space-y-4 text-center">
             <div className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 flex items-center justify-center mx-auto border border-red-200 dark:border-red-800">
-              <AlertCircle className="w-6 h-6" />
+              <AlertCircle className="w-6 h-6" aria-hidden="true" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50">
+            <h3 id="reset-modal-title" className="text-lg font-bold text-slate-900 dark:text-slate-50">
               Xác nhận làm mới tiến độ?
             </h3>
             <p className="text-sm text-slate-600 dark:text-slate-300">
@@ -408,14 +447,14 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={() => setShowResetModal(false)}
-                className="px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors"
+                className="px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-blue-600/50"
               >
                 Hủy bỏ
               </button>
               <button
                 type="button"
                 onClick={handleResetProgress}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors"
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:ring-blue-600/50"
               >
                 Đồng ý xóa
               </button>

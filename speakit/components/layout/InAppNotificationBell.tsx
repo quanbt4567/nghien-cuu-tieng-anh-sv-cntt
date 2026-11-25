@@ -155,7 +155,7 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
       >
         <Bell className="w-4 h-4" aria-hidden="true" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-[#DC2626] text-white text-[10px] font-mono font-bold flex items-center justify-center border border-white dark:border-[#1E293B]">
+          <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-[#DC2626] text-white text-[10px] font-mono tabular-nums font-bold flex items-center justify-center border border-white dark:border-[#1E293B]">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
@@ -164,7 +164,7 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
       {open && (
         <div className="fixed inset-x-3 top-20 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2.5 sm:w-80 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm z-50 overflow-hidden">
           <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/80">
-            <span className="text-xs font-bold text-slate-900 dark:text-white uppercase font-mono">
+            <span className="text-xs font-bold text-slate-900 dark:text-white font-mono">
               Thông báo
             </span>
             <div className="flex items-center gap-2">

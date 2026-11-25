@@ -246,22 +246,27 @@ export function ArenaLeaveGuardHost() {
 
       {activeRequest && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 overscroll-contain"
           role="dialog"
           aria-modal="true"
           aria-labelledby="arena-leave-title"
-          onClick={closeDialog}
         >
+          <button
+            type="button"
+            aria-label="Đóng hộp thoại"
+            disabled={submittingMode !== null}
+            onClick={closeDialog}
+            className="fixed inset-0 bg-slate-900/50 cursor-default"
+          />
           <div
-            className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
+            className="relative z-10 w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden"
           >
             <div className="flex items-center justify-between gap-3 px-5 py-3.5 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2">
                 <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-50 border border-amber-200 text-amber-700 dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-300">
                   <AlertTriangle className="w-3.5 h-3.5" aria-hidden="true" />
                 </span>
-                <span className="text-xs font-mono font-bold uppercase text-slate-900 dark:text-slate-100">
+                <span className="text-xs font-mono font-bold text-slate-900 dark:text-slate-100">
                   Trận đấu đang diễn ra
                 </span>
               </div>
@@ -290,15 +295,15 @@ export function ArenaLeaveGuardHost() {
 
               <div className="border-t border-b border-slate-200 dark:border-slate-800 py-3 text-sm space-y-1">
                 {loadingStatus ? (
-                  <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
-                    <Loader2 className="w-4 h-4 animate-spin text-blue-700 dark:text-blue-400" />
-                    <span>Đang kiểm tra lịch sử thoát của bạn...</span>
+                  <div role="status" aria-live="polite" className="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+                    <Loader2 className="w-4 h-4 animate-spin motion-reduce:animate-none text-blue-700 dark:text-blue-400" aria-hidden="true" />
+                    <span>Đang kiểm tra lịch sử thoát của bạn…</span>
                   </div>
                 ) : (
                   <>
                     <div className="flex items-center justify-between font-mono text-xs">
                       <span className="text-slate-600 dark:text-slate-300">Số lần thoát ngang hiện tại:</span>
-                      <span className="font-bold text-slate-900 dark:text-slate-100">
+                      <span className="font-bold tabular-nums text-slate-900 dark:text-slate-100">
                         {leaveCount} / {limit} lần
                       </span>
                     </div>
@@ -309,7 +314,7 @@ export function ArenaLeaveGuardHost() {
                     )}
                     {statusInfo?.frozen && (
                       <p className="text-sm font-semibold text-red-600 dark:text-red-400 flex items-center gap-1.5">
-                        <Clock className="w-3.5 h-3.5" />
+                        <Clock className="w-3.5 h-3.5" aria-hidden="true" />
                         <span>
                           {statusInfo.permanent
                             ? "Tài khoản đang bị khóa vào Arena đến khi Admin mở lại."
@@ -324,6 +329,7 @@ export function ArenaLeaveGuardHost() {
               {errorText && (
                 <div
                   role="alert"
+                  aria-live="polite"
                   className="p-3 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/40 text-sm text-red-800 dark:text-red-200 font-medium"
                 >
                   {errorText}
@@ -341,16 +347,18 @@ export function ArenaLeaveGuardHost() {
                     </label>
                     <textarea
                       id="arena-leave-reason"
+                      name="leaveReason"
+                      autoComplete="off"
                       rows={3}
                       maxLength={REASON_MAX_LENGTH}
                       value={reason}
                       onChange={(e) => setReason(e.target.value)}
-                      placeholder="Ví dụ: Micro bị lỗi không thu âm được, hoặc mạng bị rớt giữa ván..."
-                      className="liquid-glass-input w-full px-3 py-2 text-sm rounded-lg focus:outline-none"
+                      placeholder="Ví dụ: Micro bị lỗi không thu âm được, hoặc mạng bị rớt giữa ván…"
+                      className="liquid-glass-input w-full px-3 py-2 text-sm rounded-lg focus-visible:ring-2 focus-visible:ring-blue-600/50"
                     />
                     <div className="flex items-center justify-between text-xs font-mono text-slate-600 dark:text-slate-400">
                       <span>Hợp lý sẽ được tha, không hợp lý Admin sẽ trừ Coin.</span>
-                      <span>
+                      <span className="tabular-nums">
                         {reason.trim().length}/{REASON_MAX_LENGTH}
                       </span>
                     </div>
@@ -371,9 +379,9 @@ export function ArenaLeaveGuardHost() {
                       className="liquid-btn-primary inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50 transition-colors"
                     >
                       {submittingMode === "reason" ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <Loader2 className="w-4 h-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />
                       ) : (
-                        <Send className="w-4 h-4" />
+                        <Send className="w-4 h-4" aria-hidden="true" />
                       )}
                       <span>Gửi lý do &amp; Rời phòng</span>
                     </button>
@@ -406,9 +414,9 @@ export function ArenaLeaveGuardHost() {
                     className="liquid-btn-danger w-full inline-flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50"
                   >
                     {submittingMode === "forfeit" ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Loader2 className="w-4 h-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />
                     ) : (
-                      <LogOut className="w-4 h-4" />
+                      <LogOut className="w-4 h-4" aria-hidden="true" />
                     )}
                     <span>
                       Thoát ngang ngay (mất {FORFEIT_PENALTY_COINS} IT-Coin, tính 1 lần thoát ngang)
