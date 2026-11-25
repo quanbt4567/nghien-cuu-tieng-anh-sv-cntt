@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, BookOpen, Clock, Coins, Flame, Gamepad2, MessageSquare, ShoppingBag, Siren, Trophy } from "lucide-react";
+import { BookOpen, Clock, Coins, Flame, Gamepad2, MessageSquare, ShoppingBag, Siren, Trophy } from "lucide-react";
 import { DiscordAvatarFrame } from "../components/cosmetics/DiscordAvatarFrame";
 import { LeaderboardRowWrapper } from "../components/cosmetics/LeaderboardRowWrapper";
 import { PlayerAvatar } from "../components/cosmetics/PlayerAvatar";
@@ -28,22 +28,16 @@ export default async function HomePage() {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <Trophy className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" aria-hidden="true" />
-            <div className="space-y-0.5">
-              <p className="md:hidden text-xs uppercase tracking-wider text-blue-700 dark:text-blue-400 font-mono font-bold">
-                Arena Live Standings
-              </p>
-              <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
-                Top 3 Bảng Xếp Hạng Arena
-              </h2>
-            </div>
+            <h2 className="text-base font-bold text-slate-900 dark:text-slate-50 text-balance">
+              Top 3 Bảng Xếp Hạng Arena
+            </h2>
           </div>
           <Link
             href="/leaderboard"
             prefetch
-            className="liquid-glass-btn inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 hover:!border-blue-700 hover:text-blue-700 dark:hover:!border-blue-500 dark:hover:text-blue-400 text-sm font-semibold transition-colors"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 hover:!border-blue-700 hover:text-blue-700 dark:hover:!border-blue-500 dark:hover:text-blue-400 focus-visible:ring-2 focus-visible:ring-blue-600 text-sm font-semibold transition-colors"
           >
             <span>Xem bảng xếp hạng</span>
-            <ArrowRight className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
           </Link>
         </div>
 
@@ -58,7 +52,7 @@ export default async function HomePage() {
               >
                 <Link
                   href={`/profile/${player.id}`}
-                  className="group p-4 flex items-center justify-between gap-3"
+                  className="group p-4 flex items-center justify-between gap-3 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-600"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <DiscordAvatarFrame
@@ -82,7 +76,7 @@ export default async function HomePage() {
                     </div>
                   </div>
 
-                  <div className="text-right shrink-0 space-y-1">
+                  <div className="text-right shrink-0 space-y-1 tabular-nums">
                     <div className="inline-flex items-center gap-1 text-sm font-mono font-bold text-slate-900 dark:text-slate-50">
                       <Coins className="w-3.5 h-3.5 text-green-700 dark:text-green-400 shrink-0" aria-hidden="true" />
                       <span>{player.itCoins}</span>
@@ -103,159 +97,158 @@ export default async function HomePage() {
             </span>
             <Link
               href="/arena"
-              className="inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-mono text-xs font-semibold transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-white text-xs font-semibold transition-colors"
             >
-              <span>Mở /arena</span>
-              <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Vào đấu trường Arena</span>
             </Link>
           </div>
         )}
       </section>
 
-      <section aria-label="Công cụ ôn tập nhanh" className="hidden md:grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Link
-          href="/scenarios"
-          className="group liquid-glass-card p-5 hover:!border-blue-700 dark:hover:!border-blue-400 transition-colors flex flex-col justify-between gap-4"
-        >
-          <div className="flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-500/20 border border-blue-200 dark:border-blue-400/35 flex items-center justify-center shrink-0">
-              <MessageSquare className="w-4 h-4 text-blue-700 dark:text-blue-300" aria-hidden="true" />
-            </div>
-            <div className="space-y-1">
-              <h3 className="font-bold text-sm text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
-                Kịch bản luyện nói
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                {scenarioCount} tình huống công việc CNTT chia theo 3 cấp độ Fresher / Junior / Senior.
-              </p>
-            </div>
-          </div>
-          <div className="flex justify-end">
-            <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-slate-100/80 dark:bg-slate-800/80 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 group-hover:bg-blue-700 group-hover:text-white group-hover:border-blue-700 dark:group-hover:bg-blue-600 dark:group-hover:border-blue-600 text-sm font-semibold transition-colors">
-              Luyện kịch bản
-            </span>
-          </div>
-        </Link>
+      <section aria-label="Công cụ ôn tập nhanh" className="hidden md:block space-y-4">
+        <h2 className="text-base font-bold text-slate-900 dark:text-slate-50 text-balance">
+          Công cụ luyện nói &amp; ôn tập
+        </h2>
 
-        <Link
-          href="/vocabulary"
-          className="group liquid-glass-card p-5 hover:!border-emerald-600 dark:hover:!border-emerald-400 transition-colors flex flex-col justify-between gap-4"
-        >
-          <div className="flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-lg bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-400/35 flex items-center justify-center shrink-0">
-              <BookOpen className="w-4 h-4 text-emerald-700 dark:text-emerald-300" aria-hidden="true" />
+        <div className="grid md:grid-cols-2 gap-4">
+          <Link
+            href="/scenarios"
+            className="group liquid-glass-card p-5 hover:!border-blue-700 dark:hover:!border-blue-400 focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors flex flex-col justify-between gap-4"
+          >
+            <div className="flex items-start gap-3.5 min-w-0">
+              <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-500/20 border border-blue-200 dark:border-blue-400/35 flex items-center justify-center shrink-0">
+                <MessageSquare className="w-4 h-4 text-blue-700 dark:text-blue-300" aria-hidden="true" />
+              </div>
+              <div className="min-w-0 space-y-1">
+                <h3 className="font-bold text-base text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors text-balance">
+                  Kịch bản luyện nói
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {scenarioCount} tình huống công việc CNTT chia theo 3 cấp độ Fresher, Junior và Senior.
+                </p>
+              </div>
             </div>
-            <div className="space-y-1">
-              <h3 className="font-bold text-sm text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
-                Từ vựng IT
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Phát âm IPA và câu ví dụ công việc thực tế.
-              </p>
+            <div className="flex justify-end">
+              <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-blue-700 group-hover:bg-blue-800 dark:bg-blue-600 dark:group-hover:bg-blue-700 text-white text-sm font-semibold transition-colors">
+                Luyện kịch bản
+              </span>
             </div>
-          </div>
-          <div className="flex justify-end">
-            <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-slate-100/80 dark:bg-slate-800/80 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 group-hover:bg-blue-700 group-hover:text-white group-hover:border-blue-700 dark:group-hover:bg-blue-600 dark:group-hover:border-blue-600 text-sm font-semibold transition-colors">
+          </Link>
+
+          <Link
+            href="/arena/party"
+            className="group liquid-glass-card p-5 hover:!border-red-600 dark:hover:!border-red-400 focus-visible:ring-2 focus-visible:ring-red-600 transition-colors flex flex-col justify-between gap-4"
+          >
+            <div className="flex items-start gap-3.5 min-w-0">
+              <div className="w-9 h-9 rounded-lg bg-red-50 dark:bg-red-500/20 text-red-600 dark:text-red-300 flex items-center justify-center border border-red-200 dark:border-red-400/35 shrink-0">
+                <Siren className="w-4 h-4" aria-hidden="true" />
+              </div>
+              <div className="min-w-0 space-y-1">
+                <h3 className="font-bold text-base text-slate-900 dark:text-slate-50 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors text-balance">
+                  Outage At 3AM (Party Mode)
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Phối hợp nhóm xử lý sự cố production khẩn cấp theo thời gian thực.
+                </p>
+              </div>
+            </div>
+            <div className="flex justify-end">
+              <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-red-600 group-hover:bg-red-700 text-white text-sm font-semibold transition-colors">
+                Mở Party Mode
+              </span>
+            </div>
+          </Link>
+        </div>
+
+        <div className="liquid-glass-card-lite overflow-hidden grid sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80 dark:divide-white/10">
+          <Link
+            href="/vocabulary"
+            className="group p-4 hover:bg-slate-100/60 dark:hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-600 transition-colors flex flex-col justify-between gap-3"
+          >
+            <div className="flex items-start gap-3 min-w-0">
+              <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-400/35 flex items-center justify-center shrink-0">
+                <BookOpen className="w-4 h-4 text-emerald-700 dark:text-emerald-300" aria-hidden="true" />
+              </div>
+              <div className="min-w-0 space-y-1">
+                <h3 className="font-bold text-sm text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors text-balance">
+                  Từ vựng IT
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Phát âm IPA và câu ví dụ công việc thực tế.
+                </p>
+              </div>
+            </div>
+            <span className="text-xs font-semibold text-blue-700 dark:text-blue-400">
               Ôn từ vựng
             </span>
-          </div>
-        </Link>
+          </Link>
 
-        <Link
-          href="/progress"
-          className="group liquid-glass-card p-5 hover:!border-sky-600 dark:hover:!border-sky-400 transition-colors flex flex-col justify-between gap-4"
-        >
-          <div className="flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-lg bg-sky-50 dark:bg-sky-500/20 border border-sky-200 dark:border-sky-400/35 flex items-center justify-center shrink-0">
-              <Clock className="w-4 h-4 text-sky-700 dark:text-sky-300" aria-hidden="true" />
+          <Link
+            href="/progress"
+            className="group p-4 hover:bg-slate-100/60 dark:hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-600 transition-colors flex flex-col justify-between gap-3"
+          >
+            <div className="flex items-start gap-3 min-w-0">
+              <div className="w-8 h-8 rounded-lg bg-sky-50 dark:bg-sky-500/20 border border-sky-200 dark:border-sky-400/35 flex items-center justify-center shrink-0">
+                <Clock className="w-4 h-4 text-sky-700 dark:text-sky-300" aria-hidden="true" />
+              </div>
+              <div className="min-w-0 space-y-1">
+                <h3 className="font-bold text-sm text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors text-balance">
+                  Kế hoạch 7 ngày
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Tổng hợp từ khóa và lỗi ngữ pháp cần ôn.
+                </p>
+              </div>
             </div>
-            <div className="space-y-1">
-              <h3 className="font-bold text-sm text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
-                Kế hoạch 7 ngày
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Tổng hợp từ khóa và lỗi ngữ pháp cần ôn.
-              </p>
-            </div>
-          </div>
-          <div className="flex justify-end">
-            <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-slate-100/80 dark:bg-slate-800/80 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 group-hover:bg-blue-700 group-hover:text-white group-hover:border-blue-700 dark:group-hover:bg-blue-600 dark:group-hover:border-blue-600 text-sm font-semibold transition-colors">
+            <span className="text-xs font-semibold text-blue-700 dark:text-blue-400">
               Xem lộ trình
             </span>
-          </div>
-        </Link>
+          </Link>
 
-        <Link
-          href="/arena"
-          className="group liquid-glass-card p-5 hover:!border-amber-600 dark:hover:!border-amber-400 transition-colors flex flex-col justify-between gap-4"
-        >
-          <div className="flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-lg bg-amber-50 dark:bg-amber-500/20 border border-amber-200 dark:border-amber-400/35 flex items-center justify-center shrink-0">
-              <Gamepad2 className="w-4 h-4 text-amber-700 dark:text-amber-300" aria-hidden="true" />
+          <Link
+            href="/arena"
+            className="group p-4 hover:bg-slate-100/60 dark:hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-600 transition-colors flex flex-col justify-between gap-3"
+          >
+            <div className="flex items-start gap-3 min-w-0">
+              <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-500/20 border border-amber-200 dark:border-amber-400/35 flex items-center justify-center shrink-0">
+                <Gamepad2 className="w-4 h-4 text-amber-700 dark:text-amber-300" aria-hidden="true" />
+              </div>
+              <div className="min-w-0 space-y-1">
+                <h3 className="font-bold text-sm text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors text-balance">
+                  IT Speaking Arena
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Thử thách tốc độ 60s để kiếm IT-Coin.
+                </p>
+              </div>
             </div>
-            <div className="space-y-1">
-              <h3 className="font-bold text-sm text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
-                IT Speaking Arena
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Thử thách tốc độ 60s để kiếm IT-Coin.
-              </p>
-            </div>
-          </div>
-          <div className="flex justify-end">
-            <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-slate-100/80 dark:bg-slate-800/80 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 group-hover:bg-blue-700 group-hover:text-white group-hover:border-blue-700 dark:group-hover:bg-blue-600 dark:group-hover:border-blue-600 text-sm font-semibold transition-colors">
+            <span className="text-xs font-semibold text-blue-700 dark:text-blue-400">
               Vào đấu trường
             </span>
-          </div>
-        </Link>
+          </Link>
 
-        <Link
-          href="/arena/party"
-          className="group liquid-glass-card p-5 hover:!border-red-600 dark:hover:!border-red-400 transition-colors flex flex-col justify-between gap-4"
-        >
-          <div className="flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-lg bg-red-50 dark:bg-red-500/20 text-red-600 dark:text-red-300 flex items-center justify-center border border-red-200 dark:border-red-400/35 shrink-0">
-              <Siren className="w-4 h-4" aria-hidden="true" />
+          <Link
+            href="/shop"
+            className="group p-4 hover:bg-slate-100/60 dark:hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-600 transition-colors flex flex-col justify-between gap-3"
+          >
+            <div className="flex items-start gap-3 min-w-0">
+              <div className="w-8 h-8 rounded-lg bg-violet-50 dark:bg-violet-500/20 border border-violet-200 dark:border-violet-400/35 text-violet-700 dark:text-violet-300 flex items-center justify-center shrink-0">
+                <ShoppingBag className="w-4 h-4" aria-hidden="true" />
+              </div>
+              <div className="min-w-0 space-y-1">
+                <h3 className="font-bold text-sm text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors text-balance">
+                  Cửa hàng Hiệu ứng
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Đổi IT-Coin lấy khung avatar và nameplate.
+                </p>
+              </div>
             </div>
-            <div className="space-y-1">
-              <h3 className="font-bold text-sm text-slate-900 dark:text-slate-50 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
-                Outage At 3AM (Party Mode)
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Phối hợp nhóm xử lý sự cố production khẩn cấp theo thời gian thực.
-              </p>
-            </div>
-          </div>
-          <div className="flex justify-end">
-            <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-red-600 group-hover:bg-red-700 text-white text-sm font-semibold transition-colors">
-              Mở Party Mode
-            </span>
-          </div>
-        </Link>
-
-        <Link
-          href="/shop"
-          className="group liquid-glass-card p-5 hover:!border-violet-600 dark:hover:!border-violet-400 transition-colors flex flex-col justify-between gap-4"
-        >
-          <div className="flex items-start gap-3.5">
-            <div className="w-9 h-9 rounded-lg bg-violet-50 dark:bg-violet-500/20 border border-violet-200 dark:border-violet-400/35 text-violet-700 dark:text-violet-300 flex items-center justify-center shrink-0">
-              <ShoppingBag className="w-4 h-4" aria-hidden="true" />
-            </div>
-            <div className="space-y-1">
-              <h3 className="font-bold text-sm text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
-                Cửa hàng Hiệu ứng
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Đổi IT-Coin lấy khung avatar, nameplate và hiệu ứng bảng xếp hạng.
-              </p>
-            </div>
-          </div>
-          <div className="flex justify-end">
-            <span className="inline-flex items-center rounded-lg px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 group-hover:bg-blue-700 group-hover:text-white group-hover:border-blue-700 dark:group-hover:bg-blue-600 dark:group-hover:border-blue-600 text-sm font-semibold transition-colors">
+            <span className="text-xs font-semibold text-blue-700 dark:text-blue-400">
               Vào cửa hàng
             </span>
-          </div>
-        </Link>
+          </Link>
+        </div>
       </section>
     </div>
   );

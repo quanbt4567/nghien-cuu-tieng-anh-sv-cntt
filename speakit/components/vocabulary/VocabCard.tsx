@@ -234,19 +234,19 @@ export function VocabCard({
             }
             title={
               isListening
-                ? "Đang nghe... bấm để dừng"
+                ? "Đang nghe… bấm để dừng"
                 : `Đọc thử từ "${item.term}"`
             }
-            className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors border ${
+            className={`w-9 h-9 rounded-lg flex items-center justify-center focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors border ${
               isListening
-                ? "bg-red-600 hover:bg-red-700 border-red-600 text-white animate-pulse"
+                ? "bg-red-600 hover:bg-red-700 border-red-600 text-white animate-pulse motion-reduce:animate-none"
                 : "bg-slate-100 dark:bg-[#263349] border-slate-300 dark:border-white/20 text-slate-700 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-[#334155]"
             }`}
           >
             {isListening ? (
-              <MicOff className="w-4 h-4" />
+              <MicOff className="w-4 h-4" aria-hidden="true" />
             ) : (
-              <Mic className="w-4 h-4" />
+              <Mic className="w-4 h-4" aria-hidden="true" />
             )}
           </button>
 
@@ -258,7 +258,7 @@ export function VocabCard({
                 ? `Dừng phát âm "${item.term}"`
                 : `Phát âm từ "${item.term}"`
             }
-            className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors border ${
+            className={`w-9 h-9 rounded-lg flex items-center justify-center focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors border ${
               playingTarget === "word"
                 ? "bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 border-blue-700 dark:border-blue-600 text-white"
                 : "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/60"
@@ -270,9 +270,9 @@ export function VocabCard({
             }
           >
             {playingTarget === "word" ? (
-              <VolumeX className="w-4 h-4" />
+              <VolumeX className="w-4 h-4" aria-hidden="true" />
             ) : (
-              <Volume2 className="w-4 h-4" />
+              <Volume2 className="w-4 h-4" aria-hidden="true" />
             )}
           </button>
         </div>
@@ -280,6 +280,8 @@ export function VocabCard({
 
       {(isListening || micFeedback) && (
         <div
+          role="status"
+          aria-live="polite"
           className={`text-sm font-mono px-3 py-2 rounded-lg border ${
             isListening
               ? "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-900 dark:text-blue-200"
@@ -291,7 +293,7 @@ export function VocabCard({
           {isListening
             ? micTranscript
               ? `Đang nghe: "${micTranscript}"`
-              : `Hãy đọc to từ "${item.term}" hoặc câu ví dụ...`
+              : `Hãy đọc to từ "${item.term}" hoặc câu ví dụ…`
             : micFeedback?.message}
         </div>
       )}
@@ -302,28 +304,28 @@ export function VocabCard({
 
       <div className="pt-3 border-t border-slate-200 dark:border-[#334155] space-y-1.5">
         <div className="flex items-center justify-between gap-2">
-          <span className="font-mono text-xs uppercase font-bold text-slate-600 dark:text-slate-400">
+          <span className="font-mono text-xs font-bold text-slate-600 dark:text-slate-400">
             Ví dụ trong công việc:
           </span>
           <button
             type="button"
             onClick={() => playSegment("sentence", item.exampleSentenceEN, 0.8)}
-            className={`text-xs font-mono px-2.5 py-1 rounded-lg border flex items-center gap-1 font-semibold transition-colors ${
+            className={`text-xs font-mono px-2.5 py-1 rounded-lg border flex items-center gap-1 font-semibold focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
               playingTarget === "sentence"
                 ? "bg-blue-700 dark:bg-blue-600 border-blue-700 dark:border-blue-600 text-white"
                 : "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/60"
             }`}
           >
             {playingTarget === "sentence" ? (
-              <VolumeX className="w-3.5 h-3.5" />
+              <VolumeX className="w-3.5 h-3.5" aria-hidden="true" />
             ) : (
-              <Volume2 className="w-3.5 h-3.5" />
+              <Volume2 className="w-3.5 h-3.5" aria-hidden="true" />
             )}
             <span>{playingTarget === "sentence" ? "Dừng phát" : "Nghe câu mẫu"}</span>
           </button>
         </div>
         <div className="text-sm font-medium text-slate-900 dark:text-slate-100 leading-relaxed">
-          &quot;{item.exampleSentenceEN}&quot;
+          &ldquo;{item.exampleSentenceEN}&rdquo;
         </div>
         <div className="text-sm text-slate-600 dark:text-slate-300 pt-0.5">
           {item.exampleTranslationVI}
@@ -336,13 +338,13 @@ export function VocabCard({
             <button
               type="button"
               onClick={() => onToggleReview(item)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
                 isMarkedForReview
                   ? "bg-amber-50 dark:bg-amber-500/20 border-amber-300 dark:border-amber-400/50 text-amber-800 dark:text-amber-300"
                   : "bg-slate-100 dark:bg-[#263349] border-slate-300 dark:border-white/20 text-slate-700 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-[#334155]"
               }`}
             >
-              <BookmarkPlus className="w-3.5 h-3.5" />
+              <BookmarkPlus className="w-3.5 h-3.5" aria-hidden="true" />
               <span>{isMarkedForReview ? "Đang trong Cần ôn lại" : "Cần ôn lại"}</span>
             </button>
           )}
@@ -351,13 +353,13 @@ export function VocabCard({
             <button
               type="button"
               onClick={() => onToggleMastered(item)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
                 isMastered
                   ? "bg-green-50 dark:bg-green-500/20 border-green-300 dark:border-green-400/50 text-green-800 dark:text-green-300"
                   : "bg-slate-100 dark:bg-[#263349] border-slate-300 dark:border-white/20 text-slate-700 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-[#334155]"
               }`}
             >
-              <CheckCircle2 className="w-3.5 h-3.5" />
+              <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
               <span>{isMastered ? "Đã thuộc" : "Đánh dấu đã thuộc"}</span>
             </button>
           )}

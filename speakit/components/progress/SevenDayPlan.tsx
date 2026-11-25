@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CheckCircle2, ArrowRight } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { PlanDay } from "../../lib/planGenerator";
 
 interface SevenDayPlanProps {
@@ -15,7 +15,7 @@ export function SevenDayPlan({ days }: SevenDayPlanProps) {
     <div className="space-y-5">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
+          <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-50 text-balance">
             Kế Hoạch Luyện Tập 7 Ngày Thích Ứng
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">
@@ -23,7 +23,7 @@ export function SevenDayPlan({ days }: SevenDayPlanProps) {
           </p>
         </div>
         <span
-          className={`text-xs font-mono font-bold px-3 py-1 rounded-full border shrink-0 ${
+          className={`text-xs font-mono font-bold tabular-nums px-3 py-1 rounded-full border shrink-0 ${
             completedCount > 0
               ? "bg-green-50 dark:bg-green-950/50 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800"
               : "bg-blue-50 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800"
@@ -33,20 +33,20 @@ export function SevenDayPlan({ days }: SevenDayPlanProps) {
         </span>
       </div>
 
-      <div className="space-y-4">
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl overflow-hidden divide-y divide-slate-200 dark:divide-[#334155]">
         {days.map((day) => (
           <div
             key={day.dayNumber}
-            className={`rounded-xl border p-5 sm:p-6 transition-colors ${
+            className={`p-5 sm:p-6 transition-colors ${
               day.isCompleted
-                ? "bg-green-50/40 dark:bg-green-950/20 border-green-300 dark:border-green-800"
-                : "bg-white dark:bg-[#1E293B] border-slate-200 dark:border-[#334155] hover:border-blue-300 dark:hover:border-blue-700"
+                ? "bg-green-50/40 dark:bg-green-950/20"
+                : "hover:bg-slate-50/70 dark:hover:bg-slate-800/40"
             }`}
           >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-start gap-3.5">
+              <div className="flex items-start gap-3.5 min-w-0">
                 <div
-                  className={`w-9 h-9 rounded-full flex items-center justify-center border shrink-0 font-mono font-bold text-xs ${
+                  className={`w-9 h-9 rounded-full flex items-center justify-center border shrink-0 font-mono font-bold text-xs tabular-nums ${
                     day.isCompleted
                       ? "bg-green-100 dark:bg-green-950/60 text-green-800 dark:text-green-300 border-green-300 dark:border-green-700"
                       : "bg-blue-50 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800"
@@ -55,14 +55,14 @@ export function SevenDayPlan({ days }: SevenDayPlanProps) {
                   {day.dayNumber}
                 </div>
 
-                <div className="space-y-1">
+                <div className="min-w-0 space-y-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-bold text-base text-slate-900 dark:text-slate-50">
                       {day.dayLabel}: {day.scenarioTitleVI}
                     </span>
                     {day.isCompleted && (
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-green-50 dark:bg-green-950/50 border border-green-200 dark:border-green-800 text-xs font-mono text-green-800 dark:text-green-300 font-semibold">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-green-700 dark:text-green-400" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-green-700 dark:text-green-400" aria-hidden="true" />
                         Đã luyện
                       </span>
                     )}
@@ -92,14 +92,13 @@ export function SevenDayPlan({ days }: SevenDayPlanProps) {
               <div className="shrink-0 pt-2 sm:pt-0 flex justify-end">
                 <Link
                   href={`/practice/${day.scenarioId}`}
-                  className={`text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                  className={`text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
                     day.isCompleted
                       ? "bg-green-700 hover:bg-green-800"
                       : "bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700"
                   }`}
                 >
                   <span>{day.isCompleted ? "Luyện lại" : "Bắt đầu"}</span>
-                  <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>

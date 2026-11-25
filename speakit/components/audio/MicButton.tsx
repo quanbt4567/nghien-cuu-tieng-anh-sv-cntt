@@ -69,7 +69,7 @@ export function MicButton({
         onClick={handleClick}
         disabled={disabled}
         aria-label={isRecording ? "Dừng ghi âm" : "Bắt đầu nói"}
-        className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center border-2 transition-colors transition-transform ${
+        className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center border-2 transition-colors transition-transform motion-reduce:transition-none motion-reduce:transform-none focus-visible:ring-2 focus-visible:ring-blue-600 ${
           disabled
             ? "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed opacity-60 border-slate-200 dark:border-slate-700"
             : isRecording
@@ -78,9 +78,9 @@ export function MicButton({
         }`}
       >
         {isRecording ? (
-          <Square className="w-8 h-8 fill-white" />
+          <Square className="w-8 h-8 fill-white" aria-hidden="true" />
         ) : (
-          <Mic className="w-9 h-9" />
+          <Mic className="w-9 h-9" aria-hidden="true" />
         )}
       </button>
 
@@ -90,6 +90,9 @@ export function MicButton({
             @keyframes speakitWave {
               0%, 100% { transform: scaleY(0.45); }
               50% { transform: scaleY(1); }
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .speakit-wave-bar { animation: none !important; }
             }
           `}</style>
           <div
@@ -102,7 +105,7 @@ export function MicButton({
               return (
                 <span
                   key={idx}
-                  className="w-1 rounded-full bg-red-600 dark:bg-red-400 origin-center"
+                  className="speakit-wave-bar w-1 rounded-full bg-red-600 dark:bg-red-400 origin-center"
                   style={{
                     height: `${barHeight}px`,
                     animation: `speakitWave ${540 + (idx % 3) * 140}ms ease-in-out ${idx * 75}ms infinite`,
@@ -113,13 +116,13 @@ export function MicButton({
           </div>
 
           <div
-            className={`inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full border text-xs font-mono font-bold ${
+            className={`inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full border text-xs font-mono font-bold tabular-nums ${
               isLowTime
                 ? "bg-red-600 text-white border-red-600"
                 : "bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800"
             }`}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-current" />
+            <span className="w-1.5 h-1.5 rounded-full bg-current" aria-hidden="true" />
             <span>{formatDuration(displaySeconds)}</span>
             {hasCountdown && (
               <span className="opacity-75 font-normal">
@@ -135,20 +138,20 @@ export function MicButton({
           type="button"
           onClick={handleClick}
           disabled={disabled}
-          className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+          className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
             isRecording
               ? "bg-red-600 hover:bg-red-700 text-white"
-              : "bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white active:scale-[0.98]"
+              : "bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white active:scale-[0.98] motion-reduce:transform-none"
           }`}
         >
           {isRecording ? (
             <>
-              <span className="w-2 h-2 rounded-full bg-white" />
+              <span className="w-2 h-2 rounded-full bg-white" aria-hidden="true" />
               <span>Dừng ghi âm</span>
             </>
           ) : (
             <>
-              <Mic className="w-4 h-4" />
+              <Mic className="w-4 h-4" aria-hidden="true" />
               <span>Ghi âm câu trả lời</span>
             </>
           )}
@@ -159,8 +162,12 @@ export function MicButton({
       </div>
 
       {error && (
-        <div className="flex items-center gap-1.5 text-sm text-red-700 dark:text-red-300 font-medium bg-red-50 dark:bg-red-950/50 px-3.5 py-2 rounded-lg border border-red-200 dark:border-red-800">
-          <AlertCircle className="w-4 h-4 shrink-0 text-red-600 dark:text-red-400" />
+        <div
+          role="alert"
+          aria-live="polite"
+          className="flex items-center gap-1.5 text-sm text-red-700 dark:text-red-300 font-medium bg-red-50 dark:bg-red-950/50 px-3.5 py-2 rounded-lg border border-red-200 dark:border-red-800"
+        >
+          <AlertCircle className="w-4 h-4 shrink-0 text-red-600 dark:text-red-400" aria-hidden="true" />
           <span>{error}</span>
         </div>
       )}

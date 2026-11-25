@@ -46,7 +46,7 @@ function buildFeatureHighlights(scenarioCount: number) {
   return [
     `${scenarioCount} tình huống công việc IT (kèm gợi ý cho người mất gốc)`,
     "Chạm bất kỳ từ tiếng Anh nào để xem nghĩa tiếng Việt ngay",
-    "Chấm điểm Phát âm · Độ trôi chảy · Từ vựng",
+    "Chấm điểm Phát âm, Độ trôi chảy và Từ vựng",
     "Đấu trường phản xạ & Kế hoạch ôn tập 7 ngày",
   ];
 }
@@ -106,18 +106,18 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
       <div className="md:hidden space-y-4">
         <div className="liquid-glass-card p-5 space-y-4">
           <div className="space-y-1.5">
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-snug">
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-snug text-balance">
               Luyện phản xạ tiếng Anh CNTT
             </h1>
             <p className="text-sm text-slate-600 dark:text-slate-300">
-              Daily Standup · Code Review · Technical Interview
+              Daily Standup, Code Review và Technical Interview
             </p>
           </div>
 
           <div className="space-y-2.5">
             <Link
               href="/scenarios"
-              className="w-full flex items-center justify-center gap-2 rounded-lg px-5 py-3.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white text-sm font-semibold active:scale-[0.98] transition-colors"
+              className="w-full flex items-center justify-center gap-2 rounded-lg px-5 py-3.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-white text-sm font-semibold active:scale-[0.98] motion-reduce:transform-none transition-colors"
             >
               <span>Bắt đầu luyện nói ngay</span>
               <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
@@ -125,7 +125,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
 
             <Link
               href="/placement"
-              className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm font-semibold active:scale-[0.98] transition-colors"
+              className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-slate-900 dark:text-slate-100 text-sm font-semibold active:scale-[0.98] motion-reduce:transform-none transition-colors"
             >
               <Compass className="w-4 h-4 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
               <span>Kiểm tra trình độ</span>
@@ -140,16 +140,16 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className="liquid-glass-card-lite active:scale-[0.98] hover:!border-blue-700 dark:hover:!border-blue-400 transition-colors p-3.5 flex flex-col gap-2.5"
+                className="liquid-glass-card-lite active:scale-[0.98] motion-reduce:transform-none hover:!border-blue-700 dark:hover:!border-blue-400 focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors p-3.5 flex flex-col gap-2.5"
               >
                 <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 flex items-center justify-center shrink-0">
                   <Icon className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
                 </div>
-                <div className="space-y-0.5">
+                <div className="min-w-0 space-y-0.5">
                   <div className="text-sm font-bold text-slate-900 dark:text-slate-50 leading-tight">
                     {item.title}
                   </div>
-                  <div className="text-xs font-mono uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                  <div className="text-xs text-slate-600 dark:text-slate-400">
                     {item.subtitle}
                   </div>
                 </div>
@@ -159,21 +159,21 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
         </div>
 
         <details className="group liquid-glass-card-lite overflow-hidden">
-          <summary className="list-none cursor-pointer flex items-center justify-between gap-2 px-4 py-3 text-sm font-mono font-semibold text-slate-900 dark:text-slate-50 select-none">
+          <summary className="list-none cursor-pointer flex items-center justify-between gap-2 px-4 py-3 text-sm font-mono font-semibold text-slate-900 dark:text-slate-50 select-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-600 tabular-nums">
             <span className="flex items-center gap-2 min-w-0">
               <BarChart3 className="w-4 h-4 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
               <span className="truncate">
-                Số liệu EF EPI {EF_EPI_2025.year} · {EF_EPI_2025.country} {EF_EPI_2025.score} điểm
+                Số liệu EF EPI {EF_EPI_2025.year}: {EF_EPI_2025.country} ({EF_EPI_2025.score} điểm)
               </span>
             </span>
             <ChevronDown
-              className="w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0 transition-transform group-open:rotate-180"
+              className="w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0 transition-transform motion-reduce:transition-none group-open:rotate-180"
               aria-hidden="true"
             />
           </summary>
 
           <div className="px-4 pb-4 pt-3 border-t border-slate-200 dark:border-slate-800 space-y-3 text-sm">
-            <div className="flex items-center justify-between gap-2 font-mono text-xs">
+            <div className="flex items-center justify-between gap-2 font-mono text-xs tabular-nums">
               <span className="text-slate-600 dark:text-slate-400">
                 Toàn cầu #{EF_EPI_2025.globalRank}/{EF_EPI_2025.totalCountries}
               </span>
@@ -182,7 +182,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
               </span>
             </div>
 
-            <div className="space-y-2.5">
+            <div className="space-y-2.5 tabular-nums">
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs font-mono">
                   <span className="text-slate-700 dark:text-slate-300 font-semibold">
@@ -219,15 +219,14 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
             </div>
 
             <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-              Kỹ năng Nói thấp hơn Đọc {speakingVsReadingGap} điểm: luyện nói mỗi ngày giúp thu hẹp khoảng cách này.
+              Kỹ năng Nói thấp hơn Đọc <span className="tabular-nums font-semibold">{speakingVsReadingGap}</span> điểm: luyện nói mỗi ngày giúp thu hẹp khoảng cách này.
             </p>
 
             <Link
               href="/research"
-              className="inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs font-mono font-semibold transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-slate-900 dark:text-slate-100 text-xs font-semibold transition-colors"
             >
               <span>Đọc thêm số liệu &amp; nghiên cứu</span>
-              <ArrowRight className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
             </Link>
           </div>
         </details>
@@ -237,7 +236,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
         <div className="hidden md:grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           <div className="lg:col-span-7 space-y-5">
             <div className="space-y-3">
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-[3rem]">
+              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-[3rem] text-balance">
                 Luyện phản xạ nói tiếng Anh CNTT theo tình huống công việc thật
               </h1>
               <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
@@ -249,7 +248,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
             <div className="flex flex-wrap items-center gap-3 pt-1">
               <Link
                 href="/placement"
-                className="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold text-sm active:scale-[0.98] transition-colors"
+                className="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-white font-semibold text-sm active:scale-[0.98] motion-reduce:transform-none transition-colors"
               >
                 <span>Bắt đầu luyện nói ngay</span>
                 <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
@@ -257,7 +256,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
 
               <Link
                 href="/scenarios"
-                className="inline-flex items-center gap-1 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-700 dark:hover:text-blue-400 underline-offset-4 hover:underline px-1.5 py-1 transition-colors"
+                className="inline-flex items-center gap-1 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-700 dark:hover:text-blue-400 focus-visible:ring-2 focus-visible:ring-blue-600 rounded underline-offset-4 hover:underline px-1.5 py-1 transition-colors"
               >
                 <span>Hoặc chọn kịch bản trực tiếp</span>
               </Link>
@@ -280,10 +279,10 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
             className="lg:col-span-5 lg:border-l lg:border-slate-200 dark:lg:border-slate-800 lg:pl-8 space-y-4"
           >
             <div className="space-y-1.5">
-              <p className="text-xs font-mono font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400">
-                EF EPI {EF_EPI_2025.year} · {EF_EPI_2025.country}
+              <p className="text-xs font-mono font-semibold text-blue-700 dark:text-blue-400">
+                EF EPI {EF_EPI_2025.year} ({EF_EPI_2025.country})
               </p>
-              <h2 className="text-base font-bold text-slate-900 dark:text-slate-50">
+              <h2 className="text-base font-bold text-slate-900 dark:text-slate-50 text-balance">
                 Số liệu thống kê: Bối cảnh tiếng Anh CNTT
               </h2>
               <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -291,7 +290,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
               </p>
             </div>
 
-            <div className="border-t border-slate-200 dark:border-slate-800 pt-3 space-y-3">
+            <div className="border-t border-slate-200 dark:border-slate-800 pt-3 space-y-3 tabular-nums">
               <div className="flex items-center justify-between gap-2">
                 <span className="text-sm font-mono text-slate-600 dark:text-slate-300">
                   Điểm tổng EF EPI toàn quốc
@@ -321,7 +320,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
               </div>
             </div>
 
-            <div className="space-y-2.5 border-t border-slate-200 dark:border-slate-800 pt-3">
+            <div className="space-y-2.5 border-t border-slate-200 dark:border-slate-800 pt-3 tabular-nums">
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs font-mono">
                   <span className="text-slate-700 dark:text-slate-300 font-semibold">
@@ -333,7 +332,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
                 </div>
                 <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
                   <div
-                    className="h-full w-full origin-left bg-blue-700 dark:bg-blue-500 rounded-full transition-transform duration-500"
+                    className="h-full w-full origin-left bg-blue-700 dark:bg-blue-500 rounded-full transition-transform duration-500 motion-reduce:transition-none"
                     style={{ transform: `scaleX(${readingPercent / 100})` }}
                   />
                 </div>
@@ -350,7 +349,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
                 </div>
                 <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
                   <div
-                    className="h-full w-full origin-left bg-red-600 dark:bg-red-500 rounded-full transition-transform duration-500"
+                    className="h-full w-full origin-left bg-red-600 dark:bg-red-500 rounded-full transition-transform duration-500 motion-reduce:transition-none"
                     style={{ transform: `scaleX(${speakingPercent / 100})` }}
                   />
                 </div>
@@ -360,7 +359,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
             <div className="border-t border-slate-200 dark:border-slate-800 pt-3 space-y-3">
               <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 Kỹ năng Nói tại Việt Nam thấp hơn Đọc tới{" "}
-                <span className="font-mono font-bold text-slate-900 dark:text-slate-50">
+                <span className="font-mono font-bold tabular-nums text-slate-900 dark:text-slate-50">
                   {speakingVsReadingGap} điểm
                 </span>{" "}
                 do quen đọc docs nhưng thiếu môi trường phản xạ miệng. SpeakIT thu hẹp khoảng cách
@@ -369,18 +368,17 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
 
               <Link
                 href="/research"
-                className="inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs font-mono font-semibold transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-slate-900 dark:text-slate-100 text-xs font-semibold transition-colors"
               >
                 <BarChart3 className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
                 <span>Đọc thêm số liệu &amp; nghiên cứu</span>
-                <ArrowRight className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
               </Link>
             </div>
           </aside>
         </div>
       </div>
 
-      <div className="hidden md:grid md:grid-cols-3 gap-4">
+      <div className="hidden md:grid md:grid-cols-3 liquid-glass-card-lite overflow-hidden divide-y md:divide-y-0 md:divide-x divide-slate-200/80 dark:divide-white/10">
         {howItWorksSteps.map((item) => {
           const Icon = item.icon;
           const stepTone =
@@ -404,16 +402,16 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
           return (
             <div
               key={item.step}
-              className="liquid-glass-card-lite p-5 flex items-start gap-3.5"
+              className="p-5 flex items-start gap-3.5"
             >
               <div className={`w-10 h-10 rounded-lg border flex items-center justify-center shrink-0 ${stepTone.box}`}>
                 <Icon className={`w-4 h-4 ${stepTone.icon}`} aria-hidden="true" />
               </div>
-              <div className="space-y-1">
-                <div className={`text-xs font-mono font-bold ${stepTone.label}`}>
-                  BƯỚC {item.step}
+              <div className="min-w-0 space-y-1">
+                <div className={`text-xs font-mono font-bold tabular-nums ${stepTone.label}`}>
+                  Bước {item.step}
                 </div>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-slate-50">{item.title}</h3>
+                <h2 className="text-sm font-bold text-slate-900 dark:text-slate-50 text-balance">{item.title}</h2>
                 <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                   {item.description}
                 </p>

@@ -14,12 +14,12 @@ export default async function ScenariosPage() {
       <div>
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:border-blue-700 dark:hover:border-blue-500 text-xs font-semibold transition-colors mb-3"
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:border-blue-700 dark:hover:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-600 text-xs font-semibold transition-colors mb-3"
         >
           <ArrowLeft className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
           <span>Trang chủ</span>
         </Link>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 flex items-center gap-2">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 flex items-center gap-2 text-balance">
           <MessageSquare className="w-6 h-6 text-blue-700 dark:text-blue-400" aria-hidden="true" />
           <span>Kịch bản luyện nói IT</span>
         </h1>

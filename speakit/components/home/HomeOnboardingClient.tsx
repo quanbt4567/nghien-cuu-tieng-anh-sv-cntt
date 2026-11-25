@@ -207,7 +207,7 @@ export function HomeOnboardingClient() {
       <Link
         key={scenario.id}
         href={`/practice/${scenario.id}`}
-        className={`group bg-white dark:bg-[#1E293B] border rounded-xl p-5 hover:border-blue-700 dark:hover:border-blue-500 transition-colors flex flex-col justify-between gap-4 ${
+        className={`group bg-white dark:bg-[#1E293B] border rounded-xl p-5 hover:border-blue-700 dark:hover:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors flex flex-col justify-between gap-4 ${
           isPlacementMatch
             ? "border-blue-700 dark:border-blue-500 ring-1 ring-blue-700/20 dark:ring-blue-500/25"
             : isRecommended
@@ -279,14 +279,14 @@ export function HomeOnboardingClient() {
             <span className="font-semibold">Lần đầu sử dụng?</span>
             <Link
               href="/guide"
-              className="inline-flex items-center gap-1 rounded-lg px-3 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700 text-xs font-semibold transition-colors"
+              className="inline-flex items-center gap-1 rounded-lg px-3 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-xs font-semibold transition-colors"
             >
               Xem hướng dẫn 1 phút
             </Link>
             <span className="text-slate-600 dark:text-slate-300">hoặc</span>
             <Link
               href="/placement"
-              className="inline-flex items-center gap-1 rounded-lg px-3 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700 text-xs font-semibold transition-colors"
+              className="inline-flex items-center gap-1 rounded-lg px-3 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-xs font-semibold transition-colors"
             >
               Làm test xếp lớp 2 phút
             </Link>
@@ -295,9 +295,9 @@ export function HomeOnboardingClient() {
             type="button"
             onClick={handleDismissGuideBanner}
             aria-label="Đóng thông báo hướng dẫn"
-            className="p-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 hover:bg-blue-100 dark:hover:bg-slate-800 transition-colors"
+            className="p-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 hover:bg-blue-100 dark:hover:bg-slate-800 focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
       )}
@@ -320,7 +320,7 @@ export function HomeOnboardingClient() {
                   type="button"
                   onClick={() => handleSelectRole(role.id)}
                   aria-pressed={isSelected}
-                  className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-sm font-semibold border transition-colors ${
+                  className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-sm font-semibold border focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
                     isSelected
                       ? "bg-blue-700 text-white border-blue-700 dark:bg-blue-600 dark:border-blue-600"
                       : "bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:border-blue-700 dark:hover:border-blue-500 hover:text-slate-900 dark:hover:text-white"
@@ -343,10 +343,10 @@ export function HomeOnboardingClient() {
           <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1.5">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-mono font-bold text-blue-700 dark:text-blue-400 uppercase tracking-wide">
+                <span className="text-xs font-mono font-semibold text-blue-700 dark:text-blue-400 tabular-nums">
                   {placement
-                    ? `Đề xuất theo trình độ ${placement.level} · ~3 phút`
-                    : `Đề xuất cho ${activeRole.label} · ~3 phút`}
+                    ? `Đề xuất theo trình độ ${placement.level} (~3 phút)`
+                    : `Đề xuất cho ${activeRole.label} (~3 phút)`}
                 </span>
                 <span
                   className={`text-xs font-mono font-bold px-2.5 py-0.5 rounded-full border ${getDifficultyBadgeClass(
@@ -368,7 +368,7 @@ export function HomeOnboardingClient() {
               <div className="pt-1">
                 <Link
                   href="/placement"
-                  className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/50 dark:hover:bg-blue-950/80 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800 text-xs font-semibold transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/50 dark:hover:bg-blue-950/80 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800 focus-visible:ring-2 focus-visible:ring-blue-600 text-xs font-semibold transition-colors"
                 >
                   <Compass className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                   <span>
@@ -382,7 +382,7 @@ export function HomeOnboardingClient() {
 
             <Link
               href={`/practice/${recommendedScenario.id}`}
-              className="w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-lg bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold text-sm sm:text-base active:scale-[0.98] transition-colors"
+              className="w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-lg bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-white font-semibold text-sm sm:text-base active:scale-[0.98] motion-reduce:transform-none transition-colors"
             >
               <Play className="w-4 h-4 fill-white shrink-0" aria-hidden="true" />
               <span>Bắt đầu luyện ngay</span>
@@ -399,14 +399,14 @@ export function HomeOnboardingClient() {
       <section id="scenarios" className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
+            <h2 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-slate-50 tabular-nums text-balance">
               Tất cả tình huống ({filteredScenarios.length})
             </h2>
             <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">
               Chọn cấp độ Fresher, Junior hoặc Senior để luyện phản xạ nói tiếng Anh
             </p>
           </div>
-          <span className="text-xs font-mono text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700 shrink-0">
+          <span className="text-xs font-mono tabular-nums text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700 shrink-0">
             {totalTurnsCount} Lượt luyện
           </span>
         </div>
@@ -420,7 +420,7 @@ export function HomeOnboardingClient() {
                 type="button"
                 onClick={() => setDifficultyFilter(level)}
                 aria-pressed={isActive}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-semibold border transition-colors ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-semibold border tabular-nums focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
                   isActive
                     ? "bg-blue-700 text-white border-blue-700 dark:bg-blue-600 dark:border-blue-600"
                     : "bg-white dark:bg-[#1E293B] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-blue-700 dark:hover:border-blue-500 hover:text-slate-900 dark:hover:text-white"
@@ -442,10 +442,10 @@ export function HomeOnboardingClient() {
               return (
                 <div key={level} className="space-y-3">
                   <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-200 dark:border-slate-800">
-                    <h3 className="text-sm sm:text-base font-bold tracking-tight text-slate-900 dark:text-slate-50">
-                      {level} · {subtitle}
+                    <h3 className="text-sm sm:text-base font-bold tracking-tight text-slate-900 dark:text-slate-50 text-balance">
+                      {level}: {subtitle}
                     </h3>
-                    <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
+                    <span className="text-xs font-mono tabular-nums text-slate-600 dark:text-slate-400">
                       {items.length} tình huống
                     </span>
                   </div>
