@@ -440,6 +440,8 @@ export function NameplateBanner({
           src={assetUrl}
           alt=""
           aria-hidden="true"
+          width={600}
+          height={96}
           onError={() => setMediaFailed(true)}
           className="pointer-events-none select-none absolute inset-0 w-full h-full object-cover opacity-35 z-[1]"
           style={{
@@ -479,9 +481,9 @@ export function NameplateBanner({
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 z-[6] flex items-center justify-around opacity-85 text-amber-500 text-[10px]"
         >
-          <span className="animate-pulse">✦</span>
-          <span className="animate-bounce">✧</span>
-          <span className="animate-pulse">✦</span>
+          <span className="animate-pulse motion-reduce:animate-none">✦</span>
+          <span className="animate-bounce motion-reduce:animate-none">✧</span>
+          <span className="animate-pulse motion-reduce:animate-none">✦</span>
         </span>
       )}
 

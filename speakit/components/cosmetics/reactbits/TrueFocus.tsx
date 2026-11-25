@@ -155,7 +155,7 @@ const TrueFocus: FC<TrueFocusProps> = ({
 
   return (
     <div
-      className={`relative flex items-center outline-none select-none ${containerClassName}`}
+      className={`relative flex items-center select-none ${containerClassName}`}
       ref={containerRef}
     >
       {focusStyle === 'highlight' && shapes && (
@@ -177,7 +177,7 @@ const TrueFocus: FC<TrueFocusProps> = ({
             ref={el => {
               wordRefs.current[index] = el;
             }}
-            className={`relative cursor-pointer outline-none select-none ${wordClassName}`}
+            className={`relative cursor-pointer select-none ${wordClassName}`}
             style={{
               filter: `blur(${isActive ? 0 : blurAmount}px)`,
               opacity: isActive ? 1 : unfocusedOpacity,

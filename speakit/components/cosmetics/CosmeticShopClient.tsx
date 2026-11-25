@@ -187,8 +187,8 @@ function CosmeticCardThumbnail({
                 <span className="cosmetic-nameplate-terminal-cursor inline-block w-1.5 h-3 bg-green-700 dark:bg-green-400" />
               </span>
             ) : (
-              <span className="text-[11px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 shrink-0">
-                TAG
+              <span className="text-[11px] font-mono font-semibold px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 shrink-0">
+                Thẻ
               </span>
             )}
           </div>
@@ -214,7 +214,7 @@ function CosmeticCardThumbnail({
                 {displayName}
               </span>
             </div>
-            <span className="text-xs font-mono font-bold text-blue-700 dark:text-blue-400 shrink-0">
+            <span className="text-xs font-mono font-bold tabular-nums text-blue-700 dark:text-blue-400 shrink-0">
               2,450 pts
             </span>
           </div>
@@ -290,16 +290,16 @@ function CosmeticCardThumbnail({
       <div className={`h-28 rounded-xl border relative overflow-hidden flex items-center justify-center ${RARITY_PREVIEW_BG_CLASS[item.rarity]}`}>
         {item.id === "cursor-pixel-sparkle-trail" && (
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 bg-amber-500 border border-amber-600/40 animate-pulse" />
-            <span className="w-3 h-3 bg-red-600 border border-red-700/40 rotate-45 animate-bounce" />
+            <span className="w-2.5 h-2.5 bg-amber-500 border border-amber-600/40 animate-pulse motion-reduce:animate-none" />
+            <span className="w-3 h-3 bg-red-600 border border-red-700/40 rotate-45 animate-bounce motion-reduce:animate-none" />
             <MousePointer2 className="w-5 h-5 text-slate-900 dark:text-slate-100" aria-hidden="true" />
           </div>
         )}
         {item.id === "cursor-binary-01-stream" && (
           <div className="flex items-center gap-2 font-mono font-bold text-xs text-green-700 dark:text-green-400">
-            <span className="animate-pulse">0</span>
+            <span className="animate-pulse motion-reduce:animate-none">0</span>
             <span>1</span>
-            <span className="animate-bounce">0</span>
+            <span className="animate-bounce motion-reduce:animate-none">0</span>
             <span>1</span>
             <MousePointer2 className="w-5 h-5 text-slate-900 dark:text-slate-100" aria-hidden="true" />
           </div>
@@ -325,7 +325,7 @@ function CosmeticCardThumbnail({
         ].includes(item.id) && (
           <div className="flex items-center gap-2">
             <span
-              className="w-3 h-3 rounded-full border border-white dark:border-slate-900 animate-ping"
+              className="w-3 h-3 rounded-full border border-white dark:border-slate-900 animate-ping motion-reduce:animate-none"
               style={{ backgroundColor: item.previewAccent }}
             />
             <span
@@ -778,12 +778,12 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
           <div className="flex items-center gap-3">
             <Link
               href="/profile"
-              className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold transition-colors"
+              className="liquid-glass-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
             >
               <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Hồ sơ</span>
             </Link>
-            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-balance text-slate-900 dark:text-slate-100 flex items-center gap-2">
               <span className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-blue-700 dark:bg-blue-600 text-white">
                 <ShoppingBag className="w-5 h-5" aria-hidden="true" />
               </span>
@@ -795,13 +795,13 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
             data-tour="shop-coin-balance"
             className="flex flex-wrap items-center gap-2.5"
           >
-            <span className="liquid-glass-pill inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-mono font-bold text-amber-700 dark:text-amber-300">
+            <span className="liquid-glass-pill inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-mono font-bold tabular-nums text-amber-700 dark:text-amber-300">
               <Coins className="w-4 h-4 text-amber-600 dark:text-amber-400" aria-hidden="true" />
               <span>{isIdentityHydrating ? "-- IT-Coins" : `${identity.itCoins} IT-Coins`}</span>
             </span>
             <Link
               href="/arena"
-              className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold transition-colors"
+              className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
             >
               <Gamepad2 className="w-4 h-4 text-white" aria-hidden="true" />
               <span>Kiếm thêm Coin</span>
@@ -816,12 +816,12 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
         >
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
             <div>
-              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 text-[11px] font-mono font-bold uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 text-xs font-semibold">
                 <Sparkles className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
-                <span>Live Try-On Sandbox</span>
+                <span>Studio xem thử trực tiếp</span>
               </div>
               <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mt-1.5">
-                All 6 cosmetic slots render live below. Click any card in the catalog to mix &amp; match before unlocking.
+                Cả 6 slot trang bị hiển thị trực tiếp bên dưới. Nhấn vào mẫu bất kỳ để phối thử trước khi mở khóa.
               </p>
             </div>
 
@@ -829,14 +829,14 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
               <button
                 type="button"
                 onClick={() => setMicTestActive((v) => !v)}
-                className={`liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-colors ${
+                className={`liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400 ${
                   micTestActive
                     ? "!bg-blue-50 dark:!bg-blue-950/50 !border-blue-700 dark:!border-blue-500 !text-blue-700 dark:!text-blue-300"
                     : ""
                 }`}
               >
                 <Mic className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>{micTestActive ? "Mic Pulse: ON" : "Mic Pulse"}</span>
+                <span>{micTestActive ? "Mic Pulse: Bật" : "Thử Mic Pulse"}</span>
               </button>
 
               <button
@@ -845,17 +845,17 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                   setFinisherActive(false);
                   window.setTimeout(() => setFinisherActive(true), 20);
                 }}
-                className="liquid-btn-danger inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-colors"
+                className="liquid-btn-danger inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 dark:focus-visible:ring-red-400"
               >
                 <Flame className="w-3.5 h-3.5 text-white" aria-hidden="true" />
-                <span>Trigger Finisher</span>
+                <span>Chạy Finisher</span>
               </button>
 
               {hasAnyActiveSandbox && (
                 <button
                   type="button"
                   onClick={handleClearPreview}
-                  className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-colors"
+                  className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
                 >
                   <Eraser className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>Clear Preview</span>
@@ -866,10 +866,10 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                 <button
                   type="button"
                   onClick={handleResetToEquipped}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-950/60 text-amber-800 dark:text-amber-300 text-xs font-mono font-bold border border-amber-300 dark:border-amber-800 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-950/60 text-amber-800 dark:text-amber-300 text-xs font-mono font-bold border border-amber-300 dark:border-amber-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 dark:focus-visible:ring-amber-400"
                 >
                   <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
-                  <span>Reset to Equipped</span>
+                  <span>Đặt lại đã trang bị</span>
                 </button>
               )}
             </div>
@@ -927,7 +927,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     <button
                       type="button"
                       onClick={() => setThemePreviewEnabled((v) => !v)}
-                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border text-[11px] font-mono font-bold transition-colors ${
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border text-[11px] font-mono font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400 ${
                         themePreviewEnabled && activeSandbox.profile_theme
                           ? "bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300"
                           : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200/75 dark:hover:bg-slate-700"
@@ -990,9 +990,9 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                       </div>
                     </div>
 
-                    <div className="text-right shrink-0 font-mono">
+                    <div className="text-right shrink-0 font-mono tabular-nums">
                       <div className="text-sm font-extrabold text-slate-900 dark:text-slate-100">
-                        {isIdentityHydrating ? "-- pts" : `${identity.totalPoints.toLocaleString("vi-VN")} pts`}
+                        {isIdentityHydrating ? "-- pts" : `${new Intl.NumberFormat("vi-VN").format(identity.totalPoints)} pts`}
                       </div>
                       <div className="text-xs text-amber-700 dark:text-amber-400 font-bold">
                         {isIdentityHydrating ? "-- IT-Coins" : `${identity.itCoins} IT-Coins`}
@@ -1021,20 +1021,20 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                         setVisibleCount(8);
                       })
                     }
-                    className={`text-left rounded-lg border p-2.5 transition-colors ${
+                    className={`text-left rounded-lg border p-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400 ${
                       activeCategory === cat
                         ? "bg-blue-50 dark:bg-blue-950/50 border-blue-700 dark:border-blue-500"
                         : "bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-1">
-                      <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-mono font-semibold text-slate-600 dark:text-slate-400">
                         <Icon className="w-3 h-3 text-blue-700 dark:text-blue-400" aria-hidden="true" />
                         <span>{meta.shortLabel}</span>
                       </span>
                       {isOverridden && (
-                        <span className="px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-[10px] font-mono font-bold uppercase">
-                          Try
+                        <span className="px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-[10px] font-mono font-semibold">
+                          Thử
                         </span>
                       )}
                     </div>
@@ -1082,7 +1082,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     setVisibleCount(8);
                   })
                 }
-                className={`liquid-glass-pill inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold transition-colors ${
+                className={`liquid-glass-pill inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400 ${
                   selected
                     ? "!bg-blue-50 dark:!bg-blue-950/50 !border-blue-700 dark:!border-blue-500 text-blue-700 dark:text-blue-300"
                     : "text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100"
@@ -1107,27 +1107,30 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
             const isOnline = identity.mode === "online";
 
             const statusLabel = isPreviewing
-              ? "Previewing"
+              ? "Đang xem thử"
               : isEquipped
-                ? "Equipped"
+                ? "Đang trang bị"
                 : isOwned
-                  ? "Owned"
+                  ? "Đã sở hữu"
                   : null;
 
             return (
-              <div
+              <article
                 key={item.id}
-                onClick={(e) => handleSelectPreview(item, getEventCoords(e))}
-                className={`cursor-pointer [content-visibility:auto] liquid-glass-card-lite p-4 flex flex-col justify-between gap-3.5 transition-colors ${
+                className={`[content-visibility:auto] liquid-glass-card-lite p-4 flex flex-col justify-between gap-3.5 transition-colors ${
                   isPreviewing
                     ? "!border-blue-700 dark:!border-blue-500"
                     : "hover:border-blue-600 dark:hover:border-blue-500"
                 }`}
               >
-                <div className="space-y-3">
+                <button
+                  type="button"
+                  onClick={(e) => handleSelectPreview(item, getEventCoords(e))}
+                  className="w-full text-left space-y-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400 cursor-pointer"
+                >
                   <div className="flex items-center justify-between gap-2">
                     <span
-                      className={`text-[11px] font-mono font-bold uppercase px-2 py-0.5 rounded-full ${
+                      className={`text-[11px] font-mono font-semibold capitalize px-2 py-0.5 rounded-full ${
                         RARITY_BADGE_CLASS[item.rarity]
                       }`}
                     >
@@ -1137,7 +1140,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     <div className="flex items-center gap-1.5">
                       {statusLabel && (
                         <span
-                          className={`inline-flex items-center gap-1 text-[11px] font-mono font-bold uppercase px-2 py-0.5 rounded-full border ${
+                          className={`inline-flex items-center gap-1 text-[11px] font-mono font-semibold px-2 py-0.5 rounded-full border ${
                             isPreviewing
                               ? "bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300"
                               : isEquipped
@@ -1164,33 +1167,30 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                       <h3 className="text-sm font-extrabold text-slate-900 dark:text-slate-100">
                         {item.name}
                       </h3>
-                      <span className="text-xs font-mono font-bold text-amber-700 dark:text-amber-400 shrink-0">
-                        {item.price} IT-Coins
+                      <span className="text-xs font-mono font-bold tabular-nums text-amber-700 dark:text-amber-400 shrink-0">
+                        {item.price} IT-Coin
                       </span>
                     </div>
                     <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
                       {item.description}
                     </p>
                   </div>
-                </div>
+                </button>
 
-                <div
-                  className="space-y-2 pt-2.5 border-t border-slate-200 dark:border-slate-800"
-                  onClick={(e) => e.stopPropagation()}
-                >
+                <div className="space-y-2 pt-2.5 border-t border-slate-200 dark:border-slate-800">
                   {isEquipped ? (
                     <div className="flex items-center gap-2">
                       <span className="flex-1 inline-flex items-center justify-center gap-1 py-2 px-3 rounded-lg liquid-btn-success text-xs font-mono font-bold">
                         <Check className="w-3.5 h-3.5 text-white" aria-hidden="true" />
-                        <span>Equipped</span>
+                        <span>Đang trang bị</span>
                       </span>
                       <button
                         type="button"
                         disabled={busyItemId === item.id || !isOnline}
                         onClick={() => handleUnequip(item.category, item.id)}
-                        className="px-3 py-2 rounded-lg liquid-glass-btn text-xs font-mono font-bold disabled:opacity-50"
+                        className="px-3 py-2 rounded-lg liquid-glass-btn text-xs font-mono font-bold disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
                       >
-                        Unequip
+                        Tháo ra
                       </button>
                     </div>
                   ) : isOwned ? (
@@ -1198,34 +1198,34 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                       type="button"
                       disabled={busyItemId === item.id || !isOnline}
                       onClick={() => handleEquipOwned(item)}
-                      className="w-full py-2 px-3 rounded-lg liquid-btn-success text-xs font-mono font-bold disabled:opacity-50"
+                      className="w-full py-2 px-3 rounded-lg liquid-btn-success text-xs font-mono font-bold disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 dark:focus-visible:ring-green-400"
                     >
-                      {busyItemId === item.id ? "Equipping..." : "Owned : Equip"}
+                      {busyItemId === item.id ? "Đang trang bị…" : "Đã sở hữu : Trang bị"}
                     </button>
                   ) : isOnline && canAfford ? (
                     <button
                       type="button"
                       disabled={busyItemId === item.id}
                       onClick={() => handleBuyAndEquip(item)}
-                      className="w-full py-2 px-3 rounded-lg liquid-btn-primary text-xs font-mono font-bold disabled:opacity-50"
+                      className="w-full py-2 px-3 rounded-lg liquid-btn-primary text-xs font-mono font-bold tabular-nums disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
                     >
                       {busyItemId === item.id
-                        ? "Unlocking..."
-                        : `Unlock for ${item.price} IT-Coins`}
+                        ? "Đang mở khóa…"
+                        : `Mở khóa (${item.price} IT-Coin)`}
                     </button>
                   ) : (
                     <button
                       type="button"
                       onClick={(e) => handleSelectPreview(item, getEventCoords(e))}
-                      className="w-full py-2 px-3 rounded-lg border border-amber-300 dark:border-amber-400/35 bg-amber-50 dark:bg-amber-500/15 hover:bg-amber-100 dark:hover:bg-amber-500/25 text-amber-800 dark:text-amber-300 text-xs font-mono font-bold transition-colors"
+                      className="w-full py-2 px-3 rounded-lg border border-amber-300 dark:border-amber-400/35 bg-amber-50 dark:bg-amber-500/15 hover:bg-amber-100 dark:hover:bg-amber-500/25 text-amber-800 dark:text-amber-300 text-xs font-mono font-bold tabular-nums transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 dark:focus-visible:ring-amber-400"
                     >
                       {!isOnline
-                        ? `Cần ${item.price} Coin · Xem thử`
-                        : `Thiếu Coin (${item.price}) · Xem thử`}
+                        ? `Cần ${item.price} Coin (Xem thử)`
+                        : `Thiếu Coin (${item.price}) : Xem thử`}
                     </button>
                   )}
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>
@@ -1235,7 +1235,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
             <button
               type="button"
               onClick={() => startTransition(() => setVisibleCount((prev) => prev + 8))}
-              className="px-5 py-2.5 rounded-lg liquid-glass-btn text-xs font-bold transition-colors"
+              className="px-5 py-2.5 rounded-lg liquid-glass-btn text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
             >
               Xem thêm {Math.min(8, categoryItems.length - visibleCount)}/{categoryItems.length - visibleCount} mẫu khác
             </button>
@@ -1265,14 +1265,14 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
               <button
                 type="button"
                 onClick={handleScrollToSandbox}
-                className="px-2.5 py-1.5 rounded-lg liquid-btn-primary text-xs font-mono font-bold whitespace-nowrap"
+                className="px-2.5 py-1.5 rounded-lg liquid-btn-primary text-xs font-mono font-bold whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
               >
                 Xem Sandbox ↑
               </button>
               <button
                 type="button"
                 onClick={handleResetToEquipped}
-                className="px-2.5 py-1.5 rounded-lg liquid-glass-btn text-xs font-mono font-bold whitespace-nowrap"
+                className="px-2.5 py-1.5 rounded-lg liquid-glass-btn text-xs font-mono font-bold whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
               >
                 Đặt lại
               </button>

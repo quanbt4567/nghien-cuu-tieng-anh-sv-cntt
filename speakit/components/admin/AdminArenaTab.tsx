@@ -568,21 +568,22 @@ export function AdminArenaTab({
             quickTopics={ARENA_QUICK_TOPICS}
             onGenerated={handleAiGenerated}
             onUnauthorized={onUnauthorized}
-            autoFocus={aiFocusKey > 0}
             focusKey={aiFocusKey}
           />
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
             <div className="space-y-1">
-              <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+              <label htmlFor="arena-category" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
                 Nhóm tình huống (category)
               </label>
               <select
+                id="arena-category"
+                name="category"
                 value={category}
                 onChange={(e) =>
                   setCategory(e.target.value as BugBusterChallenge["category"])
                 }
-                className="liquid-glass-input w-full px-3 py-2 text-sm font-mono rounded-lg [&>option]:bg-white dark:[&>option]:bg-slate-900 [&>option]:text-slate-900 dark:[&>option]:text-slate-100"
+                className="liquid-glass-input w-full px-3 py-2 text-sm font-mono rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 [&>option]:bg-white dark:[&>option]:bg-slate-900 [&>option]:text-slate-900 dark:[&>option]:text-slate-100"
               >
                 {CATEGORY_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -593,11 +594,14 @@ export function AdminArenaTab({
             </div>
 
             <div className="space-y-1">
-              <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+              <label htmlFor="arena-target-word" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
                 Đáp án chính (targetWord) *
               </label>
               <input
+                id="arena-target-word"
+                name="targetWord"
                 type="text"
+                autoComplete="off"
                 value={targetWord}
                 onChange={(e) => setTargetWord(e.target.value)}
                 placeholder="VD: deadlock"
@@ -606,11 +610,15 @@ export function AdminArenaTab({
             </div>
 
             <div className="space-y-1">
-              <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+              <label htmlFor="arena-phonetic" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
                 Phiên âm IPA (phonetic)
               </label>
               <input
+                id="arena-phonetic"
+                name="phonetic"
                 type="text"
+                autoComplete="off"
+                spellCheck={false}
                 value={phonetic}
                 onChange={(e) => setPhonetic(e.target.value)}
                 placeholder="VD: /ˈded.lɑːk/"
@@ -620,11 +628,14 @@ export function AdminArenaTab({
           </div>
 
           <div className="space-y-1">
-            <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+            <label htmlFor="arena-prompt-blank" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
               Câu tình huống chứa chỗ trống ____ (promptWithBlank) *
             </label>
             <textarea
+              id="arena-prompt-blank"
+              name="promptWithBlank"
               rows={2}
+              autoComplete="off"
               value={promptWithBlank}
               onChange={(e) => setPromptWithBlank(e.target.value)}
               placeholder="[ERROR] Two transactions waited on each other indefinitely, causing a database ____."
@@ -647,11 +658,14 @@ export function AdminArenaTab({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
             <div className="space-y-1">
-              <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+              <label htmlFor="arena-variants" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
                 Biến thể chấp nhận (phân tách dấu phẩy)
               </label>
               <input
+                id="arena-variants"
+                name="acceptedVariants"
                 type="text"
+                autoComplete="off"
                 value={acceptedVariantsText}
                 onChange={(e) => setAcceptedVariantsText(e.target.value)}
                 placeholder="dead lock, deadlocks, deadlocked"
@@ -660,11 +674,14 @@ export function AdminArenaTab({
             </div>
 
             <div className="space-y-1">
-              <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+              <label htmlFor="arena-context-vi" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
                 Giải thích ngữ cảnh tiếng Việt (contextVI)
               </label>
               <input
+                id="arena-context-vi"
+                name="contextVI"
                 type="text"
+                autoComplete="off"
                 value={contextVI}
                 onChange={(e) => setContextVI(e.target.value)}
                 placeholder="Tình trạng hai tiến trình khóa chéo tài nguyên của nhau."
@@ -686,7 +703,7 @@ export function AdminArenaTab({
               disabled={isSaving}
               className="liquid-btn-primary px-5 py-2 rounded-lg text-xs font-semibold disabled:opacity-60"
             >
-              {isSaving ? "Đang lưu..." : editingId ? "Lưu thử thách" : "Thêm & đồng bộ"}
+              {isSaving ? "Đang lưu…" : editingId ? "Lưu thử thách" : "Thêm & đồng bộ"}
             </button>
           </div>
         </form>
@@ -699,13 +716,16 @@ export function AdminArenaTab({
                 aria-hidden="true"
               />
               <input
+                name="arenaSearch"
                 type="search"
+                autoComplete="off"
+                aria-label="Tìm kiếm thử thách Bug Buster"
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                placeholder="Tìm theo từ khóa, câu lỗi hoặc nghĩa tiếng Việt..."
+                placeholder="Tìm theo từ khóa, câu lỗi hoặc nghĩa tiếng Việt…"
                 className="liquid-glass-input w-full pl-9 pr-3 py-1.5 text-sm rounded-lg"
               />
             </div>

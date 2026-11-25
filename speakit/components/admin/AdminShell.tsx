@@ -207,7 +207,7 @@ export function AdminShell() {
             className="liquid-glass-btn inline-flex items-center justify-center w-9 h-9 rounded-lg disabled:opacity-50"
           >
             <RefreshCw
-              className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin" : ""}`}
+              className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin motion-reduce:animate-none" : ""}`}
               aria-hidden="true"
             />
           </button>
@@ -215,15 +215,17 @@ export function AdminShell() {
       </header>
 
       {mobileMenuOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-slate-900/40 lg:hidden"
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-label="Đóng menu điều hướng"
           onClick={() => setMobileMenuOpen(false)}
-          aria-hidden="true"
+          className="fixed inset-0 z-40 bg-slate-900/40 lg:hidden cursor-default"
         />
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-transform duration-200 ease-out lg:sticky lg:top-0 lg:z-30 lg:h-screen lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col overscroll-contain transition-transform motion-reduce:transition-none duration-200 ease-out lg:sticky lg:top-0 lg:z-30 lg:h-screen lg:translate-x-0 ${
           mobileMenuOpen ? "translate-x-0 shadow-xl" : "-translate-x-full"
         }`}
       >
@@ -286,7 +288,7 @@ export function AdminShell() {
             className="liquid-glass-btn w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-medium disabled:opacity-50"
           >
             <RefreshCw
-              className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin" : ""}`}
+              className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin motion-reduce:animate-none" : ""}`}
               aria-hidden="true"
             />
             <span>Làm mới dữ liệu</span>
@@ -327,7 +329,7 @@ export function AdminShell() {
         )}
 
         {isLoading || !data ? (
-          <div className="space-y-6 animate-pulse" aria-busy="true">
+          <div className="space-y-6 animate-pulse motion-reduce:animate-none" aria-busy="true">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {[0, 1, 2, 3].map((idx) => (
                 <div

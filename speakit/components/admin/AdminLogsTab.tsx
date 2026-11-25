@@ -206,10 +206,13 @@ export function AdminLogsTab({ data }: AdminLogsTabProps) {
               aria-hidden="true"
             />
             <input
-              type="text"
+              name="logsSearch"
+              type="search"
+              autoComplete="off"
+              aria-label="Tìm kiếm nhật ký luyện tập"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Tìm tên người dùng, mã, transcript, từ khóa, vai trò..."
+              placeholder="Tìm tên người dùng, mã, transcript, từ khóa, vai trò…"
               className="liquid-glass-input w-full pl-9 pr-3 py-2 text-xs rounded-lg"
             />
           </div>

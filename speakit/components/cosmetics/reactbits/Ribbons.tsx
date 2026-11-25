@@ -227,6 +227,9 @@ export default function Ribbons({
   };
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      return undefined;
+    }
     const container = containerRef.current;
     const canvas = canvasRef.current;
     if (!container || !canvas) return undefined;
@@ -539,20 +542,24 @@ export default function Ribbons({
       cancelAnimationFrame(state.raf);
     };
 
+    const reducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     canvas.addEventListener('webglcontextlost', onLost);
-    window.addEventListener('pointermove', onMove, { passive: true });
-    window.addEventListener('pointerdown', onMove, { passive: true });
+    if (!reducedMotion) {
+      window.addEventListener('pointermove', onMove, { passive: true });
+      window.addEventListener('pointerdown', onMove, { passive: true });
+    }
 
     engineRef.current = {
       redraw: () => {
         if (!state.raf) draw();
-        wake();
+        if (!reducedMotion) wake();
       }
     };
 
     resize();
     syncRibbons();
-    wake();
+    if (!reducedMotion) wake();
+    else draw();
 
     return () => {
       state.alive = false;

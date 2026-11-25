@@ -512,18 +512,18 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                 className="liquid-btn-primary inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-bold disabled:opacity-50 transition-colors"
               >
                 {isGenerating ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <Loader2 className="w-3.5 h-3.5 animate-spin motion-reduce:animate-none" aria-hidden="true" />
                 ) : (
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
                 )}
-                <span>{isGenerating ? "Đang săn tin..." : "AI Săn tin & Tạo bản nháp"}</span>
+                <span>{isGenerating ? "Đang săn tin…" : "AI Săn tin & Tạo bản nháp"}</span>
               </button>
             </div>
           </div>
 
           <section className="liquid-glass-card p-5 space-y-4">
             <div className="flex items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-              <h3 className="text-sm font-bold uppercase font-mono text-slate-900 dark:text-slate-100">
+              <h3 className="text-sm font-bold font-mono text-slate-900 dark:text-slate-100">
                 {editingId ? "Chỉnh sửa bài báo / số liệu" : "Tạo bài báo / Số liệu mới"}
               </h3>
               <div className="flex items-center gap-2">
@@ -533,7 +533,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                     onClick={resetForm}
                     className="inline-flex items-center gap-1 text-xs text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <X className="w-3.5 h-3.5" aria-hidden="true" />
                     <span>Hủy chỉnh sửa</span>
                   </button>
                 )}
@@ -550,9 +550,12 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
             <form onSubmit={(e) => void handleSaveArticle(e, "published")} className="space-y-3.5">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="sm:col-span-2 space-y-1">
-                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Tiêu đề bài viết</label>
+                  <label htmlFor="research-title" className="text-xs font-semibold text-slate-700 dark:text-slate-300">Tiêu đề bài viết</label>
                   <input
+                    id="research-title"
+                    name="title"
                     type="text"
+                    autoComplete="off"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="VD: Thống kê kỹ năng giao tiếp phỏng vấn IT 2026"
@@ -561,11 +564,13 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Chuyên mục</label>
+                  <label htmlFor="research-category" className="text-xs font-semibold text-slate-700 dark:text-slate-300">Chuyên mục</label>
                   <select
+                    id="research-category"
+                    name="category"
                     value={category}
                     onChange={(e) => setCategory(e.target.value as ResearchCategory)}
-                    className="liquid-glass-input w-full px-3 py-2 text-sm rounded-lg [&>option]:bg-white dark:[&>option]:bg-slate-900 [&>option]:text-slate-900 dark:[&>option]:text-slate-100"
+                    className="liquid-glass-input w-full px-3 py-2 text-sm rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 [&>option]:bg-white dark:[&>option]:bg-slate-900 [&>option]:text-slate-900 dark:[&>option]:text-slate-100"
                   >
                     {CATEGORY_OPTIONS.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -577,20 +582,26 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Tóm tắt ngắn</label>
+                <label htmlFor="research-summary" className="text-xs font-semibold text-slate-700 dark:text-slate-300">Tóm tắt ngắn</label>
                 <textarea
+                  id="research-summary"
+                  name="summary"
                   rows={2}
+                  autoComplete="off"
                   value={summary}
                   onChange={(e) => setSummary(e.target.value)}
-                  placeholder="Tóm tắt điểm chính của bài nghiên cứu trong 1-2 câu..."
+                  placeholder="Tóm tắt điểm chính của bài nghiên cứu trong 1-2 câu…"
                   className="liquid-glass-input w-full px-3 py-2 text-sm rounded-lg resize-none"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Nội dung Markdown</label>
+                <label htmlFor="research-markdown" className="text-xs font-semibold text-slate-700 dark:text-slate-300">Nội dung Markdown</label>
                 <textarea
+                  id="research-markdown"
+                  name="contentMarkdown"
                   rows={5}
+                  autoComplete="off"
                   value={contentMarkdown}
                   onChange={(e) => setContentMarkdown(e.target.value)}
                   placeholder="## Tiêu đề mục&#10;- Ý chính 1&#10;- Ý chính 2"
@@ -610,7 +621,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                     }
                     className="liquid-glass-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold"
                   >
-                    <Plus className="w-3.5 h-3.5" />
+                    <Plus className="w-3.5 h-3.5" aria-hidden="true" />
                     <span>Thêm số liệu</span>
                   </button>
                 </div>
@@ -619,7 +630,10 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                   {metricsJson.map((metric, idx) => (
                     <div key={idx} className="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center">
                       <input
+                        name={`metricLabel-${idx}`}
                         type="text"
+                        autoComplete="off"
+                        aria-label={`Nhãn số liệu ${idx + 1}`}
                         placeholder="Nhãn (VD: Điểm Nói)"
                         value={metric.label}
                         onChange={(e) =>
@@ -630,7 +644,10 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                         className="liquid-glass-input sm:col-span-4 px-3 py-1.5 text-xs rounded-lg"
                       />
                       <input
+                        name={`metricValue-${idx}`}
                         type="text"
+                        autoComplete="off"
+                        aria-label={`Giá trị số liệu ${idx + 1}`}
                         placeholder="Giá trị (VD: 461)"
                         value={metric.value}
                         onChange={(e) =>
@@ -641,7 +658,10 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                         className="liquid-glass-input sm:col-span-3 px-3 py-1.5 text-xs font-mono rounded-lg"
                       />
                       <input
+                        name={`metricHighlight-${idx}`}
                         type="text"
+                        autoComplete="off"
+                        aria-label={`Ghi chú nổi bật ${idx + 1}`}
                         placeholder="Ghi chú nổi bật (tùy chọn)"
                         value={metric.highlight ?? ""}
                         onChange={(e) =>
@@ -661,7 +681,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                         }
                         className="sm:col-span-1 p-1.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 justify-self-end"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-4 h-4" aria-hidden="true" />
                       </button>
                     </div>
                   ))}
@@ -682,7 +702,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                   disabled={isSaving}
                   className="liquid-btn-primary inline-flex items-center gap-1.5 px-5 py-2 rounded-lg text-xs font-bold disabled:opacity-50"
                 >
-                  {isSaving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                  {isSaving && <Loader2 className="w-3.5 h-3.5 animate-spin motion-reduce:animate-none" aria-hidden="true" />}
                   <span>{editingId ? "Cập nhật & Xuất bản" : "Tạo & xuất bản ngay"}</span>
                 </button>
               </div>
@@ -699,13 +719,16 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                   aria-hidden="true"
                 />
                 <input
+                  name="researchSearch"
                   type="search"
+                  autoComplete="off"
+                  aria-label="Tìm kiếm bài nghiên cứu"
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
                     setCurrentPage(1);
                   }}
-                  placeholder="Tìm kiếm tiêu đề, tóm tắt hoặc slug..."
+                  placeholder="Tìm kiếm tiêu đề, tóm tắt hoặc slug…"
                   className="liquid-glass-input w-full pl-9 pr-3 py-1.5 text-sm rounded-lg"
                 />
               </div>

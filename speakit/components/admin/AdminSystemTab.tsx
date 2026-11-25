@@ -444,30 +444,30 @@ export function AdminSystemTab({
 
         <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-slate-800 border-t border-slate-200 dark:border-slate-800 pt-4 text-sm">
           <div className="py-2 sm:pr-4 space-y-1">
-            <div className="font-mono text-slate-600 dark:text-slate-400 uppercase text-xs">
+            <div className="font-mono text-slate-600 dark:text-slate-400 text-xs">
               Kịch bản
             </div>
-            <div className="font-semibold text-slate-900 dark:text-slate-100">
+            <div className="font-semibold tabular-nums text-slate-900 dark:text-slate-100">
               {overrides.customScenarios.length} thêm/sửa :{" "}
               {overrides.hiddenScenarioIds.length} đang ẩn
             </div>
           </div>
 
           <div className="py-2 sm:px-4 space-y-1">
-            <div className="font-mono text-slate-600 dark:text-slate-400 uppercase text-xs">
+            <div className="font-mono text-slate-600 dark:text-slate-400 text-xs">
               Từ vựng CNTT
             </div>
-            <div className="font-semibold text-slate-900 dark:text-slate-100">
+            <div className="font-semibold tabular-nums text-slate-900 dark:text-slate-100">
               {overrides.customVocabulary.length} thêm/sửa :{" "}
               {overrides.deletedVocabIds.length} mặc định đã ẩn
             </div>
           </div>
 
           <div className="py-2 sm:pl-4 space-y-1">
-            <div className="font-mono text-slate-600 dark:text-slate-400 uppercase text-xs">
+            <div className="font-mono text-slate-600 dark:text-slate-400 text-xs">
               Arena Bug Buster
             </div>
-            <div className="font-semibold text-slate-900 dark:text-slate-100">
+            <div className="font-semibold tabular-nums text-slate-900 dark:text-slate-100">
               {overrides.customBugChallenges.length} thêm/sửa :{" "}
               {overrides.deletedChallengeIds.length} mặc định đã ẩn
             </div>
@@ -483,36 +483,42 @@ export function AdminSystemTab({
               Thông báo trong app (Admin Announcements)
             </h2>
           </div>
-          <span className="liquid-glass-pill px-2.5 py-1 text-xs font-mono text-slate-700 dark:text-slate-300">
+          <span className="liquid-glass-pill px-2.5 py-1 text-xs font-mono tabular-nums text-slate-700 dark:text-slate-300">
             {announcements.length} thông báo
           </span>
         </div>
 
         <div className="grid grid-cols-1 gap-3">
           <input
+            name="announcementTitle"
             type="text"
+            autoComplete="off"
+            aria-label="Tiêu đề thông báo"
             value={announcementTitle}
             onChange={(e) => setAnnouncementTitle(e.target.value)}
             placeholder="Tiêu đề thông báo (VD: SpeakIT cập nhật kịch bản mới!)"
             maxLength={120}
-            className="liquid-glass-input w-full px-3.5 py-2 rounded-lg text-sm"
+            className="liquid-glass-input w-full px-3.5 py-2 rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
           />
           <textarea
+            name="announcementBody"
+            autoComplete="off"
+            aria-label="Nội dung thông báo"
             value={announcementBody}
             onChange={(e) => setAnnouncementBody(e.target.value)}
-            placeholder="Nội dung thông báo hiển thị trong chuông thông báo trên app..."
+            placeholder="Nội dung thông báo hiển thị trong chuông thông báo trên app…"
             maxLength={500}
             rows={2}
-            className="liquid-glass-input w-full px-3.5 py-2 rounded-lg text-sm resize-none"
+            className="liquid-glass-input w-full px-3.5 py-2 rounded-lg text-sm resize-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
           />
           <button
             type="button"
             disabled={announcementSending}
             onClick={() => void handlePublishAnnouncement()}
-            className="liquid-btn-primary inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold self-start disabled:opacity-50"
+            className="liquid-btn-primary inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold self-start disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
           >
             <Send className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>{announcementSending ? "Đang đăng..." : "Đăng thông báo"}</span>
+            <span>{announcementSending ? "Đang đăng…" : "Đăng thông báo"}</span>
           </button>
         </div>
 

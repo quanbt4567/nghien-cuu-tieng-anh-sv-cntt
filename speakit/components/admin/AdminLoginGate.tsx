@@ -123,7 +123,7 @@ export function AdminLoginGate({ children }: AdminLoginGateProps) {
         <div
           aria-busy="true"
           aria-label="Đang kiểm tra phiên quản trị"
-          className="w-full max-w-md liquid-glass-card p-6 sm:p-8 space-y-5 animate-pulse"
+          className="w-full max-w-md liquid-glass-card p-6 sm:p-8 space-y-5 animate-pulse motion-reduce:animate-none"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800" />
@@ -144,11 +144,11 @@ export function AdminLoginGate({ children }: AdminLoginGateProps) {
       <div className="min-h-screen bg-transparent flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md liquid-glass-card p-6 sm:p-8 space-y-6">
           <div className="space-y-2">
-            <div className="liquid-glass-pill inline-flex items-center gap-2 px-3 py-1 text-[11px] font-mono font-semibold uppercase tracking-wide text-blue-700 dark:text-blue-300">
+            <div className="liquid-glass-pill inline-flex items-center gap-2 px-3 py-1 text-xs font-mono font-semibold text-blue-700 dark:text-blue-300">
               <ShieldCheck className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
               <span>Admin Portal</span>
             </div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+            <h1 className="text-2xl font-bold tracking-tight text-balance text-slate-900 dark:text-slate-100">
               Cổng Quản Trị SpeakIT
             </h1>
             <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
@@ -181,19 +181,19 @@ export function AdminLoginGate({ children }: AdminLoginGateProps) {
                 />
                 <input
                   id="admin-passcode-input"
+                  name="passcode"
                   type={showPasscode ? "text" : "password"}
                   value={passcode}
                   onChange={(e) => setPasscode(e.target.value)}
-                  placeholder="Nhập passcode quản trị..."
-                  autoFocus
+                  placeholder="Nhập passcode quản trị…"
                   autoComplete="current-password"
-                  className="liquid-glass-input w-full pl-10 pr-10 py-2.5 text-sm font-mono rounded-lg"
+                  className="liquid-glass-input w-full pl-10 pr-10 py-2.5 text-sm font-mono rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPasscode((prev) => !prev)}
                   aria-label={showPasscode ? "Ẩn mã truy cập" : "Hiện mã truy cập"}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400 rounded"
                 >
                   {showPasscode ? (
                     <EyeOff className="w-4 h-4" aria-hidden="true" />
@@ -207,9 +207,9 @@ export function AdminLoginGate({ children }: AdminLoginGateProps) {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="liquid-btn-primary w-full py-2.5 px-4 rounded-lg text-sm font-semibold transition-colors disabled:opacity-60"
+              className="liquid-btn-primary w-full py-2.5 px-4 rounded-lg text-sm font-semibold transition-colors disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
             >
-              {isSubmitting ? "Đang xác thực..." : "Mở khóa Cổng Quản Trị"}
+              {isSubmitting ? "Đang xác thực…" : "Mở khóa Cổng Quản Trị"}
             </button>
           </form>
 

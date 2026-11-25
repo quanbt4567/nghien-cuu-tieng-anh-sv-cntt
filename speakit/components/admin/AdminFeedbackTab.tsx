@@ -67,29 +67,29 @@ export function AdminFeedbackTab({ onUnauthorized }: AdminFeedbackTabProps) {
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="liquid-glass-card p-5">
-          <div className="text-xs font-mono text-slate-600 dark:text-slate-400 uppercase">
+          <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
             Tổng số góp ý
           </div>
-          <div className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 mt-1 font-mono">
+          <div className="text-2xl font-extrabold tabular-nums text-slate-900 dark:text-slate-100 mt-1 font-mono">
             {items.length}
           </div>
         </div>
 
         <div className="liquid-glass-card p-5">
-          <div className="text-xs font-mono text-slate-600 dark:text-slate-400 uppercase">
+          <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
             Điểm hài lòng trung bình
           </div>
-          <div className="text-2xl font-extrabold text-blue-700 dark:text-blue-400 mt-1 font-mono flex items-center gap-1.5">
+          <div className="text-2xl font-extrabold tabular-nums text-blue-700 dark:text-blue-400 mt-1 font-mono flex items-center gap-1.5">
             <span>{averageRating}</span>
-            <Star className="w-5 h-5 fill-amber-500 text-amber-500" />
+            <Star className="w-5 h-5 fill-amber-500 text-amber-500" aria-hidden="true" />
           </div>
         </div>
 
         <div className="liquid-glass-card p-5">
-          <div className="text-xs font-mono text-slate-600 dark:text-slate-400 uppercase">
-            Tỷ lệ 4-5 sao
+          <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
+            Tỷ lệ 4–5 sao
           </div>
-          <div className="text-2xl font-extrabold text-green-700 dark:text-green-400 mt-1 font-mono">
+          <div className="text-2xl font-extrabold tabular-nums text-green-700 dark:text-green-400 mt-1 font-mono">
             {positivePct}%
           </div>
         </div>
@@ -105,7 +105,7 @@ export function AdminFeedbackTab({ onUnauthorized }: AdminFeedbackTabProps) {
                   key={String(val)}
                   type="button"
                   onClick={() => setRatingFilter(val)}
-                  className={`px-3 py-1 rounded-full text-xs font-mono font-semibold border transition-colors ${
+                  className={`px-3 py-1 rounded-full text-xs font-mono font-semibold border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400 ${
                     active
                       ? "bg-blue-50 dark:bg-blue-950/50 border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300"
                       : "liquid-glass-btn text-slate-700 dark:text-slate-300"
@@ -121,21 +121,21 @@ export function AdminFeedbackTab({ onUnauthorized }: AdminFeedbackTabProps) {
             type="button"
             onClick={() => void loadFeedback()}
             disabled={isLoading}
-            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin motion-reduce:animate-none" : ""}`} aria-hidden="true" />
             <span>Làm mới</span>
           </button>
         </div>
 
         {isLoading ? (
-          <div className="py-10 flex items-center justify-center gap-2 text-sm text-slate-700 dark:text-slate-300">
-            <Loader2 className="w-4 h-4 animate-spin text-blue-700 dark:text-blue-400" />
-            <span>Đang tải danh sách góp ý...</span>
+          <div className="py-10 flex items-center justify-center gap-2 text-sm text-slate-700 dark:text-slate-300" role="status" aria-live="polite">
+            <Loader2 className="w-4 h-4 animate-spin motion-reduce:animate-none text-blue-700 dark:text-blue-400" aria-hidden="true" />
+            <span>Đang tải danh sách góp ý…</span>
           </div>
         ) : filteredItems.length === 0 ? (
           <div className="py-10 text-center space-y-2 text-sm text-slate-700 dark:text-slate-300">
-            <MessageSquare className="w-6 h-6 mx-auto text-slate-500 dark:text-slate-400" />
+            <MessageSquare className="w-6 h-6 mx-auto text-slate-500 dark:text-slate-400" aria-hidden="true" />
             <p>Chưa có góp ý nào phù hợp bộ lọc hiện tại.</p>
           </div>
         ) : (

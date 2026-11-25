@@ -674,21 +674,23 @@ export function AdminScenariosTab({
             key={editingId ?? "create"}
             kind="scenario"
             role={targetRoles[0] ?? ""}
-            placeholder="VD: Production database incident postmortem, Daily standup blocker..."
+            placeholder="VD: Production database incident postmortem, Daily standup blocker…"
             quickTopics={SCENARIO_QUICK_TOPICS}
             onGenerated={handleAiGenerated}
             onUnauthorized={onUnauthorized}
-            autoFocus={aiFocusKey > 0}
             focusKey={aiFocusKey}
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+              <label htmlFor="scenario-title-en" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
                 Tên tiếng Anh (titleEN) *
               </label>
               <input
+                id="scenario-title-en"
+                name="titleEN"
                 type="text"
+                autoComplete="off"
                 value={titleEN}
                 onChange={(e) => handleTitleENChange(e.target.value)}
                 placeholder="VD: Production Incident Postmortem"
@@ -697,11 +699,15 @@ export function AdminScenariosTab({
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+              <label htmlFor="scenario-id-slug" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
                 ID Slug (URL /practice/[id]) *
               </label>
               <input
+                id="scenario-id-slug"
+                name="scenarioId"
                 type="text"
+                autoComplete="off"
+                spellCheck={false}
                 value={id}
                 disabled={Boolean(editingId)}
                 onChange={(e) => {
@@ -714,11 +720,14 @@ export function AdminScenariosTab({
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+              <label htmlFor="scenario-title-vi" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
                 Tên tiếng Việt (titleVI) *
               </label>
               <input
+                id="scenario-title-vi"
+                name="titleVI"
                 type="text"
+                autoComplete="off"
                 value={titleVI}
                 onChange={(e) => setTitleVI(e.target.value)}
                 placeholder="VD: Họp Phân Tích Sự Cố Production"
@@ -727,11 +736,14 @@ export function AdminScenariosTab({
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+              <label htmlFor="scenario-role-vi" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
                 Vai trò người phỏng vấn / đối tác (roleVI) *
               </label>
               <input
+                id="scenario-role-vi"
+                name="roleVI"
                 type="text"
+                autoComplete="off"
                 value={roleVI}
                 onChange={(e) => setRoleVI(e.target.value)}
                 placeholder="VD: Site Reliability Lead"
@@ -741,14 +753,17 @@ export function AdminScenariosTab({
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+            <label htmlFor="scenario-description-vi" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
               Mô tả ngắn tiếng Việt (descriptionVI)
             </label>
             <textarea
+              id="scenario-description-vi"
+              name="descriptionVI"
               rows={2}
+              autoComplete="off"
               value={descriptionVI}
               onChange={(e) => setDescriptionVI(e.target.value)}
-              placeholder="Mô tả mục tiêu luyện tập cho sinh viên..."
+              placeholder="Mô tả mục tiêu luyện tập cho sinh viên…"
               className="liquid-glass-input w-full px-3.5 py-2 text-sm rounded-lg"
             />
           </div>
@@ -763,13 +778,14 @@ export function AdminScenariosTab({
                 return (
                   <label
                     key={role.id}
-                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-mono cursor-pointer transition-colors ${
+                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-mono cursor-pointer transition-colors focus-within:ring-2 focus-within:ring-blue-600 dark:focus-within:ring-blue-400 ${
                       checked
                         ? "bg-blue-50 dark:bg-blue-950/50 border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300 font-semibold"
                         : "liquid-glass-btn text-slate-700 dark:text-slate-300"
                     }`}
                   >
                     <input
+                      name={`targetRole-${role.id}`}
                       type="checkbox"
                       checked={checked}
                       onChange={() => toggleRole(role.id)}
@@ -783,7 +799,7 @@ export function AdminScenariosTab({
           </div>
 
           <div className="space-y-4 pt-2">
-            <h4 className="text-xs font-mono font-bold uppercase text-slate-700 dark:text-slate-300">
+            <h4 className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
               Nội dung 3 lượt hội thoại
             </h4>
             <div className="divide-y divide-slate-200 dark:divide-slate-800 border-t border-slate-200 dark:border-slate-800">
@@ -797,11 +813,14 @@ export function AdminScenariosTab({
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <label className="block text-xs font-mono text-slate-700 dark:text-slate-300">
+                      <label htmlFor={`turn-question-${idx}`} className="block text-xs font-mono text-slate-700 dark:text-slate-300">
                         Câu hỏi tiếng Anh (questionEN) *
                       </label>
                       <input
+                        id={`turn-question-${idx}`}
+                        name={`turnQuestion-${idx}`}
                         type="text"
+                        autoComplete="off"
                         value={turn.questionEN}
                         onChange={(e) => updateTurn(idx, "questionEN", e.target.value)}
                         placeholder="What caused the latency spike?"
@@ -809,11 +828,14 @@ export function AdminScenariosTab({
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="block text-xs font-mono text-slate-700 dark:text-slate-300">
+                      <label htmlFor={`turn-keywords-${idx}`} className="block text-xs font-mono text-slate-700 dark:text-slate-300">
                         Từ khóa kỳ vọng (phân tách dấu phẩy) *
                       </label>
                       <input
+                        id={`turn-keywords-${idx}`}
+                        name={`turnKeywords-${idx}`}
                         type="text"
+                        autoComplete="off"
                         value={turn.keywordsText}
                         onChange={(e) => updateTurn(idx, "keywordsText", e.target.value)}
                         placeholder="latency, database, root cause, rollback"
@@ -821,28 +843,34 @@ export function AdminScenariosTab({
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="block text-xs font-mono text-slate-700 dark:text-slate-300">
+                      <label htmlFor={`turn-sample-${idx}`} className="block text-xs font-mono text-slate-700 dark:text-slate-300">
                         Câu trả lời mẫu (sampleAnswerEN)
                       </label>
                       <input
+                        id={`turn-sample-${idx}`}
+                        name={`turnSample-${idx}`}
                         type="text"
+                        autoComplete="off"
                         value={turn.sampleAnswerEN}
                         onChange={(e) =>
                           updateTurn(idx, "sampleAnswerEN", e.target.value)
                         }
-                        placeholder="The spike was caused by an unindexed query..."
+                        placeholder="The spike was caused by an unindexed query…"
                         className="liquid-glass-input w-full px-3 py-2 text-sm rounded-lg"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="block text-xs font-mono text-slate-700 dark:text-slate-300">
+                      <label htmlFor={`turn-hint-${idx}`} className="block text-xs font-mono text-slate-700 dark:text-slate-300">
                         Gợi ý tiếng Việt (hintVI)
                       </label>
                       <input
+                        id={`turn-hint-${idx}`}
+                        name={`turnHint-${idx}`}
                         type="text"
+                        autoComplete="off"
                         value={turn.hintVI}
                         onChange={(e) => updateTurn(idx, "hintVI", e.target.value)}
-                        placeholder="Nêu nguyên nhân gốc rễ và cách khắc phục..."
+                        placeholder="Nêu nguyên nhân gốc rễ và cách khắc phục…"
                         className="liquid-glass-input w-full px-3 py-2 text-sm rounded-lg"
                       />
                     </div>
@@ -866,7 +894,7 @@ export function AdminScenariosTab({
               className="liquid-btn-primary px-5 py-2 rounded-lg text-xs font-semibold disabled:opacity-60"
             >
               {isSaving
-                ? "Đang lưu..."
+                ? "Đang lưu…"
                 : editingId
                 ? "Lưu chỉnh sửa kịch bản"
                 : "Tạo & đồng bộ kịch bản"}

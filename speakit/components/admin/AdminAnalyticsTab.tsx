@@ -144,7 +144,7 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
             <span className="text-xs font-medium">Tổng lượt luyện nói</span>
             <MessageSquare className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
           </div>
-          <div className="text-3xl font-bold font-mono text-slate-900 dark:text-slate-100">
+          <div className="text-3xl font-bold font-mono tabular-nums text-slate-900 dark:text-slate-100">
             {stats.totalAttempts}
           </div>
           <div className="text-xs text-slate-600 dark:text-slate-400">
@@ -157,7 +157,7 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
             <span className="text-xs font-medium">Điểm trung bình</span>
             <Award className="w-4 h-4 text-amber-600 dark:text-amber-400" aria-hidden="true" />
           </div>
-          <div className="text-3xl font-bold font-mono text-slate-900 dark:text-slate-100">
+          <div className="text-3xl font-bold font-mono tabular-nums text-slate-900 dark:text-slate-100">
             {stats.totalAttempts > 0 ? `${stats.avgScore}` : "0"}
             <span className="text-base font-normal text-slate-600 dark:text-slate-400">/100</span>
           </div>
@@ -171,7 +171,7 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
             <span className="text-xs font-medium">Tổng lượt Arena</span>
             <Gamepad2 className="w-4 h-4 text-green-700 dark:text-green-400" aria-hidden="true" />
           </div>
-          <div className="text-3xl font-bold font-mono text-slate-900 dark:text-slate-100">
+          <div className="text-3xl font-bold font-mono tabular-nums text-slate-900 dark:text-slate-100">
             {stats.totalArenaRuns}
           </div>
           <div className="text-xs text-slate-600 dark:text-slate-400">
@@ -184,7 +184,7 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
             <span className="text-xs font-medium">Điểm yếu đã ghi nhận</span>
             <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400" aria-hidden="true" />
           </div>
-          <div className="text-3xl font-bold font-mono text-slate-900 dark:text-slate-100">
+          <div className="text-3xl font-bold font-mono tabular-nums text-slate-900 dark:text-slate-100">
             {stats.totalWeakPoints}
           </div>
           <div className="text-xs text-slate-600 dark:text-slate-400">
@@ -195,13 +195,13 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
 
       {roleEntries.length > 0 && (
         <div className="liquid-glass-card p-5 flex flex-wrap items-center gap-3">
-          <span className="text-xs font-mono font-semibold uppercase text-slate-700 dark:text-slate-300 mr-1">
+          <span className="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 mr-1">
             Phân bố theo vai trò CNTT:
           </span>
           {roleEntries.map(([role, count]) => (
             <span
               key={role}
-              className="liquid-glass-pill inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono text-slate-900 dark:text-slate-100"
+              className="liquid-glass-pill inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono tabular-nums text-slate-900 dark:text-slate-100"
             >
               <span>{ROLE_LABELS[role] ?? role}</span>
               <span className="font-bold text-blue-700 dark:text-blue-400">{count}</span>

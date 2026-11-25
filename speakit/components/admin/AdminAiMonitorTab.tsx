@@ -270,7 +270,7 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
 
   if (isLoading && !summary) {
     return (
-      <div className="space-y-6 animate-pulse" aria-busy="true">
+      <div className="space-y-6 animate-pulse motion-reduce:animate-none" aria-busy="true">
         <div className="h-24 liquid-glass-card-lite p-5" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {[0, 1, 2, 3, 4, 5].map((idx) => (
@@ -320,11 +320,11 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
             className="liquid-btn-primary inline-flex items-center gap-2 px-5 py-2 rounded-lg text-xs sm:text-sm font-semibold disabled:opacity-60"
           >
             <Zap
-              className={`w-4 h-4 text-white ${isPinging ? "animate-pulse" : ""}`}
+              className={`w-4 h-4 text-white ${isPinging ? "animate-pulse motion-reduce:animate-none" : ""}`}
               aria-hidden="true"
             />
             <span>
-              {isPinging ? "Đang Ping 6 API..." : "Ping Kiểm Tra Tất Cả 6 API"}
+              {isPinging ? "Đang Ping 6 API…" : "Ping Kiểm Tra Tất Cả 6 API"}
             </span>
           </button>
         </div>

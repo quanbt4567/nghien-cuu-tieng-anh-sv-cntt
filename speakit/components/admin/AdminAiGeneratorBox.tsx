@@ -158,7 +158,9 @@ export function AdminAiGeneratorBox({
       <div className="flex flex-col sm:flex-row gap-2.5">
         <input
           ref={inputRef}
+          name="aiTopic"
           type="text"
+          autoComplete="off"
           value={topic}
           disabled={isGenerating}
           onChange={(e) => {
@@ -168,19 +170,19 @@ export function AdminAiGeneratorBox({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           aria-label="Chủ đề tạo nội dung bằng AI"
-          className="liquid-glass-input flex-1 min-w-0 px-3.5 py-2 text-sm rounded-lg disabled:opacity-60"
+          className="liquid-glass-input flex-1 min-w-0 px-3.5 py-2 text-sm rounded-lg disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
         />
 
         <button
           type="button"
           disabled={!topic.trim() || isGenerating}
           onClick={() => void handleGenerate()}
-          className="liquid-btn-primary inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold transition-colors disabled:opacity-50 shrink-0"
+          className="liquid-btn-primary inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold transition-colors disabled:opacity-50 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
         >
           {isGenerating ? (
             <>
-              <Loader2 className="w-3.5 h-3.5 animate-spin" aria-hidden="true" />
-              <span>Đang tạo...</span>
+              <Loader2 className="w-3.5 h-3.5 animate-spin motion-reduce:animate-none" aria-hidden="true" />
+              <span>Đang tạo…</span>
             </>
           ) : (
             <>

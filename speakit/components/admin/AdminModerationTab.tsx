@@ -129,7 +129,7 @@ export function AdminModerationTab({
       <div className="liquid-glass-card p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <ShieldAlert className="w-5 h-5 text-blue-700 dark:text-blue-400" />
+            <ShieldAlert className="w-5 h-5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
             <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
               Kiểm duyệt AI &amp; Cảnh báo Từ ngữ Nhạy cảm
             </h2>
@@ -140,16 +140,16 @@ export function AdminModerationTab({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <span className="px-3 py-1.5 rounded-full bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-300 text-xs font-mono font-bold">
+          <span className="px-3 py-1.5 rounded-full bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-300 text-xs font-mono font-bold tabular-nums">
             Chờ xử lý: {openCount} ({sensitiveCount} nhạy cảm)
           </span>
           <button
             type="button"
             onClick={() => void loadData()}
             disabled={loading}
-            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold disabled:opacity-50"
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin motion-reduce:animate-none" : ""}`} aria-hidden="true" />
             <span>Làm mới</span>
           </button>
         </div>
@@ -159,7 +159,7 @@ export function AdminModerationTab({
         <button
           type="button"
           onClick={() => setFilter("open")}
-          className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+          className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400 ${
             filter === "open"
               ? "bg-blue-50 dark:bg-blue-950/50 border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300"
               : "liquid-glass-btn text-slate-700 dark:text-slate-300"
@@ -170,7 +170,7 @@ export function AdminModerationTab({
         <button
           type="button"
           onClick={() => setFilter("all")}
-          className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+          className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400 ${
             filter === "all"
               ? "bg-blue-50 dark:bg-blue-950/50 border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300"
               : "liquid-glass-btn text-slate-700 dark:text-slate-300"
@@ -181,14 +181,14 @@ export function AdminModerationTab({
       </div>
 
       {error && (
-        <div className="p-3.5 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-300 dark:border-red-800 text-sm text-red-700 dark:text-red-300 font-medium">
+        <div role="alert" className="p-3.5 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-300 dark:border-red-800 text-sm text-red-700 dark:text-red-300 font-medium">
           {error}
         </div>
       )}
 
       {visibleIncidents.length === 0 ? (
         <div className="liquid-glass-card p-8 text-center space-y-2">
-          <CheckCircle2 className="w-8 h-8 text-green-700 dark:text-green-400 mx-auto" />
+          <CheckCircle2 className="w-8 h-8 text-green-700 dark:text-green-400 mx-auto" aria-hidden="true" />
           <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
             {filter === "open"
               ? "Không có cảnh báo vi phạm nào đang chờ xử lý."
@@ -259,7 +259,7 @@ export function AdminModerationTab({
                 </div>
 
                 <div className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50/60 dark:bg-red-950/30 px-3 py-2 space-y-1">
-                  <div className="text-xs font-mono uppercase text-red-600 dark:text-red-400 font-bold">
+                  <div className="text-xs font-mono text-red-600 dark:text-red-400 font-bold">
                     Nội dung người chơi gửi:
                   </div>
                   <p className="text-sm font-mono text-slate-900 dark:text-slate-100 break-words">
@@ -272,9 +272,10 @@ export function AdminModerationTab({
                   <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <label className="text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                        <Coins className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                        <Coins className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" aria-hidden="true" />
                         <span>Trừ IT-Coin:</span>
                         <input
+                          name={`mod-coin-${item.id}`}
                           type="number"
                           min={0}
                           max={100}
@@ -288,12 +289,15 @@ export function AdminModerationTab({
                               ),
                             }))
                           }
-                          className="liquid-glass-input w-16 px-2 py-1 rounded-lg font-mono text-xs"
+                          className="liquid-glass-input w-16 px-2 py-1 rounded-lg font-mono tabular-nums text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
                         />
                       </label>
                       <input
+                        name={`mod-note-${item.id}`}
                         type="text"
-                        placeholder="Ghi chú Admin (tuỳ chọn)..."
+                        autoComplete="off"
+                        aria-label={`Ghi chú Admin cho cảnh báo của ${item.playerName}`}
+                        placeholder="Ghi chú Admin (tuỳ chọn)…"
                         value={noteInputs[item.id] ?? ""}
                         onChange={(e) =>
                           setNoteInputs((prev) => ({
@@ -301,7 +305,7 @@ export function AdminModerationTab({
                             [item.id]: e.target.value,
                           }))
                         }
-                        className="liquid-glass-input px-2.5 py-1 rounded-lg text-xs w-52"
+                        className="liquid-glass-input px-2.5 py-1 rounded-lg text-xs w-52 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
                       />
                     </div>
 
@@ -310,9 +314,9 @@ export function AdminModerationTab({
                         type="button"
                         disabled={busyId === item.id}
                         onClick={() => void handleResolve(item, "dismiss")}
-                        className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50"
+                        className="liquid-glass-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
                       >
-                        <XCircle className="w-3.5 h-3.5" />
+                        <XCircle className="w-3.5 h-3.5" aria-hidden="true" />
                         <span>Bỏ qua</span>
                       </button>
                       <button
@@ -324,12 +328,12 @@ export function AdminModerationTab({
                             : "Trừ IT-Coin ngay"
                         }
                         onClick={() => void handleResolve(item, "penalize")}
-                        className="liquid-btn-danger inline-flex items-center gap-1 px-3.5 py-1.5 rounded-lg text-xs font-bold disabled:opacity-50"
+                        className="liquid-btn-danger inline-flex items-center gap-1 px-3.5 py-1.5 rounded-lg text-xs font-bold disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 dark:focus-visible:ring-red-400"
                       >
-                        <Coins className="w-3.5 h-3.5" />
+                        <Coins className="w-3.5 h-3.5" aria-hidden="true" />
                         <span>
                           {busyId === item.id
-                            ? "Đang xử lý..."
+                            ? "Đang xử lý…"
                             : `Trừ ${currentCoins} Coin & Phạt`}
                         </span>
                       </button>
