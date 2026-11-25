@@ -113,7 +113,7 @@ const ARENA_SHOWCASE_MODES: ArenaModeCard[] = [
     badgeTone:
       "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800",
     buttonTone:
-      "bg-amber-700 hover:bg-amber-800 text-white border border-amber-700 dark:bg-amber-600 dark:hover:bg-amber-500",
+      "bg-amber-700 hover:bg-amber-800 text-white border border-amber-700 dark:bg-amber-700 dark:hover:bg-amber-800",
     cardAccent: "hover:border-amber-300 dark:hover:border-amber-700",
     href: "/arena/explain-it-like-im-5",
   },
