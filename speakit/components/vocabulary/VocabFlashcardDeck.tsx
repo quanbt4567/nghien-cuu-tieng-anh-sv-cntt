@@ -141,18 +141,18 @@ export function VocabFlashcardDeck({
     return (
       <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-6 sm:p-8 text-center space-y-5">
         <div className="w-12 h-12 rounded-full bg-green-50 dark:bg-green-950/50 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 flex items-center justify-center mx-auto">
-          <CheckCircle2 className="w-6 h-6" />
+          <CheckCircle2 className="w-6 h-6" aria-hidden="true" />
         </div>
         <div className="space-y-1">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50 text-balance">
             Hoàn thành lượt ôn tập Flashcard!
           </h3>
           <p className="text-sm text-slate-600 dark:text-slate-300">
-            Các từ đánh dấu &quot;Chưa thuộc&quot; đã được tự động thêm vào Kế hoạch 7 ngày (/progress).
+            Các từ đánh dấu &ldquo;Chưa thuộc&rdquo; đã được tự động thêm vào Kế hoạch 7 ngày.
           </p>
         </div>
 
-        <div className="grid grid-cols-3 divide-x divide-slate-200 dark:divide-[#334155] border-y border-slate-200 dark:border-[#334155] max-w-md mx-auto py-3">
+        <div className="grid grid-cols-3 divide-x divide-slate-200 dark:divide-[#334155] border-y border-slate-200 dark:border-[#334155] max-w-md mx-auto py-3 tabular-nums">
           <div className="px-3">
             <div className="font-mono font-bold text-lg text-red-600 dark:text-red-400">
               {sessionStats.again}
@@ -183,17 +183,17 @@ export function VocabFlashcardDeck({
           <button
             type="button"
             onClick={() => handleRestart(false)}
-            className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+            className="bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-white inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="w-4 h-4" aria-hidden="true" />
             <span>Ôn lại từ đầu</span>
           </button>
           <button
             type="button"
             onClick={() => handleRestart(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-semibold transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-sm font-semibold transition-colors"
           >
-            <Shuffle className="w-4 h-4" />
+            <Shuffle className="w-4 h-4" aria-hidden="true" />
             <span>Xáo trộn &amp; ôn lại</span>
           </button>
         </div>
@@ -206,7 +206,7 @@ export function VocabFlashcardDeck({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
-        <div className="flex items-center gap-2 font-mono text-slate-600 dark:text-slate-300">
+        <div className="flex items-center gap-2 font-mono text-slate-600 dark:text-slate-300 tabular-nums">
           <span className="px-3 py-1 rounded-full bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] text-slate-900 dark:text-slate-100 font-semibold text-xs">
             Thẻ {currentIndex + 1} / {deck.length}
           </span>
@@ -226,10 +226,10 @@ export function VocabFlashcardDeck({
               setIsFlipped(false);
             }}
             disabled={currentIndex === 0}
-            className="p-2 rounded-lg bg-white dark:bg-[#1E293B] border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 transition-colors"
+            className="p-2 rounded-lg bg-white dark:bg-[#1E293B] border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 focus-visible:ring-2 focus-visible:ring-blue-600 disabled:opacity-40 transition-colors"
             aria-label="Thẻ trước"
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className="w-4 h-4" aria-hidden="true" />
           </button>
           <button
             type="button"
@@ -239,128 +239,120 @@ export function VocabFlashcardDeck({
               setIsFlipped(false);
             }}
             disabled={currentIndex >= deck.length - 1}
-            className="p-2 rounded-lg bg-white dark:bg-[#1E293B] border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 transition-colors"
+            className="p-2 rounded-lg bg-white dark:bg-[#1E293B] border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 focus-visible:ring-2 focus-visible:ring-blue-600 disabled:opacity-40 transition-colors"
             aria-label="Thẻ tiếp theo"
           >
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="w-4 h-4" aria-hidden="true" />
           </button>
           <button
             type="button"
             onClick={() => handleRestart(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-sm font-semibold transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/60 focus-visible:ring-2 focus-visible:ring-blue-600 text-sm font-semibold transition-colors"
           >
-            <Shuffle className="w-3.5 h-3.5" />
+            <Shuffle className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Xáo trộn</span>
           </button>
         </div>
       </div>
 
-      <div
-        role="button"
-        tabIndex={0}
-        onClick={() => setIsFlipped((prev) => !prev)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            setIsFlipped((prev) => !prev);
-          }
-        }}
-        className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl w-full min-h-[280px] p-6 sm:p-8 cursor-pointer flex flex-col justify-between transition-colors hover:border-blue-400 dark:hover:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
-      >
+      <div className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl w-full min-h-[280px] p-6 sm:p-8 flex flex-col justify-between gap-4">
         <div className="flex items-center justify-between gap-3">
-          <span className="text-xs font-mono uppercase px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 font-semibold">
+          <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 font-semibold">
             {isFlipped ? "Mặt sau: Nghĩa & Ví dụ" : "Mặt trước: Active Recall"}
           </span>
 
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              playSegment("word", currentItem.term, 1.0);
-            }}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold border transition-colors ${
+            onClick={() => playSegment("word", currentItem.term, 1.0)}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold border focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
               playingTarget === "word"
                 ? "bg-blue-700 dark:bg-blue-600 border-blue-700 dark:border-blue-600 text-white"
                 : "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/60"
             }`}
           >
             {playingTarget === "word" ? (
-              <VolumeX className="w-3.5 h-3.5" />
+              <VolumeX className="w-3.5 h-3.5" aria-hidden="true" />
             ) : (
-              <Volume2 className="w-3.5 h-3.5" />
+              <Volume2 className="w-3.5 h-3.5" aria-hidden="true" />
             )}
             <span>Nghe từ</span>
           </button>
         </div>
 
-        {!isFlipped ? (
-          <div className="py-8 text-center space-y-3">
-            <div className="text-3xl sm:text-4xl font-bold font-mono text-slate-900 dark:text-slate-50 tracking-normal">
-              {currentItem.term}
-            </div>
-            <div className="inline-block text-xs font-mono uppercase px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">
-              {currentItem.partOfSpeech}
-            </div>
-            <p className="text-sm text-slate-600 dark:text-slate-300 pt-3">
-              Bấm vào thẻ để lật xem phiên âm IPA, nghĩa tiếng Việt và ví dụ thực tế
-            </p>
-          </div>
-        ) : (
-          <div className="py-4 space-y-4">
-            <div className="text-center space-y-1">
-              <div className="text-2xl font-bold font-mono text-slate-900 dark:text-slate-50">
+        <button
+          type="button"
+          onClick={() => setIsFlipped((prev) => !prev)}
+          aria-pressed={isFlipped}
+          className="w-full text-left rounded-lg p-2 -mx-2 hover:bg-slate-50/80 dark:hover:bg-slate-800/40 focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors"
+        >
+          {!isFlipped ? (
+            <div className="py-6 text-center space-y-3">
+              <div className="text-3xl sm:text-4xl font-bold font-mono text-slate-900 dark:text-slate-50 tracking-normal">
                 {currentItem.term}
               </div>
-              <div className="text-base font-ipa text-blue-700 dark:text-blue-400 font-medium">
-                {currentItem.phonetic}
+              <div className="inline-block text-xs font-mono px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">
+                {currentItem.partOfSpeech}
+              </div>
+              <p className="text-sm text-slate-600 dark:text-slate-300 pt-3">
+                Bấm vào thẻ để lật xem phiên âm IPA, nghĩa tiếng Việt và ví dụ thực tế
+              </p>
+            </div>
+          ) : (
+            <div className="py-2 space-y-4">
+              <div className="text-center space-y-1">
+                <div className="text-2xl font-bold font-mono text-slate-900 dark:text-slate-50">
+                  {currentItem.term}
+                </div>
+                <div className="text-base font-ipa text-blue-700 dark:text-blue-400 font-medium">
+                  {currentItem.phonetic}
+                </div>
+              </div>
+
+              <div className="bg-slate-50 dark:bg-[#263349] rounded-lg px-3.5 py-2.5 text-sm text-slate-800 dark:text-slate-100 font-medium">
+                {currentItem.meaningVI}
               </div>
             </div>
+          )}
+        </button>
 
-            <div className="bg-slate-50 dark:bg-[#263349] rounded-lg px-3.5 py-2.5 text-sm text-slate-800 dark:text-slate-100 font-medium">
-              {currentItem.meaningVI}
-            </div>
-
-            <div
-              className="pt-3 border-t border-slate-200 dark:border-[#334155] space-y-1.5"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between gap-2">
-                <span className="font-mono text-xs uppercase font-bold text-slate-600 dark:text-slate-400">
-                  Ví dụ trong công việc:
+        {isFlipped && (
+          <div className="pt-3 border-t border-slate-200 dark:border-[#334155] space-y-1.5">
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-xs font-bold text-slate-600 dark:text-slate-400">
+                Ví dụ trong công việc:
+              </span>
+              <button
+                type="button"
+                onClick={() =>
+                  playSegment("sentence", currentItem.exampleSentenceEN, 0.8)
+                }
+                className={`text-xs font-mono px-2.5 py-1 rounded-lg border flex items-center gap-1 font-semibold focus-visible:ring-2 focus-visible:ring-blue-600 transition-colors ${
+                  playingTarget === "sentence"
+                    ? "bg-blue-700 dark:bg-blue-600 border-blue-700 dark:border-blue-600 text-white"
+                    : "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/60"
+                }`}
+              >
+                {playingTarget === "sentence" ? (
+                  <VolumeX className="w-3.5 h-3.5" aria-hidden="true" />
+                ) : (
+                  <Volume2 className="w-3.5 h-3.5" aria-hidden="true" />
+                )}
+                <span>
+                  {playingTarget === "sentence" ? "Dừng phát" : "Nghe câu mẫu"}
                 </span>
-                <button
-                  type="button"
-                  onClick={() =>
-                    playSegment("sentence", currentItem.exampleSentenceEN, 0.8)
-                  }
-                  className={`text-xs font-mono px-2.5 py-1 rounded-lg border flex items-center gap-1 font-semibold transition-colors ${
-                    playingTarget === "sentence"
-                      ? "bg-blue-700 dark:bg-blue-600 border-blue-700 dark:border-blue-600 text-white"
-                      : "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/60"
-                  }`}
-                >
-                  {playingTarget === "sentence" ? (
-                    <VolumeX className="w-3.5 h-3.5" />
-                  ) : (
-                    <Volume2 className="w-3.5 h-3.5" />
-                  )}
-                  <span>
-                    {playingTarget === "sentence" ? "Dừng phát" : "Nghe câu mẫu"}
-                  </span>
-                </button>
-              </div>
-              <div className="text-sm font-medium text-slate-900 dark:text-slate-100 leading-relaxed">
-                &quot;{currentItem.exampleSentenceEN}&quot;
-              </div>
-              <div className="text-sm text-slate-600 dark:text-slate-300">
-                {currentItem.exampleTranslationVI}
-              </div>
+              </button>
+            </div>
+            <div className="text-sm font-medium text-slate-900 dark:text-slate-100 leading-relaxed">
+              &ldquo;{currentItem.exampleSentenceEN}&rdquo;
+            </div>
+            <div className="text-sm text-slate-600 dark:text-slate-300">
+              {currentItem.exampleTranslationVI}
             </div>
           </div>
         )}
 
         <div className="text-center text-xs font-mono text-slate-600 dark:text-slate-400">
-          {isFlipped ? "Chọn mức độ ghi nhớ bên dưới" : "Nhấn để lật thẻ"}
+          {isFlipped ? "Chọn mức độ ghi nhớ bên dưới" : "Nhấn vào phần nội dung để lật thẻ"}
         </div>
       </div>
 
@@ -368,9 +360,9 @@ export function VocabFlashcardDeck({
         <button
           type="button"
           onClick={() => handleRate("again")}
-          className="bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors"
+          className="bg-red-600 hover:bg-red-700 focus-visible:ring-2 focus-visible:ring-red-600 text-white flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors"
         >
-          <AlertCircle className="w-4 h-4" />
+          <AlertCircle className="w-4 h-4" aria-hidden="true" />
           <span>Chưa thuộc (Thêm vào 7-Day Plan)</span>
         </button>
 

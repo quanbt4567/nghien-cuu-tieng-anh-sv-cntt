@@ -108,9 +108,9 @@ export default async function ResearchArticlePage({
       <div className="space-y-3">
         <Link
           href="/research"
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium transition-colors"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-sm font-medium transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4" aria-hidden="true" />
           <span>Tất cả bài nghiên cứu</span>
         </Link>
 
@@ -118,20 +118,20 @@ export default async function ResearchArticlePage({
           <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 text-xs font-mono font-semibold">
             {article.category}
           </span>
-          <span className="inline-flex items-center gap-1 text-xs font-mono text-slate-600 dark:text-slate-400">
+          <span className="inline-flex items-center gap-1 text-xs font-mono tabular-nums text-slate-600 dark:text-slate-400">
             {article.sourceType === "ai_curated" && (
-              <Sparkles className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
+              <Sparkles className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
             )}
             <span>
               Xuất bản:{" "}
-              {new Date(
-                article.publishedAt ?? article.createdAt
-              ).toLocaleDateString("vi-VN")}
+              {new Intl.DateTimeFormat("vi-VN").format(
+                new Date(article.publishedAt ?? article.createdAt)
+              )}
             </span>
           </span>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-snug">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-snug text-balance">
           {article.title}
         </h1>
         <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -149,8 +149,8 @@ export default async function ResearchArticlePage({
 
       {article.metricsJson.length > 0 && (
         <section className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 space-y-3">
-          <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase text-blue-700 dark:text-blue-400">
-            <BarChart3 className="w-4 h-4 text-blue-700 dark:text-blue-400" />
+          <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold text-blue-700 dark:text-blue-400">
+            <BarChart3 className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
             <span>Dữ liệu thống kê chính</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-[#334155] border-t border-slate-200 dark:border-[#334155] pt-4">
@@ -162,7 +162,7 @@ export default async function ResearchArticlePage({
                 <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
                   {metric.label}
                 </div>
-                <div className="text-2xl font-extrabold font-mono text-slate-900 dark:text-slate-50">
+                <div className="text-2xl font-extrabold font-mono tabular-nums text-slate-900 dark:text-slate-50">
                   {metric.value}
                 </div>
                 {metric.highlight && (
@@ -182,7 +182,7 @@ export default async function ResearchArticlePage({
 
       {article.sourceUrls.length > 0 && (
         <section className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 space-y-3">
-          <h2 className="text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-400">
+          <h2 className="text-xs font-mono font-semibold text-slate-600 dark:text-slate-400">
             Nguồn tham khảo
           </h2>
           <ul className="space-y-2">
@@ -192,10 +192,10 @@ export default async function ResearchArticlePage({
                   href={src.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 hover:underline"
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 focus-visible:ring-2 focus-visible:ring-blue-600 rounded hover:underline"
                 >
                   <span>{src.title}</span>
-                  <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                  <ExternalLink className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                 </a>
               </li>
             ))}
@@ -205,16 +205,15 @@ export default async function ResearchArticlePage({
 
       <section className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 sm:p-6 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="inline-flex items-center gap-2 text-base font-bold text-slate-900 dark:text-slate-50">
-            <Mic className="w-4 h-4 text-green-700 dark:text-green-400" />
+          <h2 className="inline-flex items-center gap-2 text-base font-bold text-slate-900 dark:text-slate-50 text-balance">
+            <Mic className="w-4 h-4 text-green-700 dark:text-green-400" aria-hidden="true" />
             <span>Tình huống luyện nói gợi ý từ bài viết</span>
-          </div>
+          </h2>
           <Link
             href="/"
-            className="text-sm font-semibold text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 hover:underline inline-flex items-center gap-1"
+            className="text-sm font-semibold text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 focus-visible:ring-2 focus-visible:ring-blue-600 rounded hover:underline inline-flex items-center gap-1"
           >
             <span>Xem tất cả kịch bản</span>
-            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
@@ -223,9 +222,9 @@ export default async function ResearchArticlePage({
             <Link
               key={scenario.id}
               href={`/practice/${scenario.id}`}
-              className="py-3.5 flex items-center justify-between gap-3 group"
+              className="py-3.5 flex items-center justify-between gap-3 group focus-visible:ring-2 focus-visible:ring-blue-600 rounded"
             >
-              <div className="space-y-0.5">
+              <div className="space-y-0.5 min-w-0">
                 <div className="font-bold text-sm text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
                   {scenario.titleEN}
                 </div>
@@ -235,7 +234,6 @@ export default async function ResearchArticlePage({
               </div>
               <span className="bg-blue-700 group-hover:bg-blue-800 dark:bg-blue-600 dark:group-hover:bg-blue-700 text-white shrink-0 inline-flex items-center gap-1 px-3.5 py-2 rounded-lg text-sm font-bold transition-colors">
                 <span>Luyện</span>
-                <ArrowRight className="w-3.5 h-3.5" />
               </span>
             </Link>
           ))}
