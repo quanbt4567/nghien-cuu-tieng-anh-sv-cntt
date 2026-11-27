@@ -50,6 +50,7 @@ export default async function HomePage() {
                 key={player.id}
                 fxId={player.equippedCosmetics?.leaderboard_fx}
                 nameplateId={player.equippedCosmetics?.nameplate}
+                lite
                 className="!rounded-none !border-0 !shadow-none !bg-transparent transition-colors hover:bg-slate-100/60 dark:hover:bg-white/5"
               >
                 <Link
@@ -61,6 +62,7 @@ export default async function HomePage() {
                       equippedId={player.equippedCosmetics?.avatar_decoration ?? player.equippedRing}
                       fallbackRing={player.equippedRing}
                       size={36}
+                      lite
                     >
                       <PlayerAvatar
                         avatarUrl={player.avatarUrl}
