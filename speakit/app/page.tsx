@@ -20,8 +20,8 @@ export default async function HomePage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-4 md:py-7 lg:py-9 space-y-5 md:space-y-8">
-      <DuolingoQuestPath />
       <HomeIntroHero scenarioCount={scenarioCount} />
+      <DuolingoQuestPath compact />
 
       <section
         aria-label="Top 3 Arena Leaders"

@@ -47,7 +47,7 @@ function getLocalTodayKey(): string {
   return `${y}-${m}-${d}`;
 }
 
-export function DuolingoQuestPath() {
+export function DuolingoQuestPath({ compact = false }: { compact?: boolean }) {
   const [hydrated, setHydrated] = useState(false);
   const [gamification, setGamification] = useState<GamificationState>(() =>
     getGamificationState()
@@ -151,6 +151,13 @@ export function DuolingoQuestPath() {
   );
   const unlockedBadges = chapterStates.filter((c) => c.isChapterDone);
   const todayKey = getLocalTodayKey();
+  const readyDailyQuestsCount = DAILY_QUESTS.filter(
+    (q) =>
+      hydrated &&
+      q.getCurrent(stats) >= q.target &&
+      !claimedIds.includes(`daily:${todayKey}:${q.id}`)
+  ).length;
+  const hasPendingRewards = Boolean(claimableChest) || readyDailyQuestsCount > 0;
 
   const handleClaimReward = async (
     claimKey: string,
@@ -198,6 +205,69 @@ export function DuolingoQuestPath() {
       setClaimingId(null);
     }
   };
+
+  if (compact) {
+    return (
+      <section aria-label="Lộ trình học cốt truyện">
+        <div className="liquid-glass-card p-4 sm:p-5 space-y-3.5">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3.5">
+            <div className="space-y-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-2 text-xs font-mono font-bold text-blue-700 dark:text-blue-300">
+                <Compass className="w-4 h-4 shrink-0" aria-hidden="true" />
+                <span>Lộ trình cốt truyện · {totalDoneNodes}/{allNodes.length} chặng</span>
+                {hasPendingRewards && (
+                  <Link
+                    href="/roadmap"
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-300/70 dark:border-amber-400/40"
+                  >
+                    <Gift className="w-3 h-3" aria-hidden="true" />
+                    <span>Có quà chưa nhận</span>
+                  </Link>
+                )}
+              </div>
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-50 leading-snug">
+                {nextNode
+                  ? `Bước tiếp theo (${nextNode.order}/${allNodes.length}): ${nextNode.title}`
+                  : "Hoàn thành toàn bộ lộ trình SpeakIT"}
+              </h2>
+              {nextNode && (
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                  {nextNode.subtitle}
+                </p>
+              )}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              {nextNode && (
+                <Link
+                  href={nextNode.href}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg liquid-btn-primary text-xs sm:text-sm font-bold focus-visible:ring-2 focus-visible:ring-blue-600"
+                >
+                  <Play className="w-3.5 h-3.5 fill-white shrink-0" aria-hidden="true" />
+                  <span>Làm ngay ({nextNode.durationLabel})</span>
+                </Link>
+              )}
+              <Link
+                href="/roadmap"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg liquid-glass-btn text-xs sm:text-sm font-semibold focus-visible:ring-2 focus-visible:ring-blue-600"
+              >
+                <span>Bản đồ lộ trình</span>
+              </Link>
+            </div>
+          </div>
+
+          <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-blue-600 via-sky-500 to-emerald-500 transition-transform duration-300 origin-left"
+              style={{
+                transform: `scaleX(${Math.max(0.04, totalDoneNodes / allNodes.length)})`,
+              }}
+            />
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section

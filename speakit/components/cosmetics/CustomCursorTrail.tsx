@@ -625,9 +625,11 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
   const GHOST_COLORS = ["#A855F7", "#6366F1", "#38BDF8", "#C084FC"];
   const COOL_COLORS = ["#F43F5E", "#F59E0B", "#10B981", "#3B82F6", "#A855F7", "#EC4899"];
 
-  let dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let dpr = 1;
   let lastSpawnX = -999;
   let lastSpawnY = -999;
+  let lastActiveAt = performance.now();
+  let clearedIdle = true;
   let hasPointer = false;
   let targetX = -100;
   let targetY = -100;
@@ -644,15 +646,17 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
   let hoverSmooth = 0;
 
   const resize = () => {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = Math.floor(window.innerWidth * dpr);
-    canvas.height = Math.floor(window.innerHeight * dpr);
+    dpr = 1;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     canvas.style.width = `${window.innerWidth}px`;
     canvas.style.height = `${window.innerHeight}px`;
   };
   resize();
 
   const syncPointer = (x: number, y: number, targetEl: EventTarget | null) => {
+    lastActiveAt = performance.now();
+    clearedIdle = false;
     if (!hasPointer) {
       hasPointer = true;
       dotX = x;
@@ -680,6 +684,8 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
   };
 
   const spawnBurst = (x: number, y: number, scale = 1) => {
+    lastActiveAt = performance.now();
+    clearedIdle = false;
     hasPointer = true;
     targetX = x;
     targetY = y;
@@ -922,6 +928,21 @@ function run2DCursorEffect(canvas: HTMLCanvasElement, mode: Exclude<CursorMode, 
   };
 
   const frame = (now: number, dt: number) => {
+    const hasParticles =
+      sparkles.length > 0 ||
+      binaries.length > 0 ||
+      crosshairRings.length > 0 ||
+      fluidBlobs.length > 0 ||
+      sparkRays.length > 0;
+    if (!hasParticles && now - lastActiveAt > 550) {
+      if (!clearedIdle) {
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        clearedIdle = true;
+      }
+      return;
+    }
+
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
