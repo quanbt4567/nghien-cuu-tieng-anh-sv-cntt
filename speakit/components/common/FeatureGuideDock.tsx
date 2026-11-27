@@ -305,7 +305,7 @@ export function FeatureGuideDock() {
       return;
     }
     setAutoDisabled(areAllGuidesDisabled());
-    setIsOpen(shouldAutoOpenGuide(pathname));
+    setIsOpen(false);
   }, [guide, pathname]);
 
   const handleAcknowledge = useCallback(() => {
@@ -507,7 +507,6 @@ export function FeatureGuideDock() {
       observer.observe(document.body, {
         childList: true,
         subtree: true,
-        attributes: true,
       });
     }
 

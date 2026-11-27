@@ -3,6 +3,7 @@ import { BookOpen, Clock, Coins, Flame, Gamepad2, MessageSquare, ShoppingBag, Si
 import { DiscordAvatarFrame } from "../components/cosmetics/DiscordAvatarFrame";
 import { LeaderboardRowWrapper } from "../components/cosmetics/LeaderboardRowWrapper";
 import { PlayerAvatar } from "../components/cosmetics/PlayerAvatar";
+import { DuolingoQuestPath } from "../components/home/DuolingoQuestPath";
 import { HomeIntroHero } from "../components/home/HomeIntroHero";
 import { getMergedScenarios } from "../lib/serverScenarios";
 import { getTopPlayers } from "./actions/leaderboard";
@@ -18,7 +19,8 @@ export default async function HomePage() {
   const scenarioCount = scenarios.length;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-4 md:py-7 lg:py-9 space-y-4 md:space-y-8">
+    <div className="max-w-5xl mx-auto px-4 py-4 md:py-7 lg:py-9 space-y-5 md:space-y-8">
+      <DuolingoQuestPath />
       <HomeIntroHero scenarioCount={scenarioCount} />
 
       <section
