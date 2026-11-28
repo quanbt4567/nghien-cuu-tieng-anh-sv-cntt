@@ -14,12 +14,9 @@ import {
   shouldShowInAppReminder,
 } from "../../lib/mobile-notifications";
 
-interface AnnouncementItem {
-  id: string;
-  title: string;
-  body: string;
-  created_at: string;
-}
+import type { InAppNotification } from "../../lib/types";
+
+type AnnouncementItem = InAppNotification;
 
 interface InAppNotificationBellProps {
   lastPracticeDate?: string | null;
@@ -244,6 +241,17 @@ export function InAppNotificationBell({ lastPracticeDate }: InAppNotificationBel
                     )}
                   </div>
                   <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{item.body}</p>
+                  {item.bannerUrl?.trim() && (
+                    <div className="relative aspect-[16/7] w-full overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 mt-1.5">
+                      <img
+                        src={item.bannerUrl.trim()}
+                        alt={item.title}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
                   {item.created_at && (
                     <div className="text-xs font-mono text-slate-500 dark:text-slate-400">
                       {formatDateTime(item.created_at)}

@@ -1,14 +1,12 @@
 import { NextResponse } from "next/server";
 import { ensureSchema, getNeonSql } from "../../../lib/db/neon";
+import type { InAppNotification } from "../../../lib/types";
 
 export const dynamic = "force-dynamic";
 
-export interface PublicAnnouncement {
-  id: string;
-  title: string;
-  body: string;
-  created_at: string;
-}
+export type PublicAnnouncement = InAppNotification;
+
+let bannerColumnReady = false;
 
 export async function GET() {
   try {
@@ -18,8 +16,13 @@ export async function GET() {
       return NextResponse.json({ announcements: [] });
     }
 
+    if (!bannerColumnReady) {
+      await sql`ALTER TABLE speakit_announcements ADD COLUMN IF NOT EXISTS banner_url TEXT NULL`;
+      bannerColumnReady = true;
+    }
+
     const rows = (await sql`
-      SELECT id, title, body, created_at
+      SELECT id, title, body, banner_url AS "bannerUrl", created_at
       FROM speakit_announcements
       ORDER BY created_at DESC
       LIMIT 10

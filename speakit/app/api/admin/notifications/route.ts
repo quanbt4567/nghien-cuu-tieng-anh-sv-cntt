@@ -1,15 +1,20 @@
 import { randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { isAdminRequest } from "../../../../lib/adminAuth";
+import { sanitizeMediaUrl } from "../../../../lib/contentStore";
 import { ensureSchema, getNeonSql } from "../../../../lib/db/neon";
+import type { InAppNotification } from "../../../../lib/types";
 
 export const dynamic = "force-dynamic";
 
-interface AnnouncementRow {
-  id: string;
-  title: string;
-  body: string;
-  created_at: string;
+let bannerColumnReady = false;
+
+async function ensureAnnouncementBannerColumn(
+  sql: NonNullable<ReturnType<typeof getNeonSql>>
+): Promise<void> {
+  if (bannerColumnReady) return;
+  await sql`ALTER TABLE speakit_announcements ADD COLUMN IF NOT EXISTS banner_url TEXT NULL`;
+  bannerColumnReady = true;
 }
 
 export async function GET(req: NextRequest) {
@@ -24,12 +29,13 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ announcements: [] });
     }
 
+    await ensureAnnouncementBannerColumn(sql);
     const rows = (await sql`
-      SELECT id, title, body, created_at
+      SELECT id, title, body, banner_url AS "bannerUrl", created_at
       FROM speakit_announcements
       ORDER BY created_at DESC
       LIMIT 50
-    `) as AnnouncementRow[];
+    `) as InAppNotification[];
 
     return NextResponse.json({ announcements: rows });
   } catch {
@@ -42,15 +48,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Chưa đăng nhập phiên quản trị." }, { status: 401 });
   }
 
-  let body: { title?: unknown; body?: unknown };
+  let body: { title?: unknown; body?: unknown; bannerUrl?: unknown };
   try {
-    body = (await req.json()) as { title?: unknown; body?: unknown };
+    body = (await req.json()) as { title?: unknown; body?: unknown; bannerUrl?: unknown };
   } catch {
     return NextResponse.json({ error: "Dữ liệu không hợp lệ." }, { status: 400 });
   }
 
   const title = typeof body.title === "string" ? body.title.trim().slice(0, 120) : "";
   const messageBody = typeof body.body === "string" ? body.body.trim().slice(0, 500) : "";
+  const bannerUrl = sanitizeMediaUrl(body.bannerUrl) ?? null;
 
   if (!title || !messageBody) {
     return NextResponse.json(
@@ -66,12 +73,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Chưa kết nối Neon DB." }, { status: 503 });
     }
 
+    await ensureAnnouncementBannerColumn(sql);
     const id = randomUUID();
     const rows = (await sql`
-      INSERT INTO speakit_announcements (id, title, body)
-      VALUES (${id}, ${title}, ${messageBody})
-      RETURNING id, title, body, created_at
-    `) as AnnouncementRow[];
+      INSERT INTO speakit_announcements (id, title, body, banner_url)
+      VALUES (${id}, ${title}, ${messageBody}, ${bannerUrl})
+      RETURNING id, title, body, banner_url AS "bannerUrl", created_at
+    `) as InAppNotification[];
 
     return NextResponse.json({ ok: true, announcement: rows[0] });
   } catch {
