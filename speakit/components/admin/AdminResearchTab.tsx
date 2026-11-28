@@ -86,6 +86,10 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
   const [markdownMode, setMarkdownMode] = useState<"edit" | "preview">("edit");
   const [publishConfirmOpen, setPublishConfirmOpen] = useState(false);
   const [contentMarkdown, setContentMarkdown] = useState("");
+  const [titleEn, setTitleEn] = useState("");
+  const [summaryEn, setSummaryEn] = useState("");
+  const [contentMarkdownEn, setContentMarkdownEn] = useState("");
+  const [isTranslating, setIsTranslating] = useState<"vi_to_en" | "en_to_vi" | null>(null);
   const [metricsJson, setMetricsJson] = useState<ResearchMetricItem[]>([
     { label: "", value: "", highlight: "" },
   ]);
@@ -130,6 +134,9 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
     setMarkdownMode("edit");
     setPublishConfirmOpen(false);
     setContentMarkdown("");
+    setTitleEn("");
+    setSummaryEn("");
+    setContentMarkdownEn("");
     setMetricsJson([{ label: "", value: "", highlight: "" }]);
     setSourceUrls([]);
   };
@@ -145,6 +152,9 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
     setTagsText("");
     setMarkdownMode("edit");
     setContentMarkdown(article.contentMarkdown);
+    setTitleEn(article.titleEn ?? "");
+    setSummaryEn(article.summaryEn ?? "");
+    setContentMarkdownEn(article.contentMarkdownEn ?? "");
     setMetricsJson(
       article.metricsJson.length > 0
         ? article.metricsJson
@@ -190,6 +200,65 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
       setErrorMessage("Lỗi kết nối khi gọi AI Săn tin.");
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const handleTranslateArticle = async (direction: "vi_to_en" | "en_to_vi") => {
+    const srcTitle = direction === "vi_to_en" ? title : titleEn;
+    const srcSummary = direction === "vi_to_en" ? summary : summaryEn;
+    const srcMarkdown = direction === "vi_to_en" ? contentMarkdown : contentMarkdownEn;
+    if (!srcTitle.trim() && !srcSummary.trim() && !srcMarkdown.trim()) {
+      setErrorMessage(
+        direction === "vi_to_en"
+          ? "Vui lòng nhập nội dung tiếng Việt trước khi dịch sang tiếng Anh."
+          : "Vui lòng nhập nội dung tiếng Anh trước khi dịch sang tiếng Việt."
+      );
+      return;
+    }
+    setIsTranslating(direction);
+    setErrorMessage(null);
+    setStatusMessage(null);
+    try {
+      const res = await fetch("/api/admin/research/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          direction,
+          title: srcTitle,
+          summary: srcSummary,
+          contentMarkdown: srcMarkdown,
+        }),
+      });
+      if (res.status === 401) {
+        onUnauthorized();
+        return;
+      }
+      const data = (await res.json()) as {
+        ok?: boolean;
+        error?: string;
+        title?: string;
+        summary?: string;
+        contentMarkdown?: string;
+      };
+      if (!res.ok || !data.ok) {
+        setErrorMessage(data.error ?? "Không thể dịch bài viết.");
+        return;
+      }
+      if (direction === "vi_to_en") {
+        setTitleEn(data.title ?? "");
+        setSummaryEn(data.summary ?? "");
+        setContentMarkdownEn(data.contentMarkdown ?? "");
+        setStatusMessage("Đã dịch sang bản Tiếng Anh bằng AI.");
+      } else {
+        setTitle(data.title ?? "");
+        setSummary(data.summary ?? "");
+        setContentMarkdown(data.contentMarkdown ?? "");
+        setStatusMessage("Đã dịch sang bản Tiếng Việt bằng AI.");
+      }
+    } catch {
+      setErrorMessage("Lỗi kết nối khi dịch bài viết bằng AI.");
+    } finally {
+      setIsTranslating(null);
     }
   };
 
@@ -304,6 +373,9 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
           publishDate: publishDate || undefined,
           tags: parsedTags.length > 0 ? parsedTags : undefined,
           contentMarkdown: contentMarkdown.trim(),
+          titleEn: titleEn.trim() || null,
+          summaryEn: summaryEn.trim() || null,
+          contentMarkdownEn: contentMarkdownEn.trim() || null,
           metricsJson: metricsJson.filter((m) => m.label.trim() && m.value.trim()),
           sourceUrls: sourceUrls.filter((s) => s.title.trim() && s.url.trim()),
           sourceType: "admin_authored",
@@ -742,6 +814,62 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                     )}
                   </div>
                 )}
+              </div>
+
+              <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/40 p-4 space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <h4 className="text-xs font-mono font-bold text-slate-800 dark:text-slate-200">
+                      Phiên bản Tiếng Anh (Bilingual Mode — tùy chọn)
+                    </h4>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      Cho phép người đọc chuyển qua lại giữa Tiếng Việt &amp; English ngay trên trang bài báo.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      disabled={isTranslating !== null}
+                      onClick={() => void handleTranslateArticle("vi_to_en")}
+                      className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
+                      <span>{isTranslating === "vi_to_en" ? "Đang dịch…" : "AI dịch Việt → Anh"}</span>
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isTranslating !== null}
+                      onClick={() => void handleTranslateArticle("en_to_vi")}
+                      className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" aria-hidden="true" />
+                      <span>{isTranslating === "en_to_vi" ? "Đang dịch…" : "AI dịch Anh → Việt"}</span>
+                    </button>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <input
+                    type="text"
+                    value={titleEn}
+                    onChange={(e) => setTitleEn(e.target.value)}
+                    placeholder="English Title (optional)"
+                    className="liquid-glass-input w-full px-3 py-2 text-sm rounded-lg"
+                  />
+                  <textarea
+                    rows={2}
+                    value={summaryEn}
+                    onChange={(e) => setSummaryEn(e.target.value)}
+                    placeholder="English Summary (optional)"
+                    className="liquid-glass-input w-full px-3 py-2 text-sm rounded-lg"
+                  />
+                  <textarea
+                    rows={4}
+                    value={contentMarkdownEn}
+                    onChange={(e) => setContentMarkdownEn(e.target.value)}
+                    placeholder="## English Markdown Content (optional)"
+                    className="liquid-glass-input w-full px-3 py-2 text-sm font-mono rounded-lg"
+                  />
+                </div>
               </div>
 
               <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-slate-800">

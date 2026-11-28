@@ -25,6 +25,9 @@ export interface UpsertResearchArticleInput {
   title: string;
   summary: string;
   contentMarkdown: string;
+  titleEn?: string | null;
+  summaryEn?: string | null;
+  contentMarkdownEn?: string | null;
   coverImageUrl?: string | null;
   category: ResearchCategory;
   metricsJson?: ResearchMetricItem[];
@@ -166,6 +169,12 @@ function mapArticleRow(row: Record<string, unknown>): ResearchArticle {
     title: String(row.title),
     summary: String(row.summary),
     contentMarkdown: String(row.content_markdown),
+    titleEn: typeof row.title_en === "string" && row.title_en.trim() ? row.title_en : null,
+    summaryEn: typeof row.summary_en === "string" && row.summary_en.trim() ? row.summary_en : null,
+    contentMarkdownEn:
+      typeof row.content_markdown_en === "string" && row.content_markdown_en.trim()
+        ? row.content_markdown_en
+        : null,
     coverImageUrl: normalizeResearchCoverImageUrl(row.cover_image_url),
     category: normalizeResearchCategory(row.category),
     metricsJson: parseJsonArray(row.metrics_json, normalizeResearchMetrics),
@@ -195,14 +204,14 @@ export async function getPublishedArticles(
   try {
     const rows = category
       ? await sql`
-          SELECT id, slug, title, summary, content_markdown, cover_image_url, category, metrics_json, source_type, source_urls, status, created_at, published_at
+          SELECT id, slug, title, summary, content_markdown, title_en, summary_en, content_markdown_en, cover_image_url, category, metrics_json, source_type, source_urls, status, created_at, published_at
           FROM research_articles
           WHERE status = 'published' AND category = ${category}
           ORDER BY COALESCE(published_at, created_at) DESC
           LIMIT 50
         `
       : await sql`
-          SELECT id, slug, title, summary, content_markdown, cover_image_url, category, metrics_json, source_type, source_urls, status, created_at, published_at
+          SELECT id, slug, title, summary, content_markdown, title_en, summary_en, content_markdown_en, cover_image_url, category, metrics_json, source_type, source_urls, status, created_at, published_at
           FROM research_articles
           WHERE status = 'published'
           ORDER BY COALESCE(published_at, created_at) DESC
@@ -233,7 +242,7 @@ export async function getArticleBySlug(
 
   try {
     const rows = await sql`
-      SELECT id, slug, title, summary, content_markdown, cover_image_url, category, metrics_json, source_type, source_urls, status, created_at, published_at
+      SELECT id, slug, title, summary, content_markdown, title_en, summary_en, content_markdown_en, cover_image_url, category, metrics_json, source_type, source_urls, status, created_at, published_at
       FROM research_articles
       WHERE slug = ${cleanSlug} AND status = 'published'
       LIMIT 1
@@ -259,7 +268,7 @@ export async function getAllAdminArticles(): Promise<ResearchArticle[]> {
 
   try {
     const rows = await sql`
-      SELECT id, slug, title, summary, content_markdown, cover_image_url, category, metrics_json, source_type, source_urls, status, created_at, published_at
+      SELECT id, slug, title, summary, content_markdown, title_en, summary_en, content_markdown_en, cover_image_url, category, metrics_json, source_type, source_urls, status, created_at, published_at
       FROM research_articles
       ORDER BY
         CASE status
@@ -292,6 +301,12 @@ export async function upsertArticle(
   const title = data.title.trim().slice(0, 300);
   const summary = data.summary.trim().slice(0, 1000);
   const contentMarkdown = data.contentMarkdown.trim().slice(0, 20000);
+  const titleEn = typeof data.titleEn === "string" && data.titleEn.trim() ? data.titleEn.trim().slice(0, 300) : null;
+  const summaryEn = typeof data.summaryEn === "string" && data.summaryEn.trim() ? data.summaryEn.trim().slice(0, 1000) : null;
+  const contentMarkdownEn =
+    typeof data.contentMarkdownEn === "string" && data.contentMarkdownEn.trim()
+      ? data.contentMarkdownEn.trim().slice(0, 20000)
+      : null;
   const coverImageUrl = normalizeResearchCoverImageUrl(data.coverImageUrl);
   const category = normalizeResearchCategory(data.category);
   const metricsJson = normalizeResearchMetrics(data.metricsJson ?? []);
@@ -316,6 +331,9 @@ export async function upsertArticle(
         title,
         summary,
         content_markdown,
+        title_en,
+        summary_en,
+        content_markdown_en,
         cover_image_url,
         category,
         metrics_json,
@@ -330,6 +348,9 @@ export async function upsertArticle(
         ${title},
         ${summary},
         ${contentMarkdown},
+        ${titleEn},
+        ${summaryEn},
+        ${contentMarkdownEn},
         ${coverImageUrl},
         ${category},
         ${JSON.stringify(metricsJson)}::jsonb,
@@ -342,6 +363,9 @@ export async function upsertArticle(
         title = EXCLUDED.title,
         summary = EXCLUDED.summary,
         content_markdown = EXCLUDED.content_markdown,
+        title_en = EXCLUDED.title_en,
+        summary_en = EXCLUDED.summary_en,
+        content_markdown_en = EXCLUDED.content_markdown_en,
         cover_image_url = EXCLUDED.cover_image_url,
         category = EXCLUDED.category,
         metrics_json = EXCLUDED.metrics_json,
