@@ -339,7 +339,7 @@ export function AdminImageField({
               src={value.trim()}
               alt={label}
               onError={() => setPreviewBroken(true)}
-              className="w-full h-44 object-cover"
+              className="w-full max-h-72 object-contain bg-slate-900/5 dark:bg-slate-950/40"
             />
           ) : (
             <div className="h-28 flex items-center justify-center text-xs text-[var(--text-muted)] px-3 text-center">
