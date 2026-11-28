@@ -11,6 +11,7 @@ import {
   type MouseEvent as ReactMouseEvent,
 } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import {
   ArrowLeft,
   Check,
@@ -62,13 +63,24 @@ import {
   saveCachedGuestProfile,
 } from "../../lib/guestClient";
 import { mergeProfileIdentity } from "../../lib/profileStats";
-import { CustomCursorTrail, SPEAKIT_CURSOR_BURST_EVENT } from "./CustomCursorTrail";
+import { SPEAKIT_CURSOR_BURST_EVENT } from "./CustomCursorTrail";
 import { DiscordAvatarFrame } from "./DiscordAvatarFrame";
-import { FullPageProfileEffect } from "./FullPageProfileEffect";
 import { LeaderboardRowWrapper } from "./LeaderboardRowWrapper";
 import { NameplateBanner, NameplateDisplayText } from "./NameplateBanner";
 import { PlayerAvatar } from "./PlayerAvatar";
-import { VictoryFinisherOverlay } from "./VictoryFinisherOverlay";
+
+const FullPageProfileEffect = dynamic(
+  () => import("./FullPageProfileEffect").then((m) => m.FullPageProfileEffect),
+  { ssr: false }
+);
+const CustomCursorTrail = dynamic(
+  () => import("./CustomCursorTrail").then((m) => m.CustomCursorTrail),
+  { ssr: false }
+);
+const VictoryFinisherOverlay = dynamic(
+  () => import("./VictoryFinisherOverlay").then((m) => m.VictoryFinisherOverlay),
+  { ssr: false }
+);
 
 const CATEGORY_META: Record<
   CosmeticCategory,
@@ -760,18 +772,24 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
 
   return (
     <div className="relative min-h-screen bg-transparent text-slate-900 dark:text-slate-100">
-      <FullPageProfileEffect
-        themeId={themePreviewEnabled ? activeSandbox.profile_theme : null}
-        item={themePreviewEnabled ? activeThemeItem : null}
-      />
-      <CustomCursorTrail effectId={previewOverrides.cursor_effect ?? null} />
-      <VictoryFinisherOverlay
-        finisherId={activeSandbox.victory_finisher}
-        active={finisherActive}
-        title={activeFinisherItem?.name ?? "Victory Finisher Preview"}
-        subtitle={`${isIdentityHydrating ? "--" : identity.displayName} : Live Try-On Studio`}
-        onComplete={() => setFinisherActive(false)}
-      />
+      {themePreviewEnabled && activeSandbox.profile_theme && (
+        <FullPageProfileEffect
+          themeId={activeSandbox.profile_theme}
+          item={activeThemeItem}
+        />
+      )}
+      {previewOverrides.cursor_effect && (
+        <CustomCursorTrail effectId={previewOverrides.cursor_effect} />
+      )}
+      {finisherActive && (
+        <VictoryFinisherOverlay
+          finisherId={activeSandbox.victory_finisher}
+          active={finisherActive}
+          title={activeFinisherItem?.name ?? "Victory Finisher Preview"}
+          subtitle={`${isIdentityHydrating ? "--" : identity.displayName} : Live Try-On Studio`}
+          onComplete={() => setFinisherActive(false)}
+        />
+      )}
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 py-8 space-y-6 pb-28">
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -950,6 +968,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                 <LeaderboardRowWrapper
                   fxId={activeSandbox.leaderboard_fx}
                   nameplateId={activeSandbox.nameplate}
+                  lite
                   className="border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 p-4"
                 >
                   <div className="flex items-center justify-between gap-3">
@@ -961,6 +980,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                         equippedId={activeSandbox.avatar_decoration}
                         fallbackRing={identity.equippedRing}
                         size="sm"
+                        lite
                         micActive={micTestActive}
                       >
                         <PlayerAvatar
@@ -1038,7 +1058,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                         </span>
                       )}
                     </div>
-                    <div className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate mt-1">
+                    <div className="text-xs font-bold text-slate-900 dark:text-slate-100 line-clamp-2 leading-snug mt-1">
                       {activeItem?.name ?? "None"}
                     </div>
                   </button>
@@ -1117,7 +1137,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
             return (
               <article
                 key={item.id}
-                className={`[content-visibility:auto] liquid-glass-card-lite p-4 flex flex-col justify-between gap-3.5 transition-colors ${
+                className={`liquid-glass-card-lite p-4 flex flex-col justify-between gap-3.5 transition-colors ${
                   isPreviewing
                     ? "!border-blue-700 dark:!border-blue-500"
                     : "hover:border-blue-600 dark:hover:border-blue-500"

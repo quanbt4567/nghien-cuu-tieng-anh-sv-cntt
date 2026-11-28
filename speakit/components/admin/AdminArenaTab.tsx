@@ -677,6 +677,7 @@ export function AdminArenaTab({
             value={thumbnailUrl}
             onChange={setThumbnailUrl}
             allowGenerate={true}
+            contextHint={targetWord ? `Sửa lỗi phần mềm liên quan đến ${targetWord}` : "Lập trình viên tìm và sửa lỗi code"}
             placeholder="https://... hoặc /research-covers/..."
           />
 

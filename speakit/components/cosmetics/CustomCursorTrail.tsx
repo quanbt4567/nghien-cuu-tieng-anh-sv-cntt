@@ -1415,7 +1415,7 @@ export function CustomCursorTrail({ effectId }: CustomCursorTrailProps) {
       <div
         key={mode}
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-50 overflow-hidden"
+        className="pointer-events-none fixed inset-0 z-30 overflow-hidden opacity-60"
         style={{ width: "100vw", height: "100vh" }}
       >
         {mode === "cursor-rb-splash-fluid" && (
@@ -1447,7 +1447,7 @@ export function CustomCursorTrail({ effectId }: CustomCursorTrailProps) {
           <DynamicGhostCursor color="#9333EA" brightness={1.4} size={0.12} theme="light" />
         )}
         {mode === "cursor-rb-antigravity-swarm" && (
-          <DynamicSwarmCursor color="#F59E0B" accentColor="#EC4899" lightMode hideCursor={false} />
+          <DynamicSwarmCursor count={12} color="#F59E0B" accentColor="#EC4899" lightMode hideCursor={false} />
         )}
         {mode === "cursor-rb-target-reticle" && (
           <DynamicTargetCursor

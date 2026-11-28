@@ -649,6 +649,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                 value={coverImageUrl}
                 onChange={setCoverImageUrl}
                 allowGenerate={true}
+                contextHint={title || summary || "Nghiên cứu và xu hướng tiếng Anh CNTT"}
                 placeholder="https://... hoặc /research-covers/..."
               />
 

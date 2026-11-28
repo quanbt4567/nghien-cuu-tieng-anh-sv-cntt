@@ -12,6 +12,7 @@ import {
   Mail,
   ShieldCheck,
   UserPlus,
+  X,
 } from "lucide-react";
 import {
   initOrHydrateGuestSession,
@@ -30,6 +31,7 @@ import type { PublicGuestPlayer } from "../../lib/db";
 const NAME_PROMPTED_STORAGE_KEY = "speakit_name_prompted_v1";
 const LOCAL_DISPLAY_NAME_KEY = "speakit_local_display_name_v1";
 const SESSION_TOKEN_STORAGE_KEY = "speakit_session_token_v1";
+const AUTH_DISMISSED_STORAGE_KEY = "speakit_auth_dismissed_v1";
 
 function readStoredSessionToken(): string | undefined {
   if (typeof window === "undefined") return undefined;
@@ -141,6 +143,12 @@ export function WelcomeNameModal() {
 
     if (isActive && !isActive()) return;
     setMustAuthenticate(true);
+    try {
+      if (window.sessionStorage.getItem(AUTH_DISMISSED_STORAGE_KEY) === "1") {
+        setIsOpen(false);
+        return;
+      }
+    } catch {}
     setIsOpen(true);
   }, []);
 
@@ -157,6 +165,9 @@ export function WelcomeNameModal() {
     if (isAdminRoute) return;
 
     const handleOpenRequest = () => {
+      try {
+        window.sessionStorage.removeItem(AUTH_DISMISSED_STORAGE_KEY);
+      } catch {}
       setError(null);
       setIsOpen(true);
     };
@@ -186,6 +197,26 @@ export function WelcomeNameModal() {
       window.removeEventListener(GUEST_PROFILE_UPDATED_EVENT, handleProfileUpdated);
     };
   }, [isAdminRoute]);
+
+  const handleDismiss = useCallback(() => {
+    if (isSubmitting) return;
+    try {
+      window.sessionStorage.setItem(AUTH_DISMISSED_STORAGE_KEY, "1");
+    } catch {}
+    setError(null);
+    setIsOpen(false);
+  }, [isSubmitting]);
+
+  useEffect(() => {
+    if (!isOpen || isAdminRoute) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleDismiss();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [handleDismiss, isAdminRoute, isOpen]);
 
   if (!isOpen || isAdminRoute) {
     return null;
@@ -287,10 +318,24 @@ export function WelcomeNameModal() {
       role="dialog"
       aria-modal="true"
       aria-labelledby="auth-modal-title"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          handleDismiss();
+        }
+      }}
       className="fixed inset-0 z-50 bg-slate-950/55 flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
     >
       <div className="w-full max-w-md bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm space-y-5 relative my-auto">
-        <div className="flex items-start gap-3">
+        <button
+          type="button"
+          onClick={handleDismiss}
+          disabled={isSubmitting}
+          aria-label="Đóng hộp thoại đăng nhập"
+          className="absolute top-3.5 right-3.5 p-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus-visible:ring-2 focus-visible:ring-blue-600"
+        >
+          <X className="w-4 h-4" aria-hidden="true" />
+        </button>
+        <div className="flex items-start gap-3 pr-7">
           <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center shrink-0">
             <ShieldCheck className="w-5 h-5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
           </div>
@@ -497,15 +542,14 @@ export function WelcomeNameModal() {
             )}
           </button>
 
-          {!mustAuthenticate && (
-            <button
-              type="button"
-              onClick={() => setIsOpen(false)}
-              className="w-full py-2 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-            >
-              Đóng
-            </button>
-          )}
+          <button
+            type="button"
+            disabled={isSubmitting}
+            onClick={handleDismiss}
+            className="w-full py-2 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50"
+          >
+            {mustAuthenticate ? "Tiếp tục với tư cách khách" : "Đóng"}
+          </button>
         </form>
       </div>
     </div>

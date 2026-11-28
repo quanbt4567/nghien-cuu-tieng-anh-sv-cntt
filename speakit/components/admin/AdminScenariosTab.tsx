@@ -819,6 +819,7 @@ export function AdminScenariosTab({
             value={thumbnailUrl}
             onChange={setThumbnailUrl}
             allowGenerate={true}
+            contextHint={titleVI || titleEN || "Tình huống giao tiếp tiếng Anh cho lập trình viên"}
             placeholder="https://... hoặc /research-covers/..."
           />
 

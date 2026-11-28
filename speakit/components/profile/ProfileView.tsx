@@ -67,6 +67,7 @@ import {
 import {
   GUEST_PROFILE_UPDATED_EVENT,
   readBackupTransferCode,
+  readCachedGuestProfile,
   requestOpenAuthModal,
   saveBackupTransferCode,
   saveCachedGuestProfile,
@@ -282,51 +283,44 @@ export function ProfileView() {
     syncContent();
 
     const loadProfileData = async () => {
-      setLoading(true);
-      const loadGuestChain = async () => {
-        const backup = readBackupTransferCode();
-        const session = await initOrHydrateGuestSession(backup);
-        if (session.mode === "online" && session.player) {
-          saveBackupTransferCode(session.player.transferCode);
-        }
-        const board = await getTopPlayers(50);
-        return { session, board };
-      };
+      const cachedGuest = readCachedGuestProfile();
+      if (cachedGuest) {
+        setGuestPlayer(cachedGuest);
+      }
 
-      const [attemptsRes, weakPointsRes, guestRes] = await Promise.allSettled([
-        storageAdapter.getAttempts(),
-        storageAdapter.getWeakPoints(20),
-        loadGuestChain(),
+      const [localAttempts, localWeakPoints] = await Promise.all([
+        storageAdapter.getAttempts().catch(() => [] as PracticeAttempt[]),
+        storageAdapter.getWeakPoints(20).catch(() => [] as WeakPoint[]),
+      ]);
+      if (!active) return;
+      setAttempts(localAttempts);
+      setWeakPoints(localWeakPoints);
+      setLoading(false);
+
+      const backup = readBackupTransferCode();
+      const [sessionRes, boardRes] = await Promise.allSettled([
+        initOrHydrateGuestSession(backup),
+        getTopPlayers(50),
         fetchAndCachePublicContent(),
       ]);
 
       if (!active) return;
 
-      if (attemptsRes.status === "fulfilled") {
-        setAttempts(attemptsRes.value);
+      const session = sessionRes.status === "fulfilled" ? sessionRes.value : null;
+      if (session?.mode === "online" && session.player) {
+        saveBackupTransferCode(session.player.transferCode);
       }
-      if (weakPointsRes.status === "fulfilled") {
-        setWeakPoints(weakPointsRes.value);
-      }
-      if (guestRes.status === "fulfilled") {
-        const { session, board } = guestRes.value;
-        if (board.mode === "online") {
-          applyGuestPlayer(board.currentPlayer ?? session.player);
-          setGlobalRank(board.currentUserRank?.rank ?? null);
-        } else if (session.mode === "online" && session.player) {
-          applyGuestPlayer(session.player);
-          setGlobalRank(null);
-        } else {
-          applyGuestPlayer(null);
-          setGlobalRank(null);
-        }
-      } else {
-        applyGuestPlayer(null);
+      const board = boardRes.status === "fulfilled" ? boardRes.value : null;
+
+      if (board?.mode === "online") {
+        applyGuestPlayer(board.currentPlayer ?? session?.player ?? cachedGuest);
+        setGlobalRank(board.currentUserRank?.rank ?? null);
+      } else if (session?.mode === "online" && session.player) {
+        applyGuestPlayer(session.player);
         setGlobalRank(null);
       }
 
       setScenarios(getEffectiveScenarios());
-      setLoading(false);
     };
 
     void loadProfileData();
