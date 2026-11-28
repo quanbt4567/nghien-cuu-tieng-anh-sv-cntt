@@ -2,6 +2,8 @@ import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { isAdminRequest } from "../../../../lib/adminAuth";
 import { extractDeleteIdsFromPayload } from "../../../../lib/adminBulkDelete";
+import { ensureSchema, getNeonSql } from "../../../../lib/db/neon";
+import type { ResearchArticle } from "../../../../lib/db/schema";
 import {
   deleteArticles,
   getAllAdminArticles,
@@ -15,6 +17,27 @@ import {
 } from "../../../../lib/research";
 
 export const dynamic = "force-dynamic";
+
+async function notifyPublishedResearchArticle(article: ResearchArticle): Promise<void> {
+  if (article.status !== "published") return;
+  try {
+    const ready = await ensureSchema();
+    const sql = getNeonSql();
+    if (!ready || !sql) return;
+    await sql`ALTER TABLE speakit_announcements ADD COLUMN IF NOT EXISTS banner_url TEXT NULL`;
+    const notifId = `research-${article.id}`;
+    const title = `Bài nghiên cứu mới: ${article.title}`.slice(0, 120);
+    const body = `${article.summary.slice(0, 380)} · Đọc tại /research/${article.slug}`.slice(0, 500);
+    const bannerUrl = article.coverImageUrl ?? null;
+    await sql`
+      INSERT INTO speakit_announcements (id, title, body, banner_url, created_at)
+      VALUES (${notifId}, ${title}, ${body}, ${bannerUrl}, NOW())
+      ON CONFLICT (id) DO NOTHING
+    `;
+  } catch {
+    // Non-blocking: announcement failure must not break article publishing.
+  }
+}
 
 export async function GET(req: NextRequest) {
   if (!isAdminRequest(req)) {
@@ -54,6 +77,9 @@ export async function POST(req: NextRequest) {
     title,
     summary,
     contentMarkdown,
+    titleEn: typeof body.titleEn === "string" ? body.titleEn : null,
+    summaryEn: typeof body.summaryEn === "string" ? body.summaryEn : null,
+    contentMarkdownEn: typeof body.contentMarkdownEn === "string" ? body.contentMarkdownEn : null,
     coverImageUrl: normalizeResearchCoverImageUrl(body.coverImageUrl),
     category: normalizeResearchCategory(body.category),
     metricsJson: normalizeResearchMetrics(body.metricsJson),
@@ -67,6 +93,10 @@ export async function POST(req: NextRequest) {
       { ok: false, error: "Database unavailable or failed to save article." },
       { status: 500 }
     );
+  }
+
+  if (!body.id && saved.status === "published") {
+    await notifyPublishedResearchArticle(saved);
   }
 
   revalidatePath("/research");
@@ -93,12 +123,21 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "Article ID is required." }, { status: 400 });
   }
 
-  const updated = await updateArticleStatus(id, normalizeResearchStatus(body.status));
+  const nextStatus = normalizeResearchStatus(body.status);
+  const updated = await updateArticleStatus(id, nextStatus);
   if (!updated) {
     return NextResponse.json(
       { ok: false, error: "Failed to update article status." },
       { status: 500 }
     );
+  }
+
+  if (nextStatus === "published") {
+    const all = await getAllAdminArticles();
+    const published = all.find((item) => item.id === id);
+    if (published) {
+      await notifyPublishedResearchArticle(published);
+    }
   }
 
   revalidatePath("/research");

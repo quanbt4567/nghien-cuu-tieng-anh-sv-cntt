@@ -13,6 +13,7 @@ import {
 import { SCENARIOS } from "../../../data/scenarios";
 import { getArticleBySlug, type ResearchCategory } from "../../../lib/research";
 import { VocabExtractorButton } from "../../../components/research/VocabExtractorButton";
+import { ResearchArticleBilingualBody } from "../../../components/research/ResearchArticleBilingualBody";
 
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
@@ -201,9 +202,18 @@ export default async function ResearchArticlePage({
         </section>
       )}
 
-      <article className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-6 sm:p-8 space-y-3">
-        {renderMarkdownBlocks(article.contentMarkdown)}
-      </article>
+      <ResearchArticleBilingualBody
+        titleVi={article.title}
+        summaryVi={article.summary}
+        titleEn={article.titleEn}
+        summaryEn={article.summaryEn}
+        viBlocks={renderMarkdownBlocks(article.contentMarkdown)}
+        enBlocks={
+          article.contentMarkdownEn
+            ? renderMarkdownBlocks(article.contentMarkdownEn)
+            : null
+        }
+      />
 
       {article.sourceUrls.length > 0 && (
         <section className="bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-[#334155] rounded-xl p-5 space-y-3">
