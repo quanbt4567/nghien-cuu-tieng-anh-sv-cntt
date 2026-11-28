@@ -247,6 +247,7 @@ interface AdminBulkActionBarProps {
   allPageSelected: boolean;
   pageCount: number;
   itemUnitLabel: string;
+  selectPageLabel?: string;
   disabled?: boolean;
   onToggleSelectPage: () => void;
   onSelectAllFiltered: () => void;
@@ -260,6 +261,7 @@ export function AdminBulkActionBar({
   allPageSelected,
   pageCount,
   itemUnitLabel,
+  selectPageLabel,
   disabled = false,
   onToggleSelectPage,
   onSelectAllFiltered,
@@ -282,7 +284,11 @@ export function AdminBulkActionBar({
           ) : (
             <Square className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" aria-hidden="true" />
           )}
-          <span>{allPageSelected ? "Bỏ chọn trang này" : `Chọn trang này (${pageCount})`}</span>
+          <span>
+            {allPageSelected
+              ? "Bỏ chọn trang này"
+              : selectPageLabel ?? `Chọn trang này (${pageCount})`}
+          </span>
         </button>
 
         {totalFilteredCount > pageCount && selectedCount < totalFilteredCount && (
@@ -314,15 +320,17 @@ export function AdminBulkActionBar({
       </div>
 
       {selectedCount > 0 && (
-        <button
-          type="button"
-          disabled={disabled}
-          onClick={onBulkDelete}
-          className="liquid-btn-danger inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold disabled:opacity-50"
-        >
-          <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
-          <span>Xóa hàng loạt ({selectedCount})</span>
-        </button>
+        <div className="flex items-center pl-3 border-l border-slate-200 dark:border-slate-700">
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={onBulkDelete}
+            className="liquid-btn-danger inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold disabled:opacity-50"
+          >
+            <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>Xóa hàng loạt ({selectedCount})</span>
+          </button>
+        </div>
       )}
     </div>
   );

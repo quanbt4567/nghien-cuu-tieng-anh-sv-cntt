@@ -30,6 +30,7 @@ import {
   AdminDeleteConfirmModal,
   type DeleteConfirmRequest,
 } from "./AdminDeleteConfirmModal";
+import { AdminImageField } from "./AdminImageField";
 
 interface AdminResearchTabProps {
   onUnauthorized: () => void;
@@ -78,6 +79,12 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
   const [category, setCategory] = useState<ResearchCategory>("benchmark");
+  const [coverImageUrl, setCoverImageUrl] = useState("");
+  const [author, setAuthor] = useState("SpeakIT Research Team");
+  const [publishDate, setPublishDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [tagsText, setTagsText] = useState("");
+  const [markdownMode, setMarkdownMode] = useState<"edit" | "preview">("edit");
+  const [publishConfirmOpen, setPublishConfirmOpen] = useState(false);
   const [contentMarkdown, setContentMarkdown] = useState("");
   const [metricsJson, setMetricsJson] = useState<ResearchMetricItem[]>([
     { label: "", value: "", highlight: "" },
@@ -87,6 +94,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
 
   const loadArticles = useCallback(async () => {
     setIsLoading(true);
+    setErrorMessage(null);
     try {
       const res = await fetch("/api/admin/research", { cache: "no-store" });
       if (res.status === 401) {
@@ -115,6 +123,12 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
     setTitle("");
     setSummary("");
     setCategory("benchmark");
+    setCoverImageUrl("");
+    setAuthor("SpeakIT Research Team");
+    setPublishDate(new Date().toISOString().slice(0, 10));
+    setTagsText("");
+    setMarkdownMode("edit");
+    setPublishConfirmOpen(false);
     setContentMarkdown("");
     setMetricsJson([{ label: "", value: "", highlight: "" }]);
     setSourceUrls([]);
@@ -125,6 +139,11 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
     setTitle(article.title);
     setSummary(article.summary);
     setCategory(article.category);
+    setCoverImageUrl(article.coverImageUrl ?? "");
+    setAuthor("SpeakIT Research Team");
+    setPublishDate((article.publishedAt ?? article.createdAt).slice(0, 10));
+    setTagsText("");
+    setMarkdownMode("edit");
     setContentMarkdown(article.contentMarkdown);
     setMetricsJson(
       article.metricsJson.length > 0
@@ -257,11 +276,7 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
     });
   };
 
-  const handleSaveArticle = async (
-    e: FormEvent,
-    targetStatus: "published" | "pending_review"
-  ) => {
-    e.preventDefault();
+  const executeSaveArticle = async (targetStatus: "published" | "pending_review") => {
     if (!title.trim() || !summary.trim() || !contentMarkdown.trim()) {
       setErrorMessage("Vui lòng nhập đầy đủ Tiêu đề, Tóm tắt và Nội dung Markdown.");
       return;
@@ -272,6 +287,10 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
     setStatusMessage(null);
 
     try {
+      const parsedTags = tagsText
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
       const res = await fetch("/api/admin/research", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -280,6 +299,10 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
           title: title.trim(),
           summary: summary.trim(),
           category,
+          coverImageUrl: coverImageUrl.trim() || null,
+          author: author.trim() || undefined,
+          publishDate: publishDate || undefined,
+          tags: parsedTags.length > 0 ? parsedTags : undefined,
           contentMarkdown: contentMarkdown.trim(),
           metricsJson: metricsJson.filter((m) => m.label.trim() && m.value.trim()),
           sourceUrls: sourceUrls.filter((s) => s.title.trim() && s.url.trim()),
@@ -315,6 +338,23 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const handleSaveArticle = (
+    e: FormEvent,
+    targetStatus: "published" | "pending_review"
+  ) => {
+    e.preventDefault();
+    if (!title.trim() || !summary.trim() || !contentMarkdown.trim()) {
+      setErrorMessage("Vui lòng nhập đầy đủ Tiêu đề, Tóm tắt và Nội dung Markdown.");
+      return;
+    }
+    if (targetStatus === "published") {
+      setErrorMessage(null);
+      setPublishConfirmOpen(true);
+      return;
+    }
+    void executeSaveArticle(targetStatus);
   };
 
   const pendingCount = useMemo(
@@ -450,18 +490,18 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
               }`}
             >
               <Plus className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>+ Soạn bài / AI Tổng hợp</span>
+              <span>Soạn bài / AI Tổng hợp</span>
             </button>
           </div>
 
           <button
             type="button"
             onClick={() => void loadArticles()}
-            disabled={isLoading}
-            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50"
+            aria-busy={isLoading}
+            className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
-            <span>Làm mới</span>
+            <span>{isLoading ? "Đang tải…" : "Làm mới"}</span>
           </button>
         </div>
       </div>
@@ -526,28 +566,9 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
               <h3 className="text-sm font-bold font-mono text-slate-900 dark:text-slate-100">
                 {editingId ? "Chỉnh sửa bài báo / số liệu" : "Tạo bài báo / Số liệu mới"}
               </h3>
-              <div className="flex items-center gap-2">
-                {editingId && (
-                  <button
-                    type="button"
-                    onClick={resetForm}
-                    className="inline-flex items-center gap-1 text-xs text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
-                  >
-                    <X className="w-3.5 h-3.5" aria-hidden="true" />
-                    <span>Hủy chỉnh sửa</span>
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setActiveSubTab("list")}
-                  className="text-xs font-mono text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
-                >
-                  Quay lại danh sách
-                </button>
-              </div>
             </div>
 
-            <form onSubmit={(e) => void handleSaveArticle(e, "published")} className="space-y-3.5">
+            <form onSubmit={(e) => handleSaveArticle(e, "published")} className="space-y-3.5">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="sm:col-span-2 space-y-1">
                   <label htmlFor="research-title" className="text-xs font-semibold text-slate-700 dark:text-slate-300">Tiêu đề bài viết</label>
@@ -581,6 +602,56 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                 </div>
               </div>
 
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="space-y-1">
+                  <label htmlFor="research-author" className="text-xs font-semibold text-slate-700 dark:text-slate-300">Tác giả</label>
+                  <input
+                    id="research-author"
+                    name="author"
+                    type="text"
+                    autoComplete="off"
+                    value={author}
+                    onChange={(e) => setAuthor(e.target.value)}
+                    placeholder="VD: SpeakIT Research Team"
+                    className="liquid-glass-input w-full px-3 py-2 text-sm rounded-lg"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label htmlFor="research-date" className="text-xs font-semibold text-slate-700 dark:text-slate-300">Ngày bài viết</label>
+                  <input
+                    id="research-date"
+                    name="publishDate"
+                    type="date"
+                    value={publishDate}
+                    onChange={(e) => setPublishDate(e.target.value)}
+                    className="liquid-glass-input w-full px-3 py-2 text-sm font-mono rounded-lg"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label htmlFor="research-tags" className="text-xs font-semibold text-slate-700 dark:text-slate-300">Tags (phân tách dấu phẩy)</label>
+                  <input
+                    id="research-tags"
+                    name="tags"
+                    type="text"
+                    autoComplete="off"
+                    value={tagsText}
+                    onChange={(e) => setTagsText(e.target.value)}
+                    placeholder="EF EPI, IT English, Interview"
+                    className="liquid-glass-input w-full px-3 py-2 text-sm rounded-lg"
+                  />
+                </div>
+              </div>
+
+              <AdminImageField
+                label="Ảnh bìa"
+                value={coverImageUrl}
+                onChange={setCoverImageUrl}
+                allowGenerate={true}
+                placeholder="https://... hoặc /research-covers/..."
+              />
+
               <div className="space-y-1">
                 <label htmlFor="research-summary" className="text-xs font-semibold text-slate-700 dark:text-slate-300">Tóm tắt ngắn</label>
                 <textarea
@@ -595,18 +666,81 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                 />
               </div>
 
-              <div className="space-y-1">
-                <label htmlFor="research-markdown" className="text-xs font-semibold text-slate-700 dark:text-slate-300">Nội dung Markdown</label>
-                <textarea
-                  id="research-markdown"
-                  name="contentMarkdown"
-                  rows={5}
-                  autoComplete="off"
-                  value={contentMarkdown}
-                  onChange={(e) => setContentMarkdown(e.target.value)}
-                  placeholder="## Tiêu đề mục&#10;- Ý chính 1&#10;- Ý chính 2"
-                  className="liquid-glass-input w-full px-3 py-2 text-sm font-mono rounded-lg"
-                />
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between gap-2">
+                  <label htmlFor="research-markdown" className="text-xs font-semibold text-slate-700 dark:text-slate-300">Nội dung Markdown</label>
+                  <div className="inline-flex rounded-full bg-slate-100 dark:bg-slate-800 p-0.5 border border-slate-200 dark:border-slate-700">
+                    <button
+                      type="button"
+                      onClick={() => setMarkdownMode("edit")}
+                      className={`px-2.5 py-0.5 rounded-full text-xs font-semibold transition-colors ${
+                        markdownMode === "edit"
+                          ? "bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300"
+                          : "text-slate-700 dark:text-slate-300"
+                      }`}
+                    >
+                      Soạn thảo
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setMarkdownMode("preview")}
+                      className={`px-2.5 py-0.5 rounded-full text-xs font-semibold transition-colors ${
+                        markdownMode === "preview"
+                          ? "bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300"
+                          : "text-slate-700 dark:text-slate-300"
+                      }`}
+                    >
+                      Xem trước Markdown
+                    </button>
+                  </div>
+                </div>
+                {markdownMode === "edit" ? (
+                  <textarea
+                    id="research-markdown"
+                    name="contentMarkdown"
+                    rows={6}
+                    autoComplete="off"
+                    value={contentMarkdown}
+                    onChange={(e) => setContentMarkdown(e.target.value)}
+                    placeholder="## Tiêu đề mục&#10;- Ý chính 1&#10;- Ý chính 2"
+                    className="liquid-glass-input w-full px-3 py-2 text-sm font-mono rounded-lg"
+                  />
+                ) : (
+                  <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 p-4 space-y-2 min-h-[160px] text-sm text-slate-800 dark:text-slate-200">
+                    <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 pb-2">
+                      <span>{author.trim() || "SpeakIT Research Team"}</span>
+                      <span>·</span>
+                      <span>{publishDate}</span>
+                      {tagsText.trim() && (
+                        <>
+                          <span>·</span>
+                          <span>{tagsText}</span>
+                        </>
+                      )}
+                    </div>
+                    {contentMarkdown.trim() ? (
+                      contentMarkdown.split(/\r?\n/).map((line, i) => {
+                        const trimmed = line.trim();
+                        if (!trimmed) return <div key={i} className="h-1" />;
+                        if (trimmed.startsWith("### ")) {
+                          return <h4 key={i} className="text-sm font-bold text-slate-900 dark:text-slate-100 pt-1">{trimmed.slice(4)}</h4>;
+                        }
+                        if (trimmed.startsWith("## ")) {
+                          return <h3 key={i} className="text-base font-bold text-slate-900 dark:text-slate-100 pt-1.5">{trimmed.slice(3)}</h3>;
+                        }
+                        if (trimmed.startsWith("# ")) {
+                          return <h2 key={i} className="text-lg font-bold text-slate-900 dark:text-slate-100 pt-2">{trimmed.slice(2)}</h2>;
+                        }
+                        if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
+                          return <li key={i} className="ml-4 list-disc">{trimmed.slice(2)}</li>;
+                        }
+                        return <p key={i} className="leading-relaxed">{trimmed}</p>;
+                      })
+                    ) : (
+                      <p className="text-xs italic text-slate-500 dark:text-slate-400">Chưa có nội dung Markdown để xem trước.</p>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-slate-800">
@@ -692,7 +826,18 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                 <button
                   type="button"
                   disabled={isSaving}
-                  onClick={(e) => void handleSaveArticle(e, "pending_review")}
+                  onClick={() => {
+                    resetForm();
+                    setActiveSubTab("list");
+                  }}
+                  className="liquid-glass-btn px-4 py-2 rounded-lg text-xs font-semibold disabled:opacity-50"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="button"
+                  disabled={isSaving}
+                  onClick={(e) => handleSaveArticle(e, "pending_review")}
                   className="liquid-glass-btn px-4 py-2 rounded-lg text-xs font-semibold disabled:opacity-50"
                 >
                   Lưu vào hàng chờ
@@ -812,9 +957,31 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
             onBulkDelete={handleBulkDelete}
           />
 
-          {paginatedArticles.length === 0 ? (
+          {isLoading && articles.length === 0 ? (
             <div className="liquid-glass-card p-8 text-center text-sm text-slate-700 dark:text-slate-300">
-              Không có bài nghiên cứu nào khớp bộ lọc. Bấm &ldquo;+ Soạn bài / AI Tổng hợp&rdquo; để tạo bài mới.
+              Đang tải danh sách bài nghiên cứu…
+            </div>
+          ) : paginatedArticles.length === 0 ? (
+            <div className="liquid-glass-card p-8 text-center space-y-2 text-sm text-slate-700 dark:text-slate-300">
+              <p>
+                {articles.length === 0
+                  ? 'Chưa có bài nghiên cứu nào. Bấm "Soạn bài / AI Tổng hợp" để tạo bài mới.'
+                  : "Không có bài nghiên cứu nào khớp bộ lọc hiện tại."}
+              </p>
+              {articles.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setCategoryFilter("all");
+                    setStatusFilter("all");
+                    setCurrentPage(1);
+                  }}
+                  className="liquid-glass-btn px-3 py-1.5 rounded-lg text-xs font-semibold"
+                >
+                  Đặt lại bộ lọc
+                </button>
+              )}
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -860,6 +1027,14 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
                           {article.metricsJson.length} số liệu
                         </span>
                       </div>
+
+                      {article.coverImageUrl && (
+                        <img
+                          src={article.coverImageUrl}
+                          alt={article.title}
+                          className="w-full h-32 object-cover rounded-lg border border-slate-200 dark:border-slate-800"
+                        />
+                      )}
 
                       <h4 className="font-bold text-sm text-slate-900 dark:text-slate-100 line-clamp-1">
                         {article.title}
@@ -943,8 +1118,8 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
 
           <div className="liquid-glass-card px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
             <span className="text-slate-700 dark:text-slate-300 font-mono">
-              Hiển thị {paginatedArticles.length} / {filteredArticles.length} bài viết : Trang{" "}
-              {safePage} / {totalPages}
+              Hiển thị {paginatedArticles.length}/{filteredArticles.length} bài viết · Trang{" "}
+              {safePage}/{totalPages}
             </span>
             <div className="flex items-center gap-1.5">
               <button
@@ -964,6 +1139,55 @@ export function AdminResearchTab({ onUnauthorized }: AdminResearchTabProps) {
               >
                 <span>Sau</span>
                 <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {publishConfirmOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 overscroll-contain"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="research-publish-confirm-title"
+        >
+          <button
+            type="button"
+            tabIndex={-1}
+            aria-label="Đóng hộp thoại xác nhận xuất bản"
+            onClick={() => {
+              if (!isSaving) setPublishConfirmOpen(false);
+            }}
+            className="fixed inset-0 bg-slate-900/50 cursor-default"
+          />
+          <div className="relative z-10 w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl p-5 space-y-4 text-slate-900 dark:text-slate-100">
+            <h3 id="research-publish-confirm-title" className="text-base font-bold">
+              Xác nhận xuất bản công khai ngay?
+            </h3>
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              Bài viết <strong className="font-semibold">&ldquo;{title.trim()}&rdquo;</strong> sẽ được xuất bản công khai ngay lập tức trên trang <code className="font-mono text-xs">/research</code> và hiển thị với tất cả người dùng.
+            </p>
+            <div className="flex items-center justify-end gap-2 pt-1">
+              <button
+                type="button"
+                disabled={isSaving}
+                onClick={() => setPublishConfirmOpen(false)}
+                className="liquid-glass-btn px-4 py-2 rounded-lg text-xs font-semibold disabled:opacity-50"
+              >
+                Hủy
+              </button>
+              <button
+                type="button"
+                disabled={isSaving}
+                onClick={() => {
+                  setPublishConfirmOpen(false);
+                  void executeSaveArticle("published");
+                }}
+                className="liquid-btn-primary inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold disabled:opacity-50"
+              >
+                {isSaving && <Loader2 className="w-3.5 h-3.5 animate-spin" aria-hidden="true" />}
+                <span>Xác nhận xuất bản ngay</span>
               </button>
             </div>
           </div>

@@ -2,15 +2,18 @@
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
+import { Lottie } from "lottie-react";
 import {
   Check,
   ChevronLeft,
   ChevronRight,
   Coins,
+  Copy,
   ExternalLink,
   Eye,
   FileJson,
   Loader2,
+  Play,
   Plus,
   RefreshCw,
   Search,
@@ -78,6 +81,50 @@ function isLottieAsset(url?: string): boolean {
   return url.split("?")[0].toLowerCase().endsWith(".json");
 }
 
+function roundScale(val: number): number {
+  const num = Number(val);
+  if (!Number.isFinite(num) || num <= 0) return 1.22;
+  return Math.round(num * 100) / 100;
+}
+
+const lottiePreviewCache = new Map<string, object>();
+
+function useLottieJson(url?: string, enabled?: boolean) {
+  const [data, setData] = useState<object | null>(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    setFailed(false);
+    if (!url || !enabled) {
+      setData(null);
+      return;
+    }
+    const cached = lottiePreviewCache.get(url);
+    if (cached) {
+      setData(cached);
+      return;
+    }
+    let cancelled = false;
+    fetch(url)
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json() as Promise<object>;
+      })
+      .then((json) => {
+        lottiePreviewCache.set(url, json);
+        if (!cancelled) setData(json);
+      })
+      .catch(() => {
+        if (!cancelled) setFailed(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [url, enabled]);
+
+  return { data, failed };
+}
+
 function LiveAssetLayer({
   url,
   alt,
@@ -90,22 +137,32 @@ function LiveAssetLayer({
   blendMode?: CosmeticBlendMode;
 }) {
   const [failed, setFailed] = useState(false);
+  const isLottie = isLottieAsset(url);
+  const { data: lottieData, failed: lottieFailed } = useLottieJson(url, isLottie);
 
   useEffect(() => {
     setFailed(false);
   }, [url]);
 
-  if (!url || failed) return null;
+  if (!url || failed || (isLottie && lottieFailed)) return null;
 
-  if (isLottieAsset(url)) {
+  if (isLottie) {
+    if (!lottieData) {
+      return (
+        <div
+          className={`${className} flex items-center justify-center border-2 border-dashed border-blue-600 rounded-full`}
+        >
+          <Loader2 className="w-4 h-4 animate-spin text-blue-600" aria-hidden="true" />
+        </div>
+      );
+    }
     return (
-      <div
-        className={`${className} flex items-center justify-center border-2 border-dashed border-blue-600 rounded-full`}
-      >
-        <span className="px-2 py-0.5 rounded-full bg-white dark:bg-slate-900 border border-blue-300 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-[11px] font-mono">
-          Lottie JSON
-        </span>
-      </div>
+      <Lottie
+        src={lottieData}
+        loop
+        autoplay
+        className={className}
+      />
     );
   }
 
@@ -133,6 +190,74 @@ function LiveAssetLayer({
       onError={() => setFailed(true)}
       style={{ mixBlendMode: blendMode }}
       className={className}
+    />
+  );
+}
+
+function CatalogAssetPreview({
+  url,
+  name,
+  accent,
+}: {
+  url?: string;
+  name: string;
+  accent: string;
+}) {
+  const [failed, setFailed] = useState(false);
+  const isLottie = isLottieAsset(url);
+  const isVideo = isVideoAsset(url);
+  const { data: lottieData, failed: lottieFailed } = useLottieJson(url, isLottie);
+
+  useEffect(() => {
+    setFailed(false);
+  }, [url]);
+
+  const fallbackDot = (
+    <span
+      className="w-7 h-7 rounded-full shrink-0 border border-slate-300 dark:border-slate-600 inline-block"
+      style={{ backgroundColor: accent }}
+      title={url ? "Không tải được asset, hiển thị màu đại diện" : "Chưa có Asset URL"}
+    />
+  );
+
+  if (!url || failed || (isLottie && lottieFailed)) {
+    return fallbackDot;
+  }
+
+  if (isLottie) {
+    if (!lottieData) return fallbackDot;
+    return (
+      <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 overflow-hidden shrink-0 flex items-center justify-center">
+        <Lottie src={lottieData} loop autoplay className="w-7 h-7" />
+      </div>
+    );
+  }
+
+  if (isVideo) {
+    return (
+      <div className="relative w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 overflow-hidden shrink-0 flex items-center justify-center">
+        <video
+          src={url}
+          autoPlay
+          loop
+          muted
+          playsInline
+          onError={() => setFailed(true)}
+          className="w-full h-full object-cover"
+        />
+        <Play className="w-2.5 h-2.5 text-white drop-shadow absolute bottom-0.5 right-0.5 pointer-events-none" aria-hidden="true" />
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={url}
+      alt={name}
+      width={32}
+      height={32}
+      onError={() => setFailed(true)}
+      className="w-8 h-8 rounded-lg object-contain bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shrink-0"
     />
   );
 }
@@ -167,6 +292,8 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
   const [blendMode, setBlendMode] = useState<CosmeticBlendMode>("normal");
   const [accentColor, setAccentColor] = useState("#E5484D");
   const [previewMode, setPreviewMode] = useState<"avatar" | "profile">("avatar");
+  const [expandedDescIds, setExpandedDescIds] = useState<Set<string>>(new Set());
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const parsedPack = useMemo(() => {
     if (!rawJson.trim()) return [];
@@ -288,7 +415,10 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
     void loadCustomCosmetics();
   }, [loadCustomCosmetics]);
 
-  const handleApplyParsedDraft = (draft: CosmeticItem) => {
+  const handleApplyParsedDraft = (draft: CosmeticItem, syncJsonBox = false) => {
+    const rounded = roundScale(
+      draft.scale ?? (draft.category === "avatar_decoration" ? 1.22 : 1)
+    );
     setName(draft.name);
     setDescription(draft.description);
     setCategory(draft.category);
@@ -296,12 +426,56 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
     setPrice(draft.price);
     setAssetUrl(draft.assetUrl ?? "");
     setIntroAssetUrl(draft.introAssetUrl ?? "");
-    setScale(draft.scale ?? (draft.category === "avatar_decoration" ? 1.22 : 1));
+    setScale(rounded);
     setBlendMode(draft.blendMode ?? (draft.category === "profile_theme" ? "screen" : "normal"));
     setAccentColor(draft.fallbackGlowColor ?? draft.previewAccent ?? "#E5484D");
     setPreviewMode(draft.category === "profile_theme" ? "profile" : "avatar");
+    if (syncJsonBox) {
+      setRawJson(
+        JSON.stringify(
+          {
+            id: draft.id,
+            title: draft.name,
+            category: draft.category,
+            rarity: draft.rarity,
+            price: draft.price,
+            scale: rounded,
+            blendMode: draft.blendMode ?? (draft.category === "profile_theme" ? "screen" : "normal"),
+            accent: draft.fallbackGlowColor ?? draft.previewAccent ?? "#E5484D",
+            description: draft.description,
+            assets: {
+              frame: draft.assetUrl ?? "",
+              ...(draft.introAssetUrl ? { intro: draft.introAssetUrl } : {}),
+            },
+          },
+          null,
+          2
+        )
+      );
+    }
     setStatusMessage(`Đã nạp cấu hình hiệu ứng: ${draft.name}`);
     setErrorMessage(null);
+  };
+
+  const toggleExpandDesc = (id: string) => {
+    setExpandedDescIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const handleCopyId = async (id: string) => {
+    try {
+      await navigator.clipboard.writeText(id);
+      setCopiedId(id);
+      setTimeout(() => {
+        setCopiedId((cur) => (cur === id ? null : cur));
+      }, 1500);
+    } catch {
+      // ignore clipboard denial
+    }
   };
 
   const handleJsonChange = (value: string) => {
@@ -336,7 +510,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
             price: Math.max(0, Math.round(Number(price) || 0)),
             assetUrl: assetUrl.trim(),
             introAssetUrl: introAssetUrl.trim() || undefined,
-            scale: Number(scale) > 0 ? Number(scale) : 1.22,
+            scale: roundScale(scale),
             blendMode,
             fallbackGlowColor: accentColor.trim() || "#E5484D",
           },
@@ -526,7 +700,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
               }`}
             >
               <Plus className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>+ Import Discord JSON / Thêm hiệu ứng</span>
+              <span>Import Discord JSON / Thêm hiệu ứng</span>
             </button>
           </div>
 
@@ -733,15 +907,15 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Scale ({scale})
+                    Scale ({roundScale(scale).toFixed(2)})
                   </label>
                   <input
                     type="number"
                     step={0.02}
                     min={0.8}
                     max={2}
-                    value={scale}
-                    onChange={(e) => setScale(Number(e.target.value))}
+                    value={roundScale(scale)}
+                    onChange={(e) => setScale(roundScale(Number(e.target.value)))}
                     className="liquid-glass-input w-full rounded-lg px-3 py-1.5 text-xs font-mono"
                   />
                 </div>
@@ -861,7 +1035,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                       </div>
                       <div className="text-sm font-bold text-slate-900 dark:text-slate-100">{name || "Sample Developer"}</div>
                       <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
-                        {CATEGORY_LABELS[category]} : {price} IT-Coin
+                        {CATEGORY_LABELS[category]} · {price} IT-Coin
                       </div>
                     </div>
                   </>
@@ -890,7 +1064,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                     <div className="text-center">
                       <div className="text-sm font-bold text-slate-900 dark:text-slate-100">{name || "Sample Effect"}</div>
                       <div className="text-xs font-mono text-slate-600 dark:text-slate-400 mt-0.5">
-                        {rarity} : {price} IT-Coin : scale {scale}
+                        {rarity} · {price} IT-Coin · scale {roundScale(scale).toFixed(2)}
                       </div>
                     </div>
                   </div>
@@ -1044,9 +1218,10 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                               className="w-4 h-4 rounded accent-blue-700 cursor-pointer shrink-0"
                             />
                           )}
-                          <span
-                            className="w-3 h-3 rounded-full shrink-0 border border-slate-300 dark:border-slate-600"
-                            style={{ backgroundColor: accent }}
+                          <CatalogAssetPreview
+                            url={item.assetUrl}
+                            name={item.name}
+                            accent={accent}
                           />
                           <span className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate">
                             {item.name}
@@ -1065,22 +1240,59 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
 
                       <div className="flex flex-wrap items-center gap-1.5 text-xs font-mono text-slate-700 dark:text-slate-300">
                         <span>{CATEGORY_LABELS[item.category]}</span>
-                        <span>:</span>
+                        <span>·</span>
                         <span className="font-semibold text-amber-700 dark:text-amber-400">{item.price} Coin</span>
-                        <span>:</span>
+                        <span>·</span>
                         <span>{item.rarity}</span>
                       </div>
 
-                      <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-1">
-                        {item.description}
-                      </p>
+                      <div className="flex items-start justify-between gap-2">
+                        <p
+                          className={`text-sm text-slate-600 dark:text-slate-400 ${
+                            expandedDescIds.has(item.id) ? "" : "line-clamp-1"
+                          }`}
+                        >
+                          {item.description}
+                        </p>
+                        {item.description.length > 65 && (
+                          <button
+                            type="button"
+                            onClick={() => toggleExpandDesc(item.id)}
+                            className="text-xs font-mono text-blue-700 dark:text-blue-400 hover:underline shrink-0"
+                          >
+                            {expandedDescIds.has(item.id) ? "Thu gọn" : "Xem thêm"}
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="flex items-center justify-between gap-2 text-[11px] font-mono text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 rounded-md px-2 py-1">
+                        <span className="break-all">{item.id}</span>
+                        <button
+                          type="button"
+                          onClick={() => void handleCopyId(item.id)}
+                          aria-label={`Sao chép ID ${item.id}`}
+                          className="inline-flex items-center gap-1 text-blue-700 dark:text-blue-400 hover:underline shrink-0"
+                        >
+                          {copiedId === item.id ? (
+                            <>
+                              <Check className="w-3 h-3" aria-hidden="true" />
+                              <span>Đã chép</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-3 h-3" aria-hidden="true" />
+                              <span>Copy</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
                     </div>
 
                     <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
                       <button
                         type="button"
                         onClick={() => {
-                          handleApplyParsedDraft(item);
+                          handleApplyParsedDraft(item, true);
                           setActiveSubTab("import");
                         }}
                         className="liquid-glass-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold"
@@ -1103,11 +1315,7 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
                           )}
                           <span>Xóa</span>
                         </button>
-                      ) : (
-                        <span className="text-xs font-mono text-slate-600 dark:text-slate-400 truncate max-w-[110px]">
-                          {item.id}
-                        </span>
-                      )}
+                      ) : null}
                     </div>
                   </div>
                 );
@@ -1117,8 +1325,8 @@ export function AdminCosmeticsTab({ onUnauthorized }: AdminCosmeticsTabProps) {
 
           <div className="liquid-glass-card px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
             <span className="text-slate-700 dark:text-slate-300 font-mono">
-              Hiển thị {paginatedCatalog.length} / {filteredCatalog.length} hiệu ứng : Trang{" "}
-              {safePage} / {totalPages}
+              Hiển thị {paginatedCatalog.length}/{filteredCatalog.length} hiệu ứng · Trang{" "}
+              {safePage}/{totalPages}
             </span>
             <div className="flex items-center gap-1.5">
               <button

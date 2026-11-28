@@ -11,7 +11,6 @@ import {
   Plus,
   RotateCcw,
   Search,
-  Sparkles,
   Trash2,
 } from "lucide-react";
 import { BUG_BUSTER_CHALLENGES } from "../../data/minigames";
@@ -24,6 +23,7 @@ import {
   AdminDeleteConfirmModal,
   type DeleteConfirmRequest,
 } from "./AdminDeleteConfirmModal";
+import { AdminImageField } from "./AdminImageField";
 import { persistAdminOverrides } from "./adminShared";
 
 interface AdminArenaTabProps {
@@ -146,6 +146,7 @@ export function AdminArenaTab({
   const [acceptedVariantsText, setAcceptedVariantsText] = useState("");
   const [contextVI, setContextVI] = useState("");
   const [phonetic, setPhonetic] = useState("");
+  const [thumbnailUrl, setThumbnailUrl] = useState("");
 
   const [isSaving, setIsSaving] = useState(false);
   const [statusNotice, setStatusNotice] = useState<{
@@ -186,6 +187,7 @@ export function AdminArenaTab({
     setAcceptedVariantsText("");
     setContextVI("");
     setPhonetic("");
+    setThumbnailUrl("");
   };
 
   const openCreate = () => {
@@ -197,13 +199,9 @@ export function AdminArenaTab({
     setAcceptedVariantsText("");
     setContextVI("");
     setPhonetic("");
+    setThumbnailUrl("");
     setStatusNotice(null);
     setActiveSubTab("create");
-  };
-
-  const openCreateWithAi = () => {
-    openCreate();
-    setAiFocusKey((k) => k + 1);
   };
 
   const openEdit = (challenge: BugBusterChallenge) => {
@@ -215,6 +213,7 @@ export function AdminArenaTab({
     setAcceptedVariantsText(challenge.acceptedVariants.join(", "));
     setContextVI(challenge.contextVI);
     setPhonetic(challenge.phonetic);
+    setThumbnailUrl(challenge.thumbnailUrl ?? "");
     setStatusNotice(null);
     setActiveSubTab("create");
   };
@@ -304,6 +303,7 @@ export function AdminArenaTab({
       acceptedVariants: splitCommaList(acceptedVariantsText),
       contextVI: contextVI.trim(),
       phonetic: phonetic.trim(),
+      thumbnailUrl: thumbnailUrl.trim() || null,
     };
 
     const nextOverrides: AdminContentOverrides = {
@@ -457,11 +457,11 @@ export function AdminArenaTab({
           <Gamepad2 className="w-5 h-5 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
           <div>
             <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
-              Quản Lý Arena Bug Buster ({challenges.length})
+              Quản Lý Bug Buster (Arena) ({challenges.length})
             </h2>
             <p className="text-sm text-slate-700 dark:text-slate-300">
-              Điền khuyết từ vựng lỗi kỹ thuật với chỗ trống{" "}
-              <code className="font-mono text-blue-700 dark:text-blue-400">____</code> và phiên âm IPA.
+              Tab này chỉ quản lý bộ câu hỏi <strong className="font-semibold">Bug Buster</strong> (điền khuyết từ vựng lỗi kỹ thuật với{" "}
+              <code className="font-mono text-blue-700 dark:text-blue-400">____</code> và IPA; không quản lý các minigame khác).
             </p>
           </div>
         </div>
@@ -493,20 +493,9 @@ export function AdminArenaTab({
               }`}
             >
               <Plus className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>+ Thêm mới / AI Tạo nhanh</span>
+              <span>Thêm mới / AI Tạo nhanh</span>
             </button>
           </div>
-
-          {activeSubTab === "list" && (
-            <button
-              type="button"
-              onClick={openCreateWithAi}
-              className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
-              <span>AI Tạo nhanh</span>
-            </button>
-          )}
 
           {hasChallengeOverrides && (
             <button
@@ -551,13 +540,6 @@ export function AdminArenaTab({
             <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
               {editingId ? `Chỉnh sửa thử thách (${editingId})` : "Thêm thử thách Bug Buster mới"}
             </h3>
-            <button
-              type="button"
-              onClick={resetForm}
-              className="text-xs font-mono text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
-            >
-              Quay lại danh sách
-            </button>
           </div>
 
           <AdminAiGeneratorBox
@@ -689,6 +671,14 @@ export function AdminArenaTab({
               />
             </div>
           </div>
+
+          <AdminImageField
+            label="Ảnh minh họa Bug Buster"
+            value={thumbnailUrl}
+            onChange={setThumbnailUrl}
+            allowGenerate={true}
+            placeholder="https://... hoặc /research-covers/..."
+          />
 
           <div className="flex items-center justify-end gap-2.5 pt-1">
             <button
@@ -834,11 +824,20 @@ export function AdminArenaTab({
                         </div>
                       </div>
 
-                      <div className="text-sm text-slate-900 dark:text-slate-100 leading-relaxed bg-slate-50 dark:bg-[#263349] rounded-lg px-3 py-2">
-                        <PromptBlankPreview
-                          promptWithBlank={challenge.promptEN}
-                          targetWord={challenge.targetWord}
-                        />
+                      <div className="flex items-start gap-2.5">
+                        {challenge.thumbnailUrl && (
+                          <img
+                            src={challenge.thumbnailUrl}
+                            alt={challenge.targetWord}
+                            className="w-16 h-12 object-cover rounded-lg border border-slate-200 dark:border-slate-800 shrink-0"
+                          />
+                        )}
+                        <div className="flex-1 text-sm text-slate-900 dark:text-slate-100 leading-relaxed bg-slate-50 dark:bg-[#263349] rounded-lg px-3 py-2">
+                          <PromptBlankPreview
+                            promptWithBlank={challenge.promptEN}
+                            targetWord={challenge.targetWord}
+                          />
+                        </div>
                       </div>
                     </div>
 
@@ -858,8 +857,8 @@ export function AdminArenaTab({
 
           <div className="liquid-glass-card px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
             <span className="text-slate-700 dark:text-slate-300 font-mono">
-              Hiển thị {paginatedChallenges.length} / {filteredChallenges.length} thử thách : Trang{" "}
-              {safePage} / {totalPages}
+              Hiển thị {paginatedChallenges.length}/{filteredChallenges.length} thử thách · Trang{" "}
+              {safePage}/{totalPages}
             </span>
             <div className="flex items-center gap-1.5">
               <button
