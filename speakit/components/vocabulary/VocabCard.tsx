@@ -302,6 +302,18 @@ export function VocabCard({
         {item.meaningVI}
       </p>
 
+      {item.imageUrl?.trim() && (
+        <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-slate-200 dark:border-[#334155] bg-slate-100 dark:bg-slate-800">
+          <img
+            src={item.imageUrl.trim()}
+            alt={item.term}
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
+
       <div className="pt-3 border-t border-slate-200 dark:border-[#334155] space-y-1.5">
         <div className="flex items-center justify-between gap-2">
           <span className="font-mono text-xs font-bold text-slate-600 dark:text-slate-400">

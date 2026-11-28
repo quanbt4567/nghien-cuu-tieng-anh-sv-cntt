@@ -25,6 +25,7 @@ export interface Scenario {
   roleVI: string;
   descriptionVI: string;
   difficulty?: ScenarioDifficulty;
+  thumbnailUrl?: string | null;
   turns: ScenarioTurn[];
   isHidden?: boolean;
   isCustom?: boolean;
@@ -39,6 +40,7 @@ export interface VocabularyItem {
   meaningVI: string;
   exampleSentenceEN: string;
   exampleTranslationVI: string;
+  imageUrl?: string | null;
   clusterTitle?: string;
   clusterSlug?: string;
   careerLevel?: "Fresher" | "Junior" | "Senior";
@@ -178,6 +180,15 @@ export interface BugBusterChallenge {
   acceptedVariants: string[];
   contextVI: string;
   phonetic: string;
+  thumbnailUrl?: string | null;
+}
+
+export interface InAppNotification {
+  id: string;
+  title: string;
+  body: string;
+  bannerUrl?: string | null;
+  created_at: string;
 }
 
 export interface ArenaRunRecord {

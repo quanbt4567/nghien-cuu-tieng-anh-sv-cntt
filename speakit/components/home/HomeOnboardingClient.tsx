@@ -202,6 +202,7 @@ export function HomeOnboardingClient() {
       isPlacementMatch ||
       scenario.id === recommendedScenario?.id ||
       Boolean(scenario.targetRoles?.includes(selectedRole));
+    const thumbnailUrl = scenario.thumbnailUrl?.trim() || "";
 
     return (
       <Link
@@ -215,7 +216,27 @@ export function HomeOnboardingClient() {
             : "border-slate-200 dark:border-slate-800"
         }`}
       >
-        <div className="flex items-start gap-3.5">
+        <div className="space-y-4">
+          <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700/80 bg-slate-100 dark:bg-slate-800">
+            {thumbnailUrl ? (
+              <img
+                src={thumbnailUrl}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-100/80 dark:from-slate-800 dark:via-slate-800/90 dark:to-blue-950/60 flex items-center justify-center">
+                <Play
+                  className="w-7 h-7 text-blue-700/35 dark:text-blue-400/35"
+                  aria-hidden="true"
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-start gap-3.5">
           <div
             className={`w-8 h-8 rounded-lg flex items-center justify-center border shrink-0 font-mono font-bold text-xs transition-colors ${
               isRecommended
@@ -258,6 +279,7 @@ export function HomeOnboardingClient() {
               {scenario.descriptionVI}
             </p>
           </div>
+        </div>
         </div>
 
         <div className="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-slate-800 text-xs font-mono text-slate-600 dark:text-slate-400">

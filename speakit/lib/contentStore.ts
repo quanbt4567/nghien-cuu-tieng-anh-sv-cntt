@@ -49,6 +49,22 @@ function toStringList(value: unknown): string[] {
   return out;
 }
 
+export function sanitizeMediaUrl(raw: unknown): string | null | undefined {
+  if (raw === undefined) return undefined;
+  if (raw === null) return null;
+  if (typeof raw !== "string") return null;
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  if (
+    trimmed.startsWith("https://") ||
+    trimmed.startsWith("http://") ||
+    (trimmed.startsWith("/") && !trimmed.startsWith("//"))
+  ) {
+    return trimmed;
+  }
+  return null;
+}
+
 function sanitizeTurn(raw: unknown, fallbackIndex: number): ScenarioTurn | null {
   if (!raw || typeof raw !== "object") return null;
   const r = raw as Record<string, unknown>;
@@ -87,6 +103,8 @@ function sanitizeScenario(raw: unknown): Scenario | null {
       )
     : undefined;
 
+  const thumbnailUrl = sanitizeMediaUrl(r.thumbnailUrl);
+
   return {
     id,
     titleEN,
@@ -94,6 +112,7 @@ function sanitizeScenario(raw: unknown): Scenario | null {
     roleVI: typeof r.roleVI === "string" && r.roleVI.trim() ? r.roleVI.trim() : "Tech Lead",
     descriptionVI:
       typeof r.descriptionVI === "string" ? r.descriptionVI.trim() : "",
+    ...(thumbnailUrl !== undefined ? { thumbnailUrl } : {}),
     turns,
     ...(typeof r.isHidden === "boolean" ? { isHidden: r.isHidden } : {}),
     ...(typeof r.isCustom === "boolean" ? { isCustom: r.isCustom } : {}),
@@ -245,6 +264,7 @@ export function normalizeIncomingVocabularyItem(
   const relatedTerms = normalizeVocabRelatedTerms(
     r.relatedTerms ?? r.related_terms ?? r.related
   );
+  const imageUrl = sanitizeMediaUrl(r.imageUrl ?? r.image_url);
 
   return {
     id,
@@ -254,6 +274,7 @@ export function normalizeIncomingVocabularyItem(
     meaningVI,
     exampleSentenceEN,
     exampleTranslationVI,
+    ...(imageUrl !== undefined ? { imageUrl } : {}),
     ...(clusterTitle ? { clusterTitle } : {}),
     ...(clusterSlug ? { clusterSlug } : {}),
     ...(careerLevel ? { careerLevel } : {}),
@@ -282,6 +303,8 @@ function sanitizeBugChallenge(raw: unknown): BugBusterChallenge | null {
     ? (r.category as BugBusterChallenge["category"])
     : "incident";
 
+  const thumbnailUrl = sanitizeMediaUrl(r.thumbnailUrl);
+
   return {
     id,
     category,
@@ -290,6 +313,7 @@ function sanitizeBugChallenge(raw: unknown): BugBusterChallenge | null {
     acceptedVariants: toStringList(r.acceptedVariants),
     contextVI: typeof r.contextVI === "string" ? r.contextVI.trim() : "",
     phonetic: typeof r.phonetic === "string" ? r.phonetic.trim() : "",
+    ...(thumbnailUrl !== undefined ? { thumbnailUrl } : {}),
   };
 }
 

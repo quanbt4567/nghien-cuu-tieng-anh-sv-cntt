@@ -18,6 +18,7 @@ const {
 } = jiti(resolve(__dirname, "../lib/adminAuth.ts"));
 const {
   createEmptyContentOverrides,
+  normalizeContentOverrides,
   mergeScenarios,
   mergeVocabulary,
   mergeBugChallenges,
@@ -505,4 +506,50 @@ test("loadMergedAdminData deduplicates Neon and localStorage records and compute
     }
     mock.restore();
   }
+});
+
+test("normalizeContentOverrides preserves valid nullable media URLs and rejects unsafe schemes", () => {
+  const overrides = normalizeContentOverrides({
+    customScenarios: [
+      {
+        id: "media-scenario",
+        titleEN: "Media Scenario",
+        thumbnailUrl: "https://cdn.example.com/thumb.webp",
+        turns: [{ turnIndex: 0, questionEN: "Ready?", keywords: ["ready"] }],
+      },
+      {
+        id: "unsafe-scenario",
+        titleEN: "Unsafe Scenario",
+        thumbnailUrl: "javascript:alert(1)",
+        turns: [{ turnIndex: 0, questionEN: "Go?", keywords: ["go"] }],
+      },
+    ],
+    customVocabulary: [
+      {
+        id: "vocab-media",
+        term: "Rollback",
+        imageUrl: "/research-covers/rollback.png",
+      },
+      {
+        id: "vocab-empty",
+        term: "Hotfix",
+        imageUrl: "   ",
+      },
+    ],
+    customBugChallenges: [
+      {
+        id: "bug-media",
+        category: "incident",
+        promptEN: "We need a ____ fix.",
+        targetWord: "hotfix",
+        thumbnailUrl: "https://cdn.example.com/bug.png",
+      },
+    ],
+  });
+
+  assert.equal(overrides.customScenarios[0].thumbnailUrl, "https://cdn.example.com/thumb.webp");
+  assert.equal(overrides.customScenarios[1].thumbnailUrl, null);
+  assert.equal(overrides.customVocabulary[0].imageUrl, "/research-covers/rollback.png");
+  assert.equal(overrides.customVocabulary[1].imageUrl, null);
+  assert.equal(overrides.customBugChallenges[0].thumbnailUrl, "https://cdn.example.com/bug.png");
 });

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { unstable_noStore as noStore } from "next/cache";
 import {
@@ -164,12 +165,40 @@ export default async function ResearchPortalPage({
             const realMetricsCount = article.metricsJson.filter(
               (m) => !isInternalDraftMetric(m)
             ).length;
+            const coverImageUrl = (
+              (article as { coverImageUrl?: string | null }).coverImageUrl ?? ""
+            ).trim();
             return (
               <article
                 key={article.id}
                 className="bg-white dark:bg-[#1E293B] p-5 sm:p-6 hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-colors flex flex-col justify-between gap-4"
               >
                 <div className="space-y-3">
+                  <Link
+                    href={`/research/${article.slug}`}
+                    tabIndex={-1}
+                    aria-hidden="true"
+                    className="block relative aspect-video w-full overflow-hidden rounded-lg border border-slate-200 dark:border-[#334155] bg-slate-100 dark:bg-slate-800"
+                  >
+                    {coverImageUrl ? (
+                      <Image
+                        src={coverImageUrl}
+                        alt={article.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        loading="lazy"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-100/80 dark:from-slate-800 dark:via-slate-800/90 dark:to-blue-950/60 flex items-center justify-center">
+                        <Newspaper
+                          className="w-8 h-8 text-blue-700/35 dark:text-blue-400/35"
+                          aria-hidden="true"
+                        />
+                      </div>
+                    )}
+                  </Link>
+
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 text-xs font-mono font-semibold">
                       {getCategoryLabel(article.category)}

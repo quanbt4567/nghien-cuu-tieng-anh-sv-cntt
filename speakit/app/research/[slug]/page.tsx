@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -6,6 +7,7 @@ import {
   BarChart3,
   ExternalLink,
   Mic,
+  Newspaper,
   Sparkles,
 } from "lucide-react";
 import { SCENARIOS } from "../../../data/scenarios";
@@ -102,6 +104,9 @@ export default async function ResearchArticlePage({
 
   const relatedIds = getRelatedScenarioIds(article.category);
   const relatedScenarios = SCENARIOS.filter((s) => relatedIds.includes(s.id));
+  const coverImageUrl = (
+    (article as { coverImageUrl?: string | null }).coverImageUrl ?? ""
+  ).trim();
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
@@ -134,6 +139,26 @@ export default async function ResearchArticlePage({
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-snug text-balance">
           {article.title}
         </h1>
+
+        <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-slate-200 dark:border-[#334155] bg-slate-100 dark:bg-slate-800">
+          {coverImageUrl ? (
+            <Image
+              src={coverImageUrl}
+              alt={article.title}
+              fill
+              sizes="(max-width: 896px) 100vw, 896px"
+              className="object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-100/80 dark:from-slate-800 dark:via-slate-800/90 dark:to-blue-950/60 flex items-center justify-center">
+              <Newspaper
+                className="w-10 h-10 text-blue-700/35 dark:text-blue-400/35"
+                aria-hidden="true"
+              />
+            </div>
+          )}
+        </div>
+
         <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
           {article.summary}
         </p>
