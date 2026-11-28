@@ -14,8 +14,10 @@ import {
   ShieldAlert,
   Trash2,
 } from "lucide-react";
+import { VOCABULARY_LIST } from "../../data/scenarios";
 import { saveLocalContentOverrides } from "../../lib/contentStore";
 import type { AdminContentOverrides } from "../../lib/types";
+import { AdminImageField } from "./AdminImageField";
 import {
   createCleanEmptyOverrides,
   resolveAiProviders,
@@ -30,8 +32,11 @@ interface AdminAnnouncement {
   id: string;
   title: string;
   body: string;
+  bannerUrl?: string | null;
   created_at: string;
 }
+
+const BASE_VOCAB_IDS = new Set(VOCABULARY_LIST.map((v) => v.id));
 
 interface AdminSystemTabProps {
   health: AdminHealth;
@@ -52,6 +57,7 @@ export function AdminSystemTab({
   const [isProcessing, setIsProcessing] = useState(false);
   const [announcementTitle, setAnnouncementTitle] = useState("");
   const [announcementBody, setAnnouncementBody] = useState("");
+  const [announcementBannerUrl, setAnnouncementBannerUrl] = useState("");
   const [announcementSending, setAnnouncementSending] = useState(false);
   const [announcements, setAnnouncements] = useState<AdminAnnouncement[]>([]);
   const [deletingAnnouncementId, setDeletingAnnouncementId] = useState<string | null>(null);
@@ -88,6 +94,7 @@ export function AdminSystemTab({
         body: JSON.stringify({
           title: announcementTitle.trim(),
           body: announcementBody.trim(),
+          bannerUrl: announcementBannerUrl.trim() || null,
         }),
       });
       if (res.status === 401) {
@@ -109,6 +116,7 @@ export function AdminSystemTab({
       setAnnouncements((prev) => [data.announcement!, ...prev]);
       setAnnouncementTitle("");
       setAnnouncementBody("");
+      setAnnouncementBannerUrl("");
       setNotice({
         tone: "ok",
         text: "Đã đăng thông báo trong app tới người dùng.",
@@ -263,6 +271,17 @@ export function AdminSystemTab({
       onConfirm: handleResetAnalytics,
     });
   };
+
+  const deletedVocabSet = new Set(overrides.deletedVocabIds);
+  const activeCustomVocab = overrides.customVocabulary.filter(
+    (v) => !deletedVocabSet.has(v.id)
+  );
+  const addedVocabCount = activeCustomVocab.filter(
+    (v) => !BASE_VOCAB_IDS.has(v.id)
+  ).length;
+  const editedDefaultVocabCount = activeCustomVocab.filter((v) =>
+    BASE_VOCAB_IDS.has(v.id)
+  ).length;
 
   const totalOverridesCount =
     overrides.customScenarios.length +
@@ -458,7 +477,7 @@ export function AdminSystemTab({
               Từ vựng CNTT
             </div>
             <div className="font-semibold tabular-nums text-slate-900 dark:text-slate-100">
-              {overrides.customVocabulary.length} thêm/sửa :{" "}
+              {addedVocabCount} từ mới · {editedDefaultVocabCount} mặc định đã sửa ·{" "}
               {overrides.deletedVocabIds.length} mặc định đã ẩn
             </div>
           </div>
@@ -511,6 +530,37 @@ export function AdminSystemTab({
             rows={2}
             className="liquid-glass-input w-full px-3.5 py-2 rounded-lg text-sm resize-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400"
           />
+          <AdminImageField
+            label="Ảnh banner thông báo (tùy chọn)"
+            value={announcementBannerUrl}
+            onChange={setAnnouncementBannerUrl}
+            allowGenerate={false}
+            placeholder="https://... hoặc tải ảnh banner lên"
+          />
+
+          {(announcementTitle.trim() ||
+            announcementBody.trim() ||
+            announcementBannerUrl.trim()) && (
+            <div className="rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/40 dark:bg-blue-950/20 p-4 space-y-2.5">
+              <div className="text-[11px] font-mono font-semibold uppercase tracking-wide text-blue-700 dark:text-blue-300">
+                Xem trước thông báo trước khi đăng
+              </div>
+              {announcementBannerUrl.trim() && (
+                <img
+                  src={announcementBannerUrl.trim()}
+                  alt="Xem trước banner thông báo"
+                  className="w-full max-h-44 object-cover rounded-lg border border-slate-200 dark:border-slate-700"
+                />
+              )}
+              <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                {announcementTitle.trim() || "(Chưa có tiêu đề)"}
+              </div>
+              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
+                {announcementBody.trim() || "(Chưa có nội dung)"}
+              </p>
+            </div>
+          )}
+
           <button
             type="button"
             disabled={announcementSending}
@@ -529,7 +579,14 @@ export function AdminSystemTab({
                 key={item.id}
                 className="flex items-start justify-between gap-3 py-3"
               >
-                <div className="min-w-0 space-y-0.5">
+                <div className="min-w-0 space-y-1.5">
+                  {item.bannerUrl && (
+                    <img
+                      src={item.bannerUrl}
+                      alt={item.title}
+                      className="w-full max-w-sm max-h-28 object-cover rounded-lg border border-slate-200 dark:border-slate-700"
+                    />
+                  )}
                   <div className="text-sm font-bold text-slate-900 dark:text-slate-100">{item.title}</div>
                   <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{item.body}</p>
                   <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
@@ -551,59 +608,60 @@ export function AdminSystemTab({
         )}
       </section>
 
-      <section className="liquid-glass-card p-5 sm:p-6 space-y-5">
+      <section className="liquid-glass-card p-5 sm:p-6 space-y-4">
         <div className="space-y-1">
           <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 text-red-600 dark:text-red-400" aria-hidden="true" />
-            <span>Bảo trì &amp; Đặt lại hệ thống</span>
+            <RotateCcw className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
+            <span>Bảo trì học liệu</span>
           </h2>
           <p className="text-sm text-slate-700 dark:text-slate-300">
-            Các thao tác dưới đây yêu cầu xác nhận hai bước để tránh mất dữ liệu ngoài ý muốn.
+            Khôi phục kịch bản, từ vựng và thử thách Bug Buster tùy chỉnh về bộ học liệu mặc định ban đầu.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-slate-200 dark:border-slate-800 pt-4">
-          <div className="bg-slate-50 dark:bg-[#263349] rounded-xl p-4 space-y-3 flex flex-col justify-between">
-            <div className="space-y-1">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
-                Khôi phục toàn bộ nội dung mặc định
-              </h3>
-              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                Xóa toàn bộ kịch bản, từ vựng và thử thách Arena tùy chỉnh để quay về bộ học liệu gốc.
-              </p>
-            </div>
+        <div className="border-t border-slate-200 dark:border-slate-800 pt-4">
+          <button
+            type="button"
+            disabled={isProcessing}
+            onClick={requestResetContent}
+            className="liquid-glass-btn inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold disabled:opacity-50"
+          >
+            <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>Khôi phục toàn bộ nội dung mặc định</span>
+          </button>
+        </div>
+      </section>
 
-            <button
-              type="button"
-              disabled={isProcessing}
-              onClick={requestResetContent}
-              className="liquid-glass-btn inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold self-start disabled:opacity-50"
-            >
-              <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Khôi phục toàn bộ nội dung mặc định</span>
-            </button>
+      <section className="rounded-2xl border-2 border-red-300 dark:border-red-800 bg-red-50/50 dark:bg-red-950/20 p-5 sm:p-6 space-y-4">
+        <div className="space-y-1">
+          <h2 className="text-base font-bold text-red-700 dark:text-red-300 flex items-center gap-2">
+            <ShieldAlert className="w-4 h-4 text-red-600 dark:text-red-400" aria-hidden="true" />
+            <span>Vùng nguy hiểm (Danger Zone)</span>
+          </h2>
+          <p className="text-sm text-red-800/90 dark:text-red-200/90 leading-relaxed">
+            Hành động dưới đây xóa vĩnh viễn dữ liệu khỏi Neon Postgres và không thể hoàn tác. Yêu cầu xác nhận hai bước trước khi thực thi.
+          </p>
+        </div>
+
+        <div className="border-t border-red-200 dark:border-red-800/70 pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
+              Xóa dữ liệu thống kê
+            </h3>
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              Xóa toàn bộ lượt luyện nói, điểm yếu và lịch sử Arena đã ghi nhận (thường dùng trước khi bắt đầu đợt thu thập dữ liệu nghiên cứu mới).
+            </p>
           </div>
 
-          <div className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50/40 dark:bg-red-950/20 p-4 space-y-3 flex flex-col justify-between">
-            <div className="space-y-1">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
-                Xóa dữ liệu thống kê
-              </h3>
-              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                Xóa toàn bộ lượt luyện nói, điểm yếu và lịch sử Arena đã ghi nhận (thường dùng trước khi bắt đầu đợt thu thập dữ liệu nghiên cứu mới).
-              </p>
-            </div>
-
-            <button
-              type="button"
-              disabled={isProcessing}
-              onClick={requestResetAnalytics}
-              className="liquid-btn-danger inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold self-start disabled:opacity-50"
-            >
-              <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Xóa dữ liệu thống kê</span>
-            </button>
-          </div>
+          <button
+            type="button"
+            disabled={isProcessing}
+            onClick={requestResetAnalytics}
+            className="liquid-btn-danger shrink-0 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold self-start sm:self-center disabled:opacity-50"
+          >
+            <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>Xóa dữ liệu thống kê</span>
+          </button>
         </div>
       </section>
 

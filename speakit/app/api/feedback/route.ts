@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { isAdminRequest } from "../../../lib/adminAuth";
 import { getNeonSql } from "../../../lib/db/neon";
+import { readExistingGuestPlayer } from "../../../lib/neon-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -13,9 +14,15 @@ async function ensureFeedbackTable(sql: NonNullable<ReturnType<typeof getNeonSql
       category TEXT,
       comment TEXT,
       context TEXT,
+      player_name TEXT,
+      avatar_url TEXT,
+      resolved BOOLEAN NOT NULL DEFAULT FALSE,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
   `;
+  await sql`ALTER TABLE user_feedback ADD COLUMN IF NOT EXISTS player_name TEXT`;
+  await sql`ALTER TABLE user_feedback ADD COLUMN IF NOT EXISTS avatar_url TEXT`;
+  await sql`ALTER TABLE user_feedback ADD COLUMN IF NOT EXISTS resolved BOOLEAN NOT NULL DEFAULT FALSE`;
 }
 
 export async function GET(req: NextRequest) {
@@ -34,7 +41,7 @@ export async function GET(req: NextRequest) {
   try {
     await ensureFeedbackTable(sql);
     const rows = await sql`
-      SELECT id, rating, category, comment, context, created_at
+      SELECT id, rating, category, comment, context, player_name, avatar_url, resolved, created_at
       FROM user_feedback
       ORDER BY created_at DESC
       LIMIT 200
@@ -45,6 +52,9 @@ export async function GET(req: NextRequest) {
       category: row.category ? String(row.category) : null,
       comment: row.comment ? String(row.comment) : null,
       context: row.context ? String(row.context) : null,
+      playerName: row.player_name ? String(row.player_name) : null,
+      avatarUrl: row.avatar_url ? String(row.avatar_url) : null,
+      resolved: Boolean(row.resolved),
       createdAt:
         row.created_at instanceof Date
           ? row.created_at.toISOString()
@@ -96,14 +106,60 @@ export async function POST(req: NextRequest) {
   try {
     await ensureFeedbackTable(sql);
 
+    const guest = await readExistingGuestPlayer().catch(() => null);
+    const playerName = guest?.displayName?.trim().slice(0, 64) || null;
+    const avatarUrl = guest?.avatarUrl?.trim().slice(0, 500) || null;
+
     const id = `fb_${randomUUID()}`;
     await sql`
-      INSERT INTO user_feedback (id, rating, category, comment, context)
-      VALUES (${id}, ${rating}, ${category}, ${comment}, ${context})
+      INSERT INTO user_feedback (id, rating, category, comment, context, player_name, avatar_url)
+      VALUES (${id}, ${rating}, ${category}, ${comment}, ${context}, ${playerName}, ${avatarUrl})
     `;
 
     return NextResponse.json({ ok: true, synced: true });
   } catch {
     return NextResponse.json({ ok: true, synced: false });
+  }
+}
+
+export async function PATCH(req: NextRequest) {
+  if (!isAdminRequest(req)) {
+    return NextResponse.json(
+      { ok: false, error: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  let body: { id?: unknown; resolved?: unknown } | null = null;
+  try {
+    body = (await req.json()) as { id?: unknown; resolved?: unknown };
+  } catch {
+    return NextResponse.json({ ok: false, error: "Invalid JSON" }, { status: 400 });
+  }
+
+  const id = typeof body?.id === "string" ? body.id.trim() : "";
+  const resolved = typeof body?.resolved === "boolean" ? body.resolved : null;
+  if (!id || resolved === null) {
+    return NextResponse.json(
+      { ok: false, error: "id and resolved are required" },
+      { status: 400 }
+    );
+  }
+
+  const sql = getNeonSql();
+  if (!sql) {
+    return NextResponse.json({ ok: true, synced: false, id, resolved });
+  }
+
+  try {
+    await ensureFeedbackTable(sql);
+    await sql`
+      UPDATE user_feedback
+      SET resolved = ${resolved}
+      WHERE id = ${id}
+    `;
+    return NextResponse.json({ ok: true, synced: true, id, resolved });
+  } catch {
+    return NextResponse.json({ ok: false, error: "Update failed" }, { status: 500 });
   }
 }

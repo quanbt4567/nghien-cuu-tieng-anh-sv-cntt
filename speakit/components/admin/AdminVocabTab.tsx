@@ -13,12 +13,10 @@ import {
   Plus,
   RotateCcw,
   Search,
-  Sparkles,
   Trash2,
   Upload,
   Volume2,
   VolumeX,
-  X,
 } from "lucide-react";
 import { VOCABULARY_LIST } from "../../data/scenarios";
 import { computeVocabularyBulkDeleteOverrides } from "../../lib/adminBulkDelete";
@@ -31,6 +29,7 @@ import {
   AdminDeleteConfirmModal,
   type DeleteConfirmRequest,
 } from "./AdminDeleteConfirmModal";
+import { AdminImageField } from "./AdminImageField";
 import { persistAdminOverrides } from "./adminShared";
 
 interface AdminVocabTabProps {
@@ -88,6 +87,10 @@ export function AdminVocabTab({
   const [meaningVI, setMeaningVI] = useState("");
   const [exampleSentenceEN, setExampleSentenceEN] = useState("");
   const [exampleTranslationVI, setExampleTranslationVI] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [careerLevel, setCareerLevel] = useState<"" | "Fresher" | "Junior" | "Senior">("");
+  const [clusterTitle, setClusterTitle] = useState("");
+  const [relatedTermsText, setRelatedTermsText] = useState("");
 
   const [isSaving, setIsSaving] = useState(false);
   const [isExporting, setIsExporting] = useState<"json" | "csv" | null>(null);
@@ -114,6 +117,7 @@ export function AdminVocabTab({
         item.meaningVI.toLowerCase().includes(q) ||
         item.partOfSpeech.toLowerCase().includes(q) ||
         item.exampleSentenceEN.toLowerCase().includes(q) ||
+        (item.exampleTranslationVI ?? "").toLowerCase().includes(q) ||
         (item.clusterTitle ?? "").toLowerCase().includes(q) ||
         (item.relatedTerms ?? []).some((rel) => rel.toLowerCase().includes(q))
       );
@@ -150,6 +154,10 @@ export function AdminVocabTab({
     setMeaningVI("");
     setExampleSentenceEN("");
     setExampleTranslationVI("");
+    setImageUrl("");
+    setCareerLevel("");
+    setClusterTitle("");
+    setRelatedTermsText("");
   };
 
   const openCreate = () => {
@@ -161,14 +169,13 @@ export function AdminVocabTab({
     setMeaningVI("");
     setExampleSentenceEN("");
     setExampleTranslationVI("");
+    setImageUrl("");
+    setCareerLevel("");
+    setClusterTitle("");
+    setRelatedTermsText("");
     setStatusNotice(null);
     setIsFormOpen(true);
     setSubTab("form");
-  };
-
-  const openCreateWithAi = () => {
-    openCreate();
-    setAiFocusKey((k) => k + 1);
   };
 
   const openEdit = (item: VocabularyItem) => {
@@ -180,6 +187,10 @@ export function AdminVocabTab({
     setMeaningVI(item.meaningVI);
     setExampleSentenceEN(item.exampleSentenceEN);
     setExampleTranslationVI(item.exampleTranslationVI);
+    setImageUrl(item.imageUrl ?? "");
+    setCareerLevel(item.careerLevel ?? "");
+    setClusterTitle(item.clusterTitle ?? "");
+    setRelatedTermsText((item.relatedTerms ?? []).join(", "));
     setStatusNotice(null);
     setIsFormOpen(true);
     setSubTab("form");
@@ -265,6 +276,11 @@ export function AdminVocabTab({
       editingId ??
       `vc_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 5)}`;
 
+    const parsedTags = relatedTermsText
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
+
     const nextItem: VocabularyItem = {
       id: nextId,
       term: term.trim(),
@@ -273,6 +289,10 @@ export function AdminVocabTab({
       meaningVI: meaningVI.trim(),
       exampleSentenceEN: exampleSentenceEN.trim(),
       exampleTranslationVI: exampleTranslationVI.trim(),
+      imageUrl: imageUrl.trim() || null,
+      ...(careerLevel ? { careerLevel } : {}),
+      ...(clusterTitle.trim() ? { clusterTitle: clusterTitle.trim() } : {}),
+      ...(parsedTags.length > 0 ? { relatedTerms: parsedTags } : {}),
     };
 
     const nextOverrides: AdminContentOverrides = {
@@ -565,45 +585,6 @@ export function AdminVocabTab({
               Thêm, chỉnh sửa phiên âm IPA, câu ví dụ và kiểm tra phát âm trực tiếp bằng Web Speech API.
             </p>
           </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            {hasVocabOverrides && (
-              <button
-                type="button"
-                disabled={isSaving}
-                onClick={handleRestoreDefaults}
-                className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium disabled:opacity-50"
-              >
-                <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>Khôi phục mặc định</span>
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={openCreateWithAi}
-              className="liquid-glass-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" aria-hidden="true" />
-              <span>Tạo bằng AI</span>
-            </button>
-            <button
-              type="button"
-              onClick={subTab === "form" && isFormOpen ? resetForm : openCreate}
-              className="liquid-btn-primary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold"
-            >
-              {subTab === "form" && isFormOpen ? (
-                <>
-                  <X className="w-3.5 h-3.5" aria-hidden="true" />
-                  <span>Đóng biểu mẫu</span>
-                </>
-              ) : (
-                <>
-                  <Plus className="w-3.5 h-3.5" aria-hidden="true" />
-                  <span>Thêm thuật ngữ</span>
-                </>
-              )}
-            </button>
-          </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
@@ -624,13 +605,14 @@ export function AdminVocabTab({
               if (!isFormOpen) openCreate();
               else setSubTab("form");
             }}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+            className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
               subTab === "form"
                 ? "bg-blue-50 dark:bg-blue-950/50 border-blue-700 dark:border-blue-500 text-blue-700 dark:text-blue-300"
                 : "liquid-glass-btn text-slate-700 dark:text-slate-300"
             }`}
           >
-            + Thêm từ / AI Tạo nhanh
+            <Plus className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>Thêm từ / AI Tạo nhanh</span>
           </button>
           <button
             type="button"
@@ -644,7 +626,7 @@ export function AdminVocabTab({
                 : "liquid-glass-btn text-slate-700 dark:text-slate-300"
             }`}
           >
-            Nhập / Xuất JSON : CSV
+            Nhập / Xuất JSON · CSV
           </button>
         </div>
       </div>
@@ -798,13 +780,6 @@ export function AdminVocabTab({
             <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
               {editingId ? `Chỉnh sửa thuật ngữ (${editingId})` : "Thêm thuật ngữ mới"}
             </h3>
-            <button
-              type="button"
-              onClick={resetForm}
-              className="text-xs font-mono text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
-            >
-              Hủy
-            </button>
           </div>
 
           <AdminAiGeneratorBox
@@ -921,6 +896,68 @@ export function AdminVocabTab({
             </div>
           </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-1.5">
+              <label htmlFor="vocab-level" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+                Cấp độ (careerLevel)
+              </label>
+              <select
+                id="vocab-level"
+                name="careerLevel"
+                value={careerLevel}
+                onChange={(e) =>
+                  setCareerLevel(e.target.value as "" | "Fresher" | "Junior" | "Senior")
+                }
+                className="liquid-glass-input w-full px-3.5 py-2 text-sm font-mono rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 [&>option]:bg-white dark:[&>option]:bg-slate-900 [&>option]:text-slate-900 dark:[&>option]:text-slate-100"
+              >
+                <option value="">Tất cả / Chưa phân loại</option>
+                <option value="Fresher">Fresher</option>
+                <option value="Junior">Junior</option>
+                <option value="Senior">Senior</option>
+              </select>
+            </div>
+
+            <div className="space-y-1.5">
+              <label htmlFor="vocab-category" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+                Nhóm chủ đề / Category
+              </label>
+              <input
+                id="vocab-category"
+                name="clusterTitle"
+                type="text"
+                autoComplete="off"
+                value={clusterTitle}
+                onChange={(e) => setClusterTitle(e.target.value)}
+                placeholder="VD: Backend & API, System Design"
+                className="liquid-glass-input w-full px-3.5 py-2 text-sm rounded-lg"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label htmlFor="vocab-tags" className="block text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+                Tags / Từ liên quan (phân tách dấu phẩy)
+              </label>
+              <input
+                id="vocab-tags"
+                name="relatedTerms"
+                type="text"
+                autoComplete="off"
+                value={relatedTermsText}
+                onChange={(e) => setRelatedTermsText(e.target.value)}
+                placeholder="retry, api, webhook"
+                className="liquid-glass-input w-full px-3.5 py-2 text-sm font-mono rounded-lg"
+              />
+            </div>
+          </div>
+
+          <AdminImageField
+            label="Ảnh minh họa từ vựng"
+            value={imageUrl}
+            onChange={setImageUrl}
+            allowGenerate={true}
+            placeholder="https://... hoặc /research-covers/..."
+          />
+
           <div className="flex items-center justify-end gap-3 pt-2">
             <button
               type="button"
@@ -942,25 +979,30 @@ export function AdminVocabTab({
 
       {subTab === "list" && (
         <div className="space-y-4">
-          <div className="liquid-glass-card p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="relative flex-1">
-              <Search
-                className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                aria-hidden="true"
-              />
-              <input
-                name="vocabSearch"
-                type="search"
-                autoComplete="off"
-                aria-label="Tìm kiếm từ vựng"
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentPage(1);
-                }}
-                placeholder="Tìm theo thuật ngữ, nghĩa tiếng Việt, từ loại…"
-                className="liquid-glass-input w-full pl-9 pr-3.5 py-1.5 text-sm rounded-lg"
-              />
+          <div className="liquid-glass-card p-3.5 flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+            <div className="flex-1 space-y-1">
+              <div className="relative">
+                <Search
+                  className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                  aria-hidden="true"
+                />
+                <input
+                  name="vocabSearch"
+                  type="search"
+                  autoComplete="off"
+                  aria-label="Tìm kiếm từ vựng"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  placeholder="Tìm kiếm từ vựng…"
+                  className="liquid-glass-input w-full pl-9 pr-3.5 py-1.5 text-sm rounded-lg"
+                />
+              </div>
+              <p className="text-[11px] font-mono text-slate-600 dark:text-slate-400 pl-1">
+                Tìm trong từ, nghĩa, ví dụ &amp; tag
+              </p>
             </div>
 
             <div className="flex flex-wrap items-center gap-1.5">
@@ -1035,6 +1077,13 @@ export function AdminVocabTab({
                           aria-label={`Chọn thuật ngữ ${item.term}`}
                           className="mt-0.5 w-4 h-4 rounded accent-blue-700 cursor-pointer shrink-0"
                         />
+                        {item.imageUrl && (
+                          <img
+                            src={item.imageUrl}
+                            alt={item.term}
+                            className="w-12 h-12 object-cover rounded-lg border border-slate-200 dark:border-slate-800 shrink-0"
+                          />
+                        )}
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-1.5">
                             <h3 className="text-sm font-bold font-mono text-slate-900 dark:text-slate-100">
@@ -1169,7 +1218,7 @@ export function AdminVocabTab({
 
           <div className="liquid-glass-card px-4 py-2.5 flex items-center justify-between gap-3">
             <span className="text-xs font-mono text-slate-700 dark:text-slate-300">
-              Trang {safePage} / {totalPages} ({filteredVocab.length} thuật ngữ)
+              Trang {safePage}/{totalPages} ({filteredVocab.length} thuật ngữ)
             </span>
             <div className="flex items-center gap-2">
               <button
@@ -1192,6 +1241,28 @@ export function AdminVocabTab({
               </button>
             </div>
           </div>
+
+          {hasVocabOverrides && (
+            <div className="rounded-xl border border-amber-300 dark:border-amber-800/80 bg-amber-50/70 dark:bg-amber-950/20 p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="space-y-0.5">
+                <p className="text-xs font-mono font-bold uppercase text-amber-800 dark:text-amber-300">
+                  Vùng khôi phục dữ liệu gốc
+                </p>
+                <p className="text-xs text-slate-700 dark:text-slate-300">
+                  Khôi phục mặc định sẽ xóa toàn bộ thuật ngữ tùy chỉnh đã thêm/import và đưa danh sách về 12 từ gốc.
+                </p>
+              </div>
+              <button
+                type="button"
+                disabled={isSaving}
+                onClick={handleRestoreDefaults}
+                className="liquid-btn-danger inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold disabled:opacity-50 shrink-0"
+              >
+                <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>Khôi phục mặc định</span>
+              </button>
+            </div>
+          )}
         </div>
       )}
 

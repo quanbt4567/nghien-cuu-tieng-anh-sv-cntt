@@ -145,8 +145,10 @@ export function GlobalLeaderboard({
   }, []);
 
   useEffect(() => {
-    if (initialBoard?.mode === "online" && initialBoard.currentPlayer) {
-      syncGuestProfileFromServer(initialBoard.currentPlayer);
+    if (initialBoard?.mode === "online") {
+      if (initialBoard.currentPlayer) {
+        syncGuestProfileFromServer(initialBoard.currentPlayer);
+      }
       return;
     }
     loadLeaderboard(Boolean(initialBoard));
@@ -559,7 +561,7 @@ export function GlobalLeaderboard({
               }
               return "bg-slate-100 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300";
             };
-            const visiblePlayers = showAllRows ? players : players.slice(0, 15);
+            const visiblePlayers = showAllRows ? players : players.slice(0, 10);
             return (
               <div className="divide-y divide-slate-200 dark:divide-slate-800 border-t border-slate-200 dark:border-slate-800">
                 {visiblePlayers.map((entry) => {
@@ -567,7 +569,7 @@ export function GlobalLeaderboard({
                   const hasFx = Boolean(entry.equippedCosmetics?.leaderboard_fx);
                   const isDuplicateName =
                     (nameCounts.get(entry.displayName.trim().toLowerCase()) ?? 0) > 1;
-                  const useLite = entry.rank > 3;
+                  const useLite = true;
                   return (
                     <LeaderboardRowWrapper
                       key={entry.id}
@@ -651,14 +653,14 @@ export function GlobalLeaderboard({
                     </LeaderboardRowWrapper>
                   );
                 })}
-                {!showAllRows && players.length > 15 && (
+                {!showAllRows && players.length > 10 && (
                   <div className="flex justify-center pt-4">
                     <button
                       type="button"
                       onClick={() => setShowAllRows(true)}
                       className="liquid-glass-btn px-4 py-2 rounded-lg text-sm font-bold transition-colors"
                     >
-                      Xem thêm {players.length - 15} học viên khác
+                      Xem thêm {players.length - 10} học viên khác
                     </button>
                   </div>
                 )}

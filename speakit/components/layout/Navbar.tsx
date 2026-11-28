@@ -24,6 +24,7 @@ import {
   ShieldCheck,
   Sun,
   Moon,
+  Compass,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -77,8 +78,9 @@ const NAV_GROUPS: readonly NavGroup[] = [
   {
     id: "practice",
     label: "Luyện tập",
-    activePrefixes: ["/scenarios", "/practice", "/arena", "/vocabulary", "/placement"],
+    activePrefixes: ["/roadmap", "/scenarios", "/practice", "/arena", "/vocabulary", "/placement"],
     items: [
+      { href: "/roadmap", label: "Lộ trình học", icon: Compass },
       { href: "/scenarios", label: "Kịch bản", icon: Mic },
       { href: "/arena", label: "Arena", icon: Gamepad2 },
       { href: "/vocabulary", label: "Từ vựng IT", icon: BookOpen },
@@ -322,6 +324,10 @@ export function Navbar() {
   const coinTooltip = `${identity.totalPoints.toLocaleString("en-US")} pts (${nextCoinPoints} pts nữa được +1 Coin)`;
   const homeActive = isItemActive(pathname, "/");
   const shopActive = pathname.startsWith("/shop");
+  const hideCursorEffect =
+    shopActive ||
+    pathname.startsWith("/practice/") ||
+    pathname.startsWith("/arena/");
   const hideBottomTabBar =
     pathname.startsWith("/practice/") ||
     pathname.startsWith("/arena/") ||
@@ -344,7 +350,7 @@ export function Navbar() {
 
   return (
     <>
-      {!shopActive && (
+      {!hideCursorEffect && (
         <CustomCursorTrail effectId={guestPlayer?.equippedCosmetics?.cursor_effect ?? null} />
       )}
       <header ref={headerRef} className="sticky top-3 z-40 w-full max-w-7xl mx-auto px-3">

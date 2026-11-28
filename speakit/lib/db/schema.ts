@@ -24,6 +24,7 @@ export interface ResearchArticle {
   title: string;
   summary: string;
   contentMarkdown: string;
+  coverImageUrl: string | null;
   category: ResearchCategory;
   metricsJson: ResearchMetricItem[];
   sourceType: ResearchSourceType;
@@ -232,6 +233,7 @@ export async function initializeGuestPlayersSchema(
             title TEXT NOT NULL,
             summary TEXT NOT NULL,
             content_markdown TEXT NOT NULL,
+            cover_image_url TEXT NULL,
             category VARCHAR(32) NOT NULL,
             metrics_json JSONB NOT NULL DEFAULT '[]'::jsonb,
             source_type VARCHAR(32) NOT NULL,
@@ -240,6 +242,10 @@ export async function initializeGuestPlayersSchema(
             created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
             published_at TIMESTAMPTZ
           )
+        `,
+        sql`
+          ALTER TABLE research_articles
+          ADD COLUMN IF NOT EXISTS cover_image_url TEXT NULL
         `,
         sql`
           CREATE INDEX IF NOT EXISTS idx_research_articles_status_published

@@ -639,6 +639,18 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
           </button>
         </div>
 
+        {currentChallenge.thumbnailUrl?.trim() && (
+          <div className="relative aspect-video w-full max-w-md overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
+            <img
+              src={currentChallenge.thumbnailUrl.trim()}
+              alt={`Minh họa thử thách ${CATEGORY_LABELS[currentChallenge.category]}`}
+              loading="lazy"
+              decoding="async"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+
         <p
           aria-label={currentChallenge.promptEN.replace(
             "____",

@@ -76,10 +76,14 @@ async function flushUnresolvedRoomRewards(input: {
     playerScore,
     input.backupTransferCode
   );
-  const durationSec = Math.max(
-    0,
-    scenario.estimatedMinutes * 60 - room.remainingSeconds
-  );
+  const byTimer = scenario.estimatedMinutes * 60 - room.remainingSeconds;
+  const createdMs = Date.parse(room.createdAt);
+  const durationSec =
+    byTimer > 0
+      ? Math.round(byTimer)
+      : Number.isFinite(createdMs)
+        ? Math.max(1, Math.min(3600, Math.round((Date.now() - createdMs) / 1000)))
+        : 1;
 
   await recordPartyArenaRun({
     roomCode: room.roomCode,

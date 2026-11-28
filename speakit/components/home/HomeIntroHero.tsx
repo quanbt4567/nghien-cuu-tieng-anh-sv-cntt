@@ -106,7 +106,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
       <div className="md:hidden space-y-4">
         <div className="liquid-glass-card p-5 space-y-4">
           <div className="space-y-1.5">
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-snug text-balance">
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-snug text-balance">
               Luyện phản xạ tiếng Anh CNTT
             </h1>
             <p className="text-sm text-slate-600 dark:text-slate-300">
@@ -236,7 +236,7 @@ export function HomeIntroHero({ scenarioCount }: { scenarioCount: number }) {
         <div className="hidden md:grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           <div className="lg:col-span-7 space-y-5">
             <div className="space-y-3">
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-[3rem] text-balance">
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-tight text-balance">
                 Luyện phản xạ nói tiếng Anh CNTT theo tình huống công việc thật
               </h1>
               <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">

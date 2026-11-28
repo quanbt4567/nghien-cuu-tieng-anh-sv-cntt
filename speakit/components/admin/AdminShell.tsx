@@ -67,7 +67,7 @@ const TABS: Array<{
   { id: "ai-monitor", label: "Giám Sát 6 API AI", icon: Activity },
   { id: "scenarios", label: "Kịch bản", icon: MessageSquareText },
   { id: "vocab", label: "Từ vựng", icon: BookOpen },
-  { id: "arena", label: "Arena Games", icon: Gamepad2 },
+  { id: "arena", label: "Bug Buster", icon: Gamepad2 },
   { id: "cosmetics", label: "Kho Hiệu Ứng", icon: Sparkles },
   { id: "research", label: "Bài báo & Nghiên cứu", icon: Newspaper },
   { id: "feedback", label: "Góp ý", icon: Star },

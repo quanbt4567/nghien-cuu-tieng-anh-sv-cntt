@@ -202,7 +202,7 @@ export function LeaderboardRowWrapper({
   return (
     <div
       ref={containerRef}
-      onPointerMove={handlePointerMove}
+      onPointerMove={effectiveLite ? undefined : handlePointerMove}
       style={rootVars}
       className={`group relative rounded-xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 ${className}`.trim()}
     >
@@ -239,16 +239,16 @@ export function LeaderboardRowWrapper({
         />
       )}
 
-      {nameplateId && (
+      {!effectiveLite && nameplateId && (
         <span
           aria-hidden="true"
           className="cosmetic-shiny-sweep absolute inset-0 rounded-[inherit] opacity-60 z-[4]"
         />
       )}
 
-      <span aria-hidden="true" className="cosmetic-spotlight z-[5]" />
+      {!effectiveLite && <span aria-hidden="true" className="cosmetic-spotlight z-[5]" />}
 
-      <span aria-hidden="true" className="cosmetic-border-beam z-[6]" />
+      {!effectiveLite && <span aria-hidden="true" className="cosmetic-border-beam z-[6]" />}
 
       {(nameplateId === "nameplate-terminal-pulse" ||
         nameplateId === "nameplate-rb-decrypted-matrix") && (

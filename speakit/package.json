@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "node --test tests/admin-ai-gen.test.mjs tests/admin-bulk-delete.test.mjs tests/admin-content.test.mjs tests/ai-waterfall.test.mjs tests/arena-leave-policy.test.mjs tests/arena-three-games.test.mjs tests/bugfix-modal-ux.test.mjs tests/content-moderation.test.mjs tests/discord-cosmetics.test.mjs tests/email-auth.test.mjs tests/feature-guides.test.mjs tests/feedback-prompt.test.mjs tests/gamification.test.mjs tests/guest-cleanup.test.mjs tests/guest-leaderboard.test.mjs tests/ip-limit.test.mjs tests/party-game.test.mjs tests/profile.test.mjs tests/public-profile.test.mjs tests/research-cms.test.mjs tests/research-sources.test.mjs tests/scoring-guard.test.mjs tests/tts.test.mjs tests/vocab-quiz.test.mjs tests/vocab-search.test.mjs"
+    "test": "node --test tests/admin-ai-gen.test.mjs tests/admin-bulk-delete.test.mjs tests/admin-content.test.mjs tests/ai-waterfall.test.mjs tests/arena-leave-policy.test.mjs tests/arena-three-games.test.mjs tests/bugfix-modal-ux.test.mjs tests/content-moderation.test.mjs tests/discord-cosmetics.test.mjs tests/email-auth.test.mjs tests/feature-guides.test.mjs tests/feedback-prompt.test.mjs tests/gamification.test.mjs tests/guest-cleanup.test.mjs tests/guest-leaderboard.test.mjs tests/ip-limit.test.mjs tests/party-game.test.mjs tests/profile.test.mjs tests/public-profile.test.mjs tests/quest-path.test.mjs tests/research-cms.test.mjs tests/research-cover-media.test.mjs tests/research-sources.test.mjs tests/scoring-guard.test.mjs tests/tts.test.mjs tests/vocab-quiz.test.mjs tests/vocab-search.test.mjs"
   },
   "dependencies": {
     "@neon/config": "^1.14.0",
@@ -16,6 +16,7 @@
     "@supabase/supabase-js": "^2.49.1",
     "@types/canvas-confetti": "^1.9.0",
     "@types/three": "^0.187.0",
+    "@vercel/blob": "^2.9.0",
     "canvas-confetti": "^1.9.4",
     "google-tts-api": "^2.0.2",
     "lottie-react": "^3.1.2",
