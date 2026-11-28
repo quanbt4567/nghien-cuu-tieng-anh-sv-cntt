@@ -6,6 +6,7 @@ import {
   recordModerationIncident,
 } from "../../../lib/content-moderation";
 import {
+  computeSampleCopySimilarity,
   detectInvalidEnglishInput,
   matchesKeyword,
   normalizeTextForMatching,
@@ -107,6 +108,20 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    const sampleSimilarity = computeSampleCopySimilarity(
+      transcript,
+      currentTurn?.sampleAnswerEN
+    );
+    const isSampleCopy = sampleSimilarity >= 0.72;
+    const adjustedResult = isSampleCopy
+      ? {
+          ...result,
+          score: Math.min(result.score, 35),
+          pronunciationNote:
+            "Bạn đang trả lời gần giống nguyên văn câu trả lời mẫu. Hãy diễn đạt lại bằng ý và từ ngữ của riêng bạn để đạt điểm cao hơn.",
+        }
+      : result;
+
     if (safeExpectedKeywords.length > 0) {
       const words = normalizeTextForMatching(transcript).split(" ").filter(Boolean);
       const keywordsUsed: string[] = [];
@@ -119,13 +134,13 @@ export async function POST(req: NextRequest) {
         }
       }
       return NextResponse.json({
-        ...result,
+        ...adjustedResult,
         keywordsUsed,
         keywordsMissed,
       });
     }
 
-    return NextResponse.json(result);
+    return NextResponse.json(adjustedResult);
   } catch {
     return NextResponse.json(
       { error: "Đã xảy ra lỗi xử lý câu trả lời. Vui lòng thử lại." },
