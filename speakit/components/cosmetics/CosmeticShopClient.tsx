@@ -432,7 +432,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
     Partial<EquippedCosmetics>
   >({});
   const [lastPreviewItemId, setLastPreviewItemId] = useState<string | null>(null);
-  const [themePreviewEnabled, setThemePreviewEnabled] = useState(true);
+  const [themePreviewEnabled, setThemePreviewEnabled] = useState(false);
   const [micTestActive, setMicTestActive] = useState(false);
   const [finisherActive, setFinisherActive] = useState(false);
   const [visibleCount, setVisibleCount] = useState(8);
@@ -764,7 +764,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
         themeId={themePreviewEnabled ? activeSandbox.profile_theme : null}
         item={themePreviewEnabled ? activeThemeItem : null}
       />
-      <CustomCursorTrail effectId={activeSandbox.cursor_effect} />
+      <CustomCursorTrail effectId={previewOverrides.cursor_effect ?? null} />
       <VictoryFinisherOverlay
         finisherId={activeSandbox.victory_finisher}
         active={finisherActive}
@@ -1082,7 +1082,7 @@ export function CosmeticShopClient({ extraItems = [] }: CosmeticShopClientProps)
                     setVisibleCount(8);
                   })
                 }
-                className={`liquid-glass-pill inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400 ${
+                className={`rounded-full border bg-white/85 dark:bg-slate-900/80 border-slate-200 dark:border-white/15 inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:focus-visible:ring-blue-400 ${
                   selected
                     ? "!bg-blue-50 dark:!bg-blue-950/50 !border-blue-700 dark:!border-blue-500 text-blue-700 dark:text-blue-300"
                     : "text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100"
