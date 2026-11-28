@@ -8,6 +8,7 @@ import {
   saveLocalContentOverrides,
 } from "../../lib/contentStore";
 import { getGamificationState } from "../../lib/gamification";
+import { getArenaGameLabel } from "../../lib/profileStats";
 import { storageAdapter } from "../../lib/storage";
 import {
   AI_PROVIDER_SPECS,
@@ -66,11 +67,26 @@ export interface AdminStats {
 export interface AdminAttemptRow extends PracticeAttempt {
   playerName?: string | null;
   transferCode?: string | null;
+  avatarUrl?: string | null;
 }
 
 export interface AdminArenaRunRow extends ArenaRunRecord {
   playerName?: string | null;
   transferCode?: string | null;
+  avatarUrl?: string | null;
+}
+
+export const EXTRA_SCENARIO_LABELS: Record<string, string> = {
+  "vocab-quiz-60s": "Kiểm tra từ vựng 60 giây",
+  "vocab-context-quiz": "Kiểm tra từ vựng theo ngữ cảnh",
+  "vocab-cluster-speaking": "Luyện nói cụm từ vựng",
+};
+
+export function formatArenaGameLabel(gameId: string): string {
+  if (gameId.startsWith("party:")) {
+    return `Outage At 3AM (${gameId.slice(6)})`;
+  }
+  return getArenaGameLabel(gameId);
 }
 
 export interface AdminDashboardResponse {
@@ -248,22 +264,15 @@ export async function loadMergedAdminData(
 
   const roleBreakdown: Record<string, number> = neonConnected && remote ? { ...remote.stats.roleBreakdown } : {};
   if (!neonConnected) {
-    for (const item of [...attempts, ...arenaRuns]) {
+    for (const item of attempts) {
       const roleKey = item.role?.trim() || "unknown";
       roleBreakdown[roleKey] = (roleBreakdown[roleKey] ?? 0) + 1;
     }
   } else {
     const remoteAttemptIds = new Set(remoteAttempts.map((a) => a.id));
-    const remoteArenaIds = new Set(remoteArenaRuns.map((r) => r.id));
     for (const a of localAttempts) {
       if (!remoteAttemptIds.has(a.id)) {
         const key = a.role?.trim() || "unknown";
-        roleBreakdown[key] = (roleBreakdown[key] ?? 0) + 1;
-      }
-    }
-    for (const r of localArenaRuns) {
-      if (!remoteArenaIds.has(r.id)) {
-        const key = r.role?.trim() || "unknown";
         roleBreakdown[key] = (roleBreakdown[key] ?? 0) + 1;
       }
     }

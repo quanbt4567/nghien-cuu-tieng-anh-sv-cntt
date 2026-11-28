@@ -534,10 +534,14 @@ export async function POST(req: NextRequest) {
           scenarioId: updatedRoom.scenarioId,
           score: Math.max(50, updatedRoom.teamScore),
           progressPercent: updatedRoom.resolutionProgress,
-          durationSec: Math.max(
-            0,
-            scenario.estimatedMinutes * 60 - updatedRoom.remainingSeconds
-          ),
+          durationSec: (() => {
+            const byTimer = scenario.estimatedMinutes * 60 - updatedRoom.remainingSeconds;
+            if (byTimer > 0) return Math.round(byTimer);
+            const createdMs = Date.parse(updatedRoom.createdAt);
+            return Number.isFinite(createdMs)
+              ? Math.max(1, Math.min(3600, Math.round((Date.now() - createdMs) / 1000)))
+              : 1;
+          })(),
           role: targetRole,
           playerId: updatedPlayer?.id ?? playerId,
           playerName: updatedPlayer?.displayName ?? sessionPlayer?.displayName ?? null,

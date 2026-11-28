@@ -53,7 +53,12 @@ const DEFAULT_DAILY_LIMIT_CAP = 1000;
 const PING_TIMEOUT_MS = 5000;
 const OPENROUTER_BALANCE_TIMEOUT_MS = 3500;
 
-export type AiProviderHealthStatus = "healthy" | "warning" | "rate_limited" | "disabled";
+export type AiProviderHealthStatus =
+  | "healthy"
+  | "warning"
+  | "rate_limited"
+  | "disabled"
+  | "unmeasured";
 
 export interface AiProviderConfig {
   dailyLimitCap: number;
@@ -334,10 +339,19 @@ function computeHealthStatus(
   todayRequests: number,
   dailyLimitCap: number,
   today429Count: number,
-  lastStatus: number | null
+  lastStatus: number | null,
+  lastLatencyMs: number | null
 ): AiProviderHealthStatus {
   if (!isEnabled) return "disabled";
   if (today429Count > 0 || lastStatus === 429) return "rate_limited";
+  if (
+    lastStatus === null ||
+    lastLatencyMs === null ||
+    lastStatus < 200 ||
+    lastStatus >= 300
+  ) {
+    return "unmeasured";
+  }
   if (dailyLimitCap > 0 && todayRequests / dailyLimitCap >= 0.8) return "warning";
   return "healthy";
 }
@@ -445,7 +459,8 @@ export async function getAiHealthSummary(
         todayRequests,
         config.dailyLimitCap,
         today429Count,
-        lastStatus
+        lastStatus,
+        lastLatencyMs
       ),
       isEnabled: config.isEnabled,
       dailyLimitCap: config.dailyLimitCap,

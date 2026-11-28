@@ -79,9 +79,10 @@ export async function GET(req: NextRequest) {
       scenarioRows,
     ] = await sql.transaction([
       sql`
-        SELECT id, scenario, turn_index, transcript, score, keywords_used, role, player_name, transfer_code, created_at
-        FROM speakit_attempts
-        ORDER BY created_at DESC
+        SELECT a.id, a.scenario, a.turn_index, a.transcript, a.score, a.keywords_used, a.role, a.player_name, a.transfer_code, gp.avatar_url, a.created_at
+        FROM speakit_attempts a
+        LEFT JOIN guest_players gp ON gp.transfer_code = a.transfer_code
+        ORDER BY a.created_at DESC
         LIMIT 200
       `,
       sql`
@@ -91,9 +92,10 @@ export async function GET(req: NextRequest) {
         LIMIT 100
       `,
       sql`
-        SELECT id, game_id, score, accuracy_or_words, duration_sec, role, player_name, transfer_code, created_at
-        FROM speakit_arena_runs
-        ORDER BY created_at DESC
+        SELECT r.id, r.game_id, r.score, r.accuracy_or_words, r.duration_sec, r.role, r.player_name, r.transfer_code, gp.avatar_url, r.created_at
+        FROM speakit_arena_runs r
+        LEFT JOIN guest_players gp ON gp.transfer_code = r.transfer_code
+        ORDER BY r.created_at DESC
         LIMIT 200
       `,
       sql`
@@ -116,11 +118,7 @@ export async function GET(req: NextRequest) {
       `,
       sql`
         SELECT COALESCE(NULLIF(TRIM(role), ''), 'unknown') AS role, COUNT(*)::int AS total
-        FROM (
-          SELECT role FROM speakit_attempts
-          UNION ALL
-          SELECT role FROM speakit_arena_runs
-        ) combined
+        FROM speakit_attempts
         GROUP BY 1
       `,
       sql`
@@ -134,7 +132,7 @@ export async function GET(req: NextRequest) {
     const overrides = normalizeContentOverrides(contentRows[0]?.payload);
 
     const attempts: Array<
-      PracticeAttempt & { playerName: string | null; transferCode: string | null }
+      PracticeAttempt & { playerName: string | null; transferCode: string | null; avatarUrl: string | null }
     > = attemptRows.map((r) => ({
       id: String(r.id),
       scenario: String(r.scenario),
@@ -153,6 +151,10 @@ export async function GET(req: NextRequest) {
         typeof r.transfer_code === "string" && r.transfer_code.trim()
           ? r.transfer_code.trim()
           : null,
+      avatarUrl:
+        typeof r.avatar_url === "string" && r.avatar_url.trim()
+          ? r.avatar_url.trim()
+          : null,
       created_at: toIsoString(r.created_at),
     }));
 
@@ -165,7 +167,7 @@ export async function GET(req: NextRequest) {
     }));
 
     const arenaRuns: Array<
-      ArenaRunRecord & { playerName: string | null; transferCode: string | null }
+      ArenaRunRecord & { playerName: string | null; transferCode: string | null; avatarUrl: string | null }
     > = arenaRows.map((r) => ({
       id: String(r.id),
       game_id: String(r.game_id),
@@ -180,6 +182,10 @@ export async function GET(req: NextRequest) {
       transferCode:
         typeof r.transfer_code === "string" && r.transfer_code.trim()
           ? r.transfer_code.trim()
+          : null,
+      avatarUrl:
+        typeof r.avatar_url === "string" && r.avatar_url.trim()
+          ? r.avatar_url.trim()
           : null,
       created_at: toIsoString(r.created_at),
     }));

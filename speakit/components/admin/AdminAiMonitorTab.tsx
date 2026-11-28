@@ -83,6 +83,11 @@ function getStatusBadge(status: AiProviderHealthStatus): {
         label: "Disabled",
         className: "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700",
       };
+    case "unmeasured":
+      return {
+        label: "Chưa đo",
+        className: "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700",
+      };
   }
 }
 
@@ -95,6 +100,9 @@ function getProgressBarColor(provider: AiProviderHealthItem): string {
   }
   if (provider.status === "warning" || provider.usagePercent >= 80) {
     return "bg-amber-500";
+  }
+  if (provider.status === "unmeasured") {
+    return provider.todayRequests > 0 ? "bg-blue-600" : "bg-slate-400";
   }
   return "bg-green-700";
 }
@@ -436,7 +444,7 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
                       <span>
                         {provider.lastLatencyMs !== null
                           ? `${provider.lastLatencyMs} ms`
-                          : "-- ms"}
+                          : "Chưa đo"}
                       </span>
                     </span>
                   </div>
@@ -460,7 +468,7 @@ export function AdminAiMonitorTab({ onUnauthorized }: AdminAiMonitorTabProps) {
                     <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-600 dark:text-slate-400">
                       <span>429 hôm nay: {provider.today429Count}</span>
                       <span>
-                        Last HTTP: {provider.lastStatus !== null ? provider.lastStatus : "--"}
+                        Last HTTP: {provider.lastStatus !== null ? provider.lastStatus : "Chưa đo"}
                       </span>
                     </div>
                   </div>
