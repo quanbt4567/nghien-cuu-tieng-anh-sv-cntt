@@ -327,6 +327,30 @@ export function matchesKeyword(transcriptWords: string[], keyword: string): bool
   return transcriptWords.some((word) => wordsMatchStem(word, normKey));
 }
 
+export function computeSampleCopySimilarity(
+  transcript: string,
+  sampleAnswerEN?: string
+): number {
+  if (!sampleAnswerEN) return 0;
+  const tWords = normalizeText(transcript).split(" ").filter(Boolean);
+  const sWords = normalizeText(sampleAnswerEN).split(" ").filter(Boolean);
+  if (tWords.length < 5 || sWords.length < 5) return 0;
+  if (tWords.join(" ") === sWords.join(" ")) return 1;
+
+  const sBigrams = new Set<string>();
+  for (let i = 0; i < sWords.length - 1; i += 1) {
+    sBigrams.add(`${sWords[i]} ${sWords[i + 1]}`);
+  }
+  let bigramHits = 0;
+  for (let i = 0; i < tWords.length - 1; i += 1) {
+    if (sBigrams.has(`${tWords[i]} ${tWords[i + 1]}`)) {
+      bigramHits += 1;
+    }
+  }
+  const denom = Math.max(tWords.length - 1, sWords.length - 1);
+  return denom > 0 ? bigramHits / denom : 0;
+}
+
 /**
  * Evaluates speech or typed response using deterministic local rules.
  * STRICT CONSTITUTION REQUIREMENT (Principles III, V, VIII):
