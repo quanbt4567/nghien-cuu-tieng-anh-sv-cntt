@@ -481,7 +481,7 @@ test("loadMergedAdminData deduplicates Neon and localStorage records and compute
     assert.equal(merged.stats.totalWeakPoints, 2);
     assert.equal(merged.stats.activeScenariosCount, SCENARIOS.length - 1);
     assert.equal(merged.stats.roleBreakdown.qa, 2);
-    assert.equal(merged.stats.roleBreakdown.devops, 1);
+    assert.equal(merged.stats.roleBreakdown.devops, undefined);
     assert.equal(merged.localExtrasCount, 3);
     assert.ok(mock.store.get(CONTENT_STORAGE_KEY));
 

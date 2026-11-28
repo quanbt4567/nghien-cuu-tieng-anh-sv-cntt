@@ -1,18 +1,23 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   AlertTriangle,
   Award,
   BarChart3,
+  ChevronDown,
+  ChevronUp,
   Download,
   FileJson,
   Gamepad2,
   MessageSquare,
+  Users,
 } from "lucide-react";
 import { SCENARIOS } from "../../data/scenarios";
 import { mergeScenarios } from "../../lib/contentStore";
+import { AdminUserAvatar } from "./AdminUserAvatar";
 import {
+  EXTRA_SCENARIO_LABELS,
   ROLE_LABELS,
   downloadResearchCsv,
   downloadResearchJson,
@@ -25,6 +30,7 @@ interface AdminAnalyticsTabProps {
 
 export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
   const { stats, weakPoints, attempts, arenaRuns, overrides } = data;
+  const [showAllWeakPoints, setShowAllWeakPoints] = useState(false);
 
   const scenarioMap = useMemo(() => {
     const allScenarios = mergeScenarios(SCENARIOS, overrides, true);
@@ -60,7 +66,7 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
       if (!scenarioMap.has(hit.scenario)) {
         rows.push({
           id: hit.scenario,
-          label: hit.scenario,
+          label: EXTRA_SCENARIO_LABELS[hit.scenario] ?? hit.scenario,
           count: hit.count,
           avgScore: hit.avgScore,
         });
@@ -75,11 +81,72 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
     [scenarioRows]
   );
 
-  const topWeakPoints = useMemo(() => weakPoints.slice(0, 12), [weakPoints]);
-  const maxMissCount = useMemo(
-    () => Math.max(1, ...topWeakPoints.map((w) => w.miss_count)),
-    [topWeakPoints]
+  const visibleWeakPoints = useMemo(
+    () => (showAllWeakPoints ? weakPoints : weakPoints.slice(0, 12)),
+    [showAllWeakPoints, weakPoints]
   );
+  const maxMissCount = useMemo(
+    () => Math.max(1, ...visibleWeakPoints.map((w) => w.miss_count)),
+    [visibleWeakPoints]
+  );
+
+  const topUsers = useMemo(() => {
+    const byUser = new Map<
+      string,
+      {
+        key: string;
+        name: string;
+        transferCode: string | null;
+        avatarUrl: string | null;
+        speakingCount: number;
+        totalScore: number;
+        arenaCount: number;
+      }
+    >();
+
+    for (const a of attempts) {
+      const name = a.playerName?.trim() || "";
+      const code = a.transferCode?.trim() || "";
+      if (!name && !code) continue;
+      const key = code || `name:${name.toLowerCase()}`;
+      const existing = byUser.get(key) ?? {
+        key,
+        name: name || "Ẩn danh",
+        transferCode: code || null,
+        avatarUrl: a.avatarUrl ?? null,
+        speakingCount: 0,
+        totalScore: 0,
+        arenaCount: 0,
+      };
+      existing.speakingCount += 1;
+      existing.totalScore += a.score;
+      if (!existing.avatarUrl && a.avatarUrl) existing.avatarUrl = a.avatarUrl;
+      byUser.set(key, existing);
+    }
+
+    for (const r of arenaRuns) {
+      const name = r.playerName?.trim() || "";
+      const code = r.transferCode?.trim() || "";
+      if (!name && !code) continue;
+      const key = code || `name:${name.toLowerCase()}`;
+      const existing = byUser.get(key) ?? {
+        key,
+        name: name || "Ẩn danh",
+        transferCode: code || null,
+        avatarUrl: r.avatarUrl ?? null,
+        speakingCount: 0,
+        totalScore: 0,
+        arenaCount: 0,
+      };
+      existing.arenaCount += 1;
+      if (!existing.avatarUrl && r.avatarUrl) existing.avatarUrl = r.avatarUrl;
+      byUser.set(key, existing);
+    }
+
+    return Array.from(byUser.values())
+      .sort((a, b) => b.speakingCount + b.arenaCount - (a.speakingCount + a.arenaCount))
+      .slice(0, 10);
+  }, [attempts, arenaRuns]);
 
   const roleEntries = useMemo(
     () =>
@@ -196,7 +263,7 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
       {roleEntries.length > 0 && (
         <div className="liquid-glass-card p-5 flex flex-wrap items-center gap-3">
           <span className="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 mr-1">
-            Phân bố theo vai trò CNTT:
+            Phân bố vai trò (Lượt luyện nói):
           </span>
           {roleEntries.map(([role, count]) => (
             <span
@@ -278,57 +345,149 @@ export function AdminAnalyticsTab({ data }: AdminAnalyticsTabProps) {
             </span>
           </div>
 
-          {topWeakPoints.length === 0 ? (
+          {visibleWeakPoints.length === 0 ? (
             <p className="py-6 border-t border-slate-200 dark:border-slate-800 text-center text-sm text-slate-700 dark:text-slate-300">
               Chưa có dữ liệu điểm yếu nào được ghi nhận. Khi người dùng hoàn thành lượt luyện nói, các từ khóa bỏ lỡ và lỗi ngữ pháp sẽ tổng hợp tại đây.
             </p>
           ) : (
-            <div className="divide-y divide-slate-200 dark:divide-slate-800">
-              {topWeakPoints.map((wp, index) => {
-                const barWidth = Math.max(
-                  8,
-                  Math.round((wp.miss_count / maxMissCount) * 100)
-                );
-                return (
-                  <div
-                    key={wp.id || `${wp.kind}:${wp.value}`}
-                    className="py-3 space-y-1.5"
-                  >
-                    <div className="flex items-center justify-between gap-2 text-xs">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span className="font-mono text-xs text-slate-600 dark:text-slate-400 w-5">
-                          #{index + 1}
-                        </span>
-                        <span
-                          className={`px-2 py-0.5 rounded-full text-[11px] font-mono font-semibold border shrink-0 ${
-                            wp.kind === "grammar"
-                              ? "bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-800 text-red-600 dark:text-red-300"
-                              : "bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300"
-                          }`}
-                        >
-                          {wp.kind === "grammar" ? "Ngữ pháp" : "Từ khóa"}
-                        </span>
-                        <span className="font-mono font-semibold text-slate-900 dark:text-slate-100 truncate">
-                          {wp.value}
+            <div className="space-y-3">
+              <div className="divide-y divide-slate-200 dark:divide-slate-800">
+                {visibleWeakPoints.map((wp, index) => {
+                  const barWidth = Math.max(
+                    8,
+                    Math.round((wp.miss_count / maxMissCount) * 100)
+                  );
+                  return (
+                    <div
+                      key={wp.id || `${wp.kind}:${wp.value}`}
+                      className="py-3 space-y-1.5"
+                    >
+                      <div className="flex items-center justify-between gap-2 text-xs">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="font-mono text-xs text-slate-600 dark:text-slate-400 w-5">
+                            #{index + 1}
+                          </span>
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-[11px] font-mono font-semibold border shrink-0 ${
+                              wp.kind === "grammar"
+                                ? "bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-800 text-red-600 dark:text-red-300"
+                                : "bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300"
+                            }`}
+                          >
+                            {wp.kind === "grammar" ? "Ngữ pháp" : "Từ khóa"}
+                          </span>
+                          <span className="font-mono font-semibold text-slate-900 dark:text-slate-100 truncate">
+                            {wp.value}
+                          </span>
+                        </div>
+                        <span className="font-mono text-xs font-bold text-red-600 dark:text-red-400 shrink-0">
+                          {wp.miss_count} lần
                         </span>
                       </div>
-                      <span className="font-mono text-xs font-bold text-red-600 dark:text-red-400 shrink-0">
-                        {wp.miss_count} lần
-                      </span>
+                      <div className="h-1.5 w-full rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                        <div
+                          className="w-full h-full rounded-full bg-red-600 dark:bg-red-500 origin-left transition-transform"
+                          style={{ transform: `scaleX(${barWidth / 100})` }}
+                        />
+                      </div>
                     </div>
-                    <div className="h-1.5 w-full rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
-                      <div
-                        className="w-full h-full rounded-full bg-red-600 dark:bg-red-500 origin-left transition-transform"
-                        style={{ transform: `scaleX(${barWidth / 100})` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
+
+              {weakPoints.length > 12 && (
+                <button
+                  type="button"
+                  onClick={() => setShowAllWeakPoints((prev) => !prev)}
+                  className="liquid-glass-btn w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-mono font-semibold"
+                >
+                  {showAllWeakPoints ? (
+                    <>
+                      <ChevronUp className="w-3.5 h-3.5" aria-hidden="true" />
+                      <span>Thu gọn</span>
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="w-3.5 h-3.5" aria-hidden="true" />
+                      <span>Xem thêm ({weakPoints.length - 12})</span>
+                    </>
+                  )}
+                </button>
+              )}
             </div>
           )}
         </section>
       </div>
+
+      {topUsers.length > 0 && (
+        <section className="liquid-glass-card overflow-hidden">
+          <div className="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+            <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+              <Users className="w-4 h-4 text-blue-700 dark:text-blue-400" aria-hidden="true" />
+              <span>Top người dùng tích cực</span>
+            </h2>
+            <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
+              {topUsers.length} người dùng gần đây
+            </span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 font-mono text-xs text-slate-700 dark:text-slate-300 uppercase">
+                  <th className="py-3 px-4">#</th>
+                  <th className="py-3 px-4">Người dùng</th>
+                  <th className="py-3 px-4">Luyện nói</th>
+                  <th className="py-3 px-4">Điểm TB</th>
+                  <th className="py-3 px-4">Arena</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+                {topUsers.map((user, idx) => {
+                  const avg =
+                    user.speakingCount > 0
+                      ? Math.round(user.totalScore / user.speakingCount)
+                      : null;
+                  return (
+                    <tr key={user.key} className="hover:bg-blue-50/50 dark:hover:bg-slate-800/60">
+                      <td className="py-3 px-4 font-mono text-slate-600 dark:text-slate-400 tabular-nums">
+                        #{idx + 1}
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-2.5">
+                          <AdminUserAvatar
+                            name={user.name}
+                            avatarUrl={user.avatarUrl}
+                            size="sm"
+                          />
+                          <div className="min-w-0">
+                            <div className="font-semibold text-slate-900 dark:text-slate-100 truncate">
+                              {user.name}
+                            </div>
+                            {user.transferCode && (
+                              <div className="font-mono text-[11px] text-slate-600 dark:text-slate-400">
+                                {user.transferCode}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4 font-mono tabular-nums text-slate-900 dark:text-slate-100">
+                        {user.speakingCount} lượt
+                      </td>
+                      <td className="py-3 px-4 font-mono font-bold tabular-nums text-blue-700 dark:text-blue-400">
+                        {avg !== null ? `${avg}/100` : "--"}
+                      </td>
+                      <td className="py-3 px-4 font-mono tabular-nums text-slate-700 dark:text-slate-300">
+                        {user.arenaCount} lượt
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
