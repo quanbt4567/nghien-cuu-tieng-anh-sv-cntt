@@ -241,15 +241,8 @@ export function Navbar() {
           }
         }
         if (session.mode === "online" && session.player) {
-          const cached = readCachedGuestProfile();
-          const isStaleHydration =
-            cached !== null &&
-            cached.id === session.player.id &&
-            cached.totalPoints > session.player.totalPoints;
-          if (!isStaleHydration) {
-            setGuestPlayer(session.player);
-            syncGuestProfileFromServer(session.player);
-          }
+          setGuestPlayer(session.player);
+          syncGuestProfileFromServer(session.player);
         } else if (session.mode === "online" && !readCachedGuestProfile()) {
           setGuestPlayer(null);
         }

@@ -19,6 +19,7 @@ export interface AdminImageFieldProps {
   onChange: (url: string) => void;
   allowGenerate?: boolean;
   placeholder?: string;
+  contextHint?: string;
 }
 
 const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
@@ -36,6 +37,7 @@ export function AdminImageField({
   onChange,
   allowGenerate = true,
   placeholder = "https://... hoặc /research-covers/...",
+  contextHint,
 }: AdminImageFieldProps) {
   const fieldId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -300,8 +302,20 @@ export function AdminImageField({
               <span>{isBusy ? "Đang tạo ảnh..." : "Tạo ảnh bằng prompt"}</span>
             </button>
           </div>
-          <div className="flex justify-between text-xs text-[var(--text-muted)]">
-            <span>AI tự động tối ưu phong cách hiện đại, không chèn chữ lên ảnh.</span>
+          <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[var(--text-muted)]">
+            <button
+              type="button"
+              disabled={isBusy}
+              onClick={() => {
+                const topic = contextHint?.trim() || "kỹ sư phần mềm giao tiếp tiếng Anh CNTT trong văn phòng công nghệ";
+                setPrompt(`Minh họa biên tập phẳng hiện đại về chủ đề: ${topic}`);
+                setError(null);
+              }}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-[var(--border-input)] bg-[var(--surface-input)] text-[var(--text-primary)] hover:border-[var(--accent-primary)] font-semibold transition-colors"
+            >
+              <Sparkles className="w-3 h-3" aria-hidden="true" />
+              <span>Gợi ý prompt theo ngữ cảnh</span>
+            </button>
             <span className="tabular-nums">{prompt.length}/500</span>
           </div>
         </div>

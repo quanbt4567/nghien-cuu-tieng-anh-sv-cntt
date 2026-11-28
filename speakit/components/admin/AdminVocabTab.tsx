@@ -955,6 +955,7 @@ export function AdminVocabTab({
             value={imageUrl}
             onChange={setImageUrl}
             allowGenerate={true}
+            contextHint={term ? `${term} - ${meaningVI || "thuật ngữ CNTT"}` : "Thuật ngữ kỹ thuật phần mềm CNTT"}
             placeholder="https://... hoặc /research-covers/..."
           />
 

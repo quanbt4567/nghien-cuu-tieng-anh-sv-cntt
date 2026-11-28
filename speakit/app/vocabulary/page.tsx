@@ -95,6 +95,7 @@ function removeKeywordWeakPointLocally(term: string): void {
 
 export default function VocabularyPage() {
   const [vocabList, setVocabList] = useState<VocabularyItem[]>(VOCABULARY_LIST);
+  const [isSyncingContent, setIsSyncingContent] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedContext, setSelectedContext] =
     useState<VocabWorkContext>("all");
@@ -183,7 +184,10 @@ export default function VocabularyPage() {
     syncContent();
     setMasteredIds(readMasteredIds());
     void syncReviewTerms();
-    void fetchAndCachePublicContent();
+    void fetchAndCachePublicContent().finally(() => {
+      syncContent();
+      setIsSyncingContent(false);
+    });
 
     window.addEventListener(CONTENT_UPDATED_EVENT, syncContent);
     const handleStorage = (event: StorageEvent) => {
@@ -327,7 +331,7 @@ export default function VocabularyPage() {
             <h1 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2 leading-tight text-balance">
               <BookOpen className="w-5 h-5 text-blue-700 dark:text-blue-400 shrink-0" aria-hidden="true" />
               <span className="truncate tabular-nums">
-                {vocabList.length} Thuật Ngữ IT Thiết Yếu
+                {isSyncingContent ? "—" : vocabList.length} Thuật Ngữ IT Thiết Yếu
               </span>
             </h1>
             <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5 line-clamp-1">

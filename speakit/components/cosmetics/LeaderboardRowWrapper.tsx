@@ -53,23 +53,23 @@ function getFxAccentGlow(fxId?: string | null): string | undefined {
 function getNameplateTint(nameplateId?: string | null): string | undefined {
   switch (nameplateId) {
     case "nameplate-mesh-nebula":
-      return "linear-gradient(125deg, rgba(244, 63, 94, 0.14) 0%, rgba(255, 255, 255, 0.65) 52%, rgba(245, 158, 11, 0.14) 100%)";
+      return "linear-gradient(125deg, rgba(244, 63, 94, 0.16) 0%, rgba(148, 163, 184, 0.06) 52%, rgba(245, 158, 11, 0.16) 100%)";
     case "nameplate-terminal-pulse":
     case "nameplate-rb-decrypted-matrix":
-      return "linear-gradient(125deg, rgba(16, 185, 129, 0.14) 0%, rgba(255, 255, 255, 0.65) 58%, rgba(20, 184, 166, 0.14) 100%)";
+      return "linear-gradient(125deg, rgba(16, 185, 129, 0.16) 0%, rgba(148, 163, 184, 0.06) 58%, rgba(20, 184, 166, 0.16) 100%)";
     case "nameplate-supernova-gold":
     case "nameplate-magic-sparkles":
     case "nameplate-rb-molten-metal":
-      return "linear-gradient(125deg, rgba(245, 158, 11, 0.18) 0%, rgba(255, 255, 255, 0.65) 50%, rgba(217, 119, 6, 0.16) 100%)";
+      return "linear-gradient(125deg, rgba(245, 158, 11, 0.18) 0%, rgba(148, 163, 184, 0.06) 50%, rgba(217, 119, 6, 0.16) 100%)";
     case "nameplate-cyber-glitch":
     case "nameplate-rb-holo-mosaic":
     case "nameplate-magic-aurora-text":
-      return "linear-gradient(125deg, rgba(14, 165, 233, 0.16) 0%, rgba(255, 255, 255, 0.65) 54%, rgba(236, 72, 153, 0.14) 100%)";
+      return "linear-gradient(125deg, rgba(14, 165, 233, 0.18) 0%, rgba(148, 163, 184, 0.06) 54%, rgba(236, 72, 153, 0.15) 100%)";
     case "nameplate-rb-liquid-chrome":
-      return "linear-gradient(125deg, rgba(226, 232, 240, 0.45) 0%, rgba(255, 255, 255, 0.72) 54%, rgba(203, 213, 225, 0.45) 100%)";
+      return "linear-gradient(125deg, rgba(148, 163, 184, 0.18) 0%, rgba(148, 163, 184, 0.08) 54%, rgba(100, 116, 139, 0.18) 100%)";
     case "nameplate-rb-silk-satin":
     case "nameplate-magic-neon-card":
-      return "linear-gradient(125deg, rgba(168, 85, 247, 0.15) 0%, rgba(255, 255, 255, 0.65) 54%, rgba(244, 63, 94, 0.14) 100%)";
+      return "linear-gradient(125deg, rgba(168, 85, 247, 0.16) 0%, rgba(148, 163, 184, 0.06) 54%, rgba(244, 63, 94, 0.16) 100%)";
     default:
       return undefined;
   }

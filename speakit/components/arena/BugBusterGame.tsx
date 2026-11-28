@@ -42,8 +42,8 @@ import { SpeechController, startSpeechRecognition } from "../../lib/speech";
 import { ITRole } from "../../lib/types";
 import { FeedbackPromptModal } from "../feedback/FeedbackPromptModal";
 
-const ROUND_DURATION_SEC = 360;
-const BUG_DURATION_SEC = 35;
+const ROUND_DURATION_SEC = 280;
+const BUG_DURATION_SEC = 20;
 const BASE_FIX_POINTS = 150;
 
 interface BugBusterGameProps {
@@ -519,7 +519,7 @@ export function BugBusterGame({ role }: BugBusterGameProps) {
             <div className="text-2xl font-mono tabular-nums font-bold text-green-700 dark:text-green-400">
               {summary.fixedCount}
               <span className="text-xs text-slate-500 dark:text-slate-400">
-                /{summary.attemptedCount}
+                /{summary.attemptedCount > 0 ? summary.attemptedCount : summary.totalCount}
               </span>
             </div>
             <div className="text-sm text-slate-600 dark:text-slate-300 mt-1">

@@ -56,6 +56,11 @@ export default async function ResearchPortalPage({
   const articles = await getPublishedArticles(
     activeCategory === "all" ? undefined : activeCategory
   );
+  const titleCounts = new Map<string, number>();
+  for (const item of articles) {
+    const key = item.title.trim().toLowerCase();
+    titleCounts.set(key, (titleCounts.get(key) ?? 0) + 1);
+  }
   const featuredArticle =
     articles.find(
       (a) => a.category === "benchmark" && a.metricsJson.length > 0
@@ -160,33 +165,43 @@ export default async function ResearchPortalPage({
           </p>
         </div>
       ) : (
-        <div className="bg-slate-200 dark:bg-[#334155] border border-slate-200 dark:border-[#334155] rounded-xl overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-px">
-          {articles.map((article) => {
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {articles.map((article, idx) => {
             const realMetricsCount = article.metricsJson.filter(
               (m) => !isInternalDraftMetric(m)
             ).length;
             const coverImageUrl = (
               (article as { coverImageUrl?: string | null }).coverImageUrl ?? ""
             ).trim();
+            const isDupTitle =
+              (titleCounts.get(article.title.trim().toLowerCase()) ?? 0) > 1;
+            const shortDate = new Intl.DateTimeFormat("vi-VN", {
+              day: "2-digit",
+              month: "2-digit",
+            }).format(new Date(article.publishedAt ?? article.createdAt));
+            const displayTitle = isDupTitle
+              ? `${article.title} (${shortDate})`
+              : article.title;
             return (
               <article
                 key={article.id}
-                className="bg-white dark:bg-[#1E293B] p-5 sm:p-6 hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-colors flex flex-col justify-between gap-4"
+                className="bg-white dark:bg-[#131F35] border border-slate-200 dark:border-white/15 rounded-xl shadow-sm p-5 sm:p-6 hover:border-blue-400 dark:hover:border-blue-500/60 transition-colors flex flex-col justify-between gap-4"
               >
                 <div className="space-y-3">
                   <Link
                     href={`/research/${article.slug}`}
                     tabIndex={-1}
                     aria-hidden="true"
-                    className="block relative aspect-video w-full overflow-hidden rounded-lg border border-slate-200 dark:border-[#334155] bg-slate-100 dark:bg-slate-800"
+                    className="block relative aspect-video w-full overflow-hidden rounded-lg border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-slate-800/80"
                   >
                     {coverImageUrl ? (
                       <Image
                         src={coverImageUrl}
-                        alt={article.title}
+                        alt={displayTitle}
                         fill
                         sizes="(max-width: 768px) 100vw, 50vw"
-                        loading="lazy"
+                        priority={idx < 2}
+                        loading={idx < 2 ? undefined : "lazy"}
                         className="object-cover"
                       />
                     ) : (
@@ -217,11 +232,11 @@ export default async function ResearchPortalPage({
 
                   <Link href={`/research/${article.slug}`} className="block group focus-visible:ring-2 focus-visible:ring-blue-600 rounded">
                     <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-50 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors leading-snug text-balance">
-                      {article.title}
+                      {displayTitle}
                     </h2>
                   </Link>
 
-                  <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3">
                     {article.summary}
                   </p>
 

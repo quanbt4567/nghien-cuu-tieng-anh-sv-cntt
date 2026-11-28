@@ -90,33 +90,35 @@ export default function ProgressPage() {
     };
 
     async function loadData() {
-      setIsLoading(true);
-      try {
-        const transferCode = readBackupTransferCode();
-        const [allAttempts, allWeakPoints, sessionRes, arenaRes] = await Promise.all([
-          storageAdapter.getAttempts(),
-          storageAdapter.getWeakPoints(),
-          initOrHydrateGuestSession(transferCode).catch(() => ({
-            mode: "offline" as const,
-            player: null,
-          })),
-          getPlayerArenaRuns(transferCode).catch(() => ({
-            mode: "offline" as const,
-            runs: [] as ArenaRunRecord[],
-          })),
-        ]);
+      const cached = readCachedGuestProfile();
+      if (cached) setGuestPlayer(cached);
+      syncGamification();
 
-        setAttempts(allAttempts);
-        setWeakPoints(allWeakPoints);
-        setServerArenaRuns(arenaRes.runs);
-        if (sessionRes.mode === "online" && sessionRes.player) {
-          saveBackupTransferCode(sessionRes.player.transferCode);
-          setGuestPlayer(sessionRes.player);
-        }
-        setPlanDays(generate7DayPlan(allWeakPoints, allAttempts));
-        syncGamification();
-      } finally {
-        setIsLoading(false);
+      const [allAttempts, allWeakPoints] = await Promise.all([
+        storageAdapter.getAttempts().catch(() => [] as PracticeAttempt[]),
+        storageAdapter.getWeakPoints().catch(() => [] as WeakPoint[]),
+      ]);
+      setAttempts(allAttempts);
+      setWeakPoints(allWeakPoints);
+      setPlanDays(generate7DayPlan(allWeakPoints, allAttempts));
+      setIsLoading(false);
+
+      const transferCode = readBackupTransferCode();
+      const [sessionRes, arenaRes] = await Promise.all([
+        initOrHydrateGuestSession(transferCode).catch(() => ({
+          mode: "offline" as const,
+          player: null,
+        })),
+        getPlayerArenaRuns(transferCode).catch(() => ({
+          mode: "offline" as const,
+          runs: [] as ArenaRunRecord[],
+        })),
+      ]);
+
+      setServerArenaRuns(arenaRes.runs);
+      if (sessionRes.mode === "online" && sessionRes.player) {
+        saveBackupTransferCode(sessionRes.player.transferCode);
+        setGuestPlayer(sessionRes.player);
       }
     }
 

@@ -83,6 +83,7 @@ function getDifficultyBadgeClass(level: ScenarioDifficulty): string {
 export function HomeOnboardingClient() {
   const [selectedRole, setSelectedRoleState] = useState<ITRole>("frontend");
   const [scenarios, setScenarios] = useState<Scenario[]>(SCENARIOS);
+  const [isSyncingContent, setIsSyncingContent] = useState(true);
   const [difficultyFilter, setDifficultyFilter] = useState<"ALL" | ScenarioDifficulty>("ALL");
   const [placement, setPlacement] = useState<PlacementResult | null>(null);
   const [showGuideBanner, setShowGuideBanner] = useState(false);
@@ -110,7 +111,10 @@ export function HomeOnboardingClient() {
       setShowGuideBanner(false);
     }
 
-    void fetchAndCachePublicContent();
+    void fetchAndCachePublicContent().finally(() => {
+      setScenarios(getEffectiveScenarios());
+      setIsSyncingContent(false);
+    });
 
     window.addEventListener(GAMIFICATION_UPDATED_EVENT, syncRole);
     window.addEventListener(CONTENT_UPDATED_EVENT, syncContent);
@@ -305,7 +309,7 @@ export function HomeOnboardingClient() {
             >
               Xem hướng dẫn 1 phút
             </Link>
-            <span className="text-slate-600 dark:text-slate-300">hoặc</span>
+            <span className="px-1 text-slate-600 dark:text-slate-300">hoặc</span>
             <Link
               href="/placement"
               className="inline-flex items-center gap-1 rounded-lg px-3 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-blue-700 focus-visible:ring-2 focus-visible:ring-blue-600 text-xs font-semibold transition-colors"
@@ -422,7 +426,7 @@ export function HomeOnboardingClient() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-slate-50 tabular-nums text-balance">
-              Tất cả tình huống ({filteredScenarios.length})
+              Tất cả tình huống ({isSyncingContent ? "—" : filteredScenarios.length})
             </h2>
             <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">
               Chọn cấp độ Fresher, Junior hoặc Senior để luyện phản xạ nói tiếng Anh
